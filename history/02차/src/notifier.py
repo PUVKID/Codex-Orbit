@@ -1,0 +1,489 @@
+"""현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다."""
+import argparse
+import base64
+import ctypes
+import hashlib
+import json
+import os
+import re
+import subprocess
+import sys
+import time
+import uuid
+from datetime import datetime, timezone
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+APP_ID = 'Yunseok.Codex.ModelChangeNotifier'
+READ_BYTES = 512 * 1024
+MAX_RECORD = 2 * 1024 * 1024
+MAX_FILES = 4096
+LOG_BYTES = 2 * 1024 * 1024
+POLL_READ_BYTES = 8 * 1024 * 1024
+MAX_PENDING = 256
+
+
+def stamp():
+    return datetime.now(timezone.utc).isoformat()
+
+
+def atomic_json(path, value):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp = path.with_suffix(path.suffix + '.tmp')
+    temp.write_text(json.dumps(value, ensure_ascii=False), encoding='utf-8')
+    os.replace(temp, path)
+
+
+def append_log(path, value):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if path.exists() and path.stat().st_size >= LOG_BYTES:
+        os.replace(path, path.with_suffix('.previous.jsonl'))
+    with path.open('a', encoding='utf-8', newline='\n') as handle:
+        handle.write(json.dumps(value, ensure_ascii=False) + '\n')
+
+
+class Watcher:
+    def __init__(self, sessions, work, sender):
+        self.sessions, self.work, self.sender = Path(sessions), Path(work), sender
+        self.work.mkdir(parents=True, exist_ok=True)
+        self.state_path = self.work / 'state.json'
+        self.state = {'schema_version': 2, 'initialized': False, 'files': {}, 'models': {},
+                      'declarations': {}, 'pending': [], 'reasons': {}, 'seen': []}
+        if self.state_path.exists():
+            if self.state_path.stat().st_size > 16 * 1024 * 1024:
+                raise ValueError('상태 파일이 16 MiB 상한을 초과했습니다. 원본 보존 후 점검이 필요합니다.')
+            self.state = json.loads(self.state_path.read_text(encoding='utf-8'))
+            if self.state.get('schema_version') != 2:
+                raise ValueError('구형 상태는 요청과 관측이 혼합되어 있습니다. 원본 보존 후 명시적 재기준선이 필요합니다.')
+            if not isinstance(self.state.get('files'), dict) or not isinstance(self.state.get('models'), dict):
+                raise ValueError('상태 파일 구조 오류입니다. 자동 초기화하지 않습니다.')
+            if not isinstance(self.state.get('declarations'), dict):
+                raise ValueError('명시 배정 상태 구조 오류입니다. 자동 초기화하지 않습니다.')
+        self.state.setdefault('reasons', {})
+        self.state.setdefault('seen', [])
+        self.seen = set(self.state['seen'])
+
+    def diagnostic(self, error, **details):
+        append_log(self.work / 'diagnostics.jsonl', {'time': stamp(), 'error': str(error)[:2000], **details})
+
+    def event(self, sid, after, reason='확인 불가', evidence='로컬 turn_context 관측', **extra):
+        before = self.state['models'].get(sid)
+        declared = self.state['declarations'].get(sid)
+        if 'declared_before' in extra:
+            # 요청은 관측 기준선을 변경하지 않습니다. 동시에 대기하는 정확한 전후만 연결합니다.
+            pending = next((e for e in reversed(self.state['pending']) if e['target'] == sid
+                            and e['after'] == after and e['before'] == extra['declared_before']
+                            and e.get('kind') == 'observed'), None)
+            if pending is not None:
+                pending['runtime_evidence'] = pending['evidence']
+                pending['declared_before'] = extra['declared_before']
+                pending['declared_after'] = after
+                pending['declared_reason'] = reason[:12000]
+                pending['reason'] = reason[:12000]
+                pending['evidence'] = '로컬 관측 전후와 일치하는 명시 배정 이유; 실제 원인 인증 아님'
+                return
+            if before == after or (declared and declared['after'] == after):
+                return
+            event = {'id': uuid.uuid4().hex, 'time': stamp(), 'target': sid,
+                     'before': extra['declared_before'], 'after': after, 'reason': reason[:12000],
+                     'evidence': evidence, 'kind': 'declared', **extra}
+            self.state['declarations'][sid] = {**event, 'observed_before': before}
+            self.state['pending'].append(event)
+            return
+        if before == after:
+            return
+        self.state['models'][sid] = after
+        event = {'id': uuid.uuid4().hex, 'time': stamp(), 'target': sid, 'before': before,
+                 'after': after, 'reason': reason[:12000], 'evidence': evidence, 'kind': 'observed', **extra}
+        if declared:
+            # 다음 실제 변경에서 요청을 소비합니다. 다른 변화 뒤 오래된 요청 이유를 재사용하지 않습니다.
+            del self.state['declarations'][sid]
+            if declared['after'] == after and declared['before'] == before and declared['observed_before'] == before:
+                event['declaration_id'] = declared['id']
+                event['declared_reason'] = declared['reason']
+                append_log(self.work / 'observations.jsonl', event)
+                return
+        self.state['pending'].append(event)
+
+    def record(self, record, info, baseline):
+        kind, payload = record.get('type'), record.get('payload')
+        if not isinstance(payload, dict):
+            return
+        if kind == 'session_meta':
+            sid = payload.get('id')
+            if not info.get('sid'):
+                if not isinstance(sid, str):
+                    return
+                if info.get('expected_sid') and sid != info['expected_sid']:
+                    return
+                info['sid'] = sid
+                source = payload.get('source', {})
+                source = source if isinstance(source, dict) else {}
+                sub = source.get('subagent', {})
+                sub = sub if isinstance(sub, dict) else {}
+                spawn = sub.get('thread_spawn', {})
+                spawn = spawn if isinstance(spawn, dict) else {}
+                info['child'] = bool(spawn or payload.get('parent_thread_id'))
+                info['role'] = spawn.get('agent_role', payload.get('agent_role', 'main'))
+                info['parent'] = spawn.get('parent_thread_id', payload.get('parent_thread_id'))
+                info['agent_path'] = spawn.get('agent_path', payload.get('agent_path'))
+                info['owner_active'] = True
+                info['turns'] = []
+            elif sid != info['sid']:
+                # 자식의 첫 메타를 보존하고 그 뒤의 부모 복제 기록을 제외합니다.
+                info['owner_active'] = False
+            return
+        sid = info.get('sid')
+        if not sid:
+            return
+        if kind == 'response_item' and info.get('owner_active'):
+            self.public_reason(payload, info)
+        if kind == 'event_msg':
+            event_kind = payload.get('type')
+            if event_kind == 'thread_settings_applied':
+                info['owner_active'] = payload.get('thread_id') == sid
+            if event_kind == 'token_usage_record' and payload.get('thread_id') == sid:
+                turn = payload.get('turn_id')
+                if turn and turn not in info['turns']:
+                    info['turns'] = (info['turns'] + [turn])[-128:]
+            if event_kind == 'task_started' and info.get('owner_active'):
+                turn = payload.get('turn_id')
+                if turn and turn not in info['turns']:
+                    info['turns'] = (info['turns'] + [turn])[-128:]
+            return
+        # 비공개 reasoning과 임의의 메시지 본문은 수집하지 않습니다.
+        if kind != 'turn_context' or not isinstance(payload.get('model'), str):
+            return
+        if info.get('child') and payload.get('turn_id') not in info.get('turns', []):
+            return
+        after = {'model': payload['model'][:256], 'effort': str(payload.get('effort') or '확인 불가')[:64]}
+        if record.get('timestamp'):
+            fingerprint = hashlib.sha256(json.dumps([sid, record['timestamp'], payload.get('turn_id'), after], sort_keys=True).encode('utf-8')).hexdigest()
+            if fingerprint in self.seen:
+                return
+            self.seen.add(fingerprint)
+            self.state['seen'].append(fingerprint)
+            if len(self.state['seen']) > 8192:
+                self.seen.discard(self.state['seen'].pop(0))
+        if baseline:
+            self.state['models'][sid] = after
+        else:
+            self.event(sid, after, role=info.get('role', '확인 불가'), turn_id=payload.get('turn_id'),
+                       parent=info.get('parent'), agent_path=info.get('agent_path'))
+
+    def public_reason(self, payload, info):
+        kind = payload.get('type')
+        if kind == 'message' and payload.get('role') == 'assistant' and payload.get('phase') == 'commentary':
+            parts = [p.get('text', '') for p in payload.get('content', []) if isinstance(p, dict) and p.get('type') in ('output_text', 'text')]
+            info['commentary'] = '\n'.join(parts)[:12000]
+            return
+        if kind == 'function_call':
+            # 다른 도구 호출이 사이에 있으면 '바로 직전 공개 설명'으로 연결하지 않습니다.
+            commentary = info.pop('commentary', '')
+            if payload.get('name') not in ('spawn_agent', 'collaboration.spawn_agent') or not commentary:
+                return
+            try:
+                arguments = json.loads(payload.get('arguments', '{}'))
+            except (ValueError, TypeError):
+                return
+            call_id = payload.get('call_id')
+            if not call_id or not isinstance(arguments.get('task_name'), str):
+                return
+            calls = info.setdefault('spawn_calls', {})
+            calls[call_id] = {'commentary': commentary, 'requested_task': arguments['task_name']}
+            while len(calls) > 16:
+                del calls[next(iter(calls))]
+        elif kind == 'function_call_output':
+            call = info.setdefault('spawn_calls', {}).pop(payload.get('call_id'), None)
+            if not call:
+                return
+            try:
+                result = json.loads(payload.get('output', '{}'))
+            except (ValueError, TypeError):
+                return
+            task = result.get('task_name')
+            if not isinstance(task, str) or not task.startswith('/') or task.rsplit('/', 1)[-1] != call['requested_task']:
+                return
+            key = info['sid'] + '|' + task
+            self.state['reasons'][key] = {'text': call['commentary'], 'call_id': payload.get('call_id')}
+            while len(self.state['reasons']) > 128:
+                del self.state['reasons'][next(iter(self.state['reasons']))]
+
+    def read_file(self, path, info):
+        stat = path.stat()
+        identity = [stat.st_dev, stat.st_ino]
+        if info.get('identity') != identity or stat.st_size < info['offset']:
+            changed = info.get('identity') is not None
+            info.update(offset=0, identity=identity, sid=None, skipping=False)
+            if changed:
+                info['baseline_end'] = 0
+                self.diagnostic('파일 교체 또는 잘림: 현재 모델과 비교하여 재검사합니다.', path=str(path))
+        total = 0
+        with path.open('rb') as handle:
+            handle.seek(info['offset'])
+            while total < READ_BYTES and len(self.state['pending']) < MAX_PENDING:
+                position = handle.tell()
+                raw = handle.readline(MAX_RECORD + 1)
+                total += len(raw)
+                if not raw:
+                    break
+                if info.get('skipping'):
+                    info['offset'] = handle.tell()
+                    info['skipping'] = not raw.endswith(b'\n')
+                    continue
+                if len(raw) > MAX_RECORD:
+                    info['offset'] = handle.tell()
+                    info['skipping'] = not raw.endswith(b'\n')
+                    self.diagnostic('레코드가 2 MiB 상한을 초과하여 LF까지 건너뜁니다.', path=str(path), offset=position)
+                    continue
+                if not raw.endswith(b'\n'):
+                    # 완전한 LF 전까지 offset을 고정하여 분할 UTF-8을 다시 읽습니다.
+                    break
+                try:
+                    record = json.loads(raw[:-1].decode('utf-8'))
+                    if not isinstance(record, dict):
+                        raise ValueError('JSON 객체가 아닙니다.')
+                    self.record(record, info, position < info.get('baseline_end', 0))
+                except (ValueError, TypeError, KeyError) as error:
+                    self.diagnostic('레코드 오류: ' + str(error), path=str(path), offset=position, bytes=len(raw))
+                info['offset'] = handle.tell()
+        return total
+
+    def poll(self):
+        paths = []
+        if not self.sessions.is_dir():
+            self.diagnostic('세션 폴더에 접근할 수 없습니다.', path=str(self.sessions))
+            return []
+        # 디렉터리 순서는 최신 연/월/일부터 우선하며 탐색 수도 제한합니다.
+        for directory, dirs, files in os.walk(self.sessions):
+            dirs.sort(reverse=True)
+            for name in sorted(files, reverse=True):
+                if name.endswith('.jsonl'):
+                    paths.append(Path(directory) / name)
+                    if len(paths) >= MAX_FILES:
+                        break
+            if len(paths) >= MAX_FILES:
+                break
+        known = self.state['files']
+        current = {str(p) for p in paths}
+        for stale in list(known):
+            if stale not in current:
+                del known[stale]
+        for path in paths:
+            key = str(path)
+            if key not in known:
+                try:
+                    baseline_end = path.stat().st_size if not self.state['initialized'] else 0
+                except OSError as error:
+                    self.diagnostic(error, path=key)
+                    continue
+                match = re.search(r'([0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12})\.jsonl$', path.name)
+                known[key] = {'offset': 0, 'baseline_end': baseline_end, 'identity': None,
+                              'expected_sid': match.group(1) if match else None}
+        # 파일별 예산과 총 예산을 두고 다음 파일부터 이어가므로 큰 과거 파일이 독점하지 않습니다.
+        cursor = self.state.get('cursor', 0) % max(1, len(paths))
+        rotated = paths[cursor:] + paths[:cursor]
+        total = 0
+        visited = 0
+        for path in rotated:
+            key = str(path)
+            if key not in known:
+                continue
+            try:
+                total += self.read_file(path, known[key]) or 0
+            except OSError as error:
+                self.diagnostic(error, path=key)
+            visited += 1
+            if total >= POLL_READ_BYTES or len(self.state['pending']) >= MAX_PENDING:
+                break
+        self.state['cursor'] = (cursor + visited) % max(1, len(paths))
+        self.state['initialized'] = True
+        # 명시적 배정 요청은 별도 상태에 기록하고 실제 관측 기준선을 유지합니다.
+        queue = self.work / 'announce'
+        if queue.exists():
+            for path in sorted(queue.glob('*.json'))[:max(0, min(32, MAX_PENDING - len(self.state['pending'])))]:
+                try:
+                    if path.stat().st_size > 20000:
+                        raise ValueError('명시 알림 파일 상한 초과')
+                    item = json.loads(path.read_text(encoding='utf-8'))
+                    self.event(item['target'], item['after'], item['reason'], '사용자/부모의 명시적 배정 기록', declared_before=item['before'])
+                    atomic_json(self.state_path, self.state)
+                    path.unlink()
+                except (OSError, ValueError, KeyError) as error:
+                    self.diagnostic(error, path=str(path))
+        atomic_json(self.state_path, self.state)
+        sent = []
+        # 영속 pending 후 API를 호출합니다. API 성공과 상태 저장 사이 강제 종료는 재알림 가능성이 있습니다.
+        for event in list(self.state['pending'])[:16]:
+            try:
+                # 첫 배정만 정확한 부모 호출 결과와 연결합니다. 이후 변경에 옛 이유를 재사용하지 않습니다.
+                reason = self.state['reasons'].get(str(event.get('parent')) + '|' + str(event.get('agent_path')))
+                if event['before'] is None and event['reason'] == '확인 불가' and reason:
+                    event['reason'] = reason['text']
+                    event['evidence'] = '배정 전 공개 설명: 부모 call_id/호출 결과/자식 경로 정확 연결; 서버 변경 원인 미확인'
+                    event['reason_call_id'] = reason['call_id']
+                result = self.sender(event)
+                append_log(self.work / 'history.jsonl', {**event, 'delivery': result or '전송 함수 반환 성공; 화면 수신 미확인'})
+                self.state['pending'].remove(event)
+                atomic_json(self.state_path, self.state)
+                sent.append(event)
+            except Exception as error:
+                self.diagnostic(error, event_id=event['id'])
+                break
+        # 삭제된 오래된 세션 상태는 제한된 수만 보존합니다.
+        if len(self.state['models']) > MAX_FILES * 2:
+            self.state['models'] = dict(list(self.state['models'].items())[-MAX_FILES * 2:])
+        if len(self.state['declarations']) > MAX_FILES * 2:
+            self.state['declarations'] = dict(list(self.state['declarations'].items())[-MAX_FILES * 2:])
+        atomic_json(self.state_path, self.state)
+        return sent
+
+
+def powershell(args, timeout=15):
+    exe = Path(os.environ.get('SystemRoot', r'C:\Windows')) / 'System32/WindowsPowerShell/v1.0/powershell.exe'
+    parameters = {args[i].lstrip('-'): args[i + 1] for i in range(0, len(args), 2)}
+    # 고정 명령은 UTF-8 로컬 스크립트를 읽고 구조화 인자만 전달합니다. 실행 정책은 변경하지 않습니다.
+    command = "$ErrorActionPreference='Stop'; $ProgressPreference='SilentlyContinue'; [Console]::OutputEncoding=[Text.UTF8Encoding]::new($false); $OutputEncoding=[Console]::OutputEncoding; try {$p=@{}; (ConvertFrom-Json $env:CODEx_NOTIFY_ARGUMENTS).PSObject.Properties | ForEach-Object {$p[$_.Name]=$_.Value}; & ([scriptblock]::Create([IO.File]::ReadAllText($env:CODEx_NOTIFY_SCRIPT,[Text.Encoding]::UTF8))) @p} catch {[Console]::Error.WriteLine($_.Exception.ToString()); exit 1}"
+    encoded = base64.b64encode(command.encode('utf-16-le')).decode('ascii')
+    env = dict(os.environ, CODEx_NOTIFY_ARGUMENTS=json.dumps(parameters, ensure_ascii=False), CODEx_NOTIFY_SCRIPT=str(ROOT / 'src' / 'toast.ps1'))
+    result = subprocess.run([str(exe), '-NoProfile', '-NonInteractive', '-STA', '-EncodedCommand', encoded], env=env,
+                            capture_output=True, timeout=timeout, shell=False,
+                            creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
+    if result.returncode:
+        # 디코딩 전 원본을 상한과 함께 보존하여 잘못된 바이트와 표시 잘림을 구분합니다.
+        failure_path = ROOT / 'work' / 'transport-last-error.json'
+        limit = 65536
+        atomic_json(failure_path, {'time': stamp(), 'returncode': result.returncode,
+                    'stderr_bytes': len(result.stderr), 'stdout_bytes': len(result.stdout),
+                    'capture_limit_per_stream': limit, 'truncated': len(result.stderr) > limit or len(result.stdout) > limit,
+                    'stderr_base64': base64.b64encode(result.stderr[:limit]).decode('ascii'),
+                    'stdout_base64': base64.b64encode(result.stdout[:limit]).decode('ascii')})
+        try:
+            message = result.stderr.decode('utf-8', errors='strict')
+        except UnicodeDecodeError:
+            message = 'stderr에 엄격 UTF-8로 해석할 수 없는 바이트가 있습니다. 원본 base64를 확인하세요.'
+        raise RuntimeError(f'Windows 알림 API 실패(exit={result.returncode}): {message[:4000]}\n표시상한 4000자; 원본 바이트/상한: {failure_path}')
+    return result.stdout.decode('utf-8', errors='replace').strip()
+
+
+class NativeToast:
+    def __init__(self, work):
+        self.work = Path(work)
+
+    def __call__(self, event):
+        import xml.etree.ElementTree as ET
+        def units(value):
+            return len(value.encode('utf-16-le')) // 2
+
+        def limited(value, maximum):
+            # Shell의 UTF-16 길이 제한 안에서 끝의 서로게이트 쌍을 보존합니다.
+            value = ''.join(c for c in value if c >= ' ' or c in '\n\t\r')
+            raw = value.encode('utf-16-le')
+            if len(raw) // 2 <= maximum:
+                return value
+            raw = raw[:max(0, maximum - 1) * 2]
+            if raw and 0xD800 <= int.from_bytes(raw[-2:], 'little') <= 0xDBFF:
+                raw = raw[:-2]
+            return raw.decode('utf-16-le') + '…'
+
+        def label(value):
+            return '미배정' if value is None else limited(f"{value['model']} / {value['effort']}", 64)
+        toast = ET.Element('toast', {'duration': 'long'})
+        visual = ET.SubElement(toast, 'visual')
+        binding = ET.SubElement(visual, 'binding', {'template': 'ToastGeneric'})
+        target = event['target'][:80]
+        if event.get('agent_path'):
+            target = f"{event['agent_path'][:80]} ({event.get('role', '확인 불가')})"
+        context = f"{limited(target, 32)}\n{label(event['before'])} → {label(event['after'])}"
+        evidence = '근거: ' + limited(event['evidence'], 28)
+        reason_budget = 255 - units(context + '\n이유: \n' + evidence)
+        reason = limited(event['reason'], reason_budget)
+        for text in ['Codex 모델·추론 강도 변경', context, f"이유: {reason}\n{evidence}"]:
+            # XML 1.0에서 허용하지 않는 제어 문자는 제거합니다.
+            ET.SubElement(binding, 'text').text = ''.join(c for c in text if c >= ' ' or c in '\n\t\r')
+        path = self.work / 'toast.xml'
+        path.parent.mkdir(parents=True, exist_ok=True)
+        ET.ElementTree(toast).write(path, encoding='utf-8', xml_declaration=True)
+        return powershell(['-Action', 'Send', '-XmlPath', str(path), '-Tag', event['id'][:16]])
+
+
+class InstanceLock:
+    def __init__(self, work):
+        self.path = Path(work) / 'watch.lock'
+        self.handle = None
+
+    def __enter__(self):
+        import msvcrt
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.handle = self.path.open('a+b')
+        try:
+            if os.fstat(self.handle.fileno()).st_size == 0:
+                self.handle.write(b'0')
+                self.handle.flush()
+            self.handle.seek(0)
+            msvcrt.locking(self.handle.fileno(), msvcrt.LK_NBLCK, 1)
+        except OSError:
+            self.handle.close()
+            raise RuntimeError('이미 감시 프로그램이 실행 중입니다.')
+        return self
+
+    def __exit__(self, *args):
+        self.handle.close()
+
+
+def main():
+    parser = argparse.ArgumentParser(description='현재 사용자 Codex 모델 변경 Windows 알림')
+    parser.add_argument('--sessions', type=Path, default=Path.home() / '.codex/sessions')
+    parser.add_argument('--work', type=Path, default=ROOT / 'work')
+    sub = parser.add_subparsers(dest='command', required=True)
+    sub.add_parser('watch')
+    sub.add_parser('stop')
+    sub.add_parser('status')
+    sub.add_parser('test-toast')
+    sub.add_parser('history')
+    announce = sub.add_parser('announce')
+    for flag in ['target', 'before-model', 'before-effort', 'after-model', 'after-effort', 'reason']:
+        announce.add_argument('--' + flag, required=True)
+    args = parser.parse_args()
+    args.work.mkdir(parents=True, exist_ok=True)
+    if args.command == 'stop':
+        (args.work / 'stop.request').write_text(stamp(), encoding='utf-8')
+        print('중지 요청을 저장했습니다. 감시기는 다음 주기에 종료합니다.')
+    elif args.command == 'status':
+        path = args.work / 'heartbeat.json'
+        print(path.read_text(encoding='utf-8') if path.exists() else '실행 기록 없음')
+    elif args.command == 'history':
+        path = args.work / 'history.jsonl'
+        print(path.read_text(encoding='utf-8') if path.exists() else '로컬 전송 이력 없음')
+    elif args.command == 'test-toast':
+        print(NativeToast(args.work)({'id': uuid.uuid4().hex, 'target': '사용자 요청 시험', 'before': None,
+              'after': {'model': '테스트', 'effort': '테스트'}, 'reason': 'Windows 알림 API 직접 시험', 'evidence': '시험 알림'}))
+    elif args.command == 'announce':
+        if any(not getattr(args, field).strip() for field in ['target', 'before_model', 'before_effort', 'after_model', 'after_effort', 'reason']):
+            parser.error('빈 입력은 허용되지 않습니다.')
+        if len(args.reason) > 12000 or len(args.target) > 256:
+            parser.error('이유 또는 대상 길이가 상한을 초과했습니다.')
+        before = {'model': args.before_model, 'effort': args.before_effort}
+        after = {'model': args.after_model, 'effort': args.after_effort}
+        if before == after:
+            print('값 유지: 알림을 만들지 않았습니다.')
+            return
+        atomic_json(args.work / 'announce' / (uuid.uuid4().hex + '.json'), {'target': args.target, 'before': before, 'after': after, 'reason': args.reason})
+        print('명시 알림을 대기열에 저장했습니다. 실행 중인 감시기가 전송합니다.')
+    else:
+        with InstanceLock(args.work):
+            stop = args.work / 'stop.request'
+            stop.unlink(missing_ok=True)
+            watcher = Watcher(args.sessions, args.work, NativeToast(args.work))
+            while not stop.exists():
+                try:
+                    watcher.poll()
+                    atomic_json(args.work / 'heartbeat.json', {'pid': os.getpid(), 'time': stamp(), 'status': '감시 중', 'pending': len(watcher.state['pending'])})
+                except Exception as error:
+                    watcher.diagnostic(error)
+                time.sleep(2)
+            atomic_json(args.work / 'heartbeat.json', {'pid': os.getpid(), 'time': stamp(), 'status': '중지됨'})
+
+
+if __name__ == '__main__':
+    main()

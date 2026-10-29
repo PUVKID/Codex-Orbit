@@ -1,0 +1,3 @@
+31종의 기하·모션·절차조명·RGB 금속 셰이더는 이 프로젝트를 위해 직접 작성했습니다. 외부 메시·텍스처·HDRI·생성형이미지는 사용하지 않았습니다. 곽윤석님의 사용·수정·재배포용입니다.
+특성·용도에서 착안한 디자인 비유이며 실제 원자의 모습·전자배치·불꽃색 재현이 아닙니다. 번호·기호 근거: NIST https://pml.nist.gov/PhysRefData/Elements/per.html ; 성질 참고: RSC https://periodic-table.rsc.org/ .
+제작 전용 ModernGL/glcontext/NumPy/Pillow는 앱 런타임에서 불필요합니다. GLB는0초의 원본기하/PBR재질이고 절차스튜디오조명·애니메이션은 제작 소스와PNG를 참조합니다.

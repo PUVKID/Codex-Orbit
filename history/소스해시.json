@@ -1,0 +1,399 @@
+[
+  {
+    "차수": 1,
+    "소스파일": 1,
+    "신규": 1,
+    "변경": 0,
+    "삭제": 0,
+    "hashes": {
+      "notifier.py": "2059fcac37723f34535eba05d83443a9dbd7e3dfb771200f190f2c8ed2ffb9a8"
+    }
+  },
+  {
+    "차수": 2,
+    "소스파일": 3,
+    "신규": 2,
+    "변경": 0,
+    "삭제": 0,
+    "hashes": {
+      "app.py": "87f6314b529e5831384703c6cd0fe97b212bb751eac632c0e7b422d1026f75da",
+      "core.py": "6e6ae64f8d21cb1af9972916c8cbbeb9fa9e43d76d69fa723521803370a7b970",
+      "notifier.py": "2059fcac37723f34535eba05d83443a9dbd7e3dfb771200f190f2c8ed2ffb9a8"
+    }
+  },
+  {
+    "차수": 3,
+    "소스파일": 3,
+    "신규": 0,
+    "변경": 3,
+    "삭제": 0,
+    "hashes": {
+      "app.py": "93d5ba9d617c35f5e547642ddf31199791b462f1530856124ae65c780d2e7929",
+      "core.py": "0da59ecbba81ad77544766fa50f0b24bd5abbd8d8f8da37f269a8ff08979b981",
+      "notifier.py": "00b619819040824cf816bb95536385e8af190967933b7912498d3edbc7f3cb89"
+    }
+  },
+  {
+    "차수": 4,
+    "소스파일": 4,
+    "신규": 1,
+    "변경": 1,
+    "삭제": 0,
+    "hashes": {
+      "app.py": "6fee6fa67549f53b670f621c24fcc190ddd4801e01c6c816649e1414e84ee546",
+      "core.py": "0da59ecbba81ad77544766fa50f0b24bd5abbd8d8f8da37f269a8ff08979b981",
+      "notifier.py": "00b619819040824cf816bb95536385e8af190967933b7912498d3edbc7f3cb89",
+      "usage.py": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e"
+    }
+  },
+  {
+    "차수": 5,
+    "소스파일": 4,
+    "신규": 0,
+    "변경": 2,
+    "삭제": 0,
+    "hashes": {
+      "app.py": "8e2621c486a0ae9da8f05968e861afe0b9e580397bbdeb3c9bfc77fad949adbb",
+      "core.py": "0da59ecbba81ad77544766fa50f0b24bd5abbd8d8f8da37f269a8ff08979b981",
+      "notifier.py": "bb9659e678dcdb5d214c2a3b7201d42785dd287f317d3ac854ef39ca5f41edb6",
+      "usage.py": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e"
+    }
+  },
+  {
+    "차수": 6,
+    "소스파일": 6,
+    "신규": 2,
+    "변경": 1,
+    "삭제": 0,
+    "hashes": {
+      "app.py": "c803fe6fdda129d8910dfe5a9d608034fcd9284e56593f3935190dab39f59fa4",
+      "core.py": "0da59ecbba81ad77544766fa50f0b24bd5abbd8d8f8da37f269a8ff08979b981",
+      "notifier.py": "bb9659e678dcdb5d214c2a3b7201d42785dd287f317d3ac854ef39ca5f41edb6",
+      "theme.py": "6ac4f4457b8a7f2cbaddeb15e8a6858bc6e506eb962175099565d5af970e74d0",
+      "usage.py": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e",
+      "visuals.py": "60af8348b66e84a9c37c11f3c700579db137fd6b5b5ef2ad25f748253071e05e"
+    }
+  },
+  {
+    "차수": 7,
+    "소스파일": 6,
+    "신규": 0,
+    "변경": 1,
+    "삭제": 0,
+    "hashes": {
+      "app.py": "2e961caa97a0aecc6b26d0948d53f72369451e6af01bd9124c759c66875a3398",
+      "core.py": "0da59ecbba81ad77544766fa50f0b24bd5abbd8d8f8da37f269a8ff08979b981",
+      "notifier.py": "bb9659e678dcdb5d214c2a3b7201d42785dd287f317d3ac854ef39ca5f41edb6",
+      "theme.py": "6ac4f4457b8a7f2cbaddeb15e8a6858bc6e506eb962175099565d5af970e74d0",
+      "usage.py": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e",
+      "visuals.py": "60af8348b66e84a9c37c11f3c700579db137fd6b5b5ef2ad25f748253071e05e"
+    }
+  },
+  {
+    "차수": 8,
+    "소스파일": 6,
+    "신규": 0,
+    "변경": 2,
+    "삭제": 0,
+    "hashes": {
+      "app.py": "694f3cbe443ee55bd6b07557517e8d1d38ddbc8f6d06ebd7a2777003e02fbf6a",
+      "core.py": "0da59ecbba81ad77544766fa50f0b24bd5abbd8d8f8da37f269a8ff08979b981",
+      "notifier.py": "5ebefd6304fee2279d53203c492a0c7452d2b363a74d03f52b20039487849321",
+      "theme.py": "6ac4f4457b8a7f2cbaddeb15e8a6858bc6e506eb962175099565d5af970e74d0",
+      "usage.py": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e",
+      "visuals.py": "60af8348b66e84a9c37c11f3c700579db137fd6b5b5ef2ad25f748253071e05e"
+    }
+  },
+  {
+    "차수": 9,
+    "소스파일": 6,
+    "신규": 0,
+    "변경": 1,
+    "삭제": 0,
+    "hashes": {
+      "app.py": "95c1db95d8b2310db03353c12ae03854c4c101092465563e36e727eeb5164522",
+      "core.py": "0da59ecbba81ad77544766fa50f0b24bd5abbd8d8f8da37f269a8ff08979b981",
+      "notifier.py": "5ebefd6304fee2279d53203c492a0c7452d2b363a74d03f52b20039487849321",
+      "theme.py": "6ac4f4457b8a7f2cbaddeb15e8a6858bc6e506eb962175099565d5af970e74d0",
+      "usage.py": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e",
+      "visuals.py": "60af8348b66e84a9c37c11f3c700579db137fd6b5b5ef2ad25f748253071e05e"
+    }
+  },
+  {
+    "차수": 10,
+    "소스파일": 6,
+    "신규": 0,
+    "변경": 1,
+    "삭제": 0,
+    "hashes": {
+      "app.py": "b6eb55394e32a9270f44b0d717f9a69b851f93a09782821386d7eb2e351b58e0",
+      "core.py": "0da59ecbba81ad77544766fa50f0b24bd5abbd8d8f8da37f269a8ff08979b981",
+      "notifier.py": "5ebefd6304fee2279d53203c492a0c7452d2b363a74d03f52b20039487849321",
+      "theme.py": "6ac4f4457b8a7f2cbaddeb15e8a6858bc6e506eb962175099565d5af970e74d0",
+      "usage.py": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e",
+      "visuals.py": "60af8348b66e84a9c37c11f3c700579db137fd6b5b5ef2ad25f748253071e05e"
+    }
+  },
+  {
+    "차수": 11,
+    "소스파일": 6,
+    "신규": 0,
+    "변경": 3,
+    "삭제": 0,
+    "hashes": {
+      "app.py": "aa9ab7a95f5b34f136ad7633b540290a6e1b3583e6bdebcccd9f71252e53204a",
+      "core.py": "0da59ecbba81ad77544766fa50f0b24bd5abbd8d8f8da37f269a8ff08979b981",
+      "notifier.py": "5ebefd6304fee2279d53203c492a0c7452d2b363a74d03f52b20039487849321",
+      "theme.py": "e3b834f71c3af854ef23aa411ddeec07c959a6547c219d318b60b627445d3243",
+      "usage.py": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e",
+      "visuals.py": "6c1102f74fb8b1c9cd551ac05931465852e5815a088421aec11ec60e8fb88132"
+    }
+  },
+  {
+    "차수": 12,
+    "소스파일": 7,
+    "신규": 1,
+    "변경": 2,
+    "삭제": 0,
+    "hashes": {
+      "app.py": "4e467339765e8e3c2c78aa1ecac416b9bcdc8e63e7498999233cfde39f8d3ead",
+      "brand.py": "45890a8eeb6f6b10bc1e91036bb973773633842ae2ac9799fe1f78003a19b2ca",
+      "core.py": "0da59ecbba81ad77544766fa50f0b24bd5abbd8d8f8da37f269a8ff08979b981",
+      "notifier.py": "5ebefd6304fee2279d53203c492a0c7452d2b363a74d03f52b20039487849321",
+      "theme.py": "e3b834f71c3af854ef23aa411ddeec07c959a6547c219d318b60b627445d3243",
+      "usage.py": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e",
+      "visuals.py": "0fc502586eafbb93a3aa6b56fb140d9697c2025b4dca39a2529feb4a505ada8a"
+    }
+  },
+  {
+    "차수": 13,
+    "소스파일": 7,
+    "신규": 0,
+    "변경": 1,
+    "삭제": 0,
+    "hashes": {
+      "app.py": "4e467339765e8e3c2c78aa1ecac416b9bcdc8e63e7498999233cfde39f8d3ead",
+      "brand.py": "45890a8eeb6f6b10bc1e91036bb973773633842ae2ac9799fe1f78003a19b2ca",
+      "core.py": "0da59ecbba81ad77544766fa50f0b24bd5abbd8d8f8da37f269a8ff08979b981",
+      "notifier.py": "5ebefd6304fee2279d53203c492a0c7452d2b363a74d03f52b20039487849321",
+      "theme.py": "e3b834f71c3af854ef23aa411ddeec07c959a6547c219d318b60b627445d3243",
+      "usage.py": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e",
+      "visuals.py": "3c6d9ed9ace7377a4506e94a4eff961289e6cc1d3f372b35a8cb5591ac8b5756"
+    }
+  },
+  {
+    "차수": 14,
+    "소스파일": 7,
+    "신규": 0,
+    "변경": 3,
+    "삭제": 0,
+    "hashes": {
+      "app.py": "b676ddee99746c0ea1b439cb9636fe6190db0f01017d71e830473534be871d2f",
+      "brand.py": "cfb51d3ce075e0ab59852f92c37efcaea28a04c2af6d5a2cee97c9ff006d6c00",
+      "core.py": "0da59ecbba81ad77544766fa50f0b24bd5abbd8d8f8da37f269a8ff08979b981",
+      "notifier.py": "5ebefd6304fee2279d53203c492a0c7452d2b363a74d03f52b20039487849321",
+      "theme.py": "e3b834f71c3af854ef23aa411ddeec07c959a6547c219d318b60b627445d3243",
+      "usage.py": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e",
+      "visuals.py": "fdc1b3703573d3751fb91591f12b5262a89fcab8b48a6915bff1a600b2294784"
+    }
+  },
+  {
+    "차수": 15,
+    "소스파일": 8,
+    "신규": 1,
+    "변경": 3,
+    "삭제": 0,
+    "hashes": {
+      "app.py": "ee151f176fc0035b441ac69bb0a6ea449f82034afcc270e72f2e412d29b4f177",
+      "atom_frames.py": "af5b5331068fb58b1daf33d124bd4d8bb33b76bc017435aa79b4ed701b7ed962",
+      "brand.py": "e940a95924da591064168b20f8486fd11026f6979f51db42d7a608e696bae48c",
+      "core.py": "0da59ecbba81ad77544766fa50f0b24bd5abbd8d8f8da37f269a8ff08979b981",
+      "notifier.py": "5ebefd6304fee2279d53203c492a0c7452d2b363a74d03f52b20039487849321",
+      "theme.py": "e3b834f71c3af854ef23aa411ddeec07c959a6547c219d318b60b627445d3243",
+      "usage.py": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e",
+      "visuals.py": "22db5d1f5aa30cb9ff8a4bf18c8d44f99a88893a6579f821b08b03f270a033ff"
+    }
+  },
+  {
+    "차수": 16,
+    "소스파일": 8,
+    "신규": 0,
+    "변경": 1,
+    "삭제": 0,
+    "hashes": {
+      "app.py": "cb630d296cc6fa01fe50ace11358ba4a3ed12f7d2940a055195566dc7613b415",
+      "atom_frames.py": "af5b5331068fb58b1daf33d124bd4d8bb33b76bc017435aa79b4ed701b7ed962",
+      "brand.py": "e940a95924da591064168b20f8486fd11026f6979f51db42d7a608e696bae48c",
+      "core.py": "0da59ecbba81ad77544766fa50f0b24bd5abbd8d8f8da37f269a8ff08979b981",
+      "notifier.py": "5ebefd6304fee2279d53203c492a0c7452d2b363a74d03f52b20039487849321",
+      "theme.py": "e3b834f71c3af854ef23aa411ddeec07c959a6547c219d318b60b627445d3243",
+      "usage.py": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e",
+      "visuals.py": "22db5d1f5aa30cb9ff8a4bf18c8d44f99a88893a6579f821b08b03f270a033ff"
+    }
+  },
+  {
+    "차수": 17,
+    "소스파일": 8,
+    "신규": 0,
+    "변경": 3,
+    "삭제": 0,
+    "hashes": {
+      "app.py": "e475770e239c4bf0affbf36d2453faa16f9a29fc2a6c0c579d81235a4b9672e8",
+      "atom_frames.py": "af5b5331068fb58b1daf33d124bd4d8bb33b76bc017435aa79b4ed701b7ed962",
+      "brand.py": "735283d9736dac88c819deaf7d342804dbf248c71535bc1b848ca6edb7b9f191",
+      "core.py": "0da59ecbba81ad77544766fa50f0b24bd5abbd8d8f8da37f269a8ff08979b981",
+      "notifier.py": "5ebefd6304fee2279d53203c492a0c7452d2b363a74d03f52b20039487849321",
+      "theme.py": "e3b834f71c3af854ef23aa411ddeec07c959a6547c219d318b60b627445d3243",
+      "usage.py": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e",
+      "visuals.py": "265e0872b25cf94cc9752cb8fef5886e46cc3a32aa240c1f712260c99f17b660"
+    }
+  },
+  {
+    "차수": 18,
+    "소스파일": 11,
+    "신규": 3,
+    "변경": 6,
+    "삭제": 0,
+    "hashes": {
+      "activity.py": "e1c17d720b16e14c328dade574c0d945486ccfb4d93260d2e022a3a17be876ad",
+      "app.py": "d1b5290ece7327f7421fd7cff5aa11c873bde5601ad6edbe95639088c4596608",
+      "atom_frames.py": "af5b5331068fb58b1daf33d124bd4d8bb33b76bc017435aa79b4ed701b7ed962",
+      "brand.py": "956c1cbeb6a17a114cda3377b2788d5efb198fff55444c6891d16155b7931135",
+      "core.py": "6578aa45d58a7e2d501d52c52689b233f993c6bc7af6196428efdc03338641bf",
+      "element_visuals.py": "a482d214b0cd73259d28561452bff4e5140a675e480301c90fcea84e3f4dd46f",
+      "elements.py": "598145f03922718a1a453ca585d7f19f93d90bca204dcfebbd2016e35f79e865",
+      "notifier.py": "6a16752a4874bc4c74e8f967bae76bb4f2c3e41af543e621cadc43b843330dd7",
+      "theme.py": "dbeca97f9a88b79de748171de4dd70f1251e6f54b517413f269b435f75c8f857",
+      "usage.py": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e",
+      "visuals.py": "b1bc638467f4aac52d6679df8ea8bfb933dcc227a7c232f6f05036ffe29a5ce3"
+    }
+  },
+  {
+    "차수": 19,
+    "소스파일": 12,
+    "신규": 1,
+    "변경": 5,
+    "삭제": 0,
+    "hashes": {
+      "activity.py": "e1c17d720b16e14c328dade574c0d945486ccfb4d93260d2e022a3a17be876ad",
+      "app.py": "7985e516248d9b840bf6d375e28025b3b5be8a63317170654659dac9445678e4",
+      "atom_frames.py": "af5b5331068fb58b1daf33d124bd4d8bb33b76bc017435aa79b4ed701b7ed962",
+      "brand.py": "956c1cbeb6a17a114cda3377b2788d5efb198fff55444c6891d16155b7931135",
+      "core.py": "6578aa45d58a7e2d501d52c52689b233f993c6bc7af6196428efdc03338641bf",
+      "element_visuals.py": "33ceea060b073d5a03af097d8e35e7f38ad5ec2252534402bd6a965328276f94",
+      "elements.py": "6357b9dce67a557de08eff0f7fd6cebfd9c08dfae2bf276e9d84610358aafe91",
+      "notifier.py": "6a16752a4874bc4c74e8f967bae76bb4f2c3e41af543e621cadc43b843330dd7",
+      "theme.py": "c6c36da153e120f6683b53dccf95ee5174e3c197a547ab118d493bcaa2a48732",
+      "typography.py": "9f34c52a2178b2603aa789ced06ea4f98cf83cd263d6272122ceb64c747b41cf",
+      "usage.py": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e",
+      "visuals.py": "c58a8a7bfb9b2fe9bd3643ad06fd07fd87ac683741d96a318a1a69a0fb4a7a8f"
+    }
+  },
+  {
+    "차수": 21,
+    "소스파일": 13,
+    "신규": 1,
+    "변경": 4,
+    "삭제": 0,
+    "hashes": {
+      "activity.py": "e1c17d720b16e14c328dade574c0d945486ccfb4d93260d2e022a3a17be876ad",
+      "app.py": "27b7ae6fa48e57d0f042667eb2ba16ffd2a4a4d4b188681df1b30517a11e5519",
+      "atom_frames.py": "af5b5331068fb58b1daf33d124bd4d8bb33b76bc017435aa79b4ed701b7ed962",
+      "brand.py": "a04c41ac93f2256689e00ccc2c94469eb02e77af24faf6666a49d18dbee8164c",
+      "core.py": "6578aa45d58a7e2d501d52c52689b233f993c6bc7af6196428efdc03338641bf",
+      "element_frames.py": "0d72e490fbc2680b3bd9bac16c5da13288c61d6e9a08049bb5b8bf072a0a1342",
+      "element_visuals.py": "33ceea060b073d5a03af097d8e35e7f38ad5ec2252534402bd6a965328276f94",
+      "elements.py": "2f4b017f3ea1d8212dfe22b0db43e82cdf01d5ab6a298a60d446e1cc1599c90c",
+      "notifier.py": "6a16752a4874bc4c74e8f967bae76bb4f2c3e41af543e621cadc43b843330dd7",
+      "theme.py": "c6c36da153e120f6683b53dccf95ee5174e3c197a547ab118d493bcaa2a48732",
+      "typography.py": "9f34c52a2178b2603aa789ced06ea4f98cf83cd263d6272122ceb64c747b41cf",
+      "usage.py": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e",
+      "visuals.py": "2a9004efcde7367ce9324655c384863e5b7ec07fab5816efdd5be6bdb3fd9c17"
+    }
+  },
+  {
+    "차수": 22,
+    "소스파일": 18,
+    "신규": 5,
+    "변경": 4,
+    "삭제": 0,
+    "hashes": {
+      "activity.py": "e1c17d720b16e14c328dade574c0d945486ccfb4d93260d2e022a3a17be876ad",
+      "app.py": "29241222e3f3447e0a62607c05dd2f7bec6fbb8a8539ffb855546b7d95c8fc11",
+      "atom_frames.py": "af5b5331068fb58b1daf33d124bd4d8bb33b76bc017435aa79b4ed701b7ed962",
+      "brand.py": "8169160d69da479a9a58f49882ecfae2b8f5e068f1c42f542d9d7d7cc2039d20",
+      "calendar_art.py": "95046b3a95e36da023a6630f1b61634561e32156e1334da0a1ef9d527482cc2a",
+      "calendar_motion.py": "25068bb3de9b72f14a06ba145654f8b79871b5283a3a75a4ec88ce05b10bfb2a",
+      "calendar_renderer.py": "f421f842ae08f4fb079be0fcab924ef2918400b2d6a6fe8c4df426b6cdeadbd5",
+      "core.py": "6578aa45d58a7e2d501d52c52689b233f993c6bc7af6196428efdc03338641bf",
+      "element_frames.py": "0d72e490fbc2680b3bd9bac16c5da13288c61d6e9a08049bb5b8bf072a0a1342",
+      "element_visuals.py": "33ceea060b073d5a03af097d8e35e7f38ad5ec2252534402bd6a965328276f94",
+      "elements.py": "2f4b017f3ea1d8212dfe22b0db43e82cdf01d5ab6a298a60d446e1cc1599c90c",
+      "notifier.py": "6a16752a4874bc4c74e8f967bae76bb4f2c3e41af543e621cadc43b843330dd7",
+      "theme.py": "e72f8620bd18a100492a45cc71ed49770f169310b800f90307bbd40a542dcf6b",
+      "typography.py": "9f34c52a2178b2603aa789ced06ea4f98cf83cd263d6272122ceb64c747b41cf",
+      "usage.py": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e",
+      "usage_frames.py": "a141ce6eaeefefbe942cf04116c032ec3c8ab383bbb07a028e5961c5026c9957",
+      "usage_widgets.py": "77215ae54bbc0b5f60906e9ba1785e6e1f5cb57489cc225dde7d9427f7434226",
+      "visuals.py": "43e9dc8030b72771abbaafea952c2d5796d43d86f324fe8755b59ab41d0bb14a"
+    }
+  },
+  {
+    "차수": 23,
+    "소스파일": 20,
+    "신규": 2,
+    "변경": 5,
+    "삭제": 0,
+    "hashes": {
+      "activity.py": "e1c17d720b16e14c328dade574c0d945486ccfb4d93260d2e022a3a17be876ad",
+      "app.py": "b5a797db3021df14053b12b82cab8034febe57f417770da8ca7bf010d3eacbac",
+      "atom_frames.py": "af5b5331068fb58b1daf33d124bd4d8bb33b76bc017435aa79b4ed701b7ed962",
+      "brand.py": "8169160d69da479a9a58f49882ecfae2b8f5e068f1c42f542d9d7d7cc2039d20",
+      "calendar_art.py": "5495a4f01dc6a30b47d94730f311f340aad081a658d8133f5bf2b0d112a54dc0",
+      "calendar_catalog.py": "99e0b12a22a6c13cb10d7920781844844951abd469c96ad0bb8022936528b960",
+      "calendar_motion.py": "1212c2a51abd840070a4b8b3912dfbcf5f5f6ed2b3d78dfd6dbc825257ed3d0d",
+      "calendar_renderer.py": "95993486dfe841e29a7f01c6f21d3b9c217b4a1a47289743184940da72248c5b",
+      "core.py": "6578aa45d58a7e2d501d52c52689b233f993c6bc7af6196428efdc03338641bf",
+      "element_frames.py": "0d72e490fbc2680b3bd9bac16c5da13288c61d6e9a08049bb5b8bf072a0a1342",
+      "element_visuals.py": "33ceea060b073d5a03af097d8e35e7f38ad5ec2252534402bd6a965328276f94",
+      "elements.py": "2f4b017f3ea1d8212dfe22b0db43e82cdf01d5ab6a298a60d446e1cc1599c90c",
+      "notifier.py": "6a16752a4874bc4c74e8f967bae76bb4f2c3e41af543e621cadc43b843330dd7",
+      "theme.py": "e72f8620bd18a100492a45cc71ed49770f169310b800f90307bbd40a542dcf6b",
+      "typography.py": "9f34c52a2178b2603aa789ced06ea4f98cf83cd263d6272122ceb64c747b41cf",
+      "usage.py": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e",
+      "usage_frames.py": "a141ce6eaeefefbe942cf04116c032ec3c8ab383bbb07a028e5961c5026c9957",
+      "usage_widgets.py": "77215ae54bbc0b5f60906e9ba1785e6e1f5cb57489cc225dde7d9427f7434226",
+      "visuals.py": "904fe83dc9cb06ac769a706059665aa211f5300f2ffb8c19c70b054ad0a74d4e",
+      "weather.py": "835caa4e16462dc09801aae984ee34e84ea163e809532f5522851939e67884b3"
+    }
+  },
+  {
+    "차수": 24,
+    "소스파일": 20,
+    "신규": 0,
+    "변경": 3,
+    "삭제": 0,
+    "hashes": {
+      "activity.py": "e1c17d720b16e14c328dade574c0d945486ccfb4d93260d2e022a3a17be876ad",
+      "app.py": "14011eab43bde0ac5a70f8f28b0fcaea6a81ac275c80027b4bbd239b35eefe50",
+      "atom_frames.py": "af5b5331068fb58b1daf33d124bd4d8bb33b76bc017435aa79b4ed701b7ed962",
+      "brand.py": "8169160d69da479a9a58f49882ecfae2b8f5e068f1c42f542d9d7d7cc2039d20",
+      "calendar_art.py": "5495a4f01dc6a30b47d94730f311f340aad081a658d8133f5bf2b0d112a54dc0",
+      "calendar_catalog.py": "99e0b12a22a6c13cb10d7920781844844951abd469c96ad0bb8022936528b960",
+      "calendar_motion.py": "1212c2a51abd840070a4b8b3912dfbcf5f5f6ed2b3d78dfd6dbc825257ed3d0d",
+      "calendar_renderer.py": "230f965d7e430a117451ba60c7f0c1e05b99d4e4cd416b8dc8b7766206de7050",
+      "core.py": "6578aa45d58a7e2d501d52c52689b233f993c6bc7af6196428efdc03338641bf",
+      "element_frames.py": "0d72e490fbc2680b3bd9bac16c5da13288c61d6e9a08049bb5b8bf072a0a1342",
+      "element_visuals.py": "33ceea060b073d5a03af097d8e35e7f38ad5ec2252534402bd6a965328276f94",
+      "elements.py": "2f4b017f3ea1d8212dfe22b0db43e82cdf01d5ab6a298a60d446e1cc1599c90c",
+      "notifier.py": "6a16752a4874bc4c74e8f967bae76bb4f2c3e41af543e621cadc43b843330dd7",
+      "theme.py": "e72f8620bd18a100492a45cc71ed49770f169310b800f90307bbd40a542dcf6b",
+      "typography.py": "9f34c52a2178b2603aa789ced06ea4f98cf83cd263d6272122ceb64c747b41cf",
+      "usage.py": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e",
+      "usage_frames.py": "a141ce6eaeefefbe942cf04116c032ec3c8ab383bbb07a028e5961c5026c9957",
+      "usage_widgets.py": "77215ae54bbc0b5f60906e9ba1785e6e1f5cb57489cc225dde7d9427f7434226",
+      "visuals.py": "6b8845e2c8bc60b3131f79d80400ecfd1c9574e677284796099aac54e4759161",
+      "weather.py": "835caa4e16462dc09801aae984ee34e84ea163e809532f5522851939e67884b3"
+    }
+  }
+]

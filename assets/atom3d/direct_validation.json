@@ -1,0 +1,52 @@
+{
+  "checks": 3893,
+  "frames_checked": 540,
+  "unique_pixel_frames": 540,
+  "max_visible_radius_logical": 58.34487980962854,
+  "max_frame_bytes": 52557,
+  "mesh_checks": [
+    {
+      "name": "궤도_안쪽",
+      "triangles": 24576,
+      "nondegenerate": 24576,
+      "outward": 24576
+    },
+    {
+      "name": "궤도_중간",
+      "triangles": 24576,
+      "nondegenerate": 24576,
+      "outward": 24576
+    },
+    {
+      "name": "궤도_바깥",
+      "triangles": 24576,
+      "nondegenerate": 24576,
+      "outward": 24576
+    },
+    {
+      "name": "흑연_원자핵",
+      "triangles": 9216,
+      "nondegenerate": 9024,
+      "outward": 9024
+    },
+    {
+      "name": "전자_공유메시",
+      "triangles": 2304,
+      "nondegenerate": 2208,
+      "outward": 2208
+    }
+  ],
+  "source_hashes": {
+    "tools/render_atom3d.py": "ccff511722619c25aab834f3a93231971e7e1f188ea5752a43de97fdbbb081ac",
+    "tools/atom3d_glb.py": "d20f7035ee0ca0bf4f812102dd12605e60e806cb465d8818792e80d2fa257c47",
+    "tools/validate_atom3d.py": "43b5e6ea0653eaf1876ea1d2b69c323ea049a3e8e632d6fc8ca5ff8f440f5f6f",
+    "tools/requirements-3d.txt": "03cb7648a80c72b28bcedf605fb0d5386d3d2727bef0363e7a7315c42604b032"
+  },
+  "archive_sha256": "6458515aff0267c76ba00fe3e41b6389745928ce179a6eea2cebc23099051fca",
+  "limits": [
+    "구현자 자체 검사이며 독립 verifier 영수증이 아님",
+    "외부 Khronos validator/glTF Transform 실행은 하지 않음",
+    "GLB 표준 PBR은 제작용 절차 조명 환경을 포함하지 않음",
+    "GPU 제작 결과이며 앱 실제 표시·종료·감지는 별도 검사"
+  ]
+}

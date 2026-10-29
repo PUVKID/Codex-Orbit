@@ -1,0 +1,114 @@
+{
+  "kst": "2026-10-26T07:40:51.746106+09:00",
+  "argv": [
+    "D:\\2026\\Codex 관련\\Codex 모델 변경 알림\\17차\\work\\venv\\Scripts\\python.exe",
+    "-B",
+    "-X",
+    "utf8",
+    "tools/render_symbols3d.py",
+    "work/icons3d-final17"
+  ],
+  "cwd": "D:\\2026\\Codex 관련\\Codex 모델 변경 알림\\17차",
+  "exit_code": 0,
+  "symbols": {
+    "model": {
+      "triangles": 2352,
+      "nondegenerate": 2352,
+      "bounds": [
+        19,
+        21,
+        76,
+        77
+      ],
+      "rgba": true,
+      "grayscale": true,
+      "alpha_zero_rgb_zero": true,
+      "normal_winding_checked": true
+    },
+    "reasoning": {
+      "triangles": 7056,
+      "nondegenerate": 7056,
+      "bounds": [
+        25,
+        18,
+        71,
+        78
+      ],
+      "rgba": true,
+      "grayscale": true,
+      "alpha_zero_rgb_zero": true,
+      "normal_winding_checked": true
+    },
+    "time": {
+      "triangles": 10744,
+      "nondegenerate": 10744,
+      "bounds": [
+        17,
+        17,
+        79,
+        79
+      ],
+      "rgba": true,
+      "grayscale": true,
+      "alpha_zero_rgb_zero": true,
+      "normal_winding_checked": true
+    },
+    "reason": {
+      "triangles": 9408,
+      "nondegenerate": 9408,
+      "bounds": [
+        24,
+        18,
+        73,
+        78
+      ],
+      "rgba": true,
+      "grayscale": true,
+      "alpha_zero_rgb_zero": true,
+      "normal_winding_checked": true
+    },
+    "usage": {
+      "triangles": 7576,
+      "nondegenerate": 7512,
+      "bounds": [
+        17,
+        17,
+        79,
+        67
+      ],
+      "rgba": true,
+      "grayscale": true,
+      "alpha_zero_rgb_zero": true,
+      "normal_winding_checked": true
+    },
+    "refresh": {
+      "triangles": 4496,
+      "nondegenerate": 4496,
+      "bounds": [
+        23,
+        22,
+        73,
+        74
+      ],
+      "rgba": true,
+      "grayscale": true,
+      "alpha_zero_rgb_zero": true,
+      "normal_winding_checked": true
+    },
+    "history": {
+      "triangles": 9408,
+      "nondegenerate": 9408,
+      "bounds": [
+        19,
+        18,
+        78,
+        80
+      ],
+      "rgba": true,
+      "grayscale": true,
+      "alpha_zero_rgb_zero": true,
+      "normal_winding_checked": true
+    }
+  },
+  "limits": "구현자 직접 검사; 공식 Khronos 검증 및 독립 검증은 아님"
+}
