@@ -1,0 +1,680 @@
+--- 이전/src/app.py
++++ 현재/src/app.py
+@@ -1,4 +1,4 @@
+-"""Codex Orbit: 투명 궤도와 로컬 감시, 명시적 Markdown 지침 적용."""
++"""Codex Orbit: 독립 회전 위젯과 로컬 변경 기록·사용 한도."""
+ import argparse
+ import hashlib
+ import json
+@@ -12,13 +12,13 @@
+ 
+ from PySide6.QtCore import QEvent, QObject, QLockFile, Qt, QThread, QTimer, Signal, QPropertyAnimation, QEasingCurve
+ from PySide6.QtGui import QFont, QFontDatabase, QIcon, QPainter, QPixmap
+-from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDialog, QFileDialog,
+-                             QFormLayout, QFrame, QHBoxLayout, QLabel, QLineEdit,
++from PySide6.QtWidgets import (QApplication, QDialog,
++                             QFrame, QGridLayout, QHBoxLayout, QLabel,
+                              QListWidget, QListWidgetItem, QMenu, QMessageBox,
+                              QPlainTextEdit, QPushButton, QSplitter, QTabWidget,
+-                             QProgressBar, QScrollArea, QSizePolicy, QLayout, QVBoxLayout, QWidget, QTextBrowser)
+-
+-from core import InstructionStore, clamp_position, read_jsonl_tail, read_text_strict, title_catalog, resolve_title
++                             QProgressBar, QScrollArea, QSizePolicy, QLayout, QVBoxLayout, QWidget)
++
++from core import clamp_position, read_jsonl_tail, read_text_strict, title_catalog, resolve_title
+ from notifier import Watcher, append_log, atomic_json, stamp, POLL_INTERVAL_SECONDS
+ from usage import UsageClient, reset_label
+ from visuals import draw_orbit
+@@ -253,13 +253,13 @@
+ 
+ 
+ class OrbitWidget(QWidget):
+-    def __init__(self, settings, details, preferences, quit_app):
++    def __init__(self, settings, details, quit_app):
+         super().__init__(None, Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.Tool)
+         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+         self.setWindowTitle('Codex Orbit')
+         self.setFixedSize(148, 148)
+         self.settings, self.details = settings, details
+-        self.preferences, self.quit_app = preferences, quit_app
++        self.quit_app = quit_app
+         self.origin_time = time.monotonic()
+         self.render_time = None
+         self.healthy = False
+@@ -270,7 +270,7 @@
+         self.press_global = None
+         self.dragged = False
+         self.setCursor(Qt.CursorShape.OpenHandCursor)
+-        self.setToolTip('Codex Orbit · 클릭: 상세 · 드래그: 이동 · 우클릭: 설정/종료')
++        self.setToolTip('Codex Orbit · 클릭: 상세 · 드래그: 이동 · 우클릭: 기록/종료')
+         self.timer = QTimer(self)
+         self.timer.timeout.connect(self.update)
+         self.timer.start(20)
+@@ -331,7 +331,6 @@
+     def create_menu(self):
+         menu = QMenu(self)
+         menu.addAction('상세 이력 열기', self.details)
+-        menu.addAction('설정 · 지침 관리', self.preferences)
+         menu.addSeparator()
+         menu.addAction('종료', self.quit_app)
+         return menu
+@@ -383,8 +382,8 @@
+         self.model_current = QLabel()
+         self.effort_previous = QLabel()
+         self.effort_current = QLabel()
+-        for previous, current, size in ((self.model_previous, self.model_current, 30),
+-                                        (self.effort_previous, self.effort_current, 23)):
++        for previous, current, size in ((self.model_previous, self.model_current, 26),
++                                        (self.effort_previous, self.effort_current, 24)):
+             column = QVBoxLayout()
+             column.setSpacing(4)
+             for label, pixels, color in ((previous, 11, '#aaaaaa'), (current, size, '#ffffff')):
+@@ -529,12 +528,35 @@
+             self.dismiss()
+ 
+ 
++class DiagnosticLabel(QLabel):
++    """오류가 있을 때 변경 기록 안에 원문을 보여 주는 읽기 전용 라벨입니다."""
++    def __init__(self):
++        super().__init__()
++        self.setWordWrap(True)
++        self.setTextFormat(Qt.TextFormat.PlainText)
++        self.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
++        self.setStyleSheet('font-size:12px;color:#dddddd;border-left:2px solid #aaaaaa;padding:10px;')
++        self.original_text = ''
++        self.hide()
++    def setPlainText(self, text):
++        self.original_text = str(text)
++        try:
++            value = json.loads(text)
++            failed = any(value.get(key) for key in ('error','diagnostic_error','notice_presentation_error',
++                'operation_log_error','diagnostic_write_failures','recent_errors','read_problems'))
++            failed = failed or any(word in value.get('state','') for word in ('오류','실패','중단','지연'))
++        except (ValueError, TypeError, AttributeError):
++            failed = bool(text)
++        self.setText('감시 진단\n' + self.original_text if failed else '')
++        self.setVisible(bool(failed))
++    def toPlainText(self):
++        return self.original_text
++
++
+ class Details(QDialog):
+     def __init__(self, controller):
+         super().__init__()
+         self.controller = controller
+-        self.store = InstructionStore(controller.settings.directory)
+-        self.plan = None
+         self.setWindowTitle('Codex Orbit · 로컬 모델 변경 기록')
+         self.resize(1120, 780)
+         self.setMinimumSize(740, 540)
+@@ -559,13 +581,6 @@
+         self.tabs = QTabWidget()
+         layout.addWidget(self.tabs, 1)
+         self.build_history()
+-        self.build_settings()
+-        self.build_instructions()
+-        help_text = QTextBrowser()
+-        help_text.setOpenExternalLinks(False)
+-        help_text.setReadOnly(True)
+-        help_text.setMarkdown(read_text_strict(asset('사용법.md')))
+-        self.tabs.addTab(help_text, '도움말')
+         usage_page = QWidget()
+         usage_layout = QVBoxLayout(usage_page)
+         usage_layout.setContentsMargins(32, 28, 32, 28)
+@@ -664,24 +679,20 @@
+         card_layout = QVBoxLayout(self.card)
+         card_layout.setContentsMargins(0, 12, 20, 20)
+         card_layout.setSpacing(12)
+-        self.event_badge = QLabel('● 변경 기록')
+-        self.event_badge.setStyleSheet('color:#B4B4B4;font-size:11px;')
+         self.chat_title = QLabel('변경을 기다리고 있습니다')
+-        self.chat_title.setStyleSheet('font-size:20px;color:#F8F8F8;')
++        self.chat_title.setStyleSheet('font-size:25px;color:#F8F8F8;padding:8px 0;')
+         self.change_heading = QLabel('변경을 기다리고 있습니다')
+-        self.change_heading.setStyleSheet('font-size:36px;color:#ffffff;padding:6px 0 20px 0;')
++        self.change_heading.setStyleSheet('font-size:12px;color:#999999;padding:0 0 12px 0;')
+         self.model_transition = QLabel('')
+-        self.model_transition.setStyleSheet('font-size:14px;color:#aaaaaa;border-top:1px solid #343434;padding-top:18px;')
++        self.model_transition.setStyleSheet('font-size:21px;color:#a0a0a0;')
+         self.model_previous = self.model_transition
+         self.model_current = QLabel('—')
+-        self.model_current.setStyleSheet('font-size:42px;color:#ffffff;padding:0 0 12px 0;')
++        self.model_current.setStyleSheet('font-size:26px;color:#eeeeee;')
+         self.effort_transition = QLabel('')
+-        self.effort_transition.setStyleSheet('font-size:14px;color:#aaaaaa;')
++        self.effort_transition.setStyleSheet('font-size:21px;color:#a0a0a0;')
+         self.effort_previous = self.effort_transition
+         self.effort_current = QLabel('—')
+-        self.effort_current.setStyleSheet('font-size:32px;color:#ffffff;border-bottom:1px solid #343434;padding-bottom:18px;')
+-        self.task_title = QLabel('채팅 제목과 작업 이름이 여기에 표시됩니다.')
+-        self.task_title.setStyleSheet('color:#A8A8A8;font-size:12px;')
++        self.effort_current.setStyleSheet('font-size:26px;color:#eeeeee;')
+         self.before_value = QLabel('변경 전  ·  —')
+         self.after_value = QLabel('변경 후  ·  —')
+         self.after_value.setStyleSheet('font-size:12px;color:#a0a0a0;padding:0;')
+@@ -692,14 +703,33 @@
+         self.reason_value.setStyleSheet('font-size:16px;padding:4px 0 12px 0;')
+         self.event_time = QLabel('')
+         self.event_time.setStyleSheet('color:#969696;font-size:11px;padding-top:12px;')
+-        for label in (self.chat_title, self.event_time, self.change_heading, self.model_transition, self.model_current, self.effort_transition, self.effort_current,
+-                      self.before_value, self.after_value,
+-                      self.reason_title, self.reason_value):
++        all_labels = (self.chat_title, self.event_time, self.change_heading, self.model_previous, self.model_current,
++                      self.effort_previous, self.effort_current, self.before_value, self.after_value,
++                      self.reason_title, self.reason_value)
++        for label in all_labels:
+             label.setTextFormat(Qt.TextFormat.PlainText)
+             label.setWordWrap(True)
+             label.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+             label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+-            card_layout.addWidget(label)
++        for label in (self.event_time, self.chat_title, self.change_heading):card_layout.addWidget(label)
++        table = QGridLayout()
++        table.setHorizontalSpacing(18)
++        table.setVerticalSpacing(12)
++        for row, (kind, previous, current) in enumerate((('모델',self.model_previous,self.model_current),
++                                                       ('추론 강도',self.effort_previous,self.effort_current))):
++            for col, text in ((0,'이전 '+kind),(2,'새 '+kind)):
++                label=QLabel(text);label.setStyleSheet('font-size:12px;color:#999999;');table.addWidget(label,row*3,col)
++            arrow=QLabel('→');arrow.setStyleSheet('font-size:16px;color:#888888;')
++            table.addWidget(previous,row*3+1,0)
++            table.addWidget(arrow,row*3+1,1)
++            table.addWidget(current,row*3+1,2)
++            line=QFrame();line.setFrameShape(QFrame.Shape.HLine);line.setStyleSheet('color:#303030;')
++            table.addWidget(line,row*3+2,0,1,3)
++        table.setColumnStretch(0,1);table.setColumnStretch(2,1)
++        card_layout.addLayout(table)
++        for label in (self.before_value,self.after_value,self.reason_title,self.reason_value):card_layout.addWidget(label)
++        self.diagnostics = DiagnosticLabel()
++        cards.addWidget(self.diagnostics)
+         cards.addWidget(self.card)
+         self.evidence_toggle = QPushButton('▸ 원문 · ID · 근거 펼치기')
+         self.evidence_toggle.setObjectName('disclosure')
+@@ -731,16 +761,14 @@
+         if current:
+             value = current.data(Qt.ItemDataRole.UserRole)
+             self.detail.setPlainText(event_description(value))
+-            self.event_badge.setText('● ' + event_kind(value))
+             self.chat_title.setText(str(value.get('chat_name') or '채팅 제목 확인 불가'))
+-            self.task_title.setText(ROLE_LABELS.get(value.get('role'), '역할 확인 불가') + ('  ·  자식 작업' if value.get('parent') else '  ·  현재 채팅'))
+             before, after = value.get('before') or {}, value.get('after') or {}
+             model_changed = before.get('model') != after.get('model')
+             self.change_heading.setText('모델이 바뀌었습니다' if model_changed else '추론 강도가 바뀌었습니다')
+-            self.model_previous.setText('이전 모델  ' + friendly_model(before.get('model')))
+-            self.model_current.setText('→  ' + friendly_model(after.get('model')))
+-            self.effort_previous.setText('이전 추론 강도  ' + friendly_effort(before.get('effort')))
+-            self.effort_current.setText('→  ' + friendly_effort(after.get('effort')))
++            self.model_previous.setText(str(before.get('model') or '미배정'))
++            self.model_current.setText(str(after.get('model') or '확인 불가'))
++            self.effort_previous.setText(friendly_effort(before.get('effort')))
++            self.effort_current.setText(friendly_effort(after.get('effort')))
+             self.before_value.setText('이전  ' + model_card_label(value.get('before')))
+             self.after_value.setText('→  ' + model_card_label(value.get('after')))
+             self.reason_value.setText(short_reason(value, 180))
+@@ -772,248 +800,6 @@
+             self.history.takeItem(self.history.count() - 1)
+         self.history.setCurrentItem(item)
+ 
+-    def build_settings(self):
+-        page = QScrollArea()
+-        page.setWidgetResizable(True)
+-        page.setFrameShape(QFrame.Shape.NoFrame)
+-        page.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+-        content = QWidget()
+-        page.setWidget(content)
+-        layout = QVBoxLayout(content)
+-        layout.setSizeConstraint(QLayout.SizeConstraint.SetMinAndMaxSize)
+-        form = QFormLayout()
+-        self.sessions = QLineEdit(self.controller.settings.values['sessions'])
+-        row = QHBoxLayout()
+-        row.addWidget(self.sessions)
+-        pick = QPushButton('폴더 선택')
+-        pick.clicked.connect(self.choose_sessions)
+-        row.addWidget(pick)
+-        form.addRow('Codex sessions 폴더', row)
+-        self.codex_exe = QLineEdit(self.controller.settings.values.get('codex_exe', ''))
+-        self.codex_exe.setPlaceholderText('자동 탐색 · 실패하면 설치된 codex.exe 선택')
+-        exe_row = QHBoxLayout()
+-        exe_row.addWidget(self.codex_exe)
+-        pick_exe = QPushButton('Codex EXE 선택')
+-        pick_exe.clicked.connect(self.choose_codex)
+-        exe_row.addWidget(pick_exe)
+-        form.addRow('잔량 조회용 Codex', exe_row)
+-        self.theme = QComboBox()
+-        self.theme.addItems(['자동', '어두운 배경', '밝은 배경'])
+-        self.theme.setCurrentText(self.controller.settings.values.get('theme', '자동'))
+-        form.addRow('궤도 대비', self.theme)
+-        self.popup = QCheckBox('변경 시 클릭 가능한 말풍선 표시')
+-        self.popup.setChecked(self.controller.settings.values.get('popup', True))
+-        form.addRow('', self.popup)
+-        self.hold_notice = QCheckBox('알림을 직접 닫을 때까지 유지')
+-        self.hold_notice.setChecked(self.controller.settings.values.get('notice_timeout_ms') == 0)
+-        form.addRow('', self.hold_notice)
+-        layout.addLayout(form)
+-        save = QPushButton('설정 저장 · 감시 다시 시작')
+-        save.clicked.connect(self.save_settings)
+-        layout.addWidget(save)
+-        self.diagnostics = QPlainTextEdit()
+-        self.diagnostics.setReadOnly(True)
+-        layout.addWidget(QLabel('감시 상태와 최근 진단 · 오류는 숨기지 않습니다'))
+-        layout.addWidget(self.diagnostics)
+-        self.tabs.addTab(page, '설정')
+-        self.settings_page = page
+-
+-    def choose_sessions(self):
+-        path = QFileDialog.getExistingDirectory(self, 'Codex sessions 폴더 선택', self.sessions.text(), options=QFileDialog.Option.DontUseNativeDialog)
+-        if path:
+-            self.sessions.setText(path)
+-
+-    def choose_codex(self):
+-        path, _ = QFileDialog.getOpenFileName(self, '설치된 Codex EXE 선택', self.codex_exe.text(), 'Codex 실행 파일 (*.exe)', options=QFileDialog.Option.DontUseNativeDialog)
+-        if path:
+-            self.codex_exe.setText(path)
+-
+-    def save_settings(self):
+-        try:
+-            path = Path(self.sessions.text()).absolute()
+-            if not path.is_dir():
+-                raise ValueError('존재하는 sessions 폴더를 선택하세요.')
+-            values = self.controller.settings.values
+-            before_exe = values.get('codex_exe', '')
+-            chosen_exe = self.codex_exe.text().strip()
+-            if chosen_exe and (not Path(chosen_exe).is_file() or Path(chosen_exe).suffix.lower() != '.exe'):
+-                raise ValueError('존재하는 Codex EXE를 선택하거나 비워 자동 탐색하세요.')
+-            values.update(sessions=str(path), theme=self.theme.currentText(), popup=self.popup.isChecked(),
+-                          notice_timeout_ms=0 if self.hold_notice.isChecked() else 30000, codex_exe=chosen_exe)
+-            self.controller.settings.save()
+-            started = self.controller.start_monitor()
+-            if before_exe != chosen_exe:
+-                self.controller.restart_usage()
+-            text = ('앱 설정을 저장했습니다. 감시 준비를 시작했으며 첫 진행 확인을 기다립니다.' if started else
+-                    '앱 설정을 저장했습니다. 이전 감시 작업자가 종료되면 최종 설정으로 자동 시작합니다.')
+-            QMessageBox.information(self, '설정 저장 · ' + ('감시 준비' if started else '재시작 대기'), text)
+-        except Exception as error:
+-            self.error(error)
+-
+-    def build_instructions(self):
+-        page = QScrollArea()
+-        page.setWidgetResizable(True)
+-        page.setFrameShape(QFrame.Shape.NoFrame)
+-        page.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+-        content = QWidget()
+-        page.setWidget(content)
+-        layout = QVBoxLayout(content)
+-        layout.setContentsMargins(22, 24, 22, 24)
+-        layout.setSpacing(16)
+-        layout.setSizeConstraint(QLayout.SizeConstraint.SetMinAndMaxSize)
+-        title = QLabel('내 지침')
+-        title.setStyleSheet('font-size:30px;')
+-        layout.addWidget(title)
+-        intro = QLabel('작성한 내용을 확인한 뒤 적용하세요. 파일은 명시 적용할 때만 바뀝니다.')
+-        intro.setWordWrap(True)
+-        intro.setStyleSheet('color:#aaaaaa;')
+-        layout.addWidget(intro)
+-        layout.addWidget(QLabel('적용할 파일'))
+-        targets = QHBoxLayout()
+-        self.target = QLineEdit()
+-        self.target.setPlaceholderText('적용할 AGENTS.md 경로 · 자동 적용하지 않습니다')
+-        self.target.textChanged.connect(self.invalidate_plan)
+-        targets.addWidget(self.target, 1)
+-        for text, action in (('프로젝트 선택', self.project_target), ('사용자 지침 선택', self.user_target)):
+-            button = QPushButton(text)
+-            button.clicked.connect(action)
+-            targets.addWidget(button)
+-        layout.addLayout(targets)
+-        self.md_split = QSplitter(Qt.Orientation.Horizontal)
+-        for heading, preview in (('지침 작성', False), ('적용 결과 미리보기', True)):
+-            pane = QWidget()
+-            column = QVBoxLayout(pane)
+-            column.setContentsMargins(0, 8, 14 if not preview else 0, 0)
+-            column.setSpacing(12)
+-            label = QLabel(heading)
+-            label.setStyleSheet('font-size:19px;')
+-            column.addWidget(label)
+-            editor = QPlainTextEdit()
+-            editor.setMinimumHeight(220 if not preview else 180)
+-            if preview:
+-                self.preview = editor
+-                editor.setReadOnly(True)
+-                editor.setPlaceholderText('적용 미리보기를 누르면 실제 대상에 반영될 전체 문서가 표시됩니다.')
+-            else:
+-                self.editor = editor
+-                custom = self.controller.settings.directory / 'instructions.md'
+-                editor.setPlainText(read_text_strict(custom if custom.exists() else asset('기본_지침.md')))
+-                editor.textChanged.connect(self.invalidate_plan)
+-            column.addWidget(editor, 1)
+-            self.md_split.addWidget(pane)
+-        self.md_split.setChildrenCollapsible(False)
+-        self.md_split.setSizes([500, 440])
+-        layout.addWidget(self.md_split, 1)
+-        buttons = QHBoxLayout()
+-        for name, action in [('기본 지침', self.load_default), ('MD 가져오기', self.import_md), ('MD 내보내기', self.export_md)]:
+-            button = QPushButton(name)
+-            button.clicked.connect(action)
+-            buttons.addWidget(button)
+-        buttons.addStretch()
+-        layout.addLayout(buttons)
+-        note = QLabel('적용 전 원문을 자동 백업합니다. 적용 후 대상이 바뀌면 충돌을 거부합니다.')
+-        note.setWordWrap(True)
+-        note.setStyleSheet('color:#aaaaaa;border-top:1px solid #333333;padding-top:18px;')
+-        layout.addWidget(note)
+-        actions = QHBoxLayout()
+-        for name, action in [('적용 미리보기', self.preview_md), ('미리본 대상에 명시 적용', self.apply_md), ('백업 선택 · 원복', self.restore_md)]:
+-            button = QPushButton(name)
+-            button.clicked.connect(action)
+-            if action == self.apply_md:
+-                self.apply_button = button
+-                button.setEnabled(False)
+-                button.setStyleSheet('QPushButton:enabled {background:#eeeeee;color:#101010;}')
+-            actions.addWidget(button)
+-        layout.addLayout(actions)
+-        self.tabs.addTab(page, '내 지침')
+-
+-    def resizeEvent(self, event):
+-        super().resizeEvent(event)
+-        if hasattr(self, 'md_split'):
+-            self.md_split.setOrientation(Qt.Orientation.Vertical if self.width() < 900 else Qt.Orientation.Horizontal)
+-
+-    def invalidate_plan(self):
+-        self.plan = None
+-        if hasattr(self, 'apply_button'):
+-            self.apply_button.setEnabled(False)
+-
+-    def load_default(self):
+-        try:
+-            self.editor.setPlainText(read_text_strict(asset('기본_지침.md')))
+-        except Exception as error:
+-            self.error(error)
+-
+-    def import_md(self):
+-        path, _ = QFileDialog.getOpenFileName(self, '엄격 UTF-8 Markdown 가져오기', '', 'Markdown (*.md);;모든 파일 (*)', options=QFileDialog.Option.DontUseNativeDialog)
+-        if path:
+-            try:
+-                self.editor.setPlainText(read_text_strict(path))
+-            except Exception as error:
+-                self.error(error)
+-
+-    def export_md(self):
+-        path, _ = QFileDialog.getSaveFileName(self, 'UTF-8 Markdown 내보내기', '모델_알림_지침.md', 'Markdown (*.md)', options=QFileDialog.Option.DontUseNativeDialog)
+-        if path:
+-            try:
+-                Path(path).write_bytes(self.editor.toPlainText().encode('utf-8'))
+-            except Exception as error:
+-                self.error(error)
+-
+-    def project_target(self):
+-        directory = QFileDialog.getExistingDirectory(self, '프로젝트 폴더 선택', options=QFileDialog.Option.DontUseNativeDialog)
+-        if directory:
+-            self.target.setText(str(Path(directory) / 'AGENTS.md'))
+-
+-    def user_target(self):
+-        directory = Path(os.environ.get('CODEX_HOME') or (Path.home() / '.codex'))
+-        self.target.setText(str(directory / 'AGENTS.md'))
+-
+-    def preview_md(self):
+-        try:
+-            self.plan = self.store.preview(self.target.text(), self.editor.toPlainText())
+-            self.preview.setPlainText(self.plan['applied_bytes'].decode('utf-8-sig'))
+-            self.apply_button.setEnabled(True)
+-        except Exception as error:
+-            self.invalidate_plan()
+-            self.error(error)
+-
+-    def apply_md(self):
+-        try:
+-            if self.plan is None:
+-                raise ValueError('새 미리보기가 필요합니다.')
+-            receipt = self.store.apply(self.plan)
+-            (self.controller.settings.directory / 'instructions.md').write_text(self.editor.toPlainText(), encoding='utf-8')
+-            self.invalidate_plan()
+-            QMessageBox.information(self, '지침 파일 적용 완료', '대상: ' + receipt['target'] + '\n원문 백업: ' + receipt['backup'] + '\n\n파일을 저장했습니다. 열린 대화의 재주입·서버 동기화·자동 모델 전환을 보장하지 않습니다.')
+-        except Exception as error:
+-            self.error(error)
+-
+-    def restore_md(self):
+-        try:
+-            receipts = self.store.receipts()
+-            if not receipts:
+-                raise ValueError('앱이 만든 적용 백업이 없습니다.')
+-            dialog = QDialog(self)
+-            dialog.setWindowTitle('원복할 적용 기록 선택')
+-            layout = QVBoxLayout(dialog)
+-            choices = QListWidget()
+-            for receipt in receipts:
+-                choices.addItem(receipt['target'] + '\n' + Path(receipt['backup']).name)
+-            choices.setCurrentRow(0)
+-            layout.addWidget(choices)
+-            button = QPushButton('현재 해시 확인 후 원문 바이트 복원')
+-            button.clicked.connect(dialog.accept)
+-            layout.addWidget(button)
+-            dialog.resize(650, 360)
+-            if dialog.exec() == QDialog.DialogCode.Accepted and choices.currentRow() >= 0:
+-                self.store.restore(receipts[choices.currentRow()])
+-                self.invalidate_plan()
+-                QMessageBox.information(self, '원복 완료', '원문 바이트를 복원했습니다. 적용 뒤 변경된 파일은 원복하지 않습니다.')
+-        except Exception as error:
+-            self.error(error)
+-
+-    def error(self, error):
+-        QMessageBox.warning(self, '작업을 완료하지 못했습니다', str(error))
+ 
+ 
+ class QuitGuard(QObject):
+@@ -1055,7 +841,7 @@
+         self.monitor_health_timer.setInterval(1000)
+         self.monitor_health_timer.timeout.connect(self.check_monitor_health)
+         self.window = Details(self)
+-        self.orbit = OrbitWidget(settings, self.show, self.preferences, self.request_quit)
++        self.orbit = OrbitWidget(settings, self.show, self.request_quit)
+         self.notice = None
+         for screen in QApplication.screens():
+             screen.availableGeometryChanged.connect(self.layout_notices)
+@@ -1163,11 +949,11 @@
+                 try:
+                     self.start_monitor()
+                 except Exception as error:
+-                    self.window.summary.setText('감시 시작 실패 · 설정과 진단을 확인하세요.')
++                    self.window.summary.setText('감시 시작 실패 · 변경 기록의 진단을 확인하세요.')
+                     self.window.diagnostics.setPlainText(str(error))
+                 return
+             self.orbit.healthy = False
+-            self.window.summary.setText('감시 중단 · ' + ('자동 재시도 대기' if self.monitor_retries < 3 else '설정에서 감시 다시 시작 필요'))
++            self.window.summary.setText('감시 중단 · ' + ('자동 재시도 대기' if self.monitor_retries < 3 else '앱 다시 실행 필요'))
+             if self.monitor_retries < 3 and not self.monitor_retry_timer.isActive():
+                 self.monitor_retry_timer.start(3000 * (self.monitor_retries + 1))
+         elif time.monotonic() - self.last_monitor_progress > 20:
+@@ -1318,10 +1104,6 @@
+         self.window.raise_()
+         self.window.activateWindow()
+         self.orbit.unread = False
+-
+-    def preferences(self):
+-        self.show()
+-        self.window.tabs.setCurrentWidget(self.window.settings_page)
+ 
+     def request_quit(self):
+         if self.quit_requested or self.cleaned:
+--- 이전/src/brand.py
++++ 현재/src/brand.py
+@@ -1,26 +1,29 @@
+-"""작은 크기에서도 읽히는 Codex Orbit의 단일 정적 브랜드 마크입니다."""
+-from PySide6.QtCore import QPointF, QRectF, Qt
+-from PySide6.QtGui import QColor, QImage, QPainter, QPen
++"""실시간 캐릭터와 같은 세 링을 사용하는 절제된 정적 마크입니다."""
++from functools import lru_cache
++from PySide6.QtCore import QPointF, Qt
++from PySide6.QtGui import QColor, QImage, QPainter, QPainterPath, QPen
++from visuals import ring_points, project_point
+ 
+-
++@lru_cache(maxsize=7)
+ def brand_image(size):
+-    """검은 경계·굵은 흰 궤도·비대칭 위성을 원래 해상도에서 그립니다."""
+     size = int(size)
+-    image = QImage(size, size, QImage.Format.Format_RGBA8888)
++    padding = 164 if size <= 32 else 148
++    image = QImage(size,size,QImage.Format.Format_RGBA8888)
+     image.fill(Qt.GlobalColor.transparent)
+     painter = QPainter(image)
+     painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+-    painter.scale(size, size)
+-    # 검은 외곽과 흰 안쪽 선이 밝고 어두운 바탕에서 각각 경계를 유지합니다.
+-    painter.setBrush(QColor('#111111'))
+-    painter.setPen(QPen(QColor('#111111'), .10))
+-    painter.drawEllipse(QRectF(.12, .20, .68, .68))
++    painter.translate(size/2,size/2)
++    painter.scale(size/padding,size/padding)
++    paths=[]
++    for index in range(3):
++        points=[project_point(point) for point in ring_points(index,0)]
++        path=QPainterPath(QPointF(*points[0]))
++        for point in points[1:]:path.lineTo(QPointF(*point))
++        path.closeSubpath();paths.append(path)
+     painter.setBrush(Qt.BrushStyle.NoBrush)
+-    painter.setPen(QPen(QColor('#ffffff'), .115))
+-    painter.drawEllipse(QRectF(.205, .285, .51, .51))
+-    # 오른쪽 위의 하나의 위성은 궤도와 겹치지 않는 식별 표식입니다.
+-    painter.setBrush(QColor('#ffffff'))
+-    painter.setPen(QPen(QColor('#111111'), .075))
+-    painter.drawEllipse(QPointF(.79, .22), .115, .115)
+-    painter.end()
+-    return image
++    for color,width in (('#111111',max(8,padding/size*4)),('#eeeeee',max(3.6,padding/size*1.4))):
++        painter.setPen(QPen(QColor(color),width))
++        for path in paths:painter.drawPath(path)
++    painter.setBrush(QColor('#141414'));painter.setPen(QPen(QColor('#a0a0a0'),max(.7,padding/size*.4)))
++    painter.drawEllipse(QPointF(0,0),15,15)
++    painter.end();return image
+--- 이전/src/visuals.py
++++ 현재/src/visuals.py
+@@ -2,7 +2,7 @@
+ import math
+ 
+ from PySide6.QtCore import QPointF, QRectF, Qt
+-from PySide6.QtGui import QColor, QFont, QFontMetricsF, QImage, QPainter, QPainterPath, QPen
++from PySide6.QtGui import QColor, QFont, QFontMetricsF, QImage, QLinearGradient, QPainter, QPainterPath, QPen
+ 
+ 
+ def rotate_point(point, angles):
+@@ -20,21 +20,44 @@
+     return x * scale, y * scale
+ 
+ 
++MOTION_PERIOD = 18
++RING_TURNS = (1, -2, 3)
++RING_AXES = ((.18, .10, .979), (-.25, .16, .955), (.13, -.27, .954))
++BASE_ANGLES = ((1.00, .0, .16), (1.02, .0, 1.35), (.98, .0, -.8))
++
++
++def axis_rotate(point, axis, angle):
++    """로드리게스 식으로 고유 축 주위를 회전하며 공통 Z 변환을 쓰지 않습니다."""
++    length = math.sqrt(sum(v*v for v in axis))
++    u, v, w = (item/length for item in axis)
++    x, y, z = point
++    c, q = math.cos(angle), math.sin(angle)
++    dot = u*x + v*y + w*z
++    return (x*c + (v*z-w*y)*q + u*dot*(1-c),
++            y*c + (w*x-u*z)*q + v*dot*(1-c),
++            z*c + (u*y-v*x)*q + w*dot*(1-c))
++
++
++def ring_normal(index, elapsed):
++    normal = rotate_point((0, 0, 1), BASE_ANGLES[index])
++    return axis_rotate(normal, RING_AXES[index], math.tau*(elapsed % MOTION_PERIOD)/MOTION_PERIOD*RING_TURNS[index])
++
++
++def ring_points(index, elapsed, count=96):
++    angle = math.tau*(elapsed % MOTION_PERIOD)/MOTION_PERIOD*RING_TURNS[index]
++    return [axis_rotate(rotate_point((56*math.cos(n*math.tau/count), 56*math.sin(n*math.tau/count), 0),
++                                     BASE_ANGLES[index]), RING_AXES[index], angle) for n in range(count)]
++
++
+ def orbit_segments(elapsed):
+-    """서로 다른 세 타원을 닫힌 3차원 원의 투영으로 만들고 깊이순으로 정렬합니다."""
+-    phase = math.tau * (elapsed % 12) / 12
++    """고유 축과 정방향·역방향 속도로 움직이는 세 폐곡선을 깊이순으로 반환합니다."""
+     segments = []
+-    for index, orientation in enumerate((.16, 1.35, -.8)):
+-        angles = (1.04 + index * .035 + .08 * math.sin(phase + index * 1.3),
+-                  .10 * math.sin(phase + index * 1.5), orientation + phase)
+-        radius, count = 56, 96
+-        points = [rotate_point((radius * math.cos(n * math.tau / count),
+-                                radius * math.sin(n * math.tau / count), 0), angles)
+-                  for n in range(count)]
++    for index in range(3):
++        points = ring_points(index, elapsed)
+         for number, point in enumerate(points):
+-            following = points[(number + 1) % count]
+-            segments.append(((point[2] + following[2]) / 2, project_point(point),
+-                             project_point(following), index, (0, 0), (0, 0)))
++            following = points[(number+1) % len(points)]
++            segments.append(((point[2]+following[2])/2, project_point(point), project_point(following),
++                             index, (0,0), (0,0)))
+     return sorted(segments, key=lambda segment: segment[0])
+ 
+ 
+@@ -50,31 +73,35 @@
+ 
+ def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', healthy=False, unread=False, light=False):
+     """3~5px의 선형 타원과 깊이 가림을 그리고 실제 숫자는 고정합니다."""
+-    elapsed %= 12
++    elapsed %= MOTION_PERIOD
+     painter.translate(0, -6)
+     groups = {}
+     for depth, start, end, index, *_ in orbit_segments(elapsed):
+         bucket = max(0, min(3, int((depth + 56) / 28)))
+-        angle = math.atan2(start[1], start[0])
+-        highlight = math.cos(angle - elapsed * math.tau / 12 - index * 1.2)
+-        shade = max(0, min(3, int((highlight + 1) * 1.99)))
+-        key = (bucket, shade)
++        key = (bucket, index)
+         if key not in groups:
+             groups[key] = QPainterPath()
+         groups[key].moveTo(QPointF(*start))
+         groups[key].lineTo(QPointF(*end))
++    lights = []
++    for index in range(3):
++        angle = -.6 + index*.5 + .25*math.sin(elapsed*math.tau/MOTION_PERIOD)
++        axis = QPointF(65*math.cos(angle),65*math.sin(angle))
++        gradient = QLinearGradient(-axis,axis)
++        for position,level in ((0,125),(.25,180),(.48,232),(.72,180),(1,125)):
++            gradient.setColorAt(position,gray(level))
++        lights.append(gradient)
+ 
+     def lines(front):
+-        paths = [(depth, shade, path) for (depth, shade), path in sorted(groups.items())
++        paths = [(depth, index, path) for (depth, index), path in sorted(groups.items())
+                  if (depth >= 2) == front]
+         painter.setBrush(Qt.BrushStyle.NoBrush)
+-        # 모든 대비 경계를 먼저 그려 밝기 묶음 사이에 검은 마디가 생기지 않게 합니다.
+-        painter.setPen(QPen(gray(20), 5.2, Qt.PenStyle.SolidLine, Qt.PenCapStyle.FlatCap))
++        painter.setPen(QPen(gray(20),4.8,Qt.PenStyle.SolidLine,Qt.PenCapStyle.FlatCap))
+         for _, _, path in paths:
+             painter.drawPath(path)
+-        for depth, shade, path in paths:
+-            painter.setPen(QPen(gray((152 if front else 115) + shade * 24), 3.6,
+-                                Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap))
++        for depth, index, path in paths:
++            # 한 링의 앞뒤 조명이 같은 화면 좌표를 공유하여 밝기 마디를 없앱니다.
++            painter.setPen(QPen(lights[index],3.6,Qt.PenStyle.SolidLine,Qt.PenCapStyle.RoundCap))
+             painter.drawPath(path)
+ 
+     lines(False)
+@@ -120,13 +147,13 @@
+     status_layer.fill(Qt.GlobalColor.transparent)
+     status_painter = QPainter(status_layer)
+     status_painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+-    status_painter.setPen(QPen(gray(10), 1))
+-    status_painter.setBrush(gray(250))
+-    status_painter.drawRoundedRect(QRectF(1, 1, 84, 18), 8, 8)
+     status_font = QFont(font)
+     status_font.setPixelSize(11)
+     status_painter.setFont(status_font)
+-    status_painter.setPen(gray(10))
++    for x, y in ((-1, 0), (1, 0), (0, -1), (0, 1)):
++        status_painter.setPen(gray(10))
++        status_painter.drawText(QRectF(1+x, 1+y, 84, 18), Qt.AlignmentFlag.AlignCenter, status_label(healthy, unread))
++    status_painter.setPen(gray(210))
+     status_painter.drawText(QRectF(1, 1, 84, 18), Qt.AlignmentFlag.AlignCenter, status_label(healthy, unread))
+     status_painter.end()
+     painter.drawImage(QRectF(-43, 51, 86, 20), status_layer)

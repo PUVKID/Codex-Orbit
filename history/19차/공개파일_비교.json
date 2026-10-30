@@ -1,0 +1,177 @@
+{
+  "version": 19,
+  "folder": "19차",
+  "previous": "18차",
+  "files": [
+    {
+      "path": "requirements.txt",
+      "bytes": 47,
+      "sha256": "0277c326e594b9e8ec8027fc240eda62a146295c2115466e872ab475d5699121",
+      "utf8_text": true
+    },
+    {
+      "path": "src/activity.py",
+      "bytes": 15832,
+      "sha256": "e1c17d720b16e14c328dade574c0d945486ccfb4d93260d2e022a3a17be876ad",
+      "utf8_text": true
+    },
+    {
+      "path": "src/app.py",
+      "bytes": 77255,
+      "sha256": "7985e516248d9b840bf6d375e28025b3b5be8a63317170654659dac9445678e4",
+      "utf8_text": true
+    },
+    {
+      "path": "src/atom_frames.py",
+      "bytes": 8515,
+      "sha256": "af5b5331068fb58b1daf33d124bd4d8bb33b76bc017435aa79b4ed701b7ed962",
+      "utf8_text": true
+    },
+    {
+      "path": "src/brand.py",
+      "bytes": 9066,
+      "sha256": "956c1cbeb6a17a114cda3377b2788d5efb198fff55444c6891d16155b7931135",
+      "utf8_text": true
+    },
+    {
+      "path": "src/core.py",
+      "bytes": 11186,
+      "sha256": "6578aa45d58a7e2d501d52c52689b233f993c6bc7af6196428efdc03338641bf",
+      "utf8_text": true
+    },
+    {
+      "path": "src/element_visuals.py",
+      "bytes": 819,
+      "sha256": "33ceea060b073d5a03af097d8e35e7f38ad5ec2252534402bd6a965328276f94",
+      "utf8_text": true
+    },
+    {
+      "path": "src/elements.py",
+      "bytes": 2532,
+      "sha256": "6357b9dce67a557de08eff0f7fd6cebfd9c08dfae2bf276e9d84610358aafe91",
+      "utf8_text": true
+    },
+    {
+      "path": "src/notifier.py",
+      "bytes": 44672,
+      "sha256": "6a16752a4874bc4c74e8f967bae76bb4f2c3e41af543e621cadc43b843330dd7",
+      "utf8_text": true
+    },
+    {
+      "path": "src/theme.py",
+      "bytes": 9033,
+      "sha256": "c6c36da153e120f6683b53dccf95ee5174e3c197a547ab118d493bcaa2a48732",
+      "utf8_text": true
+    },
+    {
+      "path": "src/typography.py",
+      "bytes": 1195,
+      "sha256": "9f34c52a2178b2603aa789ced06ea4f98cf83cd263d6272122ceb64c747b41cf",
+      "utf8_text": true
+    },
+    {
+      "path": "src/usage.py",
+      "bytes": 15245,
+      "sha256": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e",
+      "utf8_text": true
+    },
+    {
+      "path": "src/visuals.py",
+      "bytes": 6495,
+      "sha256": "c58a8a7bfb9b2fe9bd3643ad06fd07fd87ac683741d96a318a1a69a0fb4a7a8f",
+      "utf8_text": true
+    }
+  ],
+  "changes": [
+    {
+      "path": "src/app.py",
+      "status": "수정",
+      "before": {
+        "bytes": 77286,
+        "sha256": "d1b5290ece7327f7421fd7cff5aa11c873bde5601ad6edbe95639088c4596608"
+      },
+      "after": {
+        "bytes": 77255,
+        "sha256": "7985e516248d9b840bf6d375e28025b3b5be8a63317170654659dac9445678e4"
+      },
+      "binary": false,
+      "definitions_added": [],
+      "definitions_removed": []
+    },
+    {
+      "path": "src/element_visuals.py",
+      "status": "수정",
+      "before": {
+        "bytes": 800,
+        "sha256": "a482d214b0cd73259d28561452bff4e5140a675e480301c90fcea84e3f4dd46f"
+      },
+      "after": {
+        "bytes": 819,
+        "sha256": "33ceea060b073d5a03af097d8e35e7f38ad5ec2252534402bd6a965328276f94"
+      },
+      "binary": false,
+      "definitions_added": [],
+      "definitions_removed": []
+    },
+    {
+      "path": "src/elements.py",
+      "status": "수정",
+      "before": {
+        "bytes": 2484,
+        "sha256": "598145f03922718a1a453ca585d7f19f93d90bca204dcfebbd2016e35f79e865"
+      },
+      "after": {
+        "bytes": 2532,
+        "sha256": "6357b9dce67a557de08eff0f7fd6cebfd9c08dfae2bf276e9d84610358aafe91"
+      },
+      "binary": false,
+      "definitions_added": [],
+      "definitions_removed": []
+    },
+    {
+      "path": "src/theme.py",
+      "status": "수정",
+      "before": {
+        "bytes": 9000,
+        "sha256": "dbeca97f9a88b79de748171de4dd70f1251e6f54b517413f269b435f75c8f857"
+      },
+      "after": {
+        "bytes": 9033,
+        "sha256": "c6c36da153e120f6683b53dccf95ee5174e3c197a547ab118d493bcaa2a48732"
+      },
+      "binary": false,
+      "definitions_added": [],
+      "definitions_removed": []
+    },
+    {
+      "path": "src/typography.py",
+      "status": "추가",
+      "before": null,
+      "after": {
+        "bytes": 1195,
+        "sha256": "9f34c52a2178b2603aa789ced06ea4f98cf83cd263d6272122ceb64c747b41cf"
+      },
+      "binary": false,
+      "definitions_added": [
+        "app_font",
+        "register_fonts"
+      ],
+      "definitions_removed": []
+    },
+    {
+      "path": "src/visuals.py",
+      "status": "수정",
+      "before": {
+        "bytes": 6227,
+        "sha256": "b1bc638467f4aac52d6679df8ea8bfb933dcc227a7c232f6f05036ffe29a5ce3"
+      },
+      "after": {
+        "bytes": 6495,
+        "sha256": "c58a8a7bfb9b2fe9bd3643ad06fd07fd87ac683741d96a318a1a69a0fb4a7a8f"
+      },
+      "binary": false,
+      "definitions_added": [],
+      "definitions_removed": []
+    }
+  ]
+}

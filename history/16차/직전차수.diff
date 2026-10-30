@@ -1,0 +1,88 @@
+--- 이전/src/app.py
++++ 현재/src/app.py
+@@ -69,6 +69,16 @@
+     labels = {'none': '없음', 'minimal': '최소', 'low': '낮음', 'medium': '보통',
+               'high': '높음', 'xhigh': '매우 높음', 'ultra': '최고'}
+     return labels.get(value, str(value or '미확인')) + (f' ({value})' if value in labels else '')
++
++
++def previous_field(value, key):
++    """이전 기록 전체 부재와 개별 필드 미기록을 구분하고 관측값만 표시합니다."""
++    if value is None:
++        return '이전 기록 없음'
++    raw = value.get(key) if isinstance(value, dict) else None
++    if not isinstance(raw, str) or not raw:
++        return '확인 불가'
++    return friendly_effort(raw) if key == 'effort' else raw
+ 
+ 
+ ROLE_LABELS = {'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',
+@@ -118,7 +128,7 @@
+     if event.get('assignment_type') == 'replacement':
+         return '새 작업자 배정 · 이전 작업자 교체'
+     if event.get('before') is None:
+-        return '자식 작업자 첫 배정' if event.get('parent') else '첫 관측'
++        return '자식 작업자 첫 관측' if event.get('parent') else '첫 관측'
+     return '모델 · 추론 강도 변경'
+ 
+ 
+@@ -134,7 +144,7 @@
+         '제목 출처: ' + str(event.get('title_source') or '확인 불가'),
+         '제목 확인 시각: ' + kst_label(event.get('title_checked_at')),
+         '이유 호출 ID: ' + str(event.get('reason_call_id') or '기록 없음'),
+-        '변경 전: ' + model_label(event.get('before')),
++        '변경 전: ' + ('이전 기록 없음' if event.get('before') is None else model_label(event['before'])),
+         '변경 후: ' + model_label(event.get('after')),
+         '감지 시각: ' + kst_label(event.get('time')),
+         '원본 기록 시각: ' + kst_label(event.get('source_time')),
+@@ -501,12 +511,11 @@
+         if event.get('kind') == 'settings':
+             category += ' · 선택 설정'
+         self.category.setText(category)
+-        before_map, after_map = before or {}, after or {}
+-        self.model_previous.setText('이전 모델  ' + friendly_model(before_map.get('model')))
+-        self.model_current.setText(friendly_model(after_map.get('model')))
+-        self.effort_previous.setText('이전 추론  ' + friendly_effort(before_map.get('effort')))
++        after_map = after or {}
++        self.model_previous.setText('이전 모델  ' + previous_field(before, 'model'))
++        self.model_current.setText(str(after_map.get('model') or '확인 불가'))
++        self.effort_previous.setText('이전 추론 강도  ' + previous_field(before, 'effort'))
+         self.effort_current.setText(friendly_effort(after_map.get('effort')))
+-        self.before_value.setText('이전  ' + self.setting_label(before))
+         self.after_value.setText('→ 변경 후\n' + self.setting_label(after))
+         reason = short_reason(event)
+         reason = '확인되지 않음' if reason == '확인 불가' else reason
+@@ -516,7 +525,7 @@
+     @staticmethod
+     def setting_label(value):
+         if value is None:
+-            return '미배정 · 이전 값 없음'
++            return '이전 기록 없음'
+         effort = value.get('effort')
+         labels = {'none': '없음', 'minimal': '최소', 'low': '낮음', 'medium': '보통',
+                   'high': '높음', 'xhigh': '매우 높음', 'ultra': '최고'}
+@@ -765,12 +774,20 @@
+             self.chat_title.setText(str(value.get('chat_name') or '채팅 제목 확인 불가'))
+             before, after = value.get('before') or {}, value.get('after') or {}
+             model_changed = before.get('model') != after.get('model')
+-            self.change_heading.setText('모델이 바뀌었습니다' if model_changed else '추론 강도가 바뀌었습니다')
+-            self.model_previous.setText(str(before.get('model') or '미배정'))
++            effort_changed = before.get('effort') != after.get('effort')
++            if value.get('before') is None:
++                heading = event_kind(value)
++            else:
++                heading = ('모델·추론 강도가 바뀌었습니다' if model_changed and effort_changed
++                           else '모델이 바뀌었습니다' if model_changed
++                           else '추론 강도가 바뀌었습니다' if effort_changed else '설정 관측')
++            self.change_heading.setText(heading)
++            self.model_previous.setText(previous_field(value.get('before'), 'model'))
+             self.model_current.setText(str(after.get('model') or '확인 불가'))
+-            self.effort_previous.setText(friendly_effort(before.get('effort')))
++            self.effort_previous.setText(previous_field(value.get('before'), 'effort'))
+             self.effort_current.setText(friendly_effort(after.get('effort')))
+-            self.before_value.setText('이전  ' + model_card_label(value.get('before')))
++            self.before_value.setText('이전 기록 없음' if value.get('before') is None
++                                      else '이전  ' + model_card_label(value['before']))
+             self.after_value.setText('→  ' + model_card_label(value.get('after')))
+             self.reason_value.setText(short_reason(value, 180))
+             self.event_time.setText(kst_label(value.get('time')))

@@ -1,0 +1,2098 @@
+--- 이전/src/app.py
++++ 현재/src/app.py
+@@ -12,10 +12,11 @@
+ from collections import deque
+ from shiboken6 import isValid
+ 
++from i18n import translate as t, get_language, set_language, remember_translations, retranslate_widgets
+ from PySide6.QtCore import QEvent, QObject, QLockFile, Qt, QSize, QThread, QTimer, Signal, Slot, QPropertyAnimation, QEasingCurve
+ from PySide6.QtGui import QIcon, QPainter, QPixmap, QColor, QImage
+ from PySide6.QtWidgets import (QApplication, QDialog,
+-                             QFrame, QGridLayout, QHBoxLayout, QLabel,
++                             QFrame, QGridLayout, QHBoxLayout, QLabel, QComboBox,
+                              QListWidget, QListWidgetItem, QMenu, QMessageBox,
+                              QPlainTextEdit, QPushButton, QSplitter, QTabWidget,
+                              QProgressBar, QScrollArea, QSizePolicy, QLayout, QVBoxLayout, QWidget)
+@@ -24,7 +25,7 @@
+ from notifier import Watcher, append_log, atomic_json, stamp, POLL_INTERVAL_SECONDS, MAX_PENDING
+ from usage import UsageClient, reset_label
+ from weather import WeatherClient
+-from visuals import draw_orbit, draw_desktop_orbit, status_label, usage_bar
++from visuals import draw_orbit, draw_desktop_orbit, desktop_widget_layout, status_label, usage_bar
+ from atom_frames import get_atom_frames
+ from calendar_art import design_for_date, current_date
+ from brand import brand_image, AnimatedBrand, brand_clock, symbol_icon, with_symbol, validate_symbols
+@@ -32,6 +33,9 @@
+ from typography import app_font
+ from elements import daily_element
+ from usage_widgets import CalendarHero
++
++
++EMPTY_HISTORY_GUIDANCE = '변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'
+ 
+ 
+ def _application_gui_root():
+@@ -70,34 +74,34 @@
+ 
+ def model_label(value):
+     if value is None:
+-        return '모델·추론 확인 불가'
+-    return f"{(value.get('model') or '확인 불가')} / {(value.get('effort') or '확인 불가')}"
++        return t('모델·추론 확인 불가')
++    return str(value.get('model') or t('확인 불가')) + " / " + str(value.get('effort') or t('확인 불가'))
+ 
+ 
+ def model_card_label(value):
+     if value is None:
+-        return '모델·추론 확인 불가'
+-    return f"{(value.get('model') or '확인 불가')} · 추론 {(value.get('effort') or '확인 불가')}"
++        return t('모델·추론 확인 불가')
++    return str(value.get('model') or t('확인 불가')) + " · " + t('추론') + " " + (friendly_effort(value['effort']) if value.get('effort') else t('확인 불가'))
+ 
+ 
+ def friendly_model(value):
+     return {'gpt-6.1-sol': 'Sol', 'gpt-6-sol': 'Sol', 'gpt-6-astra': 'Astra',
+-            'gpt-6-luna': 'Luna'}.get(value, str(value or '확인 불가'))
++            'gpt-6-luna': 'Luna'}.get(value, str(value or t('확인 불가')))
+ 
+ 
+ def friendly_effort(value):
+-    labels = {'none': '없음', 'minimal': '최소', 'low': '낮음', 'medium': '보통',
+-              'high': '높음', 'xhigh': '매우 높음', 'ultra': '최고'}
+-    return labels.get(value, str(value or '미확인')) + (f' ({value})' if value in labels else '')
++    labels = {'none': t('없음'), 'minimal': t('최소'), 'low': t('낮음'), 'medium': t('보통'),
++              'high': t('높음'), 'xhigh': t('매우 높음'), 'ultra': t('최고')}
++    return t(labels.get(value, str(value or '미확인'))) + (f' ({value})' if value in labels else '')
+ 
+ 
+ def previous_field(value, key):
+     """이전 기록 전체 부재와 개별 필드 미기록을 구분하고 관측값만 표시합니다."""
+     if value is None:
+-        return '이전 기록 없음'
++        return t('이전 기록 없음')
+     raw = value.get(key) if isinstance(value, dict) else None
+     if not isinstance(raw, str) or not raw:
+-        return '확인 불가'
++        return t('확인 불가')
+     return friendly_effort(raw) if key == 'effort' else raw
+ 
+ 
+@@ -109,10 +113,10 @@
+     try:
+         parsed = datetime.fromisoformat(str(value).replace('Z', '+00:00'))
+         if parsed.tzinfo is None:
+-            return str(value) + ' (시간대 미기록)'
++            return str(value) + t(' (시간대 미기록)')
+         return parsed.astimezone(timezone(timedelta(hours=9))).strftime('%Y.%m.%d %H:%M:%S KST')
+     except ValueError:
+-        return str(value or '확인 불가')
++        return str(value or t('확인 불가'))
+ 
+ 
+ def short_reason(event, limit=180):
+@@ -142,39 +146,39 @@
+ 
+ def event_kind(event):
+     if event.get('kind') == 'activity':
+-        return {'assigned':'새 작업 배정', 'resumed':'작업 재개'}.get(event.get('activity_type'), '작업 활동 관측')
++        return {'assigned':t('새 작업 배정'), 'resumed':t('작업 재개')}.get(event.get('activity_type'), t('작업 활동 관측'))
+     if event.get('kind') == 'settings':
+         if event.get('before') is None:
+-            return '자식 작업자 첫 선택 설정 관측' if event.get('parent') else '채팅 선택 설정 첫 관측'
+-        return configuration_change_label(event) + ' · 선택 설정'
++            return t('자식 작업자 첫 선택 설정 관측') if event.get('parent') else t('채팅 선택 설정 첫 관측')
++        return configuration_change_label(event) + ' · ' + t('선택 설정')
+     if event.get('assignment_type') == 'replacement':
+-        return '새 작업자 배정 · 이전 작업자 교체'
++        return t('새 작업자 배정 · 이전 작업자 교체')
+     if event.get('before') is None:
+-        return '자식 작업자 첫 관측' if event.get('parent') else '첫 관측'
++        return t('자식 작업자 첫 관측') if event.get('parent') else t('첫 관측')
+     return configuration_change_label(event)
+ 
+ 
+ def configuration_change_label(event):
+     before, after = event.get('before'), event.get('after')
+     if before is None or after is None:
+-        return '설정 관측 · 현재 값 확인 불가'
++        return t('설정 관측 · 현재 값 확인 불가')
+     model_changed = before.get('model') != after.get('model')
+     effort_changed = before.get('effort') != after.get('effort')
+     if model_changed and effort_changed:
+-        return '모델 · 추론 강도 변경'
++        return t('모델 · 추론 강도 변경')
+     if model_changed:
+-        return '모델 변경'
+-    return '추론 강도 변경' if effort_changed else '설정 유지'
++        return t('모델 변경')
++    return t('추론 강도 변경') if effort_changed else t('설정 유지')
+ 
+ 
+ def public_text(value, fallback='공개된 설명이 기록되지 않았습니다.', limit=600):
+     """공개 문장만 표시하며 보호된 도구 페이로드를 해석하거나 노출하지 않습니다."""
+     if not isinstance(value, str) or not value.strip():
+-        return fallback
++        return t(fallback)
+     text = value.strip()
+     if (re.search(r'gAAAA[A-Za-z0-9_=-]{40,}|[A-Za-z0-9_+/=-]{160,}', text)
+             or re.search(r'encrypted_content\s*[:=]|BEGIN ENCRYPTED|<analysis>|<private>', text, re.I)):
+-        return fallback
++        return t(fallback)
+     text = text.replace('**', '').replace('`', '')
+     return text if len(text) <= limit else text[:limit-1].rstrip()+'…'
+ 
+@@ -185,14 +189,14 @@
+         return public_text(event['task_summary'], fallback, limit)
+     if event.get('reason'):
+         return public_text(short_reason(event, limit), fallback, limit)
+-    return fallback
++    return t(fallback)
+ 
+ 
+ def selection_explanation(event):
+     """공개된 작업 목적을 모델 선택 이유로 바꾸어 말하지 않습니다."""
+     text = public_text(event.get('reason'), '', 1200)
+     match = re.search(r'(?:모델(?:·추론 강도)? 선택 이유|선택 이유)\s*[:：]\s*([^\n]+)', text)
+-    return ('선택 이유: '+match.group(1).strip()) if match else '모델·추론 강도 선택 이유는 공개되지 않았습니다.'
++    return (t('선택 이유: ')+match.group(1).strip()) if match else t('모델·추론 강도 선택 이유는 공개되지 않았습니다.')
+ 
+ 
+ def event_accent(event):
+@@ -209,13 +213,13 @@
+ def activity_message(event):
+     if event.get('kind') != 'activity':
+         return ''
+-    role = ROLE_LABELS.get(event.get('role'), '담당')
+-    return (f'기존 {role} 작업자에게 다시 맡겼어요.' if event.get('activity_type') == 'resumed'
+-            else f'{role} 작업자에게 새 작업을 맡겼어요.')
++    role = t(ROLE_LABELS.get(event.get('role'), '담당'))
++    return (t('기존 {role} 작업자에게 다시 맡겼어요.', role=role) if event.get('activity_type') == 'resumed'
++            else t('{role} 작업자에게 새 작업을 맡겼어요.', role=role))
+ 
+ 
+ def history_label(event):
+-    title = str(event.get('chat_name') or event.get('target') or '채팅 제목 확인 불가')
++    title = str(event.get('chat_name') or event.get('target') or t('채팅 제목 확인 불가'))
+     if event.get('kind') == 'activity':
+         return title+'\n'+event_kind(event)+'\n'+task_explanation(event, 70)
+     return title+'\n'+model_label(event.get('after'))
+@@ -235,39 +239,39 @@
+ 
+ def public_reason_original(event):
+     value = event.get('reason')
+-    return str(value) if public_text(value, '', 1) else '공개된 설명이 기록되지 않았습니다.'
++    return str(value) if public_text(value, '', 1) else t('공개된 설명이 기록되지 않았습니다.')
+ 
+ 
+ def event_description(event):
+     return '\n'.join([
+-        '채팅: ' + str(event.get('chat_name') or event.get('target', '확인 불가')),
+-        '채팅 ID: ' + str(event.get('parent') or event.get('target') or '확인 불가'),
+-        '작업자 ID: ' + str(event.get('target') if event.get('parent') else '해당 없음'),
+-        '구분: ' + ('자식 작업' if event.get('parent') else 'main 또는 부모 정보 미기록'),
+-        '역할: ' + str(event.get('role', '확인 불가')),
+-        '작업 이름: ' + str(event.get('task_name') or '기록 없음'),
+-        '부모 ID: ' + str(event.get('parent') or '기록 없음'),
+-        '작업 경로: ' + str(event.get('agent_path') or '기록 없음'),
+-        '제목 출처: ' + str(event.get('title_source') or '확인 불가'),
+-        '제목 확인 시각: ' + kst_label(event.get('title_checked_at')),
+-        '호출 ID: ' + str(event.get('call_id') or '기록 없음'),
+-        '활동 종류: ' + str(event.get('activity_type') or '해당 없음'),
+-        '맡긴 일: ' + task_explanation(event, 2000),
+-        '작업 설명 출처: ' + str(event.get('task_source') or '기록 없음'),
+-        '활동 근거: ' + str(event.get('assignment_evidence') or '해당 없음'),
+-        '요청 설정: ' + str(event.get('requested') or '기록 없음'),
+-        '이유 호출 ID: ' + str(event.get('reason_call_id') or '기록 없음'),
+-        '변경 전: ' + ('이전 기록 없음' if event.get('before') is None else model_label(event['before'])),
+-        '변경 후: ' + model_label(event.get('after')),
+-        '감지 시각: ' + kst_label(event.get('time')),
+-        '원본 기록 시각: ' + kst_label(event.get('source_time')),
+-        '기록 종류: ' + str(event.get('kind', '확인 불가')),
+-        '', '공개 이유 원문', public_reason_original(event),
+-        '', '모델·추론 강도 선택 이유', selection_explanation(event),
+-        '', '근거 수준', str(event.get('evidence') or '확인 불가'),
+-        '', '선택 설정 관측 근거', str(event.get('configuration_evidence') or '해당 없음'),
+-        '', '표시 기록', str(event.get('delivery') or '앱 표시 요청; 사용자 수신 미확인'),
+-        '', '로컬 기록과 공개 이유의 연결 근거입니다. 서버 모델 신원이나 비공개 추론을 증명하지 않습니다.'
++        t('채팅') + ': ' + str(event.get('chat_name') or event.get('target', t('확인 불가'))),
++        t('채팅 ID') + ': ' + str(event.get('parent') or event.get('target') or t('확인 불가')),
++        t('작업자 ID') + ': ' + str(event.get('target') if event.get('parent') else t('해당 없음')),
++        t('구분') + ': ' + (t('자식 작업') if event.get('parent') else t('main 또는 부모 정보 미기록')),
++        t('역할') + ': ' + str(event.get('role', t('확인 불가'))),
++        t('작업 이름') + ': ' + str(event.get('task_name') or t('기록 없음')),
++        t('부모 ID') + ': ' + str(event.get('parent') or t('기록 없음')),
++        t('작업 경로') + ': ' + str(event.get('agent_path') or t('기록 없음')),
++        t('제목 출처') + ': ' + str(event.get('title_source') or t('확인 불가')),
++        t('제목 확인 시각') + ': ' + kst_label(event.get('title_checked_at')),
++        t('호출 ID') + ': ' + str(event.get('call_id') or t('기록 없음')),
++        t('활동 종류') + ': ' + str(event.get('activity_type') or t('해당 없음')),
++        t('맡긴 일') + ': ' + task_explanation(event, 2000),
++        t('작업 설명 출처') + ': ' + str(event.get('task_source') or t('기록 없음')),
++        t('활동 근거') + ': ' + str(event.get('assignment_evidence') or t('해당 없음')),
++        t('요청 설정') + ': ' + str(event.get('requested') or t('기록 없음')),
++        t('이유 호출 ID') + ': ' + str(event.get('reason_call_id') or t('기록 없음')),
++        t('변경 전') + ': ' + (t('이전 기록 없음') if event.get('before') is None else model_label(event['before'])),
++        t('변경 후') + ': ' + model_label(event.get('after')),
++        t('감지 시각') + ': ' + kst_label(event.get('time')),
++        t('원본 기록 시각') + ': ' + kst_label(event.get('source_time')),
++        t('기록 종류') + ': ' + str(event.get('kind', t('확인 불가'))),
++        '', t('공개 이유 원문'), public_reason_original(event),
++        '', t('모델·추론 강도 선택 이유'), selection_explanation(event),
++        '', t('근거 수준'), str(event.get('evidence') or t('확인 불가')),
++        '', t('선택 설정 관측 근거'), str(event.get('configuration_evidence') or t('해당 없음')),
++        '', t('표시 기록'), str(event.get('delivery') or t('앱 표시 요청; 사용자 수신 미확인')),
++        '', t('로컬 기록과 공개 이유의 연결 근거입니다. 서버 모델 신원이나 비공개 추론을 증명하지 않습니다.')
+     ])
+ 
+ 
+@@ -277,12 +281,14 @@
+         self.directory.mkdir(parents=True, exist_ok=True)
+         self.path = self.directory / 'settings.json'
+         home = Path(os.environ.get('CODEX_HOME') or (Path.home() / '.codex'))
+-        self.values = {'sessions': str(home / 'sessions'), 'theme': '자동', 'popup': True, 'notice_timeout_ms': 30000}
++        self.values = {'sessions': str(home / 'sessions'), 'theme': '자동', 'popup': True, 'notice_timeout_ms': 30000, 'language': 'ko'}
+         if self.path.exists():
+             value = json.loads(read_text_strict(self.path))
+             if not isinstance(value, dict):
+                 raise ValueError('앱 설정은 JSON 객체여야 합니다.')
+             self.values.update(value)
++        if self.values.get('language') not in ('ko', 'en'):
++            self.values['language'] = 'ko'
+ 
+     def save(self):
+         atomic_json(self.path, self.values)
+@@ -431,15 +437,19 @@
+         super().showEvent(event)
+         from calendar_motion import set_calendar_motion_visible
+         set_calendar_motion_visible(self, True)
++        self._request_motion_size()
++        if hasattr(self,'timer'):self.timer.start()
+ 
+     def hideEvent(self, event):
+         from calendar_motion import set_calendar_motion_visible
+         set_calendar_motion_visible(self, False)
++        if hasattr(self,'timer'):self.timer.stop()
+         super().hideEvent(event)
+ 
+     def closeEvent(self, event):
+         from calendar_motion import set_calendar_motion_visible
+         set_calendar_motion_visible(self, False)
++        if hasattr(self,'timer'):self.timer.stop()
+         super().closeEvent(event)
+ 
+     def __init__(self, settings, details, quit_app, parent=None):
+@@ -449,6 +459,7 @@
+         self.setWindowTitle('Codex Orbit')
+         self.setMinimumSize(180, 250)
+         self.settings, self.details = settings, details
++        self.language_changed = lambda language: None
+         size = settings.values.get('size', [220, 332])
+         if not isinstance(size, (list, tuple)) or len(size) != 2 or any(type(v) is not int for v in size):
+             size = [220, 332]
+@@ -461,8 +472,8 @@
+         self.usage_badge = '—'
+         self.usage_fraction = None
+         self.usage_state = 'unknown'
+-        self.weather_text = '기온 미확인'
+-        self.location_text = '위치 정보 없음'
++        self.weather_text = t('기온 미확인')
++        self.location_text = t('위치 정보 없음')
+         self.weather_tooltip = ''
+         self.usage_tooltip = ''
+         self.press_global = None
+@@ -470,10 +481,10 @@
+         self.resize_edges = (False, False)
+         self.setCursor(Qt.CursorShape.OpenHandCursor)
+         self.setMouseTracking(True)
+-        self.setToolTip('Codex Orbit · 클릭: 상세 · 드래그: 이동 · 오른쪽/아래 가장자리: 크기 조절 · 우클릭: 기록/종료')
++        self.setToolTip(t('Codex Orbit · 클릭: 상세 · 드래그: 이동 · 오른쪽/아래 가장자리: 크기 조절 · 우클릭: 기록/종료'))
+         self.timer = QTimer(self)
+-        self.timer.timeout.connect(self.update)
+-        self.timer.start(20)
++        self.timer.timeout.connect(self._refresh_static_clock)
++        self.timer.start(1000)
+         self.restore_position()
+         for screen in QApplication.screens():
+             screen.availableGeometryChanged.connect(self.restore_position)
+@@ -500,19 +511,42 @@
+     def clock_text(self):
+         return datetime.now().strftime('%H:%M:%S')
+ 
++    def _refresh_static_clock(self):
++        from calendar_motion import calendar_motion_status
++        status=calendar_motion_status()
++        if status.get('error') or not status.get('render_count'):self.update()
++
++    @Slot()
++    def calendar_frame_ready(self):
++        if self.isVisible():self.update()
++
++    def _request_motion_size(self):
++        if not hasattr(self,'timer') or not self.isVisible():return
++        from calendar_motion import set_calendar_motion_size
++        design=design_for_date(current_date())
++        layout=desktop_widget_layout(self.width(),self.height(),t(design.title),True,True)
++        size=max(32,min(2160,round(layout['art'].width()*self.devicePixelRatioF())))
++        set_calendar_motion_size(self,size)
++
++    def resizeEvent(self,event):
++        super().resizeEvent(event)
++        self._request_motion_size()
++
+     def refresh_tooltip(self):
+-        self.setToolTip(self.usage_tooltip + '\n' + self.weather_tooltip)
++        self.setToolTip(self.usage_tooltip + '\n' + self.weather_tooltip +
++                        t('\n감시 상태: ') + status_label(self.healthy, self.unread))
+ 
+     def paintEvent(self, _):
+-        base_tooltip = self.toolTip().split('\n감시 상태:')[0]
+-        self.setToolTip(base_tooltip+'\n감시 상태: '+status_label(self.healthy,self.unread))
++        self.refresh_tooltip()
+         elapsed = self.render_time if self.render_time is not None else time.monotonic() - self.origin_time
+         painter = QPainter(self)
+         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+-        from calendar_motion import get_calendar_frame
++        from calendar_motion import get_calendar_frame,record_calendar_presentation
+         design = design_for_date(current_date())
+-        draw_desktop_orbit(painter, self.width(), self.height(), get_calendar_frame(elapsed), design,
++        source=get_calendar_frame(elapsed)
++        draw_desktop_orbit(painter, self.width(), self.height(), source, design,
+                            self.usage_fraction, self.usage_state, self.clock_text(), self.weather_text, self.location_text)
++        record_calendar_presentation(self,source)
+         painter.setPen(QColor('#B5C8D4'))
+         painter.drawLine(self.width()-4, self.height()//2-12, self.width()-4, self.height()//2+12)
+         painter.drawLine(self.width()//2-12, self.height()-4, self.width()//2+12, self.height()-4)
+@@ -581,9 +615,15 @@
+ 
+     def create_menu(self):
+         menu = QMenu(self)
+-        menu.addAction('상세 이력 열기', self.details)
++        menu.addAction(t('상세 이력 열기'), self.details)
++        languages = menu.addMenu(t('언어'))
++        for language, label in (('ko', '한국어'), ('en', 'English')):
++            action = languages.addAction(label)
++            action.setCheckable(True)
++            action.setChecked(get_language() == language)
++            action.triggered.connect(lambda checked=False, value=language: self.language_changed(value))
+         menu.addSeparator()
+-        menu.addAction('종료', self.quit_app)
++        menu.addAction(t('종료'), self.quit_app)
+         return menu
+ 
+ 
+@@ -601,7 +641,7 @@
+         layout = QVBoxLayout(self)
+         layout.setContentsMargins(18, 14, 18, 14)
+         layout.setSpacing(5)
+-        self.title = QLabel('모델 · 추론 강도 변경')
++        self.title = QLabel(t('모델 · 추론 강도 변경'))
+         self.text = QLabel()
+         self.title.setTextFormat(Qt.TextFormat.PlainText)
+         self.title.setWordWrap(True)
+@@ -612,8 +652,8 @@
+         self.brand_mark = AnimatedBrand(32)
+         heading.addWidget(self.brand_mark, 0, Qt.AlignmentFlag.AlignTop)
+         heading.addWidget(self.title, 1)
+-        close = QPushButton('닫기')
+-        close.setToolTip('알림 닫기 · 이력은 유지됩니다')
++        close = QPushButton(t('닫기'))
++        close.setToolTip(t('알림 닫기 · 이력은 유지됩니다'))
+         close.setStyleSheet('padding:0;min-height:28px;max-height:28px;font-size:12px;')
+         close.setFixedSize(48, 30)
+         close.clicked.connect(self.dismiss)
+@@ -637,8 +677,8 @@
+         self.model_current = QLabel()
+         self.effort_previous = QLabel()
+         self.effort_current = QLabel()
+-        self.notice_after_heading = QLabel('변경 후')
+-        for column, text in ((0, '이전'), (1, '→'), (2, '변경 후')):
++        self.notice_after_heading = QLabel(t('변경 후'))
++        for column, text in ((0, t('이전')), (1, '→'), (2, t('변경 후'))):
+             label = self.notice_after_heading if column == 2 else QLabel(text)
+             label.setStyleSheet('font-size:12px;color:#B5C8D4;')
+             values.addWidget(label, 0, column)
+@@ -667,7 +707,7 @@
+         self.selection_reason.setWordWrap(True)
+         self.selection_reason.setTextFormat(Qt.TextFormat.PlainText)
+         layout.addWidget(self.selection_reason)
+-        hint = QLabel('이 변경 자세히 보기  ›')
++        hint = QLabel(t('이 변경 자세히 보기  ›'))
+         self.detail_hint = hint
+         hint.setStyleSheet('font-size:12px;color:#FFFFFF;')
+         layout.addWidget(hint)
+@@ -678,6 +718,7 @@
+         self.timer = QTimer(self)
+         self.timer.setSingleShot(True)
+         self.timer.timeout.connect(self.dismiss)
++        remember_translations(self)
+ 
+     def dismiss(self):
+         if not self.isVisible():
+@@ -700,7 +741,7 @@
+         queue_height = 0
+         for label in self.findChildren(QLabel):
+             if label is self.title:
+-                content = (str(getattr(self, 'event', {}).get('chat_name') or '채팅 제목 확인 불가'), label.text())
++                content = (str(getattr(self, 'event', {}).get('chat_name') or t('채팅 제목 확인 불가')), label.text())
+             elif label is self.queue_hint:
+                 queue_height = 0 if compact else label.heightForWidth(width)
+                 content = None
+@@ -725,7 +766,7 @@
+         if previous == signature:
+             return
+         available = getattr(self, 'available_rect', None)
+-        full_title = str(getattr(self, 'event', {}).get('chat_name') or '채팅 제목 확인 불가')
++        full_title = str(getattr(self, 'event', {}).get('chat_name') or t('채팅 제목 확인 불가'))
+         if previous is not None and previous[:-1] == signature[:-1] and self.title.text() == full_title:
+             # 안내의 줄 높이만 바뀌었으면 제목·여백을 초기화하지 않고 실제 카드 크기만 갱신합니다.
+             self.layout().activate()
+@@ -743,7 +784,7 @@
+         margins = self.layout().contentsMargins()
+         width = self.contentsRect().width() - margins.left() - margins.right()
+         self.text.setMinimumHeight(self.text.heightForWidth(width))
+-        full_title = str(getattr(self, 'event', {}).get('chat_name') or '채팅 제목 확인 불가')
++        full_title = str(getattr(self, 'event', {}).get('chat_name') or t('채팅 제목 확인 불가'))
+         self.title.setToolTip(full_title)
+         self.title.setText(full_title)
+         self.title.setMinimumHeight(0)
+@@ -797,7 +838,7 @@
+             self.replay = replay
+         self.event = dict(event)
+         self.event_id = event.get('id')
+-        name = str(event.get('chat_name') or '채팅 제목 확인 불가')
++        name = str(event.get('chat_name') or t('채팅 제목 확인 불가'))
+         self.title.setText(name)
+         before, after = event.get('before'), event.get('after')
+         if event.get('kind') == 'activity' or before is None:
+@@ -805,43 +846,43 @@
+         else:
+             model_changed = bool(before.get('model') and (after or {}).get('model') and before['model'] != after['model'])
+             effort_changed = bool(before.get('effort') and (after or {}).get('effort') and before['effort'] != after['effort'])
+-            category = ('모델·추론 변경' if model_changed and effort_changed else '모델 변경' if model_changed
+-                        else '추론 강도 변경' if effort_changed else '설정 관측')
++            category = (t('모델·추론 변경') if model_changed and effort_changed else t('모델 변경') if model_changed
++                        else t('추론 강도 변경') if effort_changed else t('설정 관측'))
+         if event.get('kind') == 'settings':
+-            category += ' · 선택 설정'
++            category += ' · ' + t('선택 설정')
+         if event.get('kind') == 'activity' and before is not None and before == after:
+-            category += ' · 설정 유지'
+-        self.category.setText(category)
++            category += ' · ' + t('설정 유지')
++        self.category.setText(t(category))
+         self.category.setStyleSheet('font-size:13px;padding:2px 0;color:'+event_accent(event)+';')
+         self.task_value.setText(task_explanation(event, 100))
+         self.task_value.setToolTip(task_explanation(event, 2000))
+         self.selection_reason.setText(selection_explanation(event))
+         after_map = after or {}
+-        self.notice_after_heading.setText('현재' if event.get('kind') == 'activity' else '변경 후')
+-        self.model_previous.setText('이전 모델  ' + previous_field(before, 'model'))
+-        self.model_current.setText(str(after_map.get('model') or '확인 불가'))
+-        self.effort_previous.setText('이전 추론 강도  ' + previous_field(before, 'effort'))
++        self.notice_after_heading.setText(t('현재') if event.get('kind') == 'activity' else t('변경 후'))
++        self.model_previous.setText(t('이전 모델') + '  ' + previous_field(before, 'model'))
++        self.model_current.setText(str(after_map.get('model') or t('확인 불가')))
++        self.effort_previous.setText(t('이전 추론 강도') + '  ' + previous_field(before, 'effort'))
+         self.effort_current.setText(friendly_effort(after_map.get('effort')))
+         for key, labels in (('model', (self.model_previous, self.model_current)), ('effort', (self.effort_previous, self.effort_current))):
+             changed = event.get('kind') != 'activity' and before is not None and before.get(key) and after_map.get(key) and before.get(key) != after_map.get(key)
+             for label in labels:
+                 label.setStyleSheet('font-size:18px;font-weight:600;color:#F1F6FA;padding:3px;' + ('background:#385064;border-radius:6px;' if changed else ''))
+-        self.after_value.setText(('현재 설정 · ' if event.get('kind') == 'activity' else '→ 변경 후 · ') + (self.setting_label(after).replace('\n',' · ') if after is not None else '확인 불가'))
++        self.after_value.setText((t('현재 설정 · ') if event.get('kind') == 'activity' else t('→ 변경 후 · ')) + (self.setting_label(after).replace('\n',' · ') if after is not None else t('확인 불가')))
+         reason = short_reason(event)
+-        reason = '확인되지 않음' if reason == '확인 불가' else reason
+-        prefix = '공개 설명: ' if event.get('kind') == 'activity' else '변경 이유: '
+-        self.text.setText(('기록 다시 보기 · ' if self.replay else '') + prefix + public_text(reason))
++        reason = t('확인되지 않음') if reason == '확인 불가' else reason
++        prefix = t('공개 설명: ') if event.get('kind') == 'activity' else t('변경 이유: ')
++        self.text.setText((t('기록 다시 보기 · ') if self.replay else '') + prefix + public_text(reason))
+         self.fit_content()
+ 
+     @staticmethod
+     def setting_label(value):
+         if value is None:
+-            return '이전 기록 없음'
++            return t('이전 기록 없음')
+         effort = value.get('effort')
+-        labels = {'none': '없음', 'minimal': '최소', 'low': '낮음', 'medium': '보통',
+-                  'high': '높음', 'xhigh': '매우 높음', 'ultra': '최고'}
+-        strength = f'{labels[effort]} ({effort})' if effort in labels else str(effort or '확인 불가')
+-        return str(value.get('model') or '모델 확인 불가') + '\n추론 ' + strength
++        labels = {'none': t('없음'), 'minimal': t('최소'), 'low': t('낮음'), 'medium': t('보통'),
++                  'high': t('높음'), 'xhigh': t('매우 높음'), 'ultra': t('최고')}
++        strength = f'{labels[effort]} ({effort})' if effort in labels else str(effort or t('확인 불가'))
++        return str(value.get('model') or t('모델 확인 불가')) + '\n' + t('추론') + ' ' + strength
+ 
+     def mouseReleaseEvent(self, event):
+         if event.button() == Qt.MouseButton.LeftButton:
+@@ -868,7 +909,7 @@
+             failed = failed or any(word in value.get('state','') for word in ('오류','실패','중단','지연'))
+         except (ValueError, TypeError, AttributeError):
+             failed = bool(text)
+-        self.setText('감시 진단\n' + self.original_text if failed else '')
++        self.setText(t('감시 진단\n') + self.original_text if failed else '')
+         self.setVisible(bool(failed))
+     def toPlainText(self):
+         return self.original_text
+@@ -879,7 +920,7 @@
+         owner = parent if parent is not None else getattr(controller, 'gui_owner', None)
+         super().__init__(owner if owner is not None else _application_gui_root())
+         self.controller = controller
+-        self.setWindowTitle('Codex Orbit · 로컬 모델 변경 기록')
++        self.setWindowTitle(t('Codex Orbit · 로컬 모델 변경 기록'))
+         self.resize(1120, 780)
+         self.setMinimumSize(740, 540)
+         layout = QVBoxLayout(self)
+@@ -892,7 +933,15 @@
+         heading = QLabel('Codex Orbit')
+         heading.setStyleSheet('font-size:19px;color:#f5f5f5;')
+         header.addWidget(heading, 1)
+-        self.usage_compact = QLabel('사용 한도 미확인')
++        self.language_combo = QComboBox()
++        self.language_combo.addItem('한국어', 'ko')
++        self.language_combo.addItem('English', 'en')
++        self.language_combo.setCurrentIndex(0 if get_language() == 'ko' else 1)
++        self.language_combo.setAccessibleName(t('언어'))
++        self.language_combo.currentIndexChanged.connect(
++            lambda index: self.controller.set_language(self.language_combo.itemData(index)))
++        header.addWidget(self.language_combo)
++        self.usage_compact = QLabel(t('사용 한도 미확인'))
+         self.usage_compact.setStyleSheet('font-size:12px;color:#b0b0b0;')
+         header.addWidget(with_symbol(self.usage_compact, 'quota'))
+         layout.addLayout(header)
+@@ -904,9 +953,27 @@
+         usage_layout = QVBoxLayout(usage_page)
+         usage_layout.setContentsMargins(12, 16, 12, 12)
+         self.build_usage(usage_layout)
+-        self.tabs.insertTab(1, usage_page, symbol_icon('quota'), '사용 한도')
++        self.tabs.insertTab(1, usage_page, symbol_icon('quota'), t('사용 한도'))
+         self.tabs.currentChanged.connect(self.update_usage_motion)
+         self.setStyleSheet(STYLE)
++        remember_translations(self)
++
++    def retranslate(self):
++        retranslate_widgets(self)
++        self.language_combo.blockSignals(True)
++        self.language_combo.setCurrentIndex(0 if get_language() == 'ko' else 1)
++        self.language_combo.blockSignals(False)
++        self.tabs.setTabText(0, t('변경 기록'))
++        self.tabs.setTabText(1, t('사용 한도'))
++        for index in range(self.history.count()):
++            item = self.history.item(index)
++            item.setText(history_label(item.data(Qt.ItemDataRole.UserRole)))
++        # 비어 있는 앱 기본 안내만 갱신하고 원문이나 별도 내용을 바꾸지 않습니다.
++        if self.history.count() == 0 and self.detail.toPlainText() == self.empty_history_text:
++            self.empty_history_text = t(EMPTY_HISTORY_GUIDANCE)
++            self.detail.setPlainText(self.empty_history_text)
++        self.select_event(self.history.currentItem(), None)
++        self.toggle_evidence(self.evidence_toggle.isChecked())
+ 
+     def update_usage_motion(self, *args):
+         self.usage_hero.set_active(self.isVisible() and self.tabs.currentIndex() == 1)
+@@ -928,18 +995,18 @@
+         box.setContentsMargins(22, 20, 22, 20)
+         box.setSpacing(12)
+         heading = QHBoxLayout()
+-        title = QLabel('계정 사용 한도')
++        title = QLabel(t('계정 사용 한도'))
+         title.setStyleSheet('color:#F1F6FA;font-size:25px;font-weight:600;')
+         heading.addWidget(with_symbol(title, 'quota'), 1)
+-        self.usage_refresh = QPushButton('새로고침')
++        self.usage_refresh = QPushButton(t('새로고침'))
+         self.usage_refresh.setIcon(symbol_icon('refresh'))
+         self.usage_refresh.setIconSize(QSize(20, 20))
+         self.usage_refresh.setMinimumHeight(44)
+-        self.usage_refresh.setAccessibleName('계정 사용 한도 새로고침')
++        self.usage_refresh.setAccessibleName(t('계정 사용 한도 새로고침'))
+         self.usage_refresh.clicked.connect(lambda: self.controller.usage.manual_refresh())
+         heading.addWidget(self.usage_refresh)
+         box.addLayout(heading)
+-        self.usage_status = QLabel('잔량 조회 준비 · 30초마다 자동 갱신')
++        self.usage_status = QLabel(t('잔량 조회 준비 · 30초마다 자동 갱신'))
+         self.usage_status.setWordWrap(True)
+         self.usage_status.setTextFormat(Qt.TextFormat.PlainText)
+         self.usage_status.setStyleSheet('color:#B5C8D4;font-size:13px;')
+@@ -956,7 +1023,7 @@
+         self.usage_rows_layout = QVBoxLayout(self.usage_rows)
+         self.usage_rows_layout.setContentsMargins(0, 0, 0, 0)
+         self.usage_rows_layout.setSpacing(10)
+-        self.usage_values = QLabel('계정 한도 미확인')
++        self.usage_values = QLabel(t('계정 한도 미확인'))
+         self.usage_values.setWordWrap(True)
+         self.usage_values.setTextFormat(Qt.TextFormat.PlainText)
+         self.usage_rows_layout.addWidget(self.usage_values)
+@@ -973,9 +1040,9 @@
+     def display_usage(self, value):
+         stale, busy = value.get('stale', True), value.get('busy', False)
+         checked = value.get('checked_at')
+-        updated = reset_label(checked) if checked else '아직 조회하지 않음'
+-        self.usage_status.setText(('조회 지연 · 이전 조회 값 · ' if stale and checked else '') + value.get('status', '미확인') +
+-                                  '  ·  최종 조회: ' + updated + '  ·  30초 자동 갱신')
++        updated = t(reset_label(checked)) if checked else t('아직 조회하지 않음')
++        self.usage_status.setText((t('조회 지연 · 이전 조회 값 · ') if stale and checked else '') + t(value.get('status', '미확인')) +
++                                  t('  ·  최종 조회: ') + updated + t('  ·  30초 자동 갱신'))
+         self.usage_refresh.setEnabled(not busy)
+         rows = value.get('rows', [])
+         self.usage_panel.setMaximumHeight(430 if len(rows) <= 1 else 16777215)
+@@ -983,26 +1050,28 @@
+         while self.usage_rows_layout.count() > 1:
+             item = self.usage_rows_layout.takeAt(1)
+             if item.widget():
++                # 지연 삭제 전에도 이전 언어의 행이 새 행과 겹쳐 보이지 않게 합니다.
++                item.widget().hide()
+                 item.widget().deleteLater()
+         texts = []
+         for row in rows:
+             remaining = row['remaining']
+-            label = f"{remaining:g}% 남음" if remaining is not None else '잔량 미확인'
+-            text = f"{row['bucket']} · {row['period']}  {label}  ·  초기화: {reset_label(row['resets_at'])}"
++            label = t("{percent:g}% 남음", percent=remaining) if remaining is not None else t('잔량 미확인')
++            text = str(row['bucket']) + " · " + t(row['period']) + "  " + label + "  ·  " + t("초기화: ") + t(reset_label(row['resets_at']))
+             if stale:
+-                text += '  ·  이전 조회 값'
++                text += t('  ·  이전 조회 값')
+             texts.append(text)
+             bar = QProgressBar()
+             bar.setRange(0, 1000000)
+             bar.setValue(round(remaining * 10000) if remaining is not None and not stale else 0)
+-            bar.setFormat(row['period'] + (' · 이전 조회' if stale else '') + ' · ' + label)
++            bar.setFormat(t(row['period']) + (t(' · 이전 조회') if stale else '') + ' · ' + label)
+             bar.setTextVisible(False)
+             bar.setAccessibleName(text)
+             bar.setEnabled(not stale and remaining is not None)
+             bar.setFixedHeight(12)
+             bar.setStyleSheet('QProgressBar {border:0;border-radius:6px;background:#30485A;} QProgressBar::chunk {background:#8EDCCB;border-radius:6px;}')
+             self.usage_rows_layout.addWidget(bar)
+-            info = QLabel(f"{row['bucket']} · {row['period']}")
++            info = QLabel(str(row['bucket']) + " · " + t(row['period']))
+             info.setTextFormat(Qt.TextFormat.PlainText)
+             info.setWordWrap(True)
+             info.setStyleSheet('color:#B5C8D4;font-size:15px;')
+@@ -1012,14 +1081,14 @@
+             number.setWordWrap(True)
+             number.setStyleSheet('color:#F1F6FA;font-size:42px;font-weight:600;')
+             self.usage_rows_layout.addWidget(number)
+-            reset = QLabel('초기화: ' + reset_label(row['resets_at']) + (' · 이전 조회 값' if stale else ''))
++            reset = QLabel(t('초기화: ') + t(reset_label(row['resets_at'])) + (t(' · 이전 조회 값') if stale else ''))
+             reset.setTextFormat(Qt.TextFormat.PlainText)
+             reset.setWordWrap(True)
+             reset.setStyleSheet('color:#B5C8D4;font-size:13px;padding-bottom:18px;')
+             self.usage_rows_layout.addWidget(reset)
+         self.usage_rows_layout.addStretch()
+-        self.usage_compact.setText(('이전 조회 · ' if stale and checked else '') + (f"{rows[0]['remaining']:g}% 남음" if rows and rows[0].get('remaining') is not None else '사용 한도 미확인'))
+-        self.usage_values.setText('\n'.join(texts) if texts else '계정 한도 미확인 · 남은 토큰 개수가 아닌 사용 한도 비율입니다.')
++        self.usage_compact.setText((t('이전 조회 · ') if stale and checked else '') + (t("{percent:g}% 남음", percent=rows[0]['remaining']) if rows and rows[0].get('remaining') is not None else t('사용 한도 미확인')))
++        self.usage_values.setText('\n'.join(texts) if texts else t('계정 한도 미확인 · 남은 토큰 개수가 아닌 사용 한도 비율입니다.'))
+         self.usage_values.setVisible(not rows)
+ 
+     def build_history(self):
+@@ -1027,13 +1096,13 @@
+         layout = QVBoxLayout(page)
+         layout.setContentsMargins(0, 12, 0, 0)
+         layout.setSpacing(8)
+-        self.summary = QLabel('감시 준비 중')
++        self.summary = QLabel(t('감시 준비 중'))
+         self.summary.setStyleSheet('color:#8ea9b6;font-size:11px;')
+         self.summary.setTextFormat(Qt.TextFormat.PlainText)
+         self.summary.setWordWrap(True)
+         self.summary.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
+         layout.addWidget(self.summary)
+-        self.notice_summary = QLabel('알림 대기 0건')
++        self.notice_summary = QLabel(t('알림 대기 0건'))
+         self.notice_summary.setStyleSheet('color:#8ea9b6;font-size:11px;')
+         layout.addWidget(self.notice_summary)
+         self.notice_summary.setWordWrap(True)
+@@ -1052,9 +1121,9 @@
+         card_layout = QVBoxLayout(self.card)
+         card_layout.setContentsMargins(20, 20, 20, 20)
+         card_layout.setSpacing(12)
+-        self.chat_title = QLabel('변경을 기다리고 있습니다')
++        self.chat_title = QLabel(t('변경을 기다리고 있습니다'))
+         self.chat_title.setStyleSheet('font-size:23px;font-weight:600;color:#f1f7f8;padding:2px 0 6px 0;')
+-        self.change_heading = QLabel('변경을 기다리고 있습니다')
++        self.change_heading = QLabel(t('변경을 기다리고 있습니다'))
+         self.change_heading.setStyleSheet('font-size:13px;color:#a7e7d0;padding:5px 8px;')
+         self.model_transition = QLabel('')
+         self.model_transition.setStyleSheet('font-size:26px;font-weight:600;color:#edf4f5;')
+@@ -1066,21 +1135,21 @@
+         self.effort_previous = self.effort_transition
+         self.effort_current = QLabel('—')
+         self.effort_current.setStyleSheet('font-size:26px;font-weight:600;color:#edf4f5;')
+-        self.before_value = QLabel('변경 전  ·  —')
+-        self.after_value = QLabel('변경 후  ·  —')
++        self.before_value = QLabel(t('변경 전  ·  —'))
++        self.after_value = QLabel(t('변경 후  ·  —'))
+         self.after_value.setStyleSheet('font-size:12px;color:#b1c5d0;padding:0;')
+         self.before_value.setStyleSheet('font-size:12px;color:#8ea9b6;')
+         self.activity_message = QLabel()
+         self.activity_message.setWordWrap(True)
+         self.activity_message.setStyleSheet('font-size:22px;font-weight:600;color:#f1f5f7;padding:6px 0;')
+         self.activity_message.hide()
+-        self.task_value = QLabel('공개된 작업 설명을 기다립니다.')
+-        self.selection_reason = QLabel('모델·추론 강도 선택 이유는 공개되지 않았습니다.')
++        self.task_value = QLabel(t('공개된 작업 설명을 기다립니다.'))
++        self.selection_reason = QLabel(t('모델·추론 강도 선택 이유는 공개되지 않았습니다.'))
+         self.task_value.setStyleSheet('font-size:20px;font-weight:600;color:#e6f2f1;padding:4px 0 10px 0;')
+         self.selection_reason.setStyleSheet('font-size:11px;color:#a6becb;padding:4px 0;')
+-        self.reason_title = QLabel('왜 맡겼나요? · 공개 설명')
++        self.reason_title = QLabel(t('왜 맡겼나요? · 공개 설명'))
+         self.reason_title.setStyleSheet('color:#afc5ce;font-size:11px;padding-top:10px;')
+-        self.reason_value = QLabel('첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.')
++        self.reason_value = QLabel(t('첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'))
+         self.reason_value.setStyleSheet('font-size:15px;background:#253f4a;border:1px solid #3a5662;border-radius:12px;padding:14px;color:#e6f0f3;')
+         self.event_time = QLabel('')
+         self.event_time.setStyleSheet('color:#9ab4c0;font-size:11px;padding:0;')
+@@ -1100,7 +1169,7 @@
+         self.after_headings = []
+         for row, (kind, previous, current) in enumerate((('모델',self.model_previous,self.model_current),
+                                                        ('추론 강도',self.effort_previous,self.effort_current))):
+-            for col, text in ((0,'이전 '+kind),(2,'새 '+kind)):
++            for col, text in ((0,t('이전')+' '+t(kind)),(2,t('새')+' '+t(kind))):
+                 label=QLabel(text);label.setStyleSheet('font-size:12px;color:#a4bbc7;')
+                 if col == 2: self.after_headings.append((label, kind))
+                 table.addWidget(with_symbol(label, 'model' if row == 0 else 'effort'),row*3,col)
+@@ -1119,7 +1188,7 @@
+         self.diagnostics = DiagnosticLabel()
+         cards.addWidget(self.diagnostics)
+         cards.addWidget(self.card)
+-        self.evidence_toggle = QPushButton('▸ 원문 · ID · 근거 펼치기')
++        self.evidence_toggle = QPushButton(t('▸ 원문 · ID · 근거 펼치기'))
+         self.evidence_toggle.setObjectName('disclosure')
+         self.evidence_toggle.setIcon(symbol_icon('reason'))
+         self.evidence_toggle.setCheckable(True)
+@@ -1127,7 +1196,8 @@
+         self.detail = QPlainTextEdit()
+         self.detail.setReadOnly(True)
+         self.detail.setMinimumHeight(180)
+-        self.detail.setPlainText('변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.')
++        self.empty_history_text = t(EMPTY_HISTORY_GUIDANCE)
++        self.detail.setPlainText(self.empty_history_text)
+         self.detail.hide()
+         self.evidence_toggle.toggled.connect(self.toggle_evidence)
+         cards.addWidget(self.detail, 1)
+@@ -1144,34 +1214,34 @@
+         self.history.setMinimumWidth(200)
+         split.setSizes([310, 700])
+         layout.addWidget(split, 1)
+-        self.tabs.addTab(page, symbol_icon('history'), '변경 기록')
++        self.tabs.addTab(page, symbol_icon('history'), t('변경 기록'))
+ 
+     def select_event(self, current, _previous):
+         if current:
+             value = current.data(Qt.ItemDataRole.UserRole)
+             self.detail.setPlainText(event_description(value))
+-            self.chat_title.setText(str(value.get('chat_name') or '채팅 제목 확인 불가'))
++            self.chat_title.setText(str(value.get('chat_name') or t('채팅 제목 확인 불가')))
+             before, after = value.get('before') or {}, value.get('after') or {}
+             model_changed = bool(before.get('model') and after.get('model') and before['model'] != after['model'])
+             effort_changed = bool(before.get('effort') and after.get('effort') and before['effort'] != after['effort'])
+             if value.get('kind') == 'activity' or value.get('before') is None:
+                 heading = event_kind(value)
+             else:
+-                heading = ('모델·추론 강도가 바뀌었습니다' if model_changed and effort_changed
+-                           else '모델이 바뀌었습니다' if model_changed
+-                           else '추론 강도가 바뀌었습니다' if effort_changed else '설정 관측')
++                heading = (t('모델·추론 강도가 바뀌었습니다') if model_changed and effort_changed
++                           else t('모델이 바뀌었습니다') if model_changed
++                           else t('추론 강도가 바뀌었습니다') if effort_changed else t('설정 관측'))
+             if value.get('kind') == 'activity' and value.get('before') is not None and value['before'] == value.get('after'):
+-                heading += ' · 설정 유지'
+-            self.change_heading.setText(heading)
++                heading += ' · ' + t('설정 유지')
++            self.change_heading.setText(t(heading))
+             self.change_heading.setStyleSheet('font-size:13px;padding:5px 8px;border-radius:8px;color:'+event_accent(value)+';background:#2d4550;')
+             self.activity_message.setText(activity_message(value))
+             self.activity_message.setVisible(bool(activity_message(value)))
+             self.task_value.setText(task_explanation(value))
+             self.selection_reason.setText(selection_explanation(value))
+             for heading, kind in self.after_headings:
+-                heading.setText(('현재 ' if value.get('kind') == 'activity' else '변경 후 ') + kind)
++                heading.setText((t('현재') if value.get('kind') == 'activity' else t('변경 후')) + ' ' + t(kind))
+             self.model_previous.setText(previous_field(value.get('before'), 'model'))
+-            self.model_current.setText(str(after.get('model') or '확인 불가'))
++            self.model_current.setText(str(after.get('model') or t('확인 불가')))
+             self.effort_previous.setText(previous_field(value.get('before'), 'effort'))
+             self.effort_current.setText(friendly_effort(after.get('effort')))
+             before = value.get('before')
+@@ -1179,16 +1249,16 @@
+                 changed = value.get('kind') != 'activity' and before is not None and before.get(key) and after.get(key) and before.get(key) != after.get(key)
+                 for label in labels:
+                     label.setStyleSheet('font-size:26px;font-weight:600;color:#edf4f5;' + ('background:#385064;border-radius:8px;padding:4px;' if changed else ''))
+-            self.before_value.setText('이전 기록 없음' if value.get('before') is None
+-                                      else '이전  ' + model_card_label(value['before']))
+-            self.after_value.setText(('현재  ' if value.get('kind') == 'activity' else '→  ') + model_card_label(value.get('after')))
++            self.before_value.setText(t('이전 기록 없음') if value.get('before') is None
++                                      else t('이전') + '  ' + model_card_label(value['before']))
++            self.after_value.setText((t('현재') + '  ' if value.get('kind') == 'activity' else '→  ') + model_card_label(value.get('after')))
+             reason = value.get('reason') if value.get('kind') == 'activity' else short_reason(value)
+-            self.reason_value.setText(public_text(reason, limit=600))
++            self.reason_value.setText(t('확인 불가') if reason == '확인 불가' and not value.get('reason') else public_text(reason, limit=600))
+             self.event_time.setText(kst_label(value.get('time')))
+ 
+     def toggle_evidence(self, checked):
+         self.detail.setVisible(checked)
+-        self.evidence_toggle.setText('▾ 원문 · ID · 근거 접기' if checked else '▸ 원문 · ID · 근거 펼치기')
++        self.evidence_toggle.setText(t('▾ 원문 · ID · 근거 접기') if checked else t('▸ 원문 · ID · 근거 펼치기'))
+ 
+     def _history_items_by_id(self):
+         items = {}
+@@ -1275,6 +1345,8 @@
+         # Qt 수신자 문맥에 수명을 결합해 종료된 Python 객체로 예약 신호가 전달되지 않게 합니다.
+         super().__init__(_application_gui_root())
+         self.settings = settings
++        set_language(settings.values.get('language', 'ko'))
++        self.last_monitor_status = None
+         self.monitor = None
+         self.closing = False
+         self.cleaned = False
+@@ -1307,6 +1379,7 @@
+         self.monitor_health_timer.timeout.connect(self.check_monitor_health)
+         self.window = Details(self)
+         self.orbit = OrbitWidget(settings, self.show, self.request_quit, self.gui_owner)
++        self.orbit.language_changed = self.set_language
+         self.notice = None
+         self.screen_connections = []
+         for screen in QApplication.screens():
+@@ -1315,7 +1388,7 @@
+         self.usage = UsageClient(settings.values.get('codex_exe', ''), self.gui_owner)
+         self.usage.changed.connect(self.update_usage)
+         self.update_usage(self.usage.snapshot)
+-        self.weather = WeatherClient(self.gui_owner)
++        self.weather = WeatherClient(self.gui_owner, language=get_language())
+         self.weather.changed.connect(self.update_weather)
+         self.update_weather(self.weather.snapshot)
+         self.quit_guard = QuitGuard(self)
+@@ -1334,21 +1407,52 @@
+         if start_weather:
+             self.weather.start()
+ 
++    @Slot(str)
++    def set_language(self, language):
++        application = QApplication.instance()
++        if QThread.currentThread() != application.thread():
++            raise RuntimeError('언어는 GUI 메인 스레드에서만 변경할 수 있습니다.')
++        language = language if language in ('ko', 'en') else 'ko'
++        # 설정 저장 성공 뒤 표시 언어를 변경합니다.
++        previous = self.settings.values.get('language', 'ko')
++        self.settings.values['language'] = language
++        try:
++            self.settings.save()
++        except Exception:
++            self.settings.values['language'] = previous
++            raise
++        set_language(language)
++        self.window.retranslate()
++        if self.window.diagnostics.original_text:
++            self.window.diagnostics.setPlainText(self.window.diagnostics.original_text)
++        self.weather.set_language(language)
++        self.update_weather(self.weather.snapshot)
++        self.update_usage(self.usage.snapshot)
++        if self.last_monitor_status is not None:
++            self.status(self.last_monitor_status)
++        for notice in self.notices.values():
++            retranslate_widgets(notice)
++            notice.update_event(notice.event)
++        self.update_notice_count()
++        self.orbit.update()
++
+     @Slot(dict)
+     def update_weather(self, value):
+         if self.closing:
+             return
+         temperature = value.get("temperature")
+-        self.orbit.location_text = value.get("region") or "위치 정보 없음"
+-        self.orbit.weather_text = (f"이전 {temperature:g}℃" if value.get("stale") else f"{temperature:g}℃") if temperature is not None else ("기온 조회 중" if value.get("busy") else "기온 미확인")
++        self.orbit.location_text = value.get("region") or t("위치 정보 없음")
++        self.orbit.weather_text = (t("이전 {temperature:g}℃", temperature=temperature) if value.get("stale") else f"{temperature:g}℃") if temperature is not None else (t("기온 조회 중") if value.get("busy") else t("기온 미확인"))
+         checked = value.get("checked_at")
+-        checked_label = datetime.fromtimestamp(checked).astimezone().strftime("%Y-%m-%d %H:%M:%S") if checked is not None else "미확인"
++        checked_label = datetime.fromtimestamp(checked).astimezone().strftime("%Y-%m-%d %H:%M:%S") if checked is not None else t("미확인")
+         observed = value.get("observed_at")
+-        observed_label = datetime.fromtimestamp(observed).astimezone().strftime("%Y-%m-%d %H:%M:%S") if observed is not None else "미확인"
+-        self.orbit.weather_tooltip = ("네트워크 추정 지역: " + (value.get("region") or "미확인") +
+-                                     "\n기온 출처: Open-Meteo · 위치: ipwho.is" +
+-                                     "\n제공 시각: " + observed_label +
+-                                     "\n조회 시각: " + checked_label + "\n" + value.get("status", "기온 미확인"))
++        observed_label = datetime.fromtimestamp(observed).astimezone().strftime("%Y-%m-%d %H:%M:%S") if observed is not None else t("미확인")
++        self.orbit.weather_tooltip = (t("네트워크 추정 지역: ") + (value.get("region") or t("미확인")) +
++                                     t("\n지역 원문: ") + (value.get("region_original") or t("미확인")) +
++                                     t("\n기온 출처: Open-Meteo · 위치: ipwho.is") +
++                                     t("\n제공 시각: ") + observed_label +
++                                     t("\n조회 시각: ") + checked_label + "\n" + t(value.get("status", "기온 미확인")))
++        self.orbit.weather_tooltip += t("\n지명 출처: ") + t(str(value.get("region_source") or "GeoNames / Open-Meteo (CC BY 4.0)"))
+         self.orbit.refresh_tooltip()
+         self.orbit.update()
+ 
+@@ -1374,8 +1478,8 @@
+             self.orbit.usage_badge = f"{min(row['remaining'] for row in valid):g}%"
+         else:
+             self.orbit.usage_badge = '—'
+-        self.orbit.usage_tooltip = ('Codex Orbit · 계정 한도 ' + self.orbit.usage_badge +
+-                                    ' · ' + value.get('status', '미확인') + '\n클릭: 기간별 잔량과 변경 이력 · 드래그: 이동')
++        self.orbit.usage_tooltip = (t('Codex Orbit · 계정 한도 ') + self.orbit.usage_badge +
++                                    ' · ' + t(value.get('status', '미확인')) + t('\n클릭: 기간별 잔량과 변경 이력 · 드래그: 이동'))
+         self.orbit.refresh_tooltip()
+         self.orbit.update()
+ 
+@@ -1398,17 +1502,17 @@
+                 self.monitor_restart_pending = True
+                 self.monitor.requestInterruption()
+             self.orbit.healthy = False
+-            self.window.summary.setText('감시 재시작 대기 · 이전 작업자 종료 후 최종 설정으로 자동 시작합니다.')
++            self.window.summary.setText(t('감시 재시작 대기 · 이전 작업자 종료 후 최종 설정으로 자동 시작합니다.'))
+             return False
+         self.monitor_restart_pending = False
+         self.monitor_retry_timer.stop()
+         if not self.stop_monitor():
+             self.orbit.healthy = False
+-            self.window.summary.setText('감시 지연 · 이전 작업자가 종료 중입니다. 종료 후 다시 시작하세요.')
++            self.window.summary.setText(t('감시 지연 · 이전 작업자가 종료 중입니다. 종료 후 다시 시작하세요.'))
+             return False
+         self.monitor_enabled = True
+         self.orbit.healthy = False
+-        self.window.summary.setText('감시 준비 중 · 첫 진행 확인 대기')
++        self.window.summary.setText(t('감시 준비 중 · 첫 진행 확인 대기'))
+         self.last_monitor_progress = time.monotonic()
+         self.operation_log_error = operation_record(self.settings.directory, 'monitor-preparation', self.settings.values['sessions'])
+         try:
+@@ -1445,16 +1549,16 @@
+                 try:
+                     self.start_monitor()
+                 except Exception as error:
+-                    self.window.summary.setText('감시 시작 실패 · 변경 기록의 진단을 확인하세요.')
++                    self.window.summary.setText(t('감시 시작 실패 · 변경 기록의 진단을 확인하세요.'))
+                     self.window.diagnostics.setPlainText(str(error))
+                 return
+             self.orbit.healthy = False
+-            self.window.summary.setText('감시 중단 · ' + ('자동 재시도 대기' if self.monitor_retries < 3 else '앱 다시 실행 필요'))
++            self.window.summary.setText(t('감시 중단 · ') + (t('자동 재시도 대기') if self.monitor_retries < 3 else t('앱 다시 실행 필요')))
+             if self.monitor_retries < 3 and not self.monitor_retry_timer.isActive():
+                 self.monitor_retry_timer.start(3000 * (self.monitor_retries + 1))
+         elif time.monotonic() - self.last_monitor_progress > 20:
+             self.orbit.healthy = False
+-            self.window.summary.setText('감시 지연 · 20초 이상 진행 확인 없음. 작업자는 실행 중이며 강제 재시작하지 않습니다.')
++            self.window.summary.setText(t('감시 지연 · 20초 이상 진행 확인 없음. 작업자는 실행 중이며 강제 재시작하지 않습니다.'))
+         self.orbit.update()
+ 
+     @Slot()
+@@ -1523,9 +1627,9 @@
+             self.enqueue_notice(event)
+ 
+     def update_notice_count(self):
+-        text = f'알림 표시 {len(self.notices)}건 · 새 변경은 즉시 표시'
++        text = t('알림 표시 {count}건 · 새 변경은 즉시 표시', count=len(self.notices))
+         if self.notice_overflow:
+-            text += f' · 표시 상한으로 숨긴 {self.notice_overflow}건은 변경 이력에서 확인하세요.'
++            text += t(' · 표시 상한으로 숨긴 {count}건은 변경 이력에서 확인하세요.', count=self.notice_overflow)
+         self.window.notice_summary.setText(text)
+         for notice in self.notices.values():
+             notice.queue_hint.setText(text)
+@@ -1643,8 +1747,9 @@
+         if self.presentation_error or self.operation_log_error:
+             value = {**value, 'notice_presentation_error': self.presentation_error,
+                      'operation_log_error': self.operation_log_error}
++        self.last_monitor_status = dict(value)
+         self.orbit.healthy = value.get('state') == '감시 중'
+-        self.window.summary.setText('● ' + value.get('state', '') + '  ·  ' + kst_label(value.get('time')))
++        self.window.summary.setText('● ' + t(value.get('state', '')) + '  ·  ' + kst_label(value.get('time')))
+         self.window.diagnostics.setPlainText(json.dumps(value, ensure_ascii=False, indent=2))
+ 
+     def show(self, event_id=None):
+@@ -1680,7 +1785,7 @@
+         for notice in list(self.notices.values()):
+             notice.dismiss()
+         self.orbit.healthy = False
+-        self.window.summary.setText('종료 중 · 감시 작업자의 안전한 종료를 기다리고 있습니다.')
++        self.window.summary.setText(t('종료 중 · 감시 작업자의 안전한 종료를 기다리고 있습니다.'))
+         if self.monitor is not None and self.monitor.isRunning():
+             self.monitor.finished.connect(self.finish_quit)
+             self.monitor.requestInterruption()
+@@ -1749,7 +1854,7 @@
+     bars = [widget for widget in widgets if isinstance(widget, QProgressBar)]
+     labels = [widget.text() for widget in widgets if isinstance(widget, QLabel) and widget.isVisible()]
+     expected_values = [round(row['remaining'] * 10000) if row.get('remaining') is not None else 0 for row in rows]
+-    expected_labels = [f"{row['remaining']:g}% 남음" if row.get('remaining') is not None else '잔량 미확인' for row in rows]
++    expected_labels = [t("{percent:g}% 남음", percent=row['remaining']) if row.get('remaining') is not None else t('잔량 미확인') for row in rows]
+     presented = {'badge': controller.orbit.usage_badge, 'fraction': controller.orbit.usage_fraction,
+                  'state': controller.orbit.usage_state, 'bar_values': [bar.value() for bar in bars],
+                  'remaining_labels': [label for label in labels if label in expected_labels]}
+@@ -1855,6 +1960,8 @@
+                 return
+             usage_finished = True
+             report = {**value, 'ok': ok, 'frozen': bool(getattr(sys, 'frozen', False)),
++                      'language': get_language(),
++                      'detail_tabs': [controller.window.tabs.tabText(index) for index in range(controller.window.tabs.count())],
+                       'widget_badge': controller.orbit.usage_badge,
+                       'widget_fraction': controller.orbit.usage_fraction,
+                       'widget_state': controller.orbit.usage_state,
+@@ -1907,7 +2014,9 @@
+                       'gpu': status, 'baseline_render_count': baseline_count, 'error': error,
+                       'translucent': controller.orbit.testAttribute(Qt.WidgetAttribute.WA_TranslucentBackground),
+                       'always_on_top': bool(controller.orbit.windowFlags() & Qt.WindowType.WindowStaysOnTopHint),
+-                      'font_families': families, 'time': stamp(), 'frozen': bool(getattr(sys, 'frozen', False))}
++                      'font_families': families, 'time': stamp(), 'frozen': bool(getattr(sys, 'frozen', False)),
++                      'language': get_language(),
++                      'detail_tabs': [controller.window.tabs.tabText(index) for index in range(controller.window.tabs.count())]}
+             if args.smoke_report:
+                 args.smoke_report.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
+             if sys.stdout:
+--- 이전/src/brand.py
++++ 현재/src/brand.py
+@@ -6,6 +6,7 @@
+ import hashlib
+ import struct
+ import re
++from i18n import translate as t
+ from PySide6.QtCore import Qt, QRect, QObject, QTimer
+ from PySide6.QtGui import QImage, QPixmap, QIcon, QPainter
+ from PySide6.QtWidgets import QApplication, QLabel, QWidget, QHBoxLayout
+@@ -43,8 +44,9 @@
+         self.members = weakref.WeakSet()
+         self.origin = time.monotonic()
+         self.timer = QTimer(self)
+-        self.timer.setInterval(33)
+-        self.timer.timeout.connect(self.tick)
++        self.timer.setInterval(1000)
++        self.timer.timeout.connect(self.prune)
++        self.last_serial=None
+ 
+     @property
+     def active_count(self):
+@@ -52,8 +54,9 @@
+ 
+     def watch(self, mark):
+         self.members.add(mark)
+-        from calendar_motion import set_calendar_motion_visible
++        from calendar_motion import set_calendar_motion_visible,set_calendar_motion_size
+         set_calendar_motion_visible(mark, True)
++        set_calendar_motion_size(mark,max(32,min(2160,round(mark.width()*mark.devicePixelRatioF()))))
+         if not self.timer.isActive():
+             self.timer.start()
+         self.tick()
+@@ -74,8 +77,11 @@
+             self.timer.stop()
+             return
+         elapsed = time.monotonic() - self.origin
+-        from calendar_motion import get_calendar_frame
++        from calendar_motion import get_calendar_frame,record_calendar_presentation
+         source = get_calendar_frame(elapsed)
++        serial=source.text('calendar_frame_id')
++        if serial and serial==self.last_serial:return
++        self.last_serial=serial
+         pixmaps = {}
+         for mark in marks:
+             size = mark.width()
+@@ -84,6 +90,7 @@
+                 pixmaps[size] = QPixmap.fromImage(image.scaled(size, size, Qt.AspectRatioMode.KeepAspectRatio,
+                                                               Qt.TransformationMode.SmoothTransformation))
+             mark.setPixmap(pixmaps[size])
++            record_calendar_presentation(mark,source)
+ 
+ 
+ _brand_clock = None
+@@ -102,14 +109,17 @@
+         super().__init__(parent)
+         self.setFixedSize(size, size)
+         self.setPixmap(QPixmap.fromImage(brand_image(size)))
+-        self.setAccessibleName('Codex Orbit 로고')
+-        self.setToolTip('Codex Orbit · 실제3D 모션')
++        self.setAccessibleName(t('Codex Orbit 로고'))
++        self.setToolTip(t('Codex Orbit · 실제3D 모션'))
+         self.playback_clock = brand_clock()
+         self.destroyed.connect(self.playback_clock.prune)
+ 
+     def showEvent(self, event):
+         super().showEvent(event)
+         self.playback_clock.watch(self)
++
++    def calendar_frame_ready(self):
++        if self.isVisible():self.playback_clock.tick()
+ 
+     def hideEvent(self, event):
+         self.playback_clock.unwatch(self)
+@@ -206,8 +216,8 @@
+     mark = QLabel()
+     mark.setPixmap(QPixmap.fromImage(symbol_image(kind, 20)))
+     mark.setFixedSize(20,20)
+-    mark.setAccessibleName({'model':'모델','effort':'추론 강도','time':'시각','reason':'공개 근거',
+-                            'quota':'사용 한도','history':'변경 기록'}.get(kind,kind))
++    mark.setAccessibleName({'model':t('모델'),'effort':t('추론 강도'),'time':t('시각'),'reason':t('공개 근거'),
++                            'quota':t('사용 한도'),'history':t('변경 기록')}.get(kind,kind))
+     layout.addWidget(mark,0,Qt.AlignmentFlag.AlignVCenter)
+     layout.addWidget(label,1)
+     return row
+--- 이전/src/calendar_motion.py
++++ 현재/src/calendar_motion.py
+@@ -6,13 +6,25 @@
+ import threading
+ import time
+ import weakref
+-from PySide6.QtCore import QCoreApplication, QThread, Qt, QRectF
++from PySide6.QtCore import QCoreApplication, QObject, QThread, Qt, QRectF, Signal, Slot
+ from PySide6.QtGui import QColor, QImage, QPainter, QPainterPath, QPen
++from shiboken6 import isValid
+ from calendar_art import current_date, design_for_date
+-
+-FPS = 30
++from frame_pacing import FrameWaiter
++
++FPS = 240
+ SIZE = 384
++RENDER_SIZE = (3840, 2160)
+ _logger = logging.getLogger(__name__)
++
++
++def next_frame_deadline(previous, now):
++    """절대 시간 슬롯을 유지하며 놓친 슬롯은 한 번에 건너뜁니다."""
++    interval=1/FPS
++    following=previous+interval
++    if following<=now:
++        following+=(math.floor((now-following)/interval)+1)*interval
++    return following
+ 
+ 
+ def fallback_image(value):
+@@ -51,17 +63,23 @@
+ 
+ class _Worker(QThread):
+     """Qt 객체나 UI를 조작하지 않고 복사된 최신 이미지 하나만 전달합니다."""
++    frame_ready=Signal()
++
+     def __init__(self):
+         super().__init__(); self.condition=threading.Condition(); self.stopping=False; self.visible=False
+-        self.requested_date=None; self.requested_elapsed=0.; self.requested_at=time.monotonic()
+-        self.started_at=time.monotonic()
++        self.requested_date=None; self.requested_elapsed=0.; self.requested_at=time.perf_counter()
++        self.started_at=time.perf_counter()
+         self.latest=None; self.latest_date=None; self.error=''; self.render_count=0; self.renderer_name=''
+-
+-    def configure(self,visible=None,value=None,elapsed=None):
++        self.output_size=SIZE; self.notification_pending=False; self.notification_count=0
++        self.first_render_at=None; self.last_render_at=None; self.render_seconds=0.
++        self.pacing_backend='준비 중'; self.pacing_warning=''
++
++    def configure(self,visible=None,value=None,elapsed=None,output_size=None):
+         with self.condition:
+             if visible is not None:self.visible=visible
++            if output_size is not None:self.output_size=output_size
+             if elapsed is not None:
+-                self.requested_date=value; self.requested_elapsed=elapsed; self.requested_at=time.monotonic()
++                self.requested_date=value; self.requested_elapsed=elapsed; self.requested_at=time.perf_counter()
+             self.condition.notify_all()
+ 
+     def stop(self):
+@@ -69,28 +87,44 @@
+ 
+     def run(self):
+         renderer=None
++        waiter=None
+         next_frame_at=0.
+         try:
++            waiter=FrameWaiter(); self.pacing_backend=waiter.backend; self.pacing_warning=waiter.warning
++            if waiter.warning:_logger.warning(waiter.warning)
+             while True:
+                 with self.condition:
+-                    # 여러 위젯의 요청 알림이 와도 렌더 속도는 초당30회를 넘지 않습니다.
+-                    while not self.stopping:
+-                        remaining=next_frame_at-time.monotonic()
+-                        if self.visible and remaining<=0:break
+-                        self.condition.wait(remaining if self.visible else None)
++                    # 요청 수와 무관하게 절대240Hz 슬롯에 맞춰 유휴 대기합니다.
++                    while not self.stopping and not self.visible:self.condition.wait()
+                     if self.stopping:break
++                    remaining=next_frame_at-time.perf_counter()
++                if remaining>0:
++                    waiter.wait(remaining,self.condition)
++                    continue
++                with self.condition:
++                    if self.stopping:break
++                    if not self.visible:continue
+                     value=self.requested_date or current_date()
+                     # 각 호출자의 서로 다른 타이머 원점 대신 서비스의 한 시계를 공유합니다.
+-                    elapsed=time.monotonic()-self.started_at
+-                start=time.monotonic()
++                    elapsed=time.perf_counter()-self.started_at
++                    output_size=self.output_size
++                start=time.perf_counter()
+                 if renderer is None:
+                     from calendar_renderer import CalendarRenderer
+-                    renderer=CalendarRenderer(SIZE); self.renderer_name=renderer.ctx.info.get('GL_RENDERER','확인 불가')
++                    renderer=CalendarRenderer(RENDER_SIZE); self.renderer_name=renderer.ctx.info.get('GL_RENDERER','확인 불가')
++                if hasattr(renderer,'set_output_size'):renderer.set_output_size(output_size)
+                 image=renderer.render(value,elapsed)
++                finished=time.perf_counter()
+                 with self.condition:
+-                    self.latest=image; self.latest_date=value; self.render_count+=1
+-                    next_frame_at=start+1/FPS
++                    self.render_count+=1; image.setText('calendar_frame_id',str(self.render_count))
++                    self.latest=image; self.latest_date=value
++                    if self.first_render_at is None:self.first_render_at=finished
++                    self.last_render_at=finished; self.render_seconds+=finished-start
++                    next_frame_at=next_frame_deadline(next_frame_at if next_frame_at else start,finished)
++                    notify=not self.notification_pending and self.visible
++                    if notify:self.notification_pending=True; self.notification_count+=1
+                     self.condition.notify_all()
++                if notify:self.frame_ready.emit()
+         except Exception as error:
+             with self.condition:
+                 self.error=f'날짜별 3D 표시 실패: {type(error).__name__}: {error}'
+@@ -101,22 +135,48 @@
+                 try:renderer.close()
+                 except Exception:
+                     _logger.exception('날짜별 GPU 자원 정리 실패')
+-
+-
+-class CalendarMotion:
++            if waiter is not None:
++                try:waiter.close()
++                except Exception as error:
++                    with self.condition:self.error=self.error or f'프레임 대기 핸들 정리 실패: {type(error).__name__}: {error}'
++                    _logger.exception('프레임 대기 핸들 정리 실패')
++
++
++class CalendarMotion(QObject):
+     def __init__(self):
+-        self.worker=_Worker(); self.owners={}; self.fallback=None; self.fallback_date=None; self.closed=False
++        super().__init__(QCoreApplication.instance())
++        self.worker=_Worker(); self.owners={}; self.sizes={}; self.presented={}
++        self.presentation_count=0; self.dispatch_count=0
++        self.fallback=None; self.fallback_date=None; self.closed=False
++        self.worker.frame_ready.connect(self._dispatch_frame,Qt.ConnectionType.QueuedConnection)
+         self.worker.start()
++
++    @Slot()
++    def _dispatch_frame(self):
++        if self.closed:return
++        with self.worker.condition:self.worker.notification_pending=False
++        self.dispatch_count+=1
++        for reference in list(self.owners.values()):
++            owner=reference()
++            if owner is None or (isinstance(owner,QObject) and not isValid(owner)):continue
++            callback=getattr(owner,'calendar_frame_ready',None)
++            if callable(callback):callback()
++
++    def _configure_size(self):
++        self.worker.configure(output_size=max((self.sizes.get(key,SIZE) for key in self.owners),default=SIZE))
+ 
+     def visible(self,owner,visible):
+         if self.closed:raise RuntimeError('날짜별 모션 서비스가 닫혔습니다.')
+         key=id(owner)
+         if visible:
+             def gone(_):
+-                self.owners.pop(key,None); self.worker.configure(visible=bool(self.owners))
++                self.owners.pop(key,None); self.sizes.pop(key,None); self.presented.pop(key,None)
++                self.worker.configure(visible=bool(self.owners)); self._configure_size()
+             self.owners[key]=weakref.ref(owner,gone)
+-        else:self.owners.pop(key,None)
++        else:
++            self.owners.pop(key,None); self.sizes.pop(key,None); self.presented.pop(key,None)
+         self.worker.configure(visible=bool(self.owners))
++        self._configure_size()
+ 
+     def frame(self,elapsed=0.0,value=None):
+         if self.closed:raise RuntimeError('날짜별 모션 서비스가 닫혔습니다.')
+@@ -134,11 +194,12 @@
+         return QImage(self.fallback)
+ 
+     def close(self):
+-        self.closed=True; self.owners.clear(); self.worker.stop()
++        self.closed=True; self.owners.clear(); self.sizes.clear(); self.presented.clear(); self.worker.stop()
+         finished=self.worker.wait(2000)
+         if finished:
+             with self.worker.condition:self.worker.latest=None
+             self.fallback=None
++            self.deleteLater()
+         return finished
+ 
+ 
+@@ -200,6 +261,23 @@
+     _get_service().visible(owner,visible)
+ 
+ 
++def set_calendar_motion_size(owner,size):
++    """현재 보이는 각 소유자의 실제 픽셀 요구 중 최대 크기만 전달합니다."""
++    if type(size) is not int or not 32<=size<=2160:raise ValueError('전달 크기는32~2160 정수여야 합니다.')
++    service=_get_service()
++    if id(owner) in service.owners:
++        service.sizes[id(owner)]=size; service._configure_size()
++
++
++def record_calendar_presentation(owner,image):
++    """Qt 그리기 경로가 실제로 소비한 서로 다른 프레임만 셉니다."""
++    _main_thread()
++    if _service is None or id(owner) not in _service.owners:return
++    serial=image.text('calendar_frame_id')
++    if serial and _service.presented.get(id(owner))!=serial:
++        _service.presented[id(owner)]=serial; _service.presentation_count+=1
++
++
+ def get_calendar_error():
+     """제품은 이 문자열을 상태나 툴팁에 표시해 대체 표식과 실제 3D를 구분할 수 있습니다."""
+     if _retiring is not None:return 'GPU 작업 스레드 종료를 기다리는 중입니다.'
+@@ -213,6 +291,15 @@
+         return {'running':_service.worker.isRunning(),'owners':len(_service.owners),
+                 'images':int(_service.worker.latest is not None)+int(_service.fallback is not None),
+                 'render_count':_service.worker.render_count,'date':str(_service.worker.latest_date),
++                'target_fps':FPS,'source_dimensions':list(RENDER_SIZE),
++                'delivery_dimensions':list(_service.worker.latest.size().toTuple()) if _service.worker.latest is not None else None,
++                'requested_delivery_size':_service.worker.output_size,
++                'notification_count':_service.worker.notification_count,'dispatch_count':_service.dispatch_count,
++                'presentation_count':_service.presentation_count,
++                'render_seconds':_service.worker.render_seconds,
++                'pacing_clock':'perf_counter','pacing_backend':_service.worker.pacing_backend,
++                'pacing_warning':_service.worker.pacing_warning,
++                'first_render_at':_service.worker.first_render_at,'last_render_at':_service.worker.last_render_at,
+                 'renderer':_service.worker.renderer_name,'error':_service.worker.error}
+ 
+ 
+--- 이전/src/calendar_renderer.py
++++ 현재/src/calendar_renderer.py
+@@ -378,18 +378,42 @@
+ class CalendarRenderer:
+     """컨텍스트를 만든 스레드에서만 사용하고 현재 날짜의 버퍼만 보유합니다."""
+     def __init__(self,size=384):
+-        if type(size) is not int or not 32<=size<=768:raise ValueError('렌더 크기는32~768 정수여야 합니다.')
+-        self.thread_id=threading.get_ident(); self.size=size; self.ctx=None; self.resources=[]; self.vaos=[]; self.buffers=[]; self.parts=[]; self.design=None
++        if type(size) is int and 32<=size<=768:
++            dimensions=(size,size)
++        elif type(size) is tuple and len(size)==2 and all(type(v) is int for v in size) and size==(3840,2160):
++            dimensions=size
++        else:raise ValueError('렌더 크기는32~768 정수 또는3840×2160이어야 합니다.')
++        width,height=dimensions
++        self.thread_id=threading.get_ident(); self.size=size; self.dimensions=dimensions; self.ctx=None; self.resources=[]; self.vaos=[]; self.buffers=[]; self.parts=[]; self.design=None
++        self.output_resources=[]; self.output_size=0; self.output=None
+         try:
+             self.ctx=moderngl.create_standalone_context(require=330)
+             self.program=self.ctx.program(vertex_shader=VERTEX,fragment_shader=FRAGMENT); self.resources.append(self.program)
+-            self.color=self.ctx.renderbuffer((size,size),components=4,samples=4); self.resources.append(self.color)
+-            self.depth=self.ctx.depth_renderbuffer((size,size),samples=4); self.resources.append(self.depth)
++            self.color=self.ctx.renderbuffer(dimensions,components=4,samples=4); self.resources.append(self.color)
++            self.depth=self.ctx.depth_renderbuffer(dimensions,samples=4); self.resources.append(self.depth)
+             self.target=self.ctx.framebuffer([self.color],self.depth); self.resources.append(self.target)
+-            self.resolved=self.ctx.simple_framebuffer((size,size),components=4,dtype='f1'); self.resources.append(self.resolved)
++            self.texture=self.ctx.texture(dimensions,components=4,dtype='f1'); self.resources.append(self.texture)
++            self.texture.filter=(moderngl.LINEAR,moderngl.LINEAR)
++            self.resolved=self.ctx.framebuffer([self.texture]); self.resources.append(self.resolved)
++            self.downsample_program=self.ctx.program(vertex_shader='''#version 330
++                out vec2 uv;
++                uniform vec2 crop_scale;
++                void main() {
++                    vec2 p=vec2((gl_VertexID<<1)&2,gl_VertexID&2);
++                    uv=(p-0.5)*crop_scale+0.5;
++                    gl_Position=vec4(p*2.0-1.0,0.0,1.0);
++                }''',fragment_shader='''#version 330
++                uniform sampler2D source_image;
++                in vec2 uv;
++                out vec4 color;
++                void main() { color=texture(source_image,uv); }
++                '''); self.resources.append(self.downsample_program)
++            self.downsample_program['crop_scale'].value=(min(width,height)/width,min(width,height)/height)
++            self.downsample_vao=self.ctx.vertex_array(self.downsample_program,[]); self.resources.append(self.downsample_vao)
++            self.set_output_size(size if type(size) is int else 384)
+             self.ctx.enable(moderngl.DEPTH_TEST)
+             near,far,camera,extent=1.,1200.,700.,69.
+-            projection=np.array([[camera/extent,0,0,0],[0,camera/extent,0,0],[0,0,(far+near)/(near-far),2*far*near/(near-far)],[0,0,-1,0]],dtype='f4')
++            projection=np.array([[camera/extent*height/width,0,0,0],[0,camera/extent,0,0],[0,0,(far+near)/(near-far),2*far*near/(near-far)],[0,0,-1,0]],dtype='f4')
+             view=np.eye(4,dtype='f4'); view[2,3]=-camera
+             self.program['view_projection'].write((projection@view).T.astype('f4').tobytes()); self.program['camera'].value=(0.,0.,camera)
+         except Exception:
+@@ -397,6 +421,17 @@
+ 
+     def _assert_thread(self):
+         if threading.get_ident()!=self.thread_id:raise RuntimeError('GPU 컨텍스트는 생성 스레드에서만 사용할 수 있습니다.')
++
++    def set_output_size(self,size):
++        """원본 타깃은 유지하고 중앙 정사각형의 GPU 전달 크기만 변경합니다."""
++        self._assert_thread()
++        if type(size) is not int or not 32<=size<=2160:raise ValueError('전달 크기는32~2160 정수여야 합니다.')
++        if self.output_size==size:return
++        for resource in reversed(self.output_resources):resource.release()
++        self.output_resources=[]
++        texture=self.ctx.texture((size,size),4); self.output_resources.append(texture)
++        self.output=self.ctx.framebuffer([texture]); self.output_resources.append(self.output)
++        self.output_size=size
+ 
+     def set_date(self,value):
+         self._assert_thread(); design=design_for_date(value)
+@@ -408,8 +443,9 @@
+             self.vaos.append(self.ctx.vertex_array(self.program,[(vertex,'3f 3f','in_position','in_normal')],index))
+         self.design=design
+ 
+-    def render(self,value,elapsed=0):
++    def _draw(self,value,elapsed):
+         self._assert_thread(); transforms=matrices(elapsed); self.set_date(value)
++        self.ctx.enable(moderngl.DEPTH_TEST)
+         self.target.use(); self.target.clear(0,0,0,0,depth=1)
+         for index,(_,color,metal,rough) in enumerate(self.parts):
+             transform=transforms[0] if index<len(self.parts)-3 else transforms[index-len(self.parts)+4]
+@@ -417,10 +453,24 @@
+             self.program['metallic'].value=metal; self.program['base_color'].value=color; self.program['roughness'].value=rough
+             self.vaos[index].render(moderngl.TRIANGLES)
+         self.ctx.copy_framebuffer(self.resolved,self.target)
+-        raw=self.resolved.read(components=4,alignment=1)
++
++    def _image(self,framebuffer,width,height):
++        raw=framebuffer.read(components=4,alignment=1)
+         # MSAA 결과는 사전곱 알파입니다. 복사해 GPU 버퍼 수명에서 분리합니다.
+-        image=QImage(raw,self.size,self.size,self.size*4,QImage.Format.Format_RGBA8888_Premultiplied).copy().mirrored(False,True)
++        image=QImage(raw,width,height,width*4,QImage.Format.Format_RGBA8888_Premultiplied).copy().mirrored(False,True)
+         return image
++
++    def render(self,value,elapsed=0):
++        self._draw(value,elapsed)
++        self.ctx.disable(moderngl.DEPTH_TEST)
++        self.output.use(); self.texture.use(location=0)
++        self.downsample_vao.render(moderngl.TRIANGLES,vertices=3)
++        return self._image(self.output,self.output_size,self.output_size)
++
++    def render_original(self,value,elapsed=0):
++        """검증·내보내기 때만 실제 직사각형 원본 전체를 CPU로 읽습니다."""
++        self._draw(value,elapsed)
++        return self._image(self.resolved,*self.dimensions)
+ 
+     def _clear_meshes(self):
+         for value in reversed(self.vaos):value.release()
+@@ -429,6 +479,8 @@
+ 
+     def close(self):
+         self._assert_thread(); self._clear_meshes()
++        for value in reversed(self.output_resources):value.release()
++        self.output_resources.clear(); self.output=None; self.output_size=0
+         for value in reversed(self.resources):value.release()
+         self.resources.clear()
+         if self.ctx is not None:self.ctx.release(); self.ctx=None
+--- 이전/src/frame_pacing.py
++++ 현재/src/frame_pacing.py
+@@ -0,0 +1,54 @@
++"""프로세스 전용 고해상도 대기로 전역 타이머 설정 없이 프레임을 조율합니다."""
++import ctypes
++import os
++
++
++class FrameWaiter:
++    def __init__(self):
++        self.handle = None
++        self.kernel = None
++        self.warning = ''
++        self.backend = '조건 변수 대기'
++        if os.name != 'nt':
++            return
++        from ctypes import wintypes
++        self.kernel = ctypes.WinDLL('kernel32', use_last_error=True)
++        self.kernel.CreateWaitableTimerExW.argtypes = [ctypes.c_void_p, wintypes.LPCWSTR, wintypes.DWORD, wintypes.DWORD]
++        self.kernel.CreateWaitableTimerExW.restype = wintypes.HANDLE
++        self.kernel.SetWaitableTimer.argtypes = [wintypes.HANDLE, ctypes.POINTER(ctypes.c_longlong), wintypes.LONG,
++                                               ctypes.c_void_p, ctypes.c_void_p, wintypes.BOOL]
++        self.kernel.SetWaitableTimer.restype = wintypes.BOOL
++        self.kernel.WaitForSingleObject.argtypes = [wintypes.HANDLE, wintypes.DWORD]
++        self.kernel.WaitForSingleObject.restype = wintypes.DWORD
++        self.kernel.CloseHandle.argtypes = [wintypes.HANDLE]
++        self.kernel.CloseHandle.restype = wintypes.BOOL
++        # 익명·상속 불가 핸들 하나만 소유하며 전역 timeBeginPeriod는 호출하지 않습니다.
++        self.handle = self.kernel.CreateWaitableTimerExW(None, None, 2, 0x1F0003)
++        if self.handle:
++            self.backend = 'Windows 고해상도 대기 타이머'
++        else:
++            self.warning = 'Windows 정밀 타이머 미지원: ' + str(ctypes.WinError(ctypes.get_last_error()))
++            self.backend = '조건 변수 대기 · 정밀 타이머 미지원'
++
++    def wait(self, seconds, condition):
++        if seconds <= 0:
++            return
++        if self.handle is None:
++            with condition:
++                condition.wait(seconds)
++            return
++        due = ctypes.c_longlong(-max(1, round(seconds * 10_000_000)))
++        if not self.kernel.SetWaitableTimer(self.handle, ctypes.byref(due), 0, None, None, False):
++            raise ctypes.WinError(ctypes.get_last_error())
++        status = self.kernel.WaitForSingleObject(self.handle, 1000)
++        if status != 0:
++            if status == 0xFFFFFFFF:
++                raise ctypes.WinError(ctypes.get_last_error())
++            raise OSError(f'Windows 정밀 타이머 대기 실패: 반환값 {status}')
++
++    def close(self):
++        if self.handle is None:
++            return
++        handle, self.handle = self.handle, None
++        if not self.kernel.CloseHandle(handle):
++            raise ctypes.WinError(ctypes.get_last_error())
+--- 이전/src/i18n.py
++++ 현재/src/i18n.py
+@@ -0,0 +1,80 @@
++"""앱이 소유한 문구만 번역하며 이벤트 원문은 호출자가 그대로 보존합니다."""
++import re
++
++_language = 'ko'
++
++# 이 사전의 키는 앱 표시 문구이며 사용자 기록을 검색·치환하지 않습니다.
++_EN = {
++'확인 불가':'Unavailable','미확인':'Unknown','없음':'None','최소':'Minimal','낮음':'Low','보통':'Medium','높음':'High','매우 높음':'Very high','최고':'Maximum',
++'이전 기록 없음':'No previous record','기록 없음':'Not recorded','해당 없음':'Not applicable','모델·추론 확인 불가':'Model / reasoning unavailable','모델 확인 불가':'Model unavailable',
++'모델':'Model','추론':'Reasoning','추론 강도':'Reasoning effort','이전 모델':'Previous model','이전 추론 강도':'Previous reasoning effort','이전':'Previous','새':'New','현재':'Current','변경 전':'Before','변경 후':'After',
++'부모 조율':'Parent coordination','작업 분류':'Task triage','간단한 수정':'Quick changes','구현':'Implementation','심층 검토·구현':'In-depth implementation','독립 검증':'Independent verification','판단 재검토·수리':'Reassessment and repair','담당':'Assigned',
++'새 작업 배정':'New task assigned','작업 재개':'Task resumed','작업 활동 관측':'Task activity observed','자식 작업자 첫 선택 설정 관측':'Initial child selection observed','채팅 선택 설정 첫 관측':'Initial chat selection observed','선택 설정':'Selected settings','새 작업자 배정 · 이전 작업자 교체':'New worker assigned · previous worker replaced','자식 작업자 첫 관측':'Initial child observation','첫 관측':'Initial observation','설정 관측 · 현재 값 확인 불가':'Settings observed · current value unavailable','모델 · 추론 강도 변경':'Model / reasoning effort changed','모델·추론 변경':'Model / reasoning changed','모델 변경':'Model changed','추론 강도 변경':'Reasoning effort changed','설정 유지':'Settings unchanged','설정 관측':'Settings observed',
++'공개된 설명이 기록되지 않았습니다.':'No public explanation recorded.','공개된 작업 설명이 기록되지 않았습니다.':'No public task description recorded.','모델·추론 강도 선택 이유는 공개되지 않았습니다.':'No public model / reasoning selection rationale.','선택 이유: ':'Selection rationale: ',
++'채팅 제목 확인 불가':'Chat title unavailable','채팅':'Chat','채팅 ID':'Chat ID','작업자 ID':'Worker ID','구분':'Type','자식 작업':'Child task','main 또는 부모 정보 미기록':'main / parent not recorded','역할':'Role','작업 이름':'Task name','부모 ID':'Parent ID','작업 경로':'Task path','제목 출처':'Title source','제목 확인 시각':'Title checked','호출 ID':'Call ID','활동 종류':'Activity type','맡긴 일':'Assigned task','작업 설명 출처':'Task source','활동 근거':'Activity evidence','요청 설정':'Requested settings','이유 호출 ID':'Rationale call ID','감지 시각':'Detected','원본 기록 시각':'Original record time','기록 종류':'Record type','공개 이유 원문':'Original public rationale','모델·추론 강도 선택 이유':'Model / reasoning selection rationale','근거 수준':'Evidence level','선택 설정 관측 근거':'Selection evidence','표시 기록':'Presentation record','앱 표시 요청; 사용자 수신 미확인':'Presentation requested; user receipt unconfirmed','로컬 기록과 공개 이유의 연결 근거입니다. 서버 모델 신원이나 비공개 추론을 증명하지 않습니다.':'Links local records to public explanations. Does not verify server model identity or private reasoning.',
++'상세 이력 열기':'Open change history','종료':'Quit','언어':'Language','닫기':'Close','알림 닫기 · 이력은 유지됩니다':'Dismiss notification · history is preserved','이 변경 자세히 보기  ›':'View this change  ›','현재 설정 · ':'Current settings · ','→ 변경 후 · ':'→ After · ','확인되지 않음':'Unconfirmed','공개 설명: ':'Public explanation: ','변경 이유: ':'Change rationale: ','기록 다시 보기 · ':'History replay · ',
++'Codex Orbit · 로컬 모델 변경 기록':'Codex Orbit · Local model change history','사용 한도 미확인':'Usage limit unknown','사용 한도':'Usage limits','계정 사용 한도':'Account usage limits','새로고침':'Refresh','계정 사용 한도 새로고침':'Refresh account usage limits','잔량 조회 준비 · 30초마다 자동 갱신':'Preparing usage lookup · refreshes every 30 seconds','계정 한도 미확인':'Account limit unknown','아직 조회하지 않음':'Not checked yet','조회 지연 · 이전 조회 값 · ':'Delayed lookup · previous value · ','  ·  최종 조회: ':'  ·  Last checked: ','  ·  30초 자동 갱신':'  ·  Refreshes every 30 seconds','잔량 미확인':'Usage unknown','초기화: ':'Resets: ',' · 이전 조회 값':' · Previous value','  ·  이전 조회 값':'  ·  Previous value',' · 이전 조회':' · Previous lookup','이전 조회 · ':'Previous lookup · ','계정 한도 미확인 · 남은 토큰 개수가 아닌 사용 한도 비율입니다.':'Account limit unknown · percentage of usage allowance, not a token count.',
++'감시 준비 중':'Preparing monitor','알림 대기 0건':'No pending notifications','변경을 기다리고 있습니다':'Waiting for changes','변경 전  ·  —':'Before  ·  —','변경 후  ·  —':'After  ·  —','공개된 작업 설명을 기다립니다.':'Waiting for a public task description.','왜 맡겼나요? · 공개 설명':'Why this assignment? · Public explanation','첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.':'On first launch, existing records form the baseline without historical notifications.','변경 기록':'Change history','▸ 원문 · ID · 근거 펼치기':'▸ Expand original / IDs / evidence','▾ 원문 · ID · 근거 접기':'▾ Collapse original / IDs / evidence','변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.':'Changes show before / after values and public explanations here.\nExisting records form the initial baseline without historical notifications.','모델·추론 강도가 바뀌었습니다':'Model and reasoning effort changed','모델이 바뀌었습니다':'Model changed','추론 강도가 바뀌었습니다':'Reasoning effort changed','감시 진단\n':'Monitor diagnostics\n',
++'새 변경':'New change','감시 중':'Monitoring','확인 필요':'Check needed','잔량 ':'Remaining ','잔량 지연':'Usage delayed','위치 정보 없음':'Location unavailable','기온 미확인':'Temperature unknown','기온 조회 중':'Loading temperature','이전 {temperature:g}℃':'Previous {temperature:g}℃','네트워크 추정 지역: ':'Network-estimated region: ','\n지역 원문: ':'\nOriginal region: ','\n기온 출처: Open-Meteo · 위치: ipwho.is':'\nTemperature: Open-Meteo · Location: ipwho.is','\n제공 시각: ':'\nObservation time: ','\n조회 시각: ':'\nChecked: ','\n지명 출처: ':'\nPlace names: ','\n감시 상태: ':'\nMonitor status: ','Codex Orbit · 계정 한도 ':'Codex Orbit · Account allowance ','\n클릭: 기간별 잔량과 변경 이력 · 드래그: 이동':'\nClick: usage and history · Drag: move','Codex Orbit · 클릭: 상세 · 드래그: 이동 · 오른쪽/아래 가장자리: 크기 조절 · 우클릭: 기록/종료':'Codex Orbit · Click: details · Drag: move · Right/bottom edge: resize · Right-click: menu',
++'조회 완료':'Lookup complete','잔량 조회 준비':'Preparing usage lookup','잔량 연결 중':'Connecting usage lookup','잔량 조회 중':'Loading usage','조회 지연 · 이전 조회 값':'Delayed lookup · previous value','초기화 미확인':'Reset time unknown','주간':'Weekly','5시간':'5 hours','기간 미확인':'Period unknown','제공된 계정 한도가 없습니다.':'No account limits provided.','계정 정보 갱신 · 잔량 다시 조회 중':'Account updated · reloading usage','기온 조회 준비':'Preparing weather lookup','기온 조회 완료':'Temperature updated','기온 정보 없음':'Temperature unavailable','위치 조회 중':'Loading location','위치 조회 실패':'Location lookup failed','네트워크 오류':'Network error','입체 이미지 준비 중':'Preparing 3D image','입체 이미지 표시 오류: ':'3D image display error: ','Codex Orbit 로고':'Codex Orbit logo','Codex Orbit · 실제3D 모션':'Codex Orbit · Real 3D motion','시각':'Time','공개 근거':'Public evidence',
++'위치:':'Location:','파일 이름:':'File name:','파일 형식:':'File type:','취소':'Cancel','선택':'Choose','저장':'Save','열기':'Open','폴더:':'Folder:',
++'감시 재시작 대기 · 이전 작업자 종료 후 최종 설정으로 자동 시작합니다.':'Monitor restart pending · starts after the previous worker stops.','감시 지연 · 이전 작업자가 종료 중입니다. 종료 후 다시 시작하세요.':'Monitor delayed · previous worker is stopping. Restart after it stops.','감시 준비 중 · 첫 진행 확인 대기':'Preparing monitor · waiting for first progress','감시 시작 실패 · 변경 기록의 진단을 확인하세요.':'Monitor startup failed · see history diagnostics.','감시 중단 · ':'Monitor stopped · ','자동 재시도 대기':'Waiting to retry','앱 다시 실행 필요':'Restart the app','감시 지연 · 20초 이상 진행 확인 없음. 작업자는 실행 중이며 강제 재시작하지 않습니다.':'Monitor delayed · no progress for over 20 seconds; worker remains running.','종료 중 · 감시 작업자의 안전한 종료를 기다리고 있습니다.':'Quitting · waiting for monitor worker to stop safely.',
++'잔량 {percent}% ':'Remaining {percent}% ','{percent:g}% 남음':'{percent:g}% remaining','알림 표시 {count}건 · 새 변경은 즉시 표시':'{count} notifications · new changes appear immediately',' · 표시 상한으로 숨긴 {count}건은 변경 이력에서 확인하세요.':' · See history for {count} notifications hidden by the display limit.',
++'기존 {role} 작업자에게 다시 맡겼어요.':'Resumed work with the existing {role} worker.','{role} 작업자에게 새 작업을 맡겼어요.':'Assigned new work to the {role} worker.'
++}
++
++
++# 기존 날짜 카탈로그의 124개 대상명에 대응하는 영어 표시입니다.
++_EN.update({'장미': 'Rose', '튤립': 'Tulip', '수선화': 'Daffodil', '백합': 'Lily', '연꽃': 'Lotus', '벚꽃': 'Cherry blossom', '매화': 'Plum blossom', '동백꽃': 'Camellia', '목련': 'Magnolia', '무궁화': 'Hibiscus', '해바라기': 'Sunflower', '데이지': 'Daisy', '코스모스': 'Cosmos', '국화': 'Chrysanthemum', '거베라': 'Gerbera', '달리아': 'Dahlia', '백일홍': 'Zinnia', '금잔화': 'Marigold', '카네이션': 'Carnation', '모란': 'Peony', '양귀비': 'Poppy', '아네모네': 'Anemone', '라넌큘러스': 'Ranunculus', '도라지꽃': 'Bellflower', '나팔꽃': 'Morning glory', '페튜니아': 'Petunia', '디기탈리스': 'Foxglove', '라벤더': 'Lavender', '수국': 'Hydrangea', '라일락': 'Lilac', '구절초': 'Gujeolcho', '사과': 'Apple', '배': 'Pear', '모과': 'Quince', '복숭아': 'Peach', '살구': 'Apricot', '자두': 'Plum', '체리': 'Cherry', '포도': 'Grape', '청포도': 'Green grapes', '오렌지': 'Orange', '귤': 'Mandarin', '레몬': 'Lemon', '라임': 'Lime', '자몽': 'Grapefruit', '딸기': 'Strawberry', '라즈베리': 'Raspberry', '블랙베리': 'Blackberry', '블루베리': 'Blueberry', '바나나': 'Banana', '파인애플': 'Pineapple', '망고': 'Mango', '파파야': 'Papaya', '키위': 'Kiwi', '수박': 'Watermelon', '멜론': 'Melon', '감': 'Persimmon', '석류': 'Pomegranate', '무화과': 'Fig', '스타프루트': 'Starfruit', '용과': 'Dragonfruit', '코코넛': 'Coconut', '단풍나무 잎': 'Maple leaf', '은행나무 잎': 'Ginkgo leaf', '참나무 잎': 'Oak leaf', '자작나무 잎': 'Birch leaf', '너도밤나무 잎': 'Beech leaf', '느릅나무 잎': 'Elm leaf', '버드나무 잎': 'Willow leaf', '올리브 잎': 'Olive leaf', '유칼립투스 잎': 'Eucalyptus leaf', '포플러 잎': 'Poplar leaf', '보리수 잎': 'Linden leaf', '담쟁이 잎': 'Ivy leaf', '포도나무 잎': 'Grape leaf', '무화과 잎': 'Fig leaf', '몬스테라 잎': 'Monstera leaf', '필로덴드론 잎': 'Philodendron leaf', '연잎': 'Lotus leaf', '한련화 잎': 'Nasturtium leaf', '클로버': 'Clover', '괭이밥': 'Oxalis', '칠엽수 잎': 'Horse chestnut leaf', '물푸레나무 잎': 'Ash leaf', '마가목 잎': 'Rowan leaf', '고사리 잎': 'Fern leaf', '야자수 잎': 'Palm leaf', '대나무 잎': 'Bamboo leaf', '소나무 바늘잎': 'Pine needles', '전나무 가지': 'Fir branch', '로즈메리 가지': 'Rosemary sprig', '민트 잎': 'Mint leaf', '세이지 잎': 'Sage leaf', '바이올린': 'Violin', '비올라': 'Viola', '첼로': 'Cello', '콘트라베이스': 'Double bass', '기타': 'Guitar', '우쿨렐레': 'Ukulele', '만돌린': 'Mandolin', '류트': 'Lute', '하프': 'Harp', '리라': 'Lyre', '그랜드 피아노': 'Grand piano', '아코디언': 'Accordion', '실로폰': 'Xylophone', '마림바': 'Marimba', '칼림바': 'Kalimba', '플루트': 'Flute', '리코더': 'Recorder', '클라리넷': 'Clarinet', '오보에': 'Oboe', '바순': 'Bassoon', '색소폰': 'Saxophone', '트럼펫': 'Trumpet', '트롬본': 'Trombone', '호른': 'Horn', '튜바': 'Tuba', '스네어 드럼': 'Snare drum', '봉고': 'Bongo', '팀파니': 'Timpani', '탬버린': 'Tambourine', '트라이앵글': 'Triangle', '핸드벨': 'Handbell'})
++_EN.update({'이전 모델': 'Previous model', '새 모델': 'New model', '이전 추론 강도': 'Previous reasoning effort', '새 추론 강도': 'New reasoning effort', ' (시간대 미기록)': ' (time zone not recorded)', 'Codex EXE를 찾지 못했습니다. 설정에서 설치된 codex.exe를 선택하세요.': 'Codex executable not found. Select the installed codex.exe in settings.', '잔량 요청을 전달하지 못했습니다.': 'Unable to send usage request.', '잔량 응답이 허용 크기를 넘었습니다.': 'Usage response exceeds the size limit.', '잔량 서버 진단이 허용 크기를 넘었습니다.': 'Usage server diagnostics exceed the size limit.', '잔량 응답 형식을 확인할 수 없습니다.': 'Unrecognized usage response format.', '설치된 Codex의 ChatGPT 로그인을 확인하세요.': 'Check the ChatGPT login in the installed Codex app.', '계정 한도 조회가 거부됐습니다. Codex 연결을 확인하세요.': 'Account limit lookup denied. Check the Codex connection.', '잔량 응답 결과를 확인할 수 없습니다.': 'Unrecognized usage result.', '잔량 조회 응답 시간이 초과됐습니다.': 'Usage lookup timed out.', 'Codex 잔량 연결을 실행할 수 없습니다. 설정의 EXE와 설치 상태를 확인하세요.': 'Unable to start the Codex usage connection. Check the executable and installation.', 'Codex 잔량 연결이 종료됐습니다.': 'Codex usage connection closed.', '위치 또는 기온 네트워크 조회 실패': 'Location / temperature network request failed', '기온 조회 응답이 너무 큽니다': 'Weather response exceeds the size limit', '위치 또는 기온 응답을 확인할 수 없습니다': 'Unrecognized location / weather response', '네트워크 위치를 확인할 수 없습니다': 'Network location unavailable', '기온 제공 자료 지연 · 이전 값': 'Weather data delayed · previous value', '기온 조회 지연 · 이전 값': 'Weather lookup delayed · previous value', '지역명 번역 조회 중': 'Looking up localized place name', '지역명 번역 실패 · 원문 표시': 'Place-name translation unavailable · original name shown', '앱 표시 요청; 사용자 수신 미확인': 'Presentation requested; user receipt unconfirmed', '감시 실패': 'Monitor failed', '감시 중단': 'Monitor stopped', '감시 지연': 'Monitor delayed', '과거 기록 읽는 중': 'Reading existing records', '감시 준비': 'Preparing monitor'})
++
++_EN.update({'기준선 준비 중': 'Preparing baseline', '오류 · 진단 기록 실패 · 다음 주기 재시도': 'Error · diagnostics failed · retrying next cycle', '감시 중단 · 상태 점검 필요': 'Monitor stopped · check status', '오류 · 다음 주기 재시도': 'Error · retrying next cycle', '감시 중단 · 상태 점검 필요 · 진단 기록 실패': 'Monitor stopped · check status · diagnostics failed', '오류 · 다음 주기 재시도 · 진단 기록 실패': 'Error · retrying next cycle · diagnostics failed', 'ipwho.is · 원문': 'ipwho.is · original name', 'ipwho.is · 원문 또는 국내 사전': 'ipwho.is · original name / Korean fallback dictionary', 'ipwho.is · 지명 검색 미일치 · 원문 보존': 'ipwho.is · no matching place name · original retained', 'ipwho.is · 지역 번역 실패 · 원문 보존': 'ipwho.is · translation unavailable · original retained'})
++
++_EN.update({'수소': 'Hydrogen', '헬륨': 'Helium', '리튬': 'Lithium', '베릴륨': 'Beryllium', '붕소': 'Boron', '탄소': 'Carbon', '질소': 'Nitrogen', '산소': 'Oxygen', '플루오린': 'Fluorine', '네온': 'Neon', '나트륨': 'Sodium', '마그네슘': 'Magnesium', '알루미늄': 'Aluminium', '규소': 'Silicon', '인': 'Phosphorus', '황': 'Sulfur', '염소': 'Chlorine', '아르곤': 'Argon', '칼륨': 'Potassium', '칼슘': 'Calcium', '스칸듐': 'Scandium', '타이타늄': 'Titanium', '바나듐': 'Vanadium', '크로뮴': 'Chromium', '망가니즈': 'Manganese', '철': 'Iron', '코발트': 'Cobalt', '니켈': 'Nickel', '구리': 'Copper', '아연': 'Zinc', '갈륨': 'Gallium'})
++
++
++def get_language():
++    return _language
++
++
++def set_language(language):
++    global _language
++    _language = language if language in ('ko', 'en') else 'ko'
++    return _language
++
++
++def translate(text, **values):
++    """명시한 앱 문구만 번역하고 전달된 값은 번역하지 않습니다."""
++    result = _EN.get(text, text) if _language == 'en' else text
++    if _language == 'en' and result == text and isinstance(text, str):
++        minutes = re.fullmatch(r'([0-9]+(?:\.[0-9]+)?)분', text)
++        if minutes:
++            result = minutes.group(1) + ' minutes'
++    if values:
++        return result.format(**values)
++    return result
++
++
++def remember_translations(root):
++    """생성 당시 정적인 앱 문구만 기록하여 사용자 원문과 구분합니다."""
++    from PySide6.QtWidgets import QWidget
++    reverse = {value: key for key, value in _EN.items()}
++    for widget in [root, *root.findChildren(QWidget)]:
++        for getter in ('text', 'toolTip', 'accessibleName', 'windowTitle'):
++            method = getattr(widget, getter, None)
++            if not callable(method):
++                continue
++            value = method()
++            source = value if value in _EN else reverse.get(value)
++            if source is not None:
++                widget.setProperty('orbit_i18n_' + getter, source)
++
++
++def retranslate_widgets(root):
++    from PySide6.QtWidgets import QWidget
++    for widget in [root, *root.findChildren(QWidget)]:
++        for getter, setter in (('text','setText'), ('toolTip','setToolTip'),
++                               ('accessibleName','setAccessibleName'), ('windowTitle','setWindowTitle')):
++            source = widget.property('orbit_i18n_' + getter)
++            if source is not None:
++                getattr(widget, setter)(translate(source))
+--- 이전/src/theme.py
++++ 현재/src/theme.py
+@@ -1,4 +1,5 @@
+ """앱이 소유하는 화면과 대화상자의 부드러운 청록 테마입니다."""
++from i18n import translate as t, get_language
+ from PySide6.QtCore import QEvent, QObject, QTimer, QTranslator, Qt
+ from PySide6.QtGui import QColor, QIcon, QPalette, QPixmap
+ from PySide6.QtWidgets import QApplication, QFileDialog, QHeaderView, QProxyStyle, QStyleFactory, QTreeView
+@@ -87,7 +88,7 @@
+               'List View': '목록 보기', 'Detail View': '자세히 보기', 'Show ': '표시 '}
+ 
+     def translate(self, context, source_text, disambiguation=None, n=-1):
+-        return self.labels.get(source_text.replace('&', ''), source_text)
++        return self.labels.get(source_text.replace('&', ''), source_text) if get_language() == 'ko' else source_text
+ 
+ 
+ class DialogLayout(QObject):
+@@ -105,10 +106,10 @@
+                             (QFileDialog.DialogLabel.FileName, '폴더:' if dialog.fileMode() == QFileDialog.FileMode.Directory else '파일 이름:'),
+                             (QFileDialog.DialogLabel.FileType, '파일 형식:'),
+                             (QFileDialog.DialogLabel.Reject, '취소')):
+-            dialog.setLabelText(label, text)
++            dialog.setLabelText(label, t(text))
+         dialog.setLabelText(QFileDialog.DialogLabel.Accept,
+-                            '선택' if dialog.fileMode() == QFileDialog.FileMode.Directory else
+-                            '저장' if dialog.acceptMode() == QFileDialog.AcceptMode.AcceptSave else '열기')
++                            t('선택') if dialog.fileMode() == QFileDialog.FileMode.Directory else
++                            t('저장') if dialog.acceptMode() == QFileDialog.AcceptMode.AcceptSave else t('열기'))
+         for tree in dialog.findChildren(QTreeView):
+             if tree.model() and tree.model().columnCount() >= 4:
+                 tree.header().setMinimumSectionSize(60)
+--- 이전/src/usage_widgets.py
++++ 현재/src/usage_widgets.py
+@@ -1,3 +1,4 @@
++from i18n import translate as t
+ from PySide6.QtCore import Qt, QTimer
+ from PySide6.QtGui import QPixmap
+ from PySide6.QtWidgets import QLabel, QSizePolicy
+@@ -7,33 +8,51 @@
+ class CalendarHero(QLabel):
+     """사용 한도 화면에서만 날짜별 입체 이미지를 갱신합니다."""
+     def __init__(self, parent=None):
+-        super().__init__('입체 이미지 준비 중', parent)
++        super().__init__(t('입체 이미지 준비 중'), parent)
+         self.setAlignment(Qt.AlignmentFlag.AlignCenter)
+         self.setMinimumSize(120, 150)
+         self.setMaximumWidth(300)
+         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+         self.setStyleSheet('color:#B5C8D4;background:transparent;')
+         self.timer = QTimer(self)
+-        self.timer.setInterval(33)
+-        self.timer.timeout.connect(self.refresh_frame)
++        self.timer.setInterval(1000)
++        self.timer.timeout.connect(self._refresh_error)
+         self.started = time.monotonic()
+ 
+     def set_active(self, active):
+         from calendar_motion import set_calendar_motion_visible
+         set_calendar_motion_visible(self, active)
+         if active:
++            self._request_motion_size()
+             self.timer.start()
+             self.refresh_frame()
+         else:
+             self.timer.stop()
+ 
++    def _refresh_error(self):
++        from calendar_motion import get_calendar_error
++        if get_calendar_error():self.refresh_frame()
++
++    def calendar_frame_ready(self):
++        if self.isVisible():self.refresh_frame()
++
++    def _request_motion_size(self):
++        from calendar_motion import set_calendar_motion_size
++        size=max(32,min(2160,round(min(self.width(),self.height())*self.devicePixelRatioF())))
++        set_calendar_motion_size(self,size)
++
++    def resizeEvent(self,event):
++        super().resizeEvent(event)
++        if hasattr(self,'timer') and self.timer.isActive():self._request_motion_size()
++
+     def refresh_frame(self):
+-        from calendar_motion import get_calendar_frame, get_calendar_error
++        from calendar_motion import get_calendar_frame, get_calendar_error,record_calendar_presentation
+         image = get_calendar_frame(time.monotonic() - self.started)
+         error = get_calendar_error()
+         if error:
+-            self.setText('입체 이미지 표시 오류: ' + str(error))
++            self.setText(t('입체 이미지 표시 오류: ') + str(error))
+         elif not image.isNull():
+             pixmap = QPixmap.fromImage(image)
+             self.setPixmap(pixmap.scaled(self.size(), Qt.AspectRatioMode.KeepAspectRatio,
+                                          Qt.TransformationMode.SmoothTransformation))
++            record_calendar_presentation(self,image)
+--- 이전/src/visuals.py
++++ 현재/src/visuals.py
+@@ -1,6 +1,7 @@
+ """제작된 실제3D 금속 프레임과 고정된 실제 잔량·상태를 합성합니다."""
+ import math
+ 
++from i18n import translate as t
+ from PySide6.QtCore import QPointF, QRectF, Qt
+ from PySide6.QtGui import QColor, QFont, QFontMetricsF, QImage, QPainter, QLinearGradient, QTextLayout, QTextOption
+ from atom_frames import get_atom_frames
+@@ -78,13 +79,13 @@
+ 
+ def status_label(healthy, unread):
+     """읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다."""
+-    return '새 변경' if unread else '감시 중' if healthy else '확인 필요'
++    return t('새 변경') if unread else t('감시 중') if healthy else t('확인 필요')
+ 
+ 
+ def element_labels(element, badge, state, healthy, unread):
+     """원자번호와 계정 퍼센트를 서로 다른 명시적 라벨로 구분합니다."""
+-    usage = ('잔량 ' + badge) if state == 'fresh' else '잔량 지연' if state == 'stale' else '잔량 미확인'
+-    return str(element.number), element.symbol, element.name, usage, status_label(healthy, unread)
++    usage = (t('잔량 ') + badge) if state == 'fresh' else t('잔량 지연') if state == 'stale' else t('잔량 미확인')
++    return str(element.number), element.symbol, t(element.name), usage, status_label(healthy, unread)
+ 
+ 
+ # 움직이는 조형물·원소 도크·계정 잔량은 서로 독립된 화면 영역입니다.
+@@ -102,9 +103,9 @@
+              and math.isfinite(fraction) and 0 <= fraction <= 1)
+     if state != 'fresh' or not valid:
+         rect.setWidth(0)
+-        return rect, '잔량 지연' if state == 'stale' else '잔량 미확인'
++        return rect, t('잔량 지연') if state == 'stale' else t('잔량 미확인')
+     rect.setWidth(USAGE_TRACK_RECT.width()*fraction)
+-    return rect, '잔량 '+format(fraction*100,'g')+'%'
++    return rect, t('잔량 ')+format(fraction*100,'g')+'%'
+ 
+ 
+ def _frame_for_element(element, elapsed):
+@@ -153,13 +154,13 @@
+     if calendar is not None:
+         today = calendar.date
+         label(QRectF(-64,27,32,21),f'{today.month}/{today.day}',11,QColor(accent))
+-        label(QRectF(-27,28,90,20),calendar.title,12)
++        label(QRectF(-27,28,90,20),t(calendar.title),12)
+         text.setPen(QColor('#657587'))
+         text.drawLine(QPointF(-30,32),QPointF(-30,45))
+     else:
+         label(QRectF(-64,28,22,20),str(element.number),12,QColor(accent))
+         label(QRectF(-39,24,50,28),element.symbol,SYMBOL_PIXELS)
+-        label(QRectF(17,28,46,20),element.name,12)
++        label(QRectF(17,28,46,20),t(element.name),12)
+         text.setPen(QColor('#657587'))
+         for x in (-40,13):text.drawLine(QPointF(x,32),QPointF(x,45))
+     surface(USAGE_RECT,5)
+@@ -210,7 +211,7 @@
+ 
+ def draw_desktop_orbit(painter, width, height, source, design, fraction, state, clock_text=None, weather_text=None, location_text=None):
+     """위젯의 조형과 글자를 별개 영역에 그려 작은 글자 축소를 막습니다."""
+-    layout = desktop_widget_layout(width, height, design.title, weather_text is not None, location_text is not None)
++    layout = desktop_widget_layout(width, height, t(design.title), weather_text is not None, location_text is not None)
+     painter.save()
+     painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+     painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+--- 이전/src/weather.py
++++ 현재/src/weather.py
+@@ -1,11 +1,103 @@
+ """네트워크로 대략적인 지역과 현재 기온을 비동기 조회합니다."""
+ import json
+ import math
++import re
+ import time
++from collections import OrderedDict
+ from urllib.parse import urlencode
+ 
+ from PySide6.QtCore import QObject, QTimer, QUrl, Signal
+ from PySide6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
++
++
++# 행정안전부 시도 안내의 영문 표기와 공식 한글 지명을 대응합니다.
++# 출처: https://www.mois.go.kr/eng/sub/a03/citiesProvinces/screen.do
++_KOREAN_REGIONS = {
++    'seoul': '서울특별시', 'busan': '부산광역시', 'daegu': '대구광역시',
++    'incheon': '인천광역시', 'gwangju': '광주광역시', 'daejeon': '대전광역시',
++    'ulsan': '울산광역시', 'sejong': '세종특별자치시', 'gyeonggi': '경기도',
++    'gangwon': '강원특별자치도', 'chungcheongbuk': '충청북도', 'chungcheongnam': '충청남도',
++    'jeollabuk': '전북특별자치도', 'jeonbuk': '전북특별자치도', 'jeollanam': '전라남도',
++    'gyeongsangbuk': '경상북도', 'gyeongsangnam': '경상남도', 'jeju': '제주특별자치도',
++}
++_COUNTRIES = {'US': '미국', 'JP': '일본', 'CN': '중국', 'GB': '영국', 'DE': '독일',
++              'FR': '프랑스', 'CA': '캐나다', 'AU': '호주', 'SG': '싱가포르', 'TW': '대만'}
++
++
++def localized_region(data, language='ko'):
++    """검색 전 임시 표시에는 검증된 국내 사전 또는 실제 원문 지명을 사용합니다."""
++    if language not in ('ko', 'en'):
++        raise ValueError('지원 언어는 ko 또는 en입니다.')
++    def clean(value):
++        return ''.join(c for c in value if c.isprintable()).strip()[:80] if isinstance(value, str) else ''
++    city, region, country = clean(data.get('city')), clean(data.get('region')), clean(data.get('country'))
++    original = ' · '.join(dict.fromkeys(v for v in (city, region, country) if v))
++    code = clean(data.get('country_code')).upper()
++    if not original:
++        return ('위치 정보 없음' if language == 'ko' else 'Location unavailable'), ''
++    if language == 'en':
++        return original, original
++    if code and code != 'KR':
++        label = ' · '.join(dict.fromkeys(v for v in (city, region, _COUNTRIES.get(code, country)) if v))
++        return label or original, original
++    def korean(value, is_city=False):
++        if re.search('[가-힣]', value):
++            return value
++        if code != 'KR':
++            return ''
++        key = value.casefold()
++        for suffix in (' special self-governing province', ' special self-governing city',
++                       ' metropolitan city', ' province', ' special city', '-do', '-si'):
++            key = key.removesuffix(suffix)
++        if is_city and key == 'suwon':
++            return '수원시'
++        if is_city and key == 'gwangju':
++            # 동명 도시이므로 확인된 시도 없이 광주광역시로 확정하지 않습니다.
++            confirmed_region = korean(region)
++            if confirmed_region == '경기도':
++                return '광주시'
++            if confirmed_region == '광주광역시':
++                return '광주광역시'
++            return ''
++        return _KOREAN_REGIONS.get(key, '')
++    label = ' · '.join(dict.fromkeys(v for v in (korean(region) or region, korean(city, True) or city, country) if v))
++    return label or original, original
++
++
++def select_geocoded_region(location, data):
++    """동일 국가이면서 IP 추정 좌표에서30km 이내인 가장 가까운 검색 결과만 수락합니다."""
++    rows = data.get('results')
++    if not isinstance(rows, list) or len(rows) > 10:
++        return None
++    code = location.get('country_code', '')
++    if not isinstance(code, str) or not re.fullmatch('[A-Z]{2}', code):
++        return None
++    def valid(value, low, high):
++        return type(value) in (int, float) and low <= value <= high and math.isfinite(value)
++    latitude, longitude = location.get('latitude'), location.get('longitude')
++    if not valid(latitude, -90, 90) or not valid(longitude, -180, 180):
++        return None
++    closest = None
++    for row in rows:
++        if not isinstance(row, dict) or row.get('country_code') != code:
++            continue
++        lat, lon = row.get('latitude'), row.get('longitude')
++        name = row.get('name')
++        if not isinstance(name, str) or not name.strip() or not valid(lat, -90, 90) or not valid(lon, -180, 180):
++            continue
++        delta_lat, delta_lon = math.radians(lat-latitude), math.radians(lon-longitude)
++        arc = math.sin(delta_lat/2)**2 + math.cos(math.radians(lat))*math.cos(math.radians(latitude))*math.sin(delta_lon/2)**2
++        distance = 6371 * 2 * math.asin(math.sqrt(min(1, max(0, arc))))
++        if distance > 30 or (closest is not None and distance >= closest[0]):
++            continue
++        labels = []
++        for value in (name, row.get('admin1'), row.get('country')):
++            if isinstance(value, str):
++                value = ''.join(c for c in value if c.isprintable()).strip()[:80]
++                if value and value.casefold() not in [v.casefold() for v in labels]:
++                    labels.append(value)
++        closest = distance, ' · '.join(labels)
++    return closest[1] if closest else None
+ 
+ 
+ class WeatherClient(QObject):
+@@ -14,8 +106,11 @@
+     TIMEOUT_MS = 8000
+     INTERVAL_MS = 300000
+ 
+-    def __init__(self, parent=None):
++    def __init__(self, parent=None, language='ko'):
+         super().__init__(parent)
++        if language not in ('ko', 'en'):
++            raise ValueError('지원 언어는 ko 또는 en입니다.')
++        self.language = language
+         self.manager = QNetworkAccessManager(self)
+         self.poll_timer = QTimer(self)
+         self.poll_timer.setInterval(self.INTERVAL_MS)
+@@ -27,12 +122,57 @@
+         self.deadline.setSingleShot(True)
+         self.deadline.timeout.connect(self._timeout)
+         self.snapshot = {'temperature': None, 'region': '', 'checked_at': None,
+-                         'status': '기온 조회 준비', 'stale': True, 'busy': False, 'observed_at': None}
++                         'status': '기온 조회 준비', 'stale': True, 'busy': False, 'observed_at': None,
++                         'region_original': '', 'language': language, 'region_source': 'ipwho.is · 원문'}
+         self.reply = None
+         self.closed = False
+         self.last_success = None
+         self.source_age_at_success = None
+         self._region = ''
++        self._region_original = ''
++        self._region_source = 'ipwho.is · 원문'
++        self._location = None
++        self._region_cache = OrderedDict()
++        self._generation = 0
++        self._stage = ''
++
++    def _guard(self, callback):
++        generation = self._generation
++        def accept(data):
++            if not self.closed and generation == self._generation:
++                callback(data)
++        return accept
++
++    def _abort_request(self):
++        self.deadline.stop()
++        reply, self.reply = self.reply, None
++        if reply is not None:
++            reply.abort()
++            reply.deleteLater()
++        self._stage = ''
++
++    def set_language(self, language):
++        if language not in ('ko', 'en'):
++            raise ValueError('지원 언어는 ko 또는 en입니다.')
++        if self.closed or language == self.language:
++            return
++        was_busy = self.snapshot['busy']
++        self.language = language
++        self._generation += 1
++        self._abort_request()
++        if self._location is not None:
++            self._region, self._region_original = localized_region(self._location, language)
++            self._region_source = 'ipwho.is · 원문 또는 국내 사전'
++            self._publish(region=self._region, region_original=self._region_original,
++                          language=language, region_source=self._region_source, busy=False)
++            if was_busy or self.snapshot['temperature'] is None:
++                self._request_weather()
++            else:
++                self._lookup_region()
++        else:
++            self._publish(language=language)
++            if was_busy or self.poll_timer.isActive():
++                self.refresh()
+ 
+     def _publish(self, **changes):
+         if self.closed:
+@@ -51,7 +191,9 @@
+         if self.closed or self.reply is not None:
+             return False
+         self._publish(busy=True, status='기온 조회 중')
+-        self._get('https://ipwho.is/', self._location_done)
++        self._generation += 1
++        self._stage = 'location'
++        self._get('https://ipwho.is/', self._guard(self._location_done))
+         return True
+ 
+     def _get(self, url, callback):
+@@ -78,12 +220,12 @@
+         self.reply = None
+         if reply.error() != QNetworkReply.NetworkError.NoError:
+             reply.deleteLater()
+-            self._publish(busy=False, stale=True, status='위치 또는 기온 네트워크 조회 실패')
++            self._request_failed('위치 또는 기온 네트워크 조회 실패')
+             return
+         raw = bytes(reply.read(self.LIMIT + 1))
+         reply.deleteLater()
+         if len(raw) > self.LIMIT:
+-            self._publish(busy=False, stale=True, status='기온 조회 응답이 너무 큽니다')
++            self._request_failed('기온 조회 응답이 너무 큽니다')
+             return
+         try:
+             data = json.loads(raw.decode('utf-8'))
+@@ -91,26 +233,89 @@
+                 raise ValueError('응답 형식')
+             callback(data)
+         except (ValueError, TypeError, UnicodeError, KeyError, OverflowError):
+-            self._publish(busy=False, stale=True, status='위치 또는 기온 응답을 확인할 수 없습니다')
++            self._request_failed('위치 또는 기온 응답을 확인할 수 없습니다')
+ 
+     @staticmethod
+     def _valid_number(value, low, high):
+-        return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value) and low <= value <= high
++        return isinstance(value, (int, float)) and not isinstance(value, bool) and low <= value <= high and math.isfinite(value)
+ 
+     def _location_done(self, data):
++        if self.closed:
++            return
+         if data.get('success') is not True:
+             self._publish(busy=False, stale=True, status='네트워크 위치를 확인할 수 없습니다')
+             return
+         latitude, longitude = data.get('latitude'), data.get('longitude')
+         if not self._valid_number(latitude, -90, 90) or not self._valid_number(longitude, -180, 180):
+             raise ValueError('위치 범위')
+-        city, region = data.get('city'), data.get('region')
+-        self._region = ' · '.join(dict.fromkeys(v.strip()[:80] for v in (city, region) if isinstance(v, str) and v.strip()))
++        # IP 자체는 복사하지 않으며 좌표는 현재 요청 문맥과 유한 메모리 캐시에만 둡니다.
++        self._location = {key: data[key] for key in ('city', 'region', 'country', 'country_code', 'latitude', 'longitude') if key in data}
++        for key in ('city', 'region', 'country', 'country_code'):
++            value = self._location.get(key)
++            self._location[key] = ''.join(c for c in value if c.isprintable()).strip()[:80] if isinstance(value, str) else ''
++        self._location['country_code'] = self._location['country_code'].upper()
++        self._region, self._region_original = localized_region(self._location, self.language)
++        self._region_source = 'ipwho.is · 원문 또는 국내 사전'
++        self._request_weather()
++
++    def _request_weather(self):
++        latitude, longitude = self._location['latitude'], self._location['longitude']
+         query = urlencode({'latitude': latitude, 'longitude': longitude, 'current': 'temperature_2m',
+                            'temperature_unit': 'celsius', 'timeformat': 'unixtime'})
+-        self._get('https://api.open-meteo.com/v1/forecast?' + query, self._weather_done)
++        self._stage = 'weather'
++        self._publish(busy=True, status='기온 조회 중')
++        self._get('https://api.open-meteo.com/v1/forecast?' + query, self._guard(self._weather_done))
++
++    def _cache_key(self):
++        return tuple(self._location.get(key, '') for key in ('city', 'region', 'country_code')) + (
++            round(self._location['latitude'], 2), round(self._location['longitude'], 2), self.language)
++
++    def _lookup_region(self):
++        if self.closed or self._location is None:
++            return
++        key = self._cache_key()
++        if key in self._region_cache:
++            self._region_cache.move_to_end(key)
++            self._region, self._region_source = self._region_cache[key]
++            self._publish(region=self._region, region_source=self._region_source)
++            self._stage = ''
++            return
++        city, code = self._location.get('city'), self._location.get('country_code')
++        if len(city) < 2 or not re.fullmatch('[A-Z]{2}', code):
++            self._stage = ''
++            return
++        query = urlencode({'name': city, 'count': 10, 'language': self.language, 'countryCode': code})
++        self._stage = 'geocode'
++        self._get('https://geocoding-api.open-meteo.com/v1/search?' + query, self._guard(self._geocode_done))
++
++    def _geocode_done(self, data):
++        if self.closed or self._location is None:
++            return
++        label = select_geocoded_region(self._location, data)
++        self._stage = ''
++        if label:
++            self._region = label
++            self._region_source = 'Open-Meteo Geocoding · GeoNames'
++            key = self._cache_key()
++            self._region_cache[key] = (label, self._region_source)
++            self._region_cache.move_to_end(key)
++            while len(self._region_cache) > 16:
++                self._region_cache.popitem(last=False)
++            self._publish(region=label, region_source=self._region_source, busy=False)
++        else:
++            self._publish(region=self._region, region_source='ipwho.is · 지명 검색 미일치 · 원문 보존', busy=False)
++
++    def _request_failed(self, message):
++        if self._stage == 'geocode':
++            self._stage = ''
++            self._publish(busy=False, region_source='ipwho.is · 지역 번역 실패 · 원문 보존')
++        else:
++            self._stage = ''
++            self._publish(busy=False, stale=True, status=message)
+ 
+     def _weather_done(self, data):
++        if self.closed:
++            return
+         current = data.get('current')
+         temperature = current.get('temperature_2m') if isinstance(current, dict) else None
+         if not self._valid_number(temperature, -100, 70):
+@@ -122,8 +327,11 @@
+         stale = now - observed > 900
+         self.last_success = time.monotonic() if not stale else None
+         self.source_age_at_success = max(0, now - observed) if not stale else None
+-        self._publish(temperature=float(temperature), region=self._region, checked_at=now, observed_at=observed,
++        self._publish(temperature=float(temperature), region=self._region, region_original=self._region_original,
++                      language=self.language, region_source=self._region_source,
++                      checked_at=now, observed_at=observed,
+                       busy=False, stale=stale, status='기온 제공 자료 지연 · 이전 값' if stale else '기온 조회 완료')
++        self._lookup_region()
+ 
+     def _check_age(self):
+         if self.last_success is None or self.snapshot['stale']:
+@@ -141,7 +349,7 @@
+         if reply is not None:
+             reply.abort()
+             reply.deleteLater()
+-        self._publish(busy=False, stale=True, status=message)
++        self._request_failed(message)
+ 
+     def _timeout(self):
+         self._fail('위치 또는 기온 조회 시간 초과')
+@@ -150,6 +358,7 @@
+         if self.closed:
+             return
+         self.closed = True
++        self._generation += 1
+         self.poll_timer.stop()
+         self.age_timer.stop()
+         self.deadline.stop()
+@@ -157,3 +366,5 @@
+         if reply is not None:
+             reply.abort()
+             reply.deleteLater()
++        self._location = None
++        self._region_cache.clear()

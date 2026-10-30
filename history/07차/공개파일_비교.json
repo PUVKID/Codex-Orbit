@@ -1,0 +1,66 @@
+{
+  "version": 7,
+  "folder": "07차",
+  "previous": "06차",
+  "files": [
+    {
+      "path": "requirements.txt",
+      "bytes": 47,
+      "sha256": "0277c326e594b9e8ec8027fc240eda62a146295c2115466e872ab475d5699121",
+      "utf8_text": true
+    },
+    {
+      "path": "src/app.py",
+      "bytes": 62775,
+      "sha256": "2e961caa97a0aecc6b26d0948d53f72369451e6af01bd9124c759c66875a3398",
+      "utf8_text": true
+    },
+    {
+      "path": "src/core.py",
+      "bytes": 10204,
+      "sha256": "0da59ecbba81ad77544766fa50f0b24bd5abbd8d8f8da37f269a8ff08979b981",
+      "utf8_text": true
+    },
+    {
+      "path": "src/notifier.py",
+      "bytes": 33077,
+      "sha256": "bb9659e678dcdb5d214c2a3b7201d42785dd287f317d3ac854ef39ca5f41edb6",
+      "utf8_text": true
+    },
+    {
+      "path": "src/theme.py",
+      "bytes": 8014,
+      "sha256": "6ac4f4457b8a7f2cbaddeb15e8a6858bc6e506eb962175099565d5af970e74d0",
+      "utf8_text": true
+    },
+    {
+      "path": "src/usage.py",
+      "bytes": 15245,
+      "sha256": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e",
+      "utf8_text": true
+    },
+    {
+      "path": "src/visuals.py",
+      "bytes": 6995,
+      "sha256": "60af8348b66e84a9c37c11f3c700579db137fd6b5b5ef2ad25f748253071e05e",
+      "utf8_text": true
+    }
+  ],
+  "changes": [
+    {
+      "path": "src/app.py",
+      "status": "수정",
+      "before": {
+        "bytes": 62549,
+        "sha256": "c803fe6fdda129d8910dfe5a9d608034fcd9284e56593f3935190dab39f59fa4"
+      },
+      "after": {
+        "bytes": 62775,
+        "sha256": "2e961caa97a0aecc6b26d0948d53f72369451e6af01bd9124c759c66875a3398"
+      },
+      "binary": false,
+      "definitions_added": [],
+      "definitions_removed": []
+    }
+  ]
+}

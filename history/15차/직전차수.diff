@@ -1,0 +1,379 @@
+--- 이전/src/app.py
++++ 현재/src/app.py
+@@ -22,6 +22,7 @@
+ from notifier import Watcher, append_log, atomic_json, stamp, POLL_INTERVAL_SECONDS
+ from usage import UsageClient, reset_label
+ from visuals import draw_orbit
++from atom_frames import get_atom_frames
+ from brand import brand_image
+ from theme import STYLE, apply_theme
+ 
+@@ -818,6 +819,8 @@
+ 
+ class Controller:
+     def __init__(self, settings, start_worker=True, start_usage=None):
++        # 필수 이미지가 손상됐으면 타이머나 창을 만들기 전에 시작 실패로 전달합니다.
++        get_atom_frames()
+         apply_theme()
+         self.settings = settings
+         self.monitor = None
+@@ -1194,6 +1197,9 @@
+             stage = 'monitor-preflight'
+             log_error = operation_record(args.data_dir, stage, effective_sessions, lock_acquired=True) or log_error
+             title_catalog(Path(effective_sessions).parent / 'session_index.jsonl', args.data_dir / 'title-cache.json')
++        stage = 'visual-assets-preflight'
++        log_error = operation_record(args.data_dir, stage, effective_sessions, lock_acquired=True) or log_error
++        get_atom_frames()
+         stage = 'controller-prepare'
+         log_error = operation_record(args.data_dir, stage, effective_sessions, lock_acquired=True) or log_error
+         controller = Controller(settings, start_worker=not (args.smoke_test or args.usage_smoke_test))
+--- 이전/src/atom_frames.py
++++ 현재/src/atom_frames.py
+@@ -0,0 +1,190 @@
++"""검증된 금속 원자 프레임을 추출 없이 읽는 제한 메모리 재생기입니다."""
++from collections import OrderedDict
++import atexit
++import hashlib
++import json
++import math
++from pathlib import Path
++import re
++import struct
++import sys
++import zipfile
++
++from PySide6.QtGui import QImage
++
++
++FRAME_COUNT = 540
++FRAME_SIZE = 296
++FPS = 30
++PERIOD_SECONDS = 18
++CACHE_LIMIT = 24
++MAX_ARCHIVE_BYTES = 128 * 1024 * 1024
++MAX_FRAME_BYTES = 1024 * 1024
++MAX_TOTAL_BYTES = 256 * 1024 * 1024
++MAX_MANIFEST_BYTES = 64 * 1024
++
++
++class AtomAssetError(RuntimeError):
++    """필수 시각 자산 오류를 시작 실패 경로에 전달합니다."""
++
++
++def asset_directory():
++    root = Path(getattr(sys, '_MEIPASS', Path(__file__).resolve().parents[1]))
++    return root / 'assets' / 'atom3d'
++
++
++def _identity(path):
++    value = path.stat()
++    return value.st_dev, value.st_ino, value.st_size, value.st_mtime_ns
++
++
++def _json_object(pairs):
++    value = {}
++    for key, item in pairs:
++        if key in value:
++            raise AtomAssetError('원자 자산 매니페스트에 중복 필드가 있습니다.')
++        value[key] = item
++    return value
++
++
++class AtomFrames:
++    """시작 시 전체 무결성을 검사하고 해제된 QImage는 최대24장만 보존합니다."""
++    def __init__(self, directory):
++        # 제품 호출은 asset_directory만 사용하며 별도 경로는 고립 fixture용입니다.
++        self.directory = Path(directory)
++        self.cache = OrderedDict()
++        self.archive = None
++        self._stream = None
++        try:
++            self._prepare()
++        except Exception as error:
++            self.close()
++            if isinstance(error, AtomAssetError):
++                raise
++            raise AtomAssetError('필수 금속 원자 자산을 읽을 수 없습니다: ' + str(error)) from error
++
++    def _prepare(self):
++        manifest_path = self.directory / 'manifest.json'
++        archive_path = self.directory / 'frames.zip'
++        if not 0 < manifest_path.stat().st_size <= MAX_MANIFEST_BYTES:
++            raise AtomAssetError('원자 자산 매니페스트 크기가 허용 범위를 벗어났습니다.')
++        self.manifest = json.loads(manifest_path.read_text(encoding='utf-8'), object_pairs_hook=_json_object)
++        expected = {'schema_version': 1, 'width': FRAME_SIZE, 'height': FRAME_SIZE,
++                    'fps': FPS, 'period_seconds': PERIOD_SECONDS, 'frame_count': FRAME_COUNT,
++                    'frame_pattern': 'frame_{:04d}.png', 'archive': 'frames.zip'}
++        if not isinstance(self.manifest, dict):
++            raise AtomAssetError('원자 자산 매니페스트는 객체여야 합니다.')
++        for key, value in expected.items():
++            actual = self.manifest.get(key)
++            if type(actual) is not type(value) or actual != value:
++                raise AtomAssetError('원자 자산 계약 불일치: ' + key)
++        for key in ('geometry', 'lighting', 'source'):
++            if not isinstance(self.manifest.get(key), (dict, str)) or not self.manifest[key]:
++                raise AtomAssetError('원자 자산 제작 근거 누락: ' + key)
++        digest = self.manifest.get('archive_sha256')
++        if not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None:
++            raise AtomAssetError('원자 프레임 ZIP의 SHA256 형식이 잘못됐습니다.')
++        if not 0 < archive_path.stat().st_size <= MAX_ARCHIVE_BYTES:
++            raise AtomAssetError('원자 프레임 ZIP 크기가 허용 범위를 벗어났습니다.')
++        self.identities = (_identity(manifest_path), _identity(archive_path))
++        self._stream = archive_path.open('rb')
++        hasher = hashlib.sha256()
++        while chunk := self._stream.read(1024 * 1024):
++            hasher.update(chunk)
++        if hasher.hexdigest() != digest:
++            raise AtomAssetError('원자 프레임 ZIP의 SHA256이 일치하지 않습니다.')
++        self._stream.seek(0)
++        self.archive = zipfile.ZipFile(self._stream)
++        members = self.archive.infolist()
++        names = {f'frame_{index:04d}.png' for index in range(FRAME_COUNT)}
++        if len(members) != FRAME_COUNT or {item.filename for item in members} != names:
++            raise AtomAssetError('원자 프레임 ZIP의 정확한540개 이름·목록이 일치하지 않습니다.')
++        if sum(item.file_size for item in members) > MAX_TOTAL_BYTES:
++            raise AtomAssetError('원자 프레임 전체 읽기 상한을 초과했습니다.')
++        for item in members:
++            if (item.is_dir() or item.flag_bits & 1 or item.compress_type not in
++                    (zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED) or
++                    not 0 < item.file_size <= MAX_FRAME_BYTES):
++                raise AtomAssetError('원자 프레임 멤버의 형식·크기가 허용 범위를 벗어났습니다.')
++            # read는 각 멤버의 CRC도 검사합니다. 이미지는 한 장씩 검사하고 버립니다.
++            image = self._decode(item.filename)
++            if item.filename == 'frame_0000.png':
++                self.cache[0] = image
++        self._check_unchanged()
++
++    def _decode(self, name):
++        with self.archive.open(name) as stream:
++            data = stream.read(MAX_FRAME_BYTES + 1)
++        if len(data) > MAX_FRAME_BYTES or len(data) < 33 or data[:8] != b'\x89PNG\r\n\x1a\n':
++            raise AtomAssetError('원자 프레임 PNG 서명·크기가 잘못됐습니다: ' + name)
++        if (data[12:16] != b'IHDR' or struct.unpack('>II', data[16:24]) != (FRAME_SIZE, FRAME_SIZE)
++                or data[24:26] != bytes((8, 6))):
++            raise AtomAssetError('원자 프레임은296x296의8비트RGBA PNG여야 합니다: ' + name)
++        image = QImage.fromData(data, 'PNG')
++        if (image.isNull() or image.width() != FRAME_SIZE or image.height() != FRAME_SIZE
++                or not image.hasAlphaChannel() or not image.allGray()):
++            raise AtomAssetError('원자 프레임의 디코딩·무채색·알파 계약이 잘못됐습니다: ' + name)
++        if any(image.pixelColor(x, y).alpha() for x, y in ((0, 0), (295, 0), (0, 295), (295, 295))):
++            raise AtomAssetError('원자 프레임의 모서리는 투명해야 합니다: ' + name)
++        return image.convertToFormat(QImage.Format.Format_ARGB32_Premultiplied)
++
++    def _check_unchanged(self):
++        actual = (_identity(self.directory / 'manifest.json'), _identity(self.directory / 'frames.zip'))
++        if actual != self.identities:
++            raise AtomAssetError('검증 뒤 원자 자산이 변경됐습니다. 앱을 다시 실행해 주세요.')
++
++    @staticmethod
++    def frame_index(elapsed):
++        if isinstance(elapsed, bool) or not isinstance(elapsed, (int, float)) or not math.isfinite(elapsed):
++            raise AtomAssetError('원자 프레임의 재생 시각이 유한한 숫자가 아닙니다.')
++        return int((elapsed % PERIOD_SECONDS) * FPS) % FRAME_COUNT
++
++    def frame(self, elapsed):
++        self._check_unchanged()
++        index = self.frame_index(elapsed)
++        if index not in self.cache:
++            try:
++                self.cache[index] = self._decode(f'frame_{index:04d}.png')
++            except Exception as error:
++                raise AtomAssetError('원자 프레임 재생 실패: ' + str(error)) from error
++            while len(self.cache) > CACHE_LIMIT:
++                self.cache.popitem(last=False)
++        self.cache.move_to_end(index)
++        return self.cache[index]
++
++    @property
++    def cache_bytes(self):
++        return sum(image.sizeInBytes() for image in self.cache.values())
++
++    def close(self):
++        if self.archive is not None:
++            self.archive.close()
++            self.archive = None
++        if self._stream is not None:
++            self._stream.close()
++            self._stream = None
++        self.cache.clear()
++
++
++_runtime_frames = None
++
++
++def close_runtime_frames():
++    """프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다."""
++    global _runtime_frames
++    value, _runtime_frames = _runtime_frames, None
++    if value is not None:
++        value.close()
++
++
++atexit.register(close_runtime_frames)
++
++
++def get_atom_frames():
++    """제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다."""
++    global _runtime_frames
++    if _runtime_frames is None:
++        _runtime_frames = AtomFrames(asset_directory())
++    else:
++        _runtime_frames._check_unchanged()
++    return _runtime_frames
+--- 이전/src/brand.py
++++ 현재/src/brand.py
+@@ -1,29 +1,17 @@
+-"""실시간 캐릭터와 같은 세 링을 사용하는 절제된 정적 마크입니다."""
++"""같은 금속 원자 제작 프레임을 사용하는 정적 앱 마크입니다."""
+ from functools import lru_cache
+-from PySide6.QtCore import QPointF, Qt
+-from PySide6.QtGui import QColor, QImage, QPainter, QPainterPath, QPen
+-from visuals import ring_points, project_point
++from PySide6.QtCore import Qt, QRect
++from atom_frames import get_atom_frames
++
+ 
+ @lru_cache(maxsize=7)
+ def brand_image(size):
+     size = int(size)
+-    padding = 164 if size <= 32 else 148
+-    image = QImage(size,size,QImage.Format.Format_RGBA8888)
+-    image.fill(Qt.GlobalColor.transparent)
+-    painter = QPainter(image)
+-    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+-    painter.translate(size/2,size/2)
+-    painter.scale(size/padding,size/padding)
+-    paths=[]
+-    for index in range(3):
+-        points=[project_point(point) for point in ring_points(index,0)]
+-        path=QPainterPath(QPointF(*points[0]))
+-        for point in points[1:]:path.lineTo(QPointF(*point))
+-        path.closeSubpath();paths.append(path)
+-    painter.setBrush(Qt.BrushStyle.NoBrush)
+-    for color,width in (('#111111',max(8,padding/size*4)),('#eeeeee',max(3.6,padding/size*1.4))):
+-        painter.setPen(QPen(QColor(color),width))
+-        for path in paths:painter.drawPath(path)
+-    painter.setBrush(QColor('#141414'));painter.setPen(QPen(QColor('#a0a0a0'),max(.7,padding/size*.4)))
+-    painter.drawEllipse(QPointF(0,0),15,15)
+-    painter.end();return image
++    if not 1 <= size <= 512:
++        raise ValueError('브랜드 이미지 크기는1~512px여야 합니다.')
++    source = get_atom_frames().frame(0)
++    # 작은 세 해상도만 투명 여백을 줄이며 금속 픽셀이나 핵을 새로 그리지 않습니다.
++    if size <= 32:
++        source = source.copy(QRect(16, 16, 264, 264))
++    return source.scaled(size, size, Qt.AspectRatioMode.KeepAspectRatio,
++                                            Qt.TransformationMode.SmoothTransformation)
+--- 이전/src/visuals.py
++++ 현재/src/visuals.py
+@@ -1,8 +1,9 @@
+-"""최초 참고의 세 교차 타원과 검은 중심을 가볍게 그리는 선형 모션입니다."""
++"""제작된 실제3D 금속 프레임과 고정된 실제 잔량·상태를 합성합니다."""
+ import math
+ 
+ from PySide6.QtCore import QPointF, QRectF, Qt
+-from PySide6.QtGui import QColor, QFont, QFontMetricsF, QImage, QLinearGradient, QPainter, QPainterPath, QPen
++from PySide6.QtGui import QColor, QFont, QFontMetricsF, QImage, QPainter
++from atom_frames import get_atom_frames
+ 
+ 
+ def rotate_point(point, angles):
+@@ -16,14 +17,16 @@
+ 
+ def project_point(point):
+     x, y, z = point
+-    scale = 290 / (290 - z)
+-    return x * scale, y * scale
++    scale = 700 / (700 - z) * 74 / 77
++    return x * scale, -y * scale
+ 
+ 
+ MOTION_PERIOD = 18
+ RING_TURNS = (1, -2, 3)
+-RING_AXES = ((.18, .10, .979), (-.25, .16, .955), (.13, -.27, .954))
+-BASE_ANGLES = ((1.00, .0, .16), (1.02, .0, 1.35), (.98, .0, -.8))
++RING_AXES = ((.06, -.025, 1.), (-.04, .04, 1.), (.03, .06, 1.))
++RING_RADII = (45., 51., 57.)
++BASE_ANGLES = tuple((math.radians(tilt), 0., math.radians(azimuth))
++                    for tilt, azimuth in zip((50., 52., 54.), (8., 70., 132.)))
+ 
+ 
+ def axis_rotate(point, axis, angle):
+@@ -45,12 +48,12 @@
+ 
+ def ring_points(index, elapsed, count=96):
+     angle = math.tau*(elapsed % MOTION_PERIOD)/MOTION_PERIOD*RING_TURNS[index]
+-    return [axis_rotate(rotate_point((56*math.cos(n*math.tau/count), 56*math.sin(n*math.tau/count), 0),
++    return [axis_rotate(rotate_point((RING_RADII[index]*math.cos(n*math.tau/count), RING_RADII[index]*math.sin(n*math.tau/count), 0),
+                                      BASE_ANGLES[index]), RING_AXES[index], angle) for n in range(count)]
+ 
+ 
+ def orbit_segments(elapsed):
+-    """고유 축과 정방향·역방향 속도로 움직이는 세 폐곡선을 깊이순으로 반환합니다."""
++    """제작 매니페스트와 일치하는 기하 검증용 메타입니다. GUI 드로잉에는 쓰지 않습니다."""
+     segments = []
+     for index in range(3):
+         points = ring_points(index, elapsed)
+@@ -72,48 +75,10 @@
+ 
+ 
+ def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', healthy=False, unread=False, light=False):
+-    """3~5px의 선형 타원과 깊이 가림을 그리고 실제 숫자는 고정합니다."""
+-    elapsed %= MOTION_PERIOD
++    """숫자가 없는 실제3D 프레임 위에 현재 계정 값과 상태만 고정 합성합니다."""
++    painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
++    painter.drawImage(QRectF(-74, -80, 148, 148), get_atom_frames().frame(elapsed))
+     painter.translate(0, -6)
+-    groups = {}
+-    for depth, start, end, index, *_ in orbit_segments(elapsed):
+-        bucket = max(0, min(3, int((depth + 56) / 28)))
+-        key = (bucket, index)
+-        if key not in groups:
+-            groups[key] = QPainterPath()
+-        groups[key].moveTo(QPointF(*start))
+-        groups[key].lineTo(QPointF(*end))
+-    lights = []
+-    for index in range(3):
+-        angle = -.6 + index*.5 + .25*math.sin(elapsed*math.tau/MOTION_PERIOD)
+-        axis = QPointF(65*math.cos(angle),65*math.sin(angle))
+-        gradient = QLinearGradient(-axis,axis)
+-        for position,level in ((0,125),(.25,180),(.48,232),(.72,180),(1,125)):
+-            gradient.setColorAt(position,gray(level))
+-        lights.append(gradient)
+-
+-    def lines(front):
+-        paths = [(depth, index, path) for (depth, index), path in sorted(groups.items())
+-                 if (depth >= 2) == front]
+-        painter.setBrush(Qt.BrushStyle.NoBrush)
+-        painter.setPen(QPen(gray(20),4.8,Qt.PenStyle.SolidLine,Qt.PenCapStyle.FlatCap))
+-        for _, _, path in paths:
+-            painter.drawPath(path)
+-        for depth, index, path in paths:
+-            # 한 링의 앞뒤 조명이 같은 화면 좌표를 공유하여 밝기 마디를 없앱니다.
+-            painter.setPen(QPen(lights[index],3.6,Qt.PenStyle.SolidLine,Qt.PenCapStyle.RoundCap))
+-            painter.drawPath(path)
+-
+-    lines(False)
+-    painter.setBrush(gray(20))
+-    painter.setPen(QPen(gray(130), .7))
+-    painter.drawEllipse(QPointF(0, 0), 24, 24)
+-    lines(True)
+-    # 검은 중심과 숫자는 앞쪽 궤도에 가려지지 않는 고정 영역입니다.
+-    painter.setBrush(gray(20))
+-    painter.setPen(Qt.PenStyle.NoPen)
+-    painter.drawEllipse(QPointF(0, 0), 22, 22)
+-    painter.setPen(gray(248))
+     font = QFont(painter.font())
+     font.setWeight(QFont.Weight.Bold)
+     # 투명 위젯의 Windows 렌더에서도 숫자와 한글에 색 프린지를 만들지 않습니다.
+@@ -131,6 +96,10 @@
+     text_painter = QPainter(text_layer)
+     text_painter.translate(24, 22)
+     text_painter.setFont(font)
++    # 구체의 실제 반사 위에서도 숫자 윤곽이 읽히도록 얇은 검정 그림자만 더합니다.
++    text_painter.setPen(gray(0))
++    for x, y in ((-1, 0), (1, 0), (0, -1), (0, 1)):
++        text_painter.drawText(QRectF(-22+x, -13+y, 44, 25), Qt.AlignmentFlag.AlignCenter, badge)
+     text_painter.setPen(gray(248))
+     text_painter.drawText(QRectF(-22, -13, 44, 25), Qt.AlignmentFlag.AlignCenter, badge)
+     text_painter.setPen(gray(170))

@@ -1,0 +1,915 @@
+--- 이전/src/app.py
++++ 현재/src/app.py
+@@ -9,17 +9,19 @@
+ import time
+ from datetime import datetime, timezone, timedelta
+ import re
+-
+-from PySide6.QtCore import QLockFile, QPoint, QPointF, QRectF, Qt, QThread, QTimer, Signal
++from collections import deque
++
++from PySide6.QtCore import QEvent, QObject, QLockFile, QPoint, QPointF, QRectF, Qt, QThread, QTimer, Signal
+ from PySide6.QtGui import QColor, QFont, QFontDatabase, QIcon, QPainter, QPen
+ from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDialog, QFileDialog,
+                              QFormLayout, QFrame, QHBoxLayout, QLabel, QLineEdit,
+                              QListWidget, QListWidgetItem, QMenu, QMessageBox,
+                              QPlainTextEdit, QPushButton, QSplitter, QTabWidget,
+-                             QSizePolicy, QVBoxLayout, QWidget)
++                             QProgressBar, QScrollArea, QSizePolicy, QVBoxLayout, QWidget)
+ 
+ from core import InstructionStore, clamp_position, read_jsonl_tail, read_text_strict, title_catalog, resolve_title
+ from notifier import Watcher, append_log, atomic_json, stamp
++from usage import UsageClient, reset_label
+ 
+ 
+ def asset(name):
+@@ -184,6 +186,7 @@
+         self.render_time = None
+         self.healthy = True
+         self.unread = False
++        self.usage_badge = '—'
+         self.press_global = None
+         self.dragged = False
+         self.setCursor(Qt.CursorShape.OpenHandCursor)
+@@ -229,9 +232,9 @@
+             painter.restore()
+         painter.setPen(QPen(QColor('#ECF7FF'), 2))
+         painter.setBrush(QColor('#111B2E'))
+-        painter.drawEllipse(QPointF(0, 0), 15, 15)
+-        painter.setFont(QFont('NanumGothic', 15, QFont.Weight.Bold))
+-        painter.drawText(QRectF(-16, -17, 32, 32), Qt.AlignmentFlag.AlignCenter, 'C')
++        painter.drawEllipse(QPointF(0, 0), 20, 16)
++        painter.setFont(QFont(QApplication.font().family(), 10, QFont.Weight.Bold))
++        painter.drawText(QRectF(-21, -17, 42, 32), Qt.AlignmentFlag.AlignCenter, self.usage_badge)
+         painter.setPen(QPen(QColor('#101827'), 1.5))
+         painter.setBrush(QColor('#FFB85C' if not self.healthy else ('#FF7095' if self.unread else '#52E5B7')))
+         painter.drawEllipse(QPointF(14, 14), 5, 5)
+@@ -275,6 +278,8 @@
+ 
+ 
+ class Notice(QFrame):
++    completed = Signal(str)
++
+     def __init__(self, open_details):
+         super().__init__(None, Qt.WindowType.Tool | Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
+         self.open_details = open_details
+@@ -295,15 +300,26 @@
+         close = QPushButton('×')
+         close.setToolTip('알림 닫기 · 이력은 유지됩니다')
+         close.setFixedSize(28, 28)
+-        close.clicked.connect(self.hide)
++        close.clicked.connect(self.dismiss)
+         heading.addWidget(close, 0, Qt.AlignmentFlag.AlignTop)
+         layout.addLayout(heading)
+         layout.addWidget(self.text)
+         hint = QLabel('클릭하여 전체 이유와 근거 보기')
+         layout.addWidget(hint)
++        self.queue_hint = QLabel('')
++        self.queue_hint.setWordWrap(True)
++        self.queue_hint.setTextFormat(Qt.TextFormat.PlainText)
++        layout.addWidget(self.queue_hint)
+         self.timer = QTimer(self)
+         self.timer.setSingleShot(True)
+-        self.timer.timeout.connect(self.hide)
++        self.timer.timeout.connect(self.dismiss)
++
++    def dismiss(self):
++        if not self.isVisible():
++            return
++        self.timer.stop()
++        self.hide()
++        self.completed.emit(str(getattr(self, 'event_id', '')))
+ 
+     def fit_content(self):
+         # 고정 폭에서 필요한 줄바꿈 높이를 먼저 확보해 마지막 줄 잘림을 막습니다.
+@@ -314,6 +330,7 @@
+         self.adjustSize()
+ 
+     def display(self, event, orbit, timeout_ms=30000, replay=False):
++        self.event = dict(event)
+         self.event_id = event.get('id')
+         name = str(event.get('chat_name') or event.get('target'))
+         self.title.setText(name)
+@@ -330,8 +347,8 @@
+ 
+     def mouseReleaseEvent(self, event):
+         if event.button() == Qt.MouseButton.LeftButton:
+-            self.hide()
+             self.open_details(self.event_id)
++            self.dismiss()
+ 
+ 
+ class Details(QDialog):
+@@ -348,6 +365,7 @@
+         heading.setStyleSheet('font-size:24px;color:#57DBD7;')
+         layout.addWidget(heading)
+         layout.addWidget(QLabel('로컬 관측 · 공개된 배정 이유 · 내 지침'))
++        self.build_usage(layout)
+         self.tabs = QTabWidget()
+         layout.addWidget(self.tabs)
+         self.build_history()
+@@ -359,6 +377,65 @@
+         self.tabs.addTab(help_text, '사용 설명')
+         self.setStyleSheet('QDialog,QWidget {background:#070B10;color:#E5F1F4;font-weight:700;} QLabel {background:transparent;} QFrame#eventCard {background:#0D151D;border:1px solid #24454E;border-radius:10px;} QLineEdit,QPlainTextEdit,QListWidget,QComboBox {background:#0C131B;border:1px solid #25434B;border-radius:6px;padding:8px;} QListWidget::item {padding:12px 6px;border-bottom:1px solid #1D3038;} QListWidget::item:selected {background:#12343C;color:#8CFFF1;} QPushButton {background:#12252E;border:1px solid #2D6570;border-radius:5px;padding:8px 12px;} QPushButton:hover {background:#1C3B45;border-color:#61DCD4;} QPushButton:disabled {color:#718198;} QTabBar::tab {padding:10px;background:#0E1922;} QTabBar::tab:selected {color:#75F1E1;border-bottom:2px solid #55DDD1;} QSplitter::handle {background:#1E424A;}')
+ 
++    def build_usage(self, layout):
++        panel = QFrame()
++        panel.setObjectName('eventCard')
++        box = QVBoxLayout(panel)
++        heading = QHBoxLayout()
++        title = QLabel('계정 사용 한도 · 남은 비율')
++        title.setStyleSheet('color:#70EFDF;font-size:14px;')
++        heading.addWidget(title, 1)
++        self.usage_refresh = QPushButton('새로고침')
++        self.usage_refresh.clicked.connect(lambda: self.controller.usage.manual_refresh())
++        heading.addWidget(self.usage_refresh)
++        box.addLayout(heading)
++        self.usage_status = QLabel('잔량 조회 준비 · 30초마다 자동 갱신')
++        self.usage_status.setWordWrap(True)
++        self.usage_status.setTextFormat(Qt.TextFormat.PlainText)
++        box.addWidget(self.usage_status)
++        self.usage_values = QLabel('계정 한도 미확인')
++        self.usage_values.setWordWrap(True)
++        self.usage_values.setTextFormat(Qt.TextFormat.PlainText)
++        self.usage_scroll = QScrollArea()
++        self.usage_scroll.setWidgetResizable(True)
++        self.usage_scroll.setMaximumHeight(160)
++        self.usage_rows = QWidget()
++        self.usage_rows_layout = QVBoxLayout(self.usage_rows)
++        self.usage_rows_layout.setContentsMargins(0, 0, 0, 0)
++        self.usage_rows_layout.addWidget(self.usage_values)
++        self.usage_scroll.setWidget(self.usage_rows)
++        box.addWidget(self.usage_scroll)
++        layout.addWidget(panel)
++
++    def display_usage(self, value):
++        stale, busy = value.get('stale', True), value.get('busy', False)
++        checked = value.get('checked_at')
++        updated = reset_label(checked) if checked else '아직 조회하지 않음'
++        self.usage_status.setText(('지연 · ' if stale and checked else '') + value.get('status', '미확인') +
++                                  '  ·  최종 조회: ' + updated + '  ·  30초 자동 갱신')
++        self.usage_refresh.setEnabled(not busy)
++        rows = value.get('rows', [])
++        texts = []
++        while self.usage_rows_layout.count() > 1:
++            child = self.usage_rows_layout.takeAt(1).widget()
++            child.deleteLater()
++        for row in rows:
++            remaining = row['remaining']
++            label = f"{remaining:g}% 남음" if remaining is not None else '잔량 미확인'
++            text = f"{row['bucket']} · {row['period']}  {label}  ·  초기화: {reset_label(row['resets_at'])}"
++            if stale:
++                text += '  ·  이전 조회 값'
++            texts.append(text)
++            bar = QProgressBar()
++            bar.setRange(0, 100)
++            bar.setValue(round(remaining) if remaining is not None else 0)
++            bar.setFormat(row['period'] + (' · 이전 조회' if stale else '') + ' · ' + label)
++            bar.setEnabled(not stale and remaining is not None)
++            bar.setFixedHeight(19)
++            bar.setStyleSheet('QProgressBar {border:1px solid #25434B;border-radius:4px;text-align:center;background:#0C131B;color:#E5F1F4;} QProgressBar::chunk {background:#246C70;}')
++            self.usage_rows_layout.addWidget(bar)
++        self.usage_values.setText('\n'.join(texts) if texts else '계정 한도 미확인 · 남은 토큰 개수가 아닌 사용 한도 비율입니다.')
++
+     def build_history(self):
+         page = QWidget()
+         layout = QVBoxLayout(page)
+@@ -367,6 +444,9 @@
+         self.summary.setWordWrap(True)
+         self.summary.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
+         layout.addWidget(self.summary)
++        self.notice_summary = QLabel('알림 대기 0건')
++        layout.addWidget(self.notice_summary)
++        self.notice_summary.setWordWrap(True)
+         split = QSplitter()
+         self.history = QListWidget()
+         self.history.currentItemChanged.connect(self.select_event)
+@@ -464,6 +544,14 @@
+         pick.clicked.connect(self.choose_sessions)
+         row.addWidget(pick)
+         form.addRow('Codex sessions 폴더', row)
++        self.codex_exe = QLineEdit(self.controller.settings.values.get('codex_exe', ''))
++        self.codex_exe.setPlaceholderText('자동 탐색 · 실패하면 설치된 codex.exe 선택')
++        exe_row = QHBoxLayout()
++        exe_row.addWidget(self.codex_exe)
++        pick_exe = QPushButton('Codex EXE 선택')
++        pick_exe.clicked.connect(self.choose_codex)
++        exe_row.addWidget(pick_exe)
++        form.addRow('잔량 조회용 Codex', exe_row)
+         self.theme = QComboBox()
+         self.theme.addItems(['자동', '어두운 배경', '밝은 배경'])
+         self.theme.setCurrentText(self.controller.settings.values.get('theme', '자동'))
+@@ -489,16 +577,27 @@
+         if path:
+             self.sessions.setText(path)
+ 
++    def choose_codex(self):
++        path, _ = QFileDialog.getOpenFileName(self, '설치된 Codex EXE 선택', self.codex_exe.text(), 'Codex 실행 파일 (*.exe)')
++        if path:
++            self.codex_exe.setText(path)
++
+     def save_settings(self):
+         try:
+             path = Path(self.sessions.text()).absolute()
+             if not path.is_dir():
+                 raise ValueError('존재하는 sessions 폴더를 선택하세요.')
+             values = self.controller.settings.values
++            before_exe = values.get('codex_exe', '')
++            chosen_exe = self.codex_exe.text().strip()
++            if chosen_exe and (not Path(chosen_exe).is_file() or Path(chosen_exe).suffix.lower() != '.exe'):
++                raise ValueError('존재하는 Codex EXE를 선택하거나 비워 자동 탐색하세요.')
+             values.update(sessions=str(path), theme=self.theme.currentText(), popup=self.popup.isChecked(),
+-                          notice_timeout_ms=0 if self.hold_notice.isChecked() else 30000)
++                          notice_timeout_ms=0 if self.hold_notice.isChecked() else 30000, codex_exe=chosen_exe)
+             self.controller.settings.save()
+             self.controller.start_monitor()
++            if before_exe != chosen_exe:
++                self.controller.restart_usage()
+             QMessageBox.information(self, '설정 저장', '앱 설정을 저장하고 감시를 시작했습니다.')
+         except Exception as error:
+             self.error(error)
+@@ -633,29 +732,99 @@
+         QMessageBox.warning(self, '작업을 완료하지 못했습니다', str(error))
+ 
+ 
++class QuitGuard(QObject):
++    """직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다."""
++    def __init__(self, controller):
++        super().__init__(QApplication.instance())
++        self.controller = controller
++
++    def eventFilter(self, watched, event):
++        if watched is QApplication.instance() and event.type() == QEvent.Type.Quit and not self.controller.quit_ready:
++            event.ignore()
++            QTimer.singleShot(0, self.controller.request_quit)
++            return True
++        return False
++
++
+ class Controller:
+-    def __init__(self, settings, start_worker=True):
++    def __init__(self, settings, start_worker=True, start_usage=None):
+         self.settings = settings
+         self.monitor = None
++        self.closing = False
++        self.cleaned = False
++        self.quit_requested = False
++        self.quit_ready = False
++        self.monitor_enabled = start_worker
++        self.last_monitor_progress = time.monotonic()
++        self.monitor_retries = 0
++        self.notice_queue = deque()
++        self.notice_overflow = 0
++        self.monitor_retry_timer = QTimer()
++        self.monitor_retry_timer.setSingleShot(True)
++        self.monitor_retry_timer.timeout.connect(self.restart_dead_monitor)
++        self.monitor_health_timer = QTimer()
++        self.monitor_health_timer.setInterval(1000)
++        self.monitor_health_timer.timeout.connect(self.check_monitor_health)
+         self.window = Details(self)
+-        self.orbit = OrbitWidget(settings, self.show, self.preferences, QApplication.instance().quit)
++        self.orbit = OrbitWidget(settings, self.show, self.preferences, self.request_quit)
+         self.notice = Notice(self.show)
++        self.notice.completed.connect(lambda _: QTimer.singleShot(0, self.advance_notice))
++        self.usage = UsageClient(settings.values.get('codex_exe', ''))
++        self.usage.changed.connect(self.update_usage)
++        self.update_usage(self.usage.snapshot)
++        self.quit_guard = QuitGuard(self)
++        QApplication.instance().installEventFilter(self.quit_guard)
+         self.orbit.show()
+         if start_worker:
+             self.start_monitor()
++            self.monitor_health_timer.start()
++        if (start_worker if start_usage is None else start_usage):
++            self.usage.start()
++
++    def restart_usage(self):
++        self.usage.close()
++        self.usage.deleteLater()
++        self.usage = UsageClient(self.settings.values.get('codex_exe', ''))
++        self.usage.changed.connect(self.update_usage)
++        self.update_usage(self.usage.snapshot)
++        self.usage.start()
++
++    def update_usage(self, value):
++        self.window.display_usage(value)
++        valid = [row for row in value.get('rows', []) if row.get('remaining') is not None]
++        if value.get('stale'):
++            self.orbit.usage_badge = '?' if value.get('checked_at') else '—'
++        elif valid:
++            self.orbit.usage_badge = f"{min(row['remaining'] for row in valid):.0f}%"
++        else:
++            self.orbit.usage_badge = '—'
++        self.orbit.setToolTip('Codex Orbit · 계정 한도 ' + self.orbit.usage_badge +
++                             ' · ' + value.get('status', '미확인') + '\n클릭: 기간별 잔량과 변경 이력 · 드래그: 이동')
++        self.orbit.update()
+ 
+     def stop_monitor(self):
+         if self.monitor:
+             self.monitor.requestInterruption()
+-            self.monitor.wait()
++            if self.monitor.isRunning():
++                # 실행 중인 감시기의 정리는 finished 신호에 맡기며 GUI에서 기다리지 않습니다.
++                return False
+             self.monitor = None
++        return True
+ 
+     def start_monitor(self):
+-        self.stop_monitor()
++        if self.closing:
++            return False
++        if not self.stop_monitor():
++            self.orbit.healthy = False
++            self.window.summary.setText('감시 지연 · 이전 작업자가 종료 중입니다. 종료 후 다시 시작하세요.')
++            return False
++        self.monitor_enabled = True
++        self.last_monitor_progress = time.monotonic()
+         self.monitor = Monitor(self.settings.values['sessions'], self.settings.directory)
+         self.monitor.event.connect(self.receive)
+         self.monitor.status.connect(self.status)
+         self.monitor.enriched.connect(self.refresh_history)
++        self.monitor.finished.connect(self.check_monitor_health)
+         history, problems = read_jsonl_tail(self.monitor.work / 'history.jsonl')
+         self.window.history.clear()
+         titles = title_catalog(Path(self.settings.values['sessions']).parent / 'session_index.jsonl', self.settings.directory / 'title-cache.json')
+@@ -664,12 +833,73 @@
+         if problems:
+             self.window.diagnostics.setPlainText('\n'.join(problems))
+         self.monitor.start()
++        self.monitor_health_timer.start()
++        return True
++
++    def check_monitor_health(self):
++        if self.closing or not self.monitor_enabled or self.monitor is None:
++            return
++        if not self.monitor.isRunning():
++            self.orbit.healthy = False
++            self.window.summary.setText('감시 중단 · ' + ('자동 재시도 대기' if self.monitor_retries < 3 else '설정에서 감시 다시 시작 필요'))
++            if self.monitor_retries < 3 and not self.monitor_retry_timer.isActive():
++                self.monitor_retry_timer.start(3000 * (self.monitor_retries + 1))
++        elif time.monotonic() - self.last_monitor_progress > 20:
++            self.orbit.healthy = False
++            self.window.summary.setText('감시 지연 · 20초 이상 진행 확인 없음. 작업자는 실행 중이며 강제 재시작하지 않습니다.')
++        self.orbit.update()
++
++    def restart_dead_monitor(self):
++        if self.closing or not self.monitor_enabled or self.monitor_retries >= 3:
++            return
++        if self.monitor is not None and self.monitor.isRunning():
++            return
++        self.monitor_retries += 1
++        self.start_monitor()
+ 
+     def receive(self, event):
++        if self.closing:
++            return
+         self.window.add_event(event)
+         self.orbit.unread = True
+         if self.settings.values.get('popup', True):
+-            self.notice.display(event, self.orbit, self.settings.values.get('notice_timeout_ms', 30000))
++            self.enqueue_notice(event)
++
++    def update_notice_count(self):
++        text = f'알림 대기 {len(self.notice_queue)}건'
++        if self.notice_overflow:
++            text += f' · 대기 상한 초과 {self.notice_overflow}건은 변경 이력에서 확인하세요.'
++        self.notice.queue_hint.setText(text)
++        self.window.notice_summary.setText(text)
++        if self.notice.isVisible():
++            self.notice.fit_content()
++
++    def enqueue_notice(self, event, replay=False):
++        if self.notice.isVisible() and self.notice.event_id == event.get('id'):
++            if replay:
++                self.notice.display(event, self.orbit, self.settings.values.get('notice_timeout_ms', 30000), replay=True)
++            return
++        for index, (queued, was_replay) in enumerate(self.notice_queue):
++            if queued.get('id') == event.get('id'):
++                self.notice_queue[index] = (event, replay or was_replay)
++                return
++        if self.notice.isVisible() or self.notice_queue:
++            if len(self.notice_queue) < 100:
++                self.notice_queue.append((event, replay))
++            else:
++                self.notice_overflow += 1
++            self.update_notice_count()
++        else:
++            self.notice.display(event, self.orbit, self.settings.values.get('notice_timeout_ms', 30000), replay=replay)
++            self.update_notice_count()
++
++    def advance_notice(self):
++        if self.closing:
++            return
++        if not self.notice.isVisible() and self.notice_queue:
++            event, replay = self.notice_queue.popleft()
++            self.notice.display(event, self.orbit, self.settings.values.get('notice_timeout_ms', 30000), replay=replay)
++        self.update_notice_count()
+ 
+     def replay_event(self, event_id):
+         for index in range(self.window.history.count()):
+@@ -677,30 +907,44 @@
+             event = item.data(Qt.ItemDataRole.UserRole)
+             if event_id in (event.get('id'), event.get('target')):
+                 self.window.history.setCurrentItem(item)
+-                self.notice.display(event, self.orbit, self.settings.values.get('notice_timeout_ms', 30000), replay=True)
++                self.enqueue_notice(event, replay=True)
+                 return True
+         return False
+ 
+     def refresh_history(self, events):
++        if self.closing:
++            return
+         for event in events:
+             self.window.update_event(event)
++            for index, (queued, replay) in enumerate(self.notice_queue):
++                if queued.get('id') == event.get('id'):
++                    self.notice_queue[index] = (event, replay)
+             if self.notice.isVisible() and getattr(self.notice, 'event_id', None) == event.get('id'):
++                self.notice.event = dict(event)
+                 self.notice.title.setText(str(event.get('chat_name') or '채팅 제목 확인 불가'))
+                 self.notice.text.setText(event_kind(event) + '\n' + model_label(event.get('before')) + '\n→ ' + model_label(event.get('after')) + '\n\n' + short_reason(event))
+                 self.notice.fit_content()
+ 
+     def status(self, value):
++        if self.closing:
++            return
++        self.last_monitor_progress = time.monotonic()
+         self.orbit.healthy = value.get('state') == '감시 중'
+         self.window.summary.setText('● ' + value.get('state', '') + '  ·  ' + kst_label(value.get('time')))
+         self.window.diagnostics.setPlainText(json.dumps(value, ensure_ascii=False, indent=2))
+ 
+     def show(self, event_id=None):
+         if event_id:
++            found = False
+             for index in range(self.window.history.count()):
+                 item = self.window.history.item(index)
+                 if item.data(Qt.ItemDataRole.UserRole).get('id') == event_id:
+                     self.window.history.setCurrentItem(item)
++                    found = True
+                     break
++            if not found and getattr(self.notice, 'event_id', None) == event_id:
++                # 대기 중 화면 이력 상한 밖으로 밀려나도 클릭한 원래 알림을 정확히 엽니다.
++                self.window.add_event(self.notice.event)
+         self.window.tabs.setCurrentIndex(0)
+         self.window.show()
+         self.window.raise_()
+@@ -711,11 +955,50 @@
+         self.show()
+         self.window.tabs.setCurrentIndex(1)
+ 
++    def request_quit(self):
++        if self.quit_requested or self.cleaned:
++            return
++        self.quit_requested = True
++        self.closing = True
++        self.monitor_enabled = False
++        self.monitor_health_timer.stop()
++        self.monitor_retry_timer.stop()
++        self.usage.close()
++        self.notice.timer.stop()
++        self.notice.hide()
++        self.orbit.healthy = False
++        self.window.summary.setText('종료 중 · 감시 작업자의 안전한 종료를 기다리고 있습니다.')
++        if self.monitor is not None and self.monitor.isRunning():
++            self.monitor.finished.connect(self.finish_quit)
++            self.monitor.requestInterruption()
++            # 신호 연결 직전에 종료된 경우도 대기 상태로 남지 않도록 다시 확인합니다.
++            if self.monitor.isRunning():
++                return
++        self.finish_quit()
++
++    def finish_quit(self):
++        if not self.quit_requested or (self.monitor is not None and self.monitor.isRunning()):
++            return
++        self.quit_ready = True
++        self.close()
++        QApplication.instance().quit()
++
+     def close(self):
++        if self.cleaned:
++            return
++        self.cleaned = True
++        self.closing = True
++        self.monitor_enabled = False
++        self.monitor_health_timer.stop()
++        self.monitor_retry_timer.stop()
++        self.notice_queue.clear()
++        self.usage.close()
+         self.stop_monitor()
+         self.notice.close()
+         self.orbit.close()
+         self.window.close()
++        QApplication.instance().removeEventFilter(self.quit_guard)
++        self.quit_guard.deleteLater()
+ 
+ 
+ def main():
+@@ -723,6 +1006,7 @@
+     parser.add_argument('--data-dir', type=Path, default=Path(os.environ.get('LOCALAPPDATA', Path.home())) / 'CodexOrbit')
+     parser.add_argument('--sessions', type=Path)
+     parser.add_argument('--smoke-test', action='store_true')
++    parser.add_argument('--usage-smoke-test', action='store_true', help='실제 계정 잔량과 표시를 조회한 뒤 종료')
+     parser.add_argument('--smoke-report', type=Path)
+     parser.add_argument('--show-details', action='store_true')
+     parser.add_argument('--show-event', help='기존 이력의 이벤트 ID 또는 대상 ID를 다시 표시')
+@@ -742,7 +1026,7 @@
+         lock = QLockFile(str(args.data_dir / 'app.lock'))
+         if not lock.tryLock(100):
+             raise RuntimeError('같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다.')
+-        controller = Controller(settings, start_worker=not args.smoke_test)
++        controller = Controller(settings, start_worker=not (args.smoke_test or args.usage_smoke_test))
+     except Exception as error:
+         if args.smoke_report:
+             args.smoke_report.write_text(json.dumps({'ok': False, 'error': str(error)}, ensure_ascii=False), encoding='utf-8')
+@@ -752,6 +1036,31 @@
+     app.aboutToQuit.connect(controller.close)
+     if args.show_details:
+         controller.show()
++    if args.usage_smoke_test and not args.smoke_test:
++        controller.show()
++        usage_finished = False
++        def finish_usage(value=None, timed_out=False):
++            nonlocal usage_finished
++            if usage_finished:
++                return
++            value = value or controller.usage.snapshot
++            ok = not value.get('stale', True) and value.get('checked_at') is not None
++            if not ok and not timed_out:
++                return
++            usage_finished = True
++            report = {**value, 'ok': ok, 'frozen': bool(getattr(sys, 'frozen', False)),
++                      'widget_badge': controller.orbit.usage_badge,
++                      'display_text': controller.window.usage_values.text(),
++                      'display_status': controller.window.usage_status.text(),
++                      'time': stamp()}
++            if args.smoke_report:
++                controller.orbit.grab().save(str(args.smoke_report.with_suffix('.orbit.png')))
++                controller.window.grab().save(str(args.smoke_report.with_suffix('.details.png')))
++                args.smoke_report.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
++            app.exit(0 if ok else 1)
++        controller.usage.changed.connect(lambda value: QTimer.singleShot(100, lambda: finish_usage(value)))
++        QTimer.singleShot(18000, lambda: finish_usage(timed_out=True))
++        controller.usage.start()
+     if args.show_event and not controller.replay_event(args.show_event):
+         controller.window.summary.setText('지정한 이력을 찾지 못했습니다. 감시가 기록을 읽은 뒤 이력에서 확인하세요.')
+     if args.smoke_test:
+--- 이전/src/usage.py
++++ 현재/src/usage.py
+@@ -0,0 +1,357 @@
++"""Codex App Server의 계정 사용 한도를 읽기 전용으로 조회합니다."""
++from datetime import datetime, timedelta, timezone
++import json
++import math
++import os
++from pathlib import Path
++import shutil
++import time
++
++from PySide6.QtCore import QObject, QProcess, QTimer, Signal
++
++MAX_BYTES = 1024 * 1024
++KST = timezone(timedelta(hours=9))
++
++
++def number(value):
++    """불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다."""
++    if not isinstance(value, (int, float)) or isinstance(value, bool):
++        return False
++    try:
++        return math.isfinite(value)
++    except (OverflowError, ValueError):
++        return False
++
++
++def reset_label(value):
++    if not number(value) or value <= 0:
++        return '초기화 미확인'
++    try:
++        return datetime.fromtimestamp(value, KST).strftime('%Y.%m.%d %H:%M:%S KST')
++    except (ValueError, OverflowError, OSError):
++        return '초기화 미확인'
++
++
++def normalize_limits(value):
++    """공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다."""
++    if not isinstance(value, dict):
++        return []
++    if isinstance(value.get('rateLimitsByLimitId'), dict):
++        buckets = value['rateLimitsByLimitId']
++    else:
++        legacy = value.get('rateLimits')
++        buckets = {str(legacy.get('limitId') or 'codex'): legacy} if isinstance(legacy, dict) else {}
++    rows = []
++    for key, bucket in buckets.items():
++        if not isinstance(bucket, dict):
++            continue
++        for slot in ('primary', 'secondary'):
++            window = bucket.get(slot)
++            if not isinstance(window, dict):
++                continue
++            used = window.get('usedPercent')
++            remaining = 100 - max(0, min(100, used)) if number(used) else None
++            minutes = window.get('windowDurationMins')
++            if minutes == 300 and number(minutes):
++                period = '5시간'
++            elif minutes == 10080 and number(minutes):
++                period = '주간'
++            elif number(minutes) and minutes > 0:
++                period = f'{minutes:g}분'
++            else:
++                period = '기간 미확인'
++            reset = window.get('resetsAt')
++            rows.append({'bucket': str(key)[:80], 'slot': slot, 'period': period,
++                         'remaining': remaining, 'resets_at': reset if number(reset) and reset > 0 else None})
++    return rows
++
++
++def discover_codex(override=''):
++    """사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다."""
++    if override:
++        path = Path(override)
++        return str(path) if path.is_file() and path.suffix.lower() == '.exe' else None
++    found = shutil.which('codex.exe') or shutil.which('codex')
++    if found and Path(found).suffix.lower() == '.exe':
++        return found
++    local = Path(os.environ.get('LOCALAPPDATA') or Path.home() / 'AppData' / 'Local')
++    base = local / 'OpenAI' / 'Codex' / 'bin'
++    candidates = [p for p in base.glob('*/codex.exe') if p.is_file()]
++    candidates.sort(key=lambda p: p.stat().st_mtime, reverse=True)
++    return str(candidates[0]) if candidates else None
++
++
++class UsageClient(QObject):
++    changed = Signal(dict)
++
++    def __init__(self, executable='', parent=None):
++        super().__init__(parent)
++        self.executable = executable
++        self.process = QProcess(self)
++        # QProcess의 분리 파이프를 사용해 콘솔 창이나 셸을 열지 않습니다.
++        self.process.setProcessChannelMode(QProcess.ProcessChannelMode.SeparateChannels)
++        self.process.started.connect(self._started)
++        self.process.readyReadStandardOutput.connect(self._stdout)
++        self.process.readyReadStandardError.connect(self._stderr)
++        self.process.errorOccurred.connect(self._process_error)
++        self.process.finished.connect(self._finished)
++        self.poll_timer = QTimer(self)
++        self.poll_timer.setInterval(30000)
++        self.poll_timer.timeout.connect(self.refresh)
++        self.deadline = QTimer(self)
++        self.deadline.setSingleShot(True)
++        self.deadline.setInterval(12000)
++        self.deadline.timeout.connect(self._timeout)
++        self.retry_timer = QTimer(self)
++        self.retry_timer.setSingleShot(True)
++        self.retry_timer.timeout.connect(self._retry)
++        self.age_timer = QTimer(self)
++        self.age_timer.setInterval(1000)
++        self.age_timer.timeout.connect(self._check_age)
++        self.snapshot = {'rows': [], 'checked_at': None, 'status': '잔량 조회 준비', 'stale': True, 'busy': False}
++        self.ready = False
++        self.enabled = False
++        self.closed = False
++        self.pending = None
++        self.sequence = 0
++        self.buffer = bytearray()
++        self.stderr_bytes = 0
++        self.retries = 0
++        self.last_success = None
++        self.failed_connection = False
++        self.account_epoch = 0
++        self.pending_epoch = 0
++
++    def _publish(self, **changes):
++        self.snapshot = {**self.snapshot, **changes}
++        self.changed.emit(dict(self.snapshot))
++
++    def start(self):
++        if self.closed or self.enabled:
++            return
++        self.enabled = True
++        self.poll_timer.start()
++        self.age_timer.start()
++        self._launch()
++
++    def _launch(self):
++        if self.closed or self.process.state() != QProcess.ProcessState.NotRunning:
++            return False
++        self.retry_timer.stop()
++        try:
++            executable = discover_codex(self.executable)
++        except OSError:
++            executable = None
++        if not executable:
++            self._publish(status='Codex EXE를 찾지 못했습니다. 설정에서 설치된 codex.exe를 선택하세요.', stale=True, busy=False)
++            return False
++        self.buffer.clear()
++        self.stderr_bytes = 0
++        self.ready = False
++        self.failed_connection = False
++        self._publish(status='잔량 연결 중', busy=True)
++        self.deadline.start()
++        self.process.setProgram(executable)
++        self.process.setArguments(['app-server'])
++        self.process.start()
++        return True
++
++    def _send(self, method, params=None, request=True):
++        message = {'method': method}
++        if request:
++            self.sequence += 1
++            message['id'] = self.sequence
++            self.pending = (self.sequence, method)
++            self.pending_epoch = self.account_epoch
++        if params is not None:
++            message['params'] = params
++        data = (json.dumps(message, ensure_ascii=False, allow_nan=False) + '\n').encode('utf-8')
++        if self.process.write(data) == -1:
++            self._failed('잔량 요청을 전달하지 못했습니다.')
++            return False
++        if request:
++            self.deadline.start()
++        return True
++
++    def _started(self):
++        if self.closed:
++            self.process.kill()
++            return
++        self._send('initialize', {'clientInfo': {'name': 'codex_orbit', 'title': 'Codex Orbit', 'version': '1.2.0'}})
++
++    def refresh(self):
++        if self.closed or self.pending or self.snapshot['busy']:
++            return False
++        if not self.ready:
++            if self.enabled and self.retries < 3 and not self.retry_timer.isActive():
++                return self._launch()
++            return False
++        self._publish(status='잔량 조회 중', busy=True)
++        return self._send('account/rateLimits/read')
++
++    def _stdout(self):
++        self.process.setReadChannel(QProcess.ProcessChannel.StandardOutput)
++        read = 0
++        while self.process.bytesAvailable() and not self.failed_connection:
++            chunk = bytes(self.process.read(65536))
++            read += len(chunk)
++            if read > MAX_BYTES:
++                self._failed('잔량 응답이 허용 크기를 넘었습니다.')
++                return
++            self.feed_bytes(chunk)
++
++    def _stderr(self):
++        # 서버 진단에는 개인정보가 섞일 수 있어 저장·표시하지 않고 제한해 비웁니다.
++        self.process.setReadChannel(QProcess.ProcessChannel.StandardError)
++        while self.process.bytesAvailable() and not self.failed_connection:
++            self.stderr_bytes += len(self.process.read(65536))
++            if self.stderr_bytes > MAX_BYTES:
++                self._failed('잔량 서버 진단이 허용 크기를 넘었습니다.')
++                break
++        self.process.setReadChannel(QProcess.ProcessChannel.StandardOutput)
++
++    def feed_bytes(self, data):
++        if self.closed or self.failed_connection:
++            return
++        self.buffer.extend(data)
++        if len(self.buffer) > MAX_BYTES:
++            self._failed('잔량 응답이 허용 크기를 넘었습니다.')
++            return
++        # 문자열 내부 U+0085 등을 줄 경계로 취급하지 않습니다.
++        while b'\n' in self.buffer:
++            line, _, tail = self.buffer.partition(b'\n')
++            self.buffer = bytearray(tail)
++            try:
++                message = json.loads(line.decode('utf-8'))
++                if not isinstance(message, dict):
++                    raise ValueError('객체가 아닌 응답')
++            except (ValueError, UnicodeError):
++                self._failed('잔량 응답 형식을 확인할 수 없습니다.')
++                return
++            self._message(message)
++            if self.failed_connection:
++                return
++
++    def _accept(self, payload, notification=False):
++        rows = normalize_limits(payload)
++        partial_multi = False
++        if notification and isinstance(payload, dict) and not isinstance(payload.get('rateLimitsByLimitId'), dict):
++            legacy = payload.get('rateLimits')
++            if isinstance(legacy, dict):
++                bucket = str(legacy.get('limitId') or 'codex')[:80]
++                old = self.snapshot['rows']
++                first = next((i for i, row in enumerate(old) if row['bucket'] == bucket), len(old))
++                kept = [row for row in old if row['bucket'] != bucket]
++                rows = kept[:first] + rows + kept[first:]
++                partial_multi = len({row['bucket'] for row in rows}) > 1
++        if partial_multi:
++            # 다른 버킷을 재조회하지 않은 부분 알림은 기존 전체 조회의 시각·지연을 유지합니다.
++            self._publish(rows=rows)
++        else:
++            self.last_success = time.monotonic()
++            self._publish(rows=rows, checked_at=time.time(), stale=False,
++                          status='조회 완료' if rows else '제공된 계정 한도가 없습니다.')
++
++    def _message(self, message):
++        method = message.get('method')
++        if method == 'account/updated':
++            self.account_epoch += 1
++            self.last_success = None
++            self._publish(rows=[], checked_at=None, stale=True, status='계정 정보 갱신 · 잔량 다시 조회 중')
++            # 시작 직후에도 오는 통지입니다. 연결은 유지하고 이전 세대의 조회 결과만 폐기합니다.
++            if not self.pending:
++                self.refresh()
++            return
++        if method == 'account/rateLimits/updated':
++            # 부분 버킷 갱신은 전체 조회의 신선도를 연장하지 않고 전체 재조회를 요청합니다.
++            payload = message.get('params')
++            if isinstance(payload, dict) and isinstance(payload.get('rateLimitsByLimitId'), dict):
++                self._accept(payload)
++            elif isinstance(payload, dict) and isinstance(payload.get('rateLimits'), dict):
++                self._accept(payload, notification=True)
++                self.refresh()
++            return
++        if not self.pending or isinstance(message.get('id'), bool) or message.get('id') != self.pending[0]:
++            return
++        _, request = self.pending
++        self.pending = None
++        self.deadline.stop()
++        if request == 'account/rateLimits/read' and self.pending_epoch != self.account_epoch:
++            self._publish(busy=False)
++            self.refresh()
++            return
++        if 'error' in message:
++            error = message['error']
++            text = str(error.get('message', '')).lower() if isinstance(error, dict) else ''
++            auth = any(word in text for word in ('auth', 'login', 'sign in', 'chatgpt', '401', '403'))
++            self._failed('설치된 Codex의 ChatGPT 로그인을 확인하세요.' if auth else '계정 한도 조회가 거부됐습니다. Codex 연결을 확인하세요.')
++            return
++        if not isinstance(message.get('result'), dict):
++            self._failed('잔량 응답 결과를 확인할 수 없습니다.')
++            return
++        if request == 'initialize':
++            self._send('initialized', request=False)
++            self.ready = True
++            self._publish(busy=False)
++            self.refresh()
++        else:
++            self.retries = 0
++            self._publish(busy=False)
++            self._accept(message['result'])
++
++    def _check_age(self):
++        expired = any(number(row['resets_at']) and time.time() >= row['resets_at'] for row in self.snapshot['rows'])
++        if self.last_success is not None and (time.monotonic() - self.last_success > 65 or expired) and not self.snapshot['stale']:
++            self._publish(stale=True, status='조회 지연 · 이전 조회 값')
++
++    def _timeout(self):
++        self._failed('잔량 조회 응답 시간이 초과됐습니다.')
++
++    def manual_refresh(self):
++        if self.closed or not self.enabled or self.snapshot['busy'] or self.pending:
++            return False
++        if not self.ready:
++            self.retries = 0
++            return self._launch()
++        return self.refresh()
++
++    def _process_error(self, _):
++        if not self.closed and not self.failed_connection:
++            self._failed('Codex 잔량 연결을 실행할 수 없습니다. 설정의 EXE와 설치 상태를 확인하세요.')
++
++    def _finished(self, *_):
++        if not self.closed and not self.failed_connection:
++            self._failed('Codex 잔량 연결이 종료됐습니다.')
++
++    def _failed(self, status):
++        self.deadline.stop()
++        self.pending = None
++        self.ready = False
++        self.buffer.clear()
++        self.failed_connection = True
++        self._publish(status=status, busy=False, stale=True)
++        if self.process.state() != QProcess.ProcessState.NotRunning:
++            self.process.kill()
++        if self.enabled and not self.closed and self.retries < 3 and not self.retry_timer.isActive():
++            self.retry_timer.start(3000 * (self.retries + 1))
++
++    def _retry(self):
++        if self.closed or self.retries >= 3:
++            return
++        self.retries += 1
++        self._launch()
++
++    def close(self):
++        if self.closed:
++            return
++        self.closed = True
++        self.enabled = False
++        for timer in (self.poll_timer, self.deadline, self.retry_timer, self.age_timer):
++            timer.stop()
++        self.pending = None
++        if self.process.state() != QProcess.ProcessState.NotRunning:
++            self.process.closeWriteChannel()
++            self.process.terminate()
++            if not self.process.waitForFinished(500):
++                self.process.kill()
++                self.process.waitForFinished(500)

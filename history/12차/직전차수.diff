@@ -1,0 +1,135 @@
+--- 이전/src/app.py
++++ 현재/src/app.py
+@@ -11,7 +11,7 @@
+ from collections import deque
+ 
+ from PySide6.QtCore import QEvent, QObject, QLockFile, Qt, QThread, QTimer, Signal, QPropertyAnimation, QEasingCurve
+-from PySide6.QtGui import QFont, QFontDatabase, QIcon, QPainter
++from PySide6.QtGui import QFont, QFontDatabase, QIcon, QPainter, QPixmap
+ from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDialog, QFileDialog,
+                              QFormLayout, QFrame, QHBoxLayout, QLabel, QLineEdit,
+                              QListWidget, QListWidgetItem, QMenu, QMessageBox,
+@@ -22,6 +22,7 @@
+ from notifier import Watcher, append_log, atomic_json, stamp, POLL_INTERVAL_SECONDS
+ from usage import UsageClient, reset_label
+ from visuals import draw_orbit
++from brand import brand_image
+ from theme import STYLE, apply_theme
+ 
+ 
+@@ -357,6 +358,12 @@
+         self.text.setTextFormat(Qt.TextFormat.PlainText)
+         self.text.setWordWrap(True)
+         heading = QHBoxLayout()
++        self.brand_mark = QLabel()
++        self.brand_mark.setPixmap(QPixmap.fromImage(brand_image(24)))
++        self.brand_mark.setFixedSize(24, 24)
++        self.brand_mark.setAccessibleName('Codex Orbit 로고')
++        self.brand_mark.setToolTip('Codex Orbit')
++        heading.addWidget(self.brand_mark, 0, Qt.AlignmentFlag.AlignTop)
+         heading.addWidget(self.title, 1)
+         close = QPushButton('닫기')
+         close.setToolTip('알림 닫기 · 이력은 유지됩니다')
+@@ -535,6 +542,13 @@
+         layout.setContentsMargins(24, 16, 24, 20)
+         layout.setSpacing(10)
+         header = QHBoxLayout()
++        self.brand_mark = QLabel()
++        self.brand_mark.setPixmap(QPixmap.fromImage(brand_image(32)))
++        self.brand_mark.setFixedSize(32, 32)
++        self.brand_mark.setAccessibleName('Codex Orbit 로고')
++        self.brand_mark.setToolTip('Codex Orbit')
++        header.addWidget(self.brand_mark)
++        self.setWindowIcon(QIcon(QPixmap.fromImage(brand_image(32))))
+         heading = QLabel('Codex Orbit')
+         heading.setStyleSheet('font-size:19px;color:#f5f5f5;')
+         header.addWidget(heading, 1)
+--- 이전/src/brand.py
++++ 현재/src/brand.py
+@@ -0,0 +1,26 @@
++"""작은 크기에서도 읽히는 Codex Orbit의 단일 정적 브랜드 마크입니다."""
++from PySide6.QtCore import QPointF, QRectF, Qt
++from PySide6.QtGui import QColor, QImage, QPainter, QPen
++
++
++def brand_image(size):
++    """검은 경계·굵은 흰 궤도·비대칭 위성을 원래 해상도에서 그립니다."""
++    size = int(size)
++    image = QImage(size, size, QImage.Format.Format_RGBA8888)
++    image.fill(Qt.GlobalColor.transparent)
++    painter = QPainter(image)
++    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
++    painter.scale(size, size)
++    # 검은 외곽과 흰 안쪽 선이 밝고 어두운 바탕에서 각각 경계를 유지합니다.
++    painter.setBrush(QColor('#111111'))
++    painter.setPen(QPen(QColor('#111111'), .10))
++    painter.drawEllipse(QRectF(.12, .20, .68, .68))
++    painter.setBrush(Qt.BrushStyle.NoBrush)
++    painter.setPen(QPen(QColor('#ffffff'), .115))
++    painter.drawEllipse(QRectF(.205, .285, .51, .51))
++    # 오른쪽 위의 하나의 위성은 궤도와 겹치지 않는 식별 표식입니다.
++    painter.setBrush(QColor('#ffffff'))
++    painter.setPen(QPen(QColor('#111111'), .075))
++    painter.drawEllipse(QPointF(.79, .22), .115, .115)
++    painter.end()
++    return image
+--- 이전/src/visuals.py
++++ 현재/src/visuals.py
+@@ -2,7 +2,7 @@
+ import math
+ 
+ from PySide6.QtCore import QPointF, QRectF, Qt
+-from PySide6.QtGui import QColor, QFont, QImage, QLinearGradient, QPainter, QPen, QPolygonF, QRadialGradient
++from PySide6.QtGui import QColor, QFont, QFontMetricsF, QImage, QLinearGradient, QPainter, QPen, QPolygonF, QRadialGradient
+ 
+ 
+ def rotate_point(point, angles):
+@@ -50,6 +50,11 @@
+ def gray(level, alpha=255):
+     level = max(0, min(255, int(level)))
+     return QColor(level, level, level, alpha)
++
++
++def status_label(healthy, unread):
++    """읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다."""
++    return '새 변경' if unread else '감시 중' if healthy else '확인 필요'
+ 
+ 
+ def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', healthy=False, unread=False, light=False):
+@@ -113,7 +118,10 @@
+     font.setWeight(QFont.Weight.Bold)
+     # 투명 위젯의 Windows 렌더에서도 숫자와 한글에 색 프린지를 만들지 않습니다.
+     font.setStyleStrategy(font.styleStrategy() | QFont.StyleStrategy.NoSubpixelAntialias)
+-    font.setPointSizeF(10 if len(badge) <= 4 else 8 if len(badge) <= 6 else 6)
++    font.setPointSizeF(13 if len(badge) <= 4 else 8 if len(badge) <= 6 else 6)
++    measured = QFontMetricsF(font).horizontalAdvance(badge)
++    if measured > 42:
++        font.setPointSizeF(font.pointSizeF() * 42 / measured)
+     painter.setFont(font)
+     # Windows 위젯 엔진이 글꼴 힌트를 무시하더라도 투명 ARGB 표면은 회색조로 합성합니다.
+     scale = max(1., abs(painter.combinedTransform().m11()) * painter.device().devicePixelRatioF())
+@@ -132,8 +140,19 @@
+                           '잔량' if state == 'fresh' else '지연' if state == 'stale' else '미확인')
+     text_painter.end()
+     painter.drawImage(QRectF(-24, -22, 48, 44), text_layer)
+-    painter.setBrush(gray(245 if unread else 165 if healthy else 30))
+-    painter.setPen(QPen(gray(235), 1))
+-    painter.drawEllipse(QPointF(0, 33), 3, 3)
+-    if not healthy:
+-        painter.drawLine(QPointF(-2, 33), QPointF(2, 33))
++    # 작은 점 대신 한글 상태를 읽을 수 있는 고대비 표지를 캔버스 안에 둡니다.
++    status_layer = QImage(math.ceil(86 * scale), math.ceil(20 * scale), QImage.Format.Format_ARGB32_Premultiplied)
++    status_layer.setDevicePixelRatio(scale)
++    status_layer.fill(Qt.GlobalColor.transparent)
++    status_painter = QPainter(status_layer)
++    status_painter.setRenderHint(QPainter.RenderHint.Antialiasing)
++    status_painter.setPen(QPen(gray(10), 1))
++    status_painter.setBrush(gray(250))
++    status_painter.drawRoundedRect(QRectF(1, 1, 84, 18), 8, 8)
++    status_font = QFont(font)
++    status_font.setPixelSize(11)
++    status_painter.setFont(status_font)
++    status_painter.setPen(gray(10))
++    status_painter.drawText(QRectF(1, 1, 84, 18), Qt.AlignmentFlag.AlignCenter, status_label(healthy, unread))
++    status_painter.end()
++    painter.drawImage(QRectF(-43, 51, 86, 20), status_layer)

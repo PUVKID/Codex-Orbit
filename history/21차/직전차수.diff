@@ -1,0 +1,393 @@
+--- 이전/src/app.py
++++ 현재/src/app.py
+@@ -21,11 +21,13 @@
+ from core import clamp_position, read_jsonl_tail, read_text_strict, title_catalog, resolve_title
+ from notifier import Watcher, append_log, atomic_json, stamp, POLL_INTERVAL_SECONDS
+ from usage import UsageClient, reset_label
+-from visuals import draw_orbit, status_label
++from visuals import draw_orbit, status_label, usage_bar
+ from atom_frames import get_atom_frames
++from element_frames import preflight_element_frames
+ from brand import brand_image, AnimatedBrand, brand_clock, symbol_icon, with_symbol, validate_symbols
+ from theme import STYLE, apply_theme
+ from typography import app_font
++from elements import daily_element
+ 
+ 
+ def asset(name):
+@@ -760,12 +762,12 @@
+                 text += '  ·  이전 조회 값'
+             texts.append(text)
+             bar = QProgressBar()
+-            bar.setRange(0, 100)
+-            bar.setValue(round(remaining) if remaining is not None else 0)
++            bar.setRange(0, 1000000)
++            bar.setValue(round(remaining*10000) if remaining is not None and not stale else 0)
+             bar.setFormat(row['period'] + (' · 이전 조회' if stale else '') + ' · ' + label)
+             bar.setEnabled(not stale and remaining is not None)
+             bar.setFixedHeight(19)
+-            bar.setStyleSheet('QProgressBar {border:1px solid #3C3C3C;border-radius:4px;text-align:center;background:#131313;color:#EEEEEE;} QProgressBar::chunk {background:#555555;}')
++            bar.setStyleSheet('QProgressBar {border:1px solid #778b9f;border-radius:4px;text-align:center;background:#202b37;color:#f2f6fa;} QProgressBar::chunk {background:'+daily_element().accent+';}')
+             self.usage_rows_layout.addWidget(bar)
+         self.usage_compact.setText(('이전 조회 · ' if stale and checked else '') + (f"{rows[0]['remaining']:g}% 남음" if rows and rows[0].get('remaining') is not None else '사용 한도 미확인'))
+         self.usage_values.setText('\n'.join(texts) if texts else '계정 한도 미확인 · 남은 토큰 개수가 아닌 사용 한도 비율입니다.')
+@@ -991,6 +993,7 @@
+     def __init__(self, settings, start_worker=True, start_usage=None):
+         # 필수 이미지가 손상됐으면 타이머나 창을 만들기 전에 시작 실패로 전달합니다.
+         get_atom_frames()
++        preflight_element_frames()
+         validate_symbols()
+         apply_theme()
+         self.settings = settings
+@@ -1384,6 +1387,7 @@
+         stage = 'visual-assets-preflight'
+         log_error = operation_record(args.data_dir, stage, effective_sessions, lock_acquired=True) or log_error
+         get_atom_frames()
++        preflight_element_frames()
+         validate_symbols()
+         stage = 'controller-prepare'
+         log_error = operation_record(args.data_dir, stage, effective_sessions, lock_acquired=True) or log_error
+@@ -1414,6 +1418,9 @@
+             usage_finished = True
+             report = {**value, 'ok': ok, 'frozen': bool(getattr(sys, 'frozen', False)),
+                       'widget_badge': controller.orbit.usage_badge,
++                      'widget_fraction': controller.orbit.usage_fraction,
++                      'widget_state': controller.orbit.usage_state,
++                      'bar_fill_width': usage_bar(controller.orbit.usage_badge,controller.orbit.usage_fraction,controller.orbit.usage_state)[0].width(),
+                       'display_text': controller.window.usage_values.text(),
+                       'display_status': controller.window.usage_status.text(),
+                       'time': stamp()}
+--- 이전/src/brand.py
++++ 현재/src/brand.py
+@@ -12,7 +12,7 @@
+ from shiboken6 import isValid
+ from atom_frames import get_atom_frames, asset_directory, AtomAssetError
+ from elements import daily_element
+-from element_visuals import colorize_atom
++from element_frames import get_element_frame
+ 
+ 
+ @lru_cache(maxsize=7)
+@@ -28,6 +28,14 @@
+                                             Qt.TransformationMode.SmoothTransformation)
+ 
+ 
++def motion_brand_source(source, size):
++    """원소 프레임의 실제 크기에 비례해 여백만 줄이며 영역 밖을 복사하지 않습니다."""
++    if size > 32:
++        return source
++    margin=round(source.width()*16/296)
++    return source.copy(source.rect().adjusted(margin,margin,-margin,-margin))
++
++
+ class BrandClock(QObject):
+     """보이는 로고만 단일 시계에서 같은 프레임으로 갱신합니다."""
+     def __init__(self):
+@@ -62,12 +70,12 @@
+             self.timer.stop()
+             return
+         elapsed = time.monotonic() - self.origin
+-        source = colorize_atom(get_atom_frames().frame(elapsed), daily_element())
++        source = get_element_frame(daily_element(), elapsed)
+         pixmaps = {}
+         for mark in marks:
+             size = mark.width()
+             if size not in pixmaps:
+-                image = source.copy(QRect(16, 16, 264, 264)) if size <= 32 else source
++                image = motion_brand_source(source,size)
+                 pixmaps[size] = QPixmap.fromImage(image.scaled(size, size, Qt.AspectRatioMode.KeepAspectRatio,
+                                                               Qt.TransformationMode.SmoothTransformation))
+             mark.setPixmap(pixmaps[size])
+--- 이전/src/element_frames.py
++++ 현재/src/element_frames.py
+@@ -0,0 +1,146 @@
++"""오늘 원소 하나의 압축 프레임만 여는 제한 메모리 재생기입니다."""
++from collections import OrderedDict
++import atexit
++import hashlib
++import json
++import math
++from pathlib import Path
++import re
++import struct
++import sys
++import zipfile
++from PySide6.QtGui import QImage
++from elements import ELEMENTS,daily_element
++
++CACHE_LIMIT=24
++FRAME_SIZE=192
++FRAME_COUNT=540
++FPS=30
++PERIOD_SECONDS=18
++MAX_ARCHIVE_BYTES=64*1024*1024
++MAX_FRAME_BYTES=512*1024
++
++
++class ElementAssetError(RuntimeError):
++    """필수 원소 자산 실패를 숨기지 않고 앱의 시작·표시 오류로 전달합니다."""
++
++
++def asset_directory():
++    return Path(getattr(sys,'_MEIPASS',Path(__file__).resolve().parents[1]))/'assets/elements3d'
++
++
++def _number(element):
++    number=element if type(element) is int else getattr(element,'number',None)
++    if type(number) is not int or not 1<=number<=31:
++        raise ElementAssetError('원소 번호는1~31 정수여야 합니다.')
++    return number
++
++
++def _identity(path):
++    value=path.stat()
++    return value.st_dev,value.st_ino,value.st_size,value.st_mtime_ns
++
++
++def _object(pairs):
++    result={}
++    for key,value in pairs:
++        if key in result:raise ElementAssetError('원소 매니페스트 중복 필드: '+key)
++        result[key]=value
++    return result
++
++
++class ElementFrames:
++    def __init__(self,number,directory=None):
++        self.number=_number(number);self.cache=OrderedDict();self.archive=None;self.stream=None
++        root=asset_directory() if directory is None else Path(directory)
++        self.directory=root/f'{self.number:02d}_{ELEMENTS[self.number-1].symbol}'
++        try:self._prepare()
++        except Exception as error:
++            self.close()
++            if isinstance(error,ElementAssetError):raise
++            raise ElementAssetError('필수 원소 자산 읽기 실패: '+str(error)) from error
++
++    def _prepare(self):
++        manifest=self.directory/'manifest.json';archive=self.directory/'frames.zip'
++        if not 0<manifest.stat().st_size<=64*1024:raise ElementAssetError('원소 매니페스트 크기 오류')
++        self.manifest=json.loads(manifest.read_text(encoding='utf-8'),object_pairs_hook=_object)
++        expected={'schema_version':1,'number':self.number,'symbol':ELEMENTS[self.number-1].symbol,'width':192,'height':192,
++                  'fps':30,'period_seconds':18,'frame_count':540,'frame_pattern':'frame_{:04d}.png','archive':'frames.zip'}
++        if not isinstance(self.manifest,dict):raise ElementAssetError('원소 매니페스트는 객체여야 합니다.')
++        for key,value in expected.items():
++            actual=self.manifest.get(key)
++            if type(actual) is not type(value) or actual!=value:raise ElementAssetError('원소 계약 불일치: '+key)
++        digest=self.manifest.get('archive_sha256')
++        if not isinstance(digest,str) or not re.fullmatch('[0-9a-f]{64}',digest):raise ElementAssetError('원소 해시 형식 오류')
++        if not 0<archive.stat().st_size<=MAX_ARCHIVE_BYTES:raise ElementAssetError('원소 압축파일 크기 초과')
++        self.identities=(_identity(manifest),_identity(archive));self.stream=archive.open('rb');hasher=hashlib.sha256()
++        while block:=self.stream.read(1024*1024):hasher.update(block)
++        if hasher.hexdigest()!=digest:raise ElementAssetError('원소 ZIP 해시 불일치')
++        self.stream.seek(0);self.archive=zipfile.ZipFile(self.stream);members=self.archive.infolist()
++        if len(members)!=540 or {m.filename for m in members}!={f'frame_{i:04d}.png' for i in range(540)}:
++            raise ElementAssetError('원소 ZIP 정확한540프레임 목록 불일치')
++        if sum(m.file_size for m in members)>128*1024*1024:raise ElementAssetError('원소 해제 크기 초과')
++        for member in members:
++            if (member.is_dir() or member.flag_bits&1 or member.compress_type not in (zipfile.ZIP_STORED,zipfile.ZIP_DEFLATED)
++                    or not 0<member.file_size<=MAX_FRAME_BYTES):raise ElementAssetError('원소 ZIP 멤버 형식 오류')
++        self.cache[0]=self._decode(0);self._check_unchanged()
++
++    def _check_unchanged(self):
++        try:actual=(_identity(self.directory/'manifest.json'),_identity(self.directory/'frames.zip'))
++        except OSError as error:raise ElementAssetError('원소 자산 경로가 변경됐습니다.') from error
++        if actual!=self.identities:raise ElementAssetError('실행 중 원소 자산이 변경됐습니다.')
++
++    def _decode(self,index):
++        try:
++            with self.archive.open(f'frame_{index:04d}.png') as stream:data=stream.read(MAX_FRAME_BYTES+1)
++            if (len(data)>MAX_FRAME_BYTES or len(data)<33 or data[:8]!=b'\x89PNG\r\n\x1a\n' or data[12:16]!=b'IHDR'
++                    or struct.unpack('>II',data[16:24])!=(192,192) or data[24:26]!=bytes((8,6))):raise ElementAssetError('원소 PNG 형식 오류')
++            image=QImage.fromData(data,'PNG')
++            if image.isNull() or image.size().width()!=192 or image.height()!=192 or not image.hasAlphaChannel():raise ElementAssetError('원소 PNG 디코딩 오류')
++            if any(image.pixelColor(x,y).alpha() for x,y in ((0,0),(191,0),(0,191),(191,191))):raise ElementAssetError('원소 PNG 투명 모서리 오류')
++            return image.convertToFormat(QImage.Format.Format_ARGB32_Premultiplied)
++        except ElementAssetError:raise
++        except Exception as error:raise ElementAssetError('원소 프레임 읽기 실패: '+str(error)) from error
++
++    def frame(self,elapsed):
++        if isinstance(elapsed,bool) or not isinstance(elapsed,(int,float)) or not math.isfinite(elapsed):raise ElementAssetError('원소 재생 시각은 유한한 숫자여야 합니다.')
++        if self.archive is None:raise ElementAssetError('원소 재생기가 닫혔습니다.')
++        self._check_unchanged();index=int((elapsed%18)*30)%540
++        if index not in self.cache:
++            self.cache[index]=self._decode(index)
++            while len(self.cache)>CACHE_LIMIT:self.cache.popitem(last=False)
++        self.cache.move_to_end(index);return self.cache[index]
++
++    @property
++    def cache_bytes(self):return sum(image.sizeInBytes() for image in self.cache.values())
++
++    def close(self):
++        if self.archive is not None:self.archive.close();self.archive=None
++        if self.stream is not None:self.stream.close();self.stream=None
++        self.cache.clear()
++
++
++_active=None
++
++
++def close_element_frames():
++    global _active
++    previous,_active=_active,None
++    if previous is not None:previous.close()
++
++
++def preflight_element_frames(element=None):
++    """활성 원소의 해시·목록·첫 프레임을 확인합니다.31개를 적재하지 않습니다."""
++    global _active
++    number=_number(daily_element() if element is None else element)
++    if _active is None or _active.number!=number:
++        close_element_frames();_active=ElementFrames(number)
++    else:_active._check_unchanged()
++    return _active
++
++
++def get_element_frame(element,elapsed):
++    return preflight_element_frames(element).frame(elapsed)
++
++
++atexit.register(close_element_frames)
+--- 이전/src/elements.py
++++ 현재/src/elements.py
+@@ -19,22 +19,22 @@
+ 
+ # 번호·기호는 NIST 표를 따르며 색은 시각 디자인을 위한 별도 선택입니다.
+ _ROWS = (
+-    ('H','수소','#a0cce4','#dcecff'), ('He','헬륨','#b4bee3','#dcecff'),
+-    ('Li','리튬','#a9bedc','#dcecff'), ('Be','베릴륨','#9fcbd6','#dcecff'),
+-    ('B','붕소','#a6bfd5','#dcecff'), ('C','탄소','#a1b7d2','#dcecff'),
+-    ('N','질소','#9db9df','#dcecff'), ('O','산소','#b1c4df','#dcecff'),
+-    ('F','플루오린','#a7cbd5','#dcecff'), ('Ne','네온','#a4bfdc','#dcecff'),
+-    ('Na','나트륨','#aec8dd','#dcecff'), ('Mg','마그네슘','#a6c7dc','#dcecff'),
+-    ('Al','알루미늄','#a5b9cf','#dcecff'), ('Si','규소','#afaee0','#dcecff'),
+-    ('P','인','#a9c2db','#dcecff'), ('S','황','#b0ccdf','#dcecff'),
+-    ('Cl','염소','#accdda','#dcecff'), ('Ar','아르곤','#b6b8df','#dcecff'),
+-    ('K','칼륨','#b6b5dc','#dcecff'), ('Ca','칼슘','#acc5d9','#dcecff'),
+-    ('Sc','스칸듐','#9fc8dc','#dcecff'), ('Ti','타이타늄','#a5b8d8','#dcecff'),
+-    ('V','바나듐','#aeabd6','#dcecff'), ('Cr','크로뮴','#9ec4d7','#dcecff'),
+-    ('Mn','망가니즈','#b2badb','#dcecff'), ('Fe','철','#a3bdd7','#dcecff'),
+-    ('Co','코발트','#809fde','#dcecff'), ('Ni','니켈','#a4c3d6','#dcecff'),
+-    ('Cu','구리','#a6bfd7','#dcecff'), ('Zn','아연','#9abacb','#dcecff'),
+-    ('Ga','갈륨','#a7b5e0','#dcecff'),
++    ('H','수소','#53c9ef','#c3ecf9'), ('He','헬륨','#b3a0f5','#e4defc'),
++    ('Li','리튬','#ef718c','#f9cdd7'), ('Be','베릴륨','#69c8b5','#caece5'),
++    ('B','붕소','#a77bcb','#e0d1ed'), ('C','탄소','#99ddf4','#dbf3fb'),
++    ('N','질소','#668ce9','#c9d7f7'), ('O','산소','#e96d7e','#f7ccd2'),
++    ('F','플루오린','#a1cf62','#deeec8'), ('Ne','네온','#f68d58','#fcd7c5'),
++    ('Na','나트륨','#f1c455','#faeac4'), ('Mg','마그네슘','#c4dbe9','#eaf2f7'),
++    ('Al','알루미늄','#9ebbd5','#dde7f0'), ('Si','규소','#7889d9','#d0d6f2'),
++    ('P','인','#dc8167','#f3d3ca'), ('S','황','#e9d34a','#f7f0c0'),
++    ('Cl','염소','#84c754','#d4ebc3'), ('Ar','아르곤','#a197e5','#dedbf6'),
++    ('K','칼륨','#c284dd','#ead4f3'), ('Ca','칼슘','#ddd0a6','#f3efe0'),
++    ('Sc','스칸듐','#77bdc8','#cfe8ec'), ('Ti','타이타늄','#96adce','#dae2ee'),
++    ('V','바나듐','#7b83cb','#d1d4ed'), ('Cr','크로뮴','#69b6ae','#cae5e3'),
++    ('Mn','망가니즈','#b67db5','#e5d2e5'), ('Fe','철','#b87561','#e6cfc8'),
++    ('Co','코발트','#477bd9','#bfd1f2'), ('Ni','니켈','#91b59b','#d8e5dc'),
++    ('Cu','구리','#d38951','#f0d6c2'), ('Zn','아연','#81acc2','#d3e2ea'),
++    ('Ga','갈륨','#a7c3e4','#e0eaf6'),
+ )
+ ELEMENTS = tuple(Element(index,symbol,name,color,accent)
+                  for index,(symbol,name,color,accent) in enumerate(_ROWS,1))
+--- 이전/src/visuals.py
++++ 현재/src/visuals.py
+@@ -2,10 +2,9 @@
+ import math
+ 
+ from PySide6.QtCore import QPointF, QRectF, Qt
+-from PySide6.QtGui import QColor, QFont, QFontMetricsF, QImage, QPainter
++from PySide6.QtGui import QColor, QFont, QFontMetricsF, QImage, QPainter, QLinearGradient
+ from atom_frames import get_atom_frames
+ from elements import daily_element
+-from element_visuals import colorize_atom
+ from typography import app_font
+ 
+ 
+@@ -88,23 +87,41 @@
+     return str(element.number), element.symbol, element.name, usage, status_label(healthy, unread)
+ 
+ 
+-# 정사각 원본을 동일 비율로 줄여 잔량과 원소/링 영역을 분리합니다.
+-ATOM_RECT = QRectF(-64,-75,128,128)
+-USAGE_RECT = QRectF(-65,56,130,16)
+-SYMBOL_PIXELS = 30
++# 움직이는 조형물·원소 도크·계정 잔량은 서로 독립된 화면 영역입니다.
++ATOM_RECT = QRectF(-48,-74,96,96)
++DOCK_RECT = QRectF(-68,25,136,27)
++USAGE_RECT = QRectF(-68,56,136,16)
++USAGE_TRACK_RECT = QRectF(-61,62,62,4)
++SYMBOL_PIXELS = 24
++
++
++def usage_bar(badge, fraction, state):
++    """숫자와 채움에 같은 실제 비율을 쓰며 최소 채움 폭을 강제하지 않습니다."""
++    rect = QRectF(USAGE_TRACK_RECT)
++    valid = (isinstance(fraction,(int,float)) and not isinstance(fraction,bool)
++             and math.isfinite(fraction) and 0 <= fraction <= 1)
++    if state != 'fresh' or not valid:
++        rect.setWidth(0)
++        return rect, '잔량 지연' if state == 'stale' else '잔량 미확인'
++    rect.setWidth(USAGE_TRACK_RECT.width()*fraction)
++    return rect, '잔량 '+format(fraction*100,'g')+'%'
++
++
++def _frame_for_element(element, elapsed):
++    """원소별 실제 제작 프레임을 읽습니다. 이전 형상으로 대체하지 않습니다."""
++    from element_frames import get_element_frame
++    return get_element_frame(element,elapsed)
+ 
+ 
+ def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', healthy=False, unread=False, light=False, element=None):
+-    """같은3D 프레임 위에 오늘 원소·별도 실제 잔량·상태를 합성합니다."""
++    """위쪽 실제3D·하단 원소 도크·실제 잔량 막대를 겹치지 않게 합성합니다."""
+     element = daily_element() if element is None else element
+-    labels = element_labels(element,badge,state,healthy,unread)
+     painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+-    painter.drawImage(ATOM_RECT,colorize_atom(get_atom_frames().frame(elapsed),element))
++    painter.drawImage(ATOM_RECT,_frame_for_element(element,elapsed))
+     font = app_font(weight=QFont.Weight.DemiBold)
+-    font.setStyleStrategy(font.styleStrategy() | QFont.StyleStrategy.NoSubpixelAntialias)
+     painter.setFont(font)
+     scale = max(1.,abs(painter.combinedTransform().m11())*painter.device().devicePixelRatioF())
+-    # 투명 ARGB에서 글자를 그려 Windows에서도 서브픽셀 색 프린지를 방지합니다.
++    # 투명 ARGB 글자층은 서브픽셀 색 프린지 없이 모션과 독립적으로 고정됩니다.
+     layer = QImage(math.ceil(148*scale),math.ceil(148*scale),QImage.Format.Format_ARGB32_Premultiplied)
+     layer.setDevicePixelRatio(scale)
+     layer.fill(Qt.GlobalColor.transparent)
+@@ -116,20 +133,24 @@
+         measured=QFontMetricsF(local).horizontalAdvance(value)
+         if measured>rect.width()-2:local.setPixelSize(max(7,int(pixels*(rect.width()-2)/measured)))
+         text.setFont(local)
+-        text.setPen(gray(8))
+-        for x,y in ((-1,0),(1,0),(0,-1),(0,1)):
+-            text.drawText(rect.translated(x,y),Qt.AlignmentFlag.AlignCenter,value)
+         text.setPen(color)
+         text.drawText(rect,Qt.AlignmentFlag.AlignCenter,value)
+-    label(QRectF(-24,-43,48,14),labels[0],11,QColor(element.accent))
+-    label(QRectF(-30,-31,60,35),labels[1],SYMBOL_PIXELS)
+-    label(QRectF(-31,5,62,16),labels[2],12,QColor(element.accent))
+-    # 사용률은 중앙 원소번호와 분리된 표지에만 표시합니다.
+-    text.setPen(Qt.PenStyle.NoPen)
+-    text.setBrush(QColor(15,19,23,225))
+-    text.drawRoundedRect(USAGE_RECT,4,4)
+-    label(QRectF(-53,56,112,16),labels[3],12)
+-    text.setBrush(QColor('#a8d9f4' if unread else '#a4bacd' if healthy else '#82909e'))
+-    text.drawEllipse(QPointF(-58,64),2,2)
++    def surface(rect,radius):
++        gradient=QLinearGradient(rect.topLeft(),rect.bottomLeft())
++        gradient.setColorAt(0,QColor('#34414f'));gradient.setColorAt(.48,QColor('#202b37'));gradient.setColorAt(1,QColor('#101923'))
++        text.setPen(QColor('#778b9f'))
++        text.setBrush(gradient);text.drawRoundedRect(rect,radius,radius)
++    surface(DOCK_RECT,8)
++    label(QRectF(-64,28,22,20),str(element.number),12,QColor(element.accent))
++    label(QRectF(-39,24,50,28),element.symbol,SYMBOL_PIXELS)
++    label(QRectF(17,28,46,20),element.name,12)
++    text.setPen(QColor('#657587'))
++    for x in (-40,13):text.drawLine(QPointF(x,32),QPointF(x,45))
++    surface(USAGE_RECT,5)
++    text.setPen(Qt.PenStyle.NoPen);text.setBrush(QColor('#445364'));text.drawRect(USAGE_TRACK_RECT)
++    fill,usage=usage_bar(badge,fraction,state)
++    if fill.width()>0:
++        text.setBrush(QColor(element.accent));text.drawRect(fill)
++    label(QRectF(5,56,60,16),usage,10)
+     text.end()
+     painter.drawImage(QRectF(-74,-74,148,148),layer)

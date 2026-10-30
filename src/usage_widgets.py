@@ -1,11 +1,12 @@
 from i18n import translate as t
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import QLabel, QSizePolicy
+from PySide6.QtWidgets import QSizePolicy
+from motion_label import MotionImageLabel
 import time
 
 
-class CalendarHero(QLabel):
+class CalendarHero(MotionImageLabel):
     """사용 한도 화면에서만 날짜별 입체 이미지를 갱신합니다."""
     def __init__(self, parent=None):
         super().__init__(t('입체 이미지 준비 중'), parent)

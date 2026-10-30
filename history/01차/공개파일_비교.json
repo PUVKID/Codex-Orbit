@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "folder": "01차",
+  "previous": null,
+  "files": [
+    {
+      "path": "src/notifier.py",
+      "bytes": 26813,
+      "sha256": "2059fcac37723f34535eba05d83443a9dbd7e3dfb771200f190f2c8ed2ffb9a8",
+      "utf8_text": true
+    }
+  ],
+  "changes": [
+    {
+      "path": "src/notifier.py",
+      "status": "추가",
+      "before": null,
+      "after": {
+        "bytes": 26813,
+        "sha256": "2059fcac37723f34535eba05d83443a9dbd7e3dfb771200f190f2c8ed2ffb9a8"
+      },
+      "binary": false,
+      "definitions_added": [
+        "InstanceLock",
+        "NativeToast",
+        "Watcher",
+        "__call__",
+        "__enter__",
+        "__exit__",
+        "__init__",
+        "append_log",
+        "atomic_json",
+        "diagnostic",
+        "event",
+        "label",
+        "limited",
+        "main",
+        "poll",
+        "powershell",
+        "public_reason",
+        "read_file",
+        "record",
+        "stamp",
+        "units"
+      ],
+      "definitions_removed": []
+    }
+  ]
+}

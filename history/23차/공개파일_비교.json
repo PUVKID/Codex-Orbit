@@ -1,0 +1,288 @@
+{
+  "version": 23,
+  "folder": "23차",
+  "previous": "22차",
+  "files": [
+    {
+      "path": "requirements.txt",
+      "bytes": 109,
+      "sha256": "76b74752d8b722fc13167e416df61ed80798286ac4762a5a8668b21ab4d93024",
+      "utf8_text": true
+    },
+    {
+      "path": "src/activity.py",
+      "bytes": 15832,
+      "sha256": "e1c17d720b16e14c328dade574c0d945486ccfb4d93260d2e022a3a17be876ad",
+      "utf8_text": true
+    },
+    {
+      "path": "src/app.py",
+      "bytes": 103035,
+      "sha256": "b5a797db3021df14053b12b82cab8034febe57f417770da8ca7bf010d3eacbac",
+      "utf8_text": true
+    },
+    {
+      "path": "src/atom_frames.py",
+      "bytes": 8515,
+      "sha256": "af5b5331068fb58b1daf33d124bd4d8bb33b76bc017435aa79b4ed701b7ed962",
+      "utf8_text": true
+    },
+    {
+      "path": "src/brand.py",
+      "bytes": 9612,
+      "sha256": "8169160d69da479a9a58f49882ecfae2b8f5e068f1c42f542d9d7d7cc2039d20",
+      "utf8_text": true
+    },
+    {
+      "path": "src/calendar_art.py",
+      "bytes": 4132,
+      "sha256": "5495a4f01dc6a30b47d94730f311f340aad081a658d8133f5bf2b0d112a54dc0",
+      "utf8_text": true
+    },
+    {
+      "path": "src/calendar_catalog.py",
+      "bytes": 16113,
+      "sha256": "99e0b12a22a6c13cb10d7920781844844951abd469c96ad0bb8022936528b960",
+      "utf8_text": true
+    },
+    {
+      "path": "src/calendar_motion.py",
+      "bytes": 10836,
+      "sha256": "1212c2a51abd840070a4b8b3912dfbcf5f5f6ed2b3d78dfd6dbc825257ed3d0d",
+      "utf8_text": true
+    },
+    {
+      "path": "src/calendar_renderer.py",
+      "bytes": 26714,
+      "sha256": "95993486dfe841e29a7f01c6f21d3b9c217b4a1a47289743184940da72248c5b",
+      "utf8_text": true
+    },
+    {
+      "path": "src/core.py",
+      "bytes": 11186,
+      "sha256": "6578aa45d58a7e2d501d52c52689b233f993c6bc7af6196428efdc03338641bf",
+      "utf8_text": true
+    },
+    {
+      "path": "src/element_frames.py",
+      "bytes": 7096,
+      "sha256": "0d72e490fbc2680b3bd9bac16c5da13288c61d6e9a08049bb5b8bf072a0a1342",
+      "utf8_text": true
+    },
+    {
+      "path": "src/element_visuals.py",
+      "bytes": 819,
+      "sha256": "33ceea060b073d5a03af097d8e35e7f38ad5ec2252534402bd6a965328276f94",
+      "utf8_text": true
+    },
+    {
+      "path": "src/elements.py",
+      "bytes": 2532,
+      "sha256": "2f4b017f3ea1d8212dfe22b0db43e82cdf01d5ab6a298a60d446e1cc1599c90c",
+      "utf8_text": true
+    },
+    {
+      "path": "src/notifier.py",
+      "bytes": 44672,
+      "sha256": "6a16752a4874bc4c74e8f967bae76bb4f2c3e41af543e621cadc43b843330dd7",
+      "utf8_text": true
+    },
+    {
+      "path": "src/theme.py",
+      "bytes": 9195,
+      "sha256": "e72f8620bd18a100492a45cc71ed49770f169310b800f90307bbd40a542dcf6b",
+      "utf8_text": true
+    },
+    {
+      "path": "src/typography.py",
+      "bytes": 1195,
+      "sha256": "9f34c52a2178b2603aa789ced06ea4f98cf83cd263d6272122ceb64c747b41cf",
+      "utf8_text": true
+    },
+    {
+      "path": "src/usage.py",
+      "bytes": 15245,
+      "sha256": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e",
+      "utf8_text": true
+    },
+    {
+      "path": "src/usage_frames.py",
+      "bytes": 9564,
+      "sha256": "a141ce6eaeefefbe942cf04116c032ec3c8ab383bbb07a028e5961c5026c9957",
+      "utf8_text": true
+    },
+    {
+      "path": "src/usage_widgets.py",
+      "bytes": 1671,
+      "sha256": "77215ae54bbc0b5f60906e9ba1785e6e1f5cb57489cc225dde7d9427f7434226",
+      "utf8_text": true
+    },
+    {
+      "path": "src/visuals.py",
+      "bytes": 12413,
+      "sha256": "904fe83dc9cb06ac769a706059665aa211f5300f2ffb8c19c70b054ad0a74d4e",
+      "utf8_text": true
+    },
+    {
+      "path": "src/weather.py",
+      "bytes": 7032,
+      "sha256": "835caa4e16462dc09801aae984ee34e84ea163e809532f5522851939e67884b3",
+      "utf8_text": true
+    }
+  ],
+  "changes": [
+    {
+      "path": "src/app.py",
+      "status": "수정",
+      "before": {
+        "bytes": 90256,
+        "sha256": "29241222e3f3447e0a62607c05dd2f7bec6fbb8a8539ffb855546b7d95c8fc11"
+      },
+      "after": {
+        "bytes": 103035,
+        "sha256": "b5a797db3021df14053b12b82cab8034febe57f417770da8ca7bf010d3eacbac"
+      },
+      "binary": false,
+      "definitions_added": [
+        "NoticeDelivery",
+        "NoticeTicket",
+        "_content_fit_signature",
+        "_history_items_by_id",
+        "acquire",
+        "available",
+        "clock_text",
+        "close_notice_delivery",
+        "deliver_next_notice",
+        "queue_delivery",
+        "queue_receive",
+        "refresh_tooltip",
+        "release",
+        "update_weather"
+      ],
+      "definitions_removed": []
+    },
+    {
+      "path": "src/calendar_art.py",
+      "status": "수정",
+      "before": {
+        "bytes": 2055,
+        "sha256": "95046b3a95e36da023a6630f1b61634561e32156e1334da0a1ef9d527482cc2a"
+      },
+      "after": {
+        "bytes": 4132,
+        "sha256": "5495a4f01dc6a30b47d94730f311f340aad081a658d8133f5bf2b0d112a54dc0"
+      },
+      "binary": false,
+      "definitions_added": [
+        "_month_palette",
+        "_raw_accent",
+        "_seed_for_date"
+      ],
+      "definitions_removed": []
+    },
+    {
+      "path": "src/calendar_catalog.py",
+      "status": "추가",
+      "before": null,
+      "after": {
+        "bytes": 16113,
+        "sha256": "99e0b12a22a6c13cb10d7920781844844951abd469c96ad0bb8022936528b960"
+      },
+      "binary": false,
+      "definitions_added": [
+        "Collection",
+        "ObjectSpec",
+        "_objects",
+        "all_collections",
+        "collection_for_month",
+        "joining_particle"
+      ],
+      "definitions_removed": []
+    },
+    {
+      "path": "src/calendar_motion.py",
+      "status": "수정",
+      "before": {
+        "bytes": 9270,
+        "sha256": "25068bb3de9b72f14a06ba145654f8b79871b5283a3a75a4ec88ce05b10bfb2a"
+      },
+      "after": {
+        "bytes": 10836,
+        "sha256": "1212c2a51abd840070a4b8b3912dfbcf5f5f6ed2b3d78dfd6dbc825257ed3d0d"
+      },
+      "binary": false,
+      "definitions_added": [
+        "prepare_calendar_motion"
+      ],
+      "definitions_removed": []
+    },
+    {
+      "path": "src/calendar_renderer.py",
+      "status": "수정",
+      "before": {
+        "bytes": 23148,
+        "sha256": "f421f842ae08f4fb079be0fcab924ef2918400b2d6a6fe8c4df426b6cdeadbd5"
+      },
+      "after": {
+        "bytes": 26714,
+        "sha256": "95993486dfe841e29a7f01c6f21d3b9c217b4a1a47289743184940da72248c5b"
+      },
+      "binary": false,
+      "definitions_added": [
+        "_object_geometry",
+        "petal",
+        "radial",
+        "stem"
+      ],
+      "definitions_removed": [
+        "leaf"
+      ]
+    },
+    {
+      "path": "src/visuals.py",
+      "status": "수정",
+      "before": {
+        "bytes": 8089,
+        "sha256": "43e9dc8030b72771abbaafea952c2d5796d43d86f324fe8755b59ab41d0bb14a"
+      },
+      "after": {
+        "bytes": 12413,
+        "sha256": "904fe83dc9cb06ac769a706059665aa211f5300f2ffb8c19c70b054ad0a74d4e"
+      },
+      "binary": false,
+      "definitions_added": [
+        "desktop_widget_layout",
+        "draw_desktop_orbit"
+      ],
+      "definitions_removed": []
+    },
+    {
+      "path": "src/weather.py",
+      "status": "추가",
+      "before": null,
+      "after": {
+        "bytes": 7032,
+        "sha256": "835caa4e16462dc09801aae984ee34e84ea163e809532f5522851939e67884b3"
+      },
+      "binary": false,
+      "definitions_added": [
+        "WeatherClient",
+        "__init__",
+        "_check_age",
+        "_check_size",
+        "_fail",
+        "_finish",
+        "_get",
+        "_location_done",
+        "_publish",
+        "_timeout",
+        "_valid_number",
+        "_weather_done",
+        "close",
+        "refresh",
+        "start"
+      ],
+      "definitions_removed": []
+    }
+  ]
+}

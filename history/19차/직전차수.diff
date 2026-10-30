@@ -1,0 +1,353 @@
+--- 이전/src/app.py
++++ 현재/src/app.py
+@@ -11,7 +11,7 @@
+ from collections import deque
+ 
+ from PySide6.QtCore import QEvent, QObject, QLockFile, Qt, QSize, QThread, QTimer, Signal, QPropertyAnimation, QEasingCurve
+-from PySide6.QtGui import QFont, QFontDatabase, QIcon, QPainter, QPixmap, QColor, QImage
++from PySide6.QtGui import QIcon, QPainter, QPixmap, QColor, QImage
+ from PySide6.QtWidgets import (QApplication, QDialog,
+                              QFrame, QGridLayout, QHBoxLayout, QLabel,
+                              QListWidget, QListWidgetItem, QMenu, QMessageBox,
+@@ -21,10 +21,11 @@
+ from core import clamp_position, read_jsonl_tail, read_text_strict, title_catalog, resolve_title
+ from notifier import Watcher, append_log, atomic_json, stamp, POLL_INTERVAL_SECONDS
+ from usage import UsageClient, reset_label
+-from visuals import draw_orbit
++from visuals import draw_orbit, status_label
+ from atom_frames import get_atom_frames
+ from brand import brand_image, AnimatedBrand, brand_clock, symbol_icon, with_symbol, validate_symbols
+ from theme import STYLE, apply_theme
++from typography import app_font
+ 
+ 
+ def asset(name):
+@@ -394,6 +395,8 @@
+         self.move(*clamp_position(value, screens, self.width()))
+ 
+     def paintEvent(self, _):
++        base_tooltip = self.toolTip().split('\n감시 상태:')[0]
++        self.setToolTip(base_tooltip+'\n감시 상태: '+status_label(self.healthy,self.unread))
+         elapsed = self.render_time if self.render_time is not None else time.monotonic() - self.origin_time
+         painter = QPainter(self)
+         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+@@ -450,7 +453,7 @@
+         self.open_details = open_details
+         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
+         self.setObjectName('notice')
+-        self.setStyleSheet('#notice {background:#203641;border:1px solid #526d78;border-radius:16px;} QLabel {color:#edf4f6;background:transparent;border:none;font-weight:700;}')
++        self.setStyleSheet('#notice {background:#203641;border:1px solid #526d78;border-radius:16px;} QLabel {color:#edf4f6;background:transparent;border:none;font-weight:500;}')
+         self.setFixedWidth(410)
+         layout = QVBoxLayout(self)
+         layout.setContentsMargins(18, 14, 18, 14)
+@@ -710,7 +713,7 @@
+         box = QVBoxLayout(panel)
+         heading = QHBoxLayout()
+         title = QLabel('계정 사용 한도 · 남은 비율')
+-        title.setStyleSheet('color:#edf4f5;font-size:25px;padding-bottom:18px;')
++        title.setStyleSheet('color:#edf4f5;font-size:25px;font-weight:600;padding-bottom:18px;')
+         heading.addWidget(with_symbol(title, 'quota'), 1)
+         self.usage_refresh = QPushButton('새로고침')
+         self.usage_refresh.setIcon(symbol_icon('refresh'))
+@@ -798,30 +801,30 @@
+         card_layout.setContentsMargins(20, 20, 20, 20)
+         card_layout.setSpacing(12)
+         self.chat_title = QLabel('변경을 기다리고 있습니다')
+-        self.chat_title.setStyleSheet('font-size:23px;color:#f1f7f8;padding:2px 0 6px 0;')
++        self.chat_title.setStyleSheet('font-size:23px;font-weight:600;color:#f1f7f8;padding:2px 0 6px 0;')
+         self.change_heading = QLabel('변경을 기다리고 있습니다')
+         self.change_heading.setStyleSheet('font-size:13px;color:#a7e7d0;padding:5px 8px;')
+         self.model_transition = QLabel('')
+-        self.model_transition.setStyleSheet('font-size:21px;color:#b1c5d0;')
++        self.model_transition.setStyleSheet('font-size:21px;font-weight:600;color:#b1c5d0;')
+         self.model_previous = self.model_transition
+         self.model_current = QLabel('—')
+-        self.model_current.setStyleSheet('font-size:26px;color:#edf4f5;')
++        self.model_current.setStyleSheet('font-size:26px;font-weight:600;color:#edf4f5;')
+         self.effort_transition = QLabel('')
+-        self.effort_transition.setStyleSheet('font-size:21px;color:#b1c5d0;')
++        self.effort_transition.setStyleSheet('font-size:21px;font-weight:600;color:#b1c5d0;')
+         self.effort_previous = self.effort_transition
+         self.effort_current = QLabel('—')
+-        self.effort_current.setStyleSheet('font-size:26px;color:#edf4f5;')
++        self.effort_current.setStyleSheet('font-size:26px;font-weight:600;color:#edf4f5;')
+         self.before_value = QLabel('변경 전  ·  —')
+         self.after_value = QLabel('변경 후  ·  —')
+         self.after_value.setStyleSheet('font-size:12px;color:#b1c5d0;padding:0;')
+         self.before_value.setStyleSheet('font-size:12px;color:#8ea9b6;')
+         self.activity_message = QLabel()
+         self.activity_message.setWordWrap(True)
+-        self.activity_message.setStyleSheet('font-size:22px;color:#f1f5f7;padding:6px 0;')
++        self.activity_message.setStyleSheet('font-size:22px;font-weight:600;color:#f1f5f7;padding:6px 0;')
+         self.activity_message.hide()
+         self.task_value = QLabel('공개된 작업 설명을 기다립니다.')
+         self.selection_reason = QLabel('모델·추론 강도 선택 이유는 공개되지 않았습니다.')
+-        self.task_value.setStyleSheet('font-size:20px;color:#e6f2f1;padding:4px 0 10px 0;')
++        self.task_value.setStyleSheet('font-size:20px;font-weight:600;color:#e6f2f1;padding:4px 0 10px 0;')
+         self.selection_reason.setStyleSheet('font-size:11px;color:#a6becb;padding:4px 0;')
+         self.reason_title = QLabel('왜 맡겼나요? · 공개 설명')
+         self.reason_title.setStyleSheet('color:#afc5ce;font-size:11px;padding-top:10px;')
+@@ -1357,16 +1360,13 @@
+     apply_theme()
+     app.setWindowIcon(QIcon(str(asset('Orbit.ico'))))
+     app.setQuitOnLastWindowClosed(False)
+-    font_id = QFontDatabase.addApplicationFont(str(asset('NanumGothic-Bold.ttf')))
+-    families = QFontDatabase.applicationFontFamilies(font_id)
+-    font = QFont(families[0] if families else 'NanumGothic', 10, QFont.Weight.Bold)
+-    # Windows ClearType의 유채색 서브픽셀 테두리가 무채색 UI에 섞이지 않게 합니다.
+-    font.setStyleStrategy(font.styleStrategy() | QFont.StyleStrategy.NoSubpixelAntialias)
+-    app.setFont(font)
+     effective_sessions = args.sessions or (Path(os.environ.get('CODEX_HOME') or (Path.home() / '.codex')) / 'sessions')
+     stage = 'settings-load'
+     log_error = operation_record(args.data_dir, stage, effective_sessions)
+     try:
++        stage = 'font-load'
++        app.setFont(app_font())
++        families = [app.font().family()]
+         settings = Settings(args.data_dir)
+         if args.sessions:
+             settings.values['sessions'] = str(args.sessions.absolute())
+--- 이전/src/element_visuals.py
++++ 현재/src/element_visuals.py
+@@ -1,19 +1,19 @@
+-"""원본3D 자산을 변경하지 않는 제한 메모리 Qt 색 합성입니다."""
+-from PySide6.QtGui import QColor, QImage, QPainter
+-
+-
+-def colorize_atom(image, element):
+-    """SourceAtop은 원본 알파를 유지하며 명암에 부드러운 영감색을 더합니다."""
+-    result = image.convertToFormat(QImage.Format.Format_ARGB32_Premultiplied)
+-    if result.isNull():
+-        return result
+-    painter = QPainter(result)
+-    try:
+-        painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_SourceAtop)
+-        tint = QColor(element.color)
+-        tint.setAlpha(66)
+-        painter.fillRect(result.rect(),tint)
+-    finally:
+-        painter.end()
+-    # 색 프레임은 보관하지 않습니다. 원본24장 캐시는 기존 재생기만 소유합니다.
+-    return result
++"""원본3D 자산을 변경하지 않는 제한 메모리 Qt 색 합성입니다."""
++from PySide6.QtGui import QColor, QImage, QPainter
++
++
++def colorize_atom(image, element):
++    """SourceAtop은 원본 알파를 유지하며 명암에 부드러운 영감색을 더합니다."""
++    result = image.convertToFormat(QImage.Format.Format_ARGB32_Premultiplied)
++    if result.isNull():
++        return result
++    painter = QPainter(result)
++    try:
++        painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_SourceAtop)
++        tint = QColor(element.color)
++        tint.setAlpha(48)
++        painter.fillRect(result.rect(),tint)
++    finally:
++        painter.end()
++    # 색 프레임은 보관하지 않습니다. 원본24장 캐시는 기존 재생기만 소유합니다.
++    return result
+--- 이전/src/elements.py
++++ 현재/src/elements.py
+@@ -1,48 +1,48 @@
+-"""한국 날짜의1~31일에 대응하는 원소와 디자인 영감 팔레트입니다."""
+-from dataclasses import dataclass
+-from datetime import datetime, timedelta, timezone
+-
+-KST = timezone(timedelta(hours=9))
+-SOURCES = ('https://pml.nist.gov/PhysRefData/Elements/per.html',
+-           'https://periodic-table.rsc.org/element/26/Iron')
+-PALETTE_NOTE = '원소에서 영감받은 디자인 색이며 실제 원소·불꽃색이나 전자배치 재현이 아닙니다.'
+-
+-
+-@dataclass(frozen=True)
+-class Element:
+-    number: int
+-    symbol: str
+-    name: str
+-    color: str
+-    accent: str
+-
+-
+-# 번호·기호는 NIST 표를 따르며 색은 시각 디자인을 위한 별도 선택입니다.
+-_ROWS = (
+-    ('H','수소','#79c9e8','#c8efff'), ('He','헬륨','#d4adf5','#eedcff'),
+-    ('Li','리튬','#ee91a9','#ffd4df'), ('Be','베릴륨','#90cdb7','#d4f4e8'),
+-    ('B','붕소','#c9a78e','#f3dfcf'), ('C','탄소','#9baec8','#d9e6fa'),
+-    ('N','질소','#92a8ed','#d8e1ff'), ('O','산소','#e99eac','#ffdae2'),
+-    ('F','플루오린','#b1d998','#e4f7d6'), ('Ne','네온','#eea77d','#ffe0c7'),
+-    ('Na','나트륨','#e1c378','#fff0bf'), ('Mg','마그네슘','#a6c7dc','#dfedf7'),
+-    ('Al','알루미늄','#a5b9cf','#e1ebf6'), ('Si','규소','#aba5dc','#e4dfff'),
+-    ('P','인','#e5ad8c','#ffe0ce'), ('S','황','#dbcf7d','#fff7c8'),
+-    ('Cl','염소','#b5d290','#e5f6ce'), ('Ar','아르곤','#b59ce7','#e7d9ff'),
+-    ('K','칼륨','#c49de4','#eed8ff'), ('Ca','칼슘','#e4b08a','#ffe3ca'),
+-    ('Sc','스칸듐','#9ac9c9','#d6f3f2'), ('Ti','타이타늄','#a5b8d8','#dde9ff'),
+-    ('V','바나듐','#aeabd6','#e4e1fc'), ('Cr','크로뮴','#90c8ad','#d2f3e2'),
+-    ('Mn','망가니즈','#c49abb','#f2d5e9'), ('Fe','철','#cd9979','#ffe0bd'),
+-    ('Co','코발트','#809fde','#d6e3ff'), ('Ni','니켈','#9fc5ad','#dbf2e3'),
+-    ('Cu','구리','#dc9c79','#ffdcc4'), ('Zn','아연','#9abacb','#d9edf5'),
+-    ('Ga','갈륨','#a7b5e0','#e0e7ff'),
+-)
+-ELEMENTS = tuple(Element(index,symbol,name,color,accent)
+-                 for index,(symbol,name,color,accent) in enumerate(_ROWS,1))
+-
+-
+-def daily_element(when=None):
+-    """매 호출 실제 날짜를 다시 읽어 자정·절전 복귀·시계 되돌림을 반영합니다."""
+-    value = datetime.now(KST) if when is None else when
+-    if value.tzinfo is None or value.utcoffset() is None:
+-        raise ValueError('원소 날짜에는 시간대가 있는 datetime이 필요합니다.')
+-    return ELEMENTS[value.astimezone(KST).day-1]
++"""한국 날짜의1~31일에 대응하는 원소와 디자인 영감 팔레트입니다."""
++from dataclasses import dataclass
++from datetime import datetime, timedelta, timezone
++
++KST = timezone(timedelta(hours=9))
++SOURCES = ('https://pml.nist.gov/PhysRefData/Elements/per.html',
++           'https://periodic-table.rsc.org/element/26/Iron')
++PALETTE_NOTE = '원소에서 영감받은 디자인 색이며 실제 원소·불꽃색이나 전자배치 재현이 아닙니다.'
++
++
++@dataclass(frozen=True)
++class Element:
++    number: int
++    symbol: str
++    name: str
++    color: str
++    accent: str
++
++
++# 번호·기호는 NIST 표를 따르며 색은 시각 디자인을 위한 별도 선택입니다.
++_ROWS = (
++    ('H','수소','#a0cce4','#dcecff'), ('He','헬륨','#b4bee3','#dcecff'),
++    ('Li','리튬','#a9bedc','#dcecff'), ('Be','베릴륨','#9fcbd6','#dcecff'),
++    ('B','붕소','#a6bfd5','#dcecff'), ('C','탄소','#a1b7d2','#dcecff'),
++    ('N','질소','#9db9df','#dcecff'), ('O','산소','#b1c4df','#dcecff'),
++    ('F','플루오린','#a7cbd5','#dcecff'), ('Ne','네온','#a4bfdc','#dcecff'),
++    ('Na','나트륨','#aec8dd','#dcecff'), ('Mg','마그네슘','#a6c7dc','#dcecff'),
++    ('Al','알루미늄','#a5b9cf','#dcecff'), ('Si','규소','#afaee0','#dcecff'),
++    ('P','인','#a9c2db','#dcecff'), ('S','황','#b0ccdf','#dcecff'),
++    ('Cl','염소','#accdda','#dcecff'), ('Ar','아르곤','#b6b8df','#dcecff'),
++    ('K','칼륨','#b6b5dc','#dcecff'), ('Ca','칼슘','#acc5d9','#dcecff'),
++    ('Sc','스칸듐','#9fc8dc','#dcecff'), ('Ti','타이타늄','#a5b8d8','#dcecff'),
++    ('V','바나듐','#aeabd6','#dcecff'), ('Cr','크로뮴','#9ec4d7','#dcecff'),
++    ('Mn','망가니즈','#b2badb','#dcecff'), ('Fe','철','#a3bdd7','#dcecff'),
++    ('Co','코발트','#809fde','#dcecff'), ('Ni','니켈','#a4c3d6','#dcecff'),
++    ('Cu','구리','#a6bfd7','#dcecff'), ('Zn','아연','#9abacb','#dcecff'),
++    ('Ga','갈륨','#a7b5e0','#dcecff'),
++)
++ELEMENTS = tuple(Element(index,symbol,name,color,accent)
++                 for index,(symbol,name,color,accent) in enumerate(_ROWS,1))
++
++
++def daily_element(when=None):
++    """매 호출 실제 날짜를 다시 읽어 자정·절전 복귀·시계 되돌림을 반영합니다."""
++    value = datetime.now(KST) if when is None else when
++    if value.tzinfo is None or value.utcoffset() is None:
++        raise ValueError('원소 날짜에는 시간대가 있는 datetime이 필요합니다.')
++    return ELEMENTS[value.astimezone(KST).day-1]
+--- 이전/src/theme.py
++++ 현재/src/theme.py
+@@ -5,7 +5,7 @@
+ 
+ 
+ STYLE = '''
+-QWidget {background:#172d36;color:#edf4f4;font-weight:700;font-size:13px;}
++QWidget {background:#172d36;color:#edf4f4;font-family:SUIT;font-weight:500;font-size:13px;}
+ QDialog {background:#142a33;}
+ QLabel {background:transparent;border:none;}
+ QFrame#eventCard {background:#1e3540;border:1px solid #344e5a;border-radius:16px;}
+@@ -24,7 +24,7 @@
+ QPushButton#disclosure {background:#203943;border:1px solid #3a5560;text-align:left;padding:14px 12px;}
+ QTabWidget::pane {border:0;border-top:1px solid #35505a;}
+ QTabBar::tab {padding:16px 17px;background:transparent;color:#a8beca;border-bottom:2px solid transparent;font-size:15px;}
+-QTabBar::tab:selected {background:#263f4b;color:#ffffff;border-bottom:2px solid #98dfd5;border-top-left-radius:10px;border-top-right-radius:10px;}
++QTabBar::tab:selected {font-weight:600;background:#263f4b;color:#ffffff;border-bottom:2px solid #98dfd5;border-top-left-radius:10px;border-top-right-radius:10px;}
+ QTabBar::tab:hover {color:#d5f5ee;}
+ QSplitter::handle {background:transparent;width:1px;}
+ QScrollArea {border:0;background:transparent;}
+--- 이전/src/typography.py
++++ 현재/src/typography.py
+@@ -0,0 +1,26 @@
++"""번들 SUIT 글꼴을 앱과 투명 렌더에서 동일하게 사용합니다."""
++from pathlib import Path
++import sys
++from PySide6.QtGui import QFont,QFontDatabase
++
++_family = None
++
++def register_fonts():
++    """필수 파일이나 Qt 등록 실패를 숨기지 않고 시작 오류로 전달합니다."""
++    global _family
++    if _family is None:
++        root=Path(getattr(sys,'_MEIPASS',Path(__file__).resolve().parents[1]))/'assets'
++        for style in ('Regular','Medium','SemiBold'):
++            path=root/('SUIT-'+style+'.ttf')
++            if not path.is_file():raise RuntimeError('필수 SUIT 글꼴 누락: '+str(path))
++            identity=QFontDatabase.addApplicationFont(str(path))
++            if identity<0 or 'SUIT' not in QFontDatabase.applicationFontFamilies(identity):
++                raise RuntimeError('필수 SUIT 글꼴 등록 실패: '+str(path))
++        _family='SUIT'
++    return _family
++
++def app_font(pixels=None,weight=QFont.Weight.Medium):
++    font=QFont(register_fonts(),10,weight)
++    if pixels is not None:font.setPixelSize(pixels)
++    font.setStyleStrategy(font.styleStrategy() | QFont.StyleStrategy.NoSubpixelAntialias)
++    return font
+--- 이전/src/visuals.py
++++ 현재/src/visuals.py
+@@ -6,6 +6,7 @@
+ from atom_frames import get_atom_frames
+ from elements import daily_element
+ from element_visuals import colorize_atom
++from typography import app_font
+ 
+ 
+ def rotate_point(point, angles):
+@@ -87,14 +88,19 @@
+     return str(element.number), element.symbol, element.name, usage, status_label(healthy, unread)
+ 
+ 
++# 정사각 원본을 동일 비율로 줄여 잔량과 원소/링 영역을 분리합니다.
++ATOM_RECT = QRectF(-64,-75,128,128)
++USAGE_RECT = QRectF(-65,56,130,16)
++SYMBOL_PIXELS = 30
++
++
+ def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', healthy=False, unread=False, light=False, element=None):
+     """같은3D 프레임 위에 오늘 원소·별도 실제 잔량·상태를 합성합니다."""
+     element = daily_element() if element is None else element
+     labels = element_labels(element,badge,state,healthy,unread)
+     painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+-    painter.drawImage(QRectF(-74,-80,148,148),colorize_atom(get_atom_frames().frame(elapsed),element))
+-    font = QFont(painter.font())
+-    font.setWeight(QFont.Weight.Bold)
++    painter.drawImage(ATOM_RECT,colorize_atom(get_atom_frames().frame(elapsed),element))
++    font = app_font(weight=QFont.Weight.DemiBold)
+     font.setStyleStrategy(font.styleStrategy() | QFont.StyleStrategy.NoSubpixelAntialias)
+     painter.setFont(font)
+     scale = max(1.,abs(painter.combinedTransform().m11())*painter.device().devicePixelRatioF())
+@@ -115,14 +121,15 @@
+             text.drawText(rect.translated(x,y),Qt.AlignmentFlag.AlignCenter,value)
+         text.setPen(color)
+         text.drawText(rect,Qt.AlignmentFlag.AlignCenter,value)
+-    label(QRectF(-22,-28,44,12),labels[0],9,QColor(element.accent))
+-    label(QRectF(-24,-18,48,25),labels[1],23)
+-    label(QRectF(-26,7,52,12),labels[2],10,QColor(element.accent))
++    label(QRectF(-24,-43,48,14),labels[0],11,QColor(element.accent))
++    label(QRectF(-30,-31,60,35),labels[1],SYMBOL_PIXELS)
++    label(QRectF(-31,5,62,16),labels[2],12,QColor(element.accent))
+     # 사용률은 중앙 원소번호와 분리된 표지에만 표시합니다.
+     text.setPen(Qt.PenStyle.NoPen)
+     text.setBrush(QColor(15,19,23,225))
+-    text.drawRoundedRect(QRectF(-47,33,94,18),7,7)
+-    label(QRectF(-45,33,90,18),labels[3],11)
+-    label(QRectF(-43,51,86,20),labels[4],11,gray(220))
++    text.drawRoundedRect(USAGE_RECT,4,4)
++    label(QRectF(-53,56,112,16),labels[3],12)
++    text.setBrush(QColor('#a8d9f4' if unread else '#a4bacd' if healthy else '#82909e'))
++    text.drawEllipse(QPointF(-58,64),2,2)
+     text.end()
+     painter.drawImage(QRectF(-74,-74,148,148),layer)

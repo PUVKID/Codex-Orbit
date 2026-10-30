@@ -109,11 +109,11 @@ class Motion240Tests(unittest.TestCase):
     def tearDown(self):
         motion.close_calendar_motion()
 
-    def test_absolute_deadlines_skip_missed_slots_without_drift(self):
+    def test_absolute_deadlines_resume_late_frames_without_extra_wait(self):
         self.assertEqual(motion.FPS, 240)
         from calendar_motion import next_frame_deadline
         self.assertAlmostEqual(next_frame_deadline(1, 1.001), 1 + 1 / 240)
-        self.assertAlmostEqual(next_frame_deadline(1, 1.02), 1 + 5 / 240)
+        self.assertEqual(next_frame_deadline(1, 1.02), 1.02)
 
     def test_native_waiter_handle_lifecycle_and_errors(self):
         import ctypes

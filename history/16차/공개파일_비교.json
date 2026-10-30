@@ -1,0 +1,80 @@
+{
+  "version": 16,
+  "folder": "16차",
+  "previous": "15차",
+  "files": [
+    {
+      "path": "requirements.txt",
+      "bytes": 47,
+      "sha256": "0277c326e594b9e8ec8027fc240eda62a146295c2115466e872ab475d5699121",
+      "utf8_text": true
+    },
+    {
+      "path": "src/app.py",
+      "bytes": 67544,
+      "sha256": "cb630d296cc6fa01fe50ace11358ba4a3ed12f7d2940a055195566dc7613b415",
+      "utf8_text": true
+    },
+    {
+      "path": "src/atom_frames.py",
+      "bytes": 8515,
+      "sha256": "af5b5331068fb58b1daf33d124bd4d8bb33b76bc017435aa79b4ed701b7ed962",
+      "utf8_text": true
+    },
+    {
+      "path": "src/brand.py",
+      "bytes": 782,
+      "sha256": "e940a95924da591064168b20f8486fd11026f6979f51db42d7a608e696bae48c",
+      "utf8_text": true
+    },
+    {
+      "path": "src/core.py",
+      "bytes": 10204,
+      "sha256": "0da59ecbba81ad77544766fa50f0b24bd5abbd8d8f8da37f269a8ff08979b981",
+      "utf8_text": true
+    },
+    {
+      "path": "src/notifier.py",
+      "bytes": 38231,
+      "sha256": "5ebefd6304fee2279d53203c492a0c7452d2b363a74d03f52b20039487849321",
+      "utf8_text": true
+    },
+    {
+      "path": "src/theme.py",
+      "bytes": 8578,
+      "sha256": "e3b834f71c3af854ef23aa411ddeec07c959a6547c219d318b60b627445d3243",
+      "utf8_text": true
+    },
+    {
+      "path": "src/usage.py",
+      "bytes": 15245,
+      "sha256": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e",
+      "utf8_text": true
+    },
+    {
+      "path": "src/visuals.py",
+      "bytes": 6413,
+      "sha256": "22db5d1f5aa30cb9ff8a4bf18c8d44f99a88893a6579f821b08b03f270a033ff",
+      "utf8_text": true
+    }
+  ],
+  "changes": [
+    {
+      "path": "src/app.py",
+      "status": "수정",
+      "before": {
+        "bytes": 66680,
+        "sha256": "ee151f176fc0035b441ac69bb0a6ea449f82034afcc270e72f2e412d29b4f177"
+      },
+      "after": {
+        "bytes": 67544,
+        "sha256": "cb630d296cc6fa01fe50ace11358ba4a3ed12f7d2940a055195566dc7613b415"
+      },
+      "binary": false,
+      "definitions_added": [
+        "previous_field"
+      ],
+      "definitions_removed": []
+    }
+  ]
+}

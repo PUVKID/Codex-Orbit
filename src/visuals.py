@@ -1,7 +1,7 @@
 """제작된 실제3D 금속 프레임과 고정된 실제 잔량·상태를 합성합니다."""
 import math
 
-from i18n import translate as t
+from i18n import translate as t, get_language
 from PySide6.QtCore import QPointF, QRectF, Qt
 from PySide6.QtGui import QColor, QFont, QFontMetricsF, QImage, QPainter, QLinearGradient, QTextLayout, QTextOption
 from atom_frames import get_atom_frames
@@ -209,13 +209,23 @@ def desktop_widget_layout(width, height, title, show_weather=False, show_locatio
             'date_font': date_font, 'line_height': line_height}
 
 
-def draw_desktop_orbit(painter, width, height, source, design, fraction, state, clock_text=None, weather_text=None, location_text=None):
+def draw_desktop_orbit(painter, width, height, source, design, fraction, state, clock_text=None, weather_text=None, location_text=None, cache=None):
     """위젯의 조형과 글자를 별개 영역에 그려 작은 글자 축소를 막습니다."""
+    if cache is not None:
+        return cache.draw(painter, width, height, source, design, fraction, state,
+                          clock_text, weather_text, location_text)
     layout = desktop_widget_layout(width, height, t(design.title), weather_text is not None, location_text is not None)
     painter.save()
     painter.setRenderHint(QPainter.RenderHint.Antialiasing)
     painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
     painter.drawImage(layout['art'], source)
+    _draw_desktop_information(painter, layout, design, fraction, state, clock_text, weather_text, location_text)
+    painter.restore()
+    return layout
+
+
+def _draw_desktop_information(painter, layout, design, fraction, state, clock_text, weather_text, location_text):
+    """움직이는 GPU 이미지와 분리한 도크·시계·지역·기온·잔량을 그립니다."""
     def surface(rect, radius):
         gradient = QLinearGradient(rect.topLeft(), rect.bottomLeft())
         gradient.setColorAt(0, QColor('#34414f'))
@@ -263,5 +273,44 @@ def draw_desktop_orbit(painter, width, height, source, design, fraction, state, 
     painter.setFont(font)
     painter.setPen(gray(248))
     painter.drawText(QRectF(usage.left()+5, usage.top()+1, usage.width()-10, 18), Qt.AlignmentFlag.AlignCenter, label)
-    painter.restore()
-    return layout
+
+
+class DesktopOverlayCache:
+    """한 위젯의 완전 입력이 같을 때만 단일 투명 정보 레이어를 재사용합니다."""
+    def __init__(self):
+        self.key = None
+        self.layout = None
+        self.image = None
+
+    def draw(self, painter, width, height, source, design, fraction, state,
+             clock_text, weather_text, location_text):
+        dpr = painter.device().devicePixelRatioF()
+        title = t(design.title)
+        font_key = app_font(weight=QFont.Weight.DemiBold).key()
+        key = (width, height, dpr, design.date, title, design.accent,
+               fraction, state, clock_text, weather_text, location_text,
+               get_language(), font_key)
+        if self.key != key:
+            layout = desktop_widget_layout(width, height, title,
+                                           weather_text is not None, location_text is not None)
+            image = QImage(math.ceil(width*dpr), math.ceil(height*dpr),
+                           QImage.Format.Format_ARGB32_Premultiplied)
+            image.setDevicePixelRatio(dpr)
+            image.fill(Qt.GlobalColor.transparent)
+            layer = QPainter(image)
+            try:
+                layer.setRenderHint(QPainter.RenderHint.Antialiasing)
+                layer.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+                _draw_desktop_information(layer, layout, design, fraction, state,
+                                          clock_text, weather_text, location_text)
+            finally:
+                layer.end()
+            self.key, self.layout, self.image = key, layout, image
+        painter.save()
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+        # 모션 이미지는 매번 새로 그리고 정적 정보만 한 장으로 합성합니다.
+        painter.drawImage(self.layout['art'], source)
+        painter.drawImage(QPointF(0, 0), self.image)
+        painter.restore()
+        return self.layout

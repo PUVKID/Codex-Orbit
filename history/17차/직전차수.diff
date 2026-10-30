@@ -1,0 +1,367 @@
+--- 이전/src/app.py
++++ 현재/src/app.py
+@@ -10,7 +10,7 @@
+ import re
+ from collections import deque
+ 
+-from PySide6.QtCore import QEvent, QObject, QLockFile, Qt, QThread, QTimer, Signal, QPropertyAnimation, QEasingCurve
++from PySide6.QtCore import QEvent, QObject, QLockFile, Qt, QSize, QThread, QTimer, Signal, QPropertyAnimation, QEasingCurve
+ from PySide6.QtGui import QFont, QFontDatabase, QIcon, QPainter, QPixmap
+ from PySide6.QtWidgets import (QApplication, QDialog,
+                              QFrame, QGridLayout, QHBoxLayout, QLabel,
+@@ -23,7 +23,7 @@
+ from usage import UsageClient, reset_label
+ from visuals import draw_orbit
+ from atom_frames import get_atom_frames
+-from brand import brand_image
++from brand import brand_image, AnimatedBrand, brand_clock, symbol_icon, with_symbol, validate_symbols
+ from theme import STYLE, apply_theme
+ 
+ 
+@@ -271,7 +271,7 @@
+         self.setFixedSize(148, 148)
+         self.settings, self.details = settings, details
+         self.quit_app = quit_app
+-        self.origin_time = time.monotonic()
++        self.origin_time = brand_clock().origin
+         self.render_time = None
+         self.healthy = False
+         self.unread = False
+@@ -368,11 +368,7 @@
+         self.text.setTextFormat(Qt.TextFormat.PlainText)
+         self.text.setWordWrap(True)
+         heading = QHBoxLayout()
+-        self.brand_mark = QLabel()
+-        self.brand_mark.setPixmap(QPixmap.fromImage(brand_image(24)))
+-        self.brand_mark.setFixedSize(24, 24)
+-        self.brand_mark.setAccessibleName('Codex Orbit 로고')
+-        self.brand_mark.setToolTip('Codex Orbit')
++        self.brand_mark = AnimatedBrand(32)
+         heading.addWidget(self.brand_mark, 0, Qt.AlignmentFlag.AlignTop)
+         heading.addWidget(self.title, 1)
+         close = QPushButton('닫기')
+@@ -574,11 +570,7 @@
+         layout.setContentsMargins(24, 16, 24, 20)
+         layout.setSpacing(10)
+         header = QHBoxLayout()
+-        self.brand_mark = QLabel()
+-        self.brand_mark.setPixmap(QPixmap.fromImage(brand_image(32)))
+-        self.brand_mark.setFixedSize(32, 32)
+-        self.brand_mark.setAccessibleName('Codex Orbit 로고')
+-        self.brand_mark.setToolTip('Codex Orbit')
++        self.brand_mark = AnimatedBrand(40)
+         header.addWidget(self.brand_mark)
+         self.setWindowIcon(QIcon(QPixmap.fromImage(brand_image(32))))
+         heading = QLabel('Codex Orbit')
+@@ -586,9 +578,10 @@
+         header.addWidget(heading, 1)
+         self.usage_compact = QLabel('사용 한도 미확인')
+         self.usage_compact.setStyleSheet('font-size:12px;color:#b0b0b0;')
+-        header.addWidget(self.usage_compact)
++        header.addWidget(with_symbol(self.usage_compact, 'quota'))
+         layout.addLayout(header)
+         self.tabs = QTabWidget()
++        self.tabs.setIconSize(QSize(20, 20))
+         layout.addWidget(self.tabs, 1)
+         self.build_history()
+         usage_page = QWidget()
+@@ -596,7 +589,7 @@
+         usage_layout.setContentsMargins(32, 28, 32, 28)
+         self.build_usage(usage_layout)
+         usage_layout.addStretch()
+-        self.tabs.insertTab(1, usage_page, '사용 한도')
++        self.tabs.insertTab(1, usage_page, symbol_icon('quota'), '사용 한도')
+         self.setStyleSheet(STYLE)
+ 
+     def build_usage(self, layout):
+@@ -606,8 +599,11 @@
+         heading = QHBoxLayout()
+         title = QLabel('계정 사용 한도 · 남은 비율')
+         title.setStyleSheet('color:#eeeeee;font-size:25px;padding-bottom:18px;')
+-        heading.addWidget(title, 1)
++        heading.addWidget(with_symbol(title, 'quota'), 1)
+         self.usage_refresh = QPushButton('새로고침')
++        self.usage_refresh.setIcon(symbol_icon('refresh'))
++        self.usage_refresh.setIconSize(QSize(20, 20))
++        self.usage_refresh.setAccessibleName('계정 사용 한도 새로고침')
+         self.usage_refresh.clicked.connect(lambda: self.controller.usage.manual_refresh())
+         heading.addWidget(self.usage_refresh)
+         box.addLayout(heading)
+@@ -721,14 +717,16 @@
+             label.setWordWrap(True)
+             label.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+             label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+-        for label in (self.event_time, self.chat_title, self.change_heading):card_layout.addWidget(label)
++        card_layout.addWidget(with_symbol(self.event_time, 'time'))
++        for label in (self.chat_title, self.change_heading):card_layout.addWidget(label)
+         table = QGridLayout()
+         table.setHorizontalSpacing(18)
+         table.setVerticalSpacing(12)
+         for row, (kind, previous, current) in enumerate((('모델',self.model_previous,self.model_current),
+                                                        ('추론 강도',self.effort_previous,self.effort_current))):
+             for col, text in ((0,'이전 '+kind),(2,'새 '+kind)):
+-                label=QLabel(text);label.setStyleSheet('font-size:12px;color:#999999;');table.addWidget(label,row*3,col)
++                label=QLabel(text);label.setStyleSheet('font-size:12px;color:#999999;')
++                table.addWidget(with_symbol(label, 'model' if row == 0 else 'effort'),row*3,col)
+             arrow=QLabel('→');arrow.setStyleSheet('font-size:16px;color:#888888;')
+             table.addWidget(previous,row*3+1,0)
+             table.addWidget(arrow,row*3+1,1)
+@@ -737,12 +735,15 @@
+             table.addWidget(line,row*3+2,0,1,3)
+         table.setColumnStretch(0,1);table.setColumnStretch(2,1)
+         card_layout.addLayout(table)
+-        for label in (self.before_value,self.after_value,self.reason_title,self.reason_value):card_layout.addWidget(label)
++        for label in (self.before_value,self.after_value):card_layout.addWidget(label)
++        card_layout.addWidget(with_symbol(self.reason_title, 'reason'))
++        card_layout.addWidget(self.reason_value)
+         self.diagnostics = DiagnosticLabel()
+         cards.addWidget(self.diagnostics)
+         cards.addWidget(self.card)
+         self.evidence_toggle = QPushButton('▸ 원문 · ID · 근거 펼치기')
+         self.evidence_toggle.setObjectName('disclosure')
++        self.evidence_toggle.setIcon(symbol_icon('reason'))
+         self.evidence_toggle.setCheckable(True)
+         cards.addWidget(self.evidence_toggle)
+         self.detail = QPlainTextEdit()
+@@ -765,7 +766,7 @@
+         self.history.setMinimumWidth(200)
+         split.setSizes([310, 700])
+         layout.addWidget(split, 1)
+-        self.tabs.addTab(page, '변경 기록')
++        self.tabs.addTab(page, symbol_icon('history'), '변경 기록')
+ 
+     def select_event(self, current, _previous):
+         if current:
+@@ -838,6 +839,7 @@
+     def __init__(self, settings, start_worker=True, start_usage=None):
+         # 필수 이미지가 손상됐으면 타이머나 창을 만들기 전에 시작 실패로 전달합니다.
+         get_atom_frames()
++        validate_symbols()
+         apply_theme()
+         self.settings = settings
+         self.monitor = None
+@@ -1217,6 +1219,7 @@
+         stage = 'visual-assets-preflight'
+         log_error = operation_record(args.data_dir, stage, effective_sessions, lock_acquired=True) or log_error
+         get_atom_frames()
++        validate_symbols()
+         stage = 'controller-prepare'
+         log_error = operation_record(args.data_dir, stage, effective_sessions, lock_acquired=True) or log_error
+         controller = Controller(settings, start_worker=not (args.smoke_test or args.usage_smoke_test))
+--- 이전/src/brand.py
++++ 현재/src/brand.py
+@@ -1,7 +1,16 @@
+-"""같은 금속 원자 제작 프레임을 사용하는 정적 앱 마크입니다."""
++"""같은 실제3D 자산을 공유하는 정적 마크와 가시성 기반 내부 모션입니다."""
+ from functools import lru_cache
+-from PySide6.QtCore import Qt, QRect
+-from atom_frames import get_atom_frames
++import time
++import weakref
++import json
++import hashlib
++import struct
++import re
++from PySide6.QtCore import Qt, QRect, QObject, QTimer
++from PySide6.QtGui import QImage, QPixmap, QIcon, QPainter
++from PySide6.QtWidgets import QApplication, QLabel, QWidget, QHBoxLayout
++from shiboken6 import isValid
++from atom_frames import get_atom_frames, asset_directory, AtomAssetError
+ 
+ 
+ @lru_cache(maxsize=7)
+@@ -15,3 +24,174 @@
+         source = source.copy(QRect(16, 16, 264, 264))
+     return source.scaled(size, size, Qt.AspectRatioMode.KeepAspectRatio,
+                                             Qt.TransformationMode.SmoothTransformation)
++
++
++class BrandClock(QObject):
++    """보이는 로고만 단일 시계에서 같은 프레임으로 갱신합니다."""
++    def __init__(self):
++        super().__init__(QApplication.instance())
++        self.members = weakref.WeakSet()
++        self.origin = time.monotonic()
++        self.timer = QTimer(self)
++        self.timer.setInterval(33)
++        self.timer.timeout.connect(self.tick)
++
++    @property
++    def active_count(self):
++        return sum(isValid(mark) and mark.isVisible() for mark in self.members)
++
++    def watch(self, mark):
++        self.members.add(mark)
++        if not self.timer.isActive():
++            self.timer.start()
++        self.tick()
++
++    def unwatch(self, mark):
++        self.members.discard(mark)
++        self.prune()
++
++    def prune(self, *_):
++        if not self.active_count:
++            self.timer.stop()
++
++    def tick(self):
++        marks = [mark for mark in self.members if isValid(mark) and mark.isVisible()]
++        if not marks:
++            self.timer.stop()
++            return
++        elapsed = time.monotonic() - self.origin
++        source = get_atom_frames().frame(elapsed)
++        pixmaps = {}
++        for mark in marks:
++            size = mark.width()
++            if size not in pixmaps:
++                image = source.copy(QRect(16, 16, 264, 264)) if size <= 32 else source
++                pixmaps[size] = QPixmap.fromImage(image.scaled(size, size, Qt.AspectRatioMode.KeepAspectRatio,
++                                                              Qt.TransformationMode.SmoothTransformation))
++            mark.setPixmap(pixmaps[size])
++
++
++_brand_clock = None
++
++
++def brand_clock():
++    global _brand_clock
++    if _brand_clock is None or not isValid(_brand_clock):
++        _brand_clock = BrandClock()
++    return _brand_clock
++
++
++class AnimatedBrand(QLabel):
++    """닫힘·숨김 이벤트에 맞춰 재생 구독을 끝내는 실제3D 로고입니다."""
++    def __init__(self, size, parent=None):
++        super().__init__(parent)
++        self.setFixedSize(size, size)
++        self.setPixmap(QPixmap.fromImage(brand_image(size)))
++        self.setAccessibleName('Codex Orbit 로고')
++        self.setToolTip('Codex Orbit · 실제3D 모션')
++        self.playback_clock = brand_clock()
++        self.destroyed.connect(self.playback_clock.prune)
++
++    def showEvent(self, event):
++        super().showEvent(event)
++        self.playback_clock.watch(self)
++
++    def hideEvent(self, event):
++        self.playback_clock.unwatch(self)
++        super().hideEvent(event)
++
++    def closeEvent(self, event):
++        self.playback_clock.unwatch(self)
++        super().closeEvent(event)
++
++
++SYMBOL_NAMES = ('model', 'reasoning', 'time', 'reason', 'usage', 'refresh', 'history')
++
++
++@lru_cache(maxsize=1)
++def validate_symbols():
++    """실제 메시에서 제작한 고정 기호 일곱 개를 창 생성 전에 검증합니다."""
++    directory = asset_directory().parent / 'icons3d'
++    try:
++        path = directory / 'manifest.json'
++        if not 0 < path.stat().st_size <= 65536:
++            raise AtomAssetError('3D 기능 기호 매니페스트 크기 오류입니다.')
++        metadata = json.loads(path.read_text(encoding='utf-8'))
++        if type(metadata.get('schema_version')) is not int or metadata['schema_version'] != 1:
++            raise AtomAssetError('3D 기능 기호 매니페스트 버전 오류입니다.')
++        files = metadata.get('files')
++        if not isinstance(files, dict) or set(files) != set(SYMBOL_NAMES):
++            raise AtomAssetError('3D 기능 기호 일곱 개 목록이 일치하지 않습니다.')
++        images = {}
++        for name in SYMBOL_NAMES:
++            record = files[name]
++            if not isinstance(record, dict) or record.get('filename') != name+'.png':
++                raise AtomAssetError('3D 기능 기호의 고정 파일 이름이 일치하지 않습니다.')
++            digest = record.get('sha256')
++            if not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None:
++                raise AtomAssetError('3D 기능 기호의 SHA256 형식 오류입니다.')
++            path = directory / (name+'.png')
++            if not 0 < path.stat().st_size <= 262144:
++                raise AtomAssetError('3D 기능 기호 읽기 크기 상한 오류입니다.')
++            data = path.read_bytes()
++            if len(data) > 262144 or hashlib.sha256(data).hexdigest() != digest:
++                raise AtomAssetError('3D 기능 기호 SHA256이 일치하지 않습니다: '+name)
++            if (len(data) < 33 or data[:8] != b'\x89PNG\r\n\x1a\n' or data[12:16] != b'IHDR'
++                    or struct.unpack('>II', data[16:24]) != (96,96) or data[24:26] != bytes((8,6))):
++                raise AtomAssetError('3D 기능 기호는96x96 RGBA PNG여야 합니다: '+name)
++            image = QImage.fromData(data,'PNG')
++            if image.isNull() or not image.hasAlphaChannel() or not image.allGray():
++                raise AtomAssetError('3D 기능 기호의 무채색·투명 디코딩 오류입니다: '+name)
++            if any(image.pixelColor(x,y).alpha() for x,y in ((0,0),(95,0),(0,95),(95,95))):
++                raise AtomAssetError('3D 기능 기호의 모서리는 투명해야 합니다: '+name)
++            images[name] = image
++        return images
++    except AtomAssetError:
++        raise
++    except Exception as error:
++        raise AtomAssetError('필수3D 기능 기호를 읽을 수 없습니다: '+str(error)) from error
++
++
++@lru_cache(maxsize=32)
++def symbol_image(kind, size=20):
++    """실제 메시 렌더만 축소하고 새로운 도형이나 글자를 덧그리지 않습니다."""
++    name = {'effort':'reasoning', 'quota':'usage'}.get(kind,kind)
++    if name not in SYMBOL_NAMES or not 1 <= size <= 96:
++        raise ValueError('3D 기능 기호의 종류나 크기가 올바르지 않습니다.')
++    source = validate_symbols()[name]
++    points = [(x,y) for y in range(96) for x in range(96) if source.pixelColor(x,y).alpha() > 0]
++    if not points:
++        raise AtomAssetError('3D 기능 기호에 보이는 형상이 없습니다: '+name)
++    left, right = min(x for x,_ in points), max(x for x,_ in points)
++    top, bottom = min(y for _,y in points), max(y for _,y in points)
++    bounds = QRect(max(0,left-2),max(0,top-2),min(95,right+2)-max(0,left-2)+1,
++                   min(95,bottom+2)-max(0,top-2)+1)
++    cropped = source.copy(bounds).scaled(size,size,Qt.AspectRatioMode.KeepAspectRatio,
++                                        Qt.TransformationMode.SmoothTransformation)
++    # 원본 래스터의 종횡비를 보존하고 투명 정사각형 안에 중앙 배치합니다.
++    image = QImage(size,size,QImage.Format.Format_ARGB32_Premultiplied)
++    image.fill(Qt.GlobalColor.transparent)
++    painter = QPainter(image)
++    painter.drawImage((size-cropped.width())//2,(size-cropped.height())//2,cropped)
++    painter.end()
++    return image
++
++
++def symbol_icon(kind, size=20):
++    return QIcon(QPixmap.fromImage(symbol_image(kind, size)))
++
++
++def with_symbol(label, kind):
++    """원문 QLabel을 유지하며 기능 의미를 읽기 쉬운 기호로 보조합니다."""
++    row = QWidget()
++    layout = QHBoxLayout(row)
++    layout.setContentsMargins(0, 0, 0, 0)
++    layout.setSpacing(7)
++    mark = QLabel()
++    mark.setPixmap(QPixmap.fromImage(symbol_image(kind, 20)))
++    mark.setFixedSize(20,20)
++    mark.setAccessibleName({'model':'모델','effort':'추론 강도','time':'시각','reason':'공개 근거',
++                            'quota':'사용 한도','history':'변경 기록'}.get(kind,kind))
++    layout.addWidget(mark,0,Qt.AlignmentFlag.AlignVCenter)
++    layout.addWidget(label,1)
++    return row
+--- 이전/src/visuals.py
++++ 현재/src/visuals.py
+@@ -23,10 +23,15 @@
+ 
+ MOTION_PERIOD = 18
+ RING_TURNS = (1, -2, 3)
+-RING_AXES = ((.06, -.025, 1.), (-.04, .04, 1.), (.03, .06, 1.))
++RING_AZIMUTHS = (8., 128., 248.)
++RING_AXIS_TILTS = (42., 46., 49.)
++RING_AXES = tuple((math.sin(math.radians(azimuth))*math.sin(math.radians(tilt)),
++                   -math.cos(math.radians(azimuth))*math.sin(math.radians(tilt)),
++                   math.cos(math.radians(tilt)))
++                  for azimuth, tilt in zip(RING_AZIMUTHS, RING_AXIS_TILTS))
+ RING_RADII = (45., 51., 57.)
+ BASE_ANGLES = tuple((math.radians(tilt), 0., math.radians(azimuth))
+-                    for tilt, azimuth in zip((50., 52., 54.), (8., 70., 132.)))
++                    for tilt, azimuth in zip((52., 58., 62.), RING_AZIMUTHS))
+ 
+ 
+ def axis_rotate(point, axis, angle):

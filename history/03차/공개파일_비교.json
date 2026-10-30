@@ -1,0 +1,95 @@
+{
+  "version": 3,
+  "folder": "03차",
+  "previous": "02차",
+  "files": [
+    {
+      "path": "requirements.txt",
+      "bytes": 47,
+      "sha256": "0277c326e594b9e8ec8027fc240eda62a146295c2115466e872ab475d5699121",
+      "utf8_text": true
+    },
+    {
+      "path": "src/app.py",
+      "bytes": 39580,
+      "sha256": "93d5ba9d617c35f5e547642ddf31199791b462f1530856124ae65c780d2e7929",
+      "utf8_text": true
+    },
+    {
+      "path": "src/core.py",
+      "bytes": 10204,
+      "sha256": "0da59ecbba81ad77544766fa50f0b24bd5abbd8d8f8da37f269a8ff08979b981",
+      "utf8_text": true
+    },
+    {
+      "path": "src/notifier.py",
+      "bytes": 30682,
+      "sha256": "00b619819040824cf816bb95536385e8af190967933b7912498d3edbc7f3cb89",
+      "utf8_text": true
+    }
+  ],
+  "changes": [
+    {
+      "path": "src/app.py",
+      "status": "수정",
+      "before": {
+        "bytes": 29190,
+        "sha256": "87f6314b529e5831384703c6cd0fe97b212bb751eac632c0e7b422d1026f75da"
+      },
+      "after": {
+        "bytes": 39580,
+        "sha256": "93d5ba9d617c35f5e547642ddf31199791b462f1530856124ae65c780d2e7929"
+      },
+      "binary": false,
+      "definitions_added": [
+        "event_kind",
+        "fit_content",
+        "kst_label",
+        "model_card_label",
+        "refresh_history",
+        "replay_event",
+        "short_reason",
+        "toggle_evidence",
+        "update_event"
+      ],
+      "definitions_removed": []
+    },
+    {
+      "path": "src/core.py",
+      "status": "수정",
+      "before": {
+        "bytes": 8223,
+        "sha256": "6e6ae64f8d21cb1af9972916c8cbbeb9fa9e43d76d69fa723521803370a7b970"
+      },
+      "after": {
+        "bytes": 10204,
+        "sha256": "0da59ecbba81ad77544766fa50f0b24bd5abbd8d8f8da37f269a8ff08979b981"
+      },
+      "binary": false,
+      "definitions_added": [
+        "resolve_title",
+        "title_catalog"
+      ],
+      "definitions_removed": []
+    },
+    {
+      "path": "src/notifier.py",
+      "status": "수정",
+      "before": {
+        "bytes": 26813,
+        "sha256": "2059fcac37723f34535eba05d83443a9dbd7e3dfb771200f190f2c8ed2ffb9a8"
+      },
+      "after": {
+        "bytes": 30682,
+        "sha256": "00b619819040824cf816bb95536385e8af190967933b7912498d3edbc7f3cb89"
+      },
+      "binary": false,
+      "definitions_added": [
+        "_lookup_parent_reason",
+        "enrich_event",
+        "lookup_parent_reason"
+      ],
+      "definitions_removed": []
+    }
+  ]
+}

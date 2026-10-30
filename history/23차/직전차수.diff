@@ -1,0 +1,1997 @@
+--- 이전/src/app.py
++++ 현재/src/app.py
+@@ -6,6 +6,7 @@
+ from pathlib import Path
+ import sys
+ import time
++import threading
+ from datetime import datetime, timezone, timedelta
+ import re
+ from collections import deque
+@@ -20,9 +21,10 @@
+                              QProgressBar, QScrollArea, QSizePolicy, QLayout, QVBoxLayout, QWidget)
+ 
+ from core import clamp_position, read_jsonl_tail, read_text_strict, title_catalog, resolve_title
+-from notifier import Watcher, append_log, atomic_json, stamp, POLL_INTERVAL_SECONDS
++from notifier import Watcher, append_log, atomic_json, stamp, POLL_INTERVAL_SECONDS, MAX_PENDING
+ from usage import UsageClient, reset_label
+-from visuals import draw_orbit, status_label, usage_bar
++from weather import WeatherClient
++from visuals import draw_orbit, draw_desktop_orbit, status_label, usage_bar
+ from atom_frames import get_atom_frames
+ from calendar_art import design_for_date, current_date
+ from brand import brand_image, AnimatedBrand, brand_clock, symbol_icon, with_symbol, validate_symbols
+@@ -286,8 +288,43 @@
+         atomic_json(self.path, self.values)
+ 
+ 
++class NoticeDelivery:
++    """Qt 예약 호출을 포함한 미처리 전달 수를 스레드 사이에서 제한합니다."""
++    def __init__(self):
++        self.lock = threading.Lock()
++        self.tickets = set()
++        self.closed = False
++
++    def acquire(self):
++        with self.lock:
++            if self.closed or len(self.tickets) >= MAX_PENDING:
++                raise RuntimeError('알림 전달 대기 한도 또는 종료 상태: 다음 감시 주기에 재시도합니다.')
++            ticket = NoticeTicket(self)
++            self.tickets.add(ticket)
++            return ticket
++
++    def available(self):
++        with self.lock:
++            return MAX_PENDING - len(self.tickets)
++
++    def close(self):
++        with self.lock:
++            self.closed = True
++            self.tickets.clear()
++
++
++class NoticeTicket:
++    """중복 반환과 종료 뒤 도착한 신호도 같은 한도를 다시 늘리지 않습니다."""
++    def __init__(self, gate):
++        self.gate = gate
++
++    def release(self):
++        with self.gate.lock:
++            self.gate.tickets.discard(self)
++
++
+ class Monitor(QThread):
+-    event = Signal(dict)
++    event = Signal((dict,), (object, dict))
+     status = Signal(dict)
+     enriched = Signal(list)
+ 
+@@ -300,17 +337,27 @@
+         self.cache_path = Path(directory) / 'title-cache.json'
+         self.titles = {}
+         self.recent_errors = deque(maxlen=5)
++        self.delivery_gate = None
+ 
+     def send(self, event):
+         value = resolve_title(event, self.titles)
+         value['delivery'] = '앱 표시 요청; 사용자 수신 미확인'
+-        self.event.emit(value)
++        if self.delivery_gate is None:
++            self.event.emit(value)
++        else:
++            ticket = self.delivery_gate.acquire()
++            try:
++                self.event[object, dict].emit(ticket, value)
++            except Exception:
++                ticket.release()
++                raise
+         return value['delivery']
+ 
+     def run(self):
+         watcher = None
+         try:
+             watcher = Watcher(self.sessions, self.work, self.send)
++            last_enriched = None
+             while not self.isInterruptionRequested():
+                 try:
+                     watcher.diagnostic_failures.clear()
+@@ -324,7 +371,10 @@
+                         if event.get('reason') == '확인 불가':
+                             watcher.lookup_parent_reason(event)
+                         values.append(resolve_title(watcher.enrich_event(event), self.titles))
+-                    self.enriched.emit(values)
++                    # 감지·오류·상태 주기는 유지하고 같은 이력의 GUI 예약 호출만 반복하지 않습니다.
++                    if values != last_enriched:
++                        self.enriched.emit(values)
++                        last_enriched = values
+                     atomic_json(watcher.state_path, watcher.state)
+                     diagnostics, problems = read_jsonl_tail(self.work / 'diagnostics.jsonl', max_records=5)
+                     remaining = sum(max(0, info.get('baseline_end', 0) - info['offset'])
+@@ -397,8 +447,12 @@
+                          Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.Tool)
+         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+         self.setWindowTitle('Codex Orbit')
+-        self.setFixedSize(148, 148)
++        self.setMinimumSize(180, 210)
+         self.settings, self.details = settings, details
++        size = settings.values.get('size', [220, 300])
++        if not isinstance(size, (list, tuple)) or len(size) != 2 or any(type(v) is not int for v in size):
++            size = [220, 300]
++        self.resize(max(180, min(size[0], 4096)), max(210, min(size[1], 4096)))
+         self.quit_app = quit_app
+         self.origin_time = brand_clock().origin
+         self.render_time = None
+@@ -407,10 +461,15 @@
+         self.usage_badge = '—'
+         self.usage_fraction = None
+         self.usage_state = 'unknown'
++        self.weather_text = '기온 미확인'
++        self.weather_tooltip = ''
++        self.usage_tooltip = ''
+         self.press_global = None
+         self.dragged = False
++        self.resize_edges = (False, False)
+         self.setCursor(Qt.CursorShape.OpenHandCursor)
+-        self.setToolTip('Codex Orbit · 클릭: 상세 · 드래그: 이동 · 우클릭: 기록/종료')
++        self.setMouseTracking(True)
++        self.setToolTip('Codex Orbit · 클릭: 상세 · 드래그: 이동 · 오른쪽/아래 가장자리: 크기 조절 · 우클릭: 기록/종료')
+         self.timer = QTimer(self)
+         self.timer.timeout.connect(self.update)
+         self.timer.start(20)
+@@ -420,12 +479,28 @@
+         QApplication.instance().screenRemoved.connect(self.restore_position)
+ 
+     def restore_position(self, *_):
+-        screens = [(r.x(), r.y(), r.width(), r.height()) for r in
+-                   [screen.availableGeometry() for screen in QApplication.screens()]]
++        screens = [screen.availableGeometry() for screen in QApplication.screens()]
+         value = self.settings.values.get('position', [900000, 900000])
+-        if not isinstance(value, (list, tuple)) or len(value) != 2 or not all(isinstance(v, int) for v in value):
++        if not isinstance(value, (list, tuple)) or len(value) != 2 or any(type(v) is not int for v in value):
+             value = [900000, 900000]
+-        self.move(*clamp_position(value, screens, self.width()))
++        if not screens:
++            self.move(24, 24)
++            return
++        screen = next((r for r in screens if r.contains(value[0], value[1])), None)
++        if screen is None:
++            screen = screens[0]
++            value = [screen.left() + 24, screen.top() + 24]
++        self.resize(min(self.width(), max(self.minimumWidth(), screen.width())),
++                    min(self.height(), max(self.minimumHeight(), screen.height())))
++        x = max(screen.left(), min(value[0], screen.right() + 1 - self.width()))
++        y = max(screen.top(), min(value[1], screen.bottom() + 1 - self.height()))
++        self.move(x, y)
++
++    def clock_text(self):
++        return datetime.now().strftime('%H:%M:%S')
++
++    def refresh_tooltip(self):
++        self.setToolTip(self.usage_tooltip + '\n' + self.weather_tooltip)
+ 
+     def paintEvent(self, _):
+         base_tooltip = self.toolTip().split('\n감시 상태:')[0]
+@@ -433,24 +508,52 @@
+         elapsed = self.render_time if self.render_time is not None else time.monotonic() - self.origin_time
+         painter = QPainter(self)
+         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+-        painter.translate(self.width() / 2, self.height() / 2)
+-        draw_orbit(painter, elapsed, self.usage_badge, self.usage_fraction, self.usage_state,
+-                   self.healthy, self.unread, self.settings.values.get('theme') == '밝은 배경')
++        from calendar_motion import get_calendar_frame
++        design = design_for_date(current_date())
++        draw_desktop_orbit(painter, self.width(), self.height(), get_calendar_frame(elapsed), design,
++                           self.usage_fraction, self.usage_state, self.clock_text(), self.weather_text)
++        painter.setPen(QColor('#B5C8D4'))
++        painter.drawLine(self.width()-4, self.height()//2-12, self.width()-4, self.height()//2+12)
++        painter.drawLine(self.width()//2-12, self.height()-4, self.width()//2+12, self.height()-4)
++        for offset in (5, 9, 13):
++            painter.drawLine(self.width()-offset, self.height()-3, self.width()-3, self.height()-offset)
+ 
+     def mousePressEvent(self, event):
+         if event.button() == Qt.MouseButton.LeftButton:
+             self.press_global = event.globalPosition().toPoint()
+             self.press_position = self.pos()
++            self.press_size = self.size()
++            point = event.position()
++            self.resize_edges = (point.x() >= self.width()-14, point.y() >= self.height()-14)
+             self.dragged = False
+-            self.setCursor(Qt.CursorShape.ClosedHandCursor)
++            self.setCursor(Qt.CursorShape.SizeFDiagCursor if all(self.resize_edges) else
++                           Qt.CursorShape.SizeHorCursor if self.resize_edges[0] else
++                           Qt.CursorShape.SizeVerCursor if self.resize_edges[1] else Qt.CursorShape.ClosedHandCursor)
+ 
+     def mouseMoveEvent(self, event):
++        if self.press_global is None:
++            point = event.position()
++            right = point.x() >= self.width()-14
++            bottom = point.y() >= self.height()-14
++            self.setCursor(Qt.CursorShape.SizeFDiagCursor if right and bottom else
++                           Qt.CursorShape.SizeHorCursor if right else
++                           Qt.CursorShape.SizeVerCursor if bottom else Qt.CursorShape.OpenHandCursor)
+         if self.press_global is not None and event.buttons() & Qt.MouseButton.LeftButton:
+             delta = event.globalPosition().toPoint() - self.press_global
+             if delta.manhattanLength() > QApplication.startDragDistance():
+                 self.dragged = True
+             if self.dragged:
+-                self.move(self.press_position + delta)
++                if any(self.resize_edges):
++                    screen = QApplication.screenAt(self.pos()) or QApplication.primaryScreen()
++                    rect = screen.availableGeometry() if screen else None
++                    width = self.press_size.width() + (delta.x() if self.resize_edges[0] else 0)
++                    height = self.press_size.height() + (delta.y() if self.resize_edges[1] else 0)
++                    if rect:
++                        width = min(width, rect.right()+1-self.x())
++                        height = min(height, rect.bottom()+1-self.y())
++                    self.resize(max(self.minimumWidth(), width), max(self.minimumHeight(), height))
++                else:
++                    self.move(self.press_position + delta)
+ 
+     def mouseReleaseEvent(self, event):
+         if event.button() == Qt.MouseButton.LeftButton and self.press_global is not None:
+@@ -458,13 +561,18 @@
+             self.setCursor(Qt.CursorShape.OpenHandCursor)
+             if self.dragged:
+                 self.settings.values['position'] = [self.x(), self.y()]
++                if any(self.resize_edges):
++                    self.settings.values['size'] = [self.width(), self.height()]
++                self.restore_position()
++                self.settings.values['position'] = [self.x(), self.y()]
+                 try:
+                     self.settings.save()
+                 except Exception as error:
+-                    QMessageBox.warning(self, '위치 저장 실패', str(error))
+-            else:
++                    QMessageBox.warning(self, '위젯 설정 저장 실패', str(error))
++            elif not any(self.resize_edges):
+                 self.unread = False
+                 self.details()
++            self.resize_edges = (False, False)
+ 
+     def contextMenuEvent(self, event):
+         menu = self.create_menu()
+@@ -581,11 +689,49 @@
+         self.dismiss()
+         super().closeEvent(event)
+ 
++    def _content_fit_signature(self):
++        """말줄임 전 제목과 실제 높이에 영향을 주는 표시 조건만 비교합니다."""
++        available = getattr(self, 'available_rect', None)
++        compact = available is not None and available.height() <= 400
++        margins = self.layout().contentsMargins()
++        width = max(1, self.contentsRect().width() - margins.left() - margins.right())
++        labels = []
++        queue_height = 0
++        for label in self.findChildren(QLabel):
++            if label is self.title:
++                content = (str(getattr(self, 'event', {}).get('chat_name') or '채팅 제목 확인 불가'), label.text())
++            elif label is self.queue_hint:
++                queue_height = 0 if compact else label.heightForWidth(width)
++                content = None
++            else:
++                content = label.text()
++            labels.append((content, label.font().toString(), label.styleSheet(), label.isHidden(),
++                           label.minimumHeight(), label.maximumHeight(), label.wordWrap()))
++        buttons = tuple((button.text(), button.font().toString(), button.styleSheet(),
++                         button.minimumSize().toTuple(), button.maximumSize().toTuple())
++                        for button in self.findChildren(QPushButton))
++        return (self.width(), self.title.width(), self.brand_mark.size().toTuple(),
++                available.getRect() if available is not None else None,
++                self.logicalDpiX(), self.logicalDpiY(), self.devicePixelRatioF(), self.font().toString(),
++                self.styleSheet(), QApplication.instance().styleSheet(), self.style().objectName(), tuple(labels), buttons, queue_height)
++
+     def fit_content(self, rect=None):
+         # 제목은 닫기 버튼을 뺀 실제 폭으로 측정하며 원본 이벤트는 바꾸지 않습니다.
+         if rect is not None:
+             self.available_rect = rect
++        signature = self._content_fit_signature()
++        previous = getattr(self, '_last_fit_signature', None)
++        if previous == signature:
++            return
+         available = getattr(self, 'available_rect', None)
++        full_title = str(getattr(self, 'event', {}).get('chat_name') or '채팅 제목 확인 불가')
++        if previous is not None and previous[:-1] == signature[:-1] and self.title.text() == full_title:
++            # 안내의 줄 높이만 바뀌었으면 제목·여백을 초기화하지 않고 실제 카드 크기만 갱신합니다.
++            self.layout().activate()
++            self.adjustSize()
++            if available is None or self.height() <= available.height():
++                self._last_fit_signature = self._content_fit_signature()
++                return
+         compact = available is not None and available.height() <= 400
+         self.layout().setContentsMargins(*( (10, 6, 10, 6) if compact else (18, 14, 18, 14) ))
+         self.layout().setSpacing(2 if compact else 5)
+@@ -624,6 +770,7 @@
+             self.title.setFixedHeight(max(self.title.fontMetrics().height(), self.title.heightForWidth(title_width)))
+             self.layout().activate()
+             self.adjustSize()
++        self._last_fit_signature = self._content_fit_signature()
+ 
+     def display(self, event, orbit, timeout_ms=30000, replay=False):
+         screen = QApplication.screenAt(orbit.pos()) or QApplication.primaryScreen()
+@@ -1042,11 +1189,28 @@
+         self.detail.setVisible(checked)
+         self.evidence_toggle.setText('▾ 원문 · ID · 근거 접기' if checked else '▸ 원문 · ID · 근거 펼치기')
+ 
+-    def update_event(self, event):
++    def _history_items_by_id(self):
++        items = {}
+         for index in range(self.history.count()):
+             item = self.history.item(index)
++            identity = item.data(Qt.ItemDataRole.UserRole).get('id')
++            if isinstance(identity, str) and identity:
++                # 중복 ID가 있어도 기존 선두 행 우선 동작을 유지합니다.
++                items.setdefault(identity, item)
++        return items
++
++    def update_event(self, event, item_index=None):
++        identity = event.get('id')
++        if item_index is not None and isinstance(identity, str) and identity:
++            item = item_index.get(identity)
++            candidates = () if item is None else (item,)
++        else:
++            candidates = (self.history.item(index) for index in range(self.history.count()))
++        for item in candidates:
+             old = item.data(Qt.ItemDataRole.UserRole)
+-            if event.get('id') and old.get('id') == event['id']:
++            if identity and old.get('id') == identity:
++                if old == event:
++                    return True
+                 item.setData(Qt.ItemDataRole.UserRole, event)
+                 item.setText(history_label(event))
+                 item.setIcon(event_icon(event))
+@@ -1101,7 +1265,7 @@
+ 
+ 
+ class Controller(QObject):
+-    def __init__(self, settings, start_worker=True, start_usage=None):
++    def __init__(self, settings, start_worker=True, start_usage=None, start_weather=False):
+         # 필수 이미지와 오늘의 조형을 창과 타이머 생성 전에 검사합니다.
+         get_atom_frames()
+         design_for_date(current_date())
+@@ -1120,14 +1284,20 @@
+         self.monitor_retries = 0
+         self.monitor_restart_pending = False
+         self.notices = {}
++        self.notice_delivery = NoticeDelivery()
++        self.notice_queue = deque()
+         self.max_visible_notices = 8
+         self.notice_overflow = 0
++        self.replacing_notice = False
+         self.presentation_error = None
+         self.operation_log_error = None
+         # 앱이 보관한 부모 아래에 두어 worker GC가 창과 타이머를 파괴하지 못하게 합니다.
+         self.gui_owner = QWidget(_application_gui_root())
+         self.gui_owner.setObjectName('codexOrbitControllerOwner')
+         self.setParent(self.gui_owner)
++        self.notice_delivery_timer = QTimer(self.gui_owner)
++        self.notice_delivery_timer.setSingleShot(True)
++        self.notice_delivery_timer.timeout.connect(self.deliver_next_notice)
+         self.monitor_retry_timer = QTimer(self.gui_owner)
+         self.monitor_retry_timer.setSingleShot(True)
+         self.monitor_retry_timer.timeout.connect(self.restart_dead_monitor)
+@@ -1144,6 +1314,9 @@
+         self.usage = UsageClient(settings.values.get('codex_exe', ''), self.gui_owner)
+         self.usage.changed.connect(self.update_usage)
+         self.update_usage(self.usage.snapshot)
++        self.weather = WeatherClient(self.gui_owner)
++        self.weather.changed.connect(self.update_weather)
++        self.update_weather(self.weather.snapshot)
+         self.quit_guard = QuitGuard(self)
+         QApplication.instance().installEventFilter(self.quit_guard)
+         if start_worker:
+@@ -1157,6 +1330,25 @@
+         self.orbit.show()
+         if (start_worker if start_usage is None else start_usage):
+             self.usage.start()
++        if start_weather:
++            self.weather.start()
++
++    @Slot(dict)
++    def update_weather(self, value):
++        if self.closing:
++            return
++        temperature = value.get("temperature")
++        self.orbit.weather_text = (f"이전 {temperature:g}℃" if value.get("stale") else f"{temperature:g}℃") if temperature is not None else ("기온 조회 중" if value.get("busy") else "기온 미확인")
++        checked = value.get("checked_at")
++        checked_label = datetime.fromtimestamp(checked).astimezone().strftime("%Y-%m-%d %H:%M:%S") if checked is not None else "미확인"
++        observed = value.get("observed_at")
++        observed_label = datetime.fromtimestamp(observed).astimezone().strftime("%Y-%m-%d %H:%M:%S") if observed is not None else "미확인"
++        self.orbit.weather_tooltip = ("네트워크 추정 지역: " + (value.get("region") or "미확인") +
++                                     "\n기온 출처: Open-Meteo · 위치: ipwho.is" +
++                                     "\n제공 시각: " + observed_label +
++                                     "\n조회 시각: " + checked_label + "\n" + value.get("status", "기온 미확인"))
++        self.orbit.refresh_tooltip()
++        self.orbit.update()
+ 
+     def restart_usage(self):
+         self.usage.close()
+@@ -1180,8 +1372,9 @@
+             self.orbit.usage_badge = f"{min(row['remaining'] for row in valid):g}%"
+         else:
+             self.orbit.usage_badge = '—'
+-        self.orbit.setToolTip('Codex Orbit · 계정 한도 ' + self.orbit.usage_badge +
+-                             ' · ' + value.get('status', '미확인') + '\n클릭: 기간별 잔량과 변경 이력 · 드래그: 이동')
++        self.orbit.usage_tooltip = ('Codex Orbit · 계정 한도 ' + self.orbit.usage_badge +
++                                    ' · ' + value.get('status', '미확인') + '\n클릭: 기간별 잔량과 변경 이력 · 드래그: 이동')
++        self.orbit.refresh_tooltip()
+         self.orbit.update()
+ 
+     def stop_monitor(self):
+@@ -1218,7 +1411,9 @@
+         self.operation_log_error = operation_record(self.settings.directory, 'monitor-preparation', self.settings.values['sessions'])
+         try:
+             self.monitor = Monitor(self.settings.values['sessions'], self.settings.directory)
+-            self.monitor.event.connect(self.receive)
++            self.monitor.delivery_gate = self.notice_delivery
++            self.monitor.event.connect(self.queue_receive)
++            self.monitor.event[object, dict].connect(self.queue_delivery)
+             self.monitor.status.connect(self.status)
+             self.monitor.enriched.connect(self.refresh_history)
+             self.monitor.finished.connect(self.check_monitor_health)
+@@ -1268,6 +1463,37 @@
+             return
+         self.monitor_retries += 1
+         self.start_monitor()
++
++    @Slot(dict)
++    def queue_receive(self, event):
++        if not self.closing:
++            self.queue_delivery(self.notice_delivery.acquire(), event)
++
++    @Slot(object, dict)
++    def queue_delivery(self, ticket, event):
++        if self.closing:
++            ticket.release()
++            return
++        self.notice_queue.append((ticket, event))
++        if not self.notice_delivery_timer.isActive():
++            self.notice_delivery_timer.start(0)
++
++    @Slot()
++    def deliver_next_notice(self):
++        if self.closing or not self.notice_queue:
++            return
++        ticket, event = self.notice_queue.popleft()
++        try:
++            self.receive(event)
++        finally:
++            ticket.release()
++            if self.notice_queue and not self.closing:
++                self.notice_delivery_timer.start(0)
++
++    def close_notice_delivery(self):
++        self.notice_delivery_timer.stop()
++        self.notice_queue.clear()
++        self.notice_delivery.close()
+ 
+     @Slot(dict)
+     def receive(self, event):
+@@ -1344,7 +1570,12 @@
+             return
+         if len(self.notices) >= self.max_visible_notices:
+             oldest = next(iter(self.notices.values()))
+-            oldest.dismiss()
++            # 교체 도중의 중간 정렬은 새 카드가 들어간 뒤 최종 정렬 한 번으로 합칩니다.
++            self.replacing_notice = True
++            try:
++                oldest.dismiss()
++            finally:
++                self.replacing_notice = False
+             self.notice_overflow += 1
+         self.display_notice(event, replay=replay)
+         self.update_notice_count()
+@@ -1372,7 +1603,8 @@
+         notice = self.notices.pop(event_id, None)
+         if notice is not None:
+             notice.deleteLater()
+-        self.update_notice_count()
++        if not self.replacing_notice:
++            self.update_notice_count()
+ 
+     def replay_event(self, event_id):
+         for index in range(self.window.history.count()):
+@@ -1388,12 +1620,16 @@
+     def refresh_history(self, events):
+         if self.closing:
+             return
++        items = self.window._history_items_by_id()
++        notice_changed = False
+         for event in events:
+-            self.window.update_event(event)
++            self.window.update_event(event, items)
+             notice = self.notices.get(event.get('id'))
+-            if notice is not None:
++            if notice is not None and notice.event != event:
+                 notice.update_event(event)
+-        self.layout_notices()
++                notice_changed = True
++        if notice_changed:
++            self.layout_notices()
+ 
+     @Slot(dict)
+     def status(self, value):
+@@ -1432,11 +1668,13 @@
+             return
+         self.quit_requested = True
+         self.closing = True
++        self.close_notice_delivery()
+         self.monitor_restart_pending = False
+         self.monitor_enabled = False
+         self.monitor_health_timer.stop()
+         self.monitor_retry_timer.stop()
+         self.usage.close()
++        self.weather.close()
+         for notice in list(self.notices.values()):
+             notice.dismiss()
+         self.orbit.healthy = False
+@@ -1462,11 +1700,13 @@
+             return
+         self.cleaned = True
+         self.closing = True
++        self.close_notice_delivery()
+         self.monitor_restart_pending = False
+         self.monitor_enabled = False
+         self.monitor_health_timer.stop()
+         self.monitor_retry_timer.stop()
+         self.usage.close()
++        self.weather.close()
+         worker = self.monitor
+         self.stop_monitor()
+         for notice in list(self.notices.values()):
+@@ -1576,9 +1816,16 @@
+         get_atom_frames()
+         design_for_date(current_date())
+         validate_symbols()
++        stage = 'calendar-motion-prepare'
++        from calendar_motion import prepare_calendar_motion
++        preparation = prepare_calendar_motion()
++        log_error = operation_record(args.data_dir, stage, effective_sessions,
++                                     ready=preparation['ready'], error=preparation['error'] or None,
++                                     renderer=preparation['renderer']) or log_error
+         stage = 'controller-prepare'
+         log_error = operation_record(args.data_dir, stage, effective_sessions, lock_acquired=True) or log_error
+-        controller = Controller(settings, start_worker=not (args.smoke_test or args.usage_smoke_test))
++        controller = Controller(settings, start_worker=not (args.smoke_test or args.usage_smoke_test),
++                                start_weather=not (args.smoke_test or args.usage_smoke_test))
+     except Exception as error:
+         log_error = operation_record(args.data_dir, stage + '-failed', effective_sessions, error) or log_error
+         message = str(error) + ('\n시작 운영 기록 실패: ' + log_error if log_error else '')
+--- 이전/src/calendar_art.py
++++ 현재/src/calendar_art.py
+@@ -2,14 +2,15 @@
+ from dataclasses import dataclass
+ from datetime import date, datetime, timedelta, timezone
+ import hashlib
++import colorsys
++import calendar
++from functools import lru_cache
++from calendar_catalog import OBJECTS, collection_for_month, all_collections
+ 
+ FIRST_DATE = date(2026,1,1)
+ LAST_DATE = date(2099,12,31)
+ KST = timezone(timedelta(hours=9))
+-THEMES = ('꽃','보석','나비','물과 비','숲','바다','우주','과일','음악','가을','빛과 건축','겨울')
+-ACCENTS = ('#f3a8c5','#b6a1f2','#b6a4f7','#83c9ed','#83c7a4','#83d6d1',
+-           '#a3adf0','#edb58e','#ccb0ef','#dfad7d','#d4d6ee','#b7dcea')
+-FLOWER_FORMS = ('햇살꽃','봉오리','겹연꽃','종꽃','나팔꽃','동백빛','백합빛')
++THEMES = tuple(row.title for row in all_collections())
+ 
+ 
+ @dataclass(frozen=True)
+@@ -22,6 +23,11 @@
+     seed: int
+     variant: int
+     year_variant: float
++    object_id: str
++    shape_recipe: str
++    anchor_id: str
++    companion_id: str
++    composition: str
+ 
+ 
+ def current_date():
+@@ -29,6 +35,46 @@
+     return datetime.now(KST).date()
+ 
+ 
++def _seed_for_date(value):
++    return int.from_bytes(hashlib.sha256(('calendar-art-v1:'+value.isoformat()).encode('ascii')).digest()[:8],'big')
++
++
++def _raw_accent(value, subject, seed):
++    rgb=tuple(int(subject.color[i:i+2],16)/255 for i in (1,3,5))
++    h,s,v=colorsys.rgb_to_hsv(*rgb)
++    color=colorsys.hsv_to_rgb((h+(seed%29-14)/1000)%1,min(.72,s+.025*(value.day%3)),min(.96,v+.004*(value.day%7)))
++    return tuple(round(channel*255) for channel in color)
++
++
++@lru_cache(maxsize=888)
++def _month_palette(year, month):
++    """반올림 충돌만 가장 가까운 미사용 RGB로 옮기고 월별 결과를 불변 보관합니다."""
++    collection=collection_for_month(year,month)
++    used=set();colors=[]
++    for day in range(1,calendar.monthrange(year,month)[1]+1):
++        value=date(year,month,day)
++        rgb=_raw_accent(value,OBJECTS[collection.subjects[day-1]],_seed_for_date(value))
++        if rgb in used:
++            # 월 최대31색보다 후보가 많으며 8비트 경계의 모서리에서도 64개가 남습니다.
++            offsets=sorted(((r,g,b) for r in range(-3,4) for g in range(-3,4) for b in range(-3,4)),
++                           key=lambda x:(sum(v*v for v in x),abs(x[0])+abs(x[1]),x))
++            for delta in offsets:
++                candidate=tuple(a+b for a,b in zip(rgb,delta))
++                if all(0<=channel<=255 for channel in candidate) and candidate not in used:
++                    rgb=candidate
++                    break
++            else:raise RuntimeError('날짜별 미사용 색 후보를 찾지 못했습니다.')
++        used.add(rgb);colors.append('#'+''.join(f'{channel:02X}' for channel in rgb))
++    return tuple(colors)
++
++
++# 초기화 한 번에 유한한 888개 월 색상을 준비합니다. 화면 조회는 직접 인덱스만 사용합니다.
++for _year in range(2026,2100):
++    for _month in range(1,13):
++        _month_palette(_year,_month)
++
++
++@lru_cache(maxsize=4)
+ def design_for_date(value):
+     """유효한 날짜만 허용하며 지원 범위 밖을 다른 날짜로 몰래 대체하지 않습니다."""
+     if type(value) is not date:
+@@ -36,11 +82,14 @@
+     if not FIRST_DATE <= value <= LAST_DATE:
+         raise ValueError('날짜별 조형 지원 범위는 2026-01-01부터 2099-12-31까지입니다.')
+     key=value.isoformat()
+-    seed=int.from_bytes(hashlib.sha256(('calendar-art-v1:'+key).encode('ascii')).digest()[:8],'big')
+-    theme=THEMES[value.month-1]
+-    form=FLOWER_FORMS[(value.day-1)%7] if value.month==1 else theme
+-    return Design(value,f'{form} · {value.day:02d}',theme,key,ACCENTS[value.month-1],seed,
+-                  value.day-1,((value.year-2026)+(seed%1000003)/1000003)/74)
++    seed=_seed_for_date(value)
++    collection=collection_for_month(value.year,value.month)
++    subject=OBJECTS[collection.subjects[value.day-1]]
++    # 기본색에 가까운 범위에서 날짜별 색을 정하며 형상 차이의 대용으로 쓰지 않습니다.
++    accent=_month_palette(value.year,value.month)[value.day-1]
++    return Design(value,subject.name,collection.title,key,accent,seed,
++                  value.day-1,((value.year-2026)+(seed%1000003)/1000003)/74,
++                  subject.key,subject.recipe,collection.anchor_id,collection.companion_id,collection.composition)
+ 
+ 
+ def all_designs():
+--- 이전/src/calendar_catalog.py
++++ 현재/src/calendar_catalog.py
+@@ -0,0 +1,233 @@
++"""실제 대상 이름과 조형 특징을 연결하는 편집 사전입니다.
++
++정밀 도감 모델이 아니라 주요 구조를 드러내는 장식용 해석입니다.
++37개 주제 모티프와 24개 동반 모티프의 역할 있는 조합을 사용합니다.
++"""
++from dataclasses import dataclass
++from functools import lru_cache
++
++
++@dataclass(frozen=True)
++class ObjectSpec:
++    key: str
++    name: str
++    category: str
++    recipe: str
++    color: str
++    count: int
++    layers: int
++    width: float
++    length: float
++    feature: str
++
++
++# 개수와 비율은 장식용 메시의 형태 지시값이며 종의 불변 생물학 수치가 아닙니다.
++_FLOWERS = (
++ ('rose','장미','rosette','#D95D83',7,4,9,13,'겹쳐 감기는 꽃잎'),
++ ('tulip','튤립','cup','#ED718B',6,1,10,22,'위로 모인 컵형 꽃잎'),
++ ('daffodil','수선화','trumpet','#F1CC54',6,1,6,16,'바깥 꽃잎과 돌출된 중앙 나팔'),
++ ('lily','백합','bloom','#E8DBEC',6,1,5,23,'길게 뻗은 여섯 꽃잎과 수술'),
++ ('lotus','연꽃','rosette','#E898B8',8,3,8,18,'넓게 펼친 여러 겹 꽃잎'),
++ ('cherry','벚꽃','bloom','#F0B8CD',5,1,9,12,'둥근 다섯 꽃잎'),
++ ('plum','매화','bloom','#EE92B4',5,1,7,10,'작은 다섯 꽃잎과 긴 수술'),
++ ('camellia','동백꽃','rosette','#CA4863',7,2,12,13,'두꺼운 둥근 꽃잎과 노란 중심'),
++ ('magnolia','목련','cup','#EAE3D6',9,1,7,23,'위로 선 긴 꽃잎'),
++ ('hibiscus','무궁화','bloom','#DFA4D5',5,1,12,17,'넓은 꽃잎과 길게 나온 중심 기둥'),
++ ('sunflower','해바라기','disc','#EEC145',18,1,4,17,'큰 원반과 좁은 방사 꽃잎'),
++ ('daisy','데이지','disc','#E8E3D3',16,1,3,13,'노란 원반 둘레 흰 꽃잎'),
++ ('cosmos','코스모스','bloom','#D783B7',8,1,8,17,'얇고 넓게 펼친 여덟 꽃잎'),
++ ('chrysanthemum','국화','rosette','#DDAE60',16,4,3,16,'촘촘한 여러 겹의 좁은 꽃잎'),
++ ('gerbera','거베라','disc','#ED8E66',20,2,3,19,'큰 원반 둘레 여러 겹 꽃잎'),
++ ('dahlia','달리아','rosette','#C685C9',10,5,5,16,'기하적으로 겹친 뾰족한 꽃잎'),
++ ('zinnia','백일홍','rosette','#DB6D89',12,3,5,13,'낮게 층진 둥근 꽃머리'),
++ ('marigold','금잔화','disc','#E8A047',15,2,4,15,'주황색 방사 꽃잎'),
++ ('carnation','카네이션','rosette','#E19EBC',11,4,7,11,'촘촘하고 부풀어 오른 겹꽃'),
++ ('peony','모란','rosette','#CD6FAD',9,4,11,15,'크고 넓은 겹꽃잎'),
++ ('poppy','양귀비','bloom','#E76C5C',4,1,15,17,'넓은 네 꽃잎과 어두운 중심'),
++ ('anemone','아네모네','bloom','#AA89D8',7,1,9,17,'꽃잎에 대비되는 짙은 중심'),
++ ('ranunculus','라넌큘러스','rosette','#EBC99A',12,5,7,12,'동심원처럼 겹쳐진 얇은 꽃잎'),
++ ('bellflower','도라지꽃','star_bloom','#968BD9',5,1,8,19,'끝이 뾰족한 별 모양 꽃잎'),
++ ('morning_glory','나팔꽃','funnel','#A582D6',5,1,17,25,'하나로 연결된 긴 나팔형 꽃'),
++ ('petunia','페튜니아','funnel','#D784C7',5,1,22,16,'넓은 입구와 짧은 깔때기'),
++ ('foxglove','디기탈리스','spike','#CB8DC3',7,1,5,10,'긴 줄기에 매달린 종형 꽃 무리'),
++ ('lavender','라벤더','spike','#A499D7',12,1,3,5,'가느다란 줄기 끝의 작은 꽃 이삭'),
++ ('hydrangea','수국','umbel','#9EBCDF',13,1,5,6,'작은 꽃들이 모인 둥근 꽃차례'),
++ ('lilac','라일락','spike','#B7A0D9',10,1,4,6,'원뿔형으로 모인 작은 꽃 무리'),
++ ('gujeolcho','구절초','disc','#EFE8DE',12,1,3,17,'노란 중심 둘레 길고 흰 꽃잎'),
++)
++
++_FRUITS = (
++ ('apple','사과','round_fruit','#D86B65',5,1,23,22,'둥근 몸체와 움푹한 꼭지'),
++ ('pear','배','pear','#D8BE75',1,1,22,27,'위쪽이 가늘고 아래가 넓은 몸체'),
++ ('quince','모과','pear','#D6BD51',5,1,20,29,'울퉁불퉁하고 길쭉한 몸체'),
++ ('peach','복숭아','lobed_fruit','#E5A6A2',2,1,23,22,'가운데 골이 있는 두 갈래 둥근 몸체'),
++ ('apricot','살구','lobed_fruit','#E5AB62',2,1,18,18,'작고 둥근 두 갈래 열매'),
++ ('plum_fruit','자두','round_fruit','#A26A9F',1,1,18,23,'세로로 긴 둥근 열매'),
++ ('cherry_fruit','체리','paired_fruit','#C75B78',2,1,11,12,'긴 꼭지에 매달린 두 열매'),
++ ('grape','포도','cluster','#9782BD',4,4,8,9,'아래로 좁아지는 송이'),
++ ('muscat','청포도','cluster','#B6C977',5,3,8,11,'연녹색의 길쭉한 포도알'),
++ ('orange','오렌지','citrus','#E7A14D',10,1,23,23,'둥근 감귤과 방사 단면'),
++ ('mandarin','귤','citrus','#EAAF4B',9,1,24,18,'위아래가 납작한 감귤'),
++ ('lemon','레몬','citrus','#E3D36C',8,1,16,26,'양끝이 좁은 긴 감귤'),
++ ('lime','라임','citrus','#B8CB79',7,1,17,20,'작고 녹색인 감귤'),
++ ('grapefruit','자몽','citrus','#EBA18F',12,1,27,25,'큰 감귤과 분홍빛 단면'),
++ ('strawberry','딸기','seeded_fruit','#D87583',14,1,19,26,'아래로 뾰족한 몸체와 표면 씨'),
++ ('raspberry','라즈베리','berry','#CB829B',8,3,5,6,'작은 알갱이가 모인 속빈 열매'),
++ ('blackberry','블랙베리','berry','#817CA8',7,4,5,6,'세로로 긴 작은 알갱이 무리'),
++ ('blueberry','블루베리','cluster','#849BCB',3,2,10,10,'푸른 열매와 별 모양 꽃받침'),
++ ('banana','바나나','banana','#E2CE75',3,1,6,28,'휘어진 긴 열매가 모인 송이'),
++ ('pineapple','파인애플','pineapple','#CDB66B',8,5,21,27,'마름모 결 몸체와 뾰족한 잎관'),
++ ('mango','망고','pear','#E4B16D',1,1,22,30,'한쪽으로 기운 긴 열매'),
++ ('papaya','파파야','seeded_fruit','#E9A976',20,1,19,31,'길쭉한 열매와 중앙 씨'),
++ ('kiwi','키위','citrus','#ADC781',16,1,19,24,'긴 타원과 방사상 씨'),
++ ('watermelon','수박','striped_fruit','#86B594',10,1,28,25,'큰 둥근 몸체의 세로 줄무늬'),
++ ('melon','멜론','striped_fruit','#B4C88C',12,1,25,24,'둥근 몸체의 격자형 결'),
++ ('persimmon','감','lobed_fruit','#D99D62',4,1,23,20,'네 갈래 꽃받침과 납작한 열매'),
++ ('pomegranate','석류','crowned_fruit','#D58C87',6,1,23,24,'왕관처럼 뻗은 꽃받침'),
++ ('fig','무화과','pear','#B793B6',1,1,23,26,'가느다란 목과 넓은 밑부분'),
++ ('starfruit','스타프루트','starfruit','#DBCD7C',5,1,22,29,'다섯 개의 길게 솟은 능선'),
++ ('dragonfruit','용과','dragonfruit','#DA8DB5',7,3,21,27,'타원 몸체를 감싸는 뾰족한 비늘'),
++ ('coconut','코코넛','round_fruit','#B39C7F',3,1,25,28,'거친 타원형 껍질과 세 발아구'),
++)
++
++_LEAVES = (
++ ('maple','단풍나무 잎','palmate','#DDA27E',7,1,9,25,'손바닥처럼 갈라진 뾰족한 잎'),
++ ('ginkgo','은행나무 잎','fan','#D6C478',9,1,22,25,'가운데가 갈라진 부채꼴'),
++ ('oak','참나무 잎','lobed_leaf','#A8BE91',7,1,12,29,'깊게 굴곡진 긴 잎'),
++ ('birch','자작나무 잎','leaf','#B8CC99',9,1,19,25,'끝이 뾰족한 삼각형 잎'),
++ ('beech','너도밤나무 잎','leaf','#A1BF96',8,1,16,27,'물결 가장자리의 타원 잎'),
++ ('elm','느릅나무 잎','leaf','#9ABD8A',11,1,17,25,'비대칭 밑부분과 톱니 가장자리'),
++ ('willow','버드나무 잎','leaf','#A6C7AE',10,1,6,34,'아주 가늘고 긴 잎'),
++ ('olive','올리브 잎','leaf','#A0B7A2',6,1,8,27,'좁고 은빛인 타원 잎'),
++ ('eucalyptus','유칼립투스 잎','round_leaf','#9BC1B6',6,1,21,22,'둥근 은청색 잎'),
++ ('poplar','포플러 잎','leaf','#A6C59D',7,1,21,25,'넓은 삼각형 잎'),
++ ('linden','보리수 잎','heart_leaf','#A8C694',9,1,23,27,'넓은 심장 모양 잎'),
++ ('ivy','담쟁이 잎','palmate','#92B5A0',3,1,12,26,'세 갈래로 나뉜 잎'),
++ ('grape_leaf','포도나무 잎','palmate','#A2BE85',5,1,14,24,'넓은 다섯 갈래 잎'),
++ ('fig_leaf','무화과 잎','palmate','#9CB893',5,1,10,29,'손가락처럼 길게 갈라진 잎'),
++ ('monstera','몬스테라 잎','split_leaf','#8BB7A3',7,1,23,31,'깊게 갈라지고 구멍이 난 잎'),
++ ('philodendron','필로덴드론 잎','heart_leaf','#80B29C',8,1,20,31,'길쭉한 심장 모양 잎'),
++ ('lotus_leaf','연잎','round_leaf','#A0C4AE',12,1,27,27,'방사상 잎맥의 큰 둥근 잎'),
++ ('nasturtium','한련화 잎','round_leaf','#ACCA9A',9,1,23,22,'중앙에서 퍼지는 잎맥'),
++ ('clover','클로버','compound','#9FC18B',3,1,12,15,'세 작은 잎이 모인 구조'),
++ ('oxalis','괭이밥','compound','#BBA1BC',3,1,14,17,'세 개의 심장형 작은 잎'),
++ ('horse_chestnut','칠엽수 잎','compound','#A5C58F',7,1,8,23,'한 점에서 퍼지는 일곱 작은 잎'),
++ ('ash','물푸레나무 잎','pinnate','#A0BD8E',7,1,9,15,'중앙 잎축 양옆의 작은 잎'),
++ ('rowan','마가목 잎','pinnate','#B4BE84',11,1,7,13,'촘촘한 깃꼴 작은 잎'),
++ ('fern','고사리 잎','fern','#A0C3A4',13,1,6,15,'반복 분지하는 깃꼴 잎'),
++ ('palm','야자수 잎','palm','#B0C695',13,1,3,30,'한 점에서 부채처럼 퍼지는 긴 갈래'),
++ ('bamboo','대나무 잎','pinnate','#AEC79B',5,1,4,23,'좁은 작은 잎이 붙은 가는 가지'),
++ ('pine','소나무 바늘잎','needle','#8EB4A1',2,5,1,29,'쌍으로 묶여 뻗는 바늘잎'),
++ ('fir','전나무 가지','needle','#8AAE9B',12,2,1,17,'가지 양옆의 짧은 바늘잎'),
++ ('rosemary','로즈메리 가지','needle','#A5C5B8',9,2,2,13,'가는 가지에 달린 좁은 잎'),
++ ('mint','민트 잎','leaf','#9CC7AD',12,1,18,23,'톱니 가장자리와 도드라진 잎맥'),
++ ('sage','세이지 잎','leaf','#B1C1BA',8,1,13,29,'부드러운 은회색의 긴 잎'),
++)
++
++_MUSIC = (
++ ('violin','바이올린','bowed','#C4A281',4,1,14,24,'잘록한 몸통과 긴 목'),
++ ('viola','비올라','bowed','#B99B80',4,1,16,26,'바이올린보다 넓은 몸통'),
++ ('cello','첼로','bowed','#B79379',4,1,19,29,'큰 몸통과 하단 지지봉'),
++ ('bass','콘트라베이스','bowed','#A9907D',4,1,21,32,'큰 어깨와 길게 솟은 목'),
++ ('guitar','기타','guitar','#D2B78C',6,1,18,25,'잘록한 울림통과 원형 소리구멍'),
++ ('ukulele','우쿨렐레','guitar','#D8BF98',4,1,15,20,'작은 울림통과 짧은 목'),
++ ('mandolin','만돌린','lute','#C4AD91',8,1,17,23,'물방울형 울림통'),
++ ('lute','류트','lute','#D3B995',6,1,20,24,'둥근 배 모양 울림통과 꺾인 목'),
++ ('harp','하프','harp','#DBC59C',12,1,26,32,'세 모서리 틀과 길이가 다른 현'),
++ ('lyre','리라','lyre','#D4B38F',7,1,23,24,'두 팔과 가로대 사이의 현'),
++ ('piano','그랜드 피아노','piano','#A3A5B8',12,1,28,22,'곡선 몸체와 가로 건반'),
++ ('accordion','아코디언','accordion','#BA8F9F',10,1,27,19,'양쪽 상자와 가운데 주름통'),
++ ('xylophone','실로폰','bars','#B1C0C5',8,1,28,20,'길이가 다른 나란한 음판'),
++ ('marimba','마림바','bars','#C5AD92',12,2,30,22,'음판 아래 긴 공명관'),
++ ('kalimba','칼림바','bars','#D5C4A4',9,1,19,23,'작은 상자 위 길이가 다른 금속 혀'),
++ ('flute','플루트','flute','#C8D8DC',7,1,3,34,'가는 관과 나란한 키'),
++ ('recorder','리코더','flute','#D8C7A7',7,1,4,31,'곧은 관의 구멍과 부리형 입구'),
++ ('clarinet','클라리넷','reed','#A4ACBB',8,1,4,34,'키가 달린 관과 작은 종형 끝'),
++ ('oboe','오보에','reed','#A6B3BB',9,1,3,33,'가느다란 관과 좁은 리드'),
++ ('bassoon','바순','reed','#BB9B85',7,2,5,34,'긴 이중 관과 굽은 입관'),
++ ('saxophone','색소폰','sax','#D6BD88',7,1,9,29,'굽은 관과 넓은 종형 끝'),
++ ('trumpet','트럼펫','brass','#D6C391',3,1,12,26,'접힌 관과 세 밸브'),
++ ('trombone','트롬본','brass','#D0BB91',2,1,10,34,'길게 왕복하는 슬라이드관'),
++ ('horn','호른','horn','#CDBD96',3,1,24,23,'둥글게 감긴 관과 벌어진 종'),
++ ('tuba','튜바','brass','#CEB88C',4,2,20,31,'굵은 접힌 관과 위로 열린 종'),
++ ('snare','스네어 드럼','drum','#A4B8CB',10,1,25,13,'낮고 넓은 원통 북'),
++ ('bongo','봉고','drum','#C9AA8E',2,2,16,22,'높이가 다른 두 원통 북'),
++ ('timpani','팀파니','bowl_drum','#C8B59D',8,1,27,24,'반구형 몸체와 넓은 북면'),
++ ('tambourine','탬버린','tambourine','#D4B691',8,1,25,6,'얇은 원형 틀 둘레의 작은 징'),
++ ('triangle','트라이앵글','triangle','#C2D1D5',3,1,27,28,'한 모서리가 열린 삼각 금속봉'),
++ ('handbell','핸드벨','bell','#D9C591',1,1,19,26,'종형 몸체와 위쪽 손잡이'),
++)
++
++
++def _objects(rows, category):
++    return tuple(ObjectSpec(row[0],row[1],category,*row[2:]) for row in rows)
++
++
++POOLS = {'꽃': _objects(_FLOWERS,'꽃'), '열매': _objects(_FRUITS,'열매'),
++         '잎': _objects(_LEAVES,'잎'), '악기': _objects(_MUSIC,'악기')}
++OBJECTS = {obj.key:obj for pool in POOLS.values() for obj in pool}
++
++# 주제와 동반 대상은 역할을 분리하고 서로 겹치지 않아 역순 쌍의 중복이 없습니다.
++ANCHORS = tuple(OBJECTS[key] for key in (
++ 'rose','tulip','daffodil','lily','lotus','cherry','plum','camellia','magnolia','hibiscus',
++ 'apple','pear','quince','peach','apricot','plum_fruit','cherry_fruit','grape','muscat',
++ 'maple','ginkgo','oak','birch','beech','elm','willow','olive','eucalyptus',
++ 'violin','viola','cello','bass','guitar','ukulele','mandolin','lute','harp'))
++COMPANIONS = tuple(OBJECTS[key] for key in (
++ 'sunflower','daisy','cosmos','chrysanthemum','gerbera','gujeolcho',
++ 'orange','mandarin','lemon','lime','grapefruit','strawberry',
++ 'poplar','linden','ivy','grape_leaf','fig_leaf','monstera',
++ 'lyre','piano','accordion','xylophone','marimba','kalimba'))
++
++# 네 범주의 실제 조형 관계에 맞춰 제목과 세 물체의 배치를 함께 선택합니다.
++COMPOSITIONS = {
++ ('꽃','꽃'):('꽃의 화원','bouquet'), ('꽃','열매'):('꽃과 열매의 정물','diagonal'),
++ ('꽃','잎'):('잎이 감싼 화원','shelter'), ('꽃','악기'):('꽃의 실내악','stage'),
++ ('열매','꽃'):('꽃이 핀 과수원','bouquet'), ('열매','열매'):('열매의 정물','triangle'),
++ ('열매','잎'):('잎과 수확의 정물','shelter'), ('열매','악기'):('수확의 음악실','stage'),
++ ('잎','꽃'):('잎과 꽃의 정원','diagonal'), ('잎','열매'):('숲의 수확','triangle'),
++ ('잎','잎'):('잎의 표본 정원','fan'), ('잎','악기'):('숲의 음악실','stage'),
++ ('악기','꽃'):('꽃으로 꾸민 연주실','stage'), ('악기','열매'):('음악과 열매의 정물','diagonal'),
++ ('악기','잎'):('잎으로 꾸민 연주실','shelter'), ('악기','악기'):('실내악 편성','stage'),
++}
++COMPOSITION_NAMES = {'bouquet':'꽃다발형','diagonal':'대각선형','shelter':'감싸는 형태',
++                     'stage':'연주대형','triangle':'삼각형 정물','fan':'부채형'}
++
++
++@dataclass(frozen=True)
++class Collection:
++    key: str
++    title: str
++    anchor_id: str
++    companion_id: str
++    composition: str
++    description: str
++    subjects: tuple
++
++
++def joining_particle(name):
++    """마지막 한글 음절의 받침에 맞춰 대상 이름을 연결합니다."""
++    last=ord(name[-1])
++    return '과' if 0xAC00 <= last <= 0xD7A3 and (last-0xAC00)%28 else '와'
++
++
++@lru_cache(maxsize=888)
++def collection_for_month(year, month):
++    index=(year-2026)*12+month-1
++    if not 0 <= index < 888 or not 1 <= month <= 12:
++        raise ValueError('연월 컬렉션은 2026년 1월부터 2099년 12월까지입니다.')
++    # 서로소 순회로 이웃한 달도 주제와 동반 대상이 함께 바뀝니다.
++    pair=(index*113)%888
++    anchor=ANCHORS[pair//24]; companion=COMPANIONS[pair%24]
++    context,composition=COMPOSITIONS[anchor.category,companion.category]
++    primary=POOLS[anchor.category]
++    # 날짜별 주연은 그 달 주제의 분류에 속하는 서로 다른 실제 대상 31종입니다.
++    start=(pair//24+pair%24*7)%31
++    subjects=tuple(primary[(start+i*11)%31].key for i in range(31))
++    title=f'{anchor.name}{joining_particle(anchor.name)} {companion.name} · {context}'
++    description=f'날짜별 {anchor.category} 주연, 왼쪽의 {anchor.name}, 오른쪽의 {companion.name}을 {COMPOSITION_NAMES[composition]} 구성으로 함께 전시합니다.'
++    return Collection(f'{year:04d}-{month:02d}',title,anchor.key,companion.key,composition,description,subjects)
++
++
++def all_collections():
++    return tuple(collection_for_month(year,month) for year in range(2026,2100) for month in range(1,13))
+--- 이전/src/calendar_motion.py
++++ 현재/src/calendar_motion.py
+@@ -90,8 +90,11 @@
+                 with self.condition:
+                     self.latest=image; self.latest_date=value; self.render_count+=1
+                     next_frame_at=start+1/FPS
++                    self.condition.notify_all()
+         except Exception as error:
+-            with self.condition:self.error=f'날짜별 3D 표시 실패: {type(error).__name__}: {error}'
++            with self.condition:
++                self.error=f'날짜별 3D 표시 실패: {type(error).__name__}: {error}'
++                self.condition.notify_all()
+             _logger.exception('날짜별 3D 렌더가 중단되어 정적 월 표식을 표시합니다.')
+         finally:
+             if renderer is not None:
+@@ -167,6 +170,31 @@
+     return _get_service().frame(elapsed,date)
+ 
+ 
++def prepare_calendar_motion(timeout_seconds=5.0):
++    """창 표시 전에 같은 작업자의 첫 실제 프레임을 최대 5초 준비합니다."""
++    if type(timeout_seconds) not in (int,float) or not 0 < timeout_seconds <= 5:
++        raise ValueError('3D 준비 제한은 0초 초과 5초 이하여야 합니다.')
++    service=_get_service();worker=service.worker;value=current_date()
++    deadline=time.monotonic()+timeout_seconds
++    with worker.condition:
++        previous_date=worker.requested_date
++        worker.requested_date=value;worker.visible=True;worker.condition.notify_all()
++        try:
++            while worker.latest_date!=value and not worker.error and not worker.stopping:
++                remaining=deadline-time.monotonic()
++                if remaining<=0:break
++                worker.condition.wait(remaining)
++            ready=worker.latest_date==value and worker.latest is not None and not worker.error
++            error=worker.error or ('' if ready else '날짜별 3D 첫 프레임이 준비 제한 안에 도착하지 않았습니다.')
++            result={'ready':ready,'error':error,'renderer':worker.renderer_name,
++                    'render_count':worker.render_count,'date':str(worker.latest_date)}
++        finally:
++            worker.requested_date=previous_date
++            worker.visible=bool(service.owners);worker.condition.notify_all()
++    if not ready and not worker.error:_logger.error(error)
++    return result
++
++
+ def set_calendar_motion_visible(owner,visible):
+     if type(visible) is not bool:raise TypeError('표시 상태는 bool이어야 합니다.')
+     _get_service().visible(owner,visible)
+--- 이전/src/calendar_renderer.py
++++ 현재/src/calendar_renderer.py
+@@ -1,362 +1,429 @@
+-"""현재 날짜의 실제 메시를 소유 스레드의 오프스크린 GPU에서 렌더합니다."""
+-
+-from __future__ import annotations
+-
+-import math
+-
+-import hashlib
+-
+-import threading
+-
+-import numpy as np
+-
+-import moderngl
+-
+-from PySide6.QtGui import QImage
+-
+-from calendar_art import design_for_date
+-
+-VERTEX = '#version 330\nin vec3 in_position;\nin vec3 in_normal;\nuniform mat4 model;\nuniform mat4 view_projection;\nout vec3 position;\nout vec3 normal;\nvoid main() {\n    vec4 world = model * vec4(in_position, 1.0);\n    position = world.xyz;\n    normal = mat3(model) * in_normal;\n    gl_Position = view_projection * world;\n}\n'
+-
+-FRAGMENT = '#version 330\nin vec3 position;\nin vec3 normal;\nuniform vec3 camera;\nuniform float metallic;\nuniform vec3 base_color;\nuniform float roughness;\nout vec4 color;\nconst float PI = 3.14159265359;\n// 실제 월드 반사 방향이 스튜디오의 긴 면광원을 바라보는 정도를 계산합니다.\nfloat box_light(vec3 direction, vec3 center, vec3 up, vec2 bounds, float softness) {\n    vec3 forward = normalize(center);\n    vec3 side = normalize(cross(forward, up));\n    vec3 vertical = cross(side, forward);\n    float facing = dot(direction, forward);\n    if (facing <= 0.0) return 0.0;\n    vec2 uv = vec2(dot(direction, side), dot(direction, vertical)) / facing;\n    vec2 edge = smoothstep(bounds, bounds + vec2(softness), abs(uv));\n    return (1.0 - edge.x) * (1.0 - edge.y);\n}\nfloat studio(vec3 direction, float blur) {\n    float value = .075 + .10 * (direction.y*.5+.5);\n    value += 3.8 * box_light(direction, vec3(-.52, .72, .62), vec3(0,1,0), vec2(.27,.82), .055+blur);\n    value += 2.4 * box_light(direction, vec3(.90, .05, .32), vec3(0,1,0), vec2(.105,.78), .035+blur);\n    value += 2.8 * box_light(direction, vec3(.10, .90, -.48), vec3(0,0,1), vec2(.68,.12), .045+blur);\n    value += .65 * box_light(direction, vec3(-.65, -.40, .35), vec3(0,1,0), vec2(.40,.62), .20+blur);\n    value += .25 * box_light(direction, vec3(.2,-.4,.9), vec3(0,1,0), vec2(.8,.45), .35+blur);\n    return value;\n}\n// 거칠기에 따른 반사 방향 원판을 고정 표본으로 적분하여 시간별 잡음을 만들지 않습니다.\nfloat filtered_studio(vec3 reflected, float rough) {\n    vec3 up = abs(reflected.y)<.95 ? vec3(0,1,0) : vec3(1,0,0);\n    vec3 tangent = normalize(cross(up,reflected));\n    vec3 bitangent = cross(reflected,tangent);\n    float total=0.0;\n    float weight_sum=0.0;\n    for(int i=0;i<12;i++) {\n        float radius=sqrt((float(i)+.5)/12.0);\n        float theta=float(i)*2.39996323;\n        float weight=exp(-2.2*radius*radius);\n        vec3 sample_direction=normalize(reflected+rough*1.7*radius*(cos(theta)*tangent+sin(theta)*bitangent));\n        total+=studio(sample_direction,rough*.30)*weight;\n        weight_sum+=weight;\n    }\n    return total/weight_sum;\n}\nfloat distribution(float nh, float alpha) {\n    float a2 = alpha * alpha;\n    float d = nh * nh * (a2 - 1.0) + 1.0;\n    return a2 / max(PI * d * d, .00001);\n}\nfloat visibility(float nv, float nl, float alpha) {\n    float k = (alpha + 1.0) * (alpha + 1.0) / 8.0;\n    return (nv / (nv * (1.0-k) + k)) * (nl / (nl * (1.0-k) + k));\n}\nfloat aces(float x) {\n    return clamp((x*(2.51*x+.03))/(x*(2.43*x+.59)+.14),0.0,1.0);\n}\nvoid main() {\n    vec3 n = normalize(normal);\n    vec3 v = normalize(camera-position);\n    float nv = max(dot(n,v),.001);\n    vec3 r = reflect(-v,n);\n    vec3 f0 = mix(vec3(.04),base_color,metallic);\n    vec3 fresnel = f0 + (1.0-f0)*pow(1.0-nv,5.0);\n    float environment = filtered_studio(r,roughness);\n    vec3 reflected = environment * fresnel * (1.0-.28*roughness);\n    vec3 l = normalize(vec3(-.4,.7,.8));\n    vec3 h = normalize(v+l);\n    float nl = max(dot(n,l),0.0);\n    float nh = max(dot(n,h),0.0);\n    float vh = max(dot(v,h),0.0);\n    vec3 f = f0+(1.0-f0)*pow(1.0-vh,5.0);\n    float alpha = max(.04,roughness*roughness);\n    vec3 specular = distribution(nh,alpha)*visibility(nv,nl,roughness)*f/max(4.0*nv*nl,.01);\n    vec3 diffuse = (1.0-metallic)*base_color*(.16+.48*nl);\n    vec3 radiance = reflected + diffuse + .25*specular*nl;\n    vec3 display = pow(vec3(aces(radiance.r),aces(radiance.g),aces(radiance.b)),vec3(1.0/2.2));\n    color = vec4(display,1.0);\n}\n'
+-
+-def rotation(axis, angle):
+-    """정규화된 실제 3D축을 중심으로 로드리게스 회전행렬을 만듭니다."""
+-    axis = np.asarray(axis, dtype=np.float64)
+-    axis /= np.linalg.norm(axis)
+-    x, y, z = axis
+-    c, s, t = (math.cos(angle), math.sin(angle), 1 - math.cos(angle))
+-    return np.array([[t * x * x + c, t * x * y - s * z, t * x * z + s * y], [t * x * y + s * z, t * y * y + c, t * y * z - s * x], [t * x * z - s * y, t * y * z + s * x, t * z * z + c]], dtype=np.float64)
+-
+-def sphere_mesh(radius, longitude=96, latitude=48):
+-    vertices = []
+-    indices = []
+-    for i in range(latitude + 1):
+-        phi = math.pi * i / latitude
+-        for j in range(longitude + 1):
+-            theta = math.tau * j / longitude
+-            n = (math.sin(phi) * math.cos(theta), math.cos(phi), math.sin(phi) * math.sin(theta))
+-            vertices.append((*[radius * v for v in n], *n))
+-    for i in range(latitude):
+-        for j in range(longitude):
+-            a = i * (longitude + 1) + j
+-            b = a + longitude + 1
+-            indices.extend((a, a + 1, b, a + 1, b + 1, b))
+-    return (np.asarray(vertices, dtype='f4'), np.asarray(indices, dtype='u4'))
+-
+-def finish(vertices, indices):
+-    """표면 법선과 삼각형 winding을 일치시킵니다."""
+-    v = np.asarray(vertices, dtype='f4')
+-    ix = np.asarray(indices, dtype='u4').reshape(-1, 3)
+-    p = v[ix, :3]
+-    n = v[ix, 3:].mean(axis=1)
+-    reverse = np.einsum('ij,ij->i', np.cross(p[:, 1] - p[:, 0], p[:, 2] - p[:, 0]), n) < 0
+-    ix[reverse] = ix[reverse][:, [0, 2, 1]]
+-    return (v, ix.reshape(-1))
+-
+-def box(size, bevel=3, steps=14):
+-    """육면체 면을 실제 둥근 모서리와 구면 꼭짓점으로 투영합니다."""
+-    half = np.asarray(size, dtype=float) / 2
+-    inner = half - bevel
+-    vertices = []
+-    indices = []
+-    for axis in range(3):
+-        other = [i for i in range(3) if i != axis]
+-        for sign in (-1, 1):
+-            start = len(vertices)
+-            for i in range(steps + 1):
+-                for j in range(steps + 1):
+-                    p = np.zeros(3)
+-                    p[axis] = sign * half[axis]
+-                    p[other] = [(2 * i / steps - 1) * half[other[0]], (2 * j / steps - 1) * half[other[1]]]
+-                    q = np.clip(p, -inner, inner)
+-                    n = p - q
+-                    n /= np.linalg.norm(n)
+-                    vertices.append((*list(q + bevel * n), *list(n)))
+-            for i in range(steps):
+-                for j in range(steps):
+-                    a = start + i * (steps + 1) + j
+-                    b = a + steps + 1
+-                    indices.extend((a, b, a + 1, a + 1, b, b + 1))
+-    return finish(vertices, indices)
+-
+-def lathe(profile, sides=64, smooth=True):
+-    """회전체의 실제 앞뒤·옆면을 만들며 다각 단면은 평면 법선을 보존합니다."""
+-    vertices = []
+-    indices = []
+-    for row in range(len(profile) - 1):
+-        radius, y = profile[row]
+-        next_radius, next_y = profile[row + 1]
+-        for j in range(sides):
+-            a = math.tau * j / sides
+-            b = math.tau * (j + 1) / sides
+-            corners = [(radius * math.cos(a), y, radius * math.sin(a)), (radius * math.cos(b), y, radius * math.sin(b)), (next_radius * math.cos(b), next_y, next_radius * math.sin(b)), (next_radius * math.cos(a), next_y, next_radius * math.sin(a))]
+-            start = len(vertices)
+-            for k, p in enumerate(corners):
+-                t = (a if k in (0, 3) else b) if smooth else (a + b) / 2
+-                n = np.array([(next_y - y) * math.cos(t), radius - next_radius, (next_y - y) * math.sin(t)])
+-                n /= np.linalg.norm(n)
+-                vertices.append((*p, *n))
+-            indices.extend((start, start + 1, start + 2, start, start + 2, start + 3))
+-    return finish(vertices, indices)
+-
+-def tube(points, radius=3, closed=False, sides=14):
+-    """3D 경로를 따라 원형 단면을 운반합니다. 코일은 실제 깊이를 가집니다."""
+-    points = np.asarray(points, dtype=float)
+-    vertices = []
+-    indices = []
+-    count = len(points)
+-    for i, p in enumerate(points):
+-        before = points[(i - 1) % count] if closed or i else points[0]
+-        after = points[(i + 1) % count] if closed or i < count - 1 else points[-1]
+-        tangent = after - before
+-        tangent /= np.linalg.norm(tangent)
+-        up = np.array([0.0, 1.0, 0.0]) if abs(tangent[1]) < 0.95 else np.array([1.0, 0.0, 0.0])
+-        side = np.cross(tangent, up)
+-        side /= np.linalg.norm(side)
+-        vertical = np.cross(tangent, side)
+-        for j in range(sides):
+-            n = side * math.cos(math.tau * j / sides) + vertical * math.sin(math.tau * j / sides)
+-            vertices.append((*list(p + radius * n), *list(n)))
+-    for i in range(count if closed else count - 1):
+-        for j in range(sides):
+-            a = i * sides + j
+-            b = (i + 1) % count * sides + j
+-            c = (i + 1) % count * sides + (j + 1) % sides
+-            d = i * sides + (j + 1) % sides
+-            indices.extend((a, b, c, a, c, d))
+-    return finish(vertices, indices)
+-
+-
+-PERIOD = 12.0
+-SIZE = 384
+-
+-
+-def _transformed(mesh, pos=(0,0,0), scale=(1,1,1), angle=0):
+-    vertices,indices=mesh; vertices=vertices.copy()
+-    matrix=rotation((0,0,1),angle)
+-    vertices[:,:3]=(vertices[:,:3]*np.asarray(scale,dtype=float))@matrix.T+np.asarray(pos,dtype=float)
+-    normals=(vertices[:,3:]/np.asarray(scale,dtype=float))@matrix.T
+-    normals/=np.linalg.norm(normals,axis=1)[:,None]; vertices[:,3:]=normals
+-    return vertices,indices
+-
+-
+-def build_geometry(design):
+-    """월별 구조와 일별 부품 수·비율·곡률을 바꾸며 색만 바꾼 복제를 피합니다."""
+-    day=design.date.day; month=design.date.month; variation=design.year_variant
+-    accent=tuple((int(design.accent[i:i+2],16)/255)**2.2 for i in (1,3,5))
+-    silver=(.66,.74,.80); pale=tuple(.35+.55*c for c in accent)
+-    parts=[]; sphere=sphere_mesh(1,32,16)
+-    def add(mesh,pos=(0,0,0),scale=(1,1,1),angle=0,color=None,metal=.65,rough=.28):
+-        parts.append((_transformed(mesh,pos,scale,angle),color or accent,metal,rough))
+-    def orb(pos,scale,color=None,angle=0):add(sphere,pos,scale,angle,color)
+-    def rod(points,radius=1.5,color=None,closed=False):add(tube(points,radius,closed,10),color=color or silver)
+-    def leaf(pos,length,width,angle,color=None):orb(pos,(width,length,3.4),color,angle)
+-    # 일자는 불연속 형태 선택과 연속 비율에 모두 들어가고 연도는 기하 위상을 바꿉니다.
+-    phase=variation*math.tau; fraction=(day-1)/30; count=5+(day-1)%7
+-    if month==1:
+-        family=(day-1)%7; group=(day-1)//7
+-        if family==1:
+-            # 닫힌 봉오리는 긴 세 꽃잎이 중심을 감싸는 수직 실루엣입니다.
+-            for j in range(3+group):
+-                t=math.tau*j/(3+group)+phase*.2
+-                orb((8*math.cos(t),10,7*math.sin(t)),(8,24+group,8),pale if j%2 else accent,.12*math.sin(t))
+-            for sign in (-1,1):leaf((sign*8,-8,2),13,5,sign*.6,(.28,.57,.40))
+-        elif family==3:
+-            # 고개를 숙인 종꽃을 각각의 줄기 끝에 달아 평면 방사꽃과 구분합니다.
+-            for j in range(2+group%3):
+-                x=(j-(1+group%3)/2)*20; y=13+8*math.cos(j+phase)
+-                add(lathe([(0,14),(5,12),(6,0),(12,-10),(10,-12),(5,-4),(0,-3)],48),pos=(x,y,0),angle=(j-.5)*.25,color=pale if j%2 else accent)
+-                rod([(0,-15,-4),(x,y+18,-4),(x,y+13,0)],1.2,(.25,.53,.40))
+-        elif family==4:
+-            # 나팔형의 벌어진 입구와 길게 좁아지는 목을 실제 회전체로 만듭니다.
+-            add(lathe([(0,-20),(5,-18),(7,-3),(22,15),(23,19),(20,20),(8,3),(3,-14),(0,-15)],64),pos=(0,8,0),angle=-.25+fraction*.35)
+-            orb((0,14,9),(4,4,4),(.85,.73,.39))
+-        else:
+-            layers=3 if family==2 else 2 if family==5 else 1
+-            for layer in range(layers):
+-                petals=(6 if family==6 else 7 if family==5 else 8 if family==2 else 5+group*2)+layer*2
+-                for j in range(petals):
+-                    t=math.tau*j/petals+layer*.32+phase*.15
+-                    radius=(18-layer*5) if layers>1 else 15
+-                    length=(19 if family==6 else 11 if family==5 else 14)+fraction*4-layer*1.4
+-                    width=(4.5 if family==6 else 10 if family==5 else 7)+group*.4
+-                    orb((radius*math.cos(t),radius*math.sin(t)+6,layer*4),(width,length,4+layer),pale if layer%2 else accent,t-math.pi/2)
+-            orb((0,6,5+layers*3),(6 if family==6 else 8,)*3,(.85,.73,.39))
+-        rod([(0,-2,-3),(-2,-18,-2),(3+fraction*4,-33,-1)],2.1,(.25,.53,.40))
+-        leaf((-9,-20,-1),11,4,.8,(.31,.64,.45))
+-    elif month==2:
+-        sides=4+day%7
+-        add(lathe([(0,-29),(19+fraction*7,-15),(24,5),(13+variation*6,23),(0,34)],sides,False),angle=-.22+fraction*.4,metal=.92,rough=.15)
+-        for j in range(2+day%4):
+-            t=math.tau*j/(2+day%4)+phase
+-            add(lathe([(0,-10),(5,0),(0,13)],4+j%3,False),pos=(32*math.cos(t),26*math.sin(t),-4),angle=t,color=pale,metal=.9,rough=.16)
+-    elif month==3:
+-        wing=18+fraction*8
+-        for sign in (-1,1):
+-            orb((sign*17,12,0),(wing*.7,wing,4+variation*3),angle=-sign*(.35+fraction*.3))
+-            orb((sign*15,-13,2),(12+day%6,13+day%4,5),pale,sign*.45)
+-            rod([(sign*2,15,2),(sign*5,25,3),(sign*(10+day%5),30,4)],1.1)
+-            orb((sign*(10+day%5),30,4),(2,2,2),silver)
+-        orb((0,0,5),(3.5,22,4),silver)
+-        for j in range(day%5):orb(((1 if j%2 else -1)*21,10-j*5,6),(2.6,2.6,1.5),silver)
+-    elif month==4:
+-        add(lathe([(0,-28),(14,-23),(21,-9),(18,5),(8,24),(0,35)],64),angle=-.2+fraction*.4,metal=.75,rough=.14)
+-        for j in range(2+day%5):
+-            t=math.tau*j/(2+day%5)+phase
+-            orb((31*math.cos(t),28*math.sin(t),-2),(2.8,5+day%4,2.8),pale,-.3)
+-        ts=np.linspace(.15,math.pi*1.65,90)
+-        rod([(34*math.cos(t),-21+8*math.sin(t),14*math.sin(t)) for t in ts],1.7)
+-    elif month==5:
+-        rod([(0,-33,0),(0,22,0)],3.2,(.40,.31,.22))
+-        for j in range(5+day%6):
+-            t=math.tau*j/(5+day%6)+phase*.3; y=-8+j*4
+-            pos=(math.cos(t)*(15+fraction*8),y,math.sin(t)*10)
+-            rod([(0,y-8,0),pos],1.5,(.40,.31,.22))
+-            leaf(pos,12+variation*5,7+day%3,t,accent if j%2 else pale)
+-        leaf((0,27,0),12,7,0,pale)
+-    elif month==6:
+-        arms=4+day%5
+-        for j in range(arms):
+-            t=math.tau*j/arms+phase*.15
+-            orb((14*math.cos(t),14*math.sin(t),0),(7+fraction*4,22+variation*3,5),angle=t-math.pi/2)
+-            for k in range(3):orb(((8+k*9)*math.cos(t),(8+k*9)*math.sin(t),5),(1.7,1.7,1.7),pale)
+-        orb((0,0,4),(12,12,7),pale)
+-        for j in range(day%4):orb((-32+j*8,28+math.sin(j)*4,-1),(2.2,2.2,2.2),silver)
+-    elif month==7:
+-        orb((0,0,0),(21+fraction*6,21+fraction*6,21+fraction*6),pale)
+-        ts=np.linspace(0,math.tau,100,endpoint=False)
+-        rod([(36*math.cos(t),12*math.sin(t),17*math.sin(t)) for t in ts],3+day%3,accent,True)
+-        for j in range(2+day%5):
+-            t=math.tau*j/(2+day%5)+phase
+-            orb((42*math.cos(t),36*math.sin(t),6),(2.2+j*.4,)*3,silver)
+-    elif month==8:
+-        if day%3==0:
+-            for row in range(4):
+-                for j in range(4-row):orb(((j-(3-row)/2)*12,20-row*13,(j%2)*4),(8+fraction*2,9,8))
+-        else:
+-            add(lathe([(0,-29),(15,-25),(25,-8),(23,6),(12 if day%3==1 else 20,22),(0,27)],64),angle=.12*math.sin(phase),rough=.22)
+-        rod([(0,24,0),(2,34,0),(7,37,0)],2,(.40,.32,.22))
+-        leaf((10,30,0),11+day%6,5,-1.0,(.34,.60,.38))
+-    elif month==9:
+-        notes=2+day%3
+-        for j in range(notes):
+-            x=(j-(notes-1)/2)*18; y=-15+8*math.sin(j+phase)
+-            orb((x,y,0),(8,5.6,4),angle=.3)
+-            rod([(x+6,y,0),(x+6,27-fraction*8,0)],1.8)
+-        rod([((j-(notes-1)/2)*18+6,27-fraction*8,0) for j in range(notes)],3,pale)
+-        if day>15:
+-            ts=np.linspace(-1.4,1.4,60); rod([(33+4*math.cos(t),12*math.sin(t),-4) for t in ts],1.1,silver)
+-    elif month==10:
+-        lobes=3+day%5
+-        for j in range(lobes):
+-            t=-1.2+2.4*j/(lobes-1)
+-            leaf((15*math.sin(t),8+12*math.cos(t),j*.4),18+fraction*7,7,t,pale if j%2 else accent)
+-        rod([(0,-31,1),(0,24,5)],1.5,(.65,.45,.25))
+-        for sign in (-1,1):rod([(0,-4,4),(sign*20,17,5)],1,(.65,.45,.25))
+-    elif month==11:
+-        towers=3+day%4
+-        for j in range(towers):
+-            height=26+17*math.sin(j*1.7+phase)+fraction*10
+-            add(box((9+day%4,height,12),2,5),pos=((j-(towers-1)/2)*12,height/2-23,(j%2)*5),color=pale if j%2 else accent,metal=.85)
+-        ts=np.linspace(0,math.pi,64); rod([(36*math.cos(t),7+28*math.sin(t),-7) for t in ts],2.4,silver)
+-        orb((0,37,0),(3+day%3,)*3,(.91,.82,.56))
+-    else:
+-        arms=5+day%4
+-        for j in range(arms):
+-            t=math.tau*j/arms+phase*.12; direction=np.array([math.cos(t),math.sin(t),0.])
+-            rod([direction*5,direction*(31+fraction*5)],2,pale)
+-            for distance in (17,26):
+-                for side in (-1,1):
+-                    branch=np.array([math.cos(t+side*.65),math.sin(t+side*.65),0.])
+-                    rod([direction*distance,direction*(distance-5)+branch*12],1.4,accent)
+-        add(lathe([(0,-8),(9,0),(0,8)],6,False),color=silver)
+-    # 모든 분기의 실제 정점에 연도 인자를 전달합니다. 깊이 비율도 달라져 색만 바뀌지 않습니다.
+-    year_scale=(.95+.1*variation,.95+.1*variation,.90+.2*variation)
+-    parts=[(_transformed(mesh,scale=year_scale),color,metal,rough) for mesh,color,metal,rough in parts]
+-    # 고유 중심 형상 밖의 두 얇은 궤도는 서로 다른 축으로 움직입니다.
+-    for index in range(2):
+-        ts=np.linspace(0,math.tau,128,endpoint=False); radius=49+index*7
+-        mesh=tube([(radius*math.cos(t),radius*math.sin(t),0) for t in ts],.85,True,10)
+-        parts.append((mesh,silver,1.,.23))
+-    return parts
+-
+-
+-def matrices(elapsed):
+-    if type(elapsed) not in (int,float):raise ValueError('모션 시각은 유한한 숫자여야 합니다.')
+-    try:valid=math.isfinite(elapsed)
+-    except OverflowError:valid=False
+-    if not valid:raise ValueError('모션 시각은 유한한 숫자여야 합니다.')
+-    phase=math.tau*(elapsed%PERIOD)/PERIOD
+-    center=np.eye(4); center[:3,:3]=rotation((0,1,0),.20*math.sin(phase))@rotation((1,0,0),.10*math.sin(phase+.5)); center[1,3]=1.4*math.sin(phase)
+-    result=[center]
+-    for index,axis in enumerate(((.6,1,.3),(-.9,.3,1))):
+-        matrix=np.eye(4); matrix[:3,:3]=rotation(axis,(.40,-.44)[index]*math.sin(phase+index))@rotation((0,0,1),(.2,1.2)[index])@rotation((1,0,0),(.8,-.7)[index])
+-        result.append(matrix)
+-    return result
+-
+-
+-class CalendarRenderer:
+-    """컨텍스트를 만든 스레드에서만 사용하고 현재 날짜의 버퍼만 보유합니다."""
+-    def __init__(self,size=384):
+-        if type(size) is not int or not 32<=size<=768:raise ValueError('렌더 크기는32~768 정수여야 합니다.')
+-        self.thread_id=threading.get_ident(); self.size=size; self.ctx=None; self.resources=[]; self.vaos=[]; self.buffers=[]; self.parts=[]; self.design=None
+-        try:
+-            self.ctx=moderngl.create_standalone_context(require=330)
+-            self.program=self.ctx.program(vertex_shader=VERTEX,fragment_shader=FRAGMENT); self.resources.append(self.program)
+-            self.color=self.ctx.renderbuffer((size,size),components=4,samples=4); self.resources.append(self.color)
+-            self.depth=self.ctx.depth_renderbuffer((size,size),samples=4); self.resources.append(self.depth)
+-            self.target=self.ctx.framebuffer([self.color],self.depth); self.resources.append(self.target)
+-            self.resolved=self.ctx.simple_framebuffer((size,size),components=4,dtype='f1'); self.resources.append(self.resolved)
+-            self.ctx.enable(moderngl.DEPTH_TEST)
+-            near,far,camera,extent=1.,1200.,700.,69.
+-            projection=np.array([[camera/extent,0,0,0],[0,camera/extent,0,0],[0,0,(far+near)/(near-far),2*far*near/(near-far)],[0,0,-1,0]],dtype='f4')
+-            view=np.eye(4,dtype='f4'); view[2,3]=-camera
+-            self.program['view_projection'].write((projection@view).T.astype('f4').tobytes()); self.program['camera'].value=(0.,0.,camera)
+-        except Exception:
+-            self.close(); raise
+-
+-    def _assert_thread(self):
+-        if threading.get_ident()!=self.thread_id:raise RuntimeError('GPU 컨텍스트는 생성 스레드에서만 사용할 수 있습니다.')
+-
+-    def set_date(self,value):
+-        self._assert_thread(); design=design_for_date(value)
+-        if self.design==design:return
+-        self._clear_meshes(); self.parts=build_geometry(design)
+-        for (vertices,indices),_,_,_ in self.parts:
+-            vertex=self.ctx.buffer(vertices.tobytes()); self.buffers.append(vertex)
+-            index=self.ctx.buffer(indices.tobytes()); self.buffers.append(index)
+-            self.vaos.append(self.ctx.vertex_array(self.program,[(vertex,'3f 3f','in_position','in_normal')],index))
+-        self.design=design
+-
+-    def render(self,value,elapsed=0):
+-        self._assert_thread(); transforms=matrices(elapsed); self.set_date(value)
+-        self.target.use(); self.target.clear(0,0,0,0,depth=1)
+-        for index,(_,color,metal,rough) in enumerate(self.parts):
+-            transform=transforms[0] if index<len(self.parts)-2 else transforms[index-len(self.parts)+3]
+-            self.program['model'].write(transform.T.astype('f4').tobytes())
+-            self.program['metallic'].value=metal; self.program['base_color'].value=color; self.program['roughness'].value=rough
+-            self.vaos[index].render(moderngl.TRIANGLES)
+-        self.ctx.copy_framebuffer(self.resolved,self.target)
+-        raw=self.resolved.read(components=4,alignment=1)
+-        # MSAA 결과는 사전곱 알파입니다. 복사해 GPU 버퍼 수명에서 분리합니다.
+-        image=QImage(raw,self.size,self.size,self.size*4,QImage.Format.Format_RGBA8888_Premultiplied).copy().mirrored(False,True)
+-        return image
+-
+-    def _clear_meshes(self):
+-        for value in reversed(self.vaos):value.release()
+-        for value in reversed(self.buffers):value.release()
+-        self.vaos.clear(); self.buffers.clear(); self.parts=[]; self.design=None
+-
+-    def close(self):
+-        self._assert_thread(); self._clear_meshes()
+-        for value in reversed(self.resources):value.release()
+-        self.resources.clear()
+-        if self.ctx is not None:self.ctx.release(); self.ctx=None
+-
+-
+-def render_date(value,elapsed=0.0,size=384):
+-    """미리보기와 직접 검증용 동기 렌더입니다. 앱은 공유 작업 스레드를 사용합니다."""
+-    renderer=CalendarRenderer(size)
+-    try:return renderer.render(value,elapsed)
+-    finally:renderer.close()
++"""현재 날짜의 실제 메시를 소유 스레드의 오프스크린 GPU에서 렌더합니다."""
++
++from __future__ import annotations
++
++import math
++
++import hashlib
++
++import threading
++
++import numpy as np
++
++import moderngl
++
++from PySide6.QtGui import QImage
++
++from calendar_art import design_for_date
++
++VERTEX = '#version 330\nin vec3 in_position;\nin vec3 in_normal;\nuniform mat4 model;\nuniform mat4 view_projection;\nout vec3 position;\nout vec3 normal;\nvoid main() {\n    vec4 world = model * vec4(in_position, 1.0);\n    position = world.xyz;\n    normal = mat3(model) * in_normal;\n    gl_Position = view_projection * world;\n}\n'
++
++FRAGMENT = '#version 330\nin vec3 position;\nin vec3 normal;\nuniform vec3 camera;\nuniform float metallic;\nuniform vec3 base_color;\nuniform float roughness;\nout vec4 color;\nconst float PI = 3.14159265359;\n// 실제 월드 반사 방향이 스튜디오의 긴 면광원을 바라보는 정도를 계산합니다.\nfloat box_light(vec3 direction, vec3 center, vec3 up, vec2 bounds, float softness) {\n    vec3 forward = normalize(center);\n    vec3 side = normalize(cross(forward, up));\n    vec3 vertical = cross(side, forward);\n    float facing = dot(direction, forward);\n    if (facing <= 0.0) return 0.0;\n    vec2 uv = vec2(dot(direction, side), dot(direction, vertical)) / facing;\n    vec2 edge = smoothstep(bounds, bounds + vec2(softness), abs(uv));\n    return (1.0 - edge.x) * (1.0 - edge.y);\n}\nfloat studio(vec3 direction, float blur) {\n    float value = .075 + .10 * (direction.y*.5+.5);\n    value += 3.8 * box_light(direction, vec3(-.52, .72, .62), vec3(0,1,0), vec2(.27,.82), .055+blur);\n    value += 2.4 * box_light(direction, vec3(.90, .05, .32), vec3(0,1,0), vec2(.105,.78), .035+blur);\n    value += 2.8 * box_light(direction, vec3(.10, .90, -.48), vec3(0,0,1), vec2(.68,.12), .045+blur);\n    value += .65 * box_light(direction, vec3(-.65, -.40, .35), vec3(0,1,0), vec2(.40,.62), .20+blur);\n    value += .25 * box_light(direction, vec3(.2,-.4,.9), vec3(0,1,0), vec2(.8,.45), .35+blur);\n    return value;\n}\n// 거칠기에 따른 반사 방향 원판을 고정 표본으로 적분하여 시간별 잡음을 만들지 않습니다.\nfloat filtered_studio(vec3 reflected, float rough) {\n    vec3 up = abs(reflected.y)<.95 ? vec3(0,1,0) : vec3(1,0,0);\n    vec3 tangent = normalize(cross(up,reflected));\n    vec3 bitangent = cross(reflected,tangent);\n    float total=0.0;\n    float weight_sum=0.0;\n    for(int i=0;i<12;i++) {\n        float radius=sqrt((float(i)+.5)/12.0);\n        float theta=float(i)*2.39996323;\n        float weight=exp(-2.2*radius*radius);\n        vec3 sample_direction=normalize(reflected+rough*1.7*radius*(cos(theta)*tangent+sin(theta)*bitangent));\n        total+=studio(sample_direction,rough*.30)*weight;\n        weight_sum+=weight;\n    }\n    return total/weight_sum;\n}\nfloat distribution(float nh, float alpha) {\n    float a2 = alpha * alpha;\n    float d = nh * nh * (a2 - 1.0) + 1.0;\n    return a2 / max(PI * d * d, .00001);\n}\nfloat visibility(float nv, float nl, float alpha) {\n    float k = (alpha + 1.0) * (alpha + 1.0) / 8.0;\n    return (nv / (nv * (1.0-k) + k)) * (nl / (nl * (1.0-k) + k));\n}\nfloat aces(float x) {\n    return clamp((x*(2.51*x+.03))/(x*(2.43*x+.59)+.14),0.0,1.0);\n}\nvoid main() {\n    vec3 n = normalize(normal);\n    vec3 v = normalize(camera-position);\n    float nv = max(dot(n,v),.001);\n    vec3 r = reflect(-v,n);\n    vec3 f0 = mix(vec3(.04),base_color,metallic);\n    vec3 fresnel = f0 + (1.0-f0)*pow(1.0-nv,5.0);\n    float environment = filtered_studio(r,roughness);\n    vec3 reflected = environment * fresnel * (1.0-.28*roughness);\n    vec3 l = normalize(vec3(-.4,.7,.8));\n    vec3 h = normalize(v+l);\n    float nl = max(dot(n,l),0.0);\n    float nh = max(dot(n,h),0.0);\n    float vh = max(dot(v,h),0.0);\n    vec3 f = f0+(1.0-f0)*pow(1.0-vh,5.0);\n    float alpha = max(.04,roughness*roughness);\n    vec3 specular = distribution(nh,alpha)*visibility(nv,nl,roughness)*f/max(4.0*nv*nl,.01);\n    vec3 diffuse = (1.0-metallic)*base_color*(.16+.48*nl);\n    vec3 radiance = reflected + diffuse + .25*specular*nl;\n    vec3 display = pow(vec3(aces(radiance.r),aces(radiance.g),aces(radiance.b)),vec3(1.0/2.2));\n    color = vec4(display,1.0);\n}\n'
++
++def rotation(axis, angle):
++    """정규화된 실제 3D축을 중심으로 로드리게스 회전행렬을 만듭니다."""
++    axis = np.asarray(axis, dtype=np.float64)
++    axis /= np.linalg.norm(axis)
++    x, y, z = axis
++    c, s, t = (math.cos(angle), math.sin(angle), 1 - math.cos(angle))
++    return np.array([[t * x * x + c, t * x * y - s * z, t * x * z + s * y], [t * x * y + s * z, t * y * y + c, t * y * z - s * x], [t * x * z - s * y, t * y * z + s * x, t * z * z + c]], dtype=np.float64)
++
++def sphere_mesh(radius, longitude=96, latitude=48):
++    vertices = []
++    indices = []
++    for i in range(latitude + 1):
++        phi = math.pi * i / latitude
++        for j in range(longitude + 1):
++            theta = math.tau * j / longitude
++            n = (math.sin(phi) * math.cos(theta), math.cos(phi), math.sin(phi) * math.sin(theta))
++            vertices.append((*[radius * v for v in n], *n))
++    for i in range(latitude):
++        for j in range(longitude):
++            a = i * (longitude + 1) + j
++            b = a + longitude + 1
++            indices.extend((a, a + 1, b, a + 1, b + 1, b))
++    return (np.asarray(vertices, dtype='f4'), np.asarray(indices, dtype='u4'))
++
++def finish(vertices, indices):
++    """표면 법선과 삼각형 winding을 일치시킵니다."""
++    v = np.asarray(vertices, dtype='f4')
++    ix = np.asarray(indices, dtype='u4').reshape(-1, 3)
++    p = v[ix, :3]
++    n = v[ix, 3:].mean(axis=1)
++    reverse = np.einsum('ij,ij->i', np.cross(p[:, 1] - p[:, 0], p[:, 2] - p[:, 0]), n) < 0
++    ix[reverse] = ix[reverse][:, [0, 2, 1]]
++    return (v, ix.reshape(-1))
++
++def box(size, bevel=3, steps=14):
++    """육면체 면을 실제 둥근 모서리와 구면 꼭짓점으로 투영합니다."""
++    half = np.asarray(size, dtype=float) / 2
++    inner = half - bevel
++    vertices = []
++    indices = []
++    for axis in range(3):
++        other = [i for i in range(3) if i != axis]
++        for sign in (-1, 1):
++            start = len(vertices)
++            for i in range(steps + 1):
++                for j in range(steps + 1):
++                    p = np.zeros(3)
++                    p[axis] = sign * half[axis]
++                    p[other] = [(2 * i / steps - 1) * half[other[0]], (2 * j / steps - 1) * half[other[1]]]
++                    q = np.clip(p, -inner, inner)
++                    n = p - q
++                    n /= np.linalg.norm(n)
++                    vertices.append((*list(q + bevel * n), *list(n)))
++            for i in range(steps):
++                for j in range(steps):
++                    a = start + i * (steps + 1) + j
++                    b = a + steps + 1
++                    indices.extend((a, b, a + 1, a + 1, b, b + 1))
++    return finish(vertices, indices)
++
++def lathe(profile, sides=64, smooth=True):
++    """회전체의 실제 앞뒤·옆면을 만들며 다각 단면은 평면 법선을 보존합니다."""
++    vertices = []
++    indices = []
++    for row in range(len(profile) - 1):
++        radius, y = profile[row]
++        next_radius, next_y = profile[row + 1]
++        for j in range(sides):
++            a = math.tau * j / sides
++            b = math.tau * (j + 1) / sides
++            corners = [(radius * math.cos(a), y, radius * math.sin(a)), (radius * math.cos(b), y, radius * math.sin(b)), (next_radius * math.cos(b), next_y, next_radius * math.sin(b)), (next_radius * math.cos(a), next_y, next_radius * math.sin(a))]
++            start = len(vertices)
++            for k, p in enumerate(corners):
++                t = (a if k in (0, 3) else b) if smooth else (a + b) / 2
++                n = np.array([(next_y - y) * math.cos(t), radius - next_radius, (next_y - y) * math.sin(t)])
++                n /= np.linalg.norm(n)
++                vertices.append((*p, *n))
++            indices.extend((start, start + 1, start + 2, start, start + 2, start + 3))
++    return finish(vertices, indices)
++
++def tube(points, radius=3, closed=False, sides=14):
++    """3D 경로를 따라 원형 단면을 운반합니다. 코일은 실제 깊이를 가집니다."""
++    points = np.asarray(points, dtype=float)
++    vertices = []
++    indices = []
++    count = len(points)
++    for i, p in enumerate(points):
++        before = points[(i - 1) % count] if closed or i else points[0]
++        after = points[(i + 1) % count] if closed or i < count - 1 else points[-1]
++        tangent = after - before
++        tangent /= np.linalg.norm(tangent)
++        up = np.array([0.0, 1.0, 0.0]) if abs(tangent[1]) < 0.95 else np.array([1.0, 0.0, 0.0])
++        side = np.cross(tangent, up)
++        side /= np.linalg.norm(side)
++        vertical = np.cross(tangent, side)
++        for j in range(sides):
++            n = side * math.cos(math.tau * j / sides) + vertical * math.sin(math.tau * j / sides)
++            vertices.append((*list(p + radius * n), *list(n)))
++    for i in range(count if closed else count - 1):
++        for j in range(sides):
++            a = i * sides + j
++            b = (i + 1) % count * sides + j
++            c = (i + 1) % count * sides + (j + 1) % sides
++            d = i * sides + (j + 1) % sides
++            indices.extend((a, b, c, a, c, d))
++    return finish(vertices, indices)
++
++
++PERIOD = 12.0
++SIZE = 384
++
++
++def _transformed(mesh, pos=(0,0,0), scale=(1,1,1), angle=0):
++    vertices,indices=mesh; vertices=vertices.copy()
++    matrix=rotation((0,0,1),angle)
++    vertices[:,:3]=(vertices[:,:3]*np.asarray(scale,dtype=float))@matrix.T+np.asarray(pos,dtype=float)
++    normals=(vertices[:,3:]/np.asarray(scale,dtype=float))@matrix.T
++    normals/=np.linalg.norm(normals,axis=1)[:,None]; vertices[:,3:]=normals
++    return vertices,indices
++
++
++def _object_geometry(spec, color):
++    """대상 이름에 연결된 주요 구조를 실제 삼각형 부품으로 구성합니다."""
++    parts=[]
++    sphere=sphere_mesh(1,20,12)
++    green=(.22,.43,.29); gold=(.68,.48,.16); dark=(.11,.12,.17)
++    n=spec.count; w=spec.width; h=spec.length; recipe=spec.recipe
++    def add(mesh,pos=(0,0,0),scale=(1,1,1),angle=0,tint=None):
++        parts.append((_transformed(mesh,pos,scale,angle),tint or color,.52,.31))
++    def orb(pos,scale,tint=None,angle=0):add(sphere,pos,scale,angle,tint)
++    def rod(points,radius=1.2,tint=None,closed=False):add(tube(points,radius,closed,8),tint=tint)
++    def petal(x,y,z,width,length,angle,tint=None):orb((x,y,z),(width,length,2.5),tint,angle)
++    def stem():
++        rod([(0,-7,-3),(1,-26,-3),(3,-37,-2)],1.4,green)
++        petal(-7,-25,-3,3,10,.8,green)
++    def radial(count,radius,length,width,z=0,tint=None):
++        for j in range(count):
++            t=math.tau*j/count
++            petal(radius*math.cos(t),radius*math.sin(t)+5,z,width,length,t-math.pi/2,tint)
++    if spec.category=='꽃':
++        if recipe in ('bloom','disc','rosette','star_bloom'):
++            for layer in range(spec.layers):
++                radial(n+layer*2,max(4,14-layer*2),h-layer*1.1,w,layer*3)
++            orb((0,5,spec.layers*3+2),(10 if recipe=='disc' else 4,)*2+(3,),dark if spec.key in ('sunflower','poppy','anemone') else gold)
++            if spec.key in ('lily','plum','hibiscus'):
++                for j in range(5):
++                    t=j*math.tau/5
++                    rod([(0,5,4),(4*math.cos(t),5+4*math.sin(t),15)],.55,gold)
++                    orb((4*math.cos(t),5+4*math.sin(t),15),(1.1,)*3,gold)
++        elif recipe=='cup':
++            for j in range(n):
++                t=j*math.tau/n
++                orb((9*math.cos(t),9,9*math.sin(t)),(w,h,3),angle=-.18*math.cos(t))
++        elif recipe in ('trumpet','funnel'):
++            if recipe=='trumpet':radial(n,14,h,w)
++            add(lathe([(0,-12),(3,-11),(5,1),(12 if recipe=='trumpet' else w,16),(11 if recipe=='trumpet' else w-2,18),(4,1),(0,-8)],32),pos=(0,6,7),scale=(1,1,1),angle=-.18,tint=gold if recipe=='trumpet' else color)
++        elif recipe=='spike':
++            rod([(0,-31,0),(0,34,0)],1.5,green)
++            for j in range(n):
++                y=-5+j*34/max(1,n-1); side=1 if j%2 else -1
++                if spec.key=='foxglove':
++                    add(lathe([(0,5),(4,4),(5,-5),(7,-7),(5,-7),(3,2),(0,3)],20),pos=(side*7,y,1),angle=side*.35)
++                else:orb((side*(5+(n-j)*.3),y,2),(w,h,4))
++        elif recipe=='umbel':
++            for j in range(n):
++                t=j*2.399963; r=math.sqrt(j/n)*23
++                for k in range(4):
++                    angle=k*math.tau/4
++                    petal(r*math.cos(t)+3*math.cos(angle),r*math.sin(t)+9+3*math.sin(angle),5+6*(1-r/23),3,4,angle)
++        stem()
++    elif spec.category=='열매':
++        if recipe in ('round_fruit','lobed_fruit','striped_fruit','crowned_fruit'):
++            if recipe=='lobed_fruit':
++                for j in range(n):
++                    t=math.tau*j/n; orb((w*.24*math.cos(t),0,w*.24*math.sin(t)),(w*.78,h,w*.78))
++            else:orb((0,0,0),(w,h,w*.8))
++            if recipe=='striped_fruit':
++                for j in range(n):
++                    t=math.tau*j/n
++                    rod([(w*math.sin(u)*math.cos(t),h*math.cos(u),w*.81*math.sin(u)*math.sin(t)) for u in np.linspace(.15,math.pi-.15,20)],.7,green)
++            if recipe=='crowned_fruit':
++                radial(n,5,5,2,h+1,green)
++        elif recipe=='pear':
++            add(lathe([(0,-h),(w*.6,-h*.8),(w,-h*.2),(w*.7,h*.35),(w*.28,h*.8),(0,h)],32))
++        elif recipe in ('cluster','berry'):
++            for row in range(spec.layers):
++                count=max(1,n-row)
++                for j in range(count):
++                    t=j*math.tau/count
++                    orb((w*count*.42*math.cos(t),(spec.layers/2-row)*h*1.35,w*count*.42*math.sin(t)),(w,h,w))
++        elif recipe=='paired_fruit':
++            for side in (-1,1):
++                orb((side*13,-9,0),(w,h,w));rod([(side*13,1,0),(side*6,22,0),(0,30,0)],1,green)
++        elif recipe=='banana':
++            for j in range(n):
++                rod([(j*6-6+12*math.cos(t),h*math.sin(t),j*3) for t in np.linspace(-1.2,1.2,24)],w)
++        elif recipe=='citrus':
++            orb((0,0,-4),(w,h,w*.60))
++            # 정면의 방사 단면은 감귤과 키위의 구조를 보여줍니다.
++            for j in range(n):
++                t=math.tau*j/n
++                rod([(0,0,w*.60),(w*.82*math.cos(t),h*.82*math.sin(t),w*.50)],.65,(.78,.72,.50))
++        elif recipe in ('seeded_fruit','pineapple','dragonfruit'):
++            add(lathe([(0,-h),(w*.6,-h*.55),(w,h*.15),(w*.75,h*.75),(0,h)],32))
++            for j in range(n):
++                t=j*2.399963; y=-h*.55+(j%7)*h*.18
++                r=w*math.sqrt(max(.1,1-(y/h)**2))
++                if recipe=='dragonfruit':petal(r*math.cos(t),y,r*math.sin(t),3,8,t,green)
++                else:orb((r*math.cos(t),y,r*math.sin(t)),(1.2,2,1.2),gold)
++            if recipe=='pineapple':
++                for j in range(7):petal((j-3)*3,h+7,0,2,12,(j-3)*.2,green)
++        elif recipe=='starfruit':
++            for j in range(5):
++                t=j*math.tau/5
++                orb((w*.55*math.cos(t),0,w*.55*math.sin(t)),(w*.4,h,w*.4))
++        if recipe not in ('paired_fruit','banana'):
++            rod([(0,h*.8,0),(2,h+6,0),(5,h+9,1)],1.5,green)
++            petal(8,h+4,1,3,9,-.8,green)
++    elif spec.category=='잎':
++        rod([(0,-32,0),(0,26,0)],1.2,green)
++        if recipe in ('palmate','palm','compound'):
++            for j in range(n):
++                t=-1.25+2.5*j/max(1,n-1)
++                petal(13*math.sin(t),7+13*math.cos(t),j*.12,w,h*.6,-t)
++        elif recipe in ('pinnate','fern','needle'):
++            for j in range(n):
++                y=-22+j*46/max(1,n-1)
++                for side in (-1,1):
++                    length=h*(.55+.45*math.sin((j+1)*math.pi/(n+1)))
++                    if recipe=='needle':rod([(0,y,0),(side*length,y+7,1)],max(.55,w*.45))
++                    else:petal(side*length*.45,y+3,0,w,length*.65,-side*.9)
++        elif recipe=='fan':
++            for j in range(n):
++                t=-1.1+2.2*j/(n-1)
++                petal(12*math.sin(t),5+12*math.cos(t),0,5,h*.75,-t)
++        elif recipe in ('split_leaf','lobed_leaf'):
++            for j in range(n):
++                y=-15+j*32/(n-1); length=w*(.4+.6*math.sin((j+1)*math.pi/(n+1)))
++                for side in (-1,1):petal(side*length*.5,y,0,4,length,-side*1.0)
++        elif recipe=='heart_leaf':
++            petal(-w*.32,5,0,w*.65,h*.8,-.35);petal(w*.32,5,0,w*.65,h*.8,.35)
++        else:orb((0,3,0),(w,h,2.4))
++        for j in range(1,min(n,12)):
++            y=-16+j*32/min(n,12)
++            for side in (-1,1):rod([(0,y,3),(side*w*.68,y+8,3)],.45,green)
++    else:
++        silver=(.65,.72,.78)
++        if recipe in ('bowed','guitar','lute'):
++            if recipe=='lute':orb((0,-10,0),(w,h*.8,7))
++            else:
++                orb((0,-17,0),(w,h*.53,7));orb((0,3,0),(w*.72,h*.40,6))
++            add(box((5,34,5),1,3),pos=(0,24,2),tint=dark)
++            add(box((9,9,5),1,3),pos=(0,44,2))
++            orb((0,-6,7),(4,5,1),dark)
++            for j in range(min(n,8)):rod([((j-(n-1)/2)*.5,-23,8),((j-(n-1)/2)*.5,43,5)],.22,silver)
++            if spec.key in ('cello','bass'):rod([(0,-h-10,0),(0,-h-18,0)],.8,silver)
++        elif recipe in ('harp','lyre'):
++            if recipe=='harp':points=[(-w,-h,0),(-w*.7,h,0),(w,h*.4,0),(-w,-h,0)]
++            else:points=[(-w,h,0),(-w,-h*.5,0),(0,-h,0),(w,-h*.5,0),(w,h,0),(-w,h,0)]
++            rod(points,2.5)
++            for j in range(n):
++                x=-w*.65+j*w*1.3/(n-1)
++                rod([(x,-h*.65,0),(x,h*(.8-.4*j/n),0)],.35,silver)
++        elif recipe in ('piano','accordion','bars'):
++            add(box((w*2,h*1.6,9),3,5),tint=dark)
++            if recipe=='piano':orb((w*.5,h*.4,-2),(w*.7,h,5))
++            for j in range(n):
++                x=-w+(j+.5)*2*w/n
++                length=h*(1.3-.65*j/n) if recipe=='bars' else h*.6
++                add(box((w*1.6/n,length,3),.5,2),pos=(x,-h*.25,7),tint=silver if j%3 else color)
++                if recipe=='accordion':rod([(x,-h,0),(x,h,0)],1.4,color)
++        elif recipe in ('flute','reed'):
++            rod([(0,-h,0),(0,h,0)],w)
++            for j in range(n):orb((w*.6,-h*.6+j*h*1.2/n,w),(1.7,1.7,1),silver)
++            if recipe=='reed':add(lathe([(w,-h+7),(w*2,-h),(w*2-1,-h),(w-1,-h+7)],24))
++        elif recipe in ('sax','brass','horn'):
++            if recipe=='horn':points=[(w*math.cos(t),h*.75*math.sin(t),0) for t in np.linspace(0,math.tau*1.6,55)]
++            else:points=[(-w,h,0),(-w,-h*.5,0),(-w*.4,-h,0),(w,-h*.6,0),(w,h*.5,0)]
++            rod(points,3 if recipe=='sax' else 2.3)
++            add(lathe([(3,-8),(5,0),(12,10),(11,11),(4,0),(2,-8)],24),pos=(w,h*.6,0),tint=color)
++            for j in range(min(n,7)):orb((-w+5,-h*.4+j*6,3),(2,2,2),silver)
++        elif recipe in ('drum','bowl_drum','tambourine'):
++            count=2 if spec.key=='bongo' else 1
++            for j in range(count):
++                x=(j-(count-1)/2)*w*1.7
++                profile=[(0,-h),(w*.7,-h),(w,h),(0,h)] if recipe=='bowl_drum' else [(0,-h),(w,-h),(w,h),(0,h)]
++                add(lathe(profile,32),pos=(x,0,0))
++                for k in range(n if count==1 else 6):
++                    t=k*math.tau/(n if count==1 else 6)
++                    orb((x+w*math.cos(t),0,w*math.sin(t)),(2,3,2),silver)
++        elif recipe=='triangle':rod([(-w,-h*.5,0),(0,h,0),(w,-h*.5,0),(-w*.7,-h*.5,0)],2,silver)
++        elif recipe=='bell':
++            add(lathe([(0,-h),(w,-h),(w*.6,-h*.4),(w*.3,h*.4),(0,h*.55)],32))
++            rod([(0,h*.5,0),(0,h+10,0)],2,dark)
++        else:raise ValueError('지원하지 않는 실제 대상 형상: '+recipe)
++    return parts
++
++
++def build_geometry(design):
++    """날짜별 주연과 서로 다른 두 월 모티프를 명시적 대상 사전에서 렌더합니다."""
++    from calendar_catalog import OBJECTS
++    subject=OBJECTS[design.object_id]
++    if subject.recipe!=design.shape_recipe:raise ValueError('대상과 형상 규칙이 일치하지 않습니다.')
++    accent=tuple((int(design.accent[i:i+2],16)/255)**2.2 for i in (1,3,5))
++    slots={
++        'bouquet':((-28,-20,-8),(29,-16,3)), 'diagonal':((-28,-26,-5),(28,27,2)),
++        'shelter':((-29,15,-8),(29,-18,1)), 'stage':((-30,-21,-6),(30,-21,1)),
++        'triangle':((-27,-25,-3),(27,-25,2)), 'fan':((-30,9,-6),(30,9,1)),
++    }
++    left,right=slots[design.composition]
++    variation=design.year_variant
++    result=[]
++    objects=((subject,(0,5,6),.73,accent),(OBJECTS[design.anchor_id],left,.34,None),
++             (OBJECTS[design.companion_id],right,.34,None))
++    for index,(spec,pos,size,color) in enumerate(objects):
++        tint=color or tuple((int(spec.color[i:i+2],16)/255)**2.2 for i in (1,3,5))
++        # 연도별 깊이 변화와 함께 날짜별로 세 대상의 기울기를 바꿉니다.
++        angle=(design.date.day-16)*.006*(1 if index==0 else (-1 if index==1 else 1))
++        scale=(size*(.95+.1*variation),size*(.95+.1*variation),size*(.90+.2*variation))
++        for mesh,base,metal,rough in _object_geometry(spec,tint):
++            result.append((_transformed(mesh,pos,scale,angle),base,metal,rough))
++    silver=(.66,.74,.80)
++    for index in range(2):
++        ts=np.linspace(0,math.tau,128,endpoint=False); radius=49+index*7
++        mesh=tube([(radius*math.cos(t),radius*math.sin(t),0) for t in ts],.85,True,10)
++        result.append((mesh,silver,1.,.23))
++    return result
++
++
++def matrices(elapsed):
++    if type(elapsed) not in (int,float):raise ValueError('모션 시각은 유한한 숫자여야 합니다.')
++    try:valid=math.isfinite(elapsed)
++    except OverflowError:valid=False
++    if not valid:raise ValueError('모션 시각은 유한한 숫자여야 합니다.')
++    phase=math.tau*(elapsed%PERIOD)/PERIOD
++    center=np.eye(4); center[:3,:3]=rotation((0,1,0),.20*math.sin(phase))@rotation((1,0,0),.10*math.sin(phase+.5)); center[1,3]=1.4*math.sin(phase)
++    result=[center]
++    for index,axis in enumerate(((.6,1,.3),(-.9,.3,1))):
++        matrix=np.eye(4); matrix[:3,:3]=rotation(axis,(.40,-.44)[index]*math.sin(phase+index))@rotation((0,0,1),(.2,1.2)[index])@rotation((1,0,0),(.8,-.7)[index])
++        result.append(matrix)
++    return result
++
++
++class CalendarRenderer:
++    """컨텍스트를 만든 스레드에서만 사용하고 현재 날짜의 버퍼만 보유합니다."""
++    def __init__(self,size=384):
++        if type(size) is not int or not 32<=size<=768:raise ValueError('렌더 크기는32~768 정수여야 합니다.')
++        self.thread_id=threading.get_ident(); self.size=size; self.ctx=None; self.resources=[]; self.vaos=[]; self.buffers=[]; self.parts=[]; self.design=None
++        try:
++            self.ctx=moderngl.create_standalone_context(require=330)
++            self.program=self.ctx.program(vertex_shader=VERTEX,fragment_shader=FRAGMENT); self.resources.append(self.program)
++            self.color=self.ctx.renderbuffer((size,size),components=4,samples=4); self.resources.append(self.color)
++            self.depth=self.ctx.depth_renderbuffer((size,size),samples=4); self.resources.append(self.depth)
++            self.target=self.ctx.framebuffer([self.color],self.depth); self.resources.append(self.target)
++            self.resolved=self.ctx.simple_framebuffer((size,size),components=4,dtype='f1'); self.resources.append(self.resolved)
++            self.ctx.enable(moderngl.DEPTH_TEST)
++            near,far,camera,extent=1.,1200.,700.,69.
++            projection=np.array([[camera/extent,0,0,0],[0,camera/extent,0,0],[0,0,(far+near)/(near-far),2*far*near/(near-far)],[0,0,-1,0]],dtype='f4')
++            view=np.eye(4,dtype='f4'); view[2,3]=-camera
++            self.program['view_projection'].write((projection@view).T.astype('f4').tobytes()); self.program['camera'].value=(0.,0.,camera)
++        except Exception:
++            self.close(); raise
++
++    def _assert_thread(self):
++        if threading.get_ident()!=self.thread_id:raise RuntimeError('GPU 컨텍스트는 생성 스레드에서만 사용할 수 있습니다.')
++
++    def set_date(self,value):
++        self._assert_thread(); design=design_for_date(value)
++        if self.design==design:return
++        self._clear_meshes(); self.parts=build_geometry(design)
++        for (vertices,indices),_,_,_ in self.parts:
++            vertex=self.ctx.buffer(vertices.tobytes()); self.buffers.append(vertex)
++            index=self.ctx.buffer(indices.tobytes()); self.buffers.append(index)
++            self.vaos.append(self.ctx.vertex_array(self.program,[(vertex,'3f 3f','in_position','in_normal')],index))
++        self.design=design
++
++    def render(self,value,elapsed=0):
++        self._assert_thread(); transforms=matrices(elapsed); self.set_date(value)
++        self.target.use(); self.target.clear(0,0,0,0,depth=1)
++        for index,(_,color,metal,rough) in enumerate(self.parts):
++            transform=transforms[0] if index<len(self.parts)-2 else transforms[index-len(self.parts)+3]
++            self.program['model'].write(transform.T.astype('f4').tobytes())
++            self.program['metallic'].value=metal; self.program['base_color'].value=color; self.program['roughness'].value=rough
++            self.vaos[index].render(moderngl.TRIANGLES)
++        self.ctx.copy_framebuffer(self.resolved,self.target)
++        raw=self.resolved.read(components=4,alignment=1)
++        # MSAA 결과는 사전곱 알파입니다. 복사해 GPU 버퍼 수명에서 분리합니다.
++        image=QImage(raw,self.size,self.size,self.size*4,QImage.Format.Format_RGBA8888_Premultiplied).copy().mirrored(False,True)
++        return image
++
++    def _clear_meshes(self):
++        for value in reversed(self.vaos):value.release()
++        for value in reversed(self.buffers):value.release()
++        self.vaos.clear(); self.buffers.clear(); self.parts=[]; self.design=None
++
++    def close(self):
++        self._assert_thread(); self._clear_meshes()
++        for value in reversed(self.resources):value.release()
++        self.resources.clear()
++        if self.ctx is not None:self.ctx.release(); self.ctx=None
++
++
++def render_date(value,elapsed=0.0,size=384):
++    """미리보기와 직접 검증용 동기 렌더입니다. 앱은 공유 작업 스레드를 사용합니다."""
++    renderer=CalendarRenderer(size)
++    try:return renderer.render(value,elapsed)
++    finally:renderer.close()
+--- 이전/src/visuals.py
++++ 현재/src/visuals.py
+@@ -2,7 +2,7 @@
+ import math
+ 
+ from PySide6.QtCore import QPointF, QRectF, Qt
+-from PySide6.QtGui import QColor, QFont, QFontMetricsF, QImage, QPainter, QLinearGradient
++from PySide6.QtGui import QColor, QFont, QFontMetricsF, QImage, QPainter, QLinearGradient, QTextLayout, QTextOption
+ from atom_frames import get_atom_frames
+ from elements import daily_element
+ from typography import app_font
+@@ -170,3 +170,87 @@
+     label(QRectF(5,56,60,16),usage,10)
+     text.end()
+     painter.drawImage(QRectF(-74,-74,148,148),layer)
++
++
++def desktop_widget_layout(width, height, title, show_weather=False):
++    """이름을 화면 픽셀 크기로 줄 바꿈하고 조형·잔량 영역을 분리합니다."""
++    name_font = app_font(weight=QFont.Weight.DemiBold)
++    name_font.setPixelSize(16)
++    date_font = app_font(weight=QFont.Weight.DemiBold)
++    date_font.setPixelSize(14)
++    metrics = QFontMetricsF(name_font)
++    text_width = max(1, width - 32)
++    layout = QTextLayout(title, name_font)
++    option = QTextOption()
++    option.setWrapMode(QTextOption.WrapMode.WrapAnywhere)
++    layout.setTextOption(option)
++    layout.beginLayout()
++    lines = []
++    while True:
++        line = layout.createLine()
++        if not line.isValid():
++            break
++        line.setLineWidth(text_width)
++        lines.append(title[line.textStart():line.textStart()+line.textLength()])
++    layout.endLayout()
++    line_height = math.ceil(metrics.height())
++    dock_height = 24 + line_height * max(1, len(lines)) + 8
++    usage = QRectF(8, height - 34, width - 16, 26)
++    weather = QRectF(8, usage.top() - 32, width - 16, 26) if show_weather else QRectF()
++    dock_bottom = weather.top() - 6 if show_weather else usage.top() - 6
++    dock = QRectF(8, dock_bottom - dock_height, width - 16, dock_height)
++    art_bottom = max(0, dock.top() - 5)
++    side = max(0, min(width - 20, art_bottom - 6))
++    art = QRectF((width-side)/2, max(0, (art_bottom-side)/2), side, side)
++    return {'art': art, 'dock': dock, 'weather': weather, 'usage': usage, 'lines': lines, 'name_font': name_font,
++            'date_font': date_font, 'line_height': line_height}
++
++
++def draw_desktop_orbit(painter, width, height, source, design, fraction, state, clock_text=None, weather_text=None):
++    """위젯의 조형과 글자를 별개 영역에 그려 작은 글자 축소를 막습니다."""
++    layout = desktop_widget_layout(width, height, design.title, weather_text is not None)
++    painter.save()
++    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
++    painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
++    painter.drawImage(layout['art'], source)
++    def surface(rect, radius):
++        gradient = QLinearGradient(rect.topLeft(), rect.bottomLeft())
++        gradient.setColorAt(0, QColor('#34414f'))
++        gradient.setColorAt(.48, QColor('#202b37'))
++        gradient.setColorAt(1, QColor('#101923'))
++        painter.setPen(QColor('#778b9f'))
++        painter.setBrush(gradient)
++        painter.drawRoundedRect(rect, radius, radius)
++    dock, usage = layout['dock'], layout['usage']
++    surface(dock, 8)
++    painter.setFont(layout['date_font'])
++    painter.setPen(QColor(design.accent))
++    painter.drawText(QRectF(dock.left()+8, dock.top()+3, dock.width()-16, 20),
++                     Qt.AlignmentFlag.AlignCenter, f'{design.date.month}/{design.date.day}' + ('  ' + clock_text if clock_text else ''))
++    painter.setFont(layout['name_font'])
++    painter.setPen(gray(248))
++    for index, line in enumerate(layout['lines']):
++        painter.drawText(QRectF(dock.left()+8, dock.top()+24+index*layout['line_height'],
++                               dock.width()-16, layout['line_height']), Qt.AlignmentFlag.AlignCenter, line)
++    if weather_text is not None:
++        surface(layout['weather'], 6)
++        painter.setFont(layout['date_font'])
++        painter.setPen(gray(248))
++        painter.drawText(layout['weather'], Qt.AlignmentFlag.AlignCenter, weather_text)
++    surface(usage, 6)
++    fill, label = usage_bar('', fraction, state)
++    track = QRectF(usage.left()+8, usage.bottom()-7, max(0, usage.width()-16), 3)
++    painter.setPen(Qt.PenStyle.NoPen)
++    painter.setBrush(QColor('#445364'))
++    painter.drawRect(track)
++    painter.setBrush(QColor(design.accent))
++    fill_rect = QRectF(track.left(), track.top(), track.width()*fill.width()/USAGE_TRACK_RECT.width(), track.height())
++    painter.drawRect(fill_rect)
++    layout['track'], layout['fill'] = track, fill_rect
++    font = app_font(weight=QFont.Weight.DemiBold)
++    font.setPixelSize(14)
++    painter.setFont(font)
++    painter.setPen(gray(248))
++    painter.drawText(QRectF(usage.left()+5, usage.top()+1, usage.width()-10, 18), Qt.AlignmentFlag.AlignCenter, label)
++    painter.restore()
++    return layout
+--- 이전/src/weather.py
++++ 현재/src/weather.py
+@@ -0,0 +1,159 @@
++"""네트워크로 대략적인 지역과 현재 기온을 비동기 조회합니다."""
++import json
++import math
++import time
++from urllib.parse import urlencode
++
++from PySide6.QtCore import QObject, QTimer, QUrl, Signal
++from PySide6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
++
++
++class WeatherClient(QObject):
++    changed = Signal(dict)
++    LIMIT = 65536
++    TIMEOUT_MS = 8000
++    INTERVAL_MS = 300000
++
++    def __init__(self, parent=None):
++        super().__init__(parent)
++        self.manager = QNetworkAccessManager(self)
++        self.poll_timer = QTimer(self)
++        self.poll_timer.setInterval(self.INTERVAL_MS)
++        self.poll_timer.timeout.connect(self.refresh)
++        self.age_timer = QTimer(self)
++        self.age_timer.setInterval(10000)
++        self.age_timer.timeout.connect(self._check_age)
++        self.deadline = QTimer(self)
++        self.deadline.setSingleShot(True)
++        self.deadline.timeout.connect(self._timeout)
++        self.snapshot = {'temperature': None, 'region': '', 'checked_at': None,
++                         'status': '기온 조회 준비', 'stale': True, 'busy': False, 'observed_at': None}
++        self.reply = None
++        self.closed = False
++        self.last_success = None
++        self.source_age_at_success = None
++        self._region = ''
++
++    def _publish(self, **changes):
++        if self.closed:
++            return
++        self.snapshot = {**self.snapshot, **changes}
++        self.changed.emit(dict(self.snapshot))
++
++    def start(self):
++        if self.closed or self.poll_timer.isActive():
++            return
++        self.poll_timer.start()
++        self.age_timer.start()
++        self.refresh()
++
++    def refresh(self):
++        if self.closed or self.reply is not None:
++            return False
++        self._publish(busy=True, status='기온 조회 중')
++        self._get('https://ipwho.is/', self._location_done)
++        return True
++
++    def _get(self, url, callback):
++        request = QNetworkRequest(QUrl(url))
++        request.setAttribute(QNetworkRequest.Attribute.RedirectPolicyAttribute,
++                             QNetworkRequest.RedirectPolicy.ManualRedirectPolicy)
++        request.setRawHeader(b'Accept', b'application/json')
++        self.reply = self.manager.get(request)
++        reply = self.reply
++        reply.setReadBufferSize(self.LIMIT + 1)
++        reply.downloadProgress.connect(lambda received, total: self._check_size(reply, received, total))
++        reply.finished.connect(lambda: self._finish(reply, callback))
++        self.deadline.start(self.TIMEOUT_MS)
++
++    def _check_size(self, reply, received, total):
++        if reply is self.reply and (received > self.LIMIT or total > self.LIMIT):
++            self._fail('기온 조회 응답이 너무 큽니다')
++
++    def _finish(self, reply, callback):
++        if reply is not self.reply or self.closed:
++            reply.deleteLater()
++            return
++        self.deadline.stop()
++        self.reply = None
++        if reply.error() != QNetworkReply.NetworkError.NoError:
++            reply.deleteLater()
++            self._publish(busy=False, stale=True, status='위치 또는 기온 네트워크 조회 실패')
++            return
++        raw = bytes(reply.read(self.LIMIT + 1))
++        reply.deleteLater()
++        if len(raw) > self.LIMIT:
++            self._publish(busy=False, stale=True, status='기온 조회 응답이 너무 큽니다')
++            return
++        try:
++            data = json.loads(raw.decode('utf-8'))
++            if not isinstance(data, dict):
++                raise ValueError('응답 형식')
++            callback(data)
++        except (ValueError, TypeError, UnicodeError, KeyError, OverflowError):
++            self._publish(busy=False, stale=True, status='위치 또는 기온 응답을 확인할 수 없습니다')
++
++    @staticmethod
++    def _valid_number(value, low, high):
++        return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value) and low <= value <= high
++
++    def _location_done(self, data):
++        if data.get('success') is not True:
++            self._publish(busy=False, stale=True, status='네트워크 위치를 확인할 수 없습니다')
++            return
++        latitude, longitude = data.get('latitude'), data.get('longitude')
++        if not self._valid_number(latitude, -90, 90) or not self._valid_number(longitude, -180, 180):
++            raise ValueError('위치 범위')
++        city, region = data.get('city'), data.get('region')
++        self._region = ' · '.join(dict.fromkeys(v.strip()[:80] for v in (city, region) if isinstance(v, str) and v.strip()))
++        query = urlencode({'latitude': latitude, 'longitude': longitude, 'current': 'temperature_2m',
++                           'temperature_unit': 'celsius', 'timeformat': 'unixtime'})
++        self._get('https://api.open-meteo.com/v1/forecast?' + query, self._weather_done)
++
++    def _weather_done(self, data):
++        current = data.get('current')
++        temperature = current.get('temperature_2m') if isinstance(current, dict) else None
++        if not self._valid_number(temperature, -100, 70):
++            raise ValueError('기온 범위')
++        observed = current.get('time')
++        now = time.time()
++        if not self._valid_number(observed, 0, now + 300):
++            raise ValueError('기온 제공 시각')
++        stale = now - observed > 900
++        self.last_success = time.monotonic() if not stale else None
++        self.source_age_at_success = max(0, now - observed) if not stale else None
++        self._publish(temperature=float(temperature), region=self._region, checked_at=now, observed_at=observed,
++                      busy=False, stale=stale, status='기온 제공 자료 지연 · 이전 값' if stale else '기온 조회 완료')
++
++    def _check_age(self):
++        if self.last_success is None or self.snapshot['stale']:
++            return
++        elapsed = max(0, time.monotonic() - self.last_success)
++        source_age = self.source_age_at_success + elapsed
++        if source_age > 900:
++            self._publish(stale=True, status='기온 제공 자료 지연 · 이전 값')
++        elif elapsed > 600:
++            self._publish(stale=True, status='기온 조회 지연 · 이전 값')
++
++    def _fail(self, message):
++        self.deadline.stop()
++        reply, self.reply = self.reply, None
++        if reply is not None:
++            reply.abort()
++            reply.deleteLater()
++        self._publish(busy=False, stale=True, status=message)
++
++    def _timeout(self):
++        self._fail('위치 또는 기온 조회 시간 초과')
++
++    def close(self):
++        if self.closed:
++            return
++        self.closed = True
++        self.poll_timer.stop()
++        self.age_timer.stop()
++        self.deadline.stop()
++        reply, self.reply = self.reply, None
++        if reply is not None:
++            reply.abort()
++            reply.deleteLater()

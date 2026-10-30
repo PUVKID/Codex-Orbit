@@ -10,7 +10,7 @@ from PySide6.QtCore import QCoreApplication, QObject, QThread, Qt, QRectF, Signa
 from PySide6.QtGui import QColor, QImage, QPainter, QPainterPath, QPen
 from shiboken6 import isValid
 from calendar_art import current_date, design_for_date
-from frame_pacing import FrameWaiter
+from frame_pacing import FrameWaiter, MotionClock, validate_motion_speed
 
 FPS = 240
 SIZE = 384
@@ -19,12 +19,8 @@ _logger = logging.getLogger(__name__)
 
 
 def next_frame_deadline(previous, now):
-    """절대 시간 슬롯을 유지하며 놓친 슬롯은 한 번에 건너뜁니다."""
-    interval=1/FPS
-    following=previous+interval
-    if following<=now:
-        following+=(math.floor((now-following)/interval)+1)*interval
-    return following
+    """정상 슬롯을 유지하고 늦은 프레임은 추가 대기나 누적 추격 없이 이어갑니다."""
+    return max(previous+1/FPS,now)
 
 
 def fallback_image(value):
@@ -69,15 +65,17 @@ class _Worker(QThread):
         super().__init__(); self.condition=threading.Condition(); self.stopping=False; self.visible=False
         self.requested_date=None; self.requested_elapsed=0.; self.requested_at=time.perf_counter()
         self.started_at=time.perf_counter()
+        self.motion_clock=MotionClock(self.started_at)
         self.latest=None; self.latest_date=None; self.error=''; self.render_count=0; self.renderer_name=''
         self.output_size=SIZE; self.notification_pending=False; self.notification_count=0
         self.first_render_at=None; self.last_render_at=None; self.render_seconds=0.
         self.pacing_backend='준비 중'; self.pacing_warning=''
 
-    def configure(self,visible=None,value=None,elapsed=None,output_size=None):
+    def configure(self,visible=None,value=None,elapsed=None,output_size=None,motion_speed=None):
         with self.condition:
             if visible is not None:self.visible=visible
             if output_size is not None:self.output_size=output_size
+            if motion_speed is not None:self.motion_clock.set_speed(motion_speed,time.perf_counter())
             if elapsed is not None:
                 self.requested_date=value; self.requested_elapsed=elapsed; self.requested_at=time.perf_counter()
             self.condition.notify_all()
@@ -94,7 +92,7 @@ class _Worker(QThread):
             if waiter.warning:_logger.warning(waiter.warning)
             while True:
                 with self.condition:
-                    # 요청 수와 무관하게 절대240Hz 슬롯에 맞춰 유휴 대기합니다.
+                    # 요청 수·재생 배율과 무관하게 240Hz 목표의 다음 시각까지 유휴 대기합니다.
                     while not self.stopping and not self.visible:self.condition.wait()
                     if self.stopping:break
                     remaining=next_frame_at-time.perf_counter()
@@ -106,7 +104,7 @@ class _Worker(QThread):
                     if not self.visible:continue
                     value=self.requested_date or current_date()
                     # 각 호출자의 서로 다른 타이머 원점 대신 서비스의 한 시계를 공유합니다.
-                    elapsed=time.perf_counter()-self.started_at
+                    elapsed=self.motion_clock.sample(time.perf_counter())
                     output_size=self.output_size
                 start=time.perf_counter()
                 if renderer is None:
@@ -261,6 +259,12 @@ def set_calendar_motion_visible(owner,visible):
     _get_service().visible(owner,visible)
 
 
+def set_calendar_motion_speed(value: float):
+    """현재 위상을 유지하고 이후 모션의 배율만 바꿉니다. 실제 시계와 날짜는 바꾸지 않습니다."""
+    speed=validate_motion_speed(value)
+    _get_service().worker.configure(motion_speed=speed)
+
+
 def set_calendar_motion_size(owner,size):
     """현재 보이는 각 소유자의 실제 픽셀 요구 중 최대 크기만 전달합니다."""
     if type(size) is not int or not 32<=size<=2160:raise ValueError('전달 크기는32~2160 정수여야 합니다.')
@@ -286,11 +290,12 @@ def get_calendar_error():
 
 
 def calendar_motion_status():
-    if _service is None:return {'running':False,'owners':0,'images':0,'error':get_calendar_error()}
+    if _service is None:return {'running':False,'owners':0,'images':0,'motion_speed':1.0,'error':get_calendar_error()}
     with _service.worker.condition:
         return {'running':_service.worker.isRunning(),'owners':len(_service.owners),
                 'images':int(_service.worker.latest is not None)+int(_service.fallback is not None),
                 'render_count':_service.worker.render_count,'date':str(_service.worker.latest_date),
+                'motion_speed':_service.worker.motion_clock.speed,
                 'target_fps':FPS,'source_dimensions':list(RENDER_SIZE),
                 'delivery_dimensions':list(_service.worker.latest.size().toTuple()) if _service.worker.latest is not None else None,
                 'requested_delivery_size':_service.worker.output_size,

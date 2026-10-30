@@ -1,0 +1,579 @@
+--- 이전/src/app.py
++++ 현재/src/app.py
+@@ -7,6 +7,8 @@
+ from pathlib import Path
+ import sys
+ import time
++from datetime import datetime, timezone, timedelta
++import re
+ 
+ from PySide6.QtCore import QLockFile, QPoint, QPointF, QRectF, Qt, QThread, QTimer, Signal
+ from PySide6.QtGui import QColor, QFont, QFontDatabase, QIcon, QPainter, QPen
+@@ -16,7 +18,7 @@
+                              QPlainTextEdit, QPushButton, QSplitter, QTabWidget,
+                              QSizePolicy, QVBoxLayout, QWidget)
+ 
+-from core import InstructionStore, clamp_position, read_jsonl_tail, read_text_strict, session_titles
++from core import InstructionStore, clamp_position, read_jsonl_tail, read_text_strict, title_catalog, resolve_title
+ from notifier import Watcher, append_log, atomic_json, stamp
+ 
+ 
+@@ -29,6 +31,52 @@
+     if value is None:
+         return '미배정'
+     return f"{value.get('model', '확인 불가')} / {value.get('effort', '확인 불가')}"
++
++
++def model_card_label(value):
++    if value is None:
++        return '미배정'
++    return f"{value.get('model', '확인 불가')} · 추론 {value.get('effort', '확인 불가')}"
++
++
++ROLE_LABELS = {'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',
++               'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}
++
++
++def kst_label(value):
++    try:
++        parsed = datetime.fromisoformat(str(value).replace('Z', '+00:00'))
++        if parsed.tzinfo is None:
++            return str(value) + ' (시간대 미기록)'
++        return parsed.astimezone(timezone(timedelta(hours=9))).strftime('%Y.%m.%d %H:%M:%S KST')
++    except ValueError:
++        return str(value or '확인 불가')
++
++
++def short_reason(event, limit=180):
++    """명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다."""
++    text = str(event.get('short_reason') or event.get('reason') or '확인 불가').strip()
++    marked = re.search(r'(?:핵심 이유|선택 이유|이유)\s*[:：]\s*([^\n]+)', text)
++    if marked:
++        text = marked.group(1)
++    else:
++        sentences = [sentence for sentence in re.split(r'(?<=[.!?。])\s+|\n', text) if sentence.strip()]
++        purpose = None if event.get('short_reason') else next((sentence for sentence in sentences if re.search(
++            r'위한\s+(?:배정|선택|변경|교체)|(?:배정|선택|변경|교체)(?:의|한)?\s*(?:이유|목적)'
++            r'|(?:때문|확인돼|확인되어).*(?:배정|선택|변경|교체)', sentence)), None)
++        text = purpose or (sentences[0] if sentences else '확인 불가')
++        if not purpose and len(sentences) > 1 and len(text) < 70 and re.search(r'(?:맡기겠습니다|배정하겠습니다)[.!]?$', text):
++            text = sentences[1]
++    text = text.replace('**', '')
++    return text if len(text) <= limit else text[:limit - 1] + '…'
++
++
++def event_kind(event):
++    if event.get('assignment_type') == 'replacement':
++        return '새 작업자 배정 · 이전 작업자 교체'
++    if event.get('before') is None:
++        return '자식 작업자 첫 배정' if event.get('parent') else '첫 관측'
++    return '모델 · 추론 강도 변경'
+ 
+ 
+ def event_description(event):
+@@ -37,11 +85,15 @@
+         '채팅 ID: ' + str(event.get('target', '확인 불가')),
+         '구분: ' + ('자식 작업' if event.get('parent') else 'main 또는 부모 정보 미기록'),
+         '역할: ' + str(event.get('role', '확인 불가')),
++        '작업 이름: ' + str(event.get('task_name') or '기록 없음'),
+         '부모 ID: ' + str(event.get('parent') or '기록 없음'),
+         '작업 경로: ' + str(event.get('agent_path') or '기록 없음'),
++        '제목 출처: ' + str(event.get('title_source') or '확인 불가'),
++        '제목 확인 시각: ' + kst_label(event.get('title_checked_at')),
++        '이유 호출 ID: ' + str(event.get('reason_call_id') or '기록 없음'),
+         '변경 전: ' + model_label(event.get('before')),
+         '변경 후: ' + model_label(event.get('after')),
+-        '감지 시각: ' + str(event.get('time', '확인 불가')),
++        '감지 시각: ' + kst_label(event.get('time')),
+         '기록 종류: ' + str(event.get('kind', '확인 불가')),
+         '', '공개 이유', str(event.get('reason') or '확인 불가'),
+         '', '근거 수준', str(event.get('evidence') or '확인 불가'),
+@@ -56,7 +108,7 @@
+         self.directory.mkdir(parents=True, exist_ok=True)
+         self.path = self.directory / 'settings.json'
+         home = Path(os.environ.get('CODEX_HOME') or (Path.home() / '.codex'))
+-        self.values = {'sessions': str(home / 'sessions'), 'theme': '자동', 'popup': True}
++        self.values = {'sessions': str(home / 'sessions'), 'theme': '자동', 'popup': True, 'notice_timeout_ms': 30000}
+         if self.path.exists():
+             value = json.loads(read_text_strict(self.path))
+             if not isinstance(value, dict):
+@@ -70,17 +122,19 @@
+ class Monitor(QThread):
+     event = Signal(dict)
+     status = Signal(dict)
++    enriched = Signal(list)
+ 
+     def __init__(self, sessions, directory):
+         super().__init__()
+         self.sessions = Path(sessions)
+         key = hashlib.sha256(str(self.sessions.absolute()).encode('utf-8')).hexdigest()[:16]
+         self.work = Path(directory) / 'watches' / key
++        self.cache_path = Path(directory) / 'title-cache.json'
+         self.titles = {}
+ 
+     def send(self, event):
+-        value = {**event, 'chat_name': self.titles.get(event.get('target'), event.get('target')),
+-                 'delivery': '앱 표시 요청; 사용자 수신 미확인'}
++        value = resolve_title(event, self.titles)
++        value['delivery'] = '앱 표시 요청; 사용자 수신 미확인'
+         self.event.emit(value)
+         return value['delivery']
+ 
+@@ -91,8 +145,16 @@
+                 try:
+                     if not self.sessions.is_dir():
+                         raise FileNotFoundError('세션 폴더가 없거나 접근할 수 없습니다: ' + str(self.sessions))
+-                    self.titles = session_titles(self.sessions.parent / 'session_index.jsonl')
++                    self.titles = title_catalog(self.sessions.parent / 'session_index.jsonl', self.cache_path)
+                     watcher.poll()
++                    history, _ = read_jsonl_tail(self.work / 'history.jsonl')
++                    values = []
++                    for event in history:
++                        if event.get('reason') == '확인 불가':
++                            watcher.lookup_parent_reason(event)
++                        values.append(resolve_title(watcher.enrich_event(event), self.titles))
++                    self.enriched.emit(values)
++                    atomic_json(watcher.state_path, watcher.state)
+                     diagnostics, problems = read_jsonl_tail(self.work / 'diagnostics.jsonl', max_records=5)
+                     status = {'time': stamp(), 'state': '감시 중', 'sessions': str(self.sessions),
+                               'files': len(watcher.state['files']), 'pending': len(watcher.state['pending']),
+@@ -217,16 +279,25 @@
+         super().__init__(None, Qt.WindowType.Tool | Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
+         self.open_details = open_details
+         self.setObjectName('notice')
+-        self.setStyleSheet('#notice {background:#142137;border:1px solid #58DAD7;border-radius:14px;} QLabel {color:#F2F7FF;background:transparent;border:none;}')
+-        self.setFixedWidth(380)
++        self.setStyleSheet('#notice {background:#070D12;border:1px solid #3AD9D0;border-radius:12px;} QLabel {color:#E9F5F5;background:transparent;border:none;font-weight:700;}')
++        self.setFixedWidth(430)
+         layout = QVBoxLayout(self)
+         layout.setContentsMargins(18, 15, 18, 15)
+         self.title = QLabel('모델 · 추론 강도 변경')
+         self.text = QLabel()
+         self.title.setTextFormat(Qt.TextFormat.PlainText)
++        self.title.setWordWrap(True)
++        self.title.setStyleSheet('font-size:15px;color:#60E9DD;')
+         self.text.setTextFormat(Qt.TextFormat.PlainText)
+         self.text.setWordWrap(True)
+-        layout.addWidget(self.title)
++        heading = QHBoxLayout()
++        heading.addWidget(self.title, 1)
++        close = QPushButton('×')
++        close.setToolTip('알림 닫기 · 이력은 유지됩니다')
++        close.setFixedSize(28, 28)
++        close.clicked.connect(self.hide)
++        heading.addWidget(close, 0, Qt.AlignmentFlag.AlignTop)
++        layout.addLayout(heading)
+         layout.addWidget(self.text)
+         hint = QLabel('클릭하여 전체 이유와 근거 보기')
+         layout.addWidget(hint)
+@@ -234,22 +305,33 @@
+         self.timer.setSingleShot(True)
+         self.timer.timeout.connect(self.hide)
+ 
+-    def display(self, event, orbit):
++    def fit_content(self):
++        # 고정 폭에서 필요한 줄바꿈 높이를 먼저 확보해 마지막 줄 잘림을 막습니다.
++        self.layout().activate()
++        margins = self.layout().contentsMargins()
++        width = self.contentsRect().width() - margins.left() - margins.right()
++        self.text.setMinimumHeight(self.text.heightForWidth(width))
++        self.adjustSize()
++
++    def display(self, event, orbit, timeout_ms=30000, replay=False):
++        self.event_id = event.get('id')
+         name = str(event.get('chat_name') or event.get('target'))
+-        self.title.setText('모델 · 추론 강도 변경')
+-        self.text.setText(name[:70] + '\n' + model_label(event.get('before'))[:90] + '\n→ ' + model_label(event.get('after'))[:90])
+-        self.adjustSize()
++        self.title.setText(name)
++        self.text.setText(('기록 다시 보기 · ' if replay else '') + event_kind(event) + '\n' + model_label(event.get('before')) + '\n→ ' + model_label(event.get('after')) + '\n\n' + short_reason(event))
++        self.fit_content()
+         screen = QApplication.screenAt(orbit.pos()) or QApplication.primaryScreen()
+         rect = screen.availableGeometry()
+         self.move(max(rect.left(), min(orbit.x() - self.width(), rect.right() - self.width())),
+                   max(rect.top(), min(orbit.y(), rect.bottom() - self.height())))
+         self.show()
+-        self.timer.start(10000)
++        self.timer.stop()
++        if timeout_ms != 0:
++            self.timer.start(max(30000, min(300000, int(timeout_ms))))
+ 
+     def mouseReleaseEvent(self, event):
+         if event.button() == Qt.MouseButton.LeftButton:
+             self.hide()
+-            self.open_details()
++            self.open_details(self.event_id)
+ 
+ 
+ class Details(QDialog):
+@@ -275,7 +357,7 @@
+         help_text.setReadOnly(True)
+         help_text.setPlainText(read_text_strict(asset('사용법.md')))
+         self.tabs.addTab(help_text, '사용 설명')
+-        self.setStyleSheet('QDialog,QWidget {background:#101A2B;color:#EDF3FF;} QLineEdit,QPlainTextEdit,QListWidget,QComboBox {background:#18263C;border:1px solid #354762;border-radius:5px;padding:7px;} QPushButton {background:#253B56;border:1px solid #3D617D;border-radius:5px;padding:8px 12px;} QPushButton:hover {background:#345978;} QPushButton:disabled {color:#718198;} QTabBar::tab {padding:10px;background:#19283C;} QTabBar::tab:selected {background:#2C4560;} QSplitter::handle {background:#354762;}')
++        self.setStyleSheet('QDialog,QWidget {background:#070B10;color:#E5F1F4;font-weight:700;} QLabel {background:transparent;} QFrame#eventCard {background:#0D151D;border:1px solid #24454E;border-radius:10px;} QLineEdit,QPlainTextEdit,QListWidget,QComboBox {background:#0C131B;border:1px solid #25434B;border-radius:6px;padding:8px;} QListWidget::item {padding:12px 6px;border-bottom:1px solid #1D3038;} QListWidget::item:selected {background:#12343C;color:#8CFFF1;} QPushButton {background:#12252E;border:1px solid #2D6570;border-radius:5px;padding:8px 12px;} QPushButton:hover {background:#1C3B45;border-color:#61DCD4;} QPushButton:disabled {color:#718198;} QTabBar::tab {padding:10px;background:#0E1922;} QTabBar::tab:selected {color:#75F1E1;border-bottom:2px solid #55DDD1;} QSplitter::handle {background:#1E424A;}')
+ 
+     def build_history(self):
+         page = QWidget()
+@@ -288,20 +370,82 @@
+         split = QSplitter()
+         self.history = QListWidget()
+         self.history.currentItemChanged.connect(self.select_event)
++        panel = QWidget()
++        cards = QVBoxLayout(panel)
++        cards.setContentsMargins(12, 0, 0, 0)
++        self.card = QFrame()
++        self.card.setObjectName('eventCard')
++        card_layout = QVBoxLayout(self.card)
++        card_layout.setContentsMargins(20, 18, 20, 18)
++        self.event_badge = QLabel('● 변경 기록')
++        self.event_badge.setStyleSheet('color:#65E5D3;font-size:11px;')
++        self.chat_title = QLabel('변경을 기다리고 있습니다')
++        self.chat_title.setStyleSheet('font-size:21px;color:#F0FAFF;')
++        self.task_title = QLabel('채팅 제목과 작업 이름이 여기에 표시됩니다.')
++        self.task_title.setStyleSheet('color:#93ACBA;font-size:12px;')
++        self.before_value = QLabel('변경 전  ·  —')
++        self.after_value = QLabel('변경 후  ·  —')
++        self.after_value.setStyleSheet('font-size:17px;color:#6DE9DB;padding:8px 0;')
++        self.reason_title = QLabel('공개 이유')
++        self.reason_title.setStyleSheet('color:#8BABB6;font-size:11px;padding-top:10px;')
++        self.reason_value = QLabel('첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.')
++        self.reason_value.setStyleSheet('font-size:14px;line-height:1.5;')
++        self.event_time = QLabel('')
++        self.event_time.setStyleSheet('color:#829AA7;font-size:11px;padding-top:12px;')
++        for label in (self.event_badge, self.chat_title, self.task_title, self.before_value, self.after_value,
++                      self.reason_title, self.reason_value, self.event_time):
++            label.setTextFormat(Qt.TextFormat.PlainText)
++            label.setWordWrap(True)
++            label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
++            card_layout.addWidget(label)
++        cards.addWidget(self.card)
++        self.evidence_toggle = QPushButton('▸ 원문 · ID · 근거 펼치기')
++        self.evidence_toggle.setCheckable(True)
++        cards.addWidget(self.evidence_toggle)
+         self.detail = QPlainTextEdit()
+         self.detail.setReadOnly(True)
+         self.detail.setPlainText('변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.')
++        self.detail.hide()
++        self.evidence_toggle.toggled.connect(self.toggle_evidence)
++        cards.addWidget(self.detail, 1)
++        cards.addStretch()
+         split.addWidget(self.history)
+-        split.addWidget(self.detail)
++        split.addWidget(panel)
+         split.setSizes([280, 600])
+         layout.addWidget(split, 1)
+         self.tabs.addTab(page, '변경 이력')
+ 
+     def select_event(self, current, _previous):
+         if current:
+-            self.detail.setPlainText(event_description(current.data(Qt.ItemDataRole.UserRole)))
++            value = current.data(Qt.ItemDataRole.UserRole)
++            self.detail.setPlainText(event_description(value))
++            self.event_badge.setText('● ' + event_kind(value))
++            self.chat_title.setText(str(value.get('chat_name') or '채팅 제목 확인 불가'))
++            self.task_title.setText(ROLE_LABELS.get(value.get('role'), '역할 확인 불가') + ('  ·  자식 작업' if value.get('parent') else '  ·  현재 채팅'))
++            self.before_value.setText('이전  ' + model_card_label(value.get('before')))
++            self.after_value.setText('→  ' + model_card_label(value.get('after')))
++            self.reason_value.setText(short_reason(value, 260))
++            self.event_time.setText(kst_label(value.get('time')))
++
++    def toggle_evidence(self, checked):
++        self.detail.setVisible(checked)
++        self.evidence_toggle.setText('▾ 원문 · ID · 근거 접기' if checked else '▸ 원문 · ID · 근거 펼치기')
++
++    def update_event(self, event):
++        for index in range(self.history.count()):
++            item = self.history.item(index)
++            old = item.data(Qt.ItemDataRole.UserRole)
++            if event.get('id') and old.get('id') == event['id']:
++                item.setData(Qt.ItemDataRole.UserRole, event)
++                item.setText(str(event.get('chat_name') or '채팅 제목 확인 불가') + '\n' + model_label(event.get('after')))
++                if item == self.history.currentItem():
++                    self.select_event(item, None)
++                return True
++        return False
+ 
+     def add_event(self, event):
++        if self.update_event(event):
++            return
+         item = QListWidgetItem(str(event.get('chat_name') or event.get('target'))[:100] + '\n' + model_label(event.get('after'))[:100])
+         item.setData(Qt.ItemDataRole.UserRole, event)
+         self.history.insertItem(0, item)
+@@ -327,6 +471,9 @@
+         self.popup = QCheckBox('변경 시 클릭 가능한 말풍선 표시')
+         self.popup.setChecked(self.controller.settings.values.get('popup', True))
+         form.addRow('', self.popup)
++        self.hold_notice = QCheckBox('알림을 직접 닫을 때까지 유지')
++        self.hold_notice.setChecked(self.controller.settings.values.get('notice_timeout_ms') == 0)
++        form.addRow('', self.hold_notice)
+         layout.addLayout(form)
+         save = QPushButton('설정 저장 · 감시 다시 시작')
+         save.clicked.connect(self.save_settings)
+@@ -348,7 +495,8 @@
+             if not path.is_dir():
+                 raise ValueError('존재하는 sessions 폴더를 선택하세요.')
+             values = self.controller.settings.values
+-            values.update(sessions=str(path), theme=self.theme.currentText(), popup=self.popup.isChecked())
++            values.update(sessions=str(path), theme=self.theme.currentText(), popup=self.popup.isChecked(),
++                          notice_timeout_ms=0 if self.hold_notice.isChecked() else 30000)
+             self.controller.settings.save()
+             self.controller.start_monitor()
+             QMessageBox.information(self, '설정 저장', '앱 설정을 저장하고 감시를 시작했습니다.')
+@@ -507,12 +655,12 @@
+         self.monitor = Monitor(self.settings.values['sessions'], self.settings.directory)
+         self.monitor.event.connect(self.receive)
+         self.monitor.status.connect(self.status)
++        self.monitor.enriched.connect(self.refresh_history)
+         history, problems = read_jsonl_tail(self.monitor.work / 'history.jsonl')
+         self.window.history.clear()
+-        titles = session_titles(Path(self.settings.values['sessions']).parent / 'session_index.jsonl')
++        titles = title_catalog(Path(self.settings.values['sessions']).parent / 'session_index.jsonl', self.settings.directory / 'title-cache.json')
+         for event in history:
+-            event['chat_name'] = titles.get(event.get('target'), event.get('target'))
+-            self.window.add_event(event)
++            self.window.add_event(resolve_title(event, titles))
+         if problems:
+             self.window.diagnostics.setPlainText('\n'.join(problems))
+         self.monitor.start()
+@@ -521,14 +669,38 @@
+         self.window.add_event(event)
+         self.orbit.unread = True
+         if self.settings.values.get('popup', True):
+-            self.notice.display(event, self.orbit)
++            self.notice.display(event, self.orbit, self.settings.values.get('notice_timeout_ms', 30000))
++
++    def replay_event(self, event_id):
++        for index in range(self.window.history.count()):
++            item = self.window.history.item(index)
++            event = item.data(Qt.ItemDataRole.UserRole)
++            if event_id in (event.get('id'), event.get('target')):
++                self.window.history.setCurrentItem(item)
++                self.notice.display(event, self.orbit, self.settings.values.get('notice_timeout_ms', 30000), replay=True)
++                return True
++        return False
++
++    def refresh_history(self, events):
++        for event in events:
++            self.window.update_event(event)
++            if self.notice.isVisible() and getattr(self.notice, 'event_id', None) == event.get('id'):
++                self.notice.title.setText(str(event.get('chat_name') or '채팅 제목 확인 불가'))
++                self.notice.text.setText(event_kind(event) + '\n' + model_label(event.get('before')) + '\n→ ' + model_label(event.get('after')) + '\n\n' + short_reason(event))
++                self.notice.fit_content()
+ 
+     def status(self, value):
+         self.orbit.healthy = value.get('state') == '감시 중'
+-        self.window.summary.setText(value.get('state', '') + ' · ' + value.get('time', '') + '\n' + value.get('sessions', ''))
++        self.window.summary.setText('● ' + value.get('state', '') + '  ·  ' + kst_label(value.get('time')))
+         self.window.diagnostics.setPlainText(json.dumps(value, ensure_ascii=False, indent=2))
+ 
+-    def show(self):
++    def show(self, event_id=None):
++        if event_id:
++            for index in range(self.window.history.count()):
++                item = self.window.history.item(index)
++                if item.data(Qt.ItemDataRole.UserRole).get('id') == event_id:
++                    self.window.history.setCurrentItem(item)
++                    break
+         self.window.tabs.setCurrentIndex(0)
+         self.window.show()
+         self.window.raise_()
+@@ -553,6 +725,7 @@
+     parser.add_argument('--smoke-test', action='store_true')
+     parser.add_argument('--smoke-report', type=Path)
+     parser.add_argument('--show-details', action='store_true')
++    parser.add_argument('--show-event', help='기존 이력의 이벤트 ID 또는 대상 ID를 다시 표시')
+     args = parser.parse_args()
+     app = QApplication(sys.argv[:1])
+     app.setApplicationName('Codex Orbit')
+@@ -579,6 +752,8 @@
+     app.aboutToQuit.connect(controller.close)
+     if args.show_details:
+         controller.show()
++    if args.show_event and not controller.replay_event(args.show_event):
++        controller.window.summary.setText('지정한 이력을 찾지 못했습니다. 감시가 기록을 읽은 뒤 이력에서 확인하세요.')
+     if args.smoke_test:
+         first = controller.orbit.grab().toImage()
+         if args.smoke_report:
+--- 이전/src/core.py
++++ 현재/src/core.py
+@@ -52,6 +52,38 @@
+             and r['thread_name'].strip()}
+ 
+ 
++def title_catalog(index_path, cache_path):
++    """공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다."""
++    rows, _ = read_jsonl_tail(index_path, max_records=10000)
++    result = {r['id']: {'title': r['thread_name'], 'source': '로컬 session_index.jsonl',
++                       'checked_at': r.get('updated_at', '확인 시각 미기록')}
++              for r in rows if isinstance(r.get('id'), str) and isinstance(r.get('thread_name'), str)
++              and r['thread_name'].strip() and len(r['thread_name']) <= 2000}
++    if Path(cache_path).exists():
++        cache = json.loads(read_text_strict(cache_path))
++        if not isinstance(cache, dict) or not isinstance(cache.get('titles'), dict):
++            raise ValueError('제목 캐시 구조가 올바르지 않습니다.')
++        for sid, title in cache['titles'].items():
++            if isinstance(sid, str) and isinstance(title, str) and title.strip() and len(title) <= 2000:
++                result[sid] = {'title': title, 'source': str(cache.get('source', '출처 미기록')) + ' 확인 캐시',
++                               'checked_at': cache.get('checked_at') or cache.get('observed_at') or '확인 시각 미기록'}
++    return result
++
++
++def resolve_title(event, catalog):
++    """자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다."""
++    value = dict(event)
++    sid = event.get('parent') or event.get('target')
++    entry = catalog.get(sid)
++    if entry:
++        value.update(chat_name=entry['title'], title_target=sid,
++                     title_source=entry['source'], title_checked_at=entry['checked_at'])
++    elif not value.get('chat_name') or value.get('chat_name') == value.get('target'):
++        value.update(chat_name='채팅 제목 확인 불가', title_target=sid, title_source='확인 불가')
++    value['task_name'] = event.get('task_name') or str(event.get('agent_path') or '').rsplit('/', 1)[-1] or '현재 채팅'
++    return value
++
++
+ def clamp_position(position, screens, size=140):
+     for x, y, width, height in screens:
+         if x <= position[0] and y <= position[1] and position[0] + size <= x + width and position[1] + size <= y + height:
+--- 이전/src/notifier.py
++++ 현재/src/notifier.py
+@@ -12,6 +12,7 @@
+ import uuid
+ from datetime import datetime, timezone
+ from pathlib import Path
++from core import read_jsonl_tail
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+ APP_ID = 'Yunseok.Codex.ModelChangeNotifier'
+@@ -62,6 +63,8 @@
+         self.state.setdefault('reasons', {})
+         self.state.setdefault('seen', [])
+         self.seen = set(self.state['seen'])
++        self.reason_reads = {}
++        self.reason_budget = POLL_READ_BYTES
+ 
+     def diagnostic(self, error, **details):
+         append_log(self.work / 'diagnostics.jsonl', {'time': stamp(), 'error': str(error)[:2000], **details})
+@@ -190,7 +193,9 @@
+             if not call_id or not isinstance(arguments.get('task_name'), str):
+                 return
+             calls = info.setdefault('spawn_calls', {})
+-            calls[call_id] = {'commentary': commentary, 'requested_task': arguments['task_name']}
++            calls[call_id] = {'commentary': commentary, 'requested_task': arguments['task_name'],
++                              'model': arguments.get('model'), 'effort': arguments.get('reasoning_effort'),
++                              'role': arguments.get('agent_type')}
+             while len(calls) > 16:
+                 del calls[next(iter(calls))]
+         elif kind == 'function_call_output':
+@@ -205,9 +210,75 @@
+             if not isinstance(task, str) or not task.startswith('/') or task.rsplit('/', 1)[-1] != call['requested_task']:
+                 return
+             key = info['sid'] + '|' + task
+-            self.state['reasons'][key] = {'text': call['commentary'], 'call_id': payload.get('call_id')}
++            self.state['reasons'][key] = {'text': call['commentary'], 'call_id': payload.get('call_id'),
++                                        'model': call.get('model'), 'effort': call.get('effort'),
++                                        'role': call.get('role')}
+             while len(self.state['reasons']) > 128:
+                 del self.state['reasons'][next(iter(self.state['reasons']))]
++
++    def lookup_parent_reason(self, event):
++        """큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다."""
++        try:
++            self._lookup_parent_reason(event)
++        except (OSError, ValueError, TypeError) as error:
++            self.diagnostic(error, parent=event.get('parent'), context='부모 이유 조회 실패; 관측 알림은 유지')
++
++    def _lookup_parent_reason(self, event):
++        parent = event.get('parent')
++        if not parent or not event.get('agent_path') or event.get('before') is not None:
++            return
++        for filename, known in self.state['files'].items():
++            if known.get('sid') != parent and known.get('expected_sid') != parent:
++                continue
++            path = Path(filename)
++            stat = path.stat()
++            signature = (stat.st_mtime_ns, stat.st_size)
++            if self.reason_reads.get(filename) == signature or self.reason_budget <= 0:
++                continue
++            limit = min(4 * 1024 * 1024, self.reason_budget)
++            self.reason_budget -= limit
++            # 파일 이름만 믿지 않고 첫 메타의 실제 소유자를 대조합니다.
++            with path.open('rb') as handle:
++                first = handle.readline(MAX_RECORD + 1)
++            if len(first) > MAX_RECORD:
++                continue
++            meta = json.loads(first.decode('utf-8'))
++            if meta.get('type') != 'session_meta' or meta.get('payload', {}).get('id') != parent:
++                continue
++            rows, problems = read_jsonl_tail(path, max_bytes=limit, max_records=10000)
++            info = {'sid': parent, 'owner_active': True}
++            for row in rows:
++                payload = row.get('payload', {})
++                if not isinstance(payload, dict):
++                    continue
++                if row.get('type') == 'session_meta':
++                    info['owner_active'] = payload.get('id') == parent
++                elif row.get('type') == 'event_msg' and payload.get('type') == 'thread_settings_applied':
++                    info['owner_active'] = payload.get('thread_id') == parent
++                elif row.get('type') == 'response_item' and info['owner_active']:
++                    self.public_reason(payload, info)
++            self.reason_reads[filename] = signature
++            # 잘린 앞부분은 정상적인 제한 조회이며 잘못된 중간 레코드는 진단에 남깁니다.
++            for problem in problems:
++                if not problem.startswith('앞부분 생략:'):
++                    self.diagnostic(problem, path=filename, context='부모 공개 이유 제한 조회')
++
++    def enrich_event(self, event):
++        """이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다."""
++        value = dict(event)
++        if value.get('before') is not None or value.get('reason') != '확인 불가':
++            return value
++        reason = self.state['reasons'].get(str(value.get('parent')) + '|' + str(value.get('agent_path')))
++        if not reason:
++            return value
++        after = value.get('after') or {}
++        if any(reason.get(key) and reason[key] != after.get(key) for key in ('model', 'effort')):
++            return value
++        if reason.get('role') and value.get('role') not in (None, 'main', '확인 불가', reason['role']):
++            return value
++        value.update(reason=reason['text'], reason_call_id=reason['call_id'],
++                     evidence='배정 전 공개 설명: 부모 call_id/호출 결과/자식 경로 정확 연결; 서버 변경 원인 미확인')
++        return value
+ 
+     def read_file(self, path, info):
+         stat = path.stat()
+@@ -250,6 +321,7 @@
+         return total
+ 
+     def poll(self):
++        self.reason_budget = POLL_READ_BYTES
+         paths = []
+         if not self.sessions.is_dir():
+             self.diagnostic('세션 폴더에 접근할 수 없습니다.', path=str(self.sessions))
+@@ -306,7 +378,9 @@
+                     if path.stat().st_size > 20000:
+                         raise ValueError('명시 알림 파일 상한 초과')
+                     item = json.loads(path.read_text(encoding='utf-8'))
+-                    self.event(item['target'], item['after'], item['reason'], '사용자/부모의 명시적 배정 기록', declared_before=item['before'])
++                    details = {key: item[key] for key in ('parent', 'agent_path', 'role', 'task_name', 'short_reason',
++                               'reason_call_id', 'assignment_type', 'replaces_target') if key in item}
++                    self.event(item['target'], item['after'], item['reason'], '사용자/부모의 명시적 배정 기록', declared_before=item['before'], **details)
+                     atomic_json(self.state_path, self.state)
+                     path.unlink()
+                 except (OSError, ValueError, KeyError) as error:
+@@ -316,12 +390,8 @@
+         # 영속 pending 후 API를 호출합니다. API 성공과 상태 저장 사이 강제 종료는 재알림 가능성이 있습니다.
+         for event in list(self.state['pending'])[:16]:
+             try:
+-                # 첫 배정만 정확한 부모 호출 결과와 연결합니다. 이후 변경에 옛 이유를 재사용하지 않습니다.
+-                reason = self.state['reasons'].get(str(event.get('parent')) + '|' + str(event.get('agent_path')))
+-                if event['before'] is None and event['reason'] == '확인 불가' and reason:
+-                    event['reason'] = reason['text']
+-                    event['evidence'] = '배정 전 공개 설명: 부모 call_id/호출 결과/자식 경로 정확 연결; 서버 변경 원인 미확인'
+-                    event['reason_call_id'] = reason['call_id']
++                self.lookup_parent_reason(event)
++                event.update(self.enrich_event(event))
+                 result = self.sender(event)
+                 append_log(self.work / 'history.jsonl', {**event, 'delivery': result or '전송 함수 반환 성공; 화면 수신 미확인'})
+                 self.state['pending'].remove(event)

@@ -1,0 +1,519 @@
+--- 이전/src/app.py
++++ 현재/src/app.py
+@@ -1,6 +1,7 @@
+ """Codex Orbit: 독립 회전 위젯과 로컬 변경 기록·사용 한도."""
+ import argparse
+ import hashlib
++import math
+ import json
+ import os
+ from pathlib import Path
+@@ -19,7 +20,7 @@
+                              QFrame, QGridLayout, QHBoxLayout, QLabel, QComboBox,
+                              QListWidget, QListWidgetItem, QMenu, QMessageBox,
+                              QPlainTextEdit, QPushButton, QSplitter, QTabWidget,
+-                             QProgressBar, QScrollArea, QSizePolicy, QLayout, QVBoxLayout, QWidget)
++                             QProgressBar, QScrollArea, QSizePolicy, QSlider, QLayout, QVBoxLayout, QWidget)
+ 
+ from core import clamp_position, read_jsonl_tail, read_text_strict, title_catalog, resolve_title
+ from notifier import Watcher, append_log, atomic_json, stamp, POLL_INTERVAL_SECONDS, MAX_PENDING
+@@ -36,6 +37,13 @@
+ 
+ 
+ EMPTY_HISTORY_GUIDANCE = '변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'
++
++
++def validated_motion_speed(value):
++    """설정과 UI의 속도는 유한한 실제 숫자 범위로 제한합니다."""
++    if type(value) not in (int, float) or not .25 <= value <= 3.0 or not math.isfinite(value):
++        raise ValueError(t('회전 속도는 0.25~3배의 유한한 숫자여야 합니다.'))
++    return float(value)
+ 
+ 
+ def _application_gui_root():
+@@ -281,7 +289,7 @@
+         self.directory.mkdir(parents=True, exist_ok=True)
+         self.path = self.directory / 'settings.json'
+         home = Path(os.environ.get('CODEX_HOME') or (Path.home() / '.codex'))
+-        self.values = {'sessions': str(home / 'sessions'), 'theme': '자동', 'popup': True, 'notice_timeout_ms': 30000, 'language': 'ko'}
++        self.values = {'sessions': str(home / 'sessions'), 'theme': '자동', 'popup': True, 'notice_timeout_ms': 30000, 'language': 'ko', 'motion_speed': 1.0}
+         if self.path.exists():
+             value = json.loads(read_text_strict(self.path))
+             if not isinstance(value, dict):
+@@ -289,6 +297,10 @@
+             self.values.update(value)
+         if self.values.get('language') not in ('ko', 'en'):
+             self.values['language'] = 'ko'
++        try:
++            self.values['motion_speed'] = validated_motion_speed(self.values['motion_speed'])
++        except ValueError:
++            self.values['motion_speed'] = 1.0
+ 
+     def save(self):
+         atomic_json(self.path, self.values)
+@@ -460,6 +472,7 @@
+         self.setMinimumSize(180, 250)
+         self.settings, self.details = settings, details
+         self.language_changed = lambda language: None
++        self.motion_speed_changed = lambda value: None
+         size = settings.values.get('size', [220, 332])
+         if not isinstance(size, (list, tuple)) or len(size) != 2 or any(type(v) is not int for v in size):
+             size = [220, 332]
+@@ -544,8 +557,12 @@
+         from calendar_motion import get_calendar_frame,record_calendar_presentation
+         design = design_for_date(current_date())
+         source=get_calendar_frame(elapsed)
++        from visuals import DesktopOverlayCache
++        if not hasattr(self, '_desktop_overlay_cache'):
++            self._desktop_overlay_cache = DesktopOverlayCache()
+         draw_desktop_orbit(painter, self.width(), self.height(), source, design,
+-                           self.usage_fraction, self.usage_state, self.clock_text(), self.weather_text, self.location_text)
++                           self.usage_fraction, self.usage_state, self.clock_text(), self.weather_text, self.location_text,
++                           cache=self._desktop_overlay_cache)
+         record_calendar_presentation(self,source)
+         painter.setPen(QColor('#B5C8D4'))
+         painter.drawLine(self.width()-4, self.height()//2-12, self.width()-4, self.height()//2+12)
+@@ -622,6 +639,14 @@
+             action.setCheckable(True)
+             action.setChecked(get_language() == language)
+             action.triggered.connect(lambda checked=False, value=language: self.language_changed(value))
++        speeds = menu.addMenu(t('회전 속도'))
++        speeds.setObjectName('motionSpeedMenu')
++        for value in (.25, .5, 1.0, 1.5, 2.0, 3.0):
++            action = speeds.addAction(t('{speed:g}배', speed=value))
++            action.setData(value)
++            action.setCheckable(True)
++            action.setChecked(self.settings.values['motion_speed'] == value)
++            action.triggered.connect(lambda checked=False, speed=value: self.motion_speed_changed(speed))
+         menu.addSeparator()
+         menu.addAction(t('종료'), self.quit_app)
+         return menu
+@@ -945,6 +970,35 @@
+         self.usage_compact.setStyleSheet('font-size:12px;color:#b0b0b0;')
+         header.addWidget(with_symbol(self.usage_compact, 'quota'))
+         layout.addLayout(header)
++        motion_controls = QHBoxLayout()
++        self.motion_speed_label = QLabel(t('회전 속도'))
++        motion_controls.addWidget(self.motion_speed_label)
++        self.motion_speed_slider = QSlider(Qt.Orientation.Horizontal)
++        self.motion_speed_slider.setRange(25, 300)
++        self.motion_speed_slider.setSingleStep(5)
++        self.motion_speed_slider.setPageStep(25)
++        self.motion_speed_slider.setEnabled(controller is not None)
++        self.motion_speed_slider.setAccessibleName(t('회전 속도'))
++        self.motion_speed_slider.setToolTip(t('회전 속도만 변경합니다. 날짜와 시각은 그대로입니다.'))
++        motion_controls.addWidget(self.motion_speed_slider, 1)
++        self.motion_speed_value = QLabel()
++        self.motion_speed_value.setMinimumWidth(58)
++        motion_controls.addWidget(self.motion_speed_value)
++        self.motion_speed_reset = QPushButton(t('기본 1배 복원'))
++        self.motion_speed_reset.setEnabled(controller is not None)
++        self.motion_speed_reset.clicked.connect(lambda: self.controller.change_motion_speed(1.0))
++        motion_controls.addWidget(self.motion_speed_reset)
++        self.update_motion_speed()
++        self.motion_speed_slider.valueChanged.connect(lambda value: self.controller.change_motion_speed(value / 100))
++        layout.addLayout(motion_controls)
++        self.motion_speed_error_text = ''
++        self.motion_speed_error = QLabel()
++        self.motion_speed_error.setTextFormat(Qt.TextFormat.PlainText)
++        self.motion_speed_error.setWordWrap(True)
++        self.motion_speed_error.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
++        self.motion_speed_error.setStyleSheet('color:#efb0aa;font-size:12px;')
++        self.motion_speed_error.hide()
++        layout.addWidget(self.motion_speed_error)
+         self.tabs = QTabWidget()
+         self.tabs.setIconSize(QSize(20, 20))
+         layout.addWidget(self.tabs, 1)
+@@ -958,8 +1012,24 @@
+         self.setStyleSheet(STYLE)
+         remember_translations(self)
+ 
++    def update_motion_speed(self):
++        value = self.controller.settings.values['motion_speed'] if self.controller is not None else 1.0
++        self.motion_speed_slider.blockSignals(True)
++        self.motion_speed_slider.setValue(round(value * 100))
++        self.motion_speed_slider.blockSignals(False)
++        self.motion_speed_value.setText(t('{speed:g}배', speed=value))
++
++    def show_motion_speed_error(self, message):
++        self.motion_speed_error_text = message
++        # 오류 원문은 일반 텍스트로 보여 주고 긴 진단은 표시 길이를 제한합니다.
++        detail = message[:500] + ('…' if len(message) > 500 else '')
++        self.motion_speed_error.setText(t('회전 속도 변경 실패: {error}', error=detail) if message else '')
++        self.motion_speed_error.setVisible(bool(message))
++
+     def retranslate(self):
+         retranslate_widgets(self)
++        self.update_motion_speed()
++        self.show_motion_speed_error(self.motion_speed_error_text)
+         self.language_combo.blockSignals(True)
+         self.language_combo.setCurrentIndex(0 if get_language() == 'ko' else 1)
+         self.language_combo.blockSignals(False)
+@@ -1346,6 +1416,8 @@
+         super().__init__(_application_gui_root())
+         self.settings = settings
+         set_language(settings.values.get('language', 'ko'))
++        from calendar_motion import set_calendar_motion_speed
++        set_calendar_motion_speed(settings.values['motion_speed'])
+         self.last_monitor_status = None
+         self.monitor = None
+         self.closing = False
+@@ -1380,6 +1452,7 @@
+         self.window = Details(self)
+         self.orbit = OrbitWidget(settings, self.show, self.request_quit, self.gui_owner)
+         self.orbit.language_changed = self.set_language
++        self.orbit.motion_speed_changed = self.change_motion_speed
+         self.notice = None
+         self.screen_connections = []
+         for screen in QApplication.screens():
+@@ -1406,6 +1479,43 @@
+             self.usage.start()
+         if start_weather:
+             self.weather.start()
++
++    @Slot(float)
++    def change_motion_speed(self, value):
++        """사용자 조작의 실패는 실제 속도를 복원한 뒤 상세창에서 안내합니다."""
++        try:
++            self.set_motion_speed(value)
++        except Exception as error:
++            self.window.update_motion_speed()
++            self.window.show_motion_speed_error(str(error) or type(error).__name__)
++            self.window.show()
++            self.window.raise_()
++            self.window.activateWindow()
++
++    @Slot(float)
++    def set_motion_speed(self, value):
++        application = QApplication.instance()
++        if QThread.currentThread() != application.thread():
++            raise RuntimeError(t('회전 속도는 GUI 메인 스레드에서만 변경할 수 있습니다.'))
++        value = validated_motion_speed(value)
++        previous = self.settings.values['motion_speed']
++        from calendar_motion import set_calendar_motion_speed
++        try:
++            set_calendar_motion_speed(value)
++        except Exception:
++            self.window.update_motion_speed()
++            raise
++        self.settings.values['motion_speed'] = value
++        try:
++            self.settings.save()
++        except Exception:
++            self.settings.values['motion_speed'] = previous
++            # 저장 실패를 숨기지 않고 표시와 실제 모션을 이전 배율로 되돌립니다.
++            set_calendar_motion_speed(previous)
++            self.window.update_motion_speed()
++            raise
++        self.window.update_motion_speed()
++        self.window.show_motion_speed_error('')
+ 
+     @Slot(str)
+     def set_language(self, language):
+--- 이전/src/calendar_motion.py
++++ 현재/src/calendar_motion.py
+@@ -10,7 +10,7 @@
+ from PySide6.QtGui import QColor, QImage, QPainter, QPainterPath, QPen
+ from shiboken6 import isValid
+ from calendar_art import current_date, design_for_date
+-from frame_pacing import FrameWaiter
++from frame_pacing import FrameWaiter, MotionClock, validate_motion_speed
+ 
+ FPS = 240
+ SIZE = 384
+@@ -19,12 +19,8 @@
+ 
+ 
+ def next_frame_deadline(previous, now):
+-    """절대 시간 슬롯을 유지하며 놓친 슬롯은 한 번에 건너뜁니다."""
+-    interval=1/FPS
+-    following=previous+interval
+-    if following<=now:
+-        following+=(math.floor((now-following)/interval)+1)*interval
+-    return following
++    """정상 슬롯을 유지하고 늦은 프레임은 추가 대기나 누적 추격 없이 이어갑니다."""
++    return max(previous+1/FPS,now)
+ 
+ 
+ def fallback_image(value):
+@@ -69,15 +65,17 @@
+         super().__init__(); self.condition=threading.Condition(); self.stopping=False; self.visible=False
+         self.requested_date=None; self.requested_elapsed=0.; self.requested_at=time.perf_counter()
+         self.started_at=time.perf_counter()
++        self.motion_clock=MotionClock(self.started_at)
+         self.latest=None; self.latest_date=None; self.error=''; self.render_count=0; self.renderer_name=''
+         self.output_size=SIZE; self.notification_pending=False; self.notification_count=0
+         self.first_render_at=None; self.last_render_at=None; self.render_seconds=0.
+         self.pacing_backend='준비 중'; self.pacing_warning=''
+ 
+-    def configure(self,visible=None,value=None,elapsed=None,output_size=None):
++    def configure(self,visible=None,value=None,elapsed=None,output_size=None,motion_speed=None):
+         with self.condition:
+             if visible is not None:self.visible=visible
+             if output_size is not None:self.output_size=output_size
++            if motion_speed is not None:self.motion_clock.set_speed(motion_speed,time.perf_counter())
+             if elapsed is not None:
+                 self.requested_date=value; self.requested_elapsed=elapsed; self.requested_at=time.perf_counter()
+             self.condition.notify_all()
+@@ -94,7 +92,7 @@
+             if waiter.warning:_logger.warning(waiter.warning)
+             while True:
+                 with self.condition:
+-                    # 요청 수와 무관하게 절대240Hz 슬롯에 맞춰 유휴 대기합니다.
++                    # 요청 수·재생 배율과 무관하게 240Hz 목표의 다음 시각까지 유휴 대기합니다.
+                     while not self.stopping and not self.visible:self.condition.wait()
+                     if self.stopping:break
+                     remaining=next_frame_at-time.perf_counter()
+@@ -106,7 +104,7 @@
+                     if not self.visible:continue
+                     value=self.requested_date or current_date()
+                     # 각 호출자의 서로 다른 타이머 원점 대신 서비스의 한 시계를 공유합니다.
+-                    elapsed=time.perf_counter()-self.started_at
++                    elapsed=self.motion_clock.sample(time.perf_counter())
+                     output_size=self.output_size
+                 start=time.perf_counter()
+                 if renderer is None:
+@@ -261,6 +259,12 @@
+     _get_service().visible(owner,visible)
+ 
+ 
++def set_calendar_motion_speed(value: float):
++    """현재 위상을 유지하고 이후 모션의 배율만 바꿉니다. 실제 시계와 날짜는 바꾸지 않습니다."""
++    speed=validate_motion_speed(value)
++    _get_service().worker.configure(motion_speed=speed)
++
++
+ def set_calendar_motion_size(owner,size):
+     """현재 보이는 각 소유자의 실제 픽셀 요구 중 최대 크기만 전달합니다."""
+     if type(size) is not int or not 32<=size<=2160:raise ValueError('전달 크기는32~2160 정수여야 합니다.')
+@@ -286,11 +290,12 @@
+ 
+ 
+ def calendar_motion_status():
+-    if _service is None:return {'running':False,'owners':0,'images':0,'error':get_calendar_error()}
++    if _service is None:return {'running':False,'owners':0,'images':0,'motion_speed':1.0,'error':get_calendar_error()}
+     with _service.worker.condition:
+         return {'running':_service.worker.isRunning(),'owners':len(_service.owners),
+                 'images':int(_service.worker.latest is not None)+int(_service.fallback is not None),
+                 'render_count':_service.worker.render_count,'date':str(_service.worker.latest_date),
++                'motion_speed':_service.worker.motion_clock.speed,
+                 'target_fps':FPS,'source_dimensions':list(RENDER_SIZE),
+                 'delivery_dimensions':list(_service.worker.latest.size().toTuple()) if _service.worker.latest is not None else None,
+                 'requested_delivery_size':_service.worker.output_size,
+--- 이전/src/frame_pacing.py
++++ 현재/src/frame_pacing.py
+@@ -1,6 +1,38 @@
+ """프로세스 전용 고해상도 대기로 전역 타이머 설정 없이 프레임을 조율합니다."""
+ import ctypes
++import math
+ import os
++
++
++def validate_motion_speed(value):
++    """유한한 0.25~3배 숫자만 받아 bool과 잘못된 설정을 거부합니다."""
++    if type(value) not in (int, float):
++        raise ValueError('회전 속도는 0.25~3배의 유한한 숫자여야 합니다.')
++    try:
++        valid = math.isfinite(value) and .25 <= value <= 3.0
++    except OverflowError:
++        valid = False
++    if not valid:
++        raise ValueError('회전 속도는 0.25~3배의 유한한 숫자여야 합니다.')
++    return float(value)
++
++
++class MotionClock:
++    """실제 날짜·시계와 분리하여 배율별 경과 시간을 연속 적분합니다."""
++    def __init__(self, now):
++        self.speed = 1.0
++        self.elapsed = 0.0
++        self.updated_at = now
++
++    def sample(self, now):
++        self.elapsed += max(0.0, now - self.updated_at) * self.speed
++        self.updated_at = max(self.updated_at, now)
++        return self.elapsed
++
++    def set_speed(self, value, now):
++        speed = validate_motion_speed(value)
++        self.sample(now)
++        self.speed = speed
+ 
+ 
+ class FrameWaiter:
+--- 이전/src/i18n.py
++++ 현재/src/i18n.py
+@@ -5,6 +5,11 @@
+ 
+ # 이 사전의 키는 앱 표시 문구이며 사용자 기록을 검색·치환하지 않습니다.
+ _EN = {
++'회전 속도':'Rotation speed','{speed:g}배':'{speed:g}×','기본 1배 복원':'Reset to 1×',
++'회전 속도 변경 실패: {error}':'Unable to change rotation speed: {error}',
++'회전 속도만 변경합니다. 날짜와 시각은 그대로입니다.':'Changes rotation speed only. Date and time stay unchanged.',
++'회전 속도는 GUI 메인 스레드에서만 변경할 수 있습니다.':'Rotation speed can only be changed on the GUI main thread.',
++'회전 속도는 0.25~3배의 유한한 숫자여야 합니다.':'Rotation speed must be a finite number between 0.25× and 3×.',
+ '확인 불가':'Unavailable','미확인':'Unknown','없음':'None','최소':'Minimal','낮음':'Low','보통':'Medium','높음':'High','매우 높음':'Very high','최고':'Maximum',
+ '이전 기록 없음':'No previous record','기록 없음':'Not recorded','해당 없음':'Not applicable','모델·추론 확인 불가':'Model / reasoning unavailable','모델 확인 불가':'Model unavailable',
+ '모델':'Model','추론':'Reasoning','추론 강도':'Reasoning effort','이전 모델':'Previous model','이전 추론 강도':'Previous reasoning effort','이전':'Previous','새':'New','현재':'Current','변경 전':'Before','변경 후':'After',
+--- 이전/src/motion_label.py
++++ 현재/src/motion_label.py
+@@ -0,0 +1,59 @@
++"""같은 논리 크기의 최신 모션 이미지를 부모 재배치 없이 표시합니다."""
++from PySide6.QtGui import QIcon, QPainter
++from PySide6.QtWidgets import QLabel, QStyle
++
++
++class MotionImageLabel(QLabel):
++    """최신 이미지 한 개를 보관하고 크기·DPR 변경 때만 기본 크기 힌트를 갱신합니다."""
++    def __init__(self, *args, **kwargs):
++        super().__init__(*args, **kwargs)
++        self._motion_icon = None
++        self._motion_size = None
++        self._motion_geometry = None
++
++    def setPixmap(self, pixmap):
++        logical = pixmap.deviceIndependentSize()
++        geometry = (logical.width(), logical.height(), pixmap.devicePixelRatioF())
++        self._motion_icon = QIcon(pixmap)
++        self._motion_size = logical.toSize()
++        if self._motion_geometry != geometry:
++            self._motion_geometry = geometry
++            super().setPixmap(pixmap)
++        else:
++            self.update()
++
++    def pixmap(self):
++        if self._motion_icon is None:
++            return super().pixmap()
++        # 현재 Qt QLabel과 같이 논리 크기의 QIcon 표본을 반환합니다.
++        return self._motion_icon.pixmap(self._motion_size)
++
++    def setText(self, text):
++        # 현재 Qt의 같은 문자열 no-op 계약도 그대로 보존합니다.
++        if text != super().text():
++            self._motion_icon = None
++            self._motion_size = None
++            self._motion_geometry = None
++        super().setText(text)
++
++    def clear(self):
++        self._motion_icon = None
++        self._motion_size = None
++        self._motion_geometry = None
++        super().clear()
++
++    def paintEvent(self, event):
++        if self._motion_icon is None or self._motion_icon.isNull():
++            return super().paintEvent(event)
++        painter = QPainter(self)
++        try:
++            self.drawFrame(painter)
++            rect = self.contentsRect()
++            margin = self.margin()
++            rect.adjust(margin, margin, -margin, -margin)
++            alignment = QStyle.visualAlignment(self.layoutDirection(), self.alignment())
++            mode = QIcon.Mode.Normal if self.isEnabled() else QIcon.Mode.Disabled
++            image = self._motion_icon.pixmap(self._motion_size, self.devicePixelRatioF(), mode)
++            self.style().drawItemPixmap(painter, rect, alignment.value, image)
++        finally:
++            painter.end()
+--- 이전/src/usage_widgets.py
++++ 현재/src/usage_widgets.py
+@@ -1,11 +1,12 @@
+ from i18n import translate as t
+ from PySide6.QtCore import Qt, QTimer
+ from PySide6.QtGui import QPixmap
+-from PySide6.QtWidgets import QLabel, QSizePolicy
++from PySide6.QtWidgets import QSizePolicy
++from motion_label import MotionImageLabel
+ import time
+ 
+ 
+-class CalendarHero(QLabel):
++class CalendarHero(MotionImageLabel):
+     """사용 한도 화면에서만 날짜별 입체 이미지를 갱신합니다."""
+     def __init__(self, parent=None):
+         super().__init__(t('입체 이미지 준비 중'), parent)
+--- 이전/src/visuals.py
++++ 현재/src/visuals.py
+@@ -1,7 +1,7 @@
+ """제작된 실제3D 금속 프레임과 고정된 실제 잔량·상태를 합성합니다."""
+ import math
+ 
+-from i18n import translate as t
++from i18n import translate as t, get_language
+ from PySide6.QtCore import QPointF, QRectF, Qt
+ from PySide6.QtGui import QColor, QFont, QFontMetricsF, QImage, QPainter, QLinearGradient, QTextLayout, QTextOption
+ from atom_frames import get_atom_frames
+@@ -209,13 +209,23 @@
+             'date_font': date_font, 'line_height': line_height}
+ 
+ 
+-def draw_desktop_orbit(painter, width, height, source, design, fraction, state, clock_text=None, weather_text=None, location_text=None):
++def draw_desktop_orbit(painter, width, height, source, design, fraction, state, clock_text=None, weather_text=None, location_text=None, cache=None):
+     """위젯의 조형과 글자를 별개 영역에 그려 작은 글자 축소를 막습니다."""
++    if cache is not None:
++        return cache.draw(painter, width, height, source, design, fraction, state,
++                          clock_text, weather_text, location_text)
+     layout = desktop_widget_layout(width, height, t(design.title), weather_text is not None, location_text is not None)
+     painter.save()
+     painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+     painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+     painter.drawImage(layout['art'], source)
++    _draw_desktop_information(painter, layout, design, fraction, state, clock_text, weather_text, location_text)
++    painter.restore()
++    return layout
++
++
++def _draw_desktop_information(painter, layout, design, fraction, state, clock_text, weather_text, location_text):
++    """움직이는 GPU 이미지와 분리한 도크·시계·지역·기온·잔량을 그립니다."""
+     def surface(rect, radius):
+         gradient = QLinearGradient(rect.topLeft(), rect.bottomLeft())
+         gradient.setColorAt(0, QColor('#34414f'))
+@@ -263,5 +273,44 @@
+     painter.setFont(font)
+     painter.setPen(gray(248))
+     painter.drawText(QRectF(usage.left()+5, usage.top()+1, usage.width()-10, 18), Qt.AlignmentFlag.AlignCenter, label)
+-    painter.restore()
+-    return layout
++
++
++class DesktopOverlayCache:
++    """한 위젯의 완전 입력이 같을 때만 단일 투명 정보 레이어를 재사용합니다."""
++    def __init__(self):
++        self.key = None
++        self.layout = None
++        self.image = None
++
++    def draw(self, painter, width, height, source, design, fraction, state,
++             clock_text, weather_text, location_text):
++        dpr = painter.device().devicePixelRatioF()
++        title = t(design.title)
++        font_key = app_font(weight=QFont.Weight.DemiBold).key()
++        key = (width, height, dpr, design.date, title, design.accent,
++               fraction, state, clock_text, weather_text, location_text,
++               get_language(), font_key)
++        if self.key != key:
++            layout = desktop_widget_layout(width, height, title,
++                                           weather_text is not None, location_text is not None)
++            image = QImage(math.ceil(width*dpr), math.ceil(height*dpr),
++                           QImage.Format.Format_ARGB32_Premultiplied)
++            image.setDevicePixelRatio(dpr)
++            image.fill(Qt.GlobalColor.transparent)
++            layer = QPainter(image)
++            try:
++                layer.setRenderHint(QPainter.RenderHint.Antialiasing)
++                layer.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
++                _draw_desktop_information(layer, layout, design, fraction, state,
++                                          clock_text, weather_text, location_text)
++            finally:
++                layer.end()
++            self.key, self.layout, self.image = key, layout, image
++        painter.save()
++        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
++        painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
++        # 모션 이미지는 매번 새로 그리고 정적 정보만 한 장으로 합성합니다.
++        painter.drawImage(self.layout['art'], source)
++        painter.drawImage(QPointF(0, 0), self.image)
++        painter.restore()
++        return self.layout

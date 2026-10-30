@@ -1,0 +1,281 @@
+{
+  "version": 26,
+  "folder": "26",
+  "previous": "25",
+  "files": [
+    {
+      "path": "requirements.txt",
+      "bytes": 109,
+      "sha256": "76b74752d8b722fc13167e416df61ed80798286ac4762a5a8668b21ab4d93024",
+      "utf8_text": true
+    },
+    {
+      "path": "src/activity.py",
+      "bytes": 15832,
+      "sha256": "e1c17d720b16e14c328dade574c0d945486ccfb4d93260d2e022a3a17be876ad",
+      "utf8_text": true
+    },
+    {
+      "path": "src/app.py",
+      "bytes": 116115,
+      "sha256": "ccb4c5771ab1a01e416e81dcc3678629cd5a5a2613e50d5e7c4a3e4263da964f",
+      "utf8_text": true
+    },
+    {
+      "path": "src/atom_frames.py",
+      "bytes": 8515,
+      "sha256": "af5b5331068fb58b1daf33d124bd4d8bb33b76bc017435aa79b4ed701b7ed962",
+      "utf8_text": true
+    },
+    {
+      "path": "src/brand.py",
+      "bytes": 10147,
+      "sha256": "bec1e0eff2b42da530b779b48fae0f0ceba56ff83a2872a8b7912d3939153852",
+      "utf8_text": true
+    },
+    {
+      "path": "src/calendar_art.py",
+      "bytes": 4132,
+      "sha256": "5495a4f01dc6a30b47d94730f311f340aad081a658d8133f5bf2b0d112a54dc0",
+      "utf8_text": true
+    },
+    {
+      "path": "src/calendar_catalog.py",
+      "bytes": 16113,
+      "sha256": "99e0b12a22a6c13cb10d7920781844844951abd469c96ad0bb8022936528b960",
+      "utf8_text": true
+    },
+    {
+      "path": "src/calendar_motion.py",
+      "bytes": 16207,
+      "sha256": "ddb3e8afdf5f46f7bb8f997e75c39234550f28bade6223e19f81e37579765791",
+      "utf8_text": true
+    },
+    {
+      "path": "src/calendar_renderer.py",
+      "bytes": 30110,
+      "sha256": "ca461e46f983969d9e06ba2f238b2b86e5a44f84a87570431993b1bfff25f03a",
+      "utf8_text": true
+    },
+    {
+      "path": "src/core.py",
+      "bytes": 11186,
+      "sha256": "6578aa45d58a7e2d501d52c52689b233f993c6bc7af6196428efdc03338641bf",
+      "utf8_text": true
+    },
+    {
+      "path": "src/element_frames.py",
+      "bytes": 7096,
+      "sha256": "0d72e490fbc2680b3bd9bac16c5da13288c61d6e9a08049bb5b8bf072a0a1342",
+      "utf8_text": true
+    },
+    {
+      "path": "src/element_visuals.py",
+      "bytes": 819,
+      "sha256": "33ceea060b073d5a03af097d8e35e7f38ad5ec2252534402bd6a965328276f94",
+      "utf8_text": true
+    },
+    {
+      "path": "src/elements.py",
+      "bytes": 2532,
+      "sha256": "2f4b017f3ea1d8212dfe22b0db43e82cdf01d5ab6a298a60d446e1cc1599c90c",
+      "utf8_text": true
+    },
+    {
+      "path": "src/frame_pacing.py",
+      "bytes": 3692,
+      "sha256": "09cd3768e4baa326bb0e08e4d7fd8130f05526024686b88f8ef2f9b0366b1bb1",
+      "utf8_text": true
+    },
+    {
+      "path": "src/i18n.py",
+      "bytes": 20538,
+      "sha256": "091208c023ccecdefd7957dcc3bacd8acc5c44324dd587ac36986ac3dc81106a",
+      "utf8_text": true
+    },
+    {
+      "path": "src/motion_label.py",
+      "bytes": 2380,
+      "sha256": "f76a05b63a676282ff4816c25ce0d7bc4aa01396889559c76021d5f858a0c60d",
+      "utf8_text": true
+    },
+    {
+      "path": "src/notifier.py",
+      "bytes": 44672,
+      "sha256": "6a16752a4874bc4c74e8f967bae76bb4f2c3e41af543e621cadc43b843330dd7",
+      "utf8_text": true
+    },
+    {
+      "path": "src/theme.py",
+      "bytes": 9297,
+      "sha256": "cafeb00fa1b52f9ca342d224c64bb51cfe1e9aea13161f1a57fb6ea99e94dc7f",
+      "utf8_text": true
+    },
+    {
+      "path": "src/typography.py",
+      "bytes": 1195,
+      "sha256": "9f34c52a2178b2603aa789ced06ea4f98cf83cd263d6272122ceb64c747b41cf",
+      "utf8_text": true
+    },
+    {
+      "path": "src/usage.py",
+      "bytes": 15245,
+      "sha256": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e",
+      "utf8_text": true
+    },
+    {
+      "path": "src/usage_frames.py",
+      "bytes": 9564,
+      "sha256": "a141ce6eaeefefbe942cf04116c032ec3c8ab383bbb07a028e5961c5026c9957",
+      "utf8_text": true
+    },
+    {
+      "path": "src/usage_widgets.py",
+      "bytes": 2516,
+      "sha256": "9ad1be24d27cbf072db6892a2bc3c431304002f90f9a9d46d59494a91b74814c",
+      "utf8_text": true
+    },
+    {
+      "path": "src/visuals.py",
+      "bytes": 15915,
+      "sha256": "13a8d20b188ac2e82bc57771263dd6c2bef7cb3ab96ef259d51fd73fa380a57a",
+      "utf8_text": true
+    },
+    {
+      "path": "src/weather.py",
+      "bytes": 17524,
+      "sha256": "acbb6804da7bde516461c739ed3e5c17bd26edee4f299b995822853dddd1b5e4",
+      "utf8_text": true
+    }
+  ],
+  "changes": [
+    {
+      "path": "src/app.py",
+      "status": "수정",
+      "before": {
+        "bytes": 110155,
+        "sha256": "bb0421143d08d6930d62f19252819ca26a91444466002c1a559b0dc87895ac3b"
+      },
+      "after": {
+        "bytes": 116115,
+        "sha256": "ccb4c5771ab1a01e416e81dcc3678629cd5a5a2613e50d5e7c4a3e4263da964f"
+      },
+      "binary": false,
+      "definitions_added": [
+        "change_motion_speed",
+        "set_motion_speed",
+        "show_motion_speed_error",
+        "update_motion_speed",
+        "validated_motion_speed"
+      ],
+      "definitions_removed": []
+    },
+    {
+      "path": "src/calendar_motion.py",
+      "status": "수정",
+      "before": {
+        "bytes": 15710,
+        "sha256": "fcd254efc4bf9e4a15eb9a1d75177323d34763716cea207e2bd95348b93463a0"
+      },
+      "after": {
+        "bytes": 16207,
+        "sha256": "ddb3e8afdf5f46f7bb8f997e75c39234550f28bade6223e19f81e37579765791"
+      },
+      "binary": false,
+      "definitions_added": [
+        "set_calendar_motion_speed"
+      ],
+      "definitions_removed": []
+    },
+    {
+      "path": "src/frame_pacing.py",
+      "status": "수정",
+      "before": {
+        "bytes": 2625,
+        "sha256": "6ca862a2eaa6707665f19514315de584424ab66017eff8f7898e3a4f6c6a9cb5"
+      },
+      "after": {
+        "bytes": 3692,
+        "sha256": "09cd3768e4baa326bb0e08e4d7fd8130f05526024686b88f8ef2f9b0366b1bb1"
+      },
+      "binary": false,
+      "definitions_added": [
+        "MotionClock",
+        "sample",
+        "set_speed",
+        "validate_motion_speed"
+      ],
+      "definitions_removed": []
+    },
+    {
+      "path": "src/i18n.py",
+      "status": "수정",
+      "before": {
+        "bytes": 19942,
+        "sha256": "2dbea990824fb7107019228d5ecf6a75d7ce1a7062d0984f2a00908c7e26cec1"
+      },
+      "after": {
+        "bytes": 20538,
+        "sha256": "091208c023ccecdefd7957dcc3bacd8acc5c44324dd587ac36986ac3dc81106a"
+      },
+      "binary": false,
+      "definitions_added": [],
+      "definitions_removed": []
+    },
+    {
+      "path": "src/motion_label.py",
+      "status": "추가",
+      "before": null,
+      "after": {
+        "bytes": 2380,
+        "sha256": "f76a05b63a676282ff4816c25ce0d7bc4aa01396889559c76021d5f858a0c60d"
+      },
+      "binary": false,
+      "definitions_added": [
+        "MotionImageLabel",
+        "__init__",
+        "clear",
+        "paintEvent",
+        "pixmap",
+        "setPixmap",
+        "setText"
+      ],
+      "definitions_removed": []
+    },
+    {
+      "path": "src/usage_widgets.py",
+      "status": "수정",
+      "before": {
+        "bytes": 2471,
+        "sha256": "a5e8de93da797f5f269551061d30878d8c0f86cae8824e89ba052bd6b28aeee2"
+      },
+      "after": {
+        "bytes": 2516,
+        "sha256": "9ad1be24d27cbf072db6892a2bc3c431304002f90f9a9d46d59494a91b74814c"
+      },
+      "binary": false,
+      "definitions_added": [],
+      "definitions_removed": []
+    },
+    {
+      "path": "src/visuals.py",
+      "status": "수정",
+      "before": {
+        "bytes": 13297,
+        "sha256": "d4bb20ebbfa421b5f05a482aedbb0b2202b7f7ffc2e6f7e22916ace3d0d72e1d"
+      },
+      "after": {
+        "bytes": 15915,
+        "sha256": "13a8d20b188ac2e82bc57771263dd6c2bef7cb3ab96ef259d51fd73fa380a57a"
+      },
+      "binary": false,
+      "definitions_added": [
+        "DesktopOverlayCache",
+        "__init__",
+        "_draw_desktop_information",
+        "draw"
+      ],
+      "definitions_removed": []
+    }
+  ]
+}

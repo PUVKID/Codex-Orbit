@@ -1,6 +1,38 @@
 """프로세스 전용 고해상도 대기로 전역 타이머 설정 없이 프레임을 조율합니다."""
 import ctypes
+import math
 import os
+
+
+def validate_motion_speed(value):
+    """유한한 0.25~3배 숫자만 받아 bool과 잘못된 설정을 거부합니다."""
+    if type(value) not in (int, float):
+        raise ValueError('회전 속도는 0.25~3배의 유한한 숫자여야 합니다.')
+    try:
+        valid = math.isfinite(value) and .25 <= value <= 3.0
+    except OverflowError:
+        valid = False
+    if not valid:
+        raise ValueError('회전 속도는 0.25~3배의 유한한 숫자여야 합니다.')
+    return float(value)
+
+
+class MotionClock:
+    """실제 날짜·시계와 분리하여 배율별 경과 시간을 연속 적분합니다."""
+    def __init__(self, now):
+        self.speed = 1.0
+        self.elapsed = 0.0
+        self.updated_at = now
+
+    def sample(self, now):
+        self.elapsed += max(0.0, now - self.updated_at) * self.speed
+        self.updated_at = max(self.updated_at, now)
+        return self.elapsed
+
+    def set_speed(self, value, now):
+        speed = validate_motion_speed(value)
+        self.sample(now)
+        self.speed = speed
 
 
 class FrameWaiter:

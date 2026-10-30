@@ -1,0 +1,259 @@
+--- 이전/src/app.py
++++ 현재/src/app.py
+@@ -19,7 +19,7 @@
+                              QProgressBar, QScrollArea, QSizePolicy, QLayout, QVBoxLayout, QWidget)
+ 
+ from core import InstructionStore, clamp_position, read_jsonl_tail, read_text_strict, title_catalog, resolve_title
+-from notifier import Watcher, append_log, atomic_json, stamp
++from notifier import Watcher, append_log, atomic_json, stamp, POLL_INTERVAL_SECONDS
+ from usage import UsageClient, reset_label
+ from visuals import draw_orbit
+ from theme import STYLE, apply_theme
+@@ -98,6 +98,10 @@
+ 
+ 
+ def event_kind(event):
++    if event.get('kind') == 'settings':
++        if event.get('before') is None:
++            return '자식 작업자 첫 선택 설정 관측' if event.get('parent') else '채팅 선택 설정 첫 관측'
++        return '채팅 선택 설정 변경'
+     if event.get('assignment_type') == 'replacement':
+         return '새 작업자 배정 · 이전 작업자 교체'
+     if event.get('before') is None:
+@@ -124,6 +128,7 @@
+         '기록 종류: ' + str(event.get('kind', '확인 불가')),
+         '', '공개 이유', str(event.get('reason') or '확인 불가'),
+         '', '근거 수준', str(event.get('evidence') or '확인 불가'),
++        '', '선택 설정 관측 근거', str(event.get('configuration_evidence') or '해당 없음'),
+         '', '표시 기록', str(event.get('delivery') or '앱 표시 요청; 사용자 수신 미확인'),
+         '', '로컬 기록과 공개 이유의 연결 근거입니다. 서버 모델 신원이나 비공개 추론을 증명하지 않습니다.'
+     ])
+@@ -187,8 +192,11 @@
+                     self.enriched.emit(values)
+                     atomic_json(watcher.state_path, watcher.state)
+                     diagnostics, problems = read_jsonl_tail(self.work / 'diagnostics.jsonl', max_records=5)
+-                    status = {'time': stamp(), 'state': '감시 중', 'sessions': str(self.sessions),
++                    remaining = sum(max(0, info.get('baseline_end', 0) - info['offset'])
++                                    for info in watcher.state['files'].values())
++                    status = {'time': stamp(), 'state': '기준선 준비 중' if remaining else '감시 중', 'sessions': str(self.sessions),
+                               'files': len(watcher.state['files']), 'pending': len(watcher.state['pending']),
++                              'baseline_remaining_bytes': remaining,
+                               'diagnostics': diagnostics, 'read_problems': problems,
+                               'recent_errors': list(self.recent_errors)}
+                     if watcher.diagnostic_failures:
+@@ -205,7 +213,7 @@
+                     atomic_json(self.work / 'heartbeat.json', status)
+                 except Exception as error:
+                     self.report_failure(error, watcher)
+-                for _ in range(20):
++                for _ in range(max(1, round(POLL_INTERVAL_SECONDS / 0.1))):
+                     if self.isInterruptionRequested():
+                         break
+                     self.msleep(100)
+@@ -234,11 +242,9 @@
+ 
+ class OrbitWidget(QWidget):
+     def __init__(self, settings, details, preferences, quit_app):
+-        super().__init__(None, Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.Window)
++        super().__init__(None, Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.Tool)
+         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+         self.setWindowTitle('Codex Orbit')
+-        self.setAccessibleName('Codex Orbit 캐릭터')
+-        self.setAccessibleDescription('클릭하면 상세 이력을 열고, 드래그하면 이동합니다. 우클릭하면 설정과 종료 메뉴를 엽니다.')
+         self.setFixedSize(148, 148)
+         self.settings, self.details = settings, details
+         self.preferences, self.quit_app = preferences, quit_app
+--- 이전/src/notifier.py
++++ 현재/src/notifier.py
+@@ -22,6 +22,7 @@
+ LOG_BYTES = 2 * 1024 * 1024
+ POLL_READ_BYTES = 8 * 1024 * 1024
+ MAX_PENDING = 256
++POLL_INTERVAL_SECONDS = 0.2
+ 
+ 
+ def stamp():
+@@ -82,18 +83,38 @@
+         self.sessions, self.work, self.sender = Path(sessions), Path(work), sender
+         self.work.mkdir(parents=True, exist_ok=True)
+         self.state_path = self.work / 'state.json'
+-        self.state = {'schema_version': 2, 'initialized': False, 'files': {}, 'models': {},
++        self.state = {'schema_version': 3, 'initialized': False, 'files': {}, 'models': {}, 'settings': {},
+                       'declarations': {}, 'pending': [], 'reasons': {}, 'seen': []}
+         if self.state_path.exists():
+             if self.state_path.stat().st_size > 16 * 1024 * 1024:
+                 raise ValueError('상태 파일이 16 MiB 상한을 초과했습니다. 원본 보존 후 점검이 필요합니다.')
+-            self.state = json.loads(self.state_path.read_text(encoding='utf-8'))
+-            if self.state.get('schema_version') != 2:
++            original = self.state_path.read_bytes()
++            self.state = json.loads(original.decode('utf-8'))
++            if self.state.get('schema_version') not in (2, 3):
+                 raise ValueError('구형 상태는 요청과 관측이 혼합되어 있습니다. 원본 보존 후 명시적 재기준선이 필요합니다.')
+             if not isinstance(self.state.get('files'), dict) or not isinstance(self.state.get('models'), dict):
+                 raise ValueError('상태 파일 구조 오류입니다. 자동 초기화하지 않습니다.')
+             if not isinstance(self.state.get('declarations'), dict):
+                 raise ValueError('명시 배정 상태 구조 오류입니다. 자동 초기화하지 않습니다.')
++            if self.state['schema_version'] == 2:
++                # 이미 소비한 위치를 고정해 재생합니다. 그 뒤 추가된 선택은 새 알림입니다.
++                digest = hashlib.sha256(original).hexdigest()
++                backup = self.work / ('state.before-settings-v3-' + digest + '.json')
++                if backup.exists():
++                    if backup.read_bytes() != original:
++                        raise ValueError('이전 상태 백업이 원본과 다릅니다. 자동 덮어쓰기하지 않습니다.')
++                else:
++                    with backup.open('xb') as handle:
++                        handle.write(original)
++                for info in self.state['files'].values():
++                    offset, end = info['offset'], info.get('baseline_end', 0)
++                    if any(isinstance(v, bool) or not isinstance(v, int) or v < 0 for v in (offset, end)):
++                        raise ValueError('이전 상태의 파일 위치가 올바르지 않습니다. 자동 초기화하지 않습니다.')
++                    info.update(offset=0, baseline_end=max(offset, end), legacy_offset=offset,
++                                sid=None, skipping=False)
++                self.state.update(schema_version=3, settings={})
++            if not isinstance(self.state.get('settings'), dict):
++                raise ValueError('채팅 선택 설정 상태 구조 오류입니다. 자동 초기화하지 않습니다.')
+         self.state.setdefault('reasons', {})
+         self.state.setdefault('seen', [])
+         self.seen = set(self.state['seen'])
+@@ -115,6 +136,15 @@
+     def event(self, sid, after, reason='확인 불가', evidence='로컬 turn_context 관측', **extra):
+         before = self.state['models'].get(sid)
+         declared = self.state['declarations'].get(sid)
++        if extra.get('kind') == 'settings':
++            # 선택의 이전값과 실행 관측의 이전값은 다를 수 있습니다.
++            before = extra.pop('settings_before')
++            if before == after:
++                return
++            self.state['models'][sid] = after
++            self.state['pending'].append({'id': uuid.uuid4().hex, 'time': stamp(), 'target': sid,
++                'before': before, 'after': after, 'reason': reason[:12000], 'evidence': evidence, **extra})
++            return
+         if 'declared_before' in extra:
+             # 요청은 관측 기준선을 변경하지 않습니다. 동시에 대기하는 정확한 전후만 연결합니다.
+             pending = next((e for e in reversed(self.state['pending']) if e['target'] == sid
+@@ -150,6 +180,51 @@
+                 append_log(self.work / 'observations.jsonl', event)
+                 return
+         self.state['pending'].append(event)
++
++    def duplicate_record(self, identity, baseline):
++        """원본 시각이 있는 복제 기록만 제외하며 기준선 재생의 순서는 복원합니다."""
++        fingerprint = hashlib.sha256(json.dumps(identity, sort_keys=True).encode('utf-8')).hexdigest()
++        duplicate = fingerprint in self.seen
++        if not duplicate:
++            self.seen.add(fingerprint)
++            self.state['seen'].append(fingerprint)
++            if len(self.state['seen']) > 8192:
++                self.seen.discard(self.state['seen'].pop(0))
++        return duplicate and not baseline
++
++    def settings_record(self, record, payload, info, baseline):
++        """자기 채팅의 native 설정 필드만 관측하며 변경 주체와 실행 모델은 추정하지 않습니다."""
++        values = payload.get('thread_settings')
++        if not isinstance(values, dict):
++            return
++        mode = values.get('collaboration_mode')
++        nested = mode.get('settings') if isinstance(mode, dict) else None
++        # 설치 앱의 선택기와 같이 활성 협업 모드의 모델 설정을 우선합니다.
++        selection_source = 'thread_settings'
++        if isinstance(nested, dict) and nested.get('model') is not None:
++            values = nested
++            selection_source = 'thread_settings.collaboration_mode.settings'
++        model, effort = values.get('model'), values.get('reasoning_effort')
++        if not isinstance(model, str) or not model.strip() or len(model) > 256:
++            return
++        if effort is not None and (not isinstance(effort, str) or not effort.strip() or len(effort) > 64):
++            return
++        sid = info['sid']
++        after = {'model': model, 'effort': effort if effort is not None else '확인 불가'}
++        if record.get('timestamp') and self.duplicate_record(
++                ['settings', sid, record['timestamp'], after], baseline):
++            return
++        before = self.state['settings'].get(sid, self.state['models'].get(sid))
++        self.state['settings'][sid] = after
++        if baseline:
++            if before != after:
++                self.state['models'][sid] = after
++            return
++        evidence = '로컬 thread_settings_applied의 채팅 선택 설정 관측; 실행 모델 인증·변경 주체·이유 확인 불가'
++        self.event(sid, after, evidence=evidence, kind='settings', settings_before=before,
++                   configuration_evidence=evidence, selection_source=selection_source,
++                   role=info.get('role', '확인 불가'), parent=info.get('parent'),
++                   agent_path=info.get('agent_path'), source_time=record.get('timestamp'))
+ 
+     def record(self, record, info, baseline):
+         kind, payload = record.get('type'), record.get('payload')
+@@ -188,6 +263,8 @@
+             event_kind = payload.get('type')
+             if event_kind == 'thread_settings_applied':
+                 info['owner_active'] = payload.get('thread_id') == sid
++                if info['owner_active']:
++                    self.settings_record(record, payload, info, baseline)
+             if event_kind == 'token_usage_record' and payload.get('thread_id') == sid:
+                 turn = payload.get('turn_id')
+                 if turn and turn not in info['turns']:
+@@ -203,14 +280,9 @@
+         if info.get('child') and payload.get('turn_id') not in info.get('turns', []):
+             return
+         after = {'model': payload['model'][:256], 'effort': str(payload.get('effort') or '확인 불가')[:64]}
+-        if record.get('timestamp'):
+-            fingerprint = hashlib.sha256(json.dumps([sid, record['timestamp'], payload.get('turn_id'), after], sort_keys=True).encode('utf-8')).hexdigest()
+-            if fingerprint in self.seen:
+-                return
+-            self.seen.add(fingerprint)
+-            self.state['seen'].append(fingerprint)
+-            if len(self.state['seen']) > 8192:
+-                self.seen.discard(self.state['seen'].pop(0))
++        if record.get('timestamp') and self.duplicate_record(
++                [sid, record['timestamp'], payload.get('turn_id'), after], baseline):
++            return
+         if baseline:
+             self.state['models'][sid] = after
+         else:
+@@ -322,14 +394,18 @@
+             return value
+         value.update(reason=reason['text'], reason_call_id=reason['call_id'],
+                      evidence='배정 전 공개 설명: 부모 call_id/호출 결과/자식 경로 정확 연결; 서버 변경 원인 미확인')
++        if value.get('kind') == 'settings':
++            # 첫 자식 배정의 공개 이유를 연결해도 설정 관측 근거는 별도로 유지합니다.
++            value['evidence'] = str(value.get('configuration_evidence', '')) + '; ' + value['evidence']
+         return value
+ 
+     def read_file(self, path, info):
+         stat = path.stat()
+         identity = [stat.st_dev, stat.st_ino]
+-        if info.get('identity') != identity or stat.st_size < info['offset']:
++        if info.get('identity') != identity or stat.st_size < max(info['offset'], info.get('legacy_offset', 0)):
+             changed = info.get('identity') is not None
+             info.update(offset=0, identity=identity, sid=None, skipping=False)
++            info.pop('legacy_offset', None)
+             if changed:
+                 info['baseline_end'] = 0
+                 self.diagnostic('파일 교체 또는 잘림: 현재 모델과 비교하여 재검사합니다.', path=str(path))
+@@ -362,6 +438,8 @@
+                 except (ValueError, TypeError, KeyError) as error:
+                     self.diagnostic('레코드 오류: ' + str(error), path=str(path), offset=position, bytes=len(raw))
+                 info['offset'] = handle.tell()
++        if info['offset'] >= info.get('legacy_offset', 0):
++            info.pop('legacy_offset', None)
+         return total
+ 
+     def poll(self):
+@@ -455,6 +533,8 @@
+             self.state['models'] = dict(list(self.state['models'].items())[-MAX_FILES * 2:])
+         if len(self.state['declarations']) > MAX_FILES * 2:
+             self.state['declarations'] = dict(list(self.state['declarations'].items())[-MAX_FILES * 2:])
++        if len(self.state['settings']) > MAX_FILES * 2:
++            self.state['settings'] = dict(list(self.state['settings'].items())[-MAX_FILES * 2:])
+         atomic_json(self.state_path, self.state)
+         return sent
+ 
+@@ -601,7 +681,7 @@
+                     atomic_json(args.work / 'heartbeat.json', {'pid': os.getpid(), 'time': stamp(), 'status': '감시 중', 'pending': len(watcher.state['pending'])})
+                 except Exception as error:
+                     watcher.diagnostic(error)
+-                time.sleep(2)
++                time.sleep(POLL_INTERVAL_SECONDS)
+             atomic_json(args.work / 'heartbeat.json', {'pid': os.getpid(), 'time': stamp(), 'status': '중지됨'})
+ 
+ 

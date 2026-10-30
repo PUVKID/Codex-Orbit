@@ -1,0 +1,1786 @@
+--- 이전/src/activity.py
++++ 현재/src/activity.py
+@@ -0,0 +1,296 @@
++"""공개 협업 호출과 소유자가 확인된 native 활동을 연결합니다."""
++from datetime import datetime, timezone
++import hashlib
++import json
++import re
++
++MAX_ACTIVITY_EVENTS = 128
++MAX_ACTIVITY_SEEN = 8192
++MAX_ACTIVITY_CALLS = 32
++MAX_PUBLIC_CALLS = 128
++MAX_DEFERRED_ACTIVITIES = 32
++MAX_CONFIGURATION_SNAPSHOTS = 256
++
++
++def safe_public_text(value, limit=12000):
++    """보호문·비공개 표식·긴 인코딩 덩어리는 해석하거나 노출하지 않습니다."""
++    if not isinstance(value, str) or not value.strip():
++        return ''
++    if (re.search(r'gAAAA[A-Za-z0-9_=-]{24,}', value)
++            or re.search(r'[A-Za-z0-9+/_-]{160,}={0,2}', value)
++            or re.search(r'<\s*(?:private|encrypted|reasoning)\b', value, re.I)):
++        return ''
++    if any(ord(character) < 32 and character not in '\n\r\t' for character in value):
++        return ''
++    return value.strip()[:limit]
++
++
++def _text(value, limit=256):
++    return (value if isinstance(value, str) and value.strip() and len(value) <= limit
++            and safe_public_text(value, limit) == value else None)
++
++
++def _instant(value):
++    if not isinstance(value, str):
++        return None
++    try:
++        result = datetime.fromisoformat(value.replace('Z', '+00:00'))
++        return result.astimezone(timezone.utc) if result.tzinfo is not None else None
++    except (ValueError, OverflowError):
++        return None
++
++
++def _failed(value):
++    return bool(value.get('error') or value.get('isError') is True
++                or value.get('status') in ('error', 'failed', 'cancelled', 'canceled'))
++
++
++def _trim(mapping, limit):
++    while len(mapping) > limit:
++        del mapping[next(iter(mapping))]
++
++
++class ActivityTracker:
++    def __init__(self, state):
++        self.state = state
++        self.data = state.setdefault('activity', {'schema_version': 1, 'seen': [],
++            'events': {}, 'latest': {}, 'agents': {}, 'first_observations': {}})
++        if (not isinstance(self.data, dict) or self.data.get('schema_version') != 1
++                or not isinstance(self.data.get('seen'), list)
++                or any(not isinstance(self.data.get(key), dict)
++                       for key in ('events', 'latest', 'agents', 'first_observations'))):
++            raise ValueError('활동 상태 구조 오류입니다. 원본을 자동 초기화하지 않습니다.')
++        self.data.setdefault('calls', {})
++        self.data.setdefault('deferred', [])
++        self.data.setdefault('configurations', [])
++        if not isinstance(self.data['calls'], dict) or not isinstance(self.data['deferred'], list):
++            raise ValueError('활동 호출/지연 상태 구조 오류입니다. 원본을 자동 초기화하지 않습니다.')
++        if not isinstance(self.data['configurations'], list):
++            raise ValueError('활동 관측 시각 구조 오류입니다. 원본을 자동 초기화하지 않습니다.')
++        self.seen = set(self.data['seen'])
++
++    def note_meta(self, sid, info):
++        self.data['agents'][sid] = {key: info.get(key) for key in ('parent', 'agent_path', 'role')}
++        _trim(self.data['agents'], MAX_ACTIVITY_SEEN)
++
++    def configuration(self, sid, value, info, source_time):
++        """원본 시각이 있는 자기 관측만 전역 256개로 제한해 보존합니다."""
++        if not info.get('owner_active'):
++            return
++        rows = self.data['configurations']
++        if _instant(source_time) is None:
++            # 시각 없는 새 값 뒤에서 과거 캐시를 현재 과거값인 것처럼 재사용하지 않습니다.
++            rows[:] = [row for row in rows if row['target'] != sid]
++            return
++        row = {'target': sid, 'value': dict(value), 'source_time': source_time,
++               'parent': info.get('parent'), 'agent_path': info.get('agent_path')}
++        if row not in rows:
++            rows.append(row)
++            del rows[:-MAX_CONFIGURATION_SNAPSHOTS]
++
++    def configuration_pair(self, target, parent, path, source_time):
++        instant = _instant(source_time)
++        rows = [row for row in self.data['configurations']
++                if row.get('target') == target and row.get('parent') == parent
++                and row.get('agent_path') == path and _instant(row.get('source_time')) is not None]
++        earlier = [row for row in rows if _instant(row['source_time']) < instant]
++        later = [row for row in rows if _instant(row['source_time']) >= instant]
++        before = max(earlier, key=lambda row: _instant(row['source_time'])) if earlier else None
++        after = min(later, key=lambda row: _instant(row['source_time'])) if later else None
++        return before, after
++
++    def response(self, payload, info):
++        kind = payload.get('type')
++        if kind == 'message' and payload.get('role') == 'assistant' and payload.get('phase') == 'commentary':
++            parts = [part.get('text', '') for part in payload.get('content', [])
++                     if isinstance(part, dict) and part.get('type') in ('output_text', 'text')
++                     and isinstance(part.get('text'), str)]
++            info['activity_commentary'] = safe_public_text('\n'.join(parts))
++            return
++        calls = self.data['calls']
++        parent = str(info.get('sid'))
++        if kind == 'function_call_output':
++            call_id = payload.get('call_id')
++            key = parent + '|' + str(call_id)
++            if key in calls:
++                try:
++                    result = json.loads(payload.get('output', '{}'))
++                except (ValueError, TypeError):
++                    return
++                if isinstance(result, dict) and _failed(result):
++                    del calls[key]
++            return
++        if kind != 'function_call':
++            return
++        commentary = info.pop('activity_commentary', '')
++        name, namespace = payload.get('name'), payload.get('namespace')
++        if isinstance(name, str) and name.startswith('collaboration.'):
++            name = name[len('collaboration.'):]
++            namespace = namespace or 'collaboration'
++        call_id = _text(payload.get('call_id'), 128)
++        if namespace != 'collaboration' or name not in ('spawn_agent', 'followup_task') or not call_id:
++            return
++        raw = payload.get('arguments')
++        if not isinstance(raw, str) or len(raw) > 20000:
++            return
++        try:
++            arguments = json.loads(raw)
++        except (ValueError, TypeError):
++            return
++        if not isinstance(arguments, dict):
++            return
++        target = _text(arguments.get('target'))
++        task = _text(arguments.get('task_name'))
++        if name == 'followup_task' and not target:
++            return
++        if name == 'spawn_agent' and (not task or '/' in task or '\\' in task):
++            return
++        message = safe_public_text(arguments.get('message'))
++        reason = safe_public_text(commentary)
++        summary = reason or message
++        calls[parent + '|' + call_id] = {'operation': name, 'target': target, 'task_name': task,
++            'reason': reason, 'task_summary': re.sub(r'\s+', ' ', summary)[:600],
++            'task_source': ('정확한 호출 직전 공개 commentary' if reason else
++                            '읽을 수 있는 공개 호출 message' if message else '확인 불가'),
++            'requested': {'model': _text(arguments.get('model')),
++                          'effort': _text(arguments.get('reasoning_effort'), 64),
++                          'role': _text(arguments.get('agent_type'), 64)}}
++        _trim(calls, MAX_PUBLIC_CALLS)
++
++    def defer(self, record, info):
++        """원본 본문 없이 검증에 필요한 native 필드만 전역 32개까지 기다립니다."""
++        payload, item = record['payload'], record['payload']['item']
++        minimal = {'type': 'event_msg', 'timestamp': record.get('timestamp'), 'payload': {
++            'type': 'item_completed', 'thread_id': info['sid'], 'item': {
++                key: _text(item.get(key)) for key in
++                ('type', 'id', 'kind', 'agent_thread_id', 'agent_path', 'model', 'reasoning_effort')}}}
++        queue = self.data['deferred']
++        if any(value['record'] == minimal for value in queue):
++            return True
++        if len(queue) >= MAX_DEFERRED_ACTIVITIES:
++            return False
++        queue.append({'record': minimal, 'owner': {'sid': info['sid'], 'owner_active': True}})
++        return True
++
++    def retry_deferred(self, finished_parents=()):
++        for value in list(self.data['deferred']):
++            result = self.complete(value['record'], value['owner'], False)
++            if result != 'unmatched' or value['owner']['sid'] in finished_parents:
++                self.data['deferred'].remove(value)
++
++    def complete(self, record, info, baseline):
++        payload = record['payload']
++        if not info.get('owner_active') or payload.get('thread_id') != info.get('sid'):
++            return
++        item = payload.get('item')
++        if not isinstance(item, dict) or item.get('type') != 'SubAgentActivity':
++            return
++        call_id = _text(item.get('id'), 128)
++        target, path = _text(item.get('agent_thread_id')), _text(item.get('agent_path'))
++        parent = info['sid']
++        if (not call_id or not target or not re.fullmatch(r'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}', target)
++                or target == parent or not path or not path.startswith('/')
++                or _failed(item) or _failed(payload) or _instant(record.get('timestamp')) is None):
++            return
++        if item.get('kind') not in ('started', 'interacted'):
++            return
++        call_key = parent + '|' + call_id
++        call = self.data['calls'].get(call_key)
++        if not call:
++            return 'unmatched'
++        assigned = call['operation'] == 'spawn_agent'
++        if item.get('kind') != ('started' if assigned else 'interacted'):
++            return
++        if assigned:
++            if path.rsplit('/', 1)[-1] != call['task_name']:
++                return
++        elif call['target'] not in (target, path):
++            return
++        del self.data['calls'][call_key]
++        identity = [parent, target, 'assigned' if assigned else 'resumed', call_id]
++        event_id = hashlib.sha256(json.dumps(identity).encode('utf-8')).hexdigest()[:32]
++        if event_id in self.seen:
++            return
++        self.seen.add(event_id)
++        self.data['seen'].append(event_id)
++        if len(self.data['seen']) > MAX_ACTIVITY_SEEN:
++            self.seen.discard(self.data['seen'].pop(0))
++        if baseline:
++            return
++        previous = self.data['latest'].get(target)
++        if previous in self.data['events']:
++            self.data['events'][previous]['waiting'] = False
++        previous_configuration, next_configuration = self.configuration_pair(target, parent, path, record['timestamp'])
++        unknown = {'model': None, 'effort': None}
++        known_before = dict(previous_configuration['value']) if previous_configuration else dict(unknown)
++        known_after = (dict(next_configuration['value']) if next_configuration else
++                       None if assigned else dict(known_before))
++        metadata = self.data['agents'].get(target, {})
++        metadata = metadata if metadata.get('parent') == parent and metadata.get('agent_path') == path else {}
++        requested = dict(call['requested'])
++        native_request = {'model': _text(item.get('model')),
++                          'effort': _text(item.get('reasoning_effort'), 64)}
++        evidence = ('소유 parent/thread_id와 collaboration.' + call['operation']
++                    + ' call_id 및 native SubAgentActivity.' + item['kind'] + ' target의 정확 연결; '
++                    + ('새 작업자 배정 완료 기록' if assigned else '기존 작업자에게 재개 요청 전달 기록; 새 turn 시작 보장 아님'))
++        event = {'id': event_id, 'time': datetime.now(timezone.utc).isoformat(),
++            'source_time': record['timestamp'], 'kind': 'activity',
++            'activity_type': 'assigned' if assigned else 'resumed', 'parent': parent,
++            'target': target, 'agent_path': path, 'task_name': path.rsplit('/', 1)[-1],
++            'role': metadata.get('role') or requested.get('role') or '확인 불가',
++            'call_id': call_id, 'reason_call_id': call_id,
++            'before': None if assigned else known_before, 'after': known_after,
++            'requested': requested, 'native_request': native_request,
++            'reason': call['reason'] or '확인 불가', 'reason_raw': call['reason'] or '확인 불가',
++            'reason_source': '정확한 호출 직전 공개 commentary' if call['reason'] else '확인 불가',
++            'task_summary': call['task_summary'] or '확인 불가', 'task_source': call['task_source'],
++            'assignment_evidence': evidence, 'evidence': evidence,
++            'model_evidence': '활동 원본시각 전 마지막/후 첫 소유 채팅 설정·실행 관측만 연결; 시각 근거 없는 필드는 확인 불가'}
++        first = self.data['first_observations'].get(target)
++        if assigned and first and self._matches(first, event):
++            event.update(after=first['after'], role=first.get('role') or event['role'],
++                         first_observation_id=first['id'], observation_source_time=first['source_time'])
++            pending = self.state['pending']
++            original = next((value for value in pending if value['id'] == first['id']), None)
++            if original is not None:
++                pending.remove(original)
++            else:
++                event['first_observation_already_delivered'] = True
++        self.data['events'][event_id] = {'event': event, 'waiting': not bool(
++            next_configuration or (first and assigned and self._matches(first, event)))}
++        self.data['latest'][target] = event_id
++        _trim(self.data['events'], MAX_ACTIVITY_EVENTS)
++        _trim(self.data['latest'], MAX_ACTIVITY_SEEN)
++        self.state['pending'].append(event)
++
++    @staticmethod
++    def _matches(observation, event):
++        observed_at, assigned_at = _instant(observation.get('source_time')), _instant(event.get('source_time'))
++        return (observation.get('parent') == event.get('parent')
++                and observation.get('agent_path') == event.get('agent_path')
++                and observed_at is not None and assigned_at is not None and observed_at >= assigned_at)
++
++    def observe(self, sid, after, before, **extra):
++        """그 활동의 첫 관측만 보강하며 이후 모델 변경은 별도 감지를 유지합니다."""
++        latest = self.data['events'].get(self.data['latest'].get(sid))
++        if not latest or not latest['waiting']:
++            return False
++        event = latest['event']
++        if not self._matches(extra, event):
++            return False
++        event.update(after=dict(after), observation_source_time=extra['source_time'],
++                     model_evidence='해당 활동 뒤 첫 로컬 설정/실행 관측; 서버 실행 신원 인증 아님')
++        if extra.get('role') not in (None, 'main', '확인 불가'):
++            event['role'] = extra['role']
++        latest['waiting'] = False
++        return event['activity_type'] == 'assigned' and before is None
++
++    def note_first_observation(self, event):
++        if event.get('before') is None and event.get('parent') and event.get('agent_path'):
++            self.data['first_observations'][event['target']] = {key: event.get(key) for key in
++                ('id', 'after', 'source_time', 'parent', 'agent_path', 'role')}
++            _trim(self.data['first_observations'], MAX_ACTIVITY_SEEN)
++
++    def enrich(self, event):
++        stored = self.data['events'].get(event.get('id')) if event.get('kind') == 'activity' else None
++        return dict(stored['event']) if stored else dict(event)
+--- 이전/src/app.py
++++ 현재/src/app.py
+@@ -11,7 +11,7 @@
+ from collections import deque
+ 
+ from PySide6.QtCore import QEvent, QObject, QLockFile, Qt, QSize, QThread, QTimer, Signal, QPropertyAnimation, QEasingCurve
+-from PySide6.QtGui import QFont, QFontDatabase, QIcon, QPainter, QPixmap
++from PySide6.QtGui import QFont, QFontDatabase, QIcon, QPainter, QPixmap, QColor, QImage
+ from PySide6.QtWidgets import (QApplication, QDialog,
+                              QFrame, QGridLayout, QHBoxLayout, QLabel,
+                              QListWidget, QListWidgetItem, QMenu, QMessageBox,
+@@ -50,19 +50,19 @@
+ 
+ def model_label(value):
+     if value is None:
+-        return '미배정'
+-    return f"{value.get('model', '확인 불가')} / {value.get('effort', '확인 불가')}"
++        return '모델·추론 확인 불가'
++    return f"{(value.get('model') or '확인 불가')} / {(value.get('effort') or '확인 불가')}"
+ 
+ 
+ def model_card_label(value):
+     if value is None:
+-        return '미배정'
+-    return f"{value.get('model', '확인 불가')} · 추론 {value.get('effort', '확인 불가')}"
++        return '모델·추론 확인 불가'
++    return f"{(value.get('model') or '확인 불가')} · 추론 {(value.get('effort') or '확인 불가')}"
+ 
+ 
+ def friendly_model(value):
+     return {'gpt-6.1-sol': 'Sol', 'gpt-6-sol': 'Sol', 'gpt-6-astra': 'Astra',
+-            'gpt-6-luna': 'Luna'}.get(value, str(value or '미배정'))
++            'gpt-6-luna': 'Luna'}.get(value, str(value or '확인 불가'))
+ 
+ 
+ def friendly_effort(value):
+@@ -121,21 +121,108 @@
+ 
+ 
+ def event_kind(event):
++    if event.get('kind') == 'activity':
++        return {'assigned':'새 작업 배정', 'resumed':'작업 재개'}.get(event.get('activity_type'), '작업 활동 관측')
+     if event.get('kind') == 'settings':
+         if event.get('before') is None:
+             return '자식 작업자 첫 선택 설정 관측' if event.get('parent') else '채팅 선택 설정 첫 관측'
+-        return '채팅 선택 설정 변경'
++        return configuration_change_label(event) + ' · 선택 설정'
+     if event.get('assignment_type') == 'replacement':
+         return '새 작업자 배정 · 이전 작업자 교체'
+     if event.get('before') is None:
+         return '자식 작업자 첫 관측' if event.get('parent') else '첫 관측'
+-    return '모델 · 추론 강도 변경'
++    return configuration_change_label(event)
++
++
++def configuration_change_label(event):
++    before, after = event.get('before'), event.get('after')
++    if before is None or after is None:
++        return '설정 관측 · 현재 값 확인 불가'
++    model_changed = before.get('model') != after.get('model')
++    effort_changed = before.get('effort') != after.get('effort')
++    if model_changed and effort_changed:
++        return '모델 · 추론 강도 변경'
++    if model_changed:
++        return '모델 변경'
++    return '추론 강도 변경' if effort_changed else '설정 유지'
++
++
++def public_text(value, fallback='공개된 설명이 기록되지 않았습니다.', limit=600):
++    """공개 문장만 표시하며 보호된 도구 페이로드를 해석하거나 노출하지 않습니다."""
++    if not isinstance(value, str) or not value.strip():
++        return fallback
++    text = value.strip()
++    if (re.search(r'gAAAA[A-Za-z0-9_=-]{40,}|[A-Za-z0-9_+/=-]{160,}', text)
++            or re.search(r'encrypted_content\s*[:=]|BEGIN ENCRYPTED|<analysis>|<private>', text, re.I)):
++        return fallback
++    text = text.replace('**', '').replace('`', '')
++    return text if len(text) <= limit else text[:limit-1].rstrip()+'…'
++
++
++def task_explanation(event, limit=360):
++    fallback = '공개된 작업 설명이 기록되지 않았습니다.'
++    if event.get('task_summary'):
++        return public_text(event['task_summary'], fallback, limit)
++    if event.get('reason'):
++        return public_text(short_reason(event, limit), fallback, limit)
++    return fallback
++
++
++def selection_explanation(event):
++    """공개된 작업 목적을 모델 선택 이유로 바꾸어 말하지 않습니다."""
++    text = public_text(event.get('reason'), '', 1200)
++    match = re.search(r'(?:모델(?:·추론 강도)? 선택 이유|선택 이유)\s*[:：]\s*([^\n]+)', text)
++    return ('선택 이유: '+match.group(1).strip()) if match else '모델·추론 강도 선택 이유는 공개되지 않았습니다.'
++
++
++def event_accent(event):
++    if event.get('kind') == 'activity':
++        return '#a0e6cc' if event.get('activity_type') == 'assigned' else '#f2b18e'
++    before, after = event.get('before') or {}, event.get('after') or {}
++    if event.get('before') is None:
++        return '#b2c8d4'
++    if before.get('model') != after.get('model'):
++        return '#cbb6ed'
++    return '#94d9eb' if before.get('effort') != after.get('effort') else '#b2c8d4'
++
++
++def activity_message(event):
++    if event.get('kind') != 'activity':
++        return ''
++    role = ROLE_LABELS.get(event.get('role'), '담당')
++    return (f'기존 {role} 작업자에게 다시 맡겼어요.' if event.get('activity_type') == 'resumed'
++            else f'{role} 작업자에게 새 작업을 맡겼어요.')
++
++
++def history_label(event):
++    title = str(event.get('chat_name') or event.get('target') or '채팅 제목 확인 불가')
++    if event.get('kind') == 'activity':
++        return title+'\n'+event_kind(event)+'\n'+task_explanation(event, 70)
++    return title+'\n'+model_label(event.get('after'))
++
++
++def event_icon(event):
++    image = QImage(16,16,QImage.Format.Format_ARGB32_Premultiplied)
++    image.fill(Qt.GlobalColor.transparent)
++    painter = QPainter(image)
++    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
++    painter.setPen(Qt.PenStyle.NoPen)
++    painter.setBrush(QColor(event_accent(event)))
++    painter.drawEllipse(3,3,10,10)
++    painter.end()
++    return QIcon(QPixmap.fromImage(image))
++
++
++def public_reason_original(event):
++    value = event.get('reason')
++    return str(value) if public_text(value, '', 1) else '공개된 설명이 기록되지 않았습니다.'
+ 
+ 
+ def event_description(event):
+     return '\n'.join([
+         '채팅: ' + str(event.get('chat_name') or event.get('target', '확인 불가')),
+-        '채팅 ID: ' + str(event.get('target', '확인 불가')),
++        '채팅 ID: ' + str(event.get('parent') or event.get('target') or '확인 불가'),
++        '작업자 ID: ' + str(event.get('target') if event.get('parent') else '해당 없음'),
+         '구분: ' + ('자식 작업' if event.get('parent') else 'main 또는 부모 정보 미기록'),
+         '역할: ' + str(event.get('role', '확인 불가')),
+         '작업 이름: ' + str(event.get('task_name') or '기록 없음'),
+@@ -143,13 +230,20 @@
+         '작업 경로: ' + str(event.get('agent_path') or '기록 없음'),
+         '제목 출처: ' + str(event.get('title_source') or '확인 불가'),
+         '제목 확인 시각: ' + kst_label(event.get('title_checked_at')),
++        '호출 ID: ' + str(event.get('call_id') or '기록 없음'),
++        '활동 종류: ' + str(event.get('activity_type') or '해당 없음'),
++        '맡긴 일: ' + task_explanation(event, 2000),
++        '작업 설명 출처: ' + str(event.get('task_source') or '기록 없음'),
++        '활동 근거: ' + str(event.get('assignment_evidence') or '해당 없음'),
++        '요청 설정: ' + str(event.get('requested') or '기록 없음'),
+         '이유 호출 ID: ' + str(event.get('reason_call_id') or '기록 없음'),
+         '변경 전: ' + ('이전 기록 없음' if event.get('before') is None else model_label(event['before'])),
+         '변경 후: ' + model_label(event.get('after')),
+         '감지 시각: ' + kst_label(event.get('time')),
+         '원본 기록 시각: ' + kst_label(event.get('source_time')),
+         '기록 종류: ' + str(event.get('kind', '확인 불가')),
+-        '', '공개 이유', str(event.get('reason') or '확인 불가'),
++        '', '공개 이유 원문', public_reason_original(event),
++        '', '모델·추론 강도 선택 이유', selection_explanation(event),
+         '', '근거 수준', str(event.get('evidence') or '확인 불가'),
+         '', '선택 설정 관측 근거', str(event.get('configuration_evidence') or '해당 없음'),
+         '', '표시 기록', str(event.get('delivery') or '앱 표시 요청; 사용자 수신 미확인'),
+@@ -217,6 +311,7 @@
+                     diagnostics, problems = read_jsonl_tail(self.work / 'diagnostics.jsonl', max_records=5)
+                     remaining = sum(max(0, info.get('baseline_end', 0) - info['offset'])
+                                     for info in watcher.state['files'].values())
++                    remaining += max(0, watcher.state.get('activity_replay_remaining_bytes', 0))
+                     status = {'time': stamp(), 'state': '기준선 준비 중' if remaining else '감시 중', 'sessions': str(self.sessions),
+                               'files': len(watcher.state['files']), 'pending': len(watcher.state['pending']),
+                               'baseline_remaining_bytes': remaining,
+@@ -355,11 +450,11 @@
+         self.open_details = open_details
+         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
+         self.setObjectName('notice')
+-        self.setStyleSheet('#notice {background:#141414;border:1px solid #666666;border-radius:10px;} QLabel {color:#F1F1F1;background:transparent;border:none;font-weight:700;}')
++        self.setStyleSheet('#notice {background:#203641;border:1px solid #526d78;border-radius:16px;} QLabel {color:#edf4f6;background:transparent;border:none;font-weight:700;}')
+         self.setFixedWidth(410)
+         layout = QVBoxLayout(self)
+-        layout.setContentsMargins(22, 20, 22, 20)
+-        layout.setSpacing(7)
++        layout.setContentsMargins(18, 14, 18, 14)
++        layout.setSpacing(5)
+         self.title = QLabel('모델 · 추론 강도 변경')
+         self.text = QLabel()
+         self.title.setTextFormat(Qt.TextFormat.PlainText)
+@@ -379,10 +474,15 @@
+         heading.addWidget(close, 0, Qt.AlignmentFlag.AlignTop)
+         layout.addLayout(heading)
+         self.category = QLabel()
+-        self.category.setStyleSheet('font-size:18px;color:#f8f8f8;padding:4px 0;')
++        self.category.setStyleSheet('font-size:13px;color:#9be3cc;padding:2px 0;')
+         self.category.setWordWrap(True)
+         self.category.setTextFormat(Qt.TextFormat.PlainText)
+         layout.addWidget(self.category)
++        self.task_value = QLabel()
++        self.task_value.setStyleSheet('font-size:13px;color:#dce9ec;padding:0;')
++        self.task_value.setWordWrap(True)
++        self.task_value.setTextFormat(Qt.TextFormat.PlainText)
++        layout.addWidget(self.task_value)
+         values = QHBoxLayout()
+         values.setSpacing(16)
+         self.model_previous = QLabel()
+@@ -407,10 +507,15 @@
+         self.after_value = QLabel()
+         self.after_value.setWordWrap(True)
+         self.after_value.setTextFormat(Qt.TextFormat.PlainText)
+-        self.after_value.setStyleSheet('font-size:11px;color:#999999;padding:0;')
++        self.after_value.setStyleSheet('font-size:10px;color:#9db6c2;padding:0;')
+         layout.addWidget(self.after_value)
+         self.text.setStyleSheet('font-size:12px;color:#C9C9C9;')
+         layout.addWidget(self.text)
++        self.selection_reason = QLabel()
++        self.selection_reason.setStyleSheet('font-size:10px;color:#a5bdc9;padding:0;')
++        self.selection_reason.setWordWrap(True)
++        self.selection_reason.setTextFormat(Qt.TextFormat.PlainText)
++        layout.addWidget(self.selection_reason)
+         hint = QLabel('이 변경 자세히 보기  ›')
+         hint.setStyleSheet('font-size:12px;color:#FFFFFF;')
+         layout.addWidget(hint)
+@@ -497,7 +602,7 @@
+         name = str(event.get('chat_name') or '채팅 제목 확인 불가')
+         self.title.setText(name)
+         before, after = event.get('before'), event.get('after')
+-        if before is None:
++        if event.get('kind') == 'activity' or before is None:
+             category = event_kind(event)
+         else:
+             model_changed = before.get('model') != (after or {}).get('model')
+@@ -506,16 +611,23 @@
+                         else '추론 강도 변경' if effort_changed else '설정 관측')
+         if event.get('kind') == 'settings':
+             category += ' · 선택 설정'
++        if event.get('kind') == 'activity' and before is not None and before == after:
++            category += ' · 설정 유지'
+         self.category.setText(category)
++        self.category.setStyleSheet('font-size:13px;padding:2px 0;color:'+event_accent(event)+';')
++        self.task_value.setText(task_explanation(event, 100))
++        self.task_value.setToolTip(task_explanation(event, 2000))
++        self.selection_reason.setText(selection_explanation(event))
+         after_map = after or {}
+         self.model_previous.setText('이전 모델  ' + previous_field(before, 'model'))
+         self.model_current.setText(str(after_map.get('model') or '확인 불가'))
+         self.effort_previous.setText('이전 추론 강도  ' + previous_field(before, 'effort'))
+         self.effort_current.setText(friendly_effort(after_map.get('effort')))
+-        self.after_value.setText('→ 변경 후\n' + self.setting_label(after))
++        self.after_value.setText(('현재 설정 · ' if event.get('kind') == 'activity' else '→ 변경 후 · ') + (self.setting_label(after).replace('\n',' · ') if after is not None else '확인 불가'))
+         reason = short_reason(event)
+         reason = '확인되지 않음' if reason == '확인 불가' else reason
+-        self.text.setText(('기록 다시 보기 · ' if self.replay else '') + '변경 이유: ' + reason)
++        prefix = '공개 설명: ' if event.get('kind') == 'activity' else '변경 이유: '
++        self.text.setText(('기록 다시 보기 · ' if self.replay else '') + prefix + public_text(reason))
+         self.fit_content()
+ 
+     @staticmethod
+@@ -598,7 +710,7 @@
+         box = QVBoxLayout(panel)
+         heading = QHBoxLayout()
+         title = QLabel('계정 사용 한도 · 남은 비율')
+-        title.setStyleSheet('color:#eeeeee;font-size:25px;padding-bottom:18px;')
++        title.setStyleSheet('color:#edf4f5;font-size:25px;padding-bottom:18px;')
+         heading.addWidget(with_symbol(title, 'quota'), 1)
+         self.usage_refresh = QPushButton('새로고침')
+         self.usage_refresh.setIcon(symbol_icon('refresh'))
+@@ -661,13 +773,13 @@
+         layout.setContentsMargins(0, 12, 0, 0)
+         layout.setSpacing(8)
+         self.summary = QLabel('감시 준비 중')
+-        self.summary.setStyleSheet('color:#888888;font-size:11px;')
++        self.summary.setStyleSheet('color:#8ea9b6;font-size:11px;')
+         self.summary.setTextFormat(Qt.TextFormat.PlainText)
+         self.summary.setWordWrap(True)
+         self.summary.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
+         layout.addWidget(self.summary)
+         self.notice_summary = QLabel('알림 대기 0건')
+-        self.notice_summary.setStyleSheet('color:#888888;font-size:11px;')
++        self.notice_summary.setStyleSheet('color:#8ea9b6;font-size:11px;')
+         layout.addWidget(self.notice_summary)
+         self.notice_summary.setWordWrap(True)
+         split = QSplitter()
+@@ -677,67 +789,76 @@
+         self.history.currentItemChanged.connect(self.select_event)
+         panel = QWidget()
+         cards = QVBoxLayout(panel)
+-        cards.setContentsMargins(24, 6, 0, 0)
++        cards.setContentsMargins(16, 6, 0, 0)
+         cards.setSizeConstraint(QLayout.SizeConstraint.SetMinAndMaxSize)
+         self.card = QFrame()
+         self.card.setObjectName('eventCard')
+         self.card.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+         card_layout = QVBoxLayout(self.card)
+-        card_layout.setContentsMargins(0, 12, 20, 20)
++        card_layout.setContentsMargins(20, 20, 20, 20)
+         card_layout.setSpacing(12)
+         self.chat_title = QLabel('변경을 기다리고 있습니다')
+-        self.chat_title.setStyleSheet('font-size:25px;color:#F8F8F8;padding:8px 0;')
++        self.chat_title.setStyleSheet('font-size:23px;color:#f1f7f8;padding:2px 0 6px 0;')
+         self.change_heading = QLabel('변경을 기다리고 있습니다')
+-        self.change_heading.setStyleSheet('font-size:12px;color:#999999;padding:0 0 12px 0;')
++        self.change_heading.setStyleSheet('font-size:13px;color:#a7e7d0;padding:5px 8px;')
+         self.model_transition = QLabel('')
+-        self.model_transition.setStyleSheet('font-size:21px;color:#a0a0a0;')
++        self.model_transition.setStyleSheet('font-size:21px;color:#b1c5d0;')
+         self.model_previous = self.model_transition
+         self.model_current = QLabel('—')
+-        self.model_current.setStyleSheet('font-size:26px;color:#eeeeee;')
++        self.model_current.setStyleSheet('font-size:26px;color:#edf4f5;')
+         self.effort_transition = QLabel('')
+-        self.effort_transition.setStyleSheet('font-size:21px;color:#a0a0a0;')
++        self.effort_transition.setStyleSheet('font-size:21px;color:#b1c5d0;')
+         self.effort_previous = self.effort_transition
+         self.effort_current = QLabel('—')
+-        self.effort_current.setStyleSheet('font-size:26px;color:#eeeeee;')
++        self.effort_current.setStyleSheet('font-size:26px;color:#edf4f5;')
+         self.before_value = QLabel('변경 전  ·  —')
+         self.after_value = QLabel('변경 후  ·  —')
+-        self.after_value.setStyleSheet('font-size:12px;color:#a0a0a0;padding:0;')
+-        self.before_value.setStyleSheet('font-size:12px;color:#888888;')
+-        self.reason_title = QLabel('변경 이유 · 공개 기록')
+-        self.reason_title.setStyleSheet('color:#A4A4A4;font-size:11px;padding-top:10px;')
++        self.after_value.setStyleSheet('font-size:12px;color:#b1c5d0;padding:0;')
++        self.before_value.setStyleSheet('font-size:12px;color:#8ea9b6;')
++        self.activity_message = QLabel()
++        self.activity_message.setWordWrap(True)
++        self.activity_message.setStyleSheet('font-size:22px;color:#f1f5f7;padding:6px 0;')
++        self.activity_message.hide()
++        self.task_value = QLabel('공개된 작업 설명을 기다립니다.')
++        self.selection_reason = QLabel('모델·추론 강도 선택 이유는 공개되지 않았습니다.')
++        self.task_value.setStyleSheet('font-size:20px;color:#e6f2f1;padding:4px 0 10px 0;')
++        self.selection_reason.setStyleSheet('font-size:11px;color:#a6becb;padding:4px 0;')
++        self.reason_title = QLabel('왜 맡겼나요? · 공개 설명')
++        self.reason_title.setStyleSheet('color:#afc5ce;font-size:11px;padding-top:10px;')
+         self.reason_value = QLabel('첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.')
+-        self.reason_value.setStyleSheet('font-size:16px;padding:4px 0 12px 0;')
++        self.reason_value.setStyleSheet('font-size:15px;background:#253f4a;border:1px solid #3a5662;border-radius:12px;padding:14px;color:#e6f0f3;')
+         self.event_time = QLabel('')
+-        self.event_time.setStyleSheet('color:#969696;font-size:11px;padding-top:12px;')
++        self.event_time.setStyleSheet('color:#9ab4c0;font-size:11px;padding:0;')
+         all_labels = (self.chat_title, self.event_time, self.change_heading, self.model_previous, self.model_current,
+                       self.effort_previous, self.effort_current, self.before_value, self.after_value,
+-                      self.reason_title, self.reason_value)
++                      self.reason_title, self.reason_value, self.task_value, self.selection_reason)
+         for label in all_labels:
+             label.setTextFormat(Qt.TextFormat.PlainText)
+             label.setWordWrap(True)
+             label.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+             label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+         card_layout.addWidget(with_symbol(self.event_time, 'time'))
+-        for label in (self.chat_title, self.change_heading):card_layout.addWidget(label)
++        for label in (self.chat_title, self.change_heading, self.activity_message, self.task_value):card_layout.addWidget(label)
+         table = QGridLayout()
+         table.setHorizontalSpacing(18)
+         table.setVerticalSpacing(12)
+         for row, (kind, previous, current) in enumerate((('모델',self.model_previous,self.model_current),
+                                                        ('추론 강도',self.effort_previous,self.effort_current))):
+             for col, text in ((0,'이전 '+kind),(2,'새 '+kind)):
+-                label=QLabel(text);label.setStyleSheet('font-size:12px;color:#999999;')
++                label=QLabel(text);label.setStyleSheet('font-size:12px;color:#a4bbc7;')
+                 table.addWidget(with_symbol(label, 'model' if row == 0 else 'effort'),row*3,col)
+-            arrow=QLabel('→');arrow.setStyleSheet('font-size:16px;color:#888888;')
++            arrow=QLabel('→');arrow.setStyleSheet('font-size:16px;color:#8ea9b6;')
+             table.addWidget(previous,row*3+1,0)
+             table.addWidget(arrow,row*3+1,1)
+             table.addWidget(current,row*3+1,2)
+-            line=QFrame();line.setFrameShape(QFrame.Shape.HLine);line.setStyleSheet('color:#303030;')
++            line=QFrame();line.setFrameShape(QFrame.Shape.HLine);line.setStyleSheet('color:#3c5662;')
+             table.addWidget(line,row*3+2,0,1,3)
+         table.setColumnStretch(0,1);table.setColumnStretch(2,1)
+         card_layout.addLayout(table)
+         for label in (self.before_value,self.after_value):card_layout.addWidget(label)
+         card_layout.addWidget(with_symbol(self.reason_title, 'reason'))
+         card_layout.addWidget(self.reason_value)
++        card_layout.addWidget(self.selection_reason)
+         self.diagnostics = DiagnosticLabel()
+         cards.addWidget(self.diagnostics)
+         cards.addWidget(self.card)
+@@ -776,21 +897,29 @@
+             before, after = value.get('before') or {}, value.get('after') or {}
+             model_changed = before.get('model') != after.get('model')
+             effort_changed = before.get('effort') != after.get('effort')
+-            if value.get('before') is None:
++            if value.get('kind') == 'activity' or value.get('before') is None:
+                 heading = event_kind(value)
+             else:
+                 heading = ('모델·추론 강도가 바뀌었습니다' if model_changed and effort_changed
+                            else '모델이 바뀌었습니다' if model_changed
+                            else '추론 강도가 바뀌었습니다' if effort_changed else '설정 관측')
++            if value.get('kind') == 'activity' and value.get('before') is not None and value['before'] == value.get('after'):
++                heading += ' · 설정 유지'
+             self.change_heading.setText(heading)
++            self.change_heading.setStyleSheet('font-size:13px;padding:5px 8px;border-radius:8px;color:'+event_accent(value)+';background:#2d4550;')
++            self.activity_message.setText(activity_message(value))
++            self.activity_message.setVisible(bool(activity_message(value)))
++            self.task_value.setText(task_explanation(value))
++            self.selection_reason.setText(selection_explanation(value))
+             self.model_previous.setText(previous_field(value.get('before'), 'model'))
+             self.model_current.setText(str(after.get('model') or '확인 불가'))
+             self.effort_previous.setText(previous_field(value.get('before'), 'effort'))
+             self.effort_current.setText(friendly_effort(after.get('effort')))
+             self.before_value.setText('이전 기록 없음' if value.get('before') is None
+                                       else '이전  ' + model_card_label(value['before']))
+-            self.after_value.setText('→  ' + model_card_label(value.get('after')))
+-            self.reason_value.setText(short_reason(value, 180))
++            self.after_value.setText(('현재  ' if value.get('kind') == 'activity' else '→  ') + model_card_label(value.get('after')))
++            reason = value.get('reason') if value.get('kind') == 'activity' else short_reason(value)
++            self.reason_value.setText(public_text(reason, limit=600))
+             self.event_time.setText(kst_label(value.get('time')))
+ 
+     def toggle_evidence(self, checked):
+@@ -803,16 +932,36 @@
+             old = item.data(Qt.ItemDataRole.UserRole)
+             if event.get('id') and old.get('id') == event['id']:
+                 item.setData(Qt.ItemDataRole.UserRole, event)
+-                item.setText(str(event.get('chat_name') or '채팅 제목 확인 불가') + '\n' + model_label(event.get('after')))
++                item.setText(history_label(event))
++                item.setIcon(event_icon(event))
+                 if item == self.history.currentItem():
+                     self.select_event(item, None)
+                 return True
+         return False
+ 
++    def promote_first_observation(self, event):
++        """실제 첫 관측 한 행만 안정된 활동 ID로 보강하며 다른 변경은 보존합니다."""
++        identity = event.get('first_observation_id')
++        for index in range(self.history.count()):
++            item = self.history.item(index)
++            old = item.data(Qt.ItemDataRole.UserRole)
++            if old.get('id') != identity:
++                continue
++            if old.get('target') != event.get('target') or old.get('before') is not None or old.get('kind') == 'activity':
++                return False
++            item.setData(Qt.ItemDataRole.UserRole, event)
++            item.setText(history_label(event))
++            item.setIcon(event_icon(event))
++            if item == self.history.currentItem():
++                self.select_event(item, None)
++            return True
++        return None
++
+     def add_event(self, event):
+         if self.update_event(event):
+             return
+-        item = QListWidgetItem(str(event.get('chat_name') or event.get('target'))[:100] + '\n' + model_label(event.get('after'))[:100])
++        item = QListWidgetItem(history_label(event))
++        item.setIcon(event_icon(event))
+         item.setData(Qt.ItemDataRole.UserRole, event)
+         self.history.insertItem(0, item)
+         while self.history.count() > 500:
+@@ -994,6 +1143,22 @@
+     def receive(self, event):
+         if self.closing:
+             return
++        if (event.get('kind') == 'activity' and event.get('first_observation_already_delivered') is True
++                and isinstance(event.get('first_observation_id'), str)):
++            promoted = self.window.promote_first_observation(event)
++            if promoted is not False:
++                if promoted is None:
++                    self.window.add_event(event)
++                prior_id = event['first_observation_id']
++                notice = self.notices.get(prior_id)
++                if (notice is not None and notice.event.get('target') == event.get('target')
++                        and notice.event.get('before') is None and notice.event.get('kind') != 'activity'):
++                    self.notices.pop(prior_id)
++                    self.notices[event.get('id')] = notice
++                    # 만료 시간·최초 표시 기록·애니메이션을 재시작하지 않고 정확한 ID만 보강합니다.
++                    notice.update_event(event)
++                self.update_notice_count()
++                return
+         self.window.add_event(event)
+         self.orbit.unread = True
+         if self.settings.values.get('popup', True):
+--- 이전/src/brand.py
++++ 현재/src/brand.py
+@@ -11,6 +11,8 @@
+ from PySide6.QtWidgets import QApplication, QLabel, QWidget, QHBoxLayout
+ from shiboken6 import isValid
+ from atom_frames import get_atom_frames, asset_directory, AtomAssetError
++from elements import daily_element
++from element_visuals import colorize_atom
+ 
+ 
+ @lru_cache(maxsize=7)
+@@ -60,7 +62,7 @@
+             self.timer.stop()
+             return
+         elapsed = time.monotonic() - self.origin
+-        source = get_atom_frames().frame(elapsed)
++        source = colorize_atom(get_atom_frames().frame(elapsed), daily_element())
+         pixmaps = {}
+         for mark in marks:
+             size = mark.width()
+@@ -184,6 +186,7 @@
+ def with_symbol(label, kind):
+     """원문 QLabel을 유지하며 기능 의미를 읽기 쉬운 기호로 보조합니다."""
+     row = QWidget()
++    row.setStyleSheet('background:transparent;')
+     layout = QHBoxLayout(row)
+     layout.setContentsMargins(0, 0, 0, 0)
+     layout.setSpacing(7)
+--- 이전/src/core.py
++++ 현재/src/core.py
+@@ -1,216 +1,229 @@
+-"""외부 통신 없는 로컬 자료 읽기와 명시적 지침 적용."""
+-import hashlib
+-import json
+-import os
+-from pathlib import Path
+-import stat
+-import uuid
+-
+-MAX_TEXT_BYTES = 2 * 1024 * 1024
+-BEGIN = b'<!-- CODEX-ORBIT:BEGIN -->'
+-END = b'<!-- CODEX-ORBIT:END -->'
+-
+-
+-def digest(raw):
+-    return hashlib.sha256(raw).hexdigest()
+-
+-
+-def read_jsonl_tail(path, max_bytes=MAX_TEXT_BYTES, max_records=500):
+-    """물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다."""
+-    path = Path(path)
+-    if not path.exists():
+-        return [], []
+-    with path.open('rb') as handle:
+-        size = handle.seek(0, os.SEEK_END)
+-        start = max(0, size - max_bytes)
+-        handle.seek(start)
+-        raw = handle.read(max_bytes)
+-    problems = []
+-    if start:
+-        problems.append(f'앞부분 생략: 전체 {size}바이트, 최대 {max_bytes}바이트 읽음')
+-        raw = raw.partition(b'\n')[2]
+-    pieces = raw.split(b'\n')
+-    pieces.pop()  # 마지막 LF 뒤 조각 또는 미완성 레코드는 기다립니다.
+-    rows = []
+-    for number, piece in enumerate(pieces):
+-        if not piece:
+-            continue
+-        try:
+-            row = json.loads(piece.decode('utf-8'))
+-            if not isinstance(row, dict):
+-                raise ValueError('JSON 객체가 아닙니다.')
+-            rows.append(row)
+-        except (UnicodeError, ValueError) as error:
+-            problems.append(f'읽은 범위의 레코드 {number + 1}: {error}')
+-    return rows[-max_records:], problems[:50]
+-
+-
+-def session_titles(path):
+-    rows, _ = read_jsonl_tail(path, max_records=10000)
+-    return {r['id']: r['thread_name'][:500] for r in rows
+-            if isinstance(r.get('id'), str) and isinstance(r.get('thread_name'), str)
+-            and r['thread_name'].strip()}
+-
+-
+-def title_catalog(index_path, cache_path):
+-    """공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다."""
+-    rows, _ = read_jsonl_tail(index_path, max_records=10000)
+-    result = {r['id']: {'title': r['thread_name'], 'source': '로컬 session_index.jsonl',
+-                       'checked_at': r.get('updated_at', '확인 시각 미기록')}
+-              for r in rows if isinstance(r.get('id'), str) and isinstance(r.get('thread_name'), str)
+-              and r['thread_name'].strip() and len(r['thread_name']) <= 2000}
+-    if Path(cache_path).exists():
+-        cache = json.loads(read_text_strict(cache_path))
+-        if not isinstance(cache, dict) or not isinstance(cache.get('titles'), dict):
+-            raise ValueError('제목 캐시 구조가 올바르지 않습니다.')
+-        for sid, title in cache['titles'].items():
+-            if isinstance(sid, str) and isinstance(title, str) and title.strip() and len(title) <= 2000:
+-                result[sid] = {'title': title, 'source': str(cache.get('source', '출처 미기록')) + ' 확인 캐시',
+-                               'checked_at': cache.get('checked_at') or cache.get('observed_at') or '확인 시각 미기록'}
+-    return result
+-
+-
+-def resolve_title(event, catalog):
+-    """자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다."""
+-    value = dict(event)
+-    sid = event.get('parent') or event.get('target')
+-    entry = catalog.get(sid)
+-    if entry:
+-        value.update(chat_name=entry['title'], title_target=sid,
+-                     title_source=entry['source'], title_checked_at=entry['checked_at'])
+-    elif not value.get('chat_name') or value.get('chat_name') == value.get('target'):
+-        value.update(chat_name='채팅 제목 확인 불가', title_target=sid, title_source='확인 불가')
+-    value['task_name'] = event.get('task_name') or str(event.get('agent_path') or '').rsplit('/', 1)[-1] or '현재 채팅'
+-    return value
+-
+-
+-def clamp_position(position, screens, size=140):
+-    for x, y, width, height in screens:
+-        if x <= position[0] and y <= position[1] and position[0] + size <= x + width and position[1] + size <= y + height:
+-            return tuple(position)
+-    if not screens:
+-        return (24, 24)
+-    x, y, _, _ = screens[0]
+-    return (x + 24, y + 24)
+-
+-
+-def safe_path(path):
+-    """적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다."""
+-    path = Path(os.path.abspath(path))
+-    for part in [path, *path.parents]:
+-        try:
+-            info = part.lstat()
+-        except FileNotFoundError:
+-            continue
+-        if stat.S_ISLNK(info.st_mode) or getattr(info, 'st_file_attributes', 0) & 0x400:
+-            raise ValueError('링크 또는 재분석 경로에는 적용할 수 없습니다: ' + str(part))
+-    return path
+-
+-
+-def read_text_strict(path):
+-    path = Path(path)
+-    if path.stat().st_size > MAX_TEXT_BYTES:
+-        raise ValueError('문서가 2 MiB 상한을 초과했습니다.')
+-    return path.read_bytes().decode('utf-8-sig')
+-
+-
+-class InstructionStore:
+-    def __init__(self, data_dir):
+-        self.data_dir = Path(data_dir)
+-
+-    def _target(self, target):
+-        target = safe_path(target)
+-        if target.name.lower() != 'agents.md':
+-            raise ValueError('적용 대상은 AGENTS.md 파일이어야 합니다.')
+-        if not target.parent.is_dir():
+-            raise ValueError('대상 폴더가 존재하지 않습니다.')
+-        if target.exists() and (not target.is_file() or target.stat().st_size > MAX_TEXT_BYTES):
+-            raise ValueError('대상은 2 MiB 이하의 일반 파일이어야 합니다.')
+-        return target
+-
+-    def preview(self, target, content):
+-        target = self._target(target)
+-        added = content.encode('utf-8')
+-        if not content.strip() or len(added) > MAX_TEXT_BYTES:
+-            raise ValueError('빈 지침 또는 2 MiB 초과 지침은 적용할 수 없습니다.')
+-        if BEGIN in added or END in added:
+-            raise ValueError('지침 내용에 앱 관리구역 표식을 넣을 수 없습니다.')
+-        existed = target.exists()
+-        original = target.read_bytes() if existed else b''
+-        original.decode('utf-8-sig')
+-        block = BEGIN + b'\n' + added.rstrip(b'\r\n') + b'\n' + END
+-        if BEGIN in original or END in original:
+-            if original.count(BEGIN) != 1 or original.count(END) != 1 or original.index(BEGIN) >= original.index(END):
+-                raise ValueError('기존 관리구역 표식이 손상되었거나 중복되었습니다.')
+-            start = original.index(BEGIN)
+-            finish = original.index(END) + len(END)
+-            result = original[:start] + block + original[finish:]
+-        else:
+-            result = original + (b'\n' if original and not original.endswith(b'\n') else b'') + block + b'\n'
+-        if len(result) > MAX_TEXT_BYTES:
+-            raise ValueError('적용 결과가 2 MiB 상한을 초과합니다.')
+-        return {'target': str(target), 'before_hash': digest(original), 'existed': existed,
+-                'original': original, 'applied_bytes': result, 'after_hash': digest(result)}
+-
+-    def _unchanged(self, target, existed, expected):
+-        target = self._target(target)
+-        if target.exists() != existed or digest(target.read_bytes() if existed else b'') != expected:
+-            raise ValueError('대상 파일이 미리보기/적용 이후 변경되었습니다. 새 미리보기가 필요합니다.')
+-        return target
+-
+-    def _replace(self, target, raw, existed, expected):
+-        temp = target.parent / ('.codex-orbit-' + uuid.uuid4().hex + '.tmp')
+-        try:
+-            with temp.open('xb') as handle:
+-                handle.write(raw)
+-                handle.flush()
+-                os.fsync(handle.fileno())
+-            self._unchanged(target, existed, expected)
+-            if existed:
+-                os.chmod(temp, stat.S_IMODE(target.stat().st_mode))
+-            os.replace(temp, target)
+-        finally:
+-            temp.unlink(missing_ok=True)
+-
+-    def apply(self, plan):
+-        target = self._unchanged(plan['target'], plan['existed'], plan['before_hash'])
+-        if digest(plan['original']) != plan['before_hash'] or digest(plan['applied_bytes']) != plan['after_hash']:
+-            raise ValueError('미리보기 데이터가 변경되었습니다.')
+-        backup_dir = safe_path(self.data_dir / 'backups')
+-        backup_dir.mkdir(parents=True, exist_ok=True)
+-        backup = backup_dir / (uuid.uuid4().hex + '.bin')
+-        with backup.open('xb') as handle:
+-            handle.write(plan['original'])
+-            handle.flush()
+-            os.fsync(handle.fileno())
+-        receipt = {key: value for key, value in plan.items() if key != 'original'}
+-        receipt['backup'] = str(backup)
+-        # 쓰기 실패 시에도 원문 백업은 남기며 적용 성공이라고 기록하지 않습니다.
+-        self._replace(target, plan['applied_bytes'], plan['existed'], plan['before_hash'])
+-        manifest = {key: value for key, value in receipt.items() if key != 'applied_bytes'}
+-        (backup.with_suffix('.json')).write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding='utf-8')
+-        return receipt
+-
+-    def restore(self, receipt):
+-        target = self._unchanged(receipt['target'], True, receipt['after_hash'])
+-        backup = safe_path(receipt['backup'])
+-        if backup.parent != safe_path(self.data_dir / 'backups') or not backup.is_file() or backup.stat().st_size > MAX_TEXT_BYTES:
+-            raise ValueError('유효한 앱 원문 백업이 아닙니다.')
+-        raw = backup.read_bytes()
+-        if digest(raw) != receipt['before_hash']:
+-            raise ValueError('백업 해시가 일치하지 않습니다.')
+-        if receipt['existed']:
+-            self._replace(target, raw, True, receipt['after_hash'])
+-        else:
+-            self._unchanged(target, True, receipt['after_hash'])
+-            target.unlink()
+-
+-    def receipts(self):
+-        directory = self.data_dir / 'backups'
+-        if not directory.is_dir():
+-            return []
+-        result = []
+-        for path in sorted(directory.glob('*.json'), key=lambda p: p.stat().st_mtime, reverse=True)[:100]:
+-            if path.stat().st_size <= 10000:
+-                result.append(json.loads(path.read_text(encoding='utf-8')))
+-        return result
++"""외부 통신 없는 로컬 자료 읽기와 명시적 지침 적용."""
++from datetime import datetime
++import hashlib
++import json
++import os
++from pathlib import Path
++import stat
++import uuid
++
++MAX_TEXT_BYTES = 2 * 1024 * 1024
++BEGIN = b'<!-- CODEX-ORBIT:BEGIN -->'
++END = b'<!-- CODEX-ORBIT:END -->'
++
++
++def digest(raw):
++    return hashlib.sha256(raw).hexdigest()
++
++
++def read_jsonl_tail(path, max_bytes=MAX_TEXT_BYTES, max_records=500):
++    """물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다."""
++    path = Path(path)
++    if not path.exists():
++        return [], []
++    with path.open('rb') as handle:
++        size = handle.seek(0, os.SEEK_END)
++        start = max(0, size - max_bytes)
++        handle.seek(start)
++        raw = handle.read(max_bytes)
++    problems = []
++    if start:
++        problems.append(f'앞부분 생략: 전체 {size}바이트, 최대 {max_bytes}바이트 읽음')
++        raw = raw.partition(b'\n')[2]
++    pieces = raw.split(b'\n')
++    pieces.pop()  # 마지막 LF 뒤 조각 또는 미완성 레코드는 기다립니다.
++    rows = []
++    for number, piece in enumerate(pieces):
++        if not piece:
++            continue
++        try:
++            row = json.loads(piece.decode('utf-8'))
++            if not isinstance(row, dict):
++                raise ValueError('JSON 객체가 아닙니다.')
++            rows.append(row)
++        except (UnicodeError, ValueError) as error:
++            problems.append(f'읽은 범위의 레코드 {number + 1}: {error}')
++    return rows[-max_records:], problems[:50]
++
++
++def session_titles(path):
++    rows, _ = read_jsonl_tail(path, max_records=10000)
++    return {r['id']: r['thread_name'][:500] for r in rows
++            if isinstance(r.get('id'), str) and isinstance(r.get('thread_name'), str)
++            and r['thread_name'].strip()}
++
++
++def title_catalog(index_path, cache_path):
++    """공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다."""
++    rows, _ = read_jsonl_tail(index_path, max_records=10000)
++    result = {r['id']: {'title': r['thread_name'], 'source': '로컬 session_index.jsonl',
++                       'checked_at': r.get('updated_at', '확인 시각 미기록')}
++              for r in rows if isinstance(r.get('id'), str) and isinstance(r.get('thread_name'), str)
++              and r['thread_name'].strip() and len(r['thread_name']) <= 2000}
++    if Path(cache_path).exists():
++        cache = json.loads(read_text_strict(cache_path))
++        if not isinstance(cache, dict) or not isinstance(cache.get('titles'), dict):
++            raise ValueError('제목 캐시 구조가 올바르지 않습니다.')
++        for sid, title in cache['titles'].items():
++            if isinstance(sid, str) and isinstance(title, str) and title.strip() and len(title) <= 2000:
++                checked_at = cache.get('checked_at') or cache.get('observed_at') or '확인 시각 미기록'
++                # 두 출처 모두 시각이 확인될 때만 최신 제목을 우선합니다.
++                def confirmed_time(value):
++                    try:
++                        parsed = datetime.fromisoformat(str(value).replace('Z', '+00:00'))
++                        return parsed if parsed.tzinfo is not None else None
++                    except ValueError:
++                        return None
++                cached_time = confirmed_time(checked_at)
++                indexed_time = confirmed_time(result.get(sid, {}).get('checked_at'))
++                if cached_time is not None and indexed_time is not None and indexed_time > cached_time:
++                    continue
++                result[sid] = {'title': title, 'source': str(cache.get('source', '출처 미기록')) + ' 확인 캐시',
++                               'checked_at': checked_at}
++    return result
++
++
++def resolve_title(event, catalog):
++    """자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다."""
++    value = dict(event)
++    sid = event.get('parent') or event.get('target')
++    entry = catalog.get(sid)
++    if entry:
++        value.update(chat_name=entry['title'], title_target=sid,
++                     title_source=entry['source'], title_checked_at=entry['checked_at'])
++    elif not value.get('chat_name') or value.get('chat_name') == value.get('target'):
++        value.update(chat_name='채팅 제목 확인 불가', title_target=sid, title_source='확인 불가')
++    value['task_name'] = event.get('task_name') or str(event.get('agent_path') or '').rsplit('/', 1)[-1] or '현재 채팅'
++    return value
++
++
++def clamp_position(position, screens, size=140):
++    for x, y, width, height in screens:
++        if x <= position[0] and y <= position[1] and position[0] + size <= x + width and position[1] + size <= y + height:
++            return tuple(position)
++    if not screens:
++        return (24, 24)
++    x, y, _, _ = screens[0]
++    return (x + 24, y + 24)
++
++
++def safe_path(path):
++    """적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다."""
++    path = Path(os.path.abspath(path))
++    for part in [path, *path.parents]:
++        try:
++            info = part.lstat()
++        except FileNotFoundError:
++            continue
++        if stat.S_ISLNK(info.st_mode) or getattr(info, 'st_file_attributes', 0) & 0x400:
++            raise ValueError('링크 또는 재분석 경로에는 적용할 수 없습니다: ' + str(part))
++    return path
++
++
++def read_text_strict(path):
++    path = Path(path)
++    if path.stat().st_size > MAX_TEXT_BYTES:
++        raise ValueError('문서가 2 MiB 상한을 초과했습니다.')
++    return path.read_bytes().decode('utf-8-sig')
++
++
++class InstructionStore:
++    def __init__(self, data_dir):
++        self.data_dir = Path(data_dir)
++
++    def _target(self, target):
++        target = safe_path(target)
++        if target.name.lower() != 'agents.md':
++            raise ValueError('적용 대상은 AGENTS.md 파일이어야 합니다.')
++        if not target.parent.is_dir():
++            raise ValueError('대상 폴더가 존재하지 않습니다.')
++        if target.exists() and (not target.is_file() or target.stat().st_size > MAX_TEXT_BYTES):
++            raise ValueError('대상은 2 MiB 이하의 일반 파일이어야 합니다.')
++        return target
++
++    def preview(self, target, content):
++        target = self._target(target)
++        added = content.encode('utf-8')
++        if not content.strip() or len(added) > MAX_TEXT_BYTES:
++            raise ValueError('빈 지침 또는 2 MiB 초과 지침은 적용할 수 없습니다.')
++        if BEGIN in added or END in added:
++            raise ValueError('지침 내용에 앱 관리구역 표식을 넣을 수 없습니다.')
++        existed = target.exists()
++        original = target.read_bytes() if existed else b''
++        original.decode('utf-8-sig')
++        block = BEGIN + b'\n' + added.rstrip(b'\r\n') + b'\n' + END
++        if BEGIN in original or END in original:
++            if original.count(BEGIN) != 1 or original.count(END) != 1 or original.index(BEGIN) >= original.index(END):
++                raise ValueError('기존 관리구역 표식이 손상되었거나 중복되었습니다.')
++            start = original.index(BEGIN)
++            finish = original.index(END) + len(END)
++            result = original[:start] + block + original[finish:]
++        else:
++            result = original + (b'\n' if original and not original.endswith(b'\n') else b'') + block + b'\n'
++        if len(result) > MAX_TEXT_BYTES:
++            raise ValueError('적용 결과가 2 MiB 상한을 초과합니다.')
++        return {'target': str(target), 'before_hash': digest(original), 'existed': existed,
++                'original': original, 'applied_bytes': result, 'after_hash': digest(result)}
++
++    def _unchanged(self, target, existed, expected):
++        target = self._target(target)
++        if target.exists() != existed or digest(target.read_bytes() if existed else b'') != expected:
++            raise ValueError('대상 파일이 미리보기/적용 이후 변경되었습니다. 새 미리보기가 필요합니다.')
++        return target
++
++    def _replace(self, target, raw, existed, expected):
++        temp = target.parent / ('.codex-orbit-' + uuid.uuid4().hex + '.tmp')
++        try:
++            with temp.open('xb') as handle:
++                handle.write(raw)
++                handle.flush()
++                os.fsync(handle.fileno())
++            self._unchanged(target, existed, expected)
++            if existed:
++                os.chmod(temp, stat.S_IMODE(target.stat().st_mode))
++            os.replace(temp, target)
++        finally:
++            temp.unlink(missing_ok=True)
++
++    def apply(self, plan):
++        target = self._unchanged(plan['target'], plan['existed'], plan['before_hash'])
++        if digest(plan['original']) != plan['before_hash'] or digest(plan['applied_bytes']) != plan['after_hash']:
++            raise ValueError('미리보기 데이터가 변경되었습니다.')
++        backup_dir = safe_path(self.data_dir / 'backups')
++        backup_dir.mkdir(parents=True, exist_ok=True)
++        backup = backup_dir / (uuid.uuid4().hex + '.bin')
++        with backup.open('xb') as handle:
++            handle.write(plan['original'])
++            handle.flush()
++            os.fsync(handle.fileno())
++        receipt = {key: value for key, value in plan.items() if key != 'original'}
++        receipt['backup'] = str(backup)
++        # 쓰기 실패 시에도 원문 백업은 남기며 적용 성공이라고 기록하지 않습니다.
++        self._replace(target, plan['applied_bytes'], plan['existed'], plan['before_hash'])
++        manifest = {key: value for key, value in receipt.items() if key != 'applied_bytes'}
++        (backup.with_suffix('.json')).write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding='utf-8')
++        return receipt
++
++    def restore(self, receipt):
++        target = self._unchanged(receipt['target'], True, receipt['after_hash'])
++        backup = safe_path(receipt['backup'])
++        if backup.parent != safe_path(self.data_dir / 'backups') or not backup.is_file() or backup.stat().st_size > MAX_TEXT_BYTES:
++            raise ValueError('유효한 앱 원문 백업이 아닙니다.')
++        raw = backup.read_bytes()
++        if digest(raw) != receipt['before_hash']:
++            raise ValueError('백업 해시가 일치하지 않습니다.')
++        if receipt['existed']:
++            self._replace(target, raw, True, receipt['after_hash'])
++        else:
++            self._unchanged(target, True, receipt['after_hash'])
++            target.unlink()
++
++    def receipts(self):
++        directory = self.data_dir / 'backups'
++        if not directory.is_dir():
++            return []
++        result = []
++        for path in sorted(directory.glob('*.json'), key=lambda p: p.stat().st_mtime, reverse=True)[:100]:
++            if path.stat().st_size <= 10000:
++                result.append(json.loads(path.read_text(encoding='utf-8')))
++        return result
+--- 이전/src/element_visuals.py
++++ 현재/src/element_visuals.py
+@@ -0,0 +1,19 @@
++"""원본3D 자산을 변경하지 않는 제한 메모리 Qt 색 합성입니다."""
++from PySide6.QtGui import QColor, QImage, QPainter
++
++
++def colorize_atom(image, element):
++    """SourceAtop은 원본 알파를 유지하며 명암에 부드러운 영감색을 더합니다."""
++    result = image.convertToFormat(QImage.Format.Format_ARGB32_Premultiplied)
++    if result.isNull():
++        return result
++    painter = QPainter(result)
++    try:
++        painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_SourceAtop)
++        tint = QColor(element.color)
++        tint.setAlpha(66)
++        painter.fillRect(result.rect(),tint)
++    finally:
++        painter.end()
++    # 색 프레임은 보관하지 않습니다. 원본24장 캐시는 기존 재생기만 소유합니다.
++    return result
+--- 이전/src/elements.py
++++ 현재/src/elements.py
+@@ -0,0 +1,48 @@
++"""한국 날짜의1~31일에 대응하는 원소와 디자인 영감 팔레트입니다."""
++from dataclasses import dataclass
++from datetime import datetime, timedelta, timezone
++
++KST = timezone(timedelta(hours=9))
++SOURCES = ('https://pml.nist.gov/PhysRefData/Elements/per.html',
++           'https://periodic-table.rsc.org/element/26/Iron')
++PALETTE_NOTE = '원소에서 영감받은 디자인 색이며 실제 원소·불꽃색이나 전자배치 재현이 아닙니다.'
++
++
++@dataclass(frozen=True)
++class Element:
++    number: int
++    symbol: str
++    name: str
++    color: str
++    accent: str
++
++
++# 번호·기호는 NIST 표를 따르며 색은 시각 디자인을 위한 별도 선택입니다.
++_ROWS = (
++    ('H','수소','#79c9e8','#c8efff'), ('He','헬륨','#d4adf5','#eedcff'),
++    ('Li','리튬','#ee91a9','#ffd4df'), ('Be','베릴륨','#90cdb7','#d4f4e8'),
++    ('B','붕소','#c9a78e','#f3dfcf'), ('C','탄소','#9baec8','#d9e6fa'),
++    ('N','질소','#92a8ed','#d8e1ff'), ('O','산소','#e99eac','#ffdae2'),
++    ('F','플루오린','#b1d998','#e4f7d6'), ('Ne','네온','#eea77d','#ffe0c7'),
++    ('Na','나트륨','#e1c378','#fff0bf'), ('Mg','마그네슘','#a6c7dc','#dfedf7'),
++    ('Al','알루미늄','#a5b9cf','#e1ebf6'), ('Si','규소','#aba5dc','#e4dfff'),
++    ('P','인','#e5ad8c','#ffe0ce'), ('S','황','#dbcf7d','#fff7c8'),
++    ('Cl','염소','#b5d290','#e5f6ce'), ('Ar','아르곤','#b59ce7','#e7d9ff'),
++    ('K','칼륨','#c49de4','#eed8ff'), ('Ca','칼슘','#e4b08a','#ffe3ca'),
++    ('Sc','스칸듐','#9ac9c9','#d6f3f2'), ('Ti','타이타늄','#a5b8d8','#dde9ff'),
++    ('V','바나듐','#aeabd6','#e4e1fc'), ('Cr','크로뮴','#90c8ad','#d2f3e2'),
++    ('Mn','망가니즈','#c49abb','#f2d5e9'), ('Fe','철','#cd9979','#ffe0bd'),
++    ('Co','코발트','#809fde','#d6e3ff'), ('Ni','니켈','#9fc5ad','#dbf2e3'),
++    ('Cu','구리','#dc9c79','#ffdcc4'), ('Zn','아연','#9abacb','#d9edf5'),
++    ('Ga','갈륨','#a7b5e0','#e0e7ff'),
++)
++ELEMENTS = tuple(Element(index,symbol,name,color,accent)
++                 for index,(symbol,name,color,accent) in enumerate(_ROWS,1))
++
++
++def daily_element(when=None):
++    """매 호출 실제 날짜를 다시 읽어 자정·절전 복귀·시계 되돌림을 반영합니다."""
++    value = datetime.now(KST) if when is None else when
++    if value.tzinfo is None or value.utcoffset() is None:
++        raise ValueError('원소 날짜에는 시간대가 있는 datetime이 필요합니다.')
++    return ELEMENTS[value.astimezone(KST).day-1]
+--- 이전/src/notifier.py
++++ 현재/src/notifier.py
+@@ -13,6 +13,7 @@
+ from datetime import datetime, timezone
+ from pathlib import Path
+ from core import read_jsonl_tail
++from activity import ActivityTracker, safe_public_text
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+ APP_ID = 'Yunseok.Codex.ModelChangeNotifier'
+@@ -115,12 +116,30 @@
+                 self.state.update(schema_version=3, settings={})
+             if not isinstance(self.state.get('settings'), dict):
+                 raise ValueError('채팅 선택 설정 상태 구조 오류입니다. 자동 초기화하지 않습니다.')
++            if 'activity' not in self.state:
++                digest = hashlib.sha256(original).hexdigest()
++                backup = self.work / ('state.before-activity-v1-' + digest + '.json')
++                if backup.exists():
++                    if backup.read_bytes() != original:
++                        raise ValueError('활동 이행 백업이 원본과 다릅니다. 자동 덮어쓰기하지 않습니다.')
++                else:
++                    with backup.open('xb') as handle:
++                        handle.write(original)
++                # 소비한 구간의 활동만 재생합니다. 기존 모델·선택·이력·대기는 바꾸지 않습니다.
++                for info in self.state['files'].values():
++                    end = info['offset']
++                    if isinstance(end, bool) or not isinstance(end, int) or end < 0:
++                        raise ValueError('활동 기준선의 파일 위치가 올바르지 않습니다.')
++                    if end:
++                        info.update(activity_replay_offset=0, activity_replay_end=end,
++                                    activity_replay_info={'expected_sid': info.get('sid') or info.get('expected_sid')})
+         self.state.setdefault('reasons', {})
+         self.state.setdefault('seen', [])
+         self.seen = set(self.state['seen'])
+         self.reason_reads = {}
+         self.reason_budget = POLL_READ_BYTES
+         self.diagnostic_failures = []
++        self.activity = ActivityTracker(self.state)
+ 
+     def diagnostic(self, error, **details):
+         value = {'time': stamp(), 'error': str(error)[:2000], **details}
+@@ -139,11 +158,16 @@
+         if extra.get('kind') == 'settings':
+             # 선택의 이전값과 실행 관측의 이전값은 다를 수 있습니다.
+             before = extra.pop('settings_before')
++            if self.activity.observe(sid, after, before, **extra):
++                self.state['models'][sid] = after
++                return
+             if before == after:
+                 return
+             self.state['models'][sid] = after
+-            self.state['pending'].append({'id': uuid.uuid4().hex, 'time': stamp(), 'target': sid,
+-                'before': before, 'after': after, 'reason': reason[:12000], 'evidence': evidence, **extra})
++            event = {'id': uuid.uuid4().hex, 'time': stamp(), 'target': sid,
++                'before': before, 'after': after, 'reason': reason[:12000], 'evidence': evidence, **extra}
++            self.state['pending'].append(event)
++            self.activity.note_first_observation(event)
+             return
+         if 'declared_before' in extra:
+             # 요청은 관측 기준선을 변경하지 않습니다. 동시에 대기하는 정확한 전후만 연결합니다.
+@@ -166,6 +190,9 @@
+             self.state['declarations'][sid] = {**event, 'observed_before': before}
+             self.state['pending'].append(event)
+             return
++        if self.activity.observe(sid, after, before, **extra):
++            self.state['models'][sid] = after
++            return
+         if before == after:
+             return
+         self.state['models'][sid] = after
+@@ -180,6 +207,7 @@
+                 append_log(self.work / 'observations.jsonl', event)
+                 return
+         self.state['pending'].append(event)
++        self.activity.note_first_observation(event)
+ 
+     def duplicate_record(self, identity, baseline):
+         """원본 시각이 있는 복제 기록만 제외하며 기준선 재생의 순서는 복원합니다."""
+@@ -214,6 +242,7 @@
+         if record.get('timestamp') and self.duplicate_record(
+                 ['settings', sid, record['timestamp'], after], baseline):
+             return
++        self.activity.configuration(sid, after, info, record.get('timestamp'))
+         before = self.state['settings'].get(sid, self.state['models'].get(sid))
+         self.state['settings'][sid] = after
+         if baseline:
+@@ -226,7 +255,7 @@
+                    role=info.get('role', '확인 불가'), parent=info.get('parent'),
+                    agent_path=info.get('agent_path'), source_time=record.get('timestamp'))
+ 
+-    def record(self, record, info, baseline):
++    def record(self, record, info, baseline, activity_only=False):
+         kind, payload = record.get('type'), record.get('payload')
+         if not isinstance(payload, dict):
+             return
+@@ -250,6 +279,7 @@
+                 info['agent_path'] = spawn.get('agent_path', payload.get('agent_path'))
+                 info['owner_active'] = True
+                 info['turns'] = []
++                self.activity.note_meta(sid, info)
+             elif sid != info['sid']:
+                 # 자식의 첫 메타를 보존하고 그 뒤의 부모 복제 기록을 제외합니다.
+                 info['owner_active'] = False
+@@ -258,13 +288,21 @@
+         if not sid:
+             return
+         if kind == 'response_item' and info.get('owner_active'):
+-            self.public_reason(payload, info)
++            self.activity.response(payload, info)
++            if not activity_only:
++                self.public_reason(payload, info)
+         if kind == 'event_msg':
+             event_kind = payload.get('type')
+             if event_kind == 'thread_settings_applied':
+                 info['owner_active'] = payload.get('thread_id') == sid
+-                if info['owner_active']:
++                if info['owner_active'] and not activity_only:
+                     self.settings_record(record, payload, info, baseline)
++            if event_kind == 'item_completed':
++                result = self.activity.complete(record, info, baseline)
++                if result == 'unmatched' and not baseline and info.get('activity_replay_end'):
++                    if not self.activity.defer(record, info):
++                        self.diagnostic('활동 기준선 지연 대기 32개 상한: 원본 위치를 보존하고 다음 주기에 재시도합니다.')
++                        return False
+             if event_kind == 'token_usage_record' and payload.get('thread_id') == sid:
+                 turn = payload.get('turn_id')
+                 if turn and turn not in info['turns']:
+@@ -274,6 +312,8 @@
+                 if turn and turn not in info['turns']:
+                     info['turns'] = (info['turns'] + [turn])[-128:]
+             return
++        if activity_only:
++            return
+         # 비공개 reasoning과 임의의 메시지 본문은 수집하지 않습니다.
+         if kind != 'turn_context' or not isinstance(payload.get('model'), str):
+             return
+@@ -283,6 +323,7 @@
+         if record.get('timestamp') and self.duplicate_record(
+                 [sid, record['timestamp'], payload.get('turn_id'), after], baseline):
+             return
++        self.activity.configuration(sid, after, info, record.get('timestamp'))
+         if baseline:
+             self.state['models'][sid] = after
+         else:
+@@ -294,7 +335,7 @@
+         kind = payload.get('type')
+         if kind == 'message' and payload.get('role') == 'assistant' and payload.get('phase') == 'commentary':
+             parts = [p.get('text', '') for p in payload.get('content', []) if isinstance(p, dict) and p.get('type') in ('output_text', 'text')]
+-            info['commentary'] = '\n'.join(parts)[:12000]
++            info['commentary'] = safe_public_text('\n'.join(parts))
+             return
+         if kind == 'function_call':
+             # 다른 도구 호출이 사이에 있으면 '바로 직전 공개 설명'으로 연결하지 않습니다.
+@@ -381,6 +422,8 @@
+ 
+     def enrich_event(self, event):
+         """이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다."""
++        if event.get('kind') == 'activity':
++            return self.activity.enrich(event)
+         value = dict(event)
+         if value.get('before') is not None or value.get('reason') != '확인 불가':
+             return value
+@@ -399,6 +442,46 @@
+             value['evidence'] = str(value.get('configuration_evidence', '')) + '; ' + value['evidence']
+         return value
+ 
++    def replay_activity_prefix(self, path, info, budget):
++        """고정된 과거 소비 구간의 활동 메타만 파일별 기존 예산 안에서 복원합니다."""
++        end = info.get('activity_replay_end', 0)
++        offset = info.get('activity_replay_offset', 0)
++        total = 0
++        replay = info.get('activity_replay_info', {})
++        with path.open('rb') as handle:
++            handle.seek(offset)
++            while handle.tell() < end and total < budget:
++                position = handle.tell()
++                raw = handle.readline(min(MAX_RECORD + 1, end - position))
++                total += len(raw)
++                if not raw:
++                    break
++                if replay.get('skipping'):
++                    replay['skipping'] = not raw.endswith(b'\n')
++                elif len(raw) > MAX_RECORD:
++                    replay['skipping'] = not raw.endswith(b'\n')
++                    self.diagnostic('활동 기준선 레코드가 2 MiB 상한을 초과했습니다.', path=str(path), offset=position)
++                elif raw.endswith(b'\n'):
++                    try:
++                        record = json.loads(raw[:-1].decode('utf-8'))
++                        if not isinstance(record, dict):
++                            raise ValueError('JSON 객체가 아닙니다.')
++                        self.record(record, replay, True, activity_only=True)
++                    except (ValueError, TypeError, KeyError) as error:
++                        self.diagnostic('활동 기준선 레코드 오류: ' + str(error), path=str(path), offset=position)
++                else:
++                    self.diagnostic('활동 기준선 끝에 완전한 LF 레코드가 없습니다.', path=str(path), offset=position)
++                info['activity_replay_offset'] = handle.tell()
++        if info.get('activity_replay_offset', 0) >= end:
++            if 'activity_commentary' in replay and 'activity_commentary' not in info:
++                info['activity_commentary'] = replay['activity_commentary']
++            for key in ('activity_replay_offset', 'activity_replay_end', 'activity_replay_info'):
++                info.pop(key, None)
++            self.activity.retry_deferred((info.get('sid') or info.get('expected_sid'),))
++        else:
++            self.activity.retry_deferred()
++        return total
++
+     def read_file(self, path, info):
+         stat = path.stat()
+         identity = [stat.st_dev, stat.st_ino]
+@@ -407,6 +490,11 @@
+             info.update(offset=0, identity=identity, sid=None, skipping=False)
+             info.pop('legacy_offset', None)
+             if changed:
++                if info.get('activity_replay_end'):
++                    # 교체 전 소비 구간과 현재 파일을 혼동하지 않고 현재 길이를 한 번 기준선으로 둡니다.
++                    info['activity_baseline_end'] = stat.st_size
++                    for key in ('activity_replay_offset', 'activity_replay_end', 'activity_replay_info'):
++                        info.pop(key, None)
+                 info['baseline_end'] = 0
+                 self.diagnostic('파일 교체 또는 잘림: 현재 모델과 비교하여 재검사합니다.', path=str(path))
+         total = 0
+@@ -434,12 +522,24 @@
+                     record = json.loads(raw[:-1].decode('utf-8'))
+                     if not isinstance(record, dict):
+                         raise ValueError('JSON 객체가 아닙니다.')
+-                    self.record(record, info, position < info.get('baseline_end', 0))
++                    baseline = position < info.get('baseline_end', 0)
++                    if position < info.get('activity_baseline_end', 0) and record.get('type') in ('response_item', 'event_msg'):
++                        item = record.get('payload', {})
++                        if isinstance(item, dict) and item.get('type') == 'item_completed':
++                            self.activity.complete(record, info, True)
++                    if self.record(record, info, baseline) is False:
++                        break
+                 except (ValueError, TypeError, KeyError) as error:
+                     self.diagnostic('레코드 오류: ' + str(error), path=str(path), offset=position, bytes=len(raw))
+                 info['offset'] = handle.tell()
++        # 최신 tail을 먼저 읽고 같은 파일의 남은 기존 예산만 과거 활동 재생에 씁니다.
++        if info.get('activity_replay_end') and total < READ_BYTES:
++            total += self.replay_activity_prefix(path, info, READ_BYTES - total)
++        self.activity.retry_deferred()
+         if info['offset'] >= info.get('legacy_offset', 0):
+             info.pop('legacy_offset', None)
++        if info['offset'] >= info.get('activity_baseline_end', 0):
++            info.pop('activity_baseline_end', None)
+         return total
+ 
+     def poll(self):
+@@ -491,6 +591,9 @@
+             if total >= POLL_READ_BYTES or len(self.state['pending']) >= MAX_PENDING:
+                 break
+         self.state['cursor'] = (cursor + visited) % max(1, len(paths))
++        self.state['activity_replay_remaining_bytes'] = sum(
++            max(0, info.get('activity_replay_end', 0) - info.get('activity_replay_offset', 0))
++            for info in known.values())
+         self.state['initialized'] = True
+         # 명시적 배정 요청은 별도 상태에 기록하고 실제 관측 기준선을 유지합니다.
+         queue = self.work / 'announce'
+--- 이전/src/theme.py
++++ 현재/src/theme.py
+@@ -1,49 +1,49 @@
+-"""앱이 소유하는 모든 화면과 대화상자의 공통 무채색 테마입니다."""
++"""앱이 소유하는 화면과 대화상자의 부드러운 청록 테마입니다."""
+ from PySide6.QtCore import QEvent, QObject, QTimer, QTranslator, Qt
+ from PySide6.QtGui import QColor, QIcon, QPalette, QPixmap
+ from PySide6.QtWidgets import QApplication, QFileDialog, QHeaderView, QProxyStyle, QStyleFactory, QTreeView
+ 
+ 
+ STYLE = '''
+-QWidget {background:#101010;color:#ededed;font-weight:700;font-size:13px;}
+-QDialog {background:#101010;}
++QWidget {background:#172d36;color:#edf4f4;font-weight:700;font-size:13px;}
++QDialog {background:#142a33;}
+ QLabel {background:transparent;border:none;}
+-QFrame#eventCard {background:transparent;border:0;}
+-QLineEdit,QPlainTextEdit,QTreeView,QComboBox {background:#181818;border:1px solid #363636;border-radius:5px;padding:10px;selection-background-color:#505050;selection-color:#ffffff;}
++QFrame#eventCard {background:#1e3540;border:1px solid #344e5a;border-radius:16px;}
++QLineEdit,QPlainTextEdit,QTreeView,QComboBox {background:#203842;border:1px solid #3a5662;border-radius:10px;padding:10px;selection-background-color:#436976;selection-color:#ffffff;}
+ QLineEdit,QComboBox {min-height:22px;}
+-QLineEdit:focus,QPlainTextEdit:focus,QComboBox:focus {border:1px solid #aaaaaa;}
++QLineEdit:focus,QPlainTextEdit:focus,QComboBox:focus {border:1px solid #9bdbc9;}
+ QTreeView::item {min-height:24px;padding:3px;}
+-QListWidget {background:#101010;border:0;border-right:1px solid #303030;padding:10px;outline:0;}
+-QListWidget::item {padding:19px 12px;border-bottom:1px solid #292929;color:#bdbdbd;}
+-QListWidget::item:selected {background:#242424;color:#ffffff;border-left:3px solid #eeeeee;border-radius:5px;}
+-QListWidget::item:hover {background:#1b1b1b;}
+-QPushButton,QToolButton {background:#222222;color:#f0f0f0;border:1px solid #484848;border-radius:5px;padding:9px 14px;min-height:18px;}
+-QPushButton:hover,QToolButton:hover {background:#343434;border-color:#aaaaaa;}
+-QPushButton:pressed,QToolButton:pressed {background:#484848;}
+-QPushButton:disabled {color:#777777;background:#191919;border-color:#303030;}
+-QPushButton#disclosure {background:transparent;border:0;border-top:1px solid #353535;text-align:left;padding:18px 0;}
+-QTabWidget::pane {border:0;border-top:1px solid #303030;}
+-QTabBar::tab {padding:18px 17px;background:transparent;color:#969696;border-bottom:2px solid transparent;font-size:15px;}
+-QTabBar::tab:selected {color:#ffffff;border-bottom:2px solid #eeeeee;}
+-QTabBar::tab:hover {color:#ffffff;}
+-QSplitter::handle {background:#292929;width:1px;}
++QListWidget {background:#1b333e;border:1px solid #324b56;border-radius:14px;padding:10px;outline:0;}
++QListWidget::item {padding:17px 12px;border-bottom:1px solid #304a55;border-radius:10px;color:#b9cbd3;}
++QListWidget::item:selected {background:#2d4955;color:#ffffff;border-left:3px solid #9adfc9;}
++QListWidget::item:hover {background:#263f4a;}
++QPushButton,QToolButton {background:#2b4551;color:#edf5f7;border:1px solid #46616d;border-radius:10px;padding:8px 12px;min-height:18px;}
++QPushButton:hover,QToolButton:hover {background:#375763;border-color:#88b9bd;}
++QPushButton:pressed,QToolButton:pressed {background:#436573;}
++QPushButton:disabled {color:#8199a4;background:#203640;border-color:#344c58;}
++QPushButton#disclosure {background:#203943;border:1px solid #3a5560;text-align:left;padding:14px 12px;}
++QTabWidget::pane {border:0;border-top:1px solid #35505a;}
++QTabBar::tab {padding:16px 17px;background:transparent;color:#a8beca;border-bottom:2px solid transparent;font-size:15px;}
++QTabBar::tab:selected {background:#263f4b;color:#ffffff;border-bottom:2px solid #98dfd5;border-top-left-radius:10px;border-top-right-radius:10px;}
++QTabBar::tab:hover {color:#d5f5ee;}
++QSplitter::handle {background:transparent;width:1px;}
+ QScrollArea {border:0;background:transparent;}
+ QCheckBox {spacing:10px;background:transparent;padding:7px;}
+-QCheckBox::indicator {width:18px;height:18px;border:1px solid #858585;border-radius:4px;background:#202020;}
+-QCheckBox::indicator:checked {background:#ededed;border:4px solid #555555;}
+-QProgressBar {border:0;border-radius:3px;text-align:center;background:#303030;color:#ffffff;}
+-QProgressBar::chunk {background:#aaaaaa;border-radius:3px;}
+-QScrollBar:vertical {background:#161616;width:8px;margin:0;}
+-QScrollBar::handle:vertical {background:#505050;min-height:28px;border-radius:4px;}
++QCheckBox::indicator {width:18px;height:18px;border:1px solid #829da7;border-radius:5px;background:#243d48;}
++QCheckBox::indicator:checked {background:#a3dfcd;border:4px solid #426d69;}
++QProgressBar {border:0;border-radius:6px;text-align:center;background:#304b57;color:#f4f8f9;}
++QProgressBar::chunk {background:#78bdb3;border-radius:6px;}
++QScrollBar:vertical {background:#19313b;width:8px;margin:0;}
++QScrollBar::handle:vertical {background:#4c6a77;min-height:28px;border-radius:4px;}
+ QScrollBar::add-line:vertical,QScrollBar::sub-line:vertical {height:0;}
+-QScrollBar:horizontal {background:#202020;height:8px;}
+-QScrollBar::handle:horizontal {background:#656565;min-width:24px;border-radius:4px;}
++QScrollBar:horizontal {background:#213b47;height:8px;}
++QScrollBar::handle:horizontal {background:#65818c;min-width:24px;border-radius:4px;}
+ QScrollBar::add-line:horizontal,QScrollBar::sub-line:horizontal {width:0;}
+-QMenu {background:#181818;border:1px solid #555555;padding:7px;}
+-QMenu::item {padding:10px 26px;border-radius:4px;}
+-QMenu::item:selected {background:#343434;color:#ffffff;}
+-QMenu::separator {height:1px;background:#383838;margin:5px;}
+-QToolTip {background:#222222;color:#ffffff;border:1px solid #777777;padding:8px;}
++QMenu {background:#203a45;border:1px solid #526c77;padding:7px;}
++QMenu::item {padding:10px 26px;border-radius:7px;}
++QMenu::item:selected {background:#395967;color:#ffffff;}
++QMenu::separator {height:1px;background:#3b5662;margin:5px;}
++QToolTip {background:#294550;color:#f0f6f7;border:1px solid #627f8c;padding:8px;}
+ QMessageBox QLabel {min-width:300px;}
+ '''
+ 
+@@ -136,6 +136,10 @@
+                         (QPalette.ColorRole.HighlightedText, 255), (QPalette.ColorRole.ToolTipBase, 32),
+                         (QPalette.ColorRole.ToolTipText, 255), (QPalette.ColorRole.Link, 220)):
+         palette.setColor(role, QColor(value, value, value))
++    for role, value in ((QPalette.ColorRole.Window, '#142a33'), (QPalette.ColorRole.Base, '#203842'),
++                        (QPalette.ColorRole.Button, '#2b4551'), (QPalette.ColorRole.Highlight, '#436976'),
++                        (QPalette.ColorRole.Link, '#a2e2d2')):
++        palette.setColor(role, QColor(value))
+     app.setPalette(palette)
+     app.setStyleSheet(STYLE)
+     app.setProperty('orbit_monochrome', True)
+--- 이전/src/visuals.py
++++ 현재/src/visuals.py
+@@ -4,6 +4,8 @@
+ from PySide6.QtCore import QPointF, QRectF, Qt
+ from PySide6.QtGui import QColor, QFont, QFontMetricsF, QImage, QPainter
+ from atom_frames import get_atom_frames
++from elements import daily_element
++from element_visuals import colorize_atom
+ 
+ 
+ def rotate_point(point, angles):
+@@ -79,55 +81,48 @@
+     return '새 변경' if unread else '감시 중' if healthy else '확인 필요'
+ 
+ 
+-def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', healthy=False, unread=False, light=False):
+-    """숫자가 없는 실제3D 프레임 위에 현재 계정 값과 상태만 고정 합성합니다."""
++def element_labels(element, badge, state, healthy, unread):
++    """원자번호와 계정 퍼센트를 서로 다른 명시적 라벨로 구분합니다."""
++    usage = ('잔량 ' + badge) if state == 'fresh' else '잔량 지연' if state == 'stale' else '잔량 미확인'
++    return str(element.number), element.symbol, element.name, usage, status_label(healthy, unread)
++
++
++def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', healthy=False, unread=False, light=False, element=None):
++    """같은3D 프레임 위에 오늘 원소·별도 실제 잔량·상태를 합성합니다."""
++    element = daily_element() if element is None else element
++    labels = element_labels(element,badge,state,healthy,unread)
+     painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+-    painter.drawImage(QRectF(-74, -80, 148, 148), get_atom_frames().frame(elapsed))
+-    painter.translate(0, -6)
++    painter.drawImage(QRectF(-74,-80,148,148),colorize_atom(get_atom_frames().frame(elapsed),element))
+     font = QFont(painter.font())
+     font.setWeight(QFont.Weight.Bold)
+-    # 투명 위젯의 Windows 렌더에서도 숫자와 한글에 색 프린지를 만들지 않습니다.
+     font.setStyleStrategy(font.styleStrategy() | QFont.StyleStrategy.NoSubpixelAntialias)
+-    font.setPointSizeF(13 if len(badge) <= 4 else 8 if len(badge) <= 6 else 6)
+-    measured = QFontMetricsF(font).horizontalAdvance(badge)
+-    if measured > 42:
+-        font.setPointSizeF(font.pointSizeF() * 42 / measured)
+     painter.setFont(font)
+-    # Windows 위젯 엔진이 글꼴 힌트를 무시하더라도 투명 ARGB 표면은 회색조로 합성합니다.
+-    scale = max(1., abs(painter.combinedTransform().m11()) * painter.device().devicePixelRatioF())
+-    text_layer = QImage(math.ceil(48 * scale), math.ceil(44 * scale), QImage.Format.Format_ARGB32_Premultiplied)
+-    text_layer.setDevicePixelRatio(scale)
+-    text_layer.fill(Qt.GlobalColor.transparent)
+-    text_painter = QPainter(text_layer)
+-    text_painter.translate(24, 22)
+-    text_painter.setFont(font)
+-    # 구체의 실제 반사 위에서도 숫자 윤곽이 읽히도록 얇은 검정 그림자만 더합니다.
+-    text_painter.setPen(gray(0))
+-    for x, y in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+-        text_painter.drawText(QRectF(-22+x, -13+y, 44, 25), Qt.AlignmentFlag.AlignCenter, badge)
+-    text_painter.setPen(gray(248))
+-    text_painter.drawText(QRectF(-22, -13, 44, 25), Qt.AlignmentFlag.AlignCenter, badge)
+-    text_painter.setPen(gray(170))
+-    font.setPointSizeF(5.2)
+-    text_painter.setFont(font)
+-    text_painter.drawText(QRectF(-20, 10, 40, 9), Qt.AlignmentFlag.AlignCenter,
+-                          '잔량' if state == 'fresh' else '지연' if state == 'stale' else '미확인')
+-    text_painter.end()
+-    painter.drawImage(QRectF(-24, -22, 48, 44), text_layer)
+-    painter.translate(0, 6)
+-    # 작은 점 대신 한글 상태를 읽을 수 있는 고대비 표지를 캔버스 안에 둡니다.
+-    status_layer = QImage(math.ceil(86 * scale), math.ceil(20 * scale), QImage.Format.Format_ARGB32_Premultiplied)
+-    status_layer.setDevicePixelRatio(scale)
+-    status_layer.fill(Qt.GlobalColor.transparent)
+-    status_painter = QPainter(status_layer)
+-    status_painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+-    status_font = QFont(font)
+-    status_font.setPixelSize(11)
+-    status_painter.setFont(status_font)
+-    for x, y in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+-        status_painter.setPen(gray(10))
+-        status_painter.drawText(QRectF(1+x, 1+y, 84, 18), Qt.AlignmentFlag.AlignCenter, status_label(healthy, unread))
+-    status_painter.setPen(gray(210))
+-    status_painter.drawText(QRectF(1, 1, 84, 18), Qt.AlignmentFlag.AlignCenter, status_label(healthy, unread))
+-    status_painter.end()
+-    painter.drawImage(QRectF(-43, 51, 86, 20), status_layer)
++    scale = max(1.,abs(painter.combinedTransform().m11())*painter.device().devicePixelRatioF())
++    # 투명 ARGB에서 글자를 그려 Windows에서도 서브픽셀 색 프린지를 방지합니다.
++    layer = QImage(math.ceil(148*scale),math.ceil(148*scale),QImage.Format.Format_ARGB32_Premultiplied)
++    layer.setDevicePixelRatio(scale)
++    layer.fill(Qt.GlobalColor.transparent)
++    text = QPainter(layer)
++    text.setRenderHint(QPainter.RenderHint.Antialiasing)
++    text.translate(74,74)
++    def label(rect,value,pixels,color=gray(248)):
++        local=QFont(font);local.setPixelSize(pixels)
++        measured=QFontMetricsF(local).horizontalAdvance(value)
++        if measured>rect.width()-2:local.setPixelSize(max(7,int(pixels*(rect.width()-2)/measured)))
++        text.setFont(local)
++        text.setPen(gray(8))
++        for x,y in ((-1,0),(1,0),(0,-1),(0,1)):
++            text.drawText(rect.translated(x,y),Qt.AlignmentFlag.AlignCenter,value)
++        text.setPen(color)
++        text.drawText(rect,Qt.AlignmentFlag.AlignCenter,value)
++    label(QRectF(-22,-28,44,12),labels[0],9,QColor(element.accent))
++    label(QRectF(-24,-18,48,25),labels[1],23)
++    label(QRectF(-26,7,52,12),labels[2],10,QColor(element.accent))
++    # 사용률은 중앙 원소번호와 분리된 표지에만 표시합니다.
++    text.setPen(Qt.PenStyle.NoPen)
++    text.setBrush(QColor(15,19,23,225))
++    text.drawRoundedRect(QRectF(-47,33,94,18),7,7)
++    label(QRectF(-45,33,90,18),labels[3],11)
++    label(QRectF(-43,51,86,20),labels[4],11,gray(220))
++    text.end()
++    painter.drawImage(QRectF(-74,-74,148,148),layer)

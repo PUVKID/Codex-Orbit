@@ -1,6 +1,7 @@
 """Codex Orbit: 독립 회전 위젯과 로컬 변경 기록·사용 한도."""
 import argparse
 import hashlib
+import math
 import json
 import os
 from pathlib import Path
@@ -19,7 +20,7 @@ from PySide6.QtWidgets import (QApplication, QDialog,
                              QFrame, QGridLayout, QHBoxLayout, QLabel, QComboBox,
                              QListWidget, QListWidgetItem, QMenu, QMessageBox,
                              QPlainTextEdit, QPushButton, QSplitter, QTabWidget,
-                             QProgressBar, QScrollArea, QSizePolicy, QLayout, QVBoxLayout, QWidget)
+                             QProgressBar, QScrollArea, QSizePolicy, QSlider, QLayout, QVBoxLayout, QWidget)
 
 from core import clamp_position, read_jsonl_tail, read_text_strict, title_catalog, resolve_title
 from notifier import Watcher, append_log, atomic_json, stamp, POLL_INTERVAL_SECONDS, MAX_PENDING
@@ -36,6 +37,13 @@ from usage_widgets import CalendarHero
 
 
 EMPTY_HISTORY_GUIDANCE = '변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'
+
+
+def validated_motion_speed(value):
+    """설정과 UI의 속도는 유한한 실제 숫자 범위로 제한합니다."""
+    if type(value) not in (int, float) or not .25 <= value <= 3.0 or not math.isfinite(value):
+        raise ValueError(t('회전 속도는 0.25~3배의 유한한 숫자여야 합니다.'))
+    return float(value)
 
 
 def _application_gui_root():
@@ -281,7 +289,7 @@ class Settings:
         self.directory.mkdir(parents=True, exist_ok=True)
         self.path = self.directory / 'settings.json'
         home = Path(os.environ.get('CODEX_HOME') or (Path.home() / '.codex'))
-        self.values = {'sessions': str(home / 'sessions'), 'theme': '자동', 'popup': True, 'notice_timeout_ms': 30000, 'language': 'ko'}
+        self.values = {'sessions': str(home / 'sessions'), 'theme': '자동', 'popup': True, 'notice_timeout_ms': 30000, 'language': 'ko', 'motion_speed': 1.0}
         if self.path.exists():
             value = json.loads(read_text_strict(self.path))
             if not isinstance(value, dict):
@@ -289,6 +297,10 @@ class Settings:
             self.values.update(value)
         if self.values.get('language') not in ('ko', 'en'):
             self.values['language'] = 'ko'
+        try:
+            self.values['motion_speed'] = validated_motion_speed(self.values['motion_speed'])
+        except ValueError:
+            self.values['motion_speed'] = 1.0
 
     def save(self):
         atomic_json(self.path, self.values)
@@ -460,6 +472,7 @@ class OrbitWidget(QWidget):
         self.setMinimumSize(180, 250)
         self.settings, self.details = settings, details
         self.language_changed = lambda language: None
+        self.motion_speed_changed = lambda value: None
         size = settings.values.get('size', [220, 332])
         if not isinstance(size, (list, tuple)) or len(size) != 2 or any(type(v) is not int for v in size):
             size = [220, 332]
@@ -544,8 +557,12 @@ class OrbitWidget(QWidget):
         from calendar_motion import get_calendar_frame,record_calendar_presentation
         design = design_for_date(current_date())
         source=get_calendar_frame(elapsed)
+        from visuals import DesktopOverlayCache
+        if not hasattr(self, '_desktop_overlay_cache'):
+            self._desktop_overlay_cache = DesktopOverlayCache()
         draw_desktop_orbit(painter, self.width(), self.height(), source, design,
-                           self.usage_fraction, self.usage_state, self.clock_text(), self.weather_text, self.location_text)
+                           self.usage_fraction, self.usage_state, self.clock_text(), self.weather_text, self.location_text,
+                           cache=self._desktop_overlay_cache)
         record_calendar_presentation(self,source)
         painter.setPen(QColor('#B5C8D4'))
         painter.drawLine(self.width()-4, self.height()//2-12, self.width()-4, self.height()//2+12)
@@ -622,6 +639,14 @@ class OrbitWidget(QWidget):
             action.setCheckable(True)
             action.setChecked(get_language() == language)
             action.triggered.connect(lambda checked=False, value=language: self.language_changed(value))
+        speeds = menu.addMenu(t('회전 속도'))
+        speeds.setObjectName('motionSpeedMenu')
+        for value in (.25, .5, 1.0, 1.5, 2.0, 3.0):
+            action = speeds.addAction(t('{speed:g}배', speed=value))
+            action.setData(value)
+            action.setCheckable(True)
+            action.setChecked(self.settings.values['motion_speed'] == value)
+            action.triggered.connect(lambda checked=False, speed=value: self.motion_speed_changed(speed))
         menu.addSeparator()
         menu.addAction(t('종료'), self.quit_app)
         return menu
@@ -945,6 +970,35 @@ class Details(QDialog):
         self.usage_compact.setStyleSheet('font-size:12px;color:#b0b0b0;')
         header.addWidget(with_symbol(self.usage_compact, 'quota'))
         layout.addLayout(header)
+        motion_controls = QHBoxLayout()
+        self.motion_speed_label = QLabel(t('회전 속도'))
+        motion_controls.addWidget(self.motion_speed_label)
+        self.motion_speed_slider = QSlider(Qt.Orientation.Horizontal)
+        self.motion_speed_slider.setRange(25, 300)
+        self.motion_speed_slider.setSingleStep(5)
+        self.motion_speed_slider.setPageStep(25)
+        self.motion_speed_slider.setEnabled(controller is not None)
+        self.motion_speed_slider.setAccessibleName(t('회전 속도'))
+        self.motion_speed_slider.setToolTip(t('회전 속도만 변경합니다. 날짜와 시각은 그대로입니다.'))
+        motion_controls.addWidget(self.motion_speed_slider, 1)
+        self.motion_speed_value = QLabel()
+        self.motion_speed_value.setMinimumWidth(58)
+        motion_controls.addWidget(self.motion_speed_value)
+        self.motion_speed_reset = QPushButton(t('기본 1배 복원'))
+        self.motion_speed_reset.setEnabled(controller is not None)
+        self.motion_speed_reset.clicked.connect(lambda: self.controller.change_motion_speed(1.0))
+        motion_controls.addWidget(self.motion_speed_reset)
+        self.update_motion_speed()
+        self.motion_speed_slider.valueChanged.connect(lambda value: self.controller.change_motion_speed(value / 100))
+        layout.addLayout(motion_controls)
+        self.motion_speed_error_text = ''
+        self.motion_speed_error = QLabel()
+        self.motion_speed_error.setTextFormat(Qt.TextFormat.PlainText)
+        self.motion_speed_error.setWordWrap(True)
+        self.motion_speed_error.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
+        self.motion_speed_error.setStyleSheet('color:#efb0aa;font-size:12px;')
+        self.motion_speed_error.hide()
+        layout.addWidget(self.motion_speed_error)
         self.tabs = QTabWidget()
         self.tabs.setIconSize(QSize(20, 20))
         layout.addWidget(self.tabs, 1)
@@ -958,8 +1012,24 @@ class Details(QDialog):
         self.setStyleSheet(STYLE)
         remember_translations(self)
 
+    def update_motion_speed(self):
+        value = self.controller.settings.values['motion_speed'] if self.controller is not None else 1.0
+        self.motion_speed_slider.blockSignals(True)
+        self.motion_speed_slider.setValue(round(value * 100))
+        self.motion_speed_slider.blockSignals(False)
+        self.motion_speed_value.setText(t('{speed:g}배', speed=value))
+
+    def show_motion_speed_error(self, message):
+        self.motion_speed_error_text = message
+        # 오류 원문은 일반 텍스트로 보여 주고 긴 진단은 표시 길이를 제한합니다.
+        detail = message[:500] + ('…' if len(message) > 500 else '')
+        self.motion_speed_error.setText(t('회전 속도 변경 실패: {error}', error=detail) if message else '')
+        self.motion_speed_error.setVisible(bool(message))
+
     def retranslate(self):
         retranslate_widgets(self)
+        self.update_motion_speed()
+        self.show_motion_speed_error(self.motion_speed_error_text)
         self.language_combo.blockSignals(True)
         self.language_combo.setCurrentIndex(0 if get_language() == 'ko' else 1)
         self.language_combo.blockSignals(False)
@@ -1346,6 +1416,8 @@ class Controller(QObject):
         super().__init__(_application_gui_root())
         self.settings = settings
         set_language(settings.values.get('language', 'ko'))
+        from calendar_motion import set_calendar_motion_speed
+        set_calendar_motion_speed(settings.values['motion_speed'])
         self.last_monitor_status = None
         self.monitor = None
         self.closing = False
@@ -1380,6 +1452,7 @@ class Controller(QObject):
         self.window = Details(self)
         self.orbit = OrbitWidget(settings, self.show, self.request_quit, self.gui_owner)
         self.orbit.language_changed = self.set_language
+        self.orbit.motion_speed_changed = self.change_motion_speed
         self.notice = None
         self.screen_connections = []
         for screen in QApplication.screens():
@@ -1406,6 +1479,43 @@ class Controller(QObject):
             self.usage.start()
         if start_weather:
             self.weather.start()
+
+    @Slot(float)
+    def change_motion_speed(self, value):
+        """사용자 조작의 실패는 실제 속도를 복원한 뒤 상세창에서 안내합니다."""
+        try:
+            self.set_motion_speed(value)
+        except Exception as error:
+            self.window.update_motion_speed()
+            self.window.show_motion_speed_error(str(error) or type(error).__name__)
+            self.window.show()
+            self.window.raise_()
+            self.window.activateWindow()
+
+    @Slot(float)
+    def set_motion_speed(self, value):
+        application = QApplication.instance()
+        if QThread.currentThread() != application.thread():
+            raise RuntimeError(t('회전 속도는 GUI 메인 스레드에서만 변경할 수 있습니다.'))
+        value = validated_motion_speed(value)
+        previous = self.settings.values['motion_speed']
+        from calendar_motion import set_calendar_motion_speed
+        try:
+            set_calendar_motion_speed(value)
+        except Exception:
+            self.window.update_motion_speed()
+            raise
+        self.settings.values['motion_speed'] = value
+        try:
+            self.settings.save()
+        except Exception:
+            self.settings.values['motion_speed'] = previous
+            # 저장 실패를 숨기지 않고 표시와 실제 모션을 이전 배율로 되돌립니다.
+            set_calendar_motion_speed(previous)
+            self.window.update_motion_speed()
+            raise
+        self.window.update_motion_speed()
+        self.window.show_motion_speed_error('')
 
     @Slot(str)
     def set_language(self, language):

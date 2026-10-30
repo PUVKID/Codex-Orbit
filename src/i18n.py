@@ -5,6 +5,11 @@ _language = 'ko'
 
 # 이 사전의 키는 앱 표시 문구이며 사용자 기록을 검색·치환하지 않습니다.
 _EN = {
+'회전 속도':'Rotation speed','{speed:g}배':'{speed:g}×','기본 1배 복원':'Reset to 1×',
+'회전 속도 변경 실패: {error}':'Unable to change rotation speed: {error}',
+'회전 속도만 변경합니다. 날짜와 시각은 그대로입니다.':'Changes rotation speed only. Date and time stay unchanged.',
+'회전 속도는 GUI 메인 스레드에서만 변경할 수 있습니다.':'Rotation speed can only be changed on the GUI main thread.',
+'회전 속도는 0.25~3배의 유한한 숫자여야 합니다.':'Rotation speed must be a finite number between 0.25× and 3×.',
 '확인 불가':'Unavailable','미확인':'Unknown','없음':'None','최소':'Minimal','낮음':'Low','보통':'Medium','높음':'High','매우 높음':'Very high','최고':'Maximum',
 '이전 기록 없음':'No previous record','기록 없음':'Not recorded','해당 없음':'Not applicable','모델·추론 확인 불가':'Model / reasoning unavailable','모델 확인 불가':'Model unavailable',
 '모델':'Model','추론':'Reasoning','추론 강도':'Reasoning effort','이전 모델':'Previous model','이전 추론 강도':'Previous reasoning effort','이전':'Previous','새':'New','현재':'Current','변경 전':'Before','변경 후':'After',

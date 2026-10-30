@@ -1,0 +1,439 @@
+--- 이전/src/app.py
++++ 현재/src/app.py
+@@ -17,7 +17,7 @@
+                              QFormLayout, QFrame, QHBoxLayout, QLabel, QLineEdit,
+                              QListWidget, QListWidgetItem, QMenu, QMessageBox,
+                              QPlainTextEdit, QPushButton, QSplitter, QTabWidget,
+-                             QProgressBar, QScrollArea, QSizePolicy, QVBoxLayout, QWidget)
++                             QProgressBar, QScrollArea, QSizePolicy, QLayout, QVBoxLayout, QWidget)
+ 
+ from core import InstructionStore, clamp_position, read_jsonl_tail, read_text_strict, title_catalog, resolve_title
+ from notifier import Watcher, append_log, atomic_json, stamp
+@@ -27,6 +27,22 @@
+ def asset(name):
+     root = Path(getattr(sys, '_MEIPASS', Path(__file__).resolve().parents[1]))
+     return root / 'assets' / name
++
++
++def operation_record(directory, stage, sessions=None, error=None, **details):
++    """대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다."""
++    value = {'time': stamp(), 'kst': datetime.now(timezone(timedelta(hours=9))).isoformat(),
++             'pid': os.getpid(), 'executable': sys.executable, 'cwd': str(Path.cwd()),
++             'data_dir': str(Path(directory).absolute()),
++             'sessions': str(Path(sessions).absolute()) if sessions is not None else None,
++             'stage': stage, **details}
++    if error is not None:
++        value['error'] = str(error)[:2000]
++    try:
++        append_log(Path(directory) / 'startup.jsonl', value)
++    except Exception as log_error:
++        return str(log_error)
++    return None
+ 
+ 
+ def model_label(value):
+@@ -96,6 +112,7 @@
+         '변경 전: ' + model_label(event.get('before')),
+         '변경 후: ' + model_label(event.get('after')),
+         '감지 시각: ' + kst_label(event.get('time')),
++        '원본 기록 시각: ' + kst_label(event.get('source_time')),
+         '기록 종류: ' + str(event.get('kind', '확인 불가')),
+         '', '공개 이유', str(event.get('reason') or '확인 불가'),
+         '', '근거 수준', str(event.get('evidence') or '확인 불가'),
+@@ -131,8 +148,10 @@
+         self.sessions = Path(sessions)
+         key = hashlib.sha256(str(self.sessions.absolute()).encode('utf-8')).hexdigest()[:16]
+         self.work = Path(directory) / 'watches' / key
++        self.directory = Path(directory)
+         self.cache_path = Path(directory) / 'title-cache.json'
+         self.titles = {}
++        self.recent_errors = deque(maxlen=5)
+ 
+     def send(self, event):
+         value = resolve_title(event, self.titles)
+@@ -141,10 +160,12 @@
+         return value['delivery']
+ 
+     def run(self):
++        watcher = None
+         try:
+             watcher = Watcher(self.sessions, self.work, self.send)
+             while not self.isInterruptionRequested():
+                 try:
++                    watcher.diagnostic_failures.clear()
+                     if not self.sessions.is_dir():
+                         raise FileNotFoundError('세션 폴더가 없거나 접근할 수 없습니다: ' + str(self.sessions))
+                     self.titles = title_catalog(self.sessions.parent / 'session_index.jsonl', self.cache_path)
+@@ -160,18 +181,47 @@
+                     diagnostics, problems = read_jsonl_tail(self.work / 'diagnostics.jsonl', max_records=5)
+                     status = {'time': stamp(), 'state': '감시 중', 'sessions': str(self.sessions),
+                               'files': len(watcher.state['files']), 'pending': len(watcher.state['pending']),
+-                              'diagnostics': diagnostics, 'read_problems': problems}
++                              'diagnostics': diagnostics, 'read_problems': problems,
++                              'recent_errors': list(self.recent_errors)}
++                    if watcher.diagnostic_failures:
++                        status['state'] = '오류 · 진단 기록 실패 · 다음 주기 재시도'
++                        status['diagnostic_write_failures'] = list(watcher.diagnostic_failures)
++                        self.recent_errors.extend(watcher.diagnostic_failures)
++                        status['recent_errors'] = list(self.recent_errors)
++                        for failure in watcher.diagnostic_failures:
++                            log_error = operation_record(self.directory, 'monitor-diagnostic-failed', self.sessions,
++                                                         failure['error'], diagnostic_error=failure['diagnostic_error'])
++                            if log_error:
++                                status['operation_log_error'] = log_error
+                     self.status.emit(status)
+                     atomic_json(self.work / 'heartbeat.json', status)
+                 except Exception as error:
+-                    watcher.diagnostic(error)
+-                    self.status.emit({'time': stamp(), 'state': '오류 · 다음 주기 재시도', 'error': str(error), 'sessions': str(self.sessions)})
++                    self.report_failure(error, watcher)
+                 for _ in range(20):
+                     if self.isInterruptionRequested():
+                         break
+                     self.msleep(100)
+         except Exception as error:
+-            self.status.emit({'time': stamp(), 'state': '감시 중단 · 상태 점검 필요', 'error': str(error), 'sessions': str(self.sessions)})
++            self.report_failure(error, watcher, stopped=True)
++
++    def report_failure(self, error, watcher, stopped=False):
++        value = {'time': stamp(), 'state': '감시 중단 · 상태 점검 필요' if stopped else '오류 · 다음 주기 재시도',
++                 'error': str(error), 'sessions': str(self.sessions)}
++        if watcher is not None:
++            try:
++                diagnostic_failure = watcher.diagnostic(error)
++                if diagnostic_failure:
++                    value['diagnostic_error'] = diagnostic_failure['diagnostic_error']
++                    value['state'] += ' · 진단 기록 실패'
++            except Exception as diagnostic_error:
++                value['diagnostic_error'] = str(diagnostic_error)
++                value['state'] += ' · 진단 기록 실패'
++        log_error = operation_record(self.directory, 'monitor-stopped' if stopped else 'monitor-retry',
++                                     self.sessions, error, diagnostic_error=value.get('diagnostic_error'))
++        if log_error:
++            value['operation_log_error'] = log_error
++        self.recent_errors.append(dict(value))
++        self.status.emit(value)
+ 
+ 
+ class OrbitWidget(QWidget):
+@@ -184,7 +234,7 @@
+         self.preferences, self.quit_app = preferences, quit_app
+         self.origin_time = time.monotonic()
+         self.render_time = None
+-        self.healthy = True
++        self.healthy = False
+         self.unread = False
+         self.usage_badge = '—'
+         self.press_global = None
+@@ -453,8 +503,10 @@
+         panel = QWidget()
+         cards = QVBoxLayout(panel)
+         cards.setContentsMargins(12, 0, 0, 0)
++        cards.setSizeConstraint(QLayout.SizeConstraint.SetMinAndMaxSize)
+         self.card = QFrame()
+         self.card.setObjectName('eventCard')
++        self.card.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+         card_layout = QVBoxLayout(self.card)
+         card_layout.setContentsMargins(20, 18, 20, 18)
+         self.event_badge = QLabel('● 변경 기록')
+@@ -476,6 +528,7 @@
+                       self.reason_title, self.reason_value, self.event_time):
+             label.setTextFormat(Qt.TextFormat.PlainText)
+             label.setWordWrap(True)
++            label.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+             label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+             card_layout.addWidget(label)
+         cards.addWidget(self.card)
+@@ -484,13 +537,20 @@
+         cards.addWidget(self.evidence_toggle)
+         self.detail = QPlainTextEdit()
+         self.detail.setReadOnly(True)
++        self.detail.setMinimumHeight(180)
+         self.detail.setPlainText('변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.')
+         self.detail.hide()
+         self.evidence_toggle.toggled.connect(self.toggle_evidence)
+         cards.addWidget(self.detail, 1)
+         cards.addStretch()
++        # 카드와 펼친 원문이 서로 높이를 빼앗지 않도록 우측 전체를 스크롤합니다.
++        self.history_detail_scroll = QScrollArea()
++        self.history_detail_scroll.setWidgetResizable(True)
++        self.history_detail_scroll.setFrameShape(QFrame.Shape.NoFrame)
++        self.history_detail_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
++        self.history_detail_scroll.setWidget(panel)
+         split.addWidget(self.history)
+-        split.addWidget(panel)
++        split.addWidget(self.history_detail_scroll)
+         split.setSizes([280, 600])
+         layout.addWidget(split, 1)
+         self.tabs.addTab(page, '변경 이력')
+@@ -504,7 +564,7 @@
+             self.task_title.setText(ROLE_LABELS.get(value.get('role'), '역할 확인 불가') + ('  ·  자식 작업' if value.get('parent') else '  ·  현재 채팅'))
+             self.before_value.setText('이전  ' + model_card_label(value.get('before')))
+             self.after_value.setText('→  ' + model_card_label(value.get('after')))
+-            self.reason_value.setText(short_reason(value, 260))
++            self.reason_value.setText(short_reason(value, 180))
+             self.event_time.setText(kst_label(value.get('time')))
+ 
+     def toggle_evidence(self, checked):
+@@ -759,6 +819,8 @@
+         self.monitor_retries = 0
+         self.notice_queue = deque()
+         self.notice_overflow = 0
++        self.presentation_error = None
++        self.operation_log_error = None
+         self.monitor_retry_timer = QTimer()
+         self.monitor_retry_timer.setSingleShot(True)
+         self.monitor_retry_timer.timeout.connect(self.restart_dead_monitor)
+@@ -774,10 +836,15 @@
+         self.update_usage(self.usage.snapshot)
+         self.quit_guard = QuitGuard(self)
+         QApplication.instance().installEventFilter(self.quit_guard)
++        if start_worker:
++            try:
++                self.start_monitor()
++                self.monitor_health_timer.start()
++            except Exception:
++                # 필수 준비 실패 시 오류창의 이벤트 루프에 회전 위젯을 남기지 않습니다.
++                self.close()
++                raise
+         self.orbit.show()
+-        if start_worker:
+-            self.start_monitor()
+-            self.monitor_health_timer.start()
+         if (start_worker if start_usage is None else start_usage):
+             self.usage.start()
+ 
+@@ -819,20 +886,29 @@
+             self.window.summary.setText('감시 지연 · 이전 작업자가 종료 중입니다. 종료 후 다시 시작하세요.')
+             return False
+         self.monitor_enabled = True
++        self.orbit.healthy = False
++        self.window.summary.setText('감시 준비 중 · 첫 진행 확인 대기')
+         self.last_monitor_progress = time.monotonic()
+-        self.monitor = Monitor(self.settings.values['sessions'], self.settings.directory)
+-        self.monitor.event.connect(self.receive)
+-        self.monitor.status.connect(self.status)
+-        self.monitor.enriched.connect(self.refresh_history)
+-        self.monitor.finished.connect(self.check_monitor_health)
+-        history, problems = read_jsonl_tail(self.monitor.work / 'history.jsonl')
+-        self.window.history.clear()
+-        titles = title_catalog(Path(self.settings.values['sessions']).parent / 'session_index.jsonl', self.settings.directory / 'title-cache.json')
+-        for event in history:
+-            self.window.add_event(resolve_title(event, titles))
+-        if problems:
+-            self.window.diagnostics.setPlainText('\n'.join(problems))
+-        self.monitor.start()
++        self.operation_log_error = operation_record(self.settings.directory, 'monitor-preparation', self.settings.values['sessions'])
++        try:
++            self.monitor = Monitor(self.settings.values['sessions'], self.settings.directory)
++            self.monitor.event.connect(self.receive)
++            self.monitor.status.connect(self.status)
++            self.monitor.enriched.connect(self.refresh_history)
++            self.monitor.finished.connect(self.check_monitor_health)
++            history, problems = read_jsonl_tail(self.monitor.work / 'history.jsonl')
++            self.window.history.clear()
++            titles = title_catalog(Path(self.settings.values['sessions']).parent / 'session_index.jsonl', self.settings.directory / 'title-cache.json')
++            for event in history:
++                self.window.add_event(resolve_title(event, titles))
++            if problems:
++                self.window.diagnostics.setPlainText('\n'.join(problems))
++            self.monitor.start()
++        except Exception as error:
++            self.monitor_enabled = False
++            self.operation_log_error = operation_record(self.settings.directory, 'monitor-preparation-failed',
++                                                        self.settings.values['sessions'], error) or self.operation_log_error
++            raise
+         self.monitor_health_timer.start()
+         return True
+ 
+@@ -877,7 +953,7 @@
+     def enqueue_notice(self, event, replay=False):
+         if self.notice.isVisible() and self.notice.event_id == event.get('id'):
+             if replay:
+-                self.notice.display(event, self.orbit, self.settings.values.get('notice_timeout_ms', 30000), replay=True)
++                self.display_notice(event, replay=True)
+             return
+         for index, (queued, was_replay) in enumerate(self.notice_queue):
+             if queued.get('id') == event.get('id'):
+@@ -890,15 +966,29 @@
+                 self.notice_overflow += 1
+             self.update_notice_count()
+         else:
+-            self.notice.display(event, self.orbit, self.settings.values.get('notice_timeout_ms', 30000), replay=replay)
++            self.display_notice(event, replay=replay)
+             self.update_notice_count()
++
++    def display_notice(self, event, replay=False):
++        self.notice.display(event, self.orbit, self.settings.values.get('notice_timeout_ms', 30000), replay=replay)
++        after = event.get('after') or {}
++        value = {'event': 'display_requested', 'time': stamp(), 'id': event.get('id'),
++                 'target': event.get('target'), 'model': after.get('model'), 'effort': after.get('effort'),
++                 'source_time': event.get('source_time'), 'event_time': event.get('time'),
++                 'queue_depth': len(self.notice_queue), 'replay': replay, 'user_confirmed': False}
++        try:
++            append_log(self.settings.directory / 'notice-presentations.jsonl', value)
++        except Exception as error:
++            self.presentation_error = str(error)
++            self.window.diagnostics.setPlainText(json.dumps({'state': '알림 표시 기록 실패', 'error': str(error)},
++                                                            ensure_ascii=False, indent=2))
+ 
+     def advance_notice(self):
+         if self.closing:
+             return
+         if not self.notice.isVisible() and self.notice_queue:
+             event, replay = self.notice_queue.popleft()
+-            self.notice.display(event, self.orbit, self.settings.values.get('notice_timeout_ms', 30000), replay=replay)
++            self.display_notice(event, replay=replay)
+         self.update_notice_count()
+ 
+     def replay_event(self, event_id):
+@@ -929,6 +1019,9 @@
+         if self.closing:
+             return
+         self.last_monitor_progress = time.monotonic()
++        if self.presentation_error or self.operation_log_error:
++            value = {**value, 'notice_presentation_error': self.presentation_error,
++                     'operation_log_error': self.operation_log_error}
+         self.orbit.healthy = value.get('state') == '감시 중'
+         self.window.summary.setText('● ' + value.get('state', '') + '  ·  ' + kst_label(value.get('time')))
+         self.window.diagnostics.setPlainText(json.dumps(value, ensure_ascii=False, indent=2))
+@@ -1011,6 +1104,7 @@
+     parser.add_argument('--show-details', action='store_true')
+     parser.add_argument('--show-event', help='기존 이력의 이벤트 ID 또는 대상 ID를 다시 표시')
+     args = parser.parse_args()
++    args.data_dir = args.data_dir.absolute()
+     app = QApplication(sys.argv[:1])
+     app.setApplicationName('Codex Orbit')
+     app.setWindowIcon(QIcon(str(asset('Orbit.ico'))))
+@@ -1019,20 +1113,36 @@
+     families = QFontDatabase.applicationFontFamilies(font_id)
+     font = QFont(families[0] if families else 'NanumGothic', 10, QFont.Weight.Bold)
+     app.setFont(font)
++    effective_sessions = args.sessions or (Path(os.environ.get('CODEX_HOME') or (Path.home() / '.codex')) / 'sessions')
++    stage = 'settings-load'
++    log_error = operation_record(args.data_dir, stage, effective_sessions)
+     try:
+         settings = Settings(args.data_dir)
+         if args.sessions:
+             settings.values['sessions'] = str(args.sessions.absolute())
++        effective_sessions = settings.values['sessions']
++        stage = 'lock-acquire'
++        log_error = operation_record(args.data_dir, stage, effective_sessions) or log_error
+         lock = QLockFile(str(args.data_dir / 'app.lock'))
+         if not lock.tryLock(100):
+             raise RuntimeError('같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다.')
++        if not (args.smoke_test or args.usage_smoke_test):
++            # 필수 캐시 오류를 UI 구성보다 먼저 알리고 준비 중 변경은 start_monitor에서 다시 검사합니다.
++            stage = 'monitor-preflight'
++            log_error = operation_record(args.data_dir, stage, effective_sessions, lock_acquired=True) or log_error
++            title_catalog(Path(effective_sessions).parent / 'session_index.jsonl', args.data_dir / 'title-cache.json')
++        stage = 'controller-prepare'
++        log_error = operation_record(args.data_dir, stage, effective_sessions, lock_acquired=True) or log_error
+         controller = Controller(settings, start_worker=not (args.smoke_test or args.usage_smoke_test))
+     except Exception as error:
++        log_error = operation_record(args.data_dir, stage + '-failed', effective_sessions, error) or log_error
++        message = str(error) + ('\n시작 운영 기록 실패: ' + log_error if log_error else '')
+         if args.smoke_report:
+-            args.smoke_report.write_text(json.dumps({'ok': False, 'error': str(error)}, ensure_ascii=False), encoding='utf-8')
++            args.smoke_report.write_text(json.dumps({'ok': False, 'error': str(error), 'operation_log_error': log_error}, ensure_ascii=False), encoding='utf-8')
+         else:
+-            QMessageBox.critical(None, 'Codex Orbit 시작 실패', str(error))
++            QMessageBox.critical(None, 'Codex Orbit 시작 실패', message)
+         return 1
++    controller.operation_log_error = operation_record(args.data_dir, 'controller-ready', effective_sessions) or log_error or controller.operation_log_error
+     app.aboutToQuit.connect(controller.close)
+     if args.show_details:
+         controller.show()
+--- 이전/src/notifier.py
++++ 현재/src/notifier.py
+@@ -29,10 +29,44 @@
+ 
+ 
+ def atomic_json(path, value):
++    """같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도합니다."""
++    path = Path(path)
+     path.parent.mkdir(parents=True, exist_ok=True)
+-    temp = path.with_suffix(path.suffix + '.tmp')
+-    temp.write_text(json.dumps(value, ensure_ascii=False), encoding='utf-8')
+-    os.replace(temp, path)
++    temp = path.with_name('.' + path.name + '.' + uuid.uuid4().hex + '.tmp')
++    failure = None
++    try:
++        with temp.open('x', encoding='utf-8') as handle:
++            handle.write(json.dumps(value, ensure_ascii=False))
++        delays = (0.02, 0.04, 0.08, 0.12)
++        for attempt in range(len(delays) + 1):
++            try:
++                os.replace(temp, path)
++                break
++            except OSError as error:
++                if getattr(error, 'winerror', None) not in (5, 32, 33) or attempt == len(delays):
++                    raise
++                time.sleep(delays[attempt])
++    except Exception as error:
++        failure = error
++        raise
++    finally:
++        try:
++            temp.unlink(missing_ok=True)
++        except OSError as cleanup_error:
++            if failure is None:
++                raise
++            failure.add_note('임시 파일 정리도 실패했습니다: ' + str(cleanup_error))
++
++
++def source_datetime(value):
++    """시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다."""
++    if not isinstance(value, str):
++        return None
++    try:
++        parsed = datetime.fromisoformat(value.replace('Z', '+00:00'))
++        return parsed.astimezone(timezone.utc) if parsed.tzinfo is not None else None
++    except (ValueError, OverflowError):
++        return None
+ 
+ 
+ def append_log(path, value):
+@@ -65,9 +99,18 @@
+         self.seen = set(self.state['seen'])
+         self.reason_reads = {}
+         self.reason_budget = POLL_READ_BYTES
++        self.diagnostic_failures = []
+ 
+     def diagnostic(self, error, **details):
+-        append_log(self.work / 'diagnostics.jsonl', {'time': stamp(), 'error': str(error)[:2000], **details})
++        value = {'time': stamp(), 'error': str(error)[:2000], **details}
++        try:
++            append_log(self.work / 'diagnostics.jsonl', value)
++        except Exception as diagnostic_error:
++            # 오류 기록 실패가 본래 오류를 바꾸거나 감시기를 종료시키지 않도록 쌍으로 전달합니다.
++            failure = {**value, 'diagnostic_error': str(diagnostic_error)[:2000]}
++            self.diagnostic_failures = (self.diagnostic_failures + [failure])[-5:]
++            return failure
++        return None
+ 
+     def event(self, sid, after, reason='확인 불가', evidence='로컬 turn_context 관측', **extra):
+         before = self.state['models'].get(sid)
+@@ -172,7 +215,8 @@
+             self.state['models'][sid] = after
+         else:
+             self.event(sid, after, role=info.get('role', '확인 불가'), turn_id=payload.get('turn_id'),
+-                       parent=info.get('parent'), agent_path=info.get('agent_path'))
++                       parent=info.get('parent'), agent_path=info.get('agent_path'),
++                       source_time=record.get('timestamp'))
+ 
+     def public_reason(self, payload, info):
+         kind = payload.get('type')
+@@ -385,6 +429,12 @@
+                     path.unlink()
+                 except (OSError, ValueError, KeyError) as error:
+                     self.diagnostic(error, path=str(path))
++        # 같은 대기 묶음에서 비교 가능한 시각만 정렬하고 미확인 항목의 위치는 고정합니다.
++        dated = [(index, source_datetime(event.get('source_time')), event)
++                 for index, event in enumerate(self.state['pending'])]
++        dated = [(index, source_time, event) for index, source_time, event in dated if source_time is not None]
++        for (index, _, _), (_, _, event) in zip(dated, sorted(dated, key=lambda item: item[1])):
++            self.state['pending'][index] = event
+         atomic_json(self.state_path, self.state)
+         sent = []
+         # 영속 pending 후 API를 호출합니다. API 성공과 상태 저장 사이 강제 종료는 재알림 가능성이 있습니다.

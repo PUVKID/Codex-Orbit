@@ -1,0 +1,309 @@
+--- 이전/src/app.py
++++ 현재/src/app.py
+@@ -331,28 +331,46 @@
+     def __init__(self, open_details):
+         super().__init__(None, Qt.WindowType.Tool | Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
+         self.open_details = open_details
++        self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
+         self.setObjectName('notice')
+         self.setStyleSheet('#notice {background:#0D0D0D;border:1px solid #A1A1A1;border-radius:12px;} QLabel {color:#F1F1F1;background:transparent;border:none;font-weight:700;}')
+         self.setFixedWidth(430)
+         layout = QVBoxLayout(self)
+         layout.setContentsMargins(18, 15, 18, 15)
++        layout.setSpacing(7)
+         self.title = QLabel('모델 · 추론 강도 변경')
+         self.text = QLabel()
+         self.title.setTextFormat(Qt.TextFormat.PlainText)
+         self.title.setWordWrap(True)
+-        self.title.setStyleSheet('font-size:15px;color:#B7B7B7;')
++        self.title.setStyleSheet('font-size:18px;color:#FFFFFF;')
+         self.text.setTextFormat(Qt.TextFormat.PlainText)
+         self.text.setWordWrap(True)
+         heading = QHBoxLayout()
+         heading.addWidget(self.title, 1)
+-        close = QPushButton('×')
++        close = QPushButton('닫기')
+         close.setToolTip('알림 닫기 · 이력은 유지됩니다')
+-        close.setFixedSize(28, 28)
++        close.setStyleSheet('padding:0;min-height:28px;max-height:28px;font-size:12px;')
++        close.setFixedSize(48, 30)
+         close.clicked.connect(self.dismiss)
+         heading.addWidget(close, 0, Qt.AlignmentFlag.AlignTop)
+         layout.addLayout(heading)
++        self.category = QLabel()
++        self.category.setStyleSheet('font-size:13px;color:#D7D7D7;')
++        self.category.setWordWrap(True)
++        self.category.setTextFormat(Qt.TextFormat.PlainText)
++        layout.addWidget(self.category)
++        self.before_value = QLabel()
++        self.before_value.setStyleSheet('font-size:12px;color:#AAAAAA;')
++        self.after_value = QLabel()
++        self.after_value.setStyleSheet('font-size:17px;color:#FFFFFF;background:#252525;border-radius:6px;padding:8px;')
++        for label in (self.before_value, self.after_value):
++            label.setWordWrap(True)
++            label.setTextFormat(Qt.TextFormat.PlainText)
++            layout.addWidget(label)
++        self.text.setStyleSheet('font-size:12px;color:#C9C9C9;')
+         layout.addWidget(self.text)
+-        hint = QLabel('클릭하여 전체 이유와 근거 보기')
++        hint = QLabel('이 변경 자세히 보기  ›')
++        hint.setStyleSheet('font-size:12px;color:#FFFFFF;')
+         layout.addWidget(hint)
+         self.queue_hint = QLabel('')
+         self.queue_hint.setWordWrap(True)
+@@ -369,6 +387,10 @@
+         self.hide()
+         self.completed.emit(str(getattr(self, 'event_id', '')))
+ 
++    def closeEvent(self, event):
++        self.dismiss()
++        super().closeEvent(event)
++
+     def fit_content(self):
+         # 고정 폭에서 필요한 줄바꿈 높이를 먼저 확보해 마지막 줄 잘림을 막습니다.
+         self.layout().activate()
+@@ -378,20 +400,51 @@
+         self.adjustSize()
+ 
+     def display(self, event, orbit, timeout_ms=30000, replay=False):
+-        self.event = dict(event)
+-        self.event_id = event.get('id')
+-        name = str(event.get('chat_name') or event.get('target'))
+-        self.title.setText(name)
+-        self.text.setText(('기록 다시 보기 · ' if replay else '') + event_kind(event) + '\n' + model_label(event.get('before')) + '\n→ ' + model_label(event.get('after')) + '\n\n' + short_reason(event))
+-        self.fit_content()
++        self.update_event(event, replay)
+         screen = QApplication.screenAt(orbit.pos()) or QApplication.primaryScreen()
+         rect = screen.availableGeometry()
+-        self.move(max(rect.left(), min(orbit.x() - self.width(), rect.right() - self.width())),
+-                  max(rect.top(), min(orbit.y(), rect.bottom() - self.height())))
++        self.move(max(rect.left(), min(orbit.x() - self.width(), rect.right() - self.width() + 1)),
++                  max(rect.top(), min(orbit.y(), rect.bottom() - self.height() + 1)))
+         self.show()
+         self.timer.stop()
+         if timeout_ms != 0:
+             self.timer.start(max(30000, min(300000, int(timeout_ms))))
++
++    def update_event(self, event, replay=None):
++        # 제목 보강과 동일 ID 갱신은 다른 카드나 남은 표시 시간을 바꾸지 않습니다.
++        if replay is not None:
++            self.replay = replay
++        self.event = dict(event)
++        self.event_id = event.get('id')
++        name = str(event.get('chat_name') or '채팅 제목 확인 불가')
++        self.title.setText(name)
++        before, after = event.get('before'), event.get('after')
++        if before is None:
++            category = event_kind(event)
++        else:
++            model_changed = before.get('model') != (after or {}).get('model')
++            effort_changed = before.get('effort') != (after or {}).get('effort')
++            category = ('모델·추론 변경' if model_changed and effort_changed else '모델 변경' if model_changed
++                        else '추론 강도 변경' if effort_changed else '설정 관측')
++        if event.get('kind') == 'settings':
++            category += ' · 선택 설정'
++        self.category.setText(category)
++        self.before_value.setText('이전  ' + self.setting_label(before))
++        self.after_value.setText('→ 변경 후\n' + self.setting_label(after))
++        reason = short_reason(event)
++        reason = '확인되지 않음' if reason == '확인 불가' else reason
++        self.text.setText(('기록 다시 보기 · ' if self.replay else '') + '변경 이유: ' + reason)
++        self.fit_content()
++
++    @staticmethod
++    def setting_label(value):
++        if value is None:
++            return '미배정 · 이전 값 없음'
++        effort = value.get('effort')
++        labels = {'none': '없음', 'minimal': '최소', 'low': '낮음', 'medium': '보통',
++                  'high': '높음', 'xhigh': '매우 높음', 'ultra': '최고'}
++        strength = f'{labels[effort]} ({effort})' if effort in labels else str(effort or '확인 불가')
++        return str(value.get('model') or '모델 확인 불가') + '\n추론 ' + strength
+ 
+     def mouseReleaseEvent(self, event):
+         if event.button() == Qt.MouseButton.LeftButton:
+@@ -824,7 +877,8 @@
+         self.monitor_enabled = start_worker
+         self.last_monitor_progress = time.monotonic()
+         self.monitor_retries = 0
+-        self.notice_queue = deque()
++        self.notices = {}
++        self.max_visible_notices = 8
+         self.notice_overflow = 0
+         self.presentation_error = None
+         self.operation_log_error = None
+@@ -836,8 +890,10 @@
+         self.monitor_health_timer.timeout.connect(self.check_monitor_health)
+         self.window = Details(self)
+         self.orbit = OrbitWidget(settings, self.show, self.preferences, self.request_quit)
+-        self.notice = Notice(self.show)
+-        self.notice.completed.connect(lambda _: QTimer.singleShot(0, self.advance_notice))
++        self.notice = None
++        for screen in QApplication.screens():
++            screen.availableGeometryChanged.connect(self.layout_notices)
++        QApplication.instance().screenRemoved.connect(self.layout_notices)
+         self.usage = UsageClient(settings.values.get('codex_exe', ''))
+         self.usage.changed.connect(self.update_usage)
+         self.update_usage(self.usage.snapshot)
+@@ -951,40 +1007,67 @@
+             self.enqueue_notice(event)
+ 
+     def update_notice_count(self):
+-        text = f'알림 대기 {len(self.notice_queue)}건'
++        text = f'알림 표시 {len(self.notices)}건 · 새 변경은 즉시 표시'
+         if self.notice_overflow:
+-            text += f' · 대기 상한 초과 {self.notice_overflow}건은 변경 이력에서 확인하세요.'
+-        self.notice.queue_hint.setText(text)
++            text += f' · 표시 상한으로 숨긴 {self.notice_overflow}건은 변경 이력에서 확인하세요.'
+         self.window.notice_summary.setText(text)
+-        if self.notice.isVisible():
+-            self.notice.fit_content()
++        for notice in self.notices.values():
++            notice.queue_hint.setText(text)
++            notice.fit_content()
++        self.layout_notices()
++
++    def layout_notices(self, *_):
++        if self.closing or not self.notices:
++            return
++        screen = QApplication.screenAt(self.orbit.pos()) or QApplication.primaryScreen()
++        rect = screen.availableGeometry()
++        cards = list(self.notices.values())
++        total = sum(card.height() for card in cards) + 10 * (len(cards) - 1)
++        top = max(rect.top(), min(self.orbit.y(), rect.bottom() + 1 - total))
++        y = top
++        # 모두 들어가지 않아도 새 카드를 기다리게 하지 않고 화면 안에서 어긋나게 겹칩니다.
++        overlap = total > rect.height()
++        for index, card in enumerate(cards):
++            x = self.orbit.x() - card.width()
++            if overlap:
++                x += index * 18
++                span = max(0, rect.height() - max(c.height() for c in cards))
++                y = rect.top() + (span * index // max(1, len(cards) - 1))
++            card.move(max(rect.left(), min(x, rect.right() + 1 - card.width())),
++                      max(rect.top(), min(y, rect.bottom() + 1 - card.height())))
++            card.raise_()
++            if not overlap:
++                y += card.height() + 10
+ 
+     def enqueue_notice(self, event, replay=False):
+-        if self.notice.isVisible() and self.notice.event_id == event.get('id'):
++        if self.closing:
++            return
++        notice = self.notices.get(event.get('id'))
++        if notice is not None:
+             if replay:
+-                self.display_notice(event, replay=True)
+-            return
+-        for index, (queued, was_replay) in enumerate(self.notice_queue):
+-            if queued.get('id') == event.get('id'):
+-                self.notice_queue[index] = (event, replay or was_replay)
+-                return
+-        if self.notice.isVisible() or self.notice_queue:
+-            if len(self.notice_queue) < 100:
+-                self.notice_queue.append((event, replay))
++                notice.display(event, self.orbit, self.settings.values.get('notice_timeout_ms', 30000), replay=True)
+             else:
+-                self.notice_overflow += 1
++                notice.update_event(event)
+             self.update_notice_count()
+-        else:
+-            self.display_notice(event, replay=replay)
+-            self.update_notice_count()
++            return
++        if len(self.notices) >= self.max_visible_notices:
++            oldest = next(iter(self.notices.values()))
++            oldest.dismiss()
++            self.notice_overflow += 1
++        self.display_notice(event, replay=replay)
++        self.update_notice_count()
+ 
+     def display_notice(self, event, replay=False):
++        self.notice = Notice(self.show)
++        self.notices[event.get('id')] = self.notice
++        self.notice.completed.connect(self.remove_notice)
+         self.notice.display(event, self.orbit, self.settings.values.get('notice_timeout_ms', 30000), replay=replay)
+         after = event.get('after') or {}
+         value = {'event': 'display_requested', 'time': stamp(), 'id': event.get('id'),
+                  'target': event.get('target'), 'model': after.get('model'), 'effort': after.get('effort'),
+                  'source_time': event.get('source_time'), 'event_time': event.get('time'),
+-                 'queue_depth': len(self.notice_queue), 'replay': replay, 'user_confirmed': False}
++                 'queue_depth': 0, 'visible_count': len(self.notices),
++                 'replay': replay, 'user_confirmed': False}
+         try:
+             append_log(self.settings.directory / 'notice-presentations.jsonl', value)
+         except Exception as error:
+@@ -992,12 +1075,10 @@
+             self.window.diagnostics.setPlainText(json.dumps({'state': '알림 표시 기록 실패', 'error': str(error)},
+                                                             ensure_ascii=False, indent=2))
+ 
+-    def advance_notice(self):
+-        if self.closing:
+-            return
+-        if not self.notice.isVisible() and self.notice_queue:
+-            event, replay = self.notice_queue.popleft()
+-            self.display_notice(event, replay=replay)
++    def remove_notice(self, event_id):
++        notice = self.notices.pop(event_id, None)
++        if notice is not None:
++            notice.deleteLater()
+         self.update_notice_count()
+ 
+     def replay_event(self, event_id):
+@@ -1015,14 +1096,10 @@
+             return
+         for event in events:
+             self.window.update_event(event)
+-            for index, (queued, replay) in enumerate(self.notice_queue):
+-                if queued.get('id') == event.get('id'):
+-                    self.notice_queue[index] = (event, replay)
+-            if self.notice.isVisible() and getattr(self.notice, 'event_id', None) == event.get('id'):
+-                self.notice.event = dict(event)
+-                self.notice.title.setText(str(event.get('chat_name') or '채팅 제목 확인 불가'))
+-                self.notice.text.setText(event_kind(event) + '\n' + model_label(event.get('before')) + '\n→ ' + model_label(event.get('after')) + '\n\n' + short_reason(event))
+-                self.notice.fit_content()
++            notice = self.notices.get(event.get('id'))
++            if notice is not None:
++                notice.update_event(event)
++        self.layout_notices()
+ 
+     def status(self, value):
+         if self.closing:
+@@ -1044,9 +1121,9 @@
+                     self.window.history.setCurrentItem(item)
+                     found = True
+                     break
+-            if not found and getattr(self.notice, 'event_id', None) == event_id:
+-                # 대기 중 화면 이력 상한 밖으로 밀려나도 클릭한 원래 알림을 정확히 엽니다.
+-                self.window.add_event(self.notice.event)
++            if not found and event_id in self.notices:
++                # 화면 이력 상한 밖으로 밀려나도 클릭한 원래 알림을 정확히 엽니다.
++                self.window.add_event(self.notices[event_id].event)
+         self.window.tabs.setCurrentIndex(0)
+         self.window.show()
+         self.window.raise_()
+@@ -1066,8 +1143,8 @@
+         self.monitor_health_timer.stop()
+         self.monitor_retry_timer.stop()
+         self.usage.close()
+-        self.notice.timer.stop()
+-        self.notice.hide()
++        for notice in list(self.notices.values()):
++            notice.dismiss()
+         self.orbit.healthy = False
+         self.window.summary.setText('종료 중 · 감시 작업자의 안전한 종료를 기다리고 있습니다.')
+         if self.monitor is not None and self.monitor.isRunning():
+@@ -1093,10 +1170,11 @@
+         self.monitor_enabled = False
+         self.monitor_health_timer.stop()
+         self.monitor_retry_timer.stop()
+-        self.notice_queue.clear()
+         self.usage.close()
+         self.stop_monitor()
+-        self.notice.close()
++        for notice in list(self.notices.values()):
++            notice.close()
++        self.notices.clear()
+         self.orbit.close()
+         self.window.close()
+         QApplication.instance().removeEventFilter(self.quit_guard)
