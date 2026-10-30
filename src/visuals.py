@@ -1,6 +1,7 @@
 """제작된 실제3D 금속 프레임과 고정된 실제 잔량·상태를 합성합니다."""
 import math
 
+from i18n import translate as t
 from PySide6.QtCore import QPointF, QRectF, Qt
 from PySide6.QtGui import QColor, QFont, QFontMetricsF, QImage, QPainter, QLinearGradient, QTextLayout, QTextOption
 from atom_frames import get_atom_frames
@@ -78,13 +79,13 @@ def gray(level, alpha=255):
 
 def status_label(healthy, unread):
     """읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다."""
-    return '새 변경' if unread else '감시 중' if healthy else '확인 필요'
+    return t('새 변경') if unread else t('감시 중') if healthy else t('확인 필요')
 
 
 def element_labels(element, badge, state, healthy, unread):
     """원자번호와 계정 퍼센트를 서로 다른 명시적 라벨로 구분합니다."""
-    usage = ('잔량 ' + badge) if state == 'fresh' else '잔량 지연' if state == 'stale' else '잔량 미확인'
-    return str(element.number), element.symbol, element.name, usage, status_label(healthy, unread)
+    usage = (t('잔량 ') + badge) if state == 'fresh' else t('잔량 지연') if state == 'stale' else t('잔량 미확인')
+    return str(element.number), element.symbol, t(element.name), usage, status_label(healthy, unread)
 
 
 # 움직이는 조형물·원소 도크·계정 잔량은 서로 독립된 화면 영역입니다.
@@ -102,9 +103,9 @@ def usage_bar(badge, fraction, state):
              and math.isfinite(fraction) and 0 <= fraction <= 1)
     if state != 'fresh' or not valid:
         rect.setWidth(0)
-        return rect, '잔량 지연' if state == 'stale' else '잔량 미확인'
+        return rect, t('잔량 지연') if state == 'stale' else t('잔량 미확인')
     rect.setWidth(USAGE_TRACK_RECT.width()*fraction)
-    return rect, '잔량 '+format(fraction*100,'g')+'%'
+    return rect, t('잔량 ')+format(fraction*100,'g')+'%'
 
 
 def _frame_for_element(element, elapsed):
@@ -153,13 +154,13 @@ def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', he
     if calendar is not None:
         today = calendar.date
         label(QRectF(-64,27,32,21),f'{today.month}/{today.day}',11,QColor(accent))
-        label(QRectF(-27,28,90,20),calendar.title,12)
+        label(QRectF(-27,28,90,20),t(calendar.title),12)
         text.setPen(QColor('#657587'))
         text.drawLine(QPointF(-30,32),QPointF(-30,45))
     else:
         label(QRectF(-64,28,22,20),str(element.number),12,QColor(accent))
         label(QRectF(-39,24,50,28),element.symbol,SYMBOL_PIXELS)
-        label(QRectF(17,28,46,20),element.name,12)
+        label(QRectF(17,28,46,20),t(element.name),12)
         text.setPen(QColor('#657587'))
         for x in (-40,13):text.drawLine(QPointF(x,32),QPointF(x,45))
     surface(USAGE_RECT,5)
@@ -210,7 +211,7 @@ def desktop_widget_layout(width, height, title, show_weather=False, show_locatio
 
 def draw_desktop_orbit(painter, width, height, source, design, fraction, state, clock_text=None, weather_text=None, location_text=None):
     """위젯의 조형과 글자를 별개 영역에 그려 작은 글자 축소를 막습니다."""
-    layout = desktop_widget_layout(width, height, design.title, weather_text is not None, location_text is not None)
+    layout = desktop_widget_layout(width, height, t(design.title), weather_text is not None, location_text is not None)
     painter.save()
     painter.setRenderHint(QPainter.RenderHint.Antialiasing)
     painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)

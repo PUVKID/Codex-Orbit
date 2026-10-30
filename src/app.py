@@ -12,10 +12,11 @@ import re
 from collections import deque
 from shiboken6 import isValid
 
+from i18n import translate as t, get_language, set_language, remember_translations, retranslate_widgets
 from PySide6.QtCore import QEvent, QObject, QLockFile, Qt, QSize, QThread, QTimer, Signal, Slot, QPropertyAnimation, QEasingCurve
 from PySide6.QtGui import QIcon, QPainter, QPixmap, QColor, QImage
 from PySide6.QtWidgets import (QApplication, QDialog,
-                             QFrame, QGridLayout, QHBoxLayout, QLabel,
+                             QFrame, QGridLayout, QHBoxLayout, QLabel, QComboBox,
                              QListWidget, QListWidgetItem, QMenu, QMessageBox,
                              QPlainTextEdit, QPushButton, QSplitter, QTabWidget,
                              QProgressBar, QScrollArea, QSizePolicy, QLayout, QVBoxLayout, QWidget)
@@ -24,7 +25,7 @@ from core import clamp_position, read_jsonl_tail, read_text_strict, title_catalo
 from notifier import Watcher, append_log, atomic_json, stamp, POLL_INTERVAL_SECONDS, MAX_PENDING
 from usage import UsageClient, reset_label
 from weather import WeatherClient
-from visuals import draw_orbit, draw_desktop_orbit, status_label, usage_bar
+from visuals import draw_orbit, draw_desktop_orbit, desktop_widget_layout, status_label, usage_bar
 from atom_frames import get_atom_frames
 from calendar_art import design_for_date, current_date
 from brand import brand_image, AnimatedBrand, brand_clock, symbol_icon, with_symbol, validate_symbols
@@ -32,6 +33,9 @@ from theme import STYLE, apply_theme
 from typography import app_font
 from elements import daily_element
 from usage_widgets import CalendarHero
+
+
+EMPTY_HISTORY_GUIDANCE = '변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'
 
 
 def _application_gui_root():
@@ -70,34 +74,34 @@ def operation_record(directory, stage, sessions=None, error=None, **details):
 
 def model_label(value):
     if value is None:
-        return '모델·추론 확인 불가'
-    return f"{(value.get('model') or '확인 불가')} / {(value.get('effort') or '확인 불가')}"
+        return t('모델·추론 확인 불가')
+    return str(value.get('model') or t('확인 불가')) + " / " + str(value.get('effort') or t('확인 불가'))
 
 
 def model_card_label(value):
     if value is None:
-        return '모델·추론 확인 불가'
-    return f"{(value.get('model') or '확인 불가')} · 추론 {(value.get('effort') or '확인 불가')}"
+        return t('모델·추론 확인 불가')
+    return str(value.get('model') or t('확인 불가')) + " · " + t('추론') + " " + (friendly_effort(value['effort']) if value.get('effort') else t('확인 불가'))
 
 
 def friendly_model(value):
     return {'gpt-6.1-sol': 'Sol', 'gpt-6-sol': 'Sol', 'gpt-6-astra': 'Astra',
-            'gpt-6-luna': 'Luna'}.get(value, str(value or '확인 불가'))
+            'gpt-6-luna': 'Luna'}.get(value, str(value or t('확인 불가')))
 
 
 def friendly_effort(value):
-    labels = {'none': '없음', 'minimal': '최소', 'low': '낮음', 'medium': '보통',
-              'high': '높음', 'xhigh': '매우 높음', 'ultra': '최고'}
-    return labels.get(value, str(value or '미확인')) + (f' ({value})' if value in labels else '')
+    labels = {'none': t('없음'), 'minimal': t('최소'), 'low': t('낮음'), 'medium': t('보통'),
+              'high': t('높음'), 'xhigh': t('매우 높음'), 'ultra': t('최고')}
+    return t(labels.get(value, str(value or '미확인'))) + (f' ({value})' if value in labels else '')
 
 
 def previous_field(value, key):
     """이전 기록 전체 부재와 개별 필드 미기록을 구분하고 관측값만 표시합니다."""
     if value is None:
-        return '이전 기록 없음'
+        return t('이전 기록 없음')
     raw = value.get(key) if isinstance(value, dict) else None
     if not isinstance(raw, str) or not raw:
-        return '확인 불가'
+        return t('확인 불가')
     return friendly_effort(raw) if key == 'effort' else raw
 
 
@@ -109,10 +113,10 @@ def kst_label(value):
     try:
         parsed = datetime.fromisoformat(str(value).replace('Z', '+00:00'))
         if parsed.tzinfo is None:
-            return str(value) + ' (시간대 미기록)'
+            return str(value) + t(' (시간대 미기록)')
         return parsed.astimezone(timezone(timedelta(hours=9))).strftime('%Y.%m.%d %H:%M:%S KST')
     except ValueError:
-        return str(value or '확인 불가')
+        return str(value or t('확인 불가'))
 
 
 def short_reason(event, limit=180):
@@ -142,39 +146,39 @@ def short_reason(event, limit=180):
 
 def event_kind(event):
     if event.get('kind') == 'activity':
-        return {'assigned':'새 작업 배정', 'resumed':'작업 재개'}.get(event.get('activity_type'), '작업 활동 관측')
+        return {'assigned':t('새 작업 배정'), 'resumed':t('작업 재개')}.get(event.get('activity_type'), t('작업 활동 관측'))
     if event.get('kind') == 'settings':
         if event.get('before') is None:
-            return '자식 작업자 첫 선택 설정 관측' if event.get('parent') else '채팅 선택 설정 첫 관측'
-        return configuration_change_label(event) + ' · 선택 설정'
+            return t('자식 작업자 첫 선택 설정 관측') if event.get('parent') else t('채팅 선택 설정 첫 관측')
+        return configuration_change_label(event) + ' · ' + t('선택 설정')
     if event.get('assignment_type') == 'replacement':
-        return '새 작업자 배정 · 이전 작업자 교체'
+        return t('새 작업자 배정 · 이전 작업자 교체')
     if event.get('before') is None:
-        return '자식 작업자 첫 관측' if event.get('parent') else '첫 관측'
+        return t('자식 작업자 첫 관측') if event.get('parent') else t('첫 관측')
     return configuration_change_label(event)
 
 
 def configuration_change_label(event):
     before, after = event.get('before'), event.get('after')
     if before is None or after is None:
-        return '설정 관측 · 현재 값 확인 불가'
+        return t('설정 관측 · 현재 값 확인 불가')
     model_changed = before.get('model') != after.get('model')
     effort_changed = before.get('effort') != after.get('effort')
     if model_changed and effort_changed:
-        return '모델 · 추론 강도 변경'
+        return t('모델 · 추론 강도 변경')
     if model_changed:
-        return '모델 변경'
-    return '추론 강도 변경' if effort_changed else '설정 유지'
+        return t('모델 변경')
+    return t('추론 강도 변경') if effort_changed else t('설정 유지')
 
 
 def public_text(value, fallback='공개된 설명이 기록되지 않았습니다.', limit=600):
     """공개 문장만 표시하며 보호된 도구 페이로드를 해석하거나 노출하지 않습니다."""
     if not isinstance(value, str) or not value.strip():
-        return fallback
+        return t(fallback)
     text = value.strip()
     if (re.search(r'gAAAA[A-Za-z0-9_=-]{40,}|[A-Za-z0-9_+/=-]{160,}', text)
             or re.search(r'encrypted_content\s*[:=]|BEGIN ENCRYPTED|<analysis>|<private>', text, re.I)):
-        return fallback
+        return t(fallback)
     text = text.replace('**', '').replace('`', '')
     return text if len(text) <= limit else text[:limit-1].rstrip()+'…'
 
@@ -185,14 +189,14 @@ def task_explanation(event, limit=360):
         return public_text(event['task_summary'], fallback, limit)
     if event.get('reason'):
         return public_text(short_reason(event, limit), fallback, limit)
-    return fallback
+    return t(fallback)
 
 
 def selection_explanation(event):
     """공개된 작업 목적을 모델 선택 이유로 바꾸어 말하지 않습니다."""
     text = public_text(event.get('reason'), '', 1200)
     match = re.search(r'(?:모델(?:·추론 강도)? 선택 이유|선택 이유)\s*[:：]\s*([^\n]+)', text)
-    return ('선택 이유: '+match.group(1).strip()) if match else '모델·추론 강도 선택 이유는 공개되지 않았습니다.'
+    return (t('선택 이유: ')+match.group(1).strip()) if match else t('모델·추론 강도 선택 이유는 공개되지 않았습니다.')
 
 
 def event_accent(event):
@@ -209,13 +213,13 @@ def event_accent(event):
 def activity_message(event):
     if event.get('kind') != 'activity':
         return ''
-    role = ROLE_LABELS.get(event.get('role'), '담당')
-    return (f'기존 {role} 작업자에게 다시 맡겼어요.' if event.get('activity_type') == 'resumed'
-            else f'{role} 작업자에게 새 작업을 맡겼어요.')
+    role = t(ROLE_LABELS.get(event.get('role'), '담당'))
+    return (t('기존 {role} 작업자에게 다시 맡겼어요.', role=role) if event.get('activity_type') == 'resumed'
+            else t('{role} 작업자에게 새 작업을 맡겼어요.', role=role))
 
 
 def history_label(event):
-    title = str(event.get('chat_name') or event.get('target') or '채팅 제목 확인 불가')
+    title = str(event.get('chat_name') or event.get('target') or t('채팅 제목 확인 불가'))
     if event.get('kind') == 'activity':
         return title+'\n'+event_kind(event)+'\n'+task_explanation(event, 70)
     return title+'\n'+model_label(event.get('after'))
@@ -235,39 +239,39 @@ def event_icon(event):
 
 def public_reason_original(event):
     value = event.get('reason')
-    return str(value) if public_text(value, '', 1) else '공개된 설명이 기록되지 않았습니다.'
+    return str(value) if public_text(value, '', 1) else t('공개된 설명이 기록되지 않았습니다.')
 
 
 def event_description(event):
     return '\n'.join([
-        '채팅: ' + str(event.get('chat_name') or event.get('target', '확인 불가')),
-        '채팅 ID: ' + str(event.get('parent') or event.get('target') or '확인 불가'),
-        '작업자 ID: ' + str(event.get('target') if event.get('parent') else '해당 없음'),
-        '구분: ' + ('자식 작업' if event.get('parent') else 'main 또는 부모 정보 미기록'),
-        '역할: ' + str(event.get('role', '확인 불가')),
-        '작업 이름: ' + str(event.get('task_name') or '기록 없음'),
-        '부모 ID: ' + str(event.get('parent') or '기록 없음'),
-        '작업 경로: ' + str(event.get('agent_path') or '기록 없음'),
-        '제목 출처: ' + str(event.get('title_source') or '확인 불가'),
-        '제목 확인 시각: ' + kst_label(event.get('title_checked_at')),
-        '호출 ID: ' + str(event.get('call_id') or '기록 없음'),
-        '활동 종류: ' + str(event.get('activity_type') or '해당 없음'),
-        '맡긴 일: ' + task_explanation(event, 2000),
-        '작업 설명 출처: ' + str(event.get('task_source') or '기록 없음'),
-        '활동 근거: ' + str(event.get('assignment_evidence') or '해당 없음'),
-        '요청 설정: ' + str(event.get('requested') or '기록 없음'),
-        '이유 호출 ID: ' + str(event.get('reason_call_id') or '기록 없음'),
-        '변경 전: ' + ('이전 기록 없음' if event.get('before') is None else model_label(event['before'])),
-        '변경 후: ' + model_label(event.get('after')),
-        '감지 시각: ' + kst_label(event.get('time')),
-        '원본 기록 시각: ' + kst_label(event.get('source_time')),
-        '기록 종류: ' + str(event.get('kind', '확인 불가')),
-        '', '공개 이유 원문', public_reason_original(event),
-        '', '모델·추론 강도 선택 이유', selection_explanation(event),
-        '', '근거 수준', str(event.get('evidence') or '확인 불가'),
-        '', '선택 설정 관측 근거', str(event.get('configuration_evidence') or '해당 없음'),
-        '', '표시 기록', str(event.get('delivery') or '앱 표시 요청; 사용자 수신 미확인'),
-        '', '로컬 기록과 공개 이유의 연결 근거입니다. 서버 모델 신원이나 비공개 추론을 증명하지 않습니다.'
+        t('채팅') + ': ' + str(event.get('chat_name') or event.get('target', t('확인 불가'))),
+        t('채팅 ID') + ': ' + str(event.get('parent') or event.get('target') or t('확인 불가')),
+        t('작업자 ID') + ': ' + str(event.get('target') if event.get('parent') else t('해당 없음')),
+        t('구분') + ': ' + (t('자식 작업') if event.get('parent') else t('main 또는 부모 정보 미기록')),
+        t('역할') + ': ' + str(event.get('role', t('확인 불가'))),
+        t('작업 이름') + ': ' + str(event.get('task_name') or t('기록 없음')),
+        t('부모 ID') + ': ' + str(event.get('parent') or t('기록 없음')),
+        t('작업 경로') + ': ' + str(event.get('agent_path') or t('기록 없음')),
+        t('제목 출처') + ': ' + str(event.get('title_source') or t('확인 불가')),
+        t('제목 확인 시각') + ': ' + kst_label(event.get('title_checked_at')),
+        t('호출 ID') + ': ' + str(event.get('call_id') or t('기록 없음')),
+        t('활동 종류') + ': ' + str(event.get('activity_type') or t('해당 없음')),
+        t('맡긴 일') + ': ' + task_explanation(event, 2000),
+        t('작업 설명 출처') + ': ' + str(event.get('task_source') or t('기록 없음')),
+        t('활동 근거') + ': ' + str(event.get('assignment_evidence') or t('해당 없음')),
+        t('요청 설정') + ': ' + str(event.get('requested') or t('기록 없음')),
+        t('이유 호출 ID') + ': ' + str(event.get('reason_call_id') or t('기록 없음')),
+        t('변경 전') + ': ' + (t('이전 기록 없음') if event.get('before') is None else model_label(event['before'])),
+        t('변경 후') + ': ' + model_label(event.get('after')),
+        t('감지 시각') + ': ' + kst_label(event.get('time')),
+        t('원본 기록 시각') + ': ' + kst_label(event.get('source_time')),
+        t('기록 종류') + ': ' + str(event.get('kind', t('확인 불가'))),
+        '', t('공개 이유 원문'), public_reason_original(event),
+        '', t('모델·추론 강도 선택 이유'), selection_explanation(event),
+        '', t('근거 수준'), str(event.get('evidence') or t('확인 불가')),
+        '', t('선택 설정 관측 근거'), str(event.get('configuration_evidence') or t('해당 없음')),
+        '', t('표시 기록'), str(event.get('delivery') or t('앱 표시 요청; 사용자 수신 미확인')),
+        '', t('로컬 기록과 공개 이유의 연결 근거입니다. 서버 모델 신원이나 비공개 추론을 증명하지 않습니다.')
     ])
 
 
@@ -277,12 +281,14 @@ class Settings:
         self.directory.mkdir(parents=True, exist_ok=True)
         self.path = self.directory / 'settings.json'
         home = Path(os.environ.get('CODEX_HOME') or (Path.home() / '.codex'))
-        self.values = {'sessions': str(home / 'sessions'), 'theme': '자동', 'popup': True, 'notice_timeout_ms': 30000}
+        self.values = {'sessions': str(home / 'sessions'), 'theme': '자동', 'popup': True, 'notice_timeout_ms': 30000, 'language': 'ko'}
         if self.path.exists():
             value = json.loads(read_text_strict(self.path))
             if not isinstance(value, dict):
                 raise ValueError('앱 설정은 JSON 객체여야 합니다.')
             self.values.update(value)
+        if self.values.get('language') not in ('ko', 'en'):
+            self.values['language'] = 'ko'
 
     def save(self):
         atomic_json(self.path, self.values)
@@ -431,15 +437,19 @@ class OrbitWidget(QWidget):
         super().showEvent(event)
         from calendar_motion import set_calendar_motion_visible
         set_calendar_motion_visible(self, True)
+        self._request_motion_size()
+        if hasattr(self,'timer'):self.timer.start()
 
     def hideEvent(self, event):
         from calendar_motion import set_calendar_motion_visible
         set_calendar_motion_visible(self, False)
+        if hasattr(self,'timer'):self.timer.stop()
         super().hideEvent(event)
 
     def closeEvent(self, event):
         from calendar_motion import set_calendar_motion_visible
         set_calendar_motion_visible(self, False)
+        if hasattr(self,'timer'):self.timer.stop()
         super().closeEvent(event)
 
     def __init__(self, settings, details, quit_app, parent=None):
@@ -449,6 +459,7 @@ class OrbitWidget(QWidget):
         self.setWindowTitle('Codex Orbit')
         self.setMinimumSize(180, 250)
         self.settings, self.details = settings, details
+        self.language_changed = lambda language: None
         size = settings.values.get('size', [220, 332])
         if not isinstance(size, (list, tuple)) or len(size) != 2 or any(type(v) is not int for v in size):
             size = [220, 332]
@@ -461,8 +472,8 @@ class OrbitWidget(QWidget):
         self.usage_badge = '—'
         self.usage_fraction = None
         self.usage_state = 'unknown'
-        self.weather_text = '기온 미확인'
-        self.location_text = '위치 정보 없음'
+        self.weather_text = t('기온 미확인')
+        self.location_text = t('위치 정보 없음')
         self.weather_tooltip = ''
         self.usage_tooltip = ''
         self.press_global = None
@@ -470,10 +481,10 @@ class OrbitWidget(QWidget):
         self.resize_edges = (False, False)
         self.setCursor(Qt.CursorShape.OpenHandCursor)
         self.setMouseTracking(True)
-        self.setToolTip('Codex Orbit · 클릭: 상세 · 드래그: 이동 · 오른쪽/아래 가장자리: 크기 조절 · 우클릭: 기록/종료')
+        self.setToolTip(t('Codex Orbit · 클릭: 상세 · 드래그: 이동 · 오른쪽/아래 가장자리: 크기 조절 · 우클릭: 기록/종료'))
         self.timer = QTimer(self)
-        self.timer.timeout.connect(self.update)
-        self.timer.start(20)
+        self.timer.timeout.connect(self._refresh_static_clock)
+        self.timer.start(1000)
         self.restore_position()
         for screen in QApplication.screens():
             screen.availableGeometryChanged.connect(self.restore_position)
@@ -500,19 +511,42 @@ class OrbitWidget(QWidget):
     def clock_text(self):
         return datetime.now().strftime('%H:%M:%S')
 
+    def _refresh_static_clock(self):
+        from calendar_motion import calendar_motion_status
+        status=calendar_motion_status()
+        if status.get('error') or not status.get('render_count'):self.update()
+
+    @Slot()
+    def calendar_frame_ready(self):
+        if self.isVisible():self.update()
+
+    def _request_motion_size(self):
+        if not hasattr(self,'timer') or not self.isVisible():return
+        from calendar_motion import set_calendar_motion_size
+        design=design_for_date(current_date())
+        layout=desktop_widget_layout(self.width(),self.height(),t(design.title),True,True)
+        size=max(32,min(2160,round(layout['art'].width()*self.devicePixelRatioF())))
+        set_calendar_motion_size(self,size)
+
+    def resizeEvent(self,event):
+        super().resizeEvent(event)
+        self._request_motion_size()
+
     def refresh_tooltip(self):
-        self.setToolTip(self.usage_tooltip + '\n' + self.weather_tooltip)
+        self.setToolTip(self.usage_tooltip + '\n' + self.weather_tooltip +
+                        t('\n감시 상태: ') + status_label(self.healthy, self.unread))
 
     def paintEvent(self, _):
-        base_tooltip = self.toolTip().split('\n감시 상태:')[0]
-        self.setToolTip(base_tooltip+'\n감시 상태: '+status_label(self.healthy,self.unread))
+        self.refresh_tooltip()
         elapsed = self.render_time if self.render_time is not None else time.monotonic() - self.origin_time
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        from calendar_motion import get_calendar_frame
+        from calendar_motion import get_calendar_frame,record_calendar_presentation
         design = design_for_date(current_date())
-        draw_desktop_orbit(painter, self.width(), self.height(), get_calendar_frame(elapsed), design,
+        source=get_calendar_frame(elapsed)
+        draw_desktop_orbit(painter, self.width(), self.height(), source, design,
                            self.usage_fraction, self.usage_state, self.clock_text(), self.weather_text, self.location_text)
+        record_calendar_presentation(self,source)
         painter.setPen(QColor('#B5C8D4'))
         painter.drawLine(self.width()-4, self.height()//2-12, self.width()-4, self.height()//2+12)
         painter.drawLine(self.width()//2-12, self.height()-4, self.width()//2+12, self.height()-4)
@@ -581,9 +615,15 @@ class OrbitWidget(QWidget):
 
     def create_menu(self):
         menu = QMenu(self)
-        menu.addAction('상세 이력 열기', self.details)
+        menu.addAction(t('상세 이력 열기'), self.details)
+        languages = menu.addMenu(t('언어'))
+        for language, label in (('ko', '한국어'), ('en', 'English')):
+            action = languages.addAction(label)
+            action.setCheckable(True)
+            action.setChecked(get_language() == language)
+            action.triggered.connect(lambda checked=False, value=language: self.language_changed(value))
         menu.addSeparator()
-        menu.addAction('종료', self.quit_app)
+        menu.addAction(t('종료'), self.quit_app)
         return menu
 
 
@@ -601,7 +641,7 @@ class Notice(QFrame):
         layout = QVBoxLayout(self)
         layout.setContentsMargins(18, 14, 18, 14)
         layout.setSpacing(5)
-        self.title = QLabel('모델 · 추론 강도 변경')
+        self.title = QLabel(t('모델 · 추론 강도 변경'))
         self.text = QLabel()
         self.title.setTextFormat(Qt.TextFormat.PlainText)
         self.title.setWordWrap(True)
@@ -612,8 +652,8 @@ class Notice(QFrame):
         self.brand_mark = AnimatedBrand(32)
         heading.addWidget(self.brand_mark, 0, Qt.AlignmentFlag.AlignTop)
         heading.addWidget(self.title, 1)
-        close = QPushButton('닫기')
-        close.setToolTip('알림 닫기 · 이력은 유지됩니다')
+        close = QPushButton(t('닫기'))
+        close.setToolTip(t('알림 닫기 · 이력은 유지됩니다'))
         close.setStyleSheet('padding:0;min-height:28px;max-height:28px;font-size:12px;')
         close.setFixedSize(48, 30)
         close.clicked.connect(self.dismiss)
@@ -637,8 +677,8 @@ class Notice(QFrame):
         self.model_current = QLabel()
         self.effort_previous = QLabel()
         self.effort_current = QLabel()
-        self.notice_after_heading = QLabel('변경 후')
-        for column, text in ((0, '이전'), (1, '→'), (2, '변경 후')):
+        self.notice_after_heading = QLabel(t('변경 후'))
+        for column, text in ((0, t('이전')), (1, '→'), (2, t('변경 후'))):
             label = self.notice_after_heading if column == 2 else QLabel(text)
             label.setStyleSheet('font-size:12px;color:#B5C8D4;')
             values.addWidget(label, 0, column)
@@ -667,7 +707,7 @@ class Notice(QFrame):
         self.selection_reason.setWordWrap(True)
         self.selection_reason.setTextFormat(Qt.TextFormat.PlainText)
         layout.addWidget(self.selection_reason)
-        hint = QLabel('이 변경 자세히 보기  ›')
+        hint = QLabel(t('이 변경 자세히 보기  ›'))
         self.detail_hint = hint
         hint.setStyleSheet('font-size:12px;color:#FFFFFF;')
         layout.addWidget(hint)
@@ -678,6 +718,7 @@ class Notice(QFrame):
         self.timer = QTimer(self)
         self.timer.setSingleShot(True)
         self.timer.timeout.connect(self.dismiss)
+        remember_translations(self)
 
     def dismiss(self):
         if not self.isVisible():
@@ -700,7 +741,7 @@ class Notice(QFrame):
         queue_height = 0
         for label in self.findChildren(QLabel):
             if label is self.title:
-                content = (str(getattr(self, 'event', {}).get('chat_name') or '채팅 제목 확인 불가'), label.text())
+                content = (str(getattr(self, 'event', {}).get('chat_name') or t('채팅 제목 확인 불가')), label.text())
             elif label is self.queue_hint:
                 queue_height = 0 if compact else label.heightForWidth(width)
                 content = None
@@ -725,7 +766,7 @@ class Notice(QFrame):
         if previous == signature:
             return
         available = getattr(self, 'available_rect', None)
-        full_title = str(getattr(self, 'event', {}).get('chat_name') or '채팅 제목 확인 불가')
+        full_title = str(getattr(self, 'event', {}).get('chat_name') or t('채팅 제목 확인 불가'))
         if previous is not None and previous[:-1] == signature[:-1] and self.title.text() == full_title:
             # 안내의 줄 높이만 바뀌었으면 제목·여백을 초기화하지 않고 실제 카드 크기만 갱신합니다.
             self.layout().activate()
@@ -743,7 +784,7 @@ class Notice(QFrame):
         margins = self.layout().contentsMargins()
         width = self.contentsRect().width() - margins.left() - margins.right()
         self.text.setMinimumHeight(self.text.heightForWidth(width))
-        full_title = str(getattr(self, 'event', {}).get('chat_name') or '채팅 제목 확인 불가')
+        full_title = str(getattr(self, 'event', {}).get('chat_name') or t('채팅 제목 확인 불가'))
         self.title.setToolTip(full_title)
         self.title.setText(full_title)
         self.title.setMinimumHeight(0)
@@ -797,7 +838,7 @@ class Notice(QFrame):
             self.replay = replay
         self.event = dict(event)
         self.event_id = event.get('id')
-        name = str(event.get('chat_name') or '채팅 제목 확인 불가')
+        name = str(event.get('chat_name') or t('채팅 제목 확인 불가'))
         self.title.setText(name)
         before, after = event.get('before'), event.get('after')
         if event.get('kind') == 'activity' or before is None:
@@ -805,43 +846,43 @@ class Notice(QFrame):
         else:
             model_changed = bool(before.get('model') and (after or {}).get('model') and before['model'] != after['model'])
             effort_changed = bool(before.get('effort') and (after or {}).get('effort') and before['effort'] != after['effort'])
-            category = ('모델·추론 변경' if model_changed and effort_changed else '모델 변경' if model_changed
-                        else '추론 강도 변경' if effort_changed else '설정 관측')
+            category = (t('모델·추론 변경') if model_changed and effort_changed else t('모델 변경') if model_changed
+                        else t('추론 강도 변경') if effort_changed else t('설정 관측'))
         if event.get('kind') == 'settings':
-            category += ' · 선택 설정'
+            category += ' · ' + t('선택 설정')
         if event.get('kind') == 'activity' and before is not None and before == after:
-            category += ' · 설정 유지'
-        self.category.setText(category)
+            category += ' · ' + t('설정 유지')
+        self.category.setText(t(category))
         self.category.setStyleSheet('font-size:13px;padding:2px 0;color:'+event_accent(event)+';')
         self.task_value.setText(task_explanation(event, 100))
         self.task_value.setToolTip(task_explanation(event, 2000))
         self.selection_reason.setText(selection_explanation(event))
         after_map = after or {}
-        self.notice_after_heading.setText('현재' if event.get('kind') == 'activity' else '변경 후')
-        self.model_previous.setText('이전 모델  ' + previous_field(before, 'model'))
-        self.model_current.setText(str(after_map.get('model') or '확인 불가'))
-        self.effort_previous.setText('이전 추론 강도  ' + previous_field(before, 'effort'))
+        self.notice_after_heading.setText(t('현재') if event.get('kind') == 'activity' else t('변경 후'))
+        self.model_previous.setText(t('이전 모델') + '  ' + previous_field(before, 'model'))
+        self.model_current.setText(str(after_map.get('model') or t('확인 불가')))
+        self.effort_previous.setText(t('이전 추론 강도') + '  ' + previous_field(before, 'effort'))
         self.effort_current.setText(friendly_effort(after_map.get('effort')))
         for key, labels in (('model', (self.model_previous, self.model_current)), ('effort', (self.effort_previous, self.effort_current))):
             changed = event.get('kind') != 'activity' and before is not None and before.get(key) and after_map.get(key) and before.get(key) != after_map.get(key)
             for label in labels:
                 label.setStyleSheet('font-size:18px;font-weight:600;color:#F1F6FA;padding:3px;' + ('background:#385064;border-radius:6px;' if changed else ''))
-        self.after_value.setText(('현재 설정 · ' if event.get('kind') == 'activity' else '→ 변경 후 · ') + (self.setting_label(after).replace('\n',' · ') if after is not None else '확인 불가'))
+        self.after_value.setText((t('현재 설정 · ') if event.get('kind') == 'activity' else t('→ 변경 후 · ')) + (self.setting_label(after).replace('\n',' · ') if after is not None else t('확인 불가')))
         reason = short_reason(event)
-        reason = '확인되지 않음' if reason == '확인 불가' else reason
-        prefix = '공개 설명: ' if event.get('kind') == 'activity' else '변경 이유: '
-        self.text.setText(('기록 다시 보기 · ' if self.replay else '') + prefix + public_text(reason))
+        reason = t('확인되지 않음') if reason == '확인 불가' else reason
+        prefix = t('공개 설명: ') if event.get('kind') == 'activity' else t('변경 이유: ')
+        self.text.setText((t('기록 다시 보기 · ') if self.replay else '') + prefix + public_text(reason))
         self.fit_content()
 
     @staticmethod
     def setting_label(value):
         if value is None:
-            return '이전 기록 없음'
+            return t('이전 기록 없음')
         effort = value.get('effort')
-        labels = {'none': '없음', 'minimal': '최소', 'low': '낮음', 'medium': '보통',
-                  'high': '높음', 'xhigh': '매우 높음', 'ultra': '최고'}
-        strength = f'{labels[effort]} ({effort})' if effort in labels else str(effort or '확인 불가')
-        return str(value.get('model') or '모델 확인 불가') + '\n추론 ' + strength
+        labels = {'none': t('없음'), 'minimal': t('최소'), 'low': t('낮음'), 'medium': t('보통'),
+                  'high': t('높음'), 'xhigh': t('매우 높음'), 'ultra': t('최고')}
+        strength = f'{labels[effort]} ({effort})' if effort in labels else str(effort or t('확인 불가'))
+        return str(value.get('model') or t('모델 확인 불가')) + '\n' + t('추론') + ' ' + strength
 
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
@@ -868,7 +909,7 @@ class DiagnosticLabel(QLabel):
             failed = failed or any(word in value.get('state','') for word in ('오류','실패','중단','지연'))
         except (ValueError, TypeError, AttributeError):
             failed = bool(text)
-        self.setText('감시 진단\n' + self.original_text if failed else '')
+        self.setText(t('감시 진단\n') + self.original_text if failed else '')
         self.setVisible(bool(failed))
     def toPlainText(self):
         return self.original_text
@@ -879,7 +920,7 @@ class Details(QDialog):
         owner = parent if parent is not None else getattr(controller, 'gui_owner', None)
         super().__init__(owner if owner is not None else _application_gui_root())
         self.controller = controller
-        self.setWindowTitle('Codex Orbit · 로컬 모델 변경 기록')
+        self.setWindowTitle(t('Codex Orbit · 로컬 모델 변경 기록'))
         self.resize(1120, 780)
         self.setMinimumSize(740, 540)
         layout = QVBoxLayout(self)
@@ -892,7 +933,15 @@ class Details(QDialog):
         heading = QLabel('Codex Orbit')
         heading.setStyleSheet('font-size:19px;color:#f5f5f5;')
         header.addWidget(heading, 1)
-        self.usage_compact = QLabel('사용 한도 미확인')
+        self.language_combo = QComboBox()
+        self.language_combo.addItem('한국어', 'ko')
+        self.language_combo.addItem('English', 'en')
+        self.language_combo.setCurrentIndex(0 if get_language() == 'ko' else 1)
+        self.language_combo.setAccessibleName(t('언어'))
+        self.language_combo.currentIndexChanged.connect(
+            lambda index: self.controller.set_language(self.language_combo.itemData(index)))
+        header.addWidget(self.language_combo)
+        self.usage_compact = QLabel(t('사용 한도 미확인'))
         self.usage_compact.setStyleSheet('font-size:12px;color:#b0b0b0;')
         header.addWidget(with_symbol(self.usage_compact, 'quota'))
         layout.addLayout(header)
@@ -904,9 +953,27 @@ class Details(QDialog):
         usage_layout = QVBoxLayout(usage_page)
         usage_layout.setContentsMargins(12, 16, 12, 12)
         self.build_usage(usage_layout)
-        self.tabs.insertTab(1, usage_page, symbol_icon('quota'), '사용 한도')
+        self.tabs.insertTab(1, usage_page, symbol_icon('quota'), t('사용 한도'))
         self.tabs.currentChanged.connect(self.update_usage_motion)
         self.setStyleSheet(STYLE)
+        remember_translations(self)
+
+    def retranslate(self):
+        retranslate_widgets(self)
+        self.language_combo.blockSignals(True)
+        self.language_combo.setCurrentIndex(0 if get_language() == 'ko' else 1)
+        self.language_combo.blockSignals(False)
+        self.tabs.setTabText(0, t('변경 기록'))
+        self.tabs.setTabText(1, t('사용 한도'))
+        for index in range(self.history.count()):
+            item = self.history.item(index)
+            item.setText(history_label(item.data(Qt.ItemDataRole.UserRole)))
+        # 비어 있는 앱 기본 안내만 갱신하고 원문이나 별도 내용을 바꾸지 않습니다.
+        if self.history.count() == 0 and self.detail.toPlainText() == self.empty_history_text:
+            self.empty_history_text = t(EMPTY_HISTORY_GUIDANCE)
+            self.detail.setPlainText(self.empty_history_text)
+        self.select_event(self.history.currentItem(), None)
+        self.toggle_evidence(self.evidence_toggle.isChecked())
 
     def update_usage_motion(self, *args):
         self.usage_hero.set_active(self.isVisible() and self.tabs.currentIndex() == 1)
@@ -928,18 +995,18 @@ class Details(QDialog):
         box.setContentsMargins(22, 20, 22, 20)
         box.setSpacing(12)
         heading = QHBoxLayout()
-        title = QLabel('계정 사용 한도')
+        title = QLabel(t('계정 사용 한도'))
         title.setStyleSheet('color:#F1F6FA;font-size:25px;font-weight:600;')
         heading.addWidget(with_symbol(title, 'quota'), 1)
-        self.usage_refresh = QPushButton('새로고침')
+        self.usage_refresh = QPushButton(t('새로고침'))
         self.usage_refresh.setIcon(symbol_icon('refresh'))
         self.usage_refresh.setIconSize(QSize(20, 20))
         self.usage_refresh.setMinimumHeight(44)
-        self.usage_refresh.setAccessibleName('계정 사용 한도 새로고침')
+        self.usage_refresh.setAccessibleName(t('계정 사용 한도 새로고침'))
         self.usage_refresh.clicked.connect(lambda: self.controller.usage.manual_refresh())
         heading.addWidget(self.usage_refresh)
         box.addLayout(heading)
-        self.usage_status = QLabel('잔량 조회 준비 · 30초마다 자동 갱신')
+        self.usage_status = QLabel(t('잔량 조회 준비 · 30초마다 자동 갱신'))
         self.usage_status.setWordWrap(True)
         self.usage_status.setTextFormat(Qt.TextFormat.PlainText)
         self.usage_status.setStyleSheet('color:#B5C8D4;font-size:13px;')
@@ -956,7 +1023,7 @@ class Details(QDialog):
         self.usage_rows_layout = QVBoxLayout(self.usage_rows)
         self.usage_rows_layout.setContentsMargins(0, 0, 0, 0)
         self.usage_rows_layout.setSpacing(10)
-        self.usage_values = QLabel('계정 한도 미확인')
+        self.usage_values = QLabel(t('계정 한도 미확인'))
         self.usage_values.setWordWrap(True)
         self.usage_values.setTextFormat(Qt.TextFormat.PlainText)
         self.usage_rows_layout.addWidget(self.usage_values)
@@ -973,9 +1040,9 @@ class Details(QDialog):
     def display_usage(self, value):
         stale, busy = value.get('stale', True), value.get('busy', False)
         checked = value.get('checked_at')
-        updated = reset_label(checked) if checked else '아직 조회하지 않음'
-        self.usage_status.setText(('조회 지연 · 이전 조회 값 · ' if stale and checked else '') + value.get('status', '미확인') +
-                                  '  ·  최종 조회: ' + updated + '  ·  30초 자동 갱신')
+        updated = t(reset_label(checked)) if checked else t('아직 조회하지 않음')
+        self.usage_status.setText((t('조회 지연 · 이전 조회 값 · ') if stale and checked else '') + t(value.get('status', '미확인')) +
+                                  t('  ·  최종 조회: ') + updated + t('  ·  30초 자동 갱신'))
         self.usage_refresh.setEnabled(not busy)
         rows = value.get('rows', [])
         self.usage_panel.setMaximumHeight(430 if len(rows) <= 1 else 16777215)
@@ -983,26 +1050,28 @@ class Details(QDialog):
         while self.usage_rows_layout.count() > 1:
             item = self.usage_rows_layout.takeAt(1)
             if item.widget():
+                # 지연 삭제 전에도 이전 언어의 행이 새 행과 겹쳐 보이지 않게 합니다.
+                item.widget().hide()
                 item.widget().deleteLater()
         texts = []
         for row in rows:
             remaining = row['remaining']
-            label = f"{remaining:g}% 남음" if remaining is not None else '잔량 미확인'
-            text = f"{row['bucket']} · {row['period']}  {label}  ·  초기화: {reset_label(row['resets_at'])}"
+            label = t("{percent:g}% 남음", percent=remaining) if remaining is not None else t('잔량 미확인')
+            text = str(row['bucket']) + " · " + t(row['period']) + "  " + label + "  ·  " + t("초기화: ") + t(reset_label(row['resets_at']))
             if stale:
-                text += '  ·  이전 조회 값'
+                text += t('  ·  이전 조회 값')
             texts.append(text)
             bar = QProgressBar()
             bar.setRange(0, 1000000)
             bar.setValue(round(remaining * 10000) if remaining is not None and not stale else 0)
-            bar.setFormat(row['period'] + (' · 이전 조회' if stale else '') + ' · ' + label)
+            bar.setFormat(t(row['period']) + (t(' · 이전 조회') if stale else '') + ' · ' + label)
             bar.setTextVisible(False)
             bar.setAccessibleName(text)
             bar.setEnabled(not stale and remaining is not None)
             bar.setFixedHeight(12)
             bar.setStyleSheet('QProgressBar {border:0;border-radius:6px;background:#30485A;} QProgressBar::chunk {background:#8EDCCB;border-radius:6px;}')
             self.usage_rows_layout.addWidget(bar)
-            info = QLabel(f"{row['bucket']} · {row['period']}")
+            info = QLabel(str(row['bucket']) + " · " + t(row['period']))
             info.setTextFormat(Qt.TextFormat.PlainText)
             info.setWordWrap(True)
             info.setStyleSheet('color:#B5C8D4;font-size:15px;')
@@ -1012,14 +1081,14 @@ class Details(QDialog):
             number.setWordWrap(True)
             number.setStyleSheet('color:#F1F6FA;font-size:42px;font-weight:600;')
             self.usage_rows_layout.addWidget(number)
-            reset = QLabel('초기화: ' + reset_label(row['resets_at']) + (' · 이전 조회 값' if stale else ''))
+            reset = QLabel(t('초기화: ') + t(reset_label(row['resets_at'])) + (t(' · 이전 조회 값') if stale else ''))
             reset.setTextFormat(Qt.TextFormat.PlainText)
             reset.setWordWrap(True)
             reset.setStyleSheet('color:#B5C8D4;font-size:13px;padding-bottom:18px;')
             self.usage_rows_layout.addWidget(reset)
         self.usage_rows_layout.addStretch()
-        self.usage_compact.setText(('이전 조회 · ' if stale and checked else '') + (f"{rows[0]['remaining']:g}% 남음" if rows and rows[0].get('remaining') is not None else '사용 한도 미확인'))
-        self.usage_values.setText('\n'.join(texts) if texts else '계정 한도 미확인 · 남은 토큰 개수가 아닌 사용 한도 비율입니다.')
+        self.usage_compact.setText((t('이전 조회 · ') if stale and checked else '') + (t("{percent:g}% 남음", percent=rows[0]['remaining']) if rows and rows[0].get('remaining') is not None else t('사용 한도 미확인')))
+        self.usage_values.setText('\n'.join(texts) if texts else t('계정 한도 미확인 · 남은 토큰 개수가 아닌 사용 한도 비율입니다.'))
         self.usage_values.setVisible(not rows)
 
     def build_history(self):
@@ -1027,13 +1096,13 @@ class Details(QDialog):
         layout = QVBoxLayout(page)
         layout.setContentsMargins(0, 12, 0, 0)
         layout.setSpacing(8)
-        self.summary = QLabel('감시 준비 중')
+        self.summary = QLabel(t('감시 준비 중'))
         self.summary.setStyleSheet('color:#8ea9b6;font-size:11px;')
         self.summary.setTextFormat(Qt.TextFormat.PlainText)
         self.summary.setWordWrap(True)
         self.summary.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
         layout.addWidget(self.summary)
-        self.notice_summary = QLabel('알림 대기 0건')
+        self.notice_summary = QLabel(t('알림 대기 0건'))
         self.notice_summary.setStyleSheet('color:#8ea9b6;font-size:11px;')
         layout.addWidget(self.notice_summary)
         self.notice_summary.setWordWrap(True)
@@ -1052,9 +1121,9 @@ class Details(QDialog):
         card_layout = QVBoxLayout(self.card)
         card_layout.setContentsMargins(20, 20, 20, 20)
         card_layout.setSpacing(12)
-        self.chat_title = QLabel('변경을 기다리고 있습니다')
+        self.chat_title = QLabel(t('변경을 기다리고 있습니다'))
         self.chat_title.setStyleSheet('font-size:23px;font-weight:600;color:#f1f7f8;padding:2px 0 6px 0;')
-        self.change_heading = QLabel('변경을 기다리고 있습니다')
+        self.change_heading = QLabel(t('변경을 기다리고 있습니다'))
         self.change_heading.setStyleSheet('font-size:13px;color:#a7e7d0;padding:5px 8px;')
         self.model_transition = QLabel('')
         self.model_transition.setStyleSheet('font-size:26px;font-weight:600;color:#edf4f5;')
@@ -1066,21 +1135,21 @@ class Details(QDialog):
         self.effort_previous = self.effort_transition
         self.effort_current = QLabel('—')
         self.effort_current.setStyleSheet('font-size:26px;font-weight:600;color:#edf4f5;')
-        self.before_value = QLabel('변경 전  ·  —')
-        self.after_value = QLabel('변경 후  ·  —')
+        self.before_value = QLabel(t('변경 전  ·  —'))
+        self.after_value = QLabel(t('변경 후  ·  —'))
         self.after_value.setStyleSheet('font-size:12px;color:#b1c5d0;padding:0;')
         self.before_value.setStyleSheet('font-size:12px;color:#8ea9b6;')
         self.activity_message = QLabel()
         self.activity_message.setWordWrap(True)
         self.activity_message.setStyleSheet('font-size:22px;font-weight:600;color:#f1f5f7;padding:6px 0;')
         self.activity_message.hide()
-        self.task_value = QLabel('공개된 작업 설명을 기다립니다.')
-        self.selection_reason = QLabel('모델·추론 강도 선택 이유는 공개되지 않았습니다.')
+        self.task_value = QLabel(t('공개된 작업 설명을 기다립니다.'))
+        self.selection_reason = QLabel(t('모델·추론 강도 선택 이유는 공개되지 않았습니다.'))
         self.task_value.setStyleSheet('font-size:20px;font-weight:600;color:#e6f2f1;padding:4px 0 10px 0;')
         self.selection_reason.setStyleSheet('font-size:11px;color:#a6becb;padding:4px 0;')
-        self.reason_title = QLabel('왜 맡겼나요? · 공개 설명')
+        self.reason_title = QLabel(t('왜 맡겼나요? · 공개 설명'))
         self.reason_title.setStyleSheet('color:#afc5ce;font-size:11px;padding-top:10px;')
-        self.reason_value = QLabel('첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.')
+        self.reason_value = QLabel(t('첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'))
         self.reason_value.setStyleSheet('font-size:15px;background:#253f4a;border:1px solid #3a5662;border-radius:12px;padding:14px;color:#e6f0f3;')
         self.event_time = QLabel('')
         self.event_time.setStyleSheet('color:#9ab4c0;font-size:11px;padding:0;')
@@ -1100,7 +1169,7 @@ class Details(QDialog):
         self.after_headings = []
         for row, (kind, previous, current) in enumerate((('모델',self.model_previous,self.model_current),
                                                        ('추론 강도',self.effort_previous,self.effort_current))):
-            for col, text in ((0,'이전 '+kind),(2,'새 '+kind)):
+            for col, text in ((0,t('이전')+' '+t(kind)),(2,t('새')+' '+t(kind))):
                 label=QLabel(text);label.setStyleSheet('font-size:12px;color:#a4bbc7;')
                 if col == 2: self.after_headings.append((label, kind))
                 table.addWidget(with_symbol(label, 'model' if row == 0 else 'effort'),row*3,col)
@@ -1119,7 +1188,7 @@ class Details(QDialog):
         self.diagnostics = DiagnosticLabel()
         cards.addWidget(self.diagnostics)
         cards.addWidget(self.card)
-        self.evidence_toggle = QPushButton('▸ 원문 · ID · 근거 펼치기')
+        self.evidence_toggle = QPushButton(t('▸ 원문 · ID · 근거 펼치기'))
         self.evidence_toggle.setObjectName('disclosure')
         self.evidence_toggle.setIcon(symbol_icon('reason'))
         self.evidence_toggle.setCheckable(True)
@@ -1127,7 +1196,8 @@ class Details(QDialog):
         self.detail = QPlainTextEdit()
         self.detail.setReadOnly(True)
         self.detail.setMinimumHeight(180)
-        self.detail.setPlainText('변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.')
+        self.empty_history_text = t(EMPTY_HISTORY_GUIDANCE)
+        self.detail.setPlainText(self.empty_history_text)
         self.detail.hide()
         self.evidence_toggle.toggled.connect(self.toggle_evidence)
         cards.addWidget(self.detail, 1)
@@ -1144,34 +1214,34 @@ class Details(QDialog):
         self.history.setMinimumWidth(200)
         split.setSizes([310, 700])
         layout.addWidget(split, 1)
-        self.tabs.addTab(page, symbol_icon('history'), '변경 기록')
+        self.tabs.addTab(page, symbol_icon('history'), t('변경 기록'))
 
     def select_event(self, current, _previous):
         if current:
             value = current.data(Qt.ItemDataRole.UserRole)
             self.detail.setPlainText(event_description(value))
-            self.chat_title.setText(str(value.get('chat_name') or '채팅 제목 확인 불가'))
+            self.chat_title.setText(str(value.get('chat_name') or t('채팅 제목 확인 불가')))
             before, after = value.get('before') or {}, value.get('after') or {}
             model_changed = bool(before.get('model') and after.get('model') and before['model'] != after['model'])
             effort_changed = bool(before.get('effort') and after.get('effort') and before['effort'] != after['effort'])
             if value.get('kind') == 'activity' or value.get('before') is None:
                 heading = event_kind(value)
             else:
-                heading = ('모델·추론 강도가 바뀌었습니다' if model_changed and effort_changed
-                           else '모델이 바뀌었습니다' if model_changed
-                           else '추론 강도가 바뀌었습니다' if effort_changed else '설정 관측')
+                heading = (t('모델·추론 강도가 바뀌었습니다') if model_changed and effort_changed
+                           else t('모델이 바뀌었습니다') if model_changed
+                           else t('추론 강도가 바뀌었습니다') if effort_changed else t('설정 관측'))
             if value.get('kind') == 'activity' and value.get('before') is not None and value['before'] == value.get('after'):
-                heading += ' · 설정 유지'
-            self.change_heading.setText(heading)
+                heading += ' · ' + t('설정 유지')
+            self.change_heading.setText(t(heading))
             self.change_heading.setStyleSheet('font-size:13px;padding:5px 8px;border-radius:8px;color:'+event_accent(value)+';background:#2d4550;')
             self.activity_message.setText(activity_message(value))
             self.activity_message.setVisible(bool(activity_message(value)))
             self.task_value.setText(task_explanation(value))
             self.selection_reason.setText(selection_explanation(value))
             for heading, kind in self.after_headings:
-                heading.setText(('현재 ' if value.get('kind') == 'activity' else '변경 후 ') + kind)
+                heading.setText((t('현재') if value.get('kind') == 'activity' else t('변경 후')) + ' ' + t(kind))
             self.model_previous.setText(previous_field(value.get('before'), 'model'))
-            self.model_current.setText(str(after.get('model') or '확인 불가'))
+            self.model_current.setText(str(after.get('model') or t('확인 불가')))
             self.effort_previous.setText(previous_field(value.get('before'), 'effort'))
             self.effort_current.setText(friendly_effort(after.get('effort')))
             before = value.get('before')
@@ -1179,16 +1249,16 @@ class Details(QDialog):
                 changed = value.get('kind') != 'activity' and before is not None and before.get(key) and after.get(key) and before.get(key) != after.get(key)
                 for label in labels:
                     label.setStyleSheet('font-size:26px;font-weight:600;color:#edf4f5;' + ('background:#385064;border-radius:8px;padding:4px;' if changed else ''))
-            self.before_value.setText('이전 기록 없음' if value.get('before') is None
-                                      else '이전  ' + model_card_label(value['before']))
-            self.after_value.setText(('현재  ' if value.get('kind') == 'activity' else '→  ') + model_card_label(value.get('after')))
+            self.before_value.setText(t('이전 기록 없음') if value.get('before') is None
+                                      else t('이전') + '  ' + model_card_label(value['before']))
+            self.after_value.setText((t('현재') + '  ' if value.get('kind') == 'activity' else '→  ') + model_card_label(value.get('after')))
             reason = value.get('reason') if value.get('kind') == 'activity' else short_reason(value)
-            self.reason_value.setText(public_text(reason, limit=600))
+            self.reason_value.setText(t('확인 불가') if reason == '확인 불가' and not value.get('reason') else public_text(reason, limit=600))
             self.event_time.setText(kst_label(value.get('time')))
 
     def toggle_evidence(self, checked):
         self.detail.setVisible(checked)
-        self.evidence_toggle.setText('▾ 원문 · ID · 근거 접기' if checked else '▸ 원문 · ID · 근거 펼치기')
+        self.evidence_toggle.setText(t('▾ 원문 · ID · 근거 접기') if checked else t('▸ 원문 · ID · 근거 펼치기'))
 
     def _history_items_by_id(self):
         items = {}
@@ -1275,6 +1345,8 @@ class Controller(QObject):
         # Qt 수신자 문맥에 수명을 결합해 종료된 Python 객체로 예약 신호가 전달되지 않게 합니다.
         super().__init__(_application_gui_root())
         self.settings = settings
+        set_language(settings.values.get('language', 'ko'))
+        self.last_monitor_status = None
         self.monitor = None
         self.closing = False
         self.cleaned = False
@@ -1307,6 +1379,7 @@ class Controller(QObject):
         self.monitor_health_timer.timeout.connect(self.check_monitor_health)
         self.window = Details(self)
         self.orbit = OrbitWidget(settings, self.show, self.request_quit, self.gui_owner)
+        self.orbit.language_changed = self.set_language
         self.notice = None
         self.screen_connections = []
         for screen in QApplication.screens():
@@ -1315,7 +1388,7 @@ class Controller(QObject):
         self.usage = UsageClient(settings.values.get('codex_exe', ''), self.gui_owner)
         self.usage.changed.connect(self.update_usage)
         self.update_usage(self.usage.snapshot)
-        self.weather = WeatherClient(self.gui_owner)
+        self.weather = WeatherClient(self.gui_owner, language=get_language())
         self.weather.changed.connect(self.update_weather)
         self.update_weather(self.weather.snapshot)
         self.quit_guard = QuitGuard(self)
@@ -1334,21 +1407,52 @@ class Controller(QObject):
         if start_weather:
             self.weather.start()
 
+    @Slot(str)
+    def set_language(self, language):
+        application = QApplication.instance()
+        if QThread.currentThread() != application.thread():
+            raise RuntimeError('언어는 GUI 메인 스레드에서만 변경할 수 있습니다.')
+        language = language if language in ('ko', 'en') else 'ko'
+        # 설정 저장 성공 뒤 표시 언어를 변경합니다.
+        previous = self.settings.values.get('language', 'ko')
+        self.settings.values['language'] = language
+        try:
+            self.settings.save()
+        except Exception:
+            self.settings.values['language'] = previous
+            raise
+        set_language(language)
+        self.window.retranslate()
+        if self.window.diagnostics.original_text:
+            self.window.diagnostics.setPlainText(self.window.diagnostics.original_text)
+        self.weather.set_language(language)
+        self.update_weather(self.weather.snapshot)
+        self.update_usage(self.usage.snapshot)
+        if self.last_monitor_status is not None:
+            self.status(self.last_monitor_status)
+        for notice in self.notices.values():
+            retranslate_widgets(notice)
+            notice.update_event(notice.event)
+        self.update_notice_count()
+        self.orbit.update()
+
     @Slot(dict)
     def update_weather(self, value):
         if self.closing:
             return
         temperature = value.get("temperature")
-        self.orbit.location_text = value.get("region") or "위치 정보 없음"
-        self.orbit.weather_text = (f"이전 {temperature:g}℃" if value.get("stale") else f"{temperature:g}℃") if temperature is not None else ("기온 조회 중" if value.get("busy") else "기온 미확인")
+        self.orbit.location_text = value.get("region") or t("위치 정보 없음")
+        self.orbit.weather_text = (t("이전 {temperature:g}℃", temperature=temperature) if value.get("stale") else f"{temperature:g}℃") if temperature is not None else (t("기온 조회 중") if value.get("busy") else t("기온 미확인"))
         checked = value.get("checked_at")
-        checked_label = datetime.fromtimestamp(checked).astimezone().strftime("%Y-%m-%d %H:%M:%S") if checked is not None else "미확인"
+        checked_label = datetime.fromtimestamp(checked).astimezone().strftime("%Y-%m-%d %H:%M:%S") if checked is not None else t("미확인")
         observed = value.get("observed_at")
-        observed_label = datetime.fromtimestamp(observed).astimezone().strftime("%Y-%m-%d %H:%M:%S") if observed is not None else "미확인"
-        self.orbit.weather_tooltip = ("네트워크 추정 지역: " + (value.get("region") or "미확인") +
-                                     "\n기온 출처: Open-Meteo · 위치: ipwho.is" +
-                                     "\n제공 시각: " + observed_label +
-                                     "\n조회 시각: " + checked_label + "\n" + value.get("status", "기온 미확인"))
+        observed_label = datetime.fromtimestamp(observed).astimezone().strftime("%Y-%m-%d %H:%M:%S") if observed is not None else t("미확인")
+        self.orbit.weather_tooltip = (t("네트워크 추정 지역: ") + (value.get("region") or t("미확인")) +
+                                     t("\n지역 원문: ") + (value.get("region_original") or t("미확인")) +
+                                     t("\n기온 출처: Open-Meteo · 위치: ipwho.is") +
+                                     t("\n제공 시각: ") + observed_label +
+                                     t("\n조회 시각: ") + checked_label + "\n" + t(value.get("status", "기온 미확인")))
+        self.orbit.weather_tooltip += t("\n지명 출처: ") + t(str(value.get("region_source") or "GeoNames / Open-Meteo (CC BY 4.0)"))
         self.orbit.refresh_tooltip()
         self.orbit.update()
 
@@ -1374,8 +1478,8 @@ class Controller(QObject):
             self.orbit.usage_badge = f"{min(row['remaining'] for row in valid):g}%"
         else:
             self.orbit.usage_badge = '—'
-        self.orbit.usage_tooltip = ('Codex Orbit · 계정 한도 ' + self.orbit.usage_badge +
-                                    ' · ' + value.get('status', '미확인') + '\n클릭: 기간별 잔량과 변경 이력 · 드래그: 이동')
+        self.orbit.usage_tooltip = (t('Codex Orbit · 계정 한도 ') + self.orbit.usage_badge +
+                                    ' · ' + t(value.get('status', '미확인')) + t('\n클릭: 기간별 잔량과 변경 이력 · 드래그: 이동'))
         self.orbit.refresh_tooltip()
         self.orbit.update()
 
@@ -1398,17 +1502,17 @@ class Controller(QObject):
                 self.monitor_restart_pending = True
                 self.monitor.requestInterruption()
             self.orbit.healthy = False
-            self.window.summary.setText('감시 재시작 대기 · 이전 작업자 종료 후 최종 설정으로 자동 시작합니다.')
+            self.window.summary.setText(t('감시 재시작 대기 · 이전 작업자 종료 후 최종 설정으로 자동 시작합니다.'))
             return False
         self.monitor_restart_pending = False
         self.monitor_retry_timer.stop()
         if not self.stop_monitor():
             self.orbit.healthy = False
-            self.window.summary.setText('감시 지연 · 이전 작업자가 종료 중입니다. 종료 후 다시 시작하세요.')
+            self.window.summary.setText(t('감시 지연 · 이전 작업자가 종료 중입니다. 종료 후 다시 시작하세요.'))
             return False
         self.monitor_enabled = True
         self.orbit.healthy = False
-        self.window.summary.setText('감시 준비 중 · 첫 진행 확인 대기')
+        self.window.summary.setText(t('감시 준비 중 · 첫 진행 확인 대기'))
         self.last_monitor_progress = time.monotonic()
         self.operation_log_error = operation_record(self.settings.directory, 'monitor-preparation', self.settings.values['sessions'])
         try:
@@ -1445,16 +1549,16 @@ class Controller(QObject):
                 try:
                     self.start_monitor()
                 except Exception as error:
-                    self.window.summary.setText('감시 시작 실패 · 변경 기록의 진단을 확인하세요.')
+                    self.window.summary.setText(t('감시 시작 실패 · 변경 기록의 진단을 확인하세요.'))
                     self.window.diagnostics.setPlainText(str(error))
                 return
             self.orbit.healthy = False
-            self.window.summary.setText('감시 중단 · ' + ('자동 재시도 대기' if self.monitor_retries < 3 else '앱 다시 실행 필요'))
+            self.window.summary.setText(t('감시 중단 · ') + (t('자동 재시도 대기') if self.monitor_retries < 3 else t('앱 다시 실행 필요')))
             if self.monitor_retries < 3 and not self.monitor_retry_timer.isActive():
                 self.monitor_retry_timer.start(3000 * (self.monitor_retries + 1))
         elif time.monotonic() - self.last_monitor_progress > 20:
             self.orbit.healthy = False
-            self.window.summary.setText('감시 지연 · 20초 이상 진행 확인 없음. 작업자는 실행 중이며 강제 재시작하지 않습니다.')
+            self.window.summary.setText(t('감시 지연 · 20초 이상 진행 확인 없음. 작업자는 실행 중이며 강제 재시작하지 않습니다.'))
         self.orbit.update()
 
     @Slot()
@@ -1523,9 +1627,9 @@ class Controller(QObject):
             self.enqueue_notice(event)
 
     def update_notice_count(self):
-        text = f'알림 표시 {len(self.notices)}건 · 새 변경은 즉시 표시'
+        text = t('알림 표시 {count}건 · 새 변경은 즉시 표시', count=len(self.notices))
         if self.notice_overflow:
-            text += f' · 표시 상한으로 숨긴 {self.notice_overflow}건은 변경 이력에서 확인하세요.'
+            text += t(' · 표시 상한으로 숨긴 {count}건은 변경 이력에서 확인하세요.', count=self.notice_overflow)
         self.window.notice_summary.setText(text)
         for notice in self.notices.values():
             notice.queue_hint.setText(text)
@@ -1643,8 +1747,9 @@ class Controller(QObject):
         if self.presentation_error or self.operation_log_error:
             value = {**value, 'notice_presentation_error': self.presentation_error,
                      'operation_log_error': self.operation_log_error}
+        self.last_monitor_status = dict(value)
         self.orbit.healthy = value.get('state') == '감시 중'
-        self.window.summary.setText('● ' + value.get('state', '') + '  ·  ' + kst_label(value.get('time')))
+        self.window.summary.setText('● ' + t(value.get('state', '')) + '  ·  ' + kst_label(value.get('time')))
         self.window.diagnostics.setPlainText(json.dumps(value, ensure_ascii=False, indent=2))
 
     def show(self, event_id=None):
@@ -1680,7 +1785,7 @@ class Controller(QObject):
         for notice in list(self.notices.values()):
             notice.dismiss()
         self.orbit.healthy = False
-        self.window.summary.setText('종료 중 · 감시 작업자의 안전한 종료를 기다리고 있습니다.')
+        self.window.summary.setText(t('종료 중 · 감시 작업자의 안전한 종료를 기다리고 있습니다.'))
         if self.monitor is not None and self.monitor.isRunning():
             self.monitor.finished.connect(self.finish_quit)
             self.monitor.requestInterruption()
@@ -1749,7 +1854,7 @@ def usage_smoke_state(controller):
     bars = [widget for widget in widgets if isinstance(widget, QProgressBar)]
     labels = [widget.text() for widget in widgets if isinstance(widget, QLabel) and widget.isVisible()]
     expected_values = [round(row['remaining'] * 10000) if row.get('remaining') is not None else 0 for row in rows]
-    expected_labels = [f"{row['remaining']:g}% 남음" if row.get('remaining') is not None else '잔량 미확인' for row in rows]
+    expected_labels = [t("{percent:g}% 남음", percent=row['remaining']) if row.get('remaining') is not None else t('잔량 미확인') for row in rows]
     presented = {'badge': controller.orbit.usage_badge, 'fraction': controller.orbit.usage_fraction,
                  'state': controller.orbit.usage_state, 'bar_values': [bar.value() for bar in bars],
                  'remaining_labels': [label for label in labels if label in expected_labels]}
@@ -1855,6 +1960,8 @@ def main():
                 return
             usage_finished = True
             report = {**value, 'ok': ok, 'frozen': bool(getattr(sys, 'frozen', False)),
+                      'language': get_language(),
+                      'detail_tabs': [controller.window.tabs.tabText(index) for index in range(controller.window.tabs.count())],
                       'widget_badge': controller.orbit.usage_badge,
                       'widget_fraction': controller.orbit.usage_fraction,
                       'widget_state': controller.orbit.usage_state,
@@ -1907,7 +2014,9 @@ def main():
                       'gpu': status, 'baseline_render_count': baseline_count, 'error': error,
                       'translucent': controller.orbit.testAttribute(Qt.WidgetAttribute.WA_TranslucentBackground),
                       'always_on_top': bool(controller.orbit.windowFlags() & Qt.WindowType.WindowStaysOnTopHint),
-                      'font_families': families, 'time': stamp(), 'frozen': bool(getattr(sys, 'frozen', False))}
+                      'font_families': families, 'time': stamp(), 'frozen': bool(getattr(sys, 'frozen', False)),
+                      'language': get_language(),
+                      'detail_tabs': [controller.window.tabs.tabText(index) for index in range(controller.window.tabs.count())]}
             if args.smoke_report:
                 args.smoke_report.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
             if sys.stdout:

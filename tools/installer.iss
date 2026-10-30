@@ -1,7 +1,7 @@
 [Setup]
 AppId=CodexOrbit.Desktop
 AppName=Codex Orbit
-AppVersion=2.8.0
+AppVersion=2.9.0
 AppPublisher=Codex Orbit
 DefaultDirName={localappdata}\Programs\CodexOrbit
 DefaultGroupName=Codex Orbit
@@ -24,16 +24,30 @@ CloseApplications=yes
 SetupLogging=yes
 
 [Languages]
+Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "korean"; MessagesFile: "compiler:Languages\Korean.isl"
 
 [LangOptions]
 DialogFontName=SUIT
 WelcomeFontName=SUIT
 
+[CustomMessages]
+korean.DesktopShortcut=바탕화면 바로가기 만들기
+english.DesktopShortcut=Create a desktop shortcut
+korean.UserGuide=사용법
+english.UserGuide=User guide
+korean.GuideFile=사용법.md
+english.GuideFile=Usage.en.md
+korean.LaunchApp=Codex Orbit 실행
+english.LaunchApp=Launch Codex Orbit
+korean.FontError=내장 글꼴을 읽을 수 없습니다. 설치 파일을 다시 확인해 주세요.
+english.FontError=Could not load the bundled font. Please check the installer.
+
 [Tasks]
-Name: "desktopicon"; Description: "바탕화면 바로가기 만들기"; Flags: unchecked
+Name: "desktopicon"; Description: "{cm:DesktopShortcut}"; Flags: unchecked
 
 [Files]
+Source: "..\배포\Usage.en.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\assets\SUIT-SemiBold.ttf"; DestDir: "{app}\assets"; Flags: ignoreversion
 Source: "..\assets\SUIT-Medium.ttf"; DestDir: "{app}\assets"; Flags: ignoreversion
 Source: "..\assets\SUIT-Regular.ttf"; DestDir: "{app}\assets"; Flags: ignoreversion
@@ -48,11 +62,11 @@ Source: "..\배포\라이선스\*"; DestDir: "{app}\라이선스"; Flags: ignore
 
 [Icons]
 Name: "{group}\Codex Orbit"; Filename: "{app}\CodexOrbit.exe"
-Name: "{group}\사용법"; Filename: "{app}\사용법.md"
+Name: "{group}\{cm:UserGuide}"; Filename: "{app}\{cm:GuideFile}"
 Name: "{autodesktop}\Codex Orbit"; Filename: "{app}\CodexOrbit.exe"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\CodexOrbit.exe"; Description: "Codex Orbit 실행"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\CodexOrbit.exe"; Description: "{cm:LaunchApp}"; Flags: nowait postinstall skipifsilent
 
 [Code]
 var
@@ -69,7 +83,7 @@ begin
   PrivateFontPath := ExpandConstant('{tmp}\SUIT-SemiBold.ttf');
   Result := AddFontResourceExW(PrivateFontPath, $10, 0) > 0;
   if not Result then
-    MsgBox('내장 글꼴을 읽을 수 없습니다. 설치 파일을 다시 확인해 주세요.', mbError, MB_OK);
+    MsgBox(ExpandConstant('{cm:FontError}'), mbError, MB_OK);
 end;
 
 procedure InitializeWizard();

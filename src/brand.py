@@ -6,6 +6,7 @@ import json
 import hashlib
 import struct
 import re
+from i18n import translate as t
 from PySide6.QtCore import Qt, QRect, QObject, QTimer
 from PySide6.QtGui import QImage, QPixmap, QIcon, QPainter
 from PySide6.QtWidgets import QApplication, QLabel, QWidget, QHBoxLayout
@@ -43,8 +44,9 @@ class BrandClock(QObject):
         self.members = weakref.WeakSet()
         self.origin = time.monotonic()
         self.timer = QTimer(self)
-        self.timer.setInterval(33)
-        self.timer.timeout.connect(self.tick)
+        self.timer.setInterval(1000)
+        self.timer.timeout.connect(self.prune)
+        self.last_serial=None
 
     @property
     def active_count(self):
@@ -52,8 +54,9 @@ class BrandClock(QObject):
 
     def watch(self, mark):
         self.members.add(mark)
-        from calendar_motion import set_calendar_motion_visible
+        from calendar_motion import set_calendar_motion_visible,set_calendar_motion_size
         set_calendar_motion_visible(mark, True)
+        set_calendar_motion_size(mark,max(32,min(2160,round(mark.width()*mark.devicePixelRatioF()))))
         if not self.timer.isActive():
             self.timer.start()
         self.tick()
@@ -74,8 +77,11 @@ class BrandClock(QObject):
             self.timer.stop()
             return
         elapsed = time.monotonic() - self.origin
-        from calendar_motion import get_calendar_frame
+        from calendar_motion import get_calendar_frame,record_calendar_presentation
         source = get_calendar_frame(elapsed)
+        serial=source.text('calendar_frame_id')
+        if serial and serial==self.last_serial:return
+        self.last_serial=serial
         pixmaps = {}
         for mark in marks:
             size = mark.width()
@@ -84,6 +90,7 @@ class BrandClock(QObject):
                 pixmaps[size] = QPixmap.fromImage(image.scaled(size, size, Qt.AspectRatioMode.KeepAspectRatio,
                                                               Qt.TransformationMode.SmoothTransformation))
             mark.setPixmap(pixmaps[size])
+            record_calendar_presentation(mark,source)
 
 
 _brand_clock = None
@@ -102,14 +109,17 @@ class AnimatedBrand(QLabel):
         super().__init__(parent)
         self.setFixedSize(size, size)
         self.setPixmap(QPixmap.fromImage(brand_image(size)))
-        self.setAccessibleName('Codex Orbit 로고')
-        self.setToolTip('Codex Orbit · 실제3D 모션')
+        self.setAccessibleName(t('Codex Orbit 로고'))
+        self.setToolTip(t('Codex Orbit · 실제3D 모션'))
         self.playback_clock = brand_clock()
         self.destroyed.connect(self.playback_clock.prune)
 
     def showEvent(self, event):
         super().showEvent(event)
         self.playback_clock.watch(self)
+
+    def calendar_frame_ready(self):
+        if self.isVisible():self.playback_clock.tick()
 
     def hideEvent(self, event):
         self.playback_clock.unwatch(self)
@@ -206,8 +216,8 @@ def with_symbol(label, kind):
     mark = QLabel()
     mark.setPixmap(QPixmap.fromImage(symbol_image(kind, 20)))
     mark.setFixedSize(20,20)
-    mark.setAccessibleName({'model':'모델','effort':'추론 강도','time':'시각','reason':'공개 근거',
-                            'quota':'사용 한도','history':'변경 기록'}.get(kind,kind))
+    mark.setAccessibleName({'model':t('모델'),'effort':t('추론 강도'),'time':t('시각'),'reason':t('공개 근거'),
+                            'quota':t('사용 한도'),'history':t('변경 기록')}.get(kind,kind))
     layout.addWidget(mark,0,Qt.AlignmentFlag.AlignVCenter)
     layout.addWidget(label,1)
     return row

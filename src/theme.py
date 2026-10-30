@@ -1,4 +1,5 @@
 """앱이 소유하는 화면과 대화상자의 부드러운 청록 테마입니다."""
+from i18n import translate as t, get_language
 from PySide6.QtCore import QEvent, QObject, QTimer, QTranslator, Qt
 from PySide6.QtGui import QColor, QIcon, QPalette, QPixmap
 from PySide6.QtWidgets import QApplication, QFileDialog, QHeaderView, QProxyStyle, QStyleFactory, QTreeView
@@ -87,7 +88,7 @@ class KoreanDialogs(QTranslator):
               'List View': '목록 보기', 'Detail View': '자세히 보기', 'Show ': '표시 '}
 
     def translate(self, context, source_text, disambiguation=None, n=-1):
-        return self.labels.get(source_text.replace('&', ''), source_text)
+        return self.labels.get(source_text.replace('&', ''), source_text) if get_language() == 'ko' else source_text
 
 
 class DialogLayout(QObject):
@@ -105,10 +106,10 @@ class DialogLayout(QObject):
                             (QFileDialog.DialogLabel.FileName, '폴더:' if dialog.fileMode() == QFileDialog.FileMode.Directory else '파일 이름:'),
                             (QFileDialog.DialogLabel.FileType, '파일 형식:'),
                             (QFileDialog.DialogLabel.Reject, '취소')):
-            dialog.setLabelText(label, text)
+            dialog.setLabelText(label, t(text))
         dialog.setLabelText(QFileDialog.DialogLabel.Accept,
-                            '선택' if dialog.fileMode() == QFileDialog.FileMode.Directory else
-                            '저장' if dialog.acceptMode() == QFileDialog.AcceptMode.AcceptSave else '열기')
+                            t('선택') if dialog.fileMode() == QFileDialog.FileMode.Directory else
+                            t('저장') if dialog.acceptMode() == QFileDialog.AcceptMode.AcceptSave else t('열기'))
         for tree in dialog.findChildren(QTreeView):
             if tree.model() and tree.model().columnCount() >= 4:
                 tree.header().setMinimumSectionSize(60)

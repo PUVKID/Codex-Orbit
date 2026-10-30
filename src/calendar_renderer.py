@@ -378,18 +378,42 @@ def matrices(elapsed):
 class CalendarRenderer:
     """컨텍스트를 만든 스레드에서만 사용하고 현재 날짜의 버퍼만 보유합니다."""
     def __init__(self,size=384):
-        if type(size) is not int or not 32<=size<=768:raise ValueError('렌더 크기는32~768 정수여야 합니다.')
-        self.thread_id=threading.get_ident(); self.size=size; self.ctx=None; self.resources=[]; self.vaos=[]; self.buffers=[]; self.parts=[]; self.design=None
+        if type(size) is int and 32<=size<=768:
+            dimensions=(size,size)
+        elif type(size) is tuple and len(size)==2 and all(type(v) is int for v in size) and size==(3840,2160):
+            dimensions=size
+        else:raise ValueError('렌더 크기는32~768 정수 또는3840×2160이어야 합니다.')
+        width,height=dimensions
+        self.thread_id=threading.get_ident(); self.size=size; self.dimensions=dimensions; self.ctx=None; self.resources=[]; self.vaos=[]; self.buffers=[]; self.parts=[]; self.design=None
+        self.output_resources=[]; self.output_size=0; self.output=None
         try:
             self.ctx=moderngl.create_standalone_context(require=330)
             self.program=self.ctx.program(vertex_shader=VERTEX,fragment_shader=FRAGMENT); self.resources.append(self.program)
-            self.color=self.ctx.renderbuffer((size,size),components=4,samples=4); self.resources.append(self.color)
-            self.depth=self.ctx.depth_renderbuffer((size,size),samples=4); self.resources.append(self.depth)
+            self.color=self.ctx.renderbuffer(dimensions,components=4,samples=4); self.resources.append(self.color)
+            self.depth=self.ctx.depth_renderbuffer(dimensions,samples=4); self.resources.append(self.depth)
             self.target=self.ctx.framebuffer([self.color],self.depth); self.resources.append(self.target)
-            self.resolved=self.ctx.simple_framebuffer((size,size),components=4,dtype='f1'); self.resources.append(self.resolved)
+            self.texture=self.ctx.texture(dimensions,components=4,dtype='f1'); self.resources.append(self.texture)
+            self.texture.filter=(moderngl.LINEAR,moderngl.LINEAR)
+            self.resolved=self.ctx.framebuffer([self.texture]); self.resources.append(self.resolved)
+            self.downsample_program=self.ctx.program(vertex_shader='''#version 330
+                out vec2 uv;
+                uniform vec2 crop_scale;
+                void main() {
+                    vec2 p=vec2((gl_VertexID<<1)&2,gl_VertexID&2);
+                    uv=(p-0.5)*crop_scale+0.5;
+                    gl_Position=vec4(p*2.0-1.0,0.0,1.0);
+                }''',fragment_shader='''#version 330
+                uniform sampler2D source_image;
+                in vec2 uv;
+                out vec4 color;
+                void main() { color=texture(source_image,uv); }
+                '''); self.resources.append(self.downsample_program)
+            self.downsample_program['crop_scale'].value=(min(width,height)/width,min(width,height)/height)
+            self.downsample_vao=self.ctx.vertex_array(self.downsample_program,[]); self.resources.append(self.downsample_vao)
+            self.set_output_size(size if type(size) is int else 384)
             self.ctx.enable(moderngl.DEPTH_TEST)
             near,far,camera,extent=1.,1200.,700.,69.
-            projection=np.array([[camera/extent,0,0,0],[0,camera/extent,0,0],[0,0,(far+near)/(near-far),2*far*near/(near-far)],[0,0,-1,0]],dtype='f4')
+            projection=np.array([[camera/extent*height/width,0,0,0],[0,camera/extent,0,0],[0,0,(far+near)/(near-far),2*far*near/(near-far)],[0,0,-1,0]],dtype='f4')
             view=np.eye(4,dtype='f4'); view[2,3]=-camera
             self.program['view_projection'].write((projection@view).T.astype('f4').tobytes()); self.program['camera'].value=(0.,0.,camera)
         except Exception:
@@ -397,6 +421,17 @@ class CalendarRenderer:
 
     def _assert_thread(self):
         if threading.get_ident()!=self.thread_id:raise RuntimeError('GPU 컨텍스트는 생성 스레드에서만 사용할 수 있습니다.')
+
+    def set_output_size(self,size):
+        """원본 타깃은 유지하고 중앙 정사각형의 GPU 전달 크기만 변경합니다."""
+        self._assert_thread()
+        if type(size) is not int or not 32<=size<=2160:raise ValueError('전달 크기는32~2160 정수여야 합니다.')
+        if self.output_size==size:return
+        for resource in reversed(self.output_resources):resource.release()
+        self.output_resources=[]
+        texture=self.ctx.texture((size,size),4); self.output_resources.append(texture)
+        self.output=self.ctx.framebuffer([texture]); self.output_resources.append(self.output)
+        self.output_size=size
 
     def set_date(self,value):
         self._assert_thread(); design=design_for_date(value)
@@ -408,8 +443,9 @@ class CalendarRenderer:
             self.vaos.append(self.ctx.vertex_array(self.program,[(vertex,'3f 3f','in_position','in_normal')],index))
         self.design=design
 
-    def render(self,value,elapsed=0):
+    def _draw(self,value,elapsed):
         self._assert_thread(); transforms=matrices(elapsed); self.set_date(value)
+        self.ctx.enable(moderngl.DEPTH_TEST)
         self.target.use(); self.target.clear(0,0,0,0,depth=1)
         for index,(_,color,metal,rough) in enumerate(self.parts):
             transform=transforms[0] if index<len(self.parts)-3 else transforms[index-len(self.parts)+4]
@@ -417,10 +453,24 @@ class CalendarRenderer:
             self.program['metallic'].value=metal; self.program['base_color'].value=color; self.program['roughness'].value=rough
             self.vaos[index].render(moderngl.TRIANGLES)
         self.ctx.copy_framebuffer(self.resolved,self.target)
-        raw=self.resolved.read(components=4,alignment=1)
+
+    def _image(self,framebuffer,width,height):
+        raw=framebuffer.read(components=4,alignment=1)
         # MSAA 결과는 사전곱 알파입니다. 복사해 GPU 버퍼 수명에서 분리합니다.
-        image=QImage(raw,self.size,self.size,self.size*4,QImage.Format.Format_RGBA8888_Premultiplied).copy().mirrored(False,True)
+        image=QImage(raw,width,height,width*4,QImage.Format.Format_RGBA8888_Premultiplied).copy().mirrored(False,True)
         return image
+
+    def render(self,value,elapsed=0):
+        self._draw(value,elapsed)
+        self.ctx.disable(moderngl.DEPTH_TEST)
+        self.output.use(); self.texture.use(location=0)
+        self.downsample_vao.render(moderngl.TRIANGLES,vertices=3)
+        return self._image(self.output,self.output_size,self.output_size)
+
+    def render_original(self,value,elapsed=0):
+        """검증·내보내기 때만 실제 직사각형 원본 전체를 CPU로 읽습니다."""
+        self._draw(value,elapsed)
+        return self._image(self.resolved,*self.dimensions)
 
     def _clear_meshes(self):
         for value in reversed(self.vaos):value.release()
@@ -429,6 +479,8 @@ class CalendarRenderer:
 
     def close(self):
         self._assert_thread(); self._clear_meshes()
+        for value in reversed(self.output_resources):value.release()
+        self.output_resources.clear(); self.output=None; self.output_size=0
         for value in reversed(self.resources):value.release()
         self.resources.clear()
         if self.ctx is not None:self.ctx.release(); self.ctx=None

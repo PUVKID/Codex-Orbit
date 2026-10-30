@@ -11,10 +11,20 @@ from qt_test_support import cleanup_qt_widgets
 
 class FakeWeather(QObject):
     changed=Signal(dict)
-    def __init__(self,parent=None):
+    def __init__(self,parent=None,language='ko'):
         super().__init__(parent);self.started=0;self.closed=False
-        self.snapshot={'temperature':None,'region':'','checked_at':None,'observed_at':None,'status':'기온 조회 준비','stale':True,'busy':False}
-    def start(self):self.started+=1
+        self.language=language if language in ('ko','en') else 'ko'
+        self.snapshot={'temperature':None,'region':'','checked_at':None,'observed_at':None,'status':'기온 조회 준비','stale':True,'busy':False,
+                       'language':self.language,'region_original':'','region_source':'ipwho.is · 원문'}
+    def set_language(self,language):
+        if self.closed:return
+        language=language if language in ('ko','en') else 'ko'
+        if language==self.language:return
+        self.language=language
+        self.snapshot={**self.snapshot,'language':language}
+        self.changed.emit(dict(self.snapshot))
+    def start(self):
+        if not self.closed:self.started+=1
     def close(self):self.closed=True
 
 class WeatherIntegrationTests(unittest.TestCase):

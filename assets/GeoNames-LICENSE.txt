@@ -1,0 +1,20 @@
+전세계 지명 데이터 출처와 이용 허락
+
+지명 검색: Open-Meteo Geocoding API
+https://open-meteo.com/en/docs/geocoding-api
+
+원천 지명 데이터: GeoNames
+https://www.geonames.org/
+https://www.geonames.org/export/
+
+GeoNames 데이터는 Creative Commons Attribution 4.0 라이선스로 제공됩니다.
+https://creativecommons.org/licenses/by/4.0/
+https://creativecommons.org/licenses/by/4.0/legalcode
+라이선스 확인 원문: https://download.geonames.org/export/dump/readme.txt
+
+이 앱은 GeoNames 기반 Open-Meteo 검색 응답에서 선택 언어의 지명·행정구역·국가명을
+조합해 표시합니다. 번역이 없는 경우 제공처의 영어 또는 현지 지명을 유지합니다.
+동명 지역 혼동을 줄이기 위해 국가·좌표 근접성을 검사하며, 지명 정보의 정확성·최신성·
+완전성을 보장하지 않습니다. 검색 실패 시 실제 IP 추정 지역의 원문을 보존합니다.
+
+이 고지는 지명 데이터의 출처와 권리를 밝히며 앱 코드에 새 라이선스를 부여하지 않습니다.

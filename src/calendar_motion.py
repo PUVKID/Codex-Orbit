@@ -6,13 +6,25 @@ import math
 import threading
 import time
 import weakref
-from PySide6.QtCore import QCoreApplication, QThread, Qt, QRectF
+from PySide6.QtCore import QCoreApplication, QObject, QThread, Qt, QRectF, Signal, Slot
 from PySide6.QtGui import QColor, QImage, QPainter, QPainterPath, QPen
+from shiboken6 import isValid
 from calendar_art import current_date, design_for_date
+from frame_pacing import FrameWaiter
 
-FPS = 30
+FPS = 240
 SIZE = 384
+RENDER_SIZE = (3840, 2160)
 _logger = logging.getLogger(__name__)
+
+
+def next_frame_deadline(previous, now):
+    """절대 시간 슬롯을 유지하며 놓친 슬롯은 한 번에 건너뜁니다."""
+    interval=1/FPS
+    following=previous+interval
+    if following<=now:
+        following+=(math.floor((now-following)/interval)+1)*interval
+    return following
 
 
 def fallback_image(value):
@@ -51,17 +63,23 @@ def fallback_image(value):
 
 class _Worker(QThread):
     """Qt 객체나 UI를 조작하지 않고 복사된 최신 이미지 하나만 전달합니다."""
+    frame_ready=Signal()
+
     def __init__(self):
         super().__init__(); self.condition=threading.Condition(); self.stopping=False; self.visible=False
-        self.requested_date=None; self.requested_elapsed=0.; self.requested_at=time.monotonic()
-        self.started_at=time.monotonic()
+        self.requested_date=None; self.requested_elapsed=0.; self.requested_at=time.perf_counter()
+        self.started_at=time.perf_counter()
         self.latest=None; self.latest_date=None; self.error=''; self.render_count=0; self.renderer_name=''
+        self.output_size=SIZE; self.notification_pending=False; self.notification_count=0
+        self.first_render_at=None; self.last_render_at=None; self.render_seconds=0.
+        self.pacing_backend='준비 중'; self.pacing_warning=''
 
-    def configure(self,visible=None,value=None,elapsed=None):
+    def configure(self,visible=None,value=None,elapsed=None,output_size=None):
         with self.condition:
             if visible is not None:self.visible=visible
+            if output_size is not None:self.output_size=output_size
             if elapsed is not None:
-                self.requested_date=value; self.requested_elapsed=elapsed; self.requested_at=time.monotonic()
+                self.requested_date=value; self.requested_elapsed=elapsed; self.requested_at=time.perf_counter()
             self.condition.notify_all()
 
     def stop(self):
@@ -69,28 +87,44 @@ class _Worker(QThread):
 
     def run(self):
         renderer=None
+        waiter=None
         next_frame_at=0.
         try:
+            waiter=FrameWaiter(); self.pacing_backend=waiter.backend; self.pacing_warning=waiter.warning
+            if waiter.warning:_logger.warning(waiter.warning)
             while True:
                 with self.condition:
-                    # 여러 위젯의 요청 알림이 와도 렌더 속도는 초당30회를 넘지 않습니다.
-                    while not self.stopping:
-                        remaining=next_frame_at-time.monotonic()
-                        if self.visible and remaining<=0:break
-                        self.condition.wait(remaining if self.visible else None)
+                    # 요청 수와 무관하게 절대240Hz 슬롯에 맞춰 유휴 대기합니다.
+                    while not self.stopping and not self.visible:self.condition.wait()
                     if self.stopping:break
+                    remaining=next_frame_at-time.perf_counter()
+                if remaining>0:
+                    waiter.wait(remaining,self.condition)
+                    continue
+                with self.condition:
+                    if self.stopping:break
+                    if not self.visible:continue
                     value=self.requested_date or current_date()
                     # 각 호출자의 서로 다른 타이머 원점 대신 서비스의 한 시계를 공유합니다.
-                    elapsed=time.monotonic()-self.started_at
-                start=time.monotonic()
+                    elapsed=time.perf_counter()-self.started_at
+                    output_size=self.output_size
+                start=time.perf_counter()
                 if renderer is None:
                     from calendar_renderer import CalendarRenderer
-                    renderer=CalendarRenderer(SIZE); self.renderer_name=renderer.ctx.info.get('GL_RENDERER','확인 불가')
+                    renderer=CalendarRenderer(RENDER_SIZE); self.renderer_name=renderer.ctx.info.get('GL_RENDERER','확인 불가')
+                if hasattr(renderer,'set_output_size'):renderer.set_output_size(output_size)
                 image=renderer.render(value,elapsed)
+                finished=time.perf_counter()
                 with self.condition:
-                    self.latest=image; self.latest_date=value; self.render_count+=1
-                    next_frame_at=start+1/FPS
+                    self.render_count+=1; image.setText('calendar_frame_id',str(self.render_count))
+                    self.latest=image; self.latest_date=value
+                    if self.first_render_at is None:self.first_render_at=finished
+                    self.last_render_at=finished; self.render_seconds+=finished-start
+                    next_frame_at=next_frame_deadline(next_frame_at if next_frame_at else start,finished)
+                    notify=not self.notification_pending and self.visible
+                    if notify:self.notification_pending=True; self.notification_count+=1
                     self.condition.notify_all()
+                if notify:self.frame_ready.emit()
         except Exception as error:
             with self.condition:
                 self.error=f'날짜별 3D 표시 실패: {type(error).__name__}: {error}'
@@ -101,22 +135,48 @@ class _Worker(QThread):
                 try:renderer.close()
                 except Exception:
                     _logger.exception('날짜별 GPU 자원 정리 실패')
+            if waiter is not None:
+                try:waiter.close()
+                except Exception as error:
+                    with self.condition:self.error=self.error or f'프레임 대기 핸들 정리 실패: {type(error).__name__}: {error}'
+                    _logger.exception('프레임 대기 핸들 정리 실패')
 
 
-class CalendarMotion:
+class CalendarMotion(QObject):
     def __init__(self):
-        self.worker=_Worker(); self.owners={}; self.fallback=None; self.fallback_date=None; self.closed=False
+        super().__init__(QCoreApplication.instance())
+        self.worker=_Worker(); self.owners={}; self.sizes={}; self.presented={}
+        self.presentation_count=0; self.dispatch_count=0
+        self.fallback=None; self.fallback_date=None; self.closed=False
+        self.worker.frame_ready.connect(self._dispatch_frame,Qt.ConnectionType.QueuedConnection)
         self.worker.start()
+
+    @Slot()
+    def _dispatch_frame(self):
+        if self.closed:return
+        with self.worker.condition:self.worker.notification_pending=False
+        self.dispatch_count+=1
+        for reference in list(self.owners.values()):
+            owner=reference()
+            if owner is None or (isinstance(owner,QObject) and not isValid(owner)):continue
+            callback=getattr(owner,'calendar_frame_ready',None)
+            if callable(callback):callback()
+
+    def _configure_size(self):
+        self.worker.configure(output_size=max((self.sizes.get(key,SIZE) for key in self.owners),default=SIZE))
 
     def visible(self,owner,visible):
         if self.closed:raise RuntimeError('날짜별 모션 서비스가 닫혔습니다.')
         key=id(owner)
         if visible:
             def gone(_):
-                self.owners.pop(key,None); self.worker.configure(visible=bool(self.owners))
+                self.owners.pop(key,None); self.sizes.pop(key,None); self.presented.pop(key,None)
+                self.worker.configure(visible=bool(self.owners)); self._configure_size()
             self.owners[key]=weakref.ref(owner,gone)
-        else:self.owners.pop(key,None)
+        else:
+            self.owners.pop(key,None); self.sizes.pop(key,None); self.presented.pop(key,None)
         self.worker.configure(visible=bool(self.owners))
+        self._configure_size()
 
     def frame(self,elapsed=0.0,value=None):
         if self.closed:raise RuntimeError('날짜별 모션 서비스가 닫혔습니다.')
@@ -134,11 +194,12 @@ class CalendarMotion:
         return QImage(self.fallback)
 
     def close(self):
-        self.closed=True; self.owners.clear(); self.worker.stop()
+        self.closed=True; self.owners.clear(); self.sizes.clear(); self.presented.clear(); self.worker.stop()
         finished=self.worker.wait(2000)
         if finished:
             with self.worker.condition:self.worker.latest=None
             self.fallback=None
+            self.deleteLater()
         return finished
 
 
@@ -200,6 +261,23 @@ def set_calendar_motion_visible(owner,visible):
     _get_service().visible(owner,visible)
 
 
+def set_calendar_motion_size(owner,size):
+    """현재 보이는 각 소유자의 실제 픽셀 요구 중 최대 크기만 전달합니다."""
+    if type(size) is not int or not 32<=size<=2160:raise ValueError('전달 크기는32~2160 정수여야 합니다.')
+    service=_get_service()
+    if id(owner) in service.owners:
+        service.sizes[id(owner)]=size; service._configure_size()
+
+
+def record_calendar_presentation(owner,image):
+    """Qt 그리기 경로가 실제로 소비한 서로 다른 프레임만 셉니다."""
+    _main_thread()
+    if _service is None or id(owner) not in _service.owners:return
+    serial=image.text('calendar_frame_id')
+    if serial and _service.presented.get(id(owner))!=serial:
+        _service.presented[id(owner)]=serial; _service.presentation_count+=1
+
+
 def get_calendar_error():
     """제품은 이 문자열을 상태나 툴팁에 표시해 대체 표식과 실제 3D를 구분할 수 있습니다."""
     if _retiring is not None:return 'GPU 작업 스레드 종료를 기다리는 중입니다.'
@@ -213,6 +291,15 @@ def calendar_motion_status():
         return {'running':_service.worker.isRunning(),'owners':len(_service.owners),
                 'images':int(_service.worker.latest is not None)+int(_service.fallback is not None),
                 'render_count':_service.worker.render_count,'date':str(_service.worker.latest_date),
+                'target_fps':FPS,'source_dimensions':list(RENDER_SIZE),
+                'delivery_dimensions':list(_service.worker.latest.size().toTuple()) if _service.worker.latest is not None else None,
+                'requested_delivery_size':_service.worker.output_size,
+                'notification_count':_service.worker.notification_count,'dispatch_count':_service.dispatch_count,
+                'presentation_count':_service.presentation_count,
+                'render_seconds':_service.worker.render_seconds,
+                'pacing_clock':'perf_counter','pacing_backend':_service.worker.pacing_backend,
+                'pacing_warning':_service.worker.pacing_warning,
+                'first_render_at':_service.worker.first_render_at,'last_render_at':_service.worker.last_render_at,
                 'renderer':_service.worker.renderer_name,'error':_service.worker.error}
 
 

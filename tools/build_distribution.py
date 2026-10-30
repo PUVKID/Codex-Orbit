@@ -98,6 +98,7 @@ def main():
     for name in ('사용법.md', '기본_지침.md'):
         shutil.copy2(ROOT / 'assets' / name, release / name)
     shutil.copy2(ROOT / 'README.md', release / '배포안내.md')
+    shutil.copy2(ROOT / 'README.en.md', release / 'Usage.en.md')
     for suffix in ('md', 'csv'):
         shutil.copy2(ROOT / 'assets' / 'calendar-art' / ('themes.' + suffix),
                      release / ('연도별_월_테마.' + suffix))
@@ -125,7 +126,7 @@ def main():
             for path in sorted((ROOT / folder).rglob('*')):
                 if path.is_file() and '__pycache__' not in path.parts:
                     bundle.write(path, path.relative_to(ROOT))
-        for name in ('requirements.txt', 'README.md'):
+        for name in ('requirements.txt', 'README.md', 'README.en.md'):
             bundle.write(ROOT / name, name)
     compiler = Path(os.environ.get('CODEX_ORBIT_ISCC') or ROOT / 'work' / 'inno' / 'ISCC.exe')
     run([str(compiler), str(ROOT / 'tools' / 'installer.iss')], 'build-installer', 180)
