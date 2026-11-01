@@ -1,4 +1,21 @@
-# Codex Orbit · 26차 / 2.10.0
+# 🪐 Codex Orbit · 2.10.0
+
+
+투명한 Windows 바탕화면 위젯에서 날짜별 3D 조형과 시계·현재 기온·계정 사용 한도를 보여 주고, 로컬 Codex의 모델·추론 강도 변경 및 작업 배정·재개를 알립니다. Python · PySide6 · ModernGL 기반 데스크톱 앱입니다.
+
+[English](README.en.md) · [다운로드 안내](docs/DOWNLOADS.md) · [사용법](docs/사용법.md) · [26차 검증 범위](docs/공개검증_26차.md) · [27차 변경 기록](변경기록_27차.md) · [전체 차수 목차](docs/REVISION_INDEX.md) · [소스 비교 수](VERSIONS.md) · [글꼴 라이선스](assets/SUIT-LICENSE.txt) · [배포 권리 고지](assets/Qt-LGPL-3.0-LICENSE.txt)
+
+## 다운로드와 실행
+
+26차에서 검증한 2.10.0 배포본을 27차 공개 전달 복구 작업으로 제공합니다. 아래 링크의 게시와 원격 파일 일치는 배포 완료 단계에서 확인합니다.
+
+- [단일 실행 파일 · CodexOrbit.exe](https://github.com/PUVKID/Codex-Orbit/releases/download/v2.10.0/CodexOrbit.exe): Windows 10/11 x64에서 설치 없이 실행합니다.
+- [설치 프로그램 · CodexOrbit-Setup.exe](https://github.com/PUVKID/Codex-Orbit/releases/download/v2.10.0/CodexOrbit-Setup.exe): 현재 사용자용 설치·시작 메뉴·선택 바탕화면 바로가기·제거 프로그램입니다.
+- [2.10.0 Release](https://github.com/PUVKID/Codex-Orbit/releases/tag/v2.10.0): 사용법·영문 안내·라이선스 묶음·SHA256SUMS와 실행 파일을 함께 제공합니다. 소스는 GitHub의 자동 소스 ZIP을 이용하며 비공개 전체 소스 ZIP은 게시하지 않습니다.
+
+Python 별도 설치 없이 실행하며 3D 모션에는 OpenGL 3.3 지원 그래픽 드라이버가 필요합니다. 사용 한도는 설치된 Codex의 로그인 상태에서 읽으며 **남은 토큰 수가 아닌 계정 한도 비율**입니다. 사용자가 직접 선택한 언어·회전 속도는 저장됩니다. [실행·조작 안내](docs/사용법.md)와 [파일 크기·SHA-256](docs/공개검증_26차.md)을 확인하십시오.
+
+27차는 GitHub 전달 문서를 정리하는 차수입니다. 앱 소스와 2.10.0 배포 파일의 기능을 추가하거나 바꾸지 않습니다. 원격 게시 여부와 로컬 검증은 [27차 재검증 기록](docs/GitHub재검증_27차.md)에서 구분합니다.
 
 <!-- 차수표 시작 -->
 ### 공개 보존 차수
@@ -7,33 +24,34 @@
 
 | 차수 | 공개 폴더 | 설명 | 직전 확인 차수 비교 |
 | --- | --- | --- | --- |
-| 1차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/01%EC%B0%A8/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/01%EC%B0%A8/README.md) | 없음 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/01%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/01%EC%B0%A8/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 2차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/02%EC%B0%A8/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/02%EC%B0%A8/README.md) | 1차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/02%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/02%EC%B0%A8/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 3차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/03%EC%B0%A8/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/03%EC%B0%A8/README.md) | 2차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/03%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/03%EC%B0%A8/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 4차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/04%EC%B0%A8/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/04%EC%B0%A8/README.md) | 3차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/04%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/04%EC%B0%A8/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 5차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/05%EC%B0%A8/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/05%EC%B0%A8/README.md) | 4차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/05%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/05%EC%B0%A8/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 6차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/06%EC%B0%A8/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/06%EC%B0%A8/README.md) | 5차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/06%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/06%EC%B0%A8/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 7차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/07%EC%B0%A8/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/07%EC%B0%A8/README.md) | 6차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/07%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/07%EC%B0%A8/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 8차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/08%EC%B0%A8/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/08%EC%B0%A8/README.md) | 7차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/08%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/08%EC%B0%A8/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 9차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/09%EC%B0%A8/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/09%EC%B0%A8/README.md) | 8차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/09%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/09%EC%B0%A8/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 10차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/10%EC%B0%A8/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/10%EC%B0%A8/README.md) | 9차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/10%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/10%EC%B0%A8/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 11차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/11%EC%B0%A8/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/11%EC%B0%A8/README.md) | 10차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/11%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/11%EC%B0%A8/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 12차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/12%EC%B0%A8/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/12%EC%B0%A8/README.md) | 11차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/12%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/12%EC%B0%A8/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 13차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/13%EC%B0%A8/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/13%EC%B0%A8/README.md) | 12차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/13%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/13%EC%B0%A8/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 14차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/14%EC%B0%A8/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/14%EC%B0%A8/README.md) | 13차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/14%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/14%EC%B0%A8/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 15차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/15%EC%B0%A8/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/15%EC%B0%A8/README.md) | 14차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/15%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/15%EC%B0%A8/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 16차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/16%EC%B0%A8/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/16%EC%B0%A8/README.md) | 15차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/16%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/16%EC%B0%A8/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 17차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/17%EC%B0%A8/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/17%EC%B0%A8/README.md) | 16차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/17%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/17%EC%B0%A8/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 18차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/18%EC%B0%A8/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/18%EC%B0%A8/README.md) | 17차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/18%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/18%EC%B0%A8/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 19차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/19%EC%B0%A8/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/19%EC%B0%A8/README.md) | 18차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/19%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/19%EC%B0%A8/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 20차 | 공개 소스 폴더 없음 | 디자인 시안 및 생성 작업 파일 확인 | 공개 소스 비교 대상 없음 |
-| 21차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/21%EC%B0%A8/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/21%EC%B0%A8/README.md) | 19차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/21%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/21%EC%B0%A8/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 22차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/22%EC%B0%A8/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/22%EC%B0%A8/README.md) | 21차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/22%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/22%EC%B0%A8/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 23차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/23%EC%B0%A8/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/23%EC%B0%A8/README.md) | 22차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/23%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/23%EC%B0%A8/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 24차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/24%EC%B0%A8/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/24%EC%B0%A8/README.md) | 23차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/24%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/24%EC%B0%A8/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 25차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/25/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/25/README.md) | 24차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/25/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/25/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 26차 | [폴더](https://github.com/PUVKID/Codex-Orbit/tree/main/history/26/) | [설명](https://github.com/PUVKID/Codex-Orbit/blob/main/history/26/README.md) | 25차 · [전체 차이](https://github.com/PUVKID/Codex-Orbit/blob/main/history/26/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [파일 목록](https://github.com/PUVKID/Codex-Orbit/blob/main/history/26/%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) |
-| 최종 | 공개 소스 폴더 없음 | 별도 검증 기록 확인 | 공개 소스 비교 대상 없음 |
+| 1차 | [폴더](history/01차/) | [설명](history/01차/README.md) | 없음 · [전체 차이](history/01차/직전차수.diff) · [파일 목록](history/01차/공개파일_비교.json) |
+| 2차 | [폴더](history/02차/) | [설명](history/02차/README.md) | 1차 · [전체 차이](history/02차/직전차수.diff) · [파일 목록](history/02차/공개파일_비교.json) |
+| 3차 | [폴더](history/03차/) | [설명](history/03차/README.md) | 2차 · [전체 차이](history/03차/직전차수.diff) · [파일 목록](history/03차/공개파일_비교.json) |
+| 4차 | [폴더](history/04차/) | [설명](history/04차/README.md) | 3차 · [전체 차이](history/04차/직전차수.diff) · [파일 목록](history/04차/공개파일_비교.json) |
+| 5차 | [폴더](history/05차/) | [설명](history/05차/README.md) | 4차 · [전체 차이](history/05차/직전차수.diff) · [파일 목록](history/05차/공개파일_비교.json) |
+| 6차 | [폴더](history/06차/) | [설명](history/06차/README.md) | 5차 · [전체 차이](history/06차/직전차수.diff) · [파일 목록](history/06차/공개파일_비교.json) |
+| 7차 | [폴더](history/07차/) | [설명](history/07차/README.md) | 6차 · [전체 차이](history/07차/직전차수.diff) · [파일 목록](history/07차/공개파일_비교.json) |
+| 8차 | [폴더](history/08차/) | [설명](history/08차/README.md) | 7차 · [전체 차이](history/08차/직전차수.diff) · [파일 목록](history/08차/공개파일_비교.json) |
+| 9차 | [폴더](history/09차/) | [설명](history/09차/README.md) | 8차 · [전체 차이](history/09차/직전차수.diff) · [파일 목록](history/09차/공개파일_비교.json) |
+| 10차 | [폴더](history/10차/) | [설명](history/10차/README.md) | 9차 · [전체 차이](history/10차/직전차수.diff) · [파일 목록](history/10차/공개파일_비교.json) |
+| 11차 | [폴더](history/11차/) | [설명](history/11차/README.md) | 10차 · [전체 차이](history/11차/직전차수.diff) · [파일 목록](history/11차/공개파일_비교.json) |
+| 12차 | [폴더](history/12차/) | [설명](history/12차/README.md) | 11차 · [전체 차이](history/12차/직전차수.diff) · [파일 목록](history/12차/공개파일_비교.json) |
+| 13차 | [폴더](history/13차/) | [설명](history/13차/README.md) | 12차 · [전체 차이](history/13차/직전차수.diff) · [파일 목록](history/13차/공개파일_비교.json) |
+| 14차 | [폴더](history/14차/) | [설명](history/14차/README.md) | 13차 · [전체 차이](history/14차/직전차수.diff) · [파일 목록](history/14차/공개파일_비교.json) |
+| 15차 | [폴더](history/15차/) | [설명](history/15차/README.md) | 14차 · [전체 차이](history/15차/직전차수.diff) · [파일 목록](history/15차/공개파일_비교.json) |
+| 16차 | [폴더](history/16차/) | [설명](history/16차/README.md) | 15차 · [전체 차이](history/16차/직전차수.diff) · [파일 목록](history/16차/공개파일_비교.json) |
+| 17차 | [폴더](history/17차/) | [설명](history/17차/README.md) | 16차 · [전체 차이](history/17차/직전차수.diff) · [파일 목록](history/17차/공개파일_비교.json) |
+| 18차 | [폴더](history/18차/) | [설명](history/18차/README.md) | 17차 · [전체 차이](history/18차/직전차수.diff) · [파일 목록](history/18차/공개파일_비교.json) |
+| 19차 | [폴더](history/19차/) | [설명](history/19차/README.md) | 18차 · [전체 차이](history/19차/직전차수.diff) · [파일 목록](history/19차/공개파일_비교.json) |
+| 20차 | [자료 상태](docs/20차/) | [설명](docs/20차/README.md) · 공개 소스 없음 | [비교 대상 없는 근거](docs/20차/README.md) |
+| 21차 | [폴더](history/21차/) | [설명](history/21차/README.md) | 19차 · [전체 차이](history/21차/직전차수.diff) · [파일 목록](history/21차/공개파일_비교.json) |
+| 22차 | [폴더](history/22차/) | [설명](history/22차/README.md) | 21차 · [전체 차이](history/22차/직전차수.diff) · [파일 목록](history/22차/공개파일_비교.json) |
+| 23차 | [폴더](history/23차/) | [설명](history/23차/README.md) | 22차 · [전체 차이](history/23차/직전차수.diff) · [파일 목록](history/23차/공개파일_비교.json) |
+| 24차 | [폴더](history/24차/) | [설명](history/24차/README.md) | 23차 · [전체 차이](history/24차/직전차수.diff) · [파일 목록](history/24차/공개파일_비교.json) |
+| 25차 | [폴더](history/25/) | [설명](history/25/README.md) | 24차 · [전체 차이](history/25/직전차수.diff) · [파일 목록](history/25/공개파일_비교.json) |
+| 26차 | [폴더](history/26/) | [설명](history/26/README.md) | 25차 · [전체 차이](history/26/직전차수.diff) · [파일 목록](history/26/공개파일_비교.json) |
+| 27차 | [문서 폴더](history/27/) | [설명](history/27/README.md) · 별도 앱 소스 없는 문서 차수 | 26차 · [전체 공개 차이](docs/27차_전체변경.diff) · [변경 기록](변경기록_27차.md) |
+| 최종 | [자료 상태](docs/최종/) | [설명](docs/최종/README.md) · 공개 소스 없음 | [비교 대상 없는 근거](docs/최종/README.md) |
 <!-- 차수표 끝 -->
 
 크기를 조절할 수 있는 투명 바탕화면 위젯에서 날짜별 3D 조형이 움직이고, 클릭하면 모델·추론 강도 변경과 작업 배정·재개 기록을 확인합니다. SUIT 글꼴과 잉크 네이비 화면을 사용합니다. 이전 차수는 보존했습니다.
@@ -42,7 +60,7 @@
 
 - `CodexOrbit.exe`: Windows 10/11 x64용 단일 실행 파일.
 - `CodexOrbit-Setup.exe`: 현재 사용자 설치·시작 메뉴·선택 바탕화면 바로가기·제거 프로그램.
-- `사용법.md`, `기본_지침.md`, 라이선스, `소스와_재빌드.zip`.
+- [사용법](docs/사용법.md)과 기존 라이선스 고지는 소스에 포함합니다. 비공개 전체 소스 ZIP은 공개 배포하지 않습니다.
 
 Python을 별도로 설치하지 않아도 실행합니다. 날짜별 실제 3D 모션에는 OpenGL 3.3을 지원하는 그래픽 드라이버가 필요합니다. GPU 준비 중에는 해당 월의 정적 표식을 보여 주며, 실패하면 사유를 표시합니다. 이때 정적 표식을 3D 성공으로 기록하지 않습니다. 감시·계정 조회는 3D 렌더와 분리됩니다.
 
@@ -55,9 +73,9 @@ Python을 별도로 설치하지 않아도 실행합니다. 날짜별 실제 3D 
 
 ## 매일 바뀌는 조형
 
-한국 날짜 기준 2026-01-01부터 2099-12-31까지 27,028일을 지원합니다. 37개 주제 모티프와24개 동반 모티프의 서로 다른 쌍으로888개 연월 컬렉션을 구성하며 두 모티프와 날짜별 주연 대상을 실제 형상 규칙에 연결합니다. 같은12개 월 테마를 매년 반복하지 않습니다. 위젯에는 실제 대상 이름을 표시하며 월 테마는 카탈로그에 별도로 기록합니다. 공통 형상 생성기를 재사용하는 장식용 조형이며888개 수작업 모델이나 과학 도감 수준의 정확한 복제품이라는 뜻은 아닙니다. 전체 연월 목록은 함께 제공하는 `연도별_월_테마.md`와CSV, 원본은 `assets/calendar-art/themes.md` 및 `themes.csv`에서 확인합니다.
+한국 날짜 기준 2026-01-01부터 2099-12-31까지 27,028일을 지원합니다. 37개 주제 모티프와24개 동반 모티프의 서로 다른 쌍으로888개 연월 컬렉션을 구성하며 두 모티프와 날짜별 주연 대상을 실제 형상 규칙에 연결합니다. 같은12개 월 테마를 매년 반복하지 않습니다. 위젯에는 실제 대상 이름을 표시하며 월 테마는 카탈로그에 별도로 기록합니다. 공통 형상 생성기를 재사용하는 장식용 조형이며888개 수작업 모델이나 과학 도감 수준의 정확한 복제품이라는 뜻은 아닙니다. 전체 연월 목록은 함께 제공하는 `연도별_월_테마.md`와CSV, 원본은 [테마 설명](assets/calendar-art/themes.md) 및 [CSV](assets/calendar-art/themes.csv)에서 확인합니다.
 
-자정 이후 다음 프레임에 한국 날짜를 다시 확인하고 조형과 도크를 바꿉니다. 절전에서 복귀하거나 시계를 되돌려도 날짜를 재확인합니다. 수만 개 영상을 넣지 않고 그날의 실제 삼각형 메시만 렌더합니다. 굵은 금속 링 세 개가 서로 다른 축에서 각각12초·6초·4초에 한 바퀴씩 연속 회전합니다. 바탕화면과 내부 모션은 한 GPU 작업자·한 컨텍스트·최신 이미지와 정적 준비 이미지 두 장을 공유하며 3840×2160 원본을 GPU에서 렌더하고 작은 위젯에 맞춰 축소 전달하며 초당 240프레임을 목표로 합니다. 실제 생성·전달 속도는 PC 부하와 그래픽 장치에 따라 달라지며 모니터의 실제 표시 주사율과는 구분합니다. 표시 대상이 없으면 렌더를 쉽니다. 날짜 카탈로그는 소스 ZIP의 `assets/calendar-art/catalog.json`에 있습니다.
+자정 이후 다음 프레임에 한국 날짜를 다시 확인하고 조형과 도크를 바꿉니다. 절전에서 복귀하거나 시계를 되돌려도 날짜를 재확인합니다. 수만 개 영상을 넣지 않고 그날의 실제 삼각형 메시만 렌더합니다. 굵은 금속 링 세 개가 서로 다른 축에서 각각12초·6초·4초에 한 바퀴씩 연속 회전합니다. 바탕화면과 내부 모션은 한 GPU 작업자·한 컨텍스트·최신 이미지와 정적 준비 이미지 두 장을 공유하며 3840×2160 원본을 GPU에서 렌더하고 작은 위젯에 맞춰 축소 전달하며 초당 240프레임을 목표로 합니다. 실제 생성·전달 속도는 PC 부하와 그래픽 장치에 따라 달라지며 모니터의 실제 표시 주사율과는 구분합니다. 표시 대상이 없으면 렌더를 쉽니다. 날짜 카탈로그는 [assets/calendar-art/catalog.json](assets/calendar-art/catalog.json)에 있습니다.
 
 ## 변경 기록과 실제 한도
 
@@ -75,10 +93,10 @@ Python을 별도로 설치하지 않아도 실행합니다. 날짜별 실제 3D 
 
 ## 재빌드
 
-`requirements.txt`의 고정 의존성을 준비하고 `tools/build_distribution.py`를 실행합니다. `CODEX_ORBIT_ISCC`에 Inno Setup 컴파일러 경로를 지정합니다. 배포 파일의 SHA256.json과 라이선스를 보존하십시오. ModernGL·glcontext·NumPy·Pillow·PySide6는 EXE에 포함되며 별도 사용자 설치가 필요하지 않습니다. 제작 및 검증 도구는 소스 ZIP에 있습니다. Windows 바로가기·트레이·실행파일 아이콘은 운영체제 형식상 정적이며, 실행 위젯과 내부 조형은 움직입니다.
+`requirements.txt`의 고정 의존성을 준비하고 `tools/build_distribution.py`를 실행합니다. `CODEX_ORBIT_ISCC`에 Inno Setup 컴파일러 경로를 지정합니다. 배포 파일의 SHA256.json과 라이선스를 보존하십시오. ModernGL·glcontext·NumPy·Pillow·PySide6는 EXE에 포함되며 별도 사용자 설치가 필요하지 않습니다. 공개 제작·검사 도구는 `tools/`에 있습니다. 공개본의 검사 범위는 [검증 안내](docs/공개검증_26차.md)를 확인하십시오. Windows 바로가기·트레이·실행파일 아이콘은 운영체제 형식상 정적이며, 실행 위젯과 내부 조형은 움직입니다.
 
 
-22차 실행 자산 정리: 예전 원소 영상팩31개는 이전 차수와 소스 ZIP에 보존하며, 현재 달력 GUI에서 쓰지 않아 새 EXE에는 포함하지 않습니다. 소스 ZIP은 설치 파일과 별도로 제공합니다. 설치본은 실행 파일·사용법·라이선스·연도별 월 테마표를 설치합니다. 현재 달력과 원본 브랜드·기능 아이콘에 필요한 자산 검사는 유지합니다.
+22차 실행 자산 정리: 예전 원소 영상팩 31개는 이전 차수의 비공개 로컬 보존본에 남아 있으며 현재 달력 GUI에서 쓰지 않아 EXE와 공개 자동 소스 ZIP에는 포함하지 않습니다. 기존 assets/사용법.md는 당시 로컬 보존본 안내이며, 현재 공개 배포는 위의 docs/사용법.md를 기준으로 합니다. 설치본은 실행 파일·사용법·라이선스·연도별 월 테마표를 설치합니다. 현재 달력과 원본 브랜드·기능 아이콘에 필요한 자산 검사는 유지합니다.
 
 
 25차 성능 확인: 개발 환경의 실제 창 5초 측정에서 4K 생성은 약232.6~235.1fps, 화면별 고유 그리기는 약232.0~234.9fps였습니다. 240fps는 페이싱 목표이며 이 측정을 240 고정 달성으로 표시하지 않습니다. 물리 모니터의 스캔아웃 속도는 측정하지 않았고 표시 주사율이 낮으면 생성한 프레임 전체를 화면에 표시할 수 없습니다.
@@ -98,4 +116,4 @@ Python을 별도로 설치하지 않아도 실행합니다. 날짜별 실제 3D 
 
 상세창의 회전 속도 슬라이더 또는 위젯 우클릭 메뉴에서 0.25~3배로 조절합니다. 설정은 다시 실행해도 유지됩니다. 한국어·영어를 선택할 수 있습니다. 240fps 고정 달성은 사용자 요청에 따라 추가 개선 범위에서 제외했습니다. 최근 측정은 생성 약227~230fps, 고유 Qt 그리기 약214~229fps이며 물리 화면 표시율을 뜻하지 않습니다.
 
-[26차 실제 변경 기록](https://github.com/PUVKID/Codex-Orbit/blob/main/변경기록_26차.md)
+[26차 실제 변경 기록](변경기록_26차.md)

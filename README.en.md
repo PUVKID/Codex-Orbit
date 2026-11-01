@@ -1,5 +1,16 @@
 # Codex Orbit 2.10.0 · Quick guide
 
+[한국어](README.md) · [Usage guide](docs/Usage.en.md) · [Verification scope](docs/공개검증_26차.md) · [Revision history](VERSIONS.md) · [Revision 27](history/27/README.md) · [Font license](assets/SUIT-LICENSE.txt)
+
+Codex Orbit is a Windows desktop widget for daily 3D artwork, time, approximate local weather, account usage limits and local Codex model, reasoning and assignment notifications. It uses Python, PySide6 and ModernGL.
+
+Revision 27 restores publication of the locally verified revision 26 packages and updates documentation. Application version 2.10.0 remains unchanged. Release publication and remote file hashes are verified separately before completion.
+
+[Standalone EXE](https://github.com/PUVKID/Codex-Orbit/releases/download/v2.10.0/CodexOrbit.exe) · [Windows installer](https://github.com/PUVKID/Codex-Orbit/releases/download/v2.10.0/CodexOrbit-Setup.exe) · [Release, guides, licenses and checksums](https://github.com/PUVKID/Codex-Orbit/releases/tag/v2.10.0)
+
+Public source archives are GitHub's automatically generated archives; the private full development ZIP is not published.
+
+
 Run CodexOrbit.exe directly, or use CodexOrbit-Setup.exe to install it for the current Windows user. The installer supports Korean and English.
 
 Choose 한국어 or English in the detail window's top language selector, or in the desktop widget's right-click menu. The selection is saved. Drag the widget to move it; drag its right or bottom edge to resize it. Click it to open change history.
@@ -17,9 +28,9 @@ Sources: https://open-meteo.com/ · https://www.geonames.org/ · https://ipwhois
 
 ## Rotation speed
 
-Use the Rotation speed slider near the top of the details window to select0.25×–3×. Reset to1× restores the default. You can also right-click the desktop widget and choose a speed preset. The choice is saved and restored on restart.
+Use the Rotation speed slider near the top of the details window to select 0.25×–3×. Reset to 1× restores the default. You can also right-click the desktop widget and choose a speed preset. The choice is saved and restored on restart.
 
-Speed changes preserve the current animation phase. They affect the rings and sculpture only; clock, date, weather and usage updates retain their real-time schedules. Rotation speed and the240fps pacing target are separate controls of the animation.
+Speed changes preserve the current animation phase. They affect the rings and sculpture only; clock, date, weather and usage updates retain their real-time schedules. Rotation speed and the 240 fps pacing target are separate controls of the animation.
 
 
 ## Version 26 rotation speed
