@@ -1,38 +1,31 @@
-# Codex Orbit 2.10.0 · Quick guide
+# 🪐 Codex Orbit 2.11.0 · Quick guide
 
-[한국어](README.md) · [Usage guide](docs/Usage.en.md) · [Verification scope](docs/공개검증_26차.md) · [Revision history](VERSIONS.md) · [Revision 27](history/27/README.md) · [Font license](assets/SUIT-LICENSE.txt)
+Run `CodexOrbit.exe` without installation, or install for the current Windows user with `CodexOrbit-Setup.exe`. Windows 10/11 x64 is required. Python is bundled. The animated 3D widget requires an OpenGL 3.3 capable graphics driver; loading and failures are shown separately.
 
-Codex Orbit is a Windows desktop widget for daily 3D artwork, time, approximate local weather, account usage limits and local Codex model, reasoning and assignment notifications. It uses Python, PySide6 and ModernGL.
+Drag the transparent widget to move it. Drag its right/bottom edges or bottom-right corner to resize it. Click to open details. Position and size persist. Select Korean or English in the details header or widget context menu.
 
-Revision 27 restores publication of the locally verified revision 26 packages and updates documentation. Application version 2.10.0 remains unchanged. Release publication and remote file hashes are verified separately before completion.
+Use the rotation speed slider or context menu to select 0.25–3×. Reset restores 1×. The setting persists and preserves animation phase; clock, weather and usage refresh intervals remain unchanged.
 
-[Standalone EXE](https://github.com/PUVKID/Codex-Orbit/releases/download/v2.10.0/CodexOrbit.exe) · [Windows installer](https://github.com/PUVKID/Codex-Orbit/releases/download/v2.10.0/CodexOrbit-Setup.exe) · [Release, guides, licenses and checksums](https://github.com/PUVKID/Codex-Orbit/releases/tag/v2.10.0)
+Model and reasoning changes show **before → after** separately. Worker assignments and resumptions are distinct event types. Recorded chat titles, tasks and public reasons are preserved. Missing previous values or reasons are shown as unavailable; private reasoning is not reconstructed.
 
-Public source archives are GitHub's automatically generated archives; the private full development ZIP is not published.
+Monitoring observes local selection state before message submission once locally recorded. Remote/cloud chats, unrecorded UI choices and server model identity are outside its assurance. Limits include 4,096 files, 2MiB records and a per-cycle read budget. Up to eight notices are visible; older notices are hidden while the latest 500 history entries are retained. First launch establishes a baseline without replaying old events.
 
+The clock uses PC local time. Approximate worldwide location uses the connection IP without Windows Location Services. Temperature refreshes every five minutes using Open-Meteo; IP location uses ipwho.is. VPNs and carrier networks may report a different region. Failed/stale readings are identified.
 
-Run CodexOrbit.exe directly, or use CodexOrbit-Setup.exe to install it for the current Windows user. The installer supports Korean and English.
+Usage bars show the account's actual **remaining rate-limit percentage**, not an exact remaining token count. The read-only account query refreshes every 30 seconds. Missing readings are not replaced with invented values.
 
-Choose 한국어 or English in the detail window's top language selector, or in the desktop widget's right-click menu. The selection is saved. Drag the widget to move it; drag its right or bottom edge to resize it. Click it to open change history.
+Daily sculptures cover 27,028 Korean-calendar dates across 2026–2099, using 888 year/month motif combinations and shared geometry rules. These are not individually handcrafted models. Daily art changes at Korean midnight, while the displayed clock follows PC local time.
 
-Worldwide location and current temperature use the internet connection's approximate IP location. Windows Location Services are not required. Place names use Open-Meteo/GeoNames translations. If a translation or reliable match is unavailable, the original place name is shown. VPNs and mobile networks may point to a different region.
+The GPU source is 3840×2160, downsampled to widget size. Fixed 240fps was not achieved; further attempts were withdrawn. Generated frames, Qt paints and physical display refresh are different measurements. EXE/shortcut icons are static; motion appears in the running widget.
 
-The GPU renders an actual 3840×2160 source and downsamples it to the widget size before transfer. Pacing targets 240 fps; measured development-window generation was approximately 233–235 fps, so fixed 240 fps has not been achieved. Rendered frames, GUI paint counts and physical monitor refresh rate are different measurements.
+User settings, MD instructions, backups and history remain in `%LOCALAPPDATA%/CodexOrbit`. Settings, My Instructions and Help tabs are not exposed. Included instructions are not applied silently or injected into every chat. The uninstaller preserves user instructions, backups and history. Never share credentials, local chats or personal instruction files.
 
-Usage bars show the account's remaining rate-limit percentage, not an exact token count. Chat titles, model IDs, role IDs and recorded public reasons remain unchanged when the interface language changes. Reasons not present in the source are not invented.
+Check downloads against `SHA256SUMS.txt`; dependency licenses are in `Licenses.zip`. Public source and 108 public tests are available in the [repository](https://github.com/PUVKID/Codex-Orbit). GitHub's automatic source ZIP contains public repository files only; the private local full-source archive is not distributed.
 
-The uninstaller preserves user instructions, backups and history. Included default instructions are not applied silently. Do not share your account credentials, local chat data or personal instruction files with the application package.
+## Clearer notifications
 
-Sources: https://open-meteo.com/ · https://www.geonames.org/ · https://ipwhois.io/
+Notifications show the chat title, previous model and reasoning effort, current model and reasoning effort, and an understandable recorded reason. Model families use ☀️ Sol, ✨ Astra, 🌍 Terra and 🌙 Luna; exact model IDs remain visible. Missing reasons are identified rather than invented. Assignments and resumptions remain distinct from setting changes.
 
+## Reasoning effort icons
 
-## Rotation speed
-
-Use the Rotation speed slider near the top of the details window to select 0.25×–3×. Reset to 1× restores the default. You can also right-click the desktop widget and choose a speed preset. The choice is saved and restored on restart.
-
-Speed changes preserve the current animation phase. They affect the rings and sculpture only; clock, date, weather and usage updates retain their real-time schedules. Rotation speed and the 240 fps pacing target are separate controls of the animation.
-
-
-## Version 26 rotation speed
-
-Use the detail window slider or widget context menu to select 0.25–3× speed. The setting persists across restarts. Korean and English are supported. Further work toward fixed 240fps was withdrawn by the user. Recent measurements were approximately 227–230 generated frames/s and 214–229 unique Qt paints/s; these are separate from physical display refresh.
+⚪ None (none) · 💧 Minimal (minimal) · 🌱 Low (low) · ⚖️ Medium (medium) · 🔥 High (high) · 🚀 Very high (xhigh) · ⚡ Maximum (ultra). Each previous and current effort gets its own icon. Missing or unknown values use ❔ while retaining the original record or missing-record explanation.

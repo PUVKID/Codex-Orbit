@@ -1,7 +1,7 @@
 [Setup]
 AppId=CodexOrbit.Desktop
 AppName=Codex Orbit
-AppVersion=2.10.0
+AppVersion=2.11.0
 AppPublisher=Codex Orbit
 DefaultDirName={localappdata}\Programs\CodexOrbit
 DefaultGroupName=Codex Orbit
@@ -57,6 +57,8 @@ Source: "..\배포\사용법.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\배포\기본_지침.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\배포\연도별_월_테마.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\배포\연도별_월_테마.csv"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\배포\연도별_월별_테마_전체.md"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\배포\연도별_월별_테마_전체.csv"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\배포\배포안내.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\배포\라이선스\*"; DestDir: "{app}\라이선스"; Flags: ignoreversion recursesubdirs
 

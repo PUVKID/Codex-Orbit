@@ -1,0 +1,449 @@
+diff --git a/src/app.py b/src/app.py
+index 68f2f267e3c44f57a2aff5586b0f78a667a409ac..ae0289f2b9099b327c6338f518888cea5adb1b36 100644
+--- a/src/app.py
++++ b/src/app.py
+@@ -14,6 +14,9 @@ from collections import deque
+ from shiboken6 import isValid
+ 
+ from i18n import translate as t, get_language, set_language, remember_translations, retranslate_widgets
++from notice_format import (friendly_effort, previous_field, short_reason, public_text,
++                           public_reason_original, notice_model_label, notice_previous_model,
++                           notice_reason, notice_reason_original)
+ from PySide6.QtCore import QEvent, QObject, QLockFile, Qt, QSize, QThread, QTimer, Signal, Slot, QPropertyAnimation, QEasingCurve
+ from PySide6.QtGui import QIcon, QPainter, QPixmap, QColor, QImage
+ from PySide6.QtWidgets import (QApplication, QDialog,
+@@ -97,20 +100,16 @@ def friendly_model(value):
+             'gpt-6-luna': 'Luna'}.get(value, str(value or t('확인 불가')))
+ 
+ 
+-def friendly_effort(value):
+-    labels = {'none': t('없음'), 'minimal': t('최소'), 'low': t('낮음'), 'medium': t('보통'),
+-              'high': t('높음'), 'xhigh': t('매우 높음'), 'ultra': t('최고')}
+-    return t(labels.get(value, str(value or '미확인'))) + (f' ({value})' if value in labels else '')
+ 
+ 
+-def previous_field(value, key):
+-    """이전 기록 전체 부재와 개별 필드 미기록을 구분하고 관측값만 표시합니다."""
+-    if value is None:
+-        return t('이전 기록 없음')
+-    raw = value.get(key) if isinstance(value, dict) else None
+-    if not isinstance(raw, str) or not raw:
+-        return t('확인 불가')
+-    return friendly_effort(raw) if key == 'effort' else raw
++
++
++
++
++
++
++
++
+ 
+ 
+ ROLE_LABELS = {'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',
+@@ -127,29 +126,6 @@ def kst_label(value):
+         return str(value or t('확인 불가'))
+ 
+ 
+-def short_reason(event, limit=180):
+-    """명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다."""
+-    text = str(event.get('short_reason') or event.get('reason') or '확인 불가').strip()
+-    marked = re.search(r'(?:핵심 이유|선택 이유|이유)\s*[:：]\s*([^\n]+)', text)
+-    if marked:
+-        text = marked.group(1)
+-    else:
+-        sentences = [sentence for sentence in re.split(r'(?<=[.!?。])\s+|\n', text) if sentence.strip()]
+-        purpose = None if event.get('short_reason') else next((sentence for sentence in sentences if re.search(
+-            r'위한\s+(?:배정|선택|변경|교체)|(?:배정|선택|변경|교체)(?:의|한)?\s*(?:이유|목적)'
+-            r'|(?:때문|확인돼|확인되어).*(?:배정|선택|변경|교체)', sentence)), None)
+-        if not purpose and not event.get('short_reason'):
+-            for index, sentence in enumerate(sentences[:-1]):
+-                if re.search(r'(?:배정합니다|배정하겠습니다|맡기겠습니다)[.!]?$', sentence.replace('**', '').strip()):
+-                    candidate = sentences[index + 1].strip()
+-                    if re.search(r'(?:대조|검사|확인|검토|검증|구현|수정)', candidate):
+-                        purpose = candidate
+-                        break
+-        text = purpose or (sentences[0] if sentences else '확인 불가')
+-        if not purpose and len(sentences) > 1 and len(text) < 70 and re.search(r'(?:맡기겠습니다|배정하겠습니다)[.!]?$', text):
+-            text = sentences[1]
+-    text = text.replace('**', '')
+-    return text if len(text) <= limit else text[:limit - 1] + '…'
+ 
+ 
+ def event_kind(event):
+@@ -179,16 +155,6 @@ def configuration_change_label(event):
+     return t('추론 강도 변경') if effort_changed else t('설정 유지')
+ 
+ 
+-def public_text(value, fallback='공개된 설명이 기록되지 않았습니다.', limit=600):
+-    """공개 문장만 표시하며 보호된 도구 페이로드를 해석하거나 노출하지 않습니다."""
+-    if not isinstance(value, str) or not value.strip():
+-        return t(fallback)
+-    text = value.strip()
+-    if (re.search(r'gAAAA[A-Za-z0-9_=-]{40,}|[A-Za-z0-9_+/=-]{160,}', text)
+-            or re.search(r'encrypted_content\s*[:=]|BEGIN ENCRYPTED|<analysis>|<private>', text, re.I)):
+-        return t(fallback)
+-    text = text.replace('**', '').replace('`', '')
+-    return text if len(text) <= limit else text[:limit-1].rstrip()+'…'
+ 
+ 
+ def task_explanation(event, limit=360):
+@@ -245,9 +211,6 @@ def event_icon(event):
+     return QIcon(QPixmap.fromImage(image))
+ 
+ 
+-def public_reason_original(event):
+-    value = event.get('reason')
+-    return str(value) if public_text(value, '', 1) else t('공개된 설명이 기록되지 않았습니다.')
+ 
+ 
+ def event_description(event):
+@@ -676,11 +639,15 @@ class Notice(QFrame):
+         heading = QHBoxLayout()
+         self.brand_mark = AnimatedBrand(32)
+         heading.addWidget(self.brand_mark, 0, Qt.AlignmentFlag.AlignTop)
++        self.title_marker = QLabel('💬')
++        self.title_marker.setAccessibleName(t('채팅 제목'))
++        self.title_marker.setStyleSheet('font-size:16px;')
++        heading.addWidget(self.title_marker, 0, Qt.AlignmentFlag.AlignTop)
+         heading.addWidget(self.title, 1)
+-        close = QPushButton(t('닫기'))
++        close = QPushButton(t('✕ 닫기'))
+         close.setToolTip(t('알림 닫기 · 이력은 유지됩니다'))
+         close.setStyleSheet('padding:0;min-height:28px;max-height:28px;font-size:12px;')
+-        close.setFixedSize(48, 30)
++        close.setFixedSize(64, 30)
+         close.clicked.connect(self.dismiss)
+         heading.addWidget(close, 0, Qt.AlignmentFlag.AlignTop)
+         layout.addLayout(heading)
+@@ -693,7 +660,7 @@ class Notice(QFrame):
+         self.task_value.setStyleSheet('font-size:13px;color:#dce9ec;padding:0;')
+         self.task_value.setWordWrap(True)
+         self.task_value.setTextFormat(Qt.TextFormat.PlainText)
+-        layout.addWidget(self.task_value)
++        self.task_value.hide()
+         values = QGridLayout()
+         self.values_layout = values
+         values.setHorizontalSpacing(12)
+@@ -703,7 +670,7 @@ class Notice(QFrame):
+         self.effort_previous = QLabel()
+         self.effort_current = QLabel()
+         self.notice_after_heading = QLabel(t('변경 후'))
+-        for column, text in ((0, t('이전')), (1, '→'), (2, t('변경 후'))):
++        for column, text in ((0, '⬅️ ' + t('이전')), (1, '→'), (2, '➡️ ' + t('현재'))):
+             label = self.notice_after_heading if column == 2 else QLabel(text)
+             label.setStyleSheet('font-size:12px;color:#B5C8D4;')
+             values.addWidget(label, 0, column)
+@@ -724,15 +691,15 @@ class Notice(QFrame):
+         self.after_value.setWordWrap(True)
+         self.after_value.setTextFormat(Qt.TextFormat.PlainText)
+         self.after_value.setStyleSheet('font-size:10px;color:#9db6c2;padding:0;')
+-        layout.addWidget(self.after_value)
++        self.after_value.hide()
+         self.text.setStyleSheet('font-size:12px;color:#C9C9C9;')
+         layout.addWidget(self.text)
+         self.selection_reason = QLabel()
+         self.selection_reason.setStyleSheet('font-size:10px;color:#a5bdc9;padding:0;')
+         self.selection_reason.setWordWrap(True)
+         self.selection_reason.setTextFormat(Qt.TextFormat.PlainText)
+-        layout.addWidget(self.selection_reason)
+-        hint = QLabel(t('이 변경 자세히 보기  ›'))
++        self.selection_reason.hide()
++        hint = QLabel(t('🔎 자세히 보기'))
+         self.detail_hint = hint
+         hint.setStyleSheet('font-size:12px;color:#FFFFFF;')
+         layout.addWidget(hint)
+@@ -782,6 +749,14 @@ class Notice(QFrame):
+                 self.logicalDpiX(), self.logicalDpiY(), self.devicePixelRatioF(), self.font().toString(),
+                 self.styleSheet(), QApplication.instance().styleSheet(), self.style().objectName(), tuple(labels), buttons, queue_height)
+ 
++    def _adjust_content_size(self):
++        """고정된 실제 폭의 줄바꿈 높이를 반영해 값 행이 압축되지 않게 합니다."""
++        self.adjustSize()
++        required = self.layout().totalHeightForWidth(self.width())
++        if required >= 0:
++            self.resize(self.width(), max(self.minimumSizeHint().height(), required))
++        self.layout().activate()
++
+     def fit_content(self, rect=None):
+         # 제목은 닫기 버튼을 뺀 실제 폭으로 측정하며 원본 이벤트는 바꾸지 않습니다.
+         if rect is not None:
+@@ -795,7 +770,7 @@ class Notice(QFrame):
+         if previous is not None and previous[:-1] == signature[:-1] and self.title.text() == full_title:
+             # 안내의 줄 높이만 바뀌었으면 제목·여백을 초기화하지 않고 실제 카드 크기만 갱신합니다.
+             self.layout().activate()
+-            self.adjustSize()
++            self._adjust_content_size()
+             if available is None or self.height() <= available.height():
+                 self._last_fit_signature = self._content_fit_signature()
+                 return
+@@ -803,7 +778,9 @@ class Notice(QFrame):
+         self.layout().setContentsMargins(*( (10, 6, 10, 6) if compact else (18, 14, 18, 14) ))
+         self.layout().setSpacing(2 if compact else 5)
+         self.values_layout.setVerticalSpacing(2 if compact else 8)
+-        for label in (self.after_value, self.selection_reason, self.detail_hint, self.queue_hint):
++        for label in (self.after_value, self.selection_reason, self.task_value):
++            label.hide()
++        for label in (self.detail_hint, self.queue_hint):
+             label.setVisible(not compact)
+         self.layout().activate()
+         margins = self.layout().contentsMargins()
+@@ -818,7 +795,7 @@ class Notice(QFrame):
+         needed = max(self.title.fontMetrics().height(), self.title.heightForWidth(title_width))
+         self.title.setFixedHeight(needed)
+         self.layout().activate()
+-        self.adjustSize()
++        self._adjust_content_size()
+         rect = getattr(self, 'available_rect', None)
+         if rect is not None and self.height() > rect.height():
+             budget = max(self.title.fontMetrics().height(), needed - (self.height() - rect.height()))
+@@ -836,7 +813,7 @@ class Notice(QFrame):
+             self.title.setText(full_title[:low].rstrip() + '…')
+             self.title.setFixedHeight(max(self.title.fontMetrics().height(), self.title.heightForWidth(title_width)))
+             self.layout().activate()
+-            self.adjustSize()
++            self._adjust_content_size()
+         self._last_fit_signature = self._content_fit_signature()
+ 
+     def display(self, event, orbit, timeout_ms=30000, replay=False):
+@@ -877,26 +854,25 @@ class Notice(QFrame):
+             category += ' · ' + t('선택 설정')
+         if event.get('kind') == 'activity' and before is not None and before == after:
+             category += ' · ' + t('설정 유지')
+-        self.category.setText(t(category))
++        icon = '📋' if event.get('kind') == 'activity' and event.get('activity_type') == 'assigned' else '▶️' if event.get('kind') == 'activity' else '⚙️' if event.get('kind') == 'settings' else '🔄'
++        self.category.setText(('🔁 ' + t('기록 다시 보기 · ') if self.replay else '') + icon + ' ' + t(category))
+         self.category.setStyleSheet('font-size:13px;padding:2px 0;color:'+event_accent(event)+';')
+         self.task_value.setText(task_explanation(event, 100))
+         self.task_value.setToolTip(task_explanation(event, 2000))
+         self.selection_reason.setText(selection_explanation(event))
+         after_map = after or {}
+-        self.notice_after_heading.setText(t('현재') if event.get('kind') == 'activity' else t('변경 후'))
+-        self.model_previous.setText(t('이전 모델') + '  ' + previous_field(before, 'model'))
+-        self.model_current.setText(str(after_map.get('model') or t('확인 불가')))
+-        self.effort_previous.setText(t('이전 추론 강도') + '  ' + previous_field(before, 'effort'))
+-        self.effort_current.setText(friendly_effort(after_map.get('effort')))
++        self.notice_after_heading.setText('➡️ ' + t('현재'))
++        self.model_previous.setText(t('이전 모델') + '  ' + notice_previous_model(before))
++        self.model_current.setText(t('현재 모델') + '  ' + notice_model_label(after_map.get('model')))
++        self.effort_previous.setText(t('이전 추론 강도') + ' 🧠  ' + previous_field(before, 'effort'))
++        self.effort_current.setText(t('현재 추론 강도') + ' 🧠  ' + friendly_effort(after_map.get('effort')))
+         for key, labels in (('model', (self.model_previous, self.model_current)), ('effort', (self.effort_previous, self.effort_current))):
+             changed = event.get('kind') != 'activity' and before is not None and before.get(key) and after_map.get(key) and before.get(key) != after_map.get(key)
+             for label in labels:
+                 label.setStyleSheet('font-size:18px;font-weight:600;color:#F1F6FA;padding:3px;' + ('background:#385064;border-radius:6px;' if changed else ''))
+         self.after_value.setText((t('현재 설정 · ') if event.get('kind') == 'activity' else t('→ 변경 후 · ')) + (self.setting_label(after).replace('\n',' · ') if after is not None else t('확인 불가')))
+-        reason = short_reason(event)
+-        reason = t('확인되지 않음') if reason == '확인 불가' else reason
+-        prefix = t('공개 설명: ') if event.get('kind') == 'activity' else t('변경 이유: ')
+-        self.text.setText((t('기록 다시 보기 · ') if self.replay else '') + prefix + public_text(reason))
++        self.text.setText(t('💬 이유: ') + notice_reason(event))
++        self.text.setToolTip(notice_reason_original(event))
+         self.fit_content()
+ 
+     @staticmethod
+@@ -1240,7 +1216,7 @@ class Details(QDialog):
+         for row, (kind, previous, current) in enumerate((('모델',self.model_previous,self.model_current),
+                                                        ('추론 강도',self.effort_previous,self.effort_current))):
+             for col, text in ((0,t('이전')+' '+t(kind)),(2,t('새')+' '+t(kind))):
+-                label=QLabel(text);label.setStyleSheet('font-size:12px;color:#a4bbc7;')
++                label=QLabel(text + (' 🧠' if row == 1 else ''));label.setStyleSheet('font-size:12px;color:#a4bbc7;')
+                 if col == 2: self.after_headings.append((label, kind))
+                 table.addWidget(with_symbol(label, 'model' if row == 0 else 'effort'),row*3,col)
+             arrow=QLabel('→');arrow.setStyleSheet('font-size:16px;color:#8ea9b6;')
+@@ -1309,9 +1285,9 @@ class Details(QDialog):
+             self.task_value.setText(task_explanation(value))
+             self.selection_reason.setText(selection_explanation(value))
+             for heading, kind in self.after_headings:
+-                heading.setText((t('현재') if value.get('kind') == 'activity' else t('변경 후')) + ' ' + t(kind))
+-            self.model_previous.setText(previous_field(value.get('before'), 'model'))
+-            self.model_current.setText(str(after.get('model') or t('확인 불가')))
++                heading.setText(t('현재') + ' ' + t(kind) + (' 🧠' if kind == '추론 강도' else ''))
++            self.model_previous.setText(notice_previous_model(value.get('before')))
++            self.model_current.setText(notice_model_label(after.get('model')))
+             self.effort_previous.setText(previous_field(value.get('before'), 'effort'))
+             self.effort_current.setText(friendly_effort(after.get('effort')))
+             before = value.get('before')
+@@ -1322,8 +1298,9 @@ class Details(QDialog):
+             self.before_value.setText(t('이전 기록 없음') if value.get('before') is None
+                                       else t('이전') + '  ' + model_card_label(value['before']))
+             self.after_value.setText((t('현재') + '  ' if value.get('kind') == 'activity' else '→  ') + model_card_label(value.get('after')))
+-            reason = value.get('reason') if value.get('kind') == 'activity' else short_reason(value)
+-            self.reason_value.setText(t('확인 불가') if reason == '확인 불가' and not value.get('reason') else public_text(reason, limit=600))
++            self.reason_title.setText(t('💬 이유'))
++            self.reason_value.setText(notice_reason(value, 600))
++            self.reason_value.setToolTip(notice_reason_original(value))
+             self.event_time.setText(kst_label(value.get('time')))
+ 
+     def toggle_evidence(self, checked):
+diff --git a/src/i18n.py b/src/i18n.py
+index fcfee2dac40c5214c584626f4de748a2ed4320c1..9af71311feb657add6b6afd44d25b3ec569a5482 100644
+--- a/src/i18n.py
++++ b/src/i18n.py
+@@ -38,6 +38,13 @@ _EN.update({'기준선 준비 중': 'Preparing baseline', '오류 · 진단 기
+ _EN.update({'수소': 'Hydrogen', '헬륨': 'Helium', '리튬': 'Lithium', '베릴륨': 'Beryllium', '붕소': 'Boron', '탄소': 'Carbon', '질소': 'Nitrogen', '산소': 'Oxygen', '플루오린': 'Fluorine', '네온': 'Neon', '나트륨': 'Sodium', '마그네슘': 'Magnesium', '알루미늄': 'Aluminium', '규소': 'Silicon', '인': 'Phosphorus', '황': 'Sulfur', '염소': 'Chlorine', '아르곤': 'Argon', '칼륨': 'Potassium', '칼슘': 'Calcium', '스칸듐': 'Scandium', '타이타늄': 'Titanium', '바나듐': 'Vanadium', '크로뮴': 'Chromium', '망가니즈': 'Manganese', '철': 'Iron', '코발트': 'Cobalt', '니켈': 'Nickel', '구리': 'Copper', '아연': 'Zinc', '갈륨': 'Gallium'})
+ 
+ 
++_EN.update({'현재 모델': 'Current model', '현재 추론 강도': 'Current reasoning effort', '💬 이유: ': '💬 Reason: ', '💬 이유': '💬 Reason', '이유가 기록되지 않았습니다.': 'No reason was recorded.', '맡긴 일: ': 'Assigned task: ', '✕ 닫기': '✕ Close', '🔎 자세히 보기': '🔎 View details', '채팅 제목': 'Chat title'})
++
++
++# 이모지를 포함한 고정 헤더도 열린 창의 양방향 재번역 대상으로 등록합니다.
++_EN.update({'⬅️ 이전': '⬅️ Previous', '이전 추론 강도 🧠': 'Previous reasoning effort 🧠'})
++
++
+ def get_language():
+     return _language
+ 
+diff --git a/src/notice_format.py b/src/notice_format.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..032d7b039aae3241950154c4dd14374c95c8d2b7
+--- /dev/null
++++ b/src/notice_format.py
+@@ -0,0 +1,107 @@
++"""Qt 화면과 Windows 알림이 공유하는 공개 정보 표시 함수입니다."""
++import re
++from i18n import translate as t, get_language
++
++
++def notice_model_label(value):
++    """확인된 모델 계열의 이모지만 붙이고 정확한 모델 ID를 보존합니다."""
++    raw = str(value or t('확인 불가'))
++    family = re.fullmatch(r'gpt-\d+(?:\.\d+)?-(sol|astra|terra|luna)', raw)
++    emoji = {'sol': '☀️', 'astra': '✨', 'terra': '🌍', 'luna': '🌙'}.get(family.group(1) if family else '', '🤖')
++    return emoji + ' ' + raw
++
++
++def notice_previous_model(value):
++    """전체 이전 기록이 없으면 모델 계열을 추정하지 않습니다."""
++    if value is None or not isinstance(value, dict) or not value.get('model'):
++        return previous_field(value, 'model')
++    return notice_model_label(value['model'])
++
++
++def notice_reason(event, limit=210):
++    """공개 이유와 실제 맡긴 일만 짧게 연결하며 없는 선택 동기를 만들지 않습니다."""
++    reason = public_text(event.get('reason'), '', 1000000)
++    # 감지기의 명시적인 미기록 표식만 처리하며 정상 문장 속 같은 단어는 보존합니다.
++    if reason in ('확인 불가', '확인되지 않음'):
++        reason = ''
++    text = public_text(short_reason({**event, 'reason': reason, 'short_reason': ''}, limit), '', limit) if reason else t('이유가 기록되지 않았습니다.')
++    if get_language() == 'ko':
++        # 뜻이 분명한 표시 용어만 풀어 쓰며 전체 원문은 툴팁과 상세에 남깁니다.
++        for original, plain in ((r'\bUI\b', '화면'), (r'\bfixture\b', '검사용 예시'), (r'\bassert\b', '검사 조건')):
++            text = re.sub(original, plain, text)
++    if event.get('kind') == 'activity':
++        task = public_text(event.get('task_summary'), '', 1000000)
++        if task and task not in text:
++            text += '\n' + t('맡긴 일: ') + task
++    return text if len(text) <= limit else text[:limit-1].rstrip() + '…'
++
++
++def notice_reason_original(event):
++    """공개로 판정된 전체 문장만 툴팁에 보존하고 보호된 본문은 제외합니다."""
++    parts = [public_reason_original(event)]
++    task = public_text(event.get('task_summary'), '', 1000000)
++    if event.get('kind') == 'activity' and task:
++        parts.append(t('맡긴 일: ') + task)
++    return '\n'.join(parts)
++
++
++def friendly_effort(value):
++    labels = {'none': t('없음'), 'minimal': t('최소'), 'low': t('낮음'), 'medium': t('보통'),
++              'high': t('높음'), 'xhigh': t('매우 높음'), 'ultra': t('최고')}
++    # 기존 풀이와 정확한 원문 값 뒤에 강도별 이모지만 덧붙입니다.
++    icons = {'none': '⚪', 'minimal': '💧', 'low': '🌱', 'medium': '⚖️',
++             'high': '🔥', 'xhigh': '🚀', 'ultra': '⚡'}
++    return (t(labels.get(value, str(value or '미확인'))) + (f' ({value})' if value in labels else '')
++            + ' ' + icons.get(value, '❔'))
++
++
++def previous_field(value, key):
++    """이전 기록 전체 부재와 개별 필드 미기록을 구분하고 관측값만 표시합니다."""
++    if value is None:
++        return t('이전 기록 없음') + (' ❔' if key == 'effort' else '')
++    raw = value.get(key) if isinstance(value, dict) else None
++    if not isinstance(raw, str) or not raw:
++        return t('확인 불가') + (' ❔' if key == 'effort' else '')
++    return friendly_effort(raw) if key == 'effort' else raw
++
++
++def short_reason(event, limit=180):
++    """명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다."""
++    text = str(event.get('short_reason') or event.get('reason') or '확인 불가').strip()
++    marked = re.search(r'(?:핵심 이유|선택 이유|이유)\s*[:：]\s*([^\n]+)', text)
++    if marked:
++        text = marked.group(1)
++    else:
++        sentences = [sentence for sentence in re.split(r'(?<=[.!?。])\s+|\n', text) if sentence.strip()]
++        purpose = None if event.get('short_reason') else next((sentence for sentence in sentences if re.search(
++            r'위한\s+(?:배정|선택|변경|교체)|(?:배정|선택|변경|교체)(?:의|한)?\s*(?:이유|목적)'
++            r'|(?:때문|확인돼|확인되어).*(?:배정|선택|변경|교체)', sentence)), None)
++        if not purpose and not event.get('short_reason'):
++            for index, sentence in enumerate(sentences[:-1]):
++                if re.search(r'(?:배정합니다|배정하겠습니다|맡기겠습니다)[.!]?$', sentence.replace('**', '').strip()):
++                    candidate = sentences[index + 1].strip()
++                    if re.search(r'(?:대조|검사|확인|검토|검증|구현|수정)', candidate):
++                        purpose = candidate
++                        break
++        text = purpose or (sentences[0] if sentences else '확인 불가')
++        if not purpose and len(sentences) > 1 and len(text) < 70 and re.search(r'(?:맡기겠습니다|배정하겠습니다)[.!]?$', text):
++            text = sentences[1]
++    text = text.replace('**', '')
++    return text if len(text) <= limit else text[:limit - 1] + '…'
++
++
++def public_text(value, fallback='공개된 설명이 기록되지 않았습니다.', limit=600):
++    """공개 문장만 표시하며 보호된 도구 페이로드를 해석하거나 노출하지 않습니다."""
++    if not isinstance(value, str) or not value.strip():
++        return t(fallback)
++    text = value.strip()
++    if (re.search(r'gAAAA[A-Za-z0-9_=-]{40,}|[A-Za-z0-9_+/=-]{160,}', text)
++            or re.search(r'encrypted_content\s*[:=]|BEGIN ENCRYPTED|<analysis>|<private>', text, re.I)):
++        return t(fallback)
++    text = text.replace('**', '').replace('`', '')
++    return text if len(text) <= limit else text[:limit-1].rstrip()+'…'
++
++
++def public_reason_original(event):
++    value = event.get('reason')
++    return str(value) if public_text(value, '', 1) else t('공개된 설명이 기록되지 않았습니다.')
+diff --git a/src/notifier.py b/src/notifier.py
+index 7549dca76c0bdce913d0ec59654bb18bae212af1..8d7b669c0f3ecff01fbfbbf7fdb8e5d88330d1ba 100644
+--- a/src/notifier.py
++++ b/src/notifier.py
+@@ -689,20 +689,24 @@ class NativeToast:
+                 raw = raw[:-2]
+             return raw.decode('utf-16-le') + '…'
+ 
+-        def label(value):
+-            return '미배정' if value is None else limited(f"{value['model']} / {value['effort']}", 64)
++        from notice_format import notice_model_label, notice_previous_model, friendly_effort, previous_field, notice_reason
++        from i18n import translate as t
+         toast = ET.Element('toast', {'duration': 'long'})
+         visual = ET.SubElement(toast, 'visual')
+         binding = ET.SubElement(visual, 'binding', {'template': 'ToastGeneric'})
+-        target = event['target'][:80]
+-        if event.get('agent_path'):
+-            target = f"{event['agent_path'][:80]} ({event.get('role', '확인 불가')})"
+-        context = f"{limited(target, 32)}\n{label(event['before'])} → {label(event['after'])}"
+-        evidence = '근거: ' + limited(event['evidence'], 28)
+-        reason_budget = 255 - units(context + '\n이유: \n' + evidence)
+-        reason = limited(event['reason'], reason_budget)
+-        for text in ['Codex 모델·추론 강도 변경', context, f"이유: {reason}\n{evidence}"]:
+-            # XML 1.0에서 허용하지 않는 제어 문자는 제거합니다.
++        before, after = event.get('before'), event.get('after') or {}
++        title = limited(str(event.get('chat_name') or t('채팅 제목 확인 불가')), 64)
++        # Shell 본문 한도 안에서 네 값의 이름을 구분하고 원문 ID는 명시적으로만 줄입니다.
++        fields = [limited(t('이전 모델') + ': ' + notice_previous_model(before), 52),
++                  limited(t('이전 추론 강도') + ': 🧠 ' + previous_field(before, 'effort'), 52),
++                  limited(t('현재 모델') + ': ' + notice_model_label(after.get('model')), 52),
++                  limited(t('현재 추론 강도') + ': 🧠 ' + friendly_effort(after.get('effort')), 52)]
++        context = '\n'.join(fields)
++        prefix = t('💬 이유: ')
++        reason_budget = 255 - units(context + '\n' + prefix)
++        reason = limited(notice_reason(event), reason_budget)
++        for text in [title, context, prefix + reason]:
++            # XML 1.0에서 허용하지 않는 제어 문자는 제거하고 사용자 문장은 XML로 이스케이프합니다.
+             ET.SubElement(binding, 'text').text = ''.join(c for c in text if c >= ' ' or c in '\n\t\r')
+         path = self.work / 'toast.xml'
+         path.parent.mkdir(parents=True, exist_ok=True)

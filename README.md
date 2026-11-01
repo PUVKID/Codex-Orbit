@@ -1,21 +1,25 @@
-# 🪐 Codex Orbit · 2.10.0
+# 🪐 Codex Orbit · 2.11.0
 
 
 투명한 Windows 바탕화면 위젯에서 날짜별 3D 조형과 시계·현재 기온·계정 사용 한도를 보여 주고, 로컬 Codex의 모델·추론 강도 변경 및 작업 배정·재개를 알립니다. Python · PySide6 · ModernGL 기반 데스크톱 앱입니다.
 
-[English](README.en.md) · [다운로드 안내](docs/DOWNLOADS.md) · [사용법](docs/사용법.md) · [26차 검증 범위](docs/공개검증_26차.md) · [27차 변경 기록](변경기록_27차.md) · [전체 차수 목차](docs/REVISION_INDEX.md) · [소스 비교 수](VERSIONS.md) · [글꼴 라이선스](assets/SUIT-LICENSE.txt) · [배포 권리 고지](assets/Qt-LGPL-3.0-LICENSE.txt)
+[English](README.en.md) · [다운로드 안내](docs/DOWNLOADS.md) · [사용법](docs/사용법.md) · [28차 검증 범위](docs/공개검증_28차.md) · [28차 변경 기록](변경기록_28차.md) · [전체 차수 목차](docs/REVISION_INDEX.md) · [소스 비교 수](VERSIONS.md) · [글꼴 라이선스](assets/SUIT-LICENSE.txt) · [배포 권리 고지](assets/Qt-LGPL-3.0-LICENSE.txt)
 
 ## 다운로드와 실행
 
-26차에서 검증한 2.10.0 배포본을 27차 공개 전달 복구 작업으로 제공합니다. 아래 링크의 게시와 원격 파일 일치는 배포 완료 단계에서 확인합니다.
+28차는 알림을 채팅 제목·이전과 현재 모델/추론 강도·쉬운 이유로 정리하고 모델별 이모지를 표시합니다. 긴 알림의 글자 잘림과 열린 창의 한영 전환도 보완합니다. 단일 실행 파일과 현재 사용자용 설치본을 제공합니다.
 
-- [단일 실행 파일 · CodexOrbit.exe](https://github.com/PUVKID/Codex-Orbit/releases/download/v2.10.0/CodexOrbit.exe): Windows 10/11 x64에서 설치 없이 실행합니다.
-- [설치 프로그램 · CodexOrbit-Setup.exe](https://github.com/PUVKID/Codex-Orbit/releases/download/v2.10.0/CodexOrbit-Setup.exe): 현재 사용자용 설치·시작 메뉴·선택 바탕화면 바로가기·제거 프로그램입니다.
-- [2.10.0 Release](https://github.com/PUVKID/Codex-Orbit/releases/tag/v2.10.0): 사용법·영문 안내·라이선스 묶음·SHA256SUMS와 실행 파일을 함께 제공합니다. 소스는 GitHub의 자동 소스 ZIP을 이용하며 비공개 전체 소스 ZIP은 게시하지 않습니다.
+- [단일 실행 파일 · CodexOrbit.exe](https://github.com/PUVKID/Codex-Orbit/releases/download/v2.11.0/CodexOrbit.exe): Windows 10/11 x64에서 설치 없이 실행합니다.
+- [설치 프로그램 · CodexOrbit-Setup.exe](https://github.com/PUVKID/Codex-Orbit/releases/download/v2.11.0/CodexOrbit-Setup.exe): 현재 사용자용 설치·시작 메뉴·선택 바탕화면 바로가기·제거 프로그램입니다.
+- [2.11.0 Release](https://github.com/PUVKID/Codex-Orbit/releases/tag/v2.11.0): 사용법·영문 안내·라이선스 묶음·SHA256SUMS와 실행 파일을 함께 제공합니다. 소스는 GitHub의 자동 소스 ZIP을 이용하며 비공개 전체 소스 ZIP은 게시하지 않습니다.
 
-Python 별도 설치 없이 실행하며 3D 모션에는 OpenGL 3.3 지원 그래픽 드라이버가 필요합니다. 사용 한도는 설치된 Codex의 로그인 상태에서 읽으며 **남은 토큰 수가 아닌 계정 한도 비율**입니다. 사용자가 직접 선택한 언어·회전 속도는 저장됩니다. [실행·조작 안내](docs/사용법.md)와 [파일 크기·SHA-256](docs/공개검증_26차.md)을 확인하십시오.
+Python 별도 설치 없이 실행하며 3D 모션에는 OpenGL 3.3 지원 그래픽 드라이버가 필요합니다. 사용 한도는 설치된 Codex의 로그인 상태에서 읽으며 **남은 토큰 수가 아닌 계정 한도 비율**입니다. 사용자가 직접 선택한 언어·회전 속도는 저장됩니다. [실행·조작 안내](docs/사용법.md)와 [파일 크기·SHA-256](docs/DOWNLOADS.md)을 확인하십시오.
 
-27차는 GitHub 전달 문서를 정리하는 차수입니다. 앱 소스와 2.10.0 배포 파일의 기능을 추가하거나 바꾸지 않습니다. 원격 게시 여부와 로컬 검증은 [27차 재검증 기록](docs/GitHub재검증_27차.md)에서 구분합니다.
+☀️ 솔 · ✨ 아스트라 · 🌍 테라 · 🌙 루나를 정확한 ID와 함께 보여 줍니다. 기록되지 않은 이유는 만들어 쓰지 않습니다. [888개 연월 테마](docs/연도별_월별_테마_전체.md) · [테마 CSV](docs/연도별_월별_테마_전체.csv) · [28차 전체 비교](docs/28차_전체변경.diff).
+
+![합성 데이터로 캡처한 실제 Windows 알림](docs/images/notice-ko.png)
+
+위 화면은 합성 예시입니다. 개인 채팅·계정 자료를 공개하지 않습니다.
 
 <!-- 차수표 시작 -->
 ### 공개 보존 차수
@@ -51,6 +55,7 @@ Python 별도 설치 없이 실행하며 3D 모션에는 OpenGL 3.3 지원 그�
 | 25차 | [폴더](history/25/) | [설명](history/25/README.md) | 24차 · [전체 차이](history/25/직전차수.diff) · [파일 목록](history/25/공개파일_비교.json) |
 | 26차 | [폴더](history/26/) | [설명](history/26/README.md) | 25차 · [전체 차이](history/26/직전차수.diff) · [파일 목록](history/26/공개파일_비교.json) |
 | 27차 | [문서 폴더](history/27/) | [설명](history/27/README.md) · 별도 앱 소스 없는 문서 차수 | 26차 · [전체 공개 차이](docs/27차_전체변경.diff) · [변경 기록](변경기록_27차.md) |
+| 28차 | [폴더](history/28/) | [설명](history/28/README.md) | 27차 공개본 · [전체 차이](docs/28차_전체변경.diff) · [소스 비교](history/28/직전차수.diff) · [파일 목록](history/28/공개파일_비교.json) |
 | 최종 | [자료 상태](docs/최종/) | [설명](docs/최종/README.md) · 공개 소스 없음 | [비교 대상 없는 근거](docs/최종/README.md) |
 <!-- 차수표 끝 -->
 
@@ -93,10 +98,10 @@ Python을 별도로 설치하지 않아도 실행합니다. 날짜별 실제 3D 
 
 ## 재빌드
 
-`requirements.txt`의 고정 의존성을 준비하고 `tools/build_distribution.py`를 실행합니다. `CODEX_ORBIT_ISCC`에 Inno Setup 컴파일러 경로를 지정합니다. 배포 파일의 SHA256.json과 라이선스를 보존하십시오. ModernGL·glcontext·NumPy·Pillow·PySide6는 EXE에 포함되며 별도 사용자 설치가 필요하지 않습니다. 공개 제작·검사 도구는 `tools/`에 있습니다. 공개본의 검사 범위는 [검증 안내](docs/공개검증_26차.md)를 확인하십시오. Windows 바로가기·트레이·실행파일 아이콘은 운영체제 형식상 정적이며, 실행 위젯과 내부 조형은 움직입니다.
+`requirements.txt`의 고정 의존성을 준비하고 `tools/build_distribution.py`를 실행합니다. `CODEX_ORBIT_ISCC`에 Inno Setup 컴파일러 경로를 지정합니다. 배포 파일의 SHA256.json과 라이선스를 보존하십시오. ModernGL·glcontext·NumPy·Pillow·PySide6는 EXE에 포함되며 별도 사용자 설치가 필요하지 않습니다. 공개 제작·검사 도구는 `tools/`에 있습니다. 공개본의 검사 범위는 [검증 안내](docs/공개검증_28차.md)를 확인하십시오. Windows 바로가기·트레이·실행파일 아이콘은 운영체제 형식상 정적이며, 실행 위젯과 내부 조형은 움직입니다.
 
 
-22차 실행 자산 정리: 예전 원소 영상팩 31개는 이전 차수의 비공개 로컬 보존본에 남아 있으며 현재 달력 GUI에서 쓰지 않아 EXE와 공개 자동 소스 ZIP에는 포함하지 않습니다. 기존 assets/사용법.md는 당시 로컬 보존본 안내이며, 현재 공개 배포는 위의 docs/사용법.md를 기준으로 합니다. 설치본은 실행 파일·사용법·라이선스·연도별 월 테마표를 설치합니다. 현재 달력과 원본 브랜드·기능 아이콘에 필요한 자산 검사는 유지합니다.
+22차 실행 자산 정리: 예전 원소 영상팩 31개는 이전 차수의 비공개 로컬 보존본에 남아 있으며 현재 달력 GUI에서 쓰지 않아 EXE와 공개 자동 소스 ZIP에는 포함하지 않습니다. 현재 assets/사용법.md와 docs/사용법.md는 모두 28차 배포 사용법입니다. 설치본은 실행 파일·사용법·라이선스·연도별 월 테마표를 설치합니다. 현재 달력과 원본 브랜드·기능 아이콘에 필요한 자산 검사는 유지합니다.
 
 
 25차 성능 확인: 개발 환경의 실제 창 5초 측정에서 4K 생성은 약232.6~235.1fps, 화면별 고유 그리기는 약232.0~234.9fps였습니다. 240fps는 페이싱 목표이며 이 측정을 240 고정 달성으로 표시하지 않습니다. 물리 모니터의 스캔아웃 속도는 측정하지 않았고 표시 주사율이 낮으면 생성한 프레임 전체를 화면에 표시할 수 없습니다.
@@ -117,3 +122,9 @@ Python을 별도로 설치하지 않아도 실행합니다. 날짜별 실제 3D 
 상세창의 회전 속도 슬라이더 또는 위젯 우클릭 메뉴에서 0.25~3배로 조절합니다. 설정은 다시 실행해도 유지됩니다. 한국어·영어를 선택할 수 있습니다. 240fps 고정 달성은 사용자 요청에 따라 추가 개선 범위에서 제외했습니다. 최근 측정은 생성 약227~230fps, 고유 Qt 그리기 약214~229fps이며 물리 화면 표시율을 뜻하지 않습니다.
 
 [26차 실제 변경 기록](변경기록_26차.md)
+
+## 공개 소스 검사 준비
+
+새 사본에서는 개인 빌드 산출물을 추적하지 않으므로 먼저 `work` 폴더를 만듭니다. PowerShell에서 `New-Item -ItemType Directory -Force work`를 실행한 뒤 고정 의존성을 준비하고 `python -B -X utf8 -m unittest discover -s tests`로 공개 검사만 실행합니다. `tools/build_distribution.py`는 검사·빌드 전에 작업 폴더를 자동으로 준비합니다. 공개108개와 비공개자료를 포함한 개발381개는 다른 범위입니다.
+
+추론 강도는 값별로 ⚪ 없음 · 💧 최소 · 🌱 낮음 · ⚖️ 보통 · 🔥 높음 · 🚀 매우 높음 · ⚡ 최고로 구분하며 이전·현재 각각의 원래 값도 유지합니다. 미확인·미기록은 ❔로 표시합니다.

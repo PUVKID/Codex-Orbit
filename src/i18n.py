@@ -38,6 +38,13 @@ _EN.update({'기준선 준비 중': 'Preparing baseline', '오류 · 진단 기�
 _EN.update({'수소': 'Hydrogen', '헬륨': 'Helium', '리튬': 'Lithium', '베릴륨': 'Beryllium', '붕소': 'Boron', '탄소': 'Carbon', '질소': 'Nitrogen', '산소': 'Oxygen', '플루오린': 'Fluorine', '네온': 'Neon', '나트륨': 'Sodium', '마그네슘': 'Magnesium', '알루미늄': 'Aluminium', '규소': 'Silicon', '인': 'Phosphorus', '황': 'Sulfur', '염소': 'Chlorine', '아르곤': 'Argon', '칼륨': 'Potassium', '칼슘': 'Calcium', '스칸듐': 'Scandium', '타이타늄': 'Titanium', '바나듐': 'Vanadium', '크로뮴': 'Chromium', '망가니즈': 'Manganese', '철': 'Iron', '코발트': 'Cobalt', '니켈': 'Nickel', '구리': 'Copper', '아연': 'Zinc', '갈륨': 'Gallium'})
 
 
+_EN.update({'현재 모델': 'Current model', '현재 추론 강도': 'Current reasoning effort', '💬 이유: ': '💬 Reason: ', '💬 이유': '💬 Reason', '이유가 기록되지 않았습니다.': 'No reason was recorded.', '맡긴 일: ': 'Assigned task: ', '✕ 닫기': '✕ Close', '🔎 자세히 보기': '🔎 View details', '채팅 제목': 'Chat title'})
+
+
+# 이모지를 포함한 고정 헤더도 열린 창의 양방향 재번역 대상으로 등록합니다.
+_EN.update({'⬅️ 이전': '⬅️ Previous', '이전 추론 강도 🧠': 'Previous reasoning effort 🧠'})
+
+
 def get_language():
     return _language
 

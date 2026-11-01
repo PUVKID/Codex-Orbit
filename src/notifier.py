@@ -689,20 +689,24 @@ class NativeToast:
                 raw = raw[:-2]
             return raw.decode('utf-16-le') + '…'
 
-        def label(value):
-            return '미배정' if value is None else limited(f"{value['model']} / {value['effort']}", 64)
+        from notice_format import notice_model_label, notice_previous_model, friendly_effort, previous_field, notice_reason
+        from i18n import translate as t
         toast = ET.Element('toast', {'duration': 'long'})
         visual = ET.SubElement(toast, 'visual')
         binding = ET.SubElement(visual, 'binding', {'template': 'ToastGeneric'})
-        target = event['target'][:80]
-        if event.get('agent_path'):
-            target = f"{event['agent_path'][:80]} ({event.get('role', '확인 불가')})"
-        context = f"{limited(target, 32)}\n{label(event['before'])} → {label(event['after'])}"
-        evidence = '근거: ' + limited(event['evidence'], 28)
-        reason_budget = 255 - units(context + '\n이유: \n' + evidence)
-        reason = limited(event['reason'], reason_budget)
-        for text in ['Codex 모델·추론 강도 변경', context, f"이유: {reason}\n{evidence}"]:
-            # XML 1.0에서 허용하지 않는 제어 문자는 제거합니다.
+        before, after = event.get('before'), event.get('after') or {}
+        title = limited(str(event.get('chat_name') or t('채팅 제목 확인 불가')), 64)
+        # Shell 본문 한도 안에서 네 값의 이름을 구분하고 원문 ID는 명시적으로만 줄입니다.
+        fields = [limited(t('이전 모델') + ': ' + notice_previous_model(before), 52),
+                  limited(t('이전 추론 강도') + ': 🧠 ' + previous_field(before, 'effort'), 52),
+                  limited(t('현재 모델') + ': ' + notice_model_label(after.get('model')), 52),
+                  limited(t('현재 추론 강도') + ': 🧠 ' + friendly_effort(after.get('effort')), 52)]
+        context = '\n'.join(fields)
+        prefix = t('💬 이유: ')
+        reason_budget = 255 - units(context + '\n' + prefix)
+        reason = limited(notice_reason(event), reason_budget)
+        for text in [title, context, prefix + reason]:
+            # XML 1.0에서 허용하지 않는 제어 문자는 제거하고 사용자 문장은 XML로 이스케이프합니다.
             ET.SubElement(binding, 'text').text = ''.join(c for c in text if c >= ' ' or c in '\n\t\r')
         path = self.work / 'toast.xml'
         path.parent.mkdir(parents=True, exist_ok=True)

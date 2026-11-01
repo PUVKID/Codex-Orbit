@@ -158,8 +158,14 @@ class Motion240Tests(unittest.TestCase):
         with patch('calendar_renderer.CalendarRenderer', FakeRenderer):
             motion.set_calendar_motion_visible(owner, True)
             motion.set_calendar_motion_size(owner, 512)
-            loop = QEventLoop(); QTimer.singleShot(80, loop.quit); loop.exec()
-            status = motion.calendar_motion_status()
+            # 비동기 준비를 고정 80ms로 가정하지 않고 동일한 세 조건까지 최대 1초 기다립니다.
+            deadline = time.monotonic() + 1.0
+            while True:
+                loop = QEventLoop(); QTimer.singleShot(10, loop.quit); loop.exec()
+                status = motion.calendar_motion_status()
+                if (status['render_count'] > 6 and owner.arrivals > 2 and status['dispatch_count'] > 2
+                        or time.monotonic() >= deadline):
+                    break
             self.assertEqual(status['target_fps'], 240)
             self.assertEqual(status['pacing_clock'], 'perf_counter')
             self.assertEqual(status['source_dimensions'], [3840, 2160])

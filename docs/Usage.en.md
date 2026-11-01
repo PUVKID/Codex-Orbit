@@ -1,4 +1,4 @@
-# 🪐 Codex Orbit 2.10.0 · Quick guide
+# 🪐 Codex Orbit 2.11.0 · Quick guide
 
 Run `CodexOrbit.exe` without installation, or install for the current Windows user with `CodexOrbit-Setup.exe`. Windows 10/11 x64 is required. Python is bundled. The animated 3D widget requires an OpenGL 3.3 capable graphics driver; loading and failures are shown separately.
 
@@ -20,4 +20,12 @@ The GPU source is 3840×2160, downsampled to widget size. Fixed 240fps was not a
 
 User settings, MD instructions, backups and history remain in `%LOCALAPPDATA%/CodexOrbit`. Settings, My Instructions and Help tabs are not exposed. Included instructions are not applied silently or injected into every chat. The uninstaller preserves user instructions, backups and history. Never share credentials, local chats or personal instruction files.
 
-Check downloads against `SHA256SUMS.txt`; dependency licenses are in `Licenses.zip`. Public source and 87 public tests are available in the [repository](https://github.com/PUVKID/Codex-Orbit). GitHub's automatic source ZIP contains public repository files only; the private local full-source archive is not distributed.
+Check downloads against `SHA256SUMS.txt`; dependency licenses are in `Licenses.zip`. Public source and 108 public tests are available in the [repository](https://github.com/PUVKID/Codex-Orbit). GitHub's automatic source ZIP contains public repository files only; the private local full-source archive is not distributed.
+
+## Clearer notifications
+
+Notifications show the chat title, previous model and reasoning effort, current model and reasoning effort, and an understandable recorded reason. Model families use ☀️ Sol, ✨ Astra, 🌍 Terra and 🌙 Luna; exact model IDs remain visible. Missing reasons are identified rather than invented. Assignments and resumptions remain distinct from setting changes.
+
+## Reasoning effort icons
+
+⚪ None (none) · 💧 Minimal (minimal) · 🌱 Low (low) · ⚖️ Medium (medium) · 🔥 High (high) · 🚀 Very high (xhigh) · ⚡ Maximum (ultra). Each previous and current effort gets its own icon. Missing or unknown values use ❔ while retaining the original record or missing-record explanation.

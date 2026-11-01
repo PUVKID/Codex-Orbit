@@ -71,6 +71,8 @@ def run(argv, name, timeout):
 
 
 def main():
+    # 새로 받은 공개 소스에도 검사용·빌드용 비공개 작업 폴더를 준비합니다.
+    (ROOT / 'work').mkdir(exist_ok=True)
     release = ROOT / '배포'
     release.mkdir(exist_ok=True)
     # 빌드 중 임시 추출물은 프로젝트의 D 드라이브 작업 폴더에 둡니다.
@@ -102,6 +104,9 @@ def main():
     for suffix in ('md', 'csv'):
         shutil.copy2(ROOT / 'assets' / 'calendar-art' / ('themes.' + suffix),
                      release / ('연도별_월_테마.' + suffix))
+        # 월별 주제만 빠르게 읽을 수 있는 전체 표도 함께 전달합니다.
+        shutil.copy2(ROOT / 'docs' / ('연도별_월별_테마_전체.' + suffix),
+                     release / ('연도별_월별_테마_전체.' + suffix))
     license_dir = release / '라이선스'
     license_dir.mkdir(exist_ok=True)
     for path in (ROOT / 'assets').glob('*LICENSE*'):
@@ -127,6 +132,9 @@ def main():
                 if path.is_file() and '__pycache__' not in path.parts:
                     bundle.write(path, path.relative_to(ROOT))
         for name in ('requirements.txt', 'README.md', 'README.en.md'):
+            bundle.write(ROOT / name, name)
+        for suffix in ('md', 'csv'):
+            name = 'docs/연도별_월별_테마_전체.' + suffix
             bundle.write(ROOT / name, name)
     compiler = Path(os.environ.get('CODEX_ORBIT_ISCC') or ROOT / 'work' / 'inno' / 'ISCC.exe')
     run([str(compiler), str(ROOT / 'tools' / 'installer.iss')], 'build-installer', 180)

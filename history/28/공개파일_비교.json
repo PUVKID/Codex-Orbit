@@ -1,0 +1,299 @@
+[
+  {
+    "path": "requirements.txt",
+    "status": "same",
+    "before": {
+      "bytes": 109,
+      "sha256": "76b74752d8b722fc13167e416df61ed80798286ac4762a5a8668b21ab4d93024"
+    },
+    "after": {
+      "bytes": 109,
+      "sha256": "76b74752d8b722fc13167e416df61ed80798286ac4762a5a8668b21ab4d93024"
+    }
+  },
+  {
+    "path": "src/activity.py",
+    "status": "same",
+    "before": {
+      "bytes": 15832,
+      "sha256": "e1c17d720b16e14c328dade574c0d945486ccfb4d93260d2e022a3a17be876ad"
+    },
+    "after": {
+      "bytes": 15832,
+      "sha256": "e1c17d720b16e14c328dade574c0d945486ccfb4d93260d2e022a3a17be876ad"
+    }
+  },
+  {
+    "path": "src/app.py",
+    "status": "modified",
+    "before": {
+      "bytes": 116115,
+      "sha256": "ccb4c5771ab1a01e416e81dcc3678629cd5a5a2613e50d5e7c4a3e4263da964f"
+    },
+    "after": {
+      "bytes": 113873,
+      "sha256": "931870c699146c50132076ec6e50d72491dace5714b8d89b40a06406faf9949c"
+    }
+  },
+  {
+    "path": "src/atom_frames.py",
+    "status": "same",
+    "before": {
+      "bytes": 8515,
+      "sha256": "af5b5331068fb58b1daf33d124bd4d8bb33b76bc017435aa79b4ed701b7ed962"
+    },
+    "after": {
+      "bytes": 8515,
+      "sha256": "af5b5331068fb58b1daf33d124bd4d8bb33b76bc017435aa79b4ed701b7ed962"
+    }
+  },
+  {
+    "path": "src/brand.py",
+    "status": "same",
+    "before": {
+      "bytes": 10147,
+      "sha256": "bec1e0eff2b42da530b779b48fae0f0ceba56ff83a2872a8b7912d3939153852"
+    },
+    "after": {
+      "bytes": 10147,
+      "sha256": "bec1e0eff2b42da530b779b48fae0f0ceba56ff83a2872a8b7912d3939153852"
+    }
+  },
+  {
+    "path": "src/calendar_art.py",
+    "status": "same",
+    "before": {
+      "bytes": 4132,
+      "sha256": "5495a4f01dc6a30b47d94730f311f340aad081a658d8133f5bf2b0d112a54dc0"
+    },
+    "after": {
+      "bytes": 4132,
+      "sha256": "5495a4f01dc6a30b47d94730f311f340aad081a658d8133f5bf2b0d112a54dc0"
+    }
+  },
+  {
+    "path": "src/calendar_catalog.py",
+    "status": "same",
+    "before": {
+      "bytes": 16113,
+      "sha256": "99e0b12a22a6c13cb10d7920781844844951abd469c96ad0bb8022936528b960"
+    },
+    "after": {
+      "bytes": 16113,
+      "sha256": "99e0b12a22a6c13cb10d7920781844844951abd469c96ad0bb8022936528b960"
+    }
+  },
+  {
+    "path": "src/calendar_motion.py",
+    "status": "same",
+    "before": {
+      "bytes": 16207,
+      "sha256": "ddb3e8afdf5f46f7bb8f997e75c39234550f28bade6223e19f81e37579765791"
+    },
+    "after": {
+      "bytes": 16207,
+      "sha256": "ddb3e8afdf5f46f7bb8f997e75c39234550f28bade6223e19f81e37579765791"
+    }
+  },
+  {
+    "path": "src/calendar_renderer.py",
+    "status": "same",
+    "before": {
+      "bytes": 30110,
+      "sha256": "ca461e46f983969d9e06ba2f238b2b86e5a44f84a87570431993b1bfff25f03a"
+    },
+    "after": {
+      "bytes": 30110,
+      "sha256": "ca461e46f983969d9e06ba2f238b2b86e5a44f84a87570431993b1bfff25f03a"
+    }
+  },
+  {
+    "path": "src/core.py",
+    "status": "same",
+    "before": {
+      "bytes": 11186,
+      "sha256": "6578aa45d58a7e2d501d52c52689b233f993c6bc7af6196428efdc03338641bf"
+    },
+    "after": {
+      "bytes": 11186,
+      "sha256": "6578aa45d58a7e2d501d52c52689b233f993c6bc7af6196428efdc03338641bf"
+    }
+  },
+  {
+    "path": "src/element_frames.py",
+    "status": "same",
+    "before": {
+      "bytes": 7096,
+      "sha256": "0d72e490fbc2680b3bd9bac16c5da13288c61d6e9a08049bb5b8bf072a0a1342"
+    },
+    "after": {
+      "bytes": 7096,
+      "sha256": "0d72e490fbc2680b3bd9bac16c5da13288c61d6e9a08049bb5b8bf072a0a1342"
+    }
+  },
+  {
+    "path": "src/element_visuals.py",
+    "status": "same",
+    "before": {
+      "bytes": 819,
+      "sha256": "33ceea060b073d5a03af097d8e35e7f38ad5ec2252534402bd6a965328276f94"
+    },
+    "after": {
+      "bytes": 819,
+      "sha256": "33ceea060b073d5a03af097d8e35e7f38ad5ec2252534402bd6a965328276f94"
+    }
+  },
+  {
+    "path": "src/elements.py",
+    "status": "same",
+    "before": {
+      "bytes": 2532,
+      "sha256": "2f4b017f3ea1d8212dfe22b0db43e82cdf01d5ab6a298a60d446e1cc1599c90c"
+    },
+    "after": {
+      "bytes": 2532,
+      "sha256": "2f4b017f3ea1d8212dfe22b0db43e82cdf01d5ab6a298a60d446e1cc1599c90c"
+    }
+  },
+  {
+    "path": "src/frame_pacing.py",
+    "status": "same",
+    "before": {
+      "bytes": 3692,
+      "sha256": "09cd3768e4baa326bb0e08e4d7fd8130f05526024686b88f8ef2f9b0366b1bb1"
+    },
+    "after": {
+      "bytes": 3692,
+      "sha256": "09cd3768e4baa326bb0e08e4d7fd8130f05526024686b88f8ef2f9b0366b1bb1"
+    }
+  },
+  {
+    "path": "src/i18n.py",
+    "status": "modified",
+    "before": {
+      "bytes": 20538,
+      "sha256": "091208c023ccecdefd7957dcc3bacd8acc5c44324dd587ac36986ac3dc81106a"
+    },
+    "after": {
+      "bytes": 21139,
+      "sha256": "3f20e8f5827103b45f0650fcda5c449d5105b3391806eea85c36b77464d2f7f3"
+    }
+  },
+  {
+    "path": "src/motion_label.py",
+    "status": "same",
+    "before": {
+      "bytes": 2380,
+      "sha256": "f76a05b63a676282ff4816c25ce0d7bc4aa01396889559c76021d5f858a0c60d"
+    },
+    "after": {
+      "bytes": 2380,
+      "sha256": "f76a05b63a676282ff4816c25ce0d7bc4aa01396889559c76021d5f858a0c60d"
+    }
+  },
+  {
+    "path": "src/notice_format.py",
+    "status": "added",
+    "before": null,
+    "after": {
+      "bytes": 5988,
+      "sha256": "fdcc1756889ad84ff1e9eed5bf911d5f78708c2f80e9fb3a200719089670726e"
+    }
+  },
+  {
+    "path": "src/notifier.py",
+    "status": "modified",
+    "before": {
+      "bytes": 44672,
+      "sha256": "6a16752a4874bc4c74e8f967bae76bb4f2c3e41af543e621cadc43b843330dd7"
+    },
+    "after": {
+      "bytes": 45133,
+      "sha256": "31c92ea876efdcc70e93ce63be097d1c999628f1beff98355c66ee906cf4ebfa"
+    }
+  },
+  {
+    "path": "src/theme.py",
+    "status": "same",
+    "before": {
+      "bytes": 9297,
+      "sha256": "cafeb00fa1b52f9ca342d224c64bb51cfe1e9aea13161f1a57fb6ea99e94dc7f"
+    },
+    "after": {
+      "bytes": 9297,
+      "sha256": "cafeb00fa1b52f9ca342d224c64bb51cfe1e9aea13161f1a57fb6ea99e94dc7f"
+    }
+  },
+  {
+    "path": "src/typography.py",
+    "status": "same",
+    "before": {
+      "bytes": 1195,
+      "sha256": "9f34c52a2178b2603aa789ced06ea4f98cf83cd263d6272122ceb64c747b41cf"
+    },
+    "after": {
+      "bytes": 1195,
+      "sha256": "9f34c52a2178b2603aa789ced06ea4f98cf83cd263d6272122ceb64c747b41cf"
+    }
+  },
+  {
+    "path": "src/usage.py",
+    "status": "same",
+    "before": {
+      "bytes": 15245,
+      "sha256": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e"
+    },
+    "after": {
+      "bytes": 15245,
+      "sha256": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e"
+    }
+  },
+  {
+    "path": "src/usage_frames.py",
+    "status": "same",
+    "before": {
+      "bytes": 9564,
+      "sha256": "a141ce6eaeefefbe942cf04116c032ec3c8ab383bbb07a028e5961c5026c9957"
+    },
+    "after": {
+      "bytes": 9564,
+      "sha256": "a141ce6eaeefefbe942cf04116c032ec3c8ab383bbb07a028e5961c5026c9957"
+    }
+  },
+  {
+    "path": "src/usage_widgets.py",
+    "status": "same",
+    "before": {
+      "bytes": 2516,
+      "sha256": "9ad1be24d27cbf072db6892a2bc3c431304002f90f9a9d46d59494a91b74814c"
+    },
+    "after": {
+      "bytes": 2516,
+      "sha256": "9ad1be24d27cbf072db6892a2bc3c431304002f90f9a9d46d59494a91b74814c"
+    }
+  },
+  {
+    "path": "src/visuals.py",
+    "status": "same",
+    "before": {
+      "bytes": 15915,
+      "sha256": "13a8d20b188ac2e82bc57771263dd6c2bef7cb3ab96ef259d51fd73fa380a57a"
+    },
+    "after": {
+      "bytes": 15915,
+      "sha256": "13a8d20b188ac2e82bc57771263dd6c2bef7cb3ab96ef259d51fd73fa380a57a"
+    }
+  },
+  {
+    "path": "src/weather.py",
+    "status": "same",
+    "before": {
+      "bytes": 17524,
+      "sha256": "acbb6804da7bde516461c739ed3e5c17bd26edee4f299b995822853dddd1b5e4"
+    },
+    "after": {
+      "bytes": 17524,
+      "sha256": "acbb6804da7bde516461c739ed3e5c17bd26edee4f299b995822853dddd1b5e4"
+    }
+  }
+]
