@@ -33,4 +33,5 @@
 | 27차 | [폴더](../history/27/) | [설명](../history/27/README.md) | 26차 · [전체 차이](../docs/27차_전체변경.diff) |
 | 28차 | [폴더](../history/28/) | [설명](../history/28/README.md) | 27차 · [전체 차이](../docs/28차_전체변경.diff) |
 | 29차 | [폴더](../history/29차/) | [설명](../history/29차/README.md) | 28차 · [전체 차이](../history/29차/직전차수.diff) |
+| 30차 | [폴더](../history/30차/) | [설명](../history/30차/README.md) | 29차 · [전체 차이](../history/30차/직전차수.diff) |
 | 최종 | [폴더](../docs/최종/) | [설명](../docs/최종/README.md) | [비교 대상 없는 근거](../docs/최종/README.md) |

@@ -215,7 +215,7 @@ class OrbitExperience:
         from PySide6.QtWidgets import QMenu
         c=self.controller;row=QHBoxLayout();c.window.layout().insertLayout(2,row)
         self.view=QComboBox();self.view.addItem(tr('입체 관측소','3D observatory'),'observatory');self.view.addItem(tr('날짜별 조형','Daily sculpture'),'calendar')
-        self.view.setCurrentIndex(1 if c.settings.values.get('scene_mode','observatory')=='calendar' else 0)
+        self.view.setCurrentIndex(1 if c.settings.values.get('scene_mode','calendar')=='calendar' else 0)
         self.view.currentIndexChanged.connect(lambda _:self.option('scene_mode',self.view.currentData()));row.addWidget(self.view)
         self.play=QPushButton();self.play.setCheckable(True);self.play.setChecked(c.settings.values.get('motion_paused',False));self.play.toggled.connect(lambda v:self.option('motion_paused',v));row.addWidget(self.play)
         self.privacy=QPushButton();self.privacy.setCheckable(True);self.privacy.setChecked(c.settings.values.get('broadcast_mode',False));self.privacy.toggled.connect(lambda v:self.option('broadcast_mode',v));row.addWidget(self.privacy)
@@ -294,7 +294,7 @@ class OrbitExperience:
         if not hasattr(c,'orbit'):return
         from calendar_motion import set_calendar_observatory_scene,set_calendar_motion_options
         set_calendar_motion_options(paused=bool(c.settings.values.get("motion_paused",False)),reduced_motion=bool(c.settings.values.get("reduced_motion",False)),quality=c.settings.values.get("render_quality","balanced"))
-        if c.settings.values.get('scene_mode','observatory')=='calendar':set_calendar_observatory_scene(None);return
+        if c.settings.values.get('scene_mode','calendar')=='calendar':set_calendar_observatory_scene(None);return
         snapshot=snapshot or (self.panel.replay_snapshot if self.panel.replaying else self.snapshot_cache);agents=sorted(snapshot.get('agents',[]),key=lambda a:not a.get('pinned'))
         events=snapshot.get('events',[]);last=events[-1] if events else {};target=last.get('target');current=last.get('after') or snapshot.get('executed',{}).get(target) or snapshot.get('selected',{}).get(target) or {}
         self.scene={'model':current.get('model'),'effort':current.get('effort'),'agents':[{'target':a['target'],'status':a.get('status','unknown'),'pinned':a.get('pinned',False)} for a in agents[:24]],

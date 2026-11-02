@@ -37,7 +37,9 @@ class IntegratedExperience29Tests(unittest.TestCase):
   from qt_test_support import cleanup_qt_widgets
   set_language('ko');self.addCleanup(set_language,'ko');self.addCleanup(cleanup_qt_widgets,self)
   folder=tempfile.TemporaryDirectory();self.addCleanup(folder.cleanup)
-  self.c=Controller(Settings(folder.name),start_worker=False,start_usage=False);self.addCleanup(self.c.close)
+  # 관측소 기능 검사는 명시 선택 상태를 유지하고 달력 기본값은30차에서 따로 검사합니다.
+  settings=Settings(folder.name);settings.values['scene_mode']='observatory'
+  self.c=Controller(settings,start_worker=False,start_usage=False);self.addCleanup(self.c.close)
  def record(self,**extra):
   return {'id':'private-event','target':'chat-only-fixture','time':'2026-11-02T01:00:00+00:00','chat_name':'🔄 비공개 시험 제목','before':{'model':'gpt-6.1-sol','effort':'medium'},'after':{'model':'gpt-6-astra','effort':'high'},'reason':'비공개 작업 이유','task_summary':'비공개 작업 본문',**extra}
  def test_broadcast_masks_existing_card_history_and_tooltips_then_restores(self):

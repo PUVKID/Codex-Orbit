@@ -524,7 +524,7 @@ class OrbitWidget(QWidget):
             painter.setRenderHint(QPainter.RenderHint.Antialiasing)
             from calendar_motion import get_calendar_frame,record_calendar_presentation
             design = design_for_date(current_date())
-            if hasattr(self,'experience') and self.settings.values.get('scene_mode','observatory')=='observatory':
+            if hasattr(self,'experience') and self.settings.values.get('scene_mode','calendar')=='observatory':
                 from dataclasses import replace
                 model=self.experience.scene.get('model')
                 name={'gpt-6.1-sol':'Sol','gpt-6-sol':'Sol','gpt-6-astra':'Astra','gpt-6.1-terra':'Terra','gpt-6-luna':'Luna'}.get(model,t('모델 확인 불가'))
@@ -602,7 +602,7 @@ class OrbitWidget(QWidget):
                     QMessageBox.warning(self, '위젯 설정 저장 실패', str(error))
             elif not any(self.resize_edges):
                 self.unread = False
-                if hasattr(self,'experience') and self.settings.values.get('scene_mode','observatory')=='observatory':
+                if hasattr(self,'experience') and self.settings.values.get('scene_mode','calendar')=='observatory':
                     layout=desktop_widget_layout(self.width(),self.height(),'',True,True,text_scale=self.settings.values.get('text_scale',100)/100)
                     art=layout['art'];point=event.position()
                     self.experience.hit((point.x()-art.x())/max(1,art.width()),(point.y()-art.y())/max(1,art.height()))

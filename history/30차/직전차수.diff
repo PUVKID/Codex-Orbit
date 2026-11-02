@@ -1,0 +1,75 @@
+diff --git a/src/app.py b/src/app.py
+index 4fe10d085dcf95ce9ad3a7daa487dc310fff36c1..f8e209e1b2f27b373d48d04550aad252fb9c9044 100644
+--- a/src/app.py
++++ b/src/app.py
+@@ -524,7 +524,7 @@ class OrbitWidget(QWidget):
+             painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+             from calendar_motion import get_calendar_frame,record_calendar_presentation
+             design = design_for_date(current_date())
+-            if hasattr(self,'experience') and self.settings.values.get('scene_mode','observatory')=='observatory':
++            if hasattr(self,'experience') and self.settings.values.get('scene_mode','calendar')=='observatory':
+                 from dataclasses import replace
+                 model=self.experience.scene.get('model')
+                 name={'gpt-6.1-sol':'Sol','gpt-6-sol':'Sol','gpt-6-astra':'Astra','gpt-6.1-terra':'Terra','gpt-6-luna':'Luna'}.get(model,t('모델 확인 불가'))
+@@ -602,7 +602,7 @@ class OrbitWidget(QWidget):
+                     QMessageBox.warning(self, '위젯 설정 저장 실패', str(error))
+             elif not any(self.resize_edges):
+                 self.unread = False
+-                if hasattr(self,'experience') and self.settings.values.get('scene_mode','observatory')=='observatory':
++                if hasattr(self,'experience') and self.settings.values.get('scene_mode','calendar')=='observatory':
+                     layout=desktop_widget_layout(self.width(),self.height(),'',True,True,text_scale=self.settings.values.get('text_scale',100)/100)
+                     art=layout['art'];point=event.position()
+                     self.experience.hit((point.x()-art.x())/max(1,art.width()),(point.y()-art.y())/max(1,art.height()))
+diff --git a/src/observatory_panel.py b/src/observatory_panel.py
+index 2f73d2530a5757620847fd68d72724ad98324468..6d5fd7e7cc494a739b19dfb7c03cb8a58747f6e8 100644
+--- a/src/observatory_panel.py
++++ b/src/observatory_panel.py
+@@ -215,7 +215,7 @@ class OrbitExperience:
+         from PySide6.QtWidgets import QMenu
+         c=self.controller;row=QHBoxLayout();c.window.layout().insertLayout(2,row)
+         self.view=QComboBox();self.view.addItem(tr('입체 관측소','3D observatory'),'observatory');self.view.addItem(tr('날짜별 조형','Daily sculpture'),'calendar')
+-        self.view.setCurrentIndex(1 if c.settings.values.get('scene_mode','observatory')=='calendar' else 0)
++        self.view.setCurrentIndex(1 if c.settings.values.get('scene_mode','calendar')=='calendar' else 0)
+         self.view.currentIndexChanged.connect(lambda _:self.option('scene_mode',self.view.currentData()));row.addWidget(self.view)
+         self.play=QPushButton();self.play.setCheckable(True);self.play.setChecked(c.settings.values.get('motion_paused',False));self.play.toggled.connect(lambda v:self.option('motion_paused',v));row.addWidget(self.play)
+         self.privacy=QPushButton();self.privacy.setCheckable(True);self.privacy.setChecked(c.settings.values.get('broadcast_mode',False));self.privacy.toggled.connect(lambda v:self.option('broadcast_mode',v));row.addWidget(self.privacy)
+@@ -294,7 +294,7 @@ class OrbitExperience:
+         if not hasattr(c,'orbit'):return
+         from calendar_motion import set_calendar_observatory_scene,set_calendar_motion_options
+         set_calendar_motion_options(paused=bool(c.settings.values.get("motion_paused",False)),reduced_motion=bool(c.settings.values.get("reduced_motion",False)),quality=c.settings.values.get("render_quality","balanced"))
+-        if c.settings.values.get('scene_mode','observatory')=='calendar':set_calendar_observatory_scene(None);return
++        if c.settings.values.get('scene_mode','calendar')=='calendar':set_calendar_observatory_scene(None);return
+         snapshot=snapshot or (self.panel.replay_snapshot if self.panel.replaying else self.snapshot_cache);agents=sorted(snapshot.get('agents',[]),key=lambda a:not a.get('pinned'))
+         events=snapshot.get('events',[]);last=events[-1] if events else {};target=last.get('target');current=last.get('after') or snapshot.get('executed',{}).get(target) or snapshot.get('selected',{}).get(target) or {}
+         self.scene={'model':current.get('model'),'effort':current.get('effort'),'agents':[{'target':a['target'],'status':a.get('status','unknown'),'pinned':a.get('pinned',False)} for a in agents[:24]],
+diff --git a/src/update_widgets.py b/src/update_widgets.py
+index 55a2bfda38df5a0d6d6661160634d015b6c5c94b..5f8b48b76641f660f73135f5e61df8954ef3b0c9 100644
+--- a/src/update_widgets.py
++++ b/src/update_widgets.py
+@@ -6,7 +6,7 @@ from PySide6.QtWidgets import QDialog,QVBoxLayout,QLabel,QPushButton
+ from shiboken6 import isValid
+ from observatory_panel import tr
+ 
+-VERSION='3.0.0'
++VERSION='3.0.1'
+ 
+ class UpdateBridge(QObject):
+     result=Signal(object,object)
+@@ -17,7 +17,7 @@ class UpdateDialog(QDialog):
+         from safe_update import SafeUpdater
+         self.updater=SafeUpdater(controller.settings.directory)
+         self.setWindowTitle(tr('공식 업데이트','Official update'));self.resize(540,260)
+-        layout=QVBoxLayout(self);self.label=QLabel(tr('현재 버전 3.0.0 · 공식 저장소의 릴리스만 확인합니다.','Version 3.0.0 · Only releases from the official repository are checked.'));self.label.setWordWrap(True);self.label.setTextFormat(Qt.TextFormat.PlainText);layout.addWidget(self.label)
++        layout=QVBoxLayout(self);self.label=QLabel(tr('현재 버전 3.0.1 · 공식 저장소의 릴리스만 확인합니다.','Version 3.0.1 · Only releases from the official repository are checked.'));self.label.setWordWrap(True);self.label.setTextFormat(Qt.TextFormat.PlainText);layout.addWidget(self.label)
+         self.action=QPushButton(tr('새 버전 확인','Check for update'));self.action.clicked.connect(self.next_step);layout.addWidget(self.action)
+         self.close_button=QPushButton(tr('닫기','Close'));self.close_button.clicked.connect(self.close);layout.addWidget(self.close_button)
+         self.bridge=UpdateBridge(self);self.bridge.result.connect(self.done)
+@@ -78,7 +78,7 @@ class UpdateDialog(QDialog):
+         elif self.latest:
+             self.label.setText(tr('현재 버전이 최신 공개 버전입니다.','The current version is up to date.'));self.action.setText(tr('다시 확인','Check again'))
+         else:
+-            self.label.setText(tr('현재 버전 3.0.0 · 공식 저장소의 릴리스만 확인합니다.','Version 3.0.0 · Only releases from the official repository are checked.'));self.action.setText(tr('새 버전 확인','Check for update'))
++            self.label.setText(tr('현재 버전 3.0.1 · 공식 저장소의 릴리스만 확인합니다.','Version 3.0.1 · Only releases from the official repository are checked.'));self.action.setText(tr('새 버전 확인','Check for update'))
+ 
+ 
+ def show_update(controller):

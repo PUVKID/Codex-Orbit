@@ -1,4 +1,6 @@
-# 🪐 Codex Orbit 3.0.0 · User guide
+# 🪐 Codex Orbit 3.0.1 · User guide
+
+The original daily calendar sculpture is the default desktop view. Model notifications keep its date-based title and artwork. The 3D observatory remains available as an explicit display-mode choice.
 
 Run the portable `CodexOrbit.exe` or install `CodexOrbit-Setup.exe` for the current Windows user. Do not run both against the same data directory. Click the transparent widget for history and account usage; drag to move and use the right/bottom edges to resize.
 
