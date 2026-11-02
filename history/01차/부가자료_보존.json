@@ -1,0 +1,125 @@
+{
+  "revision": "1차",
+  "scope": "원본 docs/tools/assets/루트 공개 후보 문서와 별도 디자인시안. 운영·대화·인증·실관측 원문 제외. 경로는 저장소 루트 기준이며 원문 상대경로와 대응합니다.",
+  "historical_notice": "당시 내용이며 현재 앱의 동작·다운로드·검증 결과를 의미하지 않습니다. 과거 문서의 원래 상대 링크는 당시 폴더 기준입니다. .md.txt는 원문 표시용이며 내용이 동일한 경우 바이트를 보존합니다.",
+  "files": [
+    {
+      "original_path": "README.md",
+      "original": {
+        "bytes": 11518,
+        "sha256": "9461f7219b42a3030cbe6c726da1de2ad83abaec968c257ea03b15782aaa3065"
+      },
+      "category": "root_document",
+      "status": "정제 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/4243d2c6b702a1b679d88e805923a0c105b1434426389022868e7936e6152bcc.md.txt",
+      "public": {
+        "bytes": 11464,
+        "sha256": "4243d2c6b702a1b679d88e805923a0c105b1434426389022868e7936e6152bcc"
+      },
+      "edits": [
+        "사용자 홈 절대경로를 USER_HOME으로 치환"
+      ]
+    },
+    {
+      "original_path": "docs/설계.md",
+      "original": {
+        "bytes": 3117,
+        "sha256": "7787163534cb198f0a7a637b944f1d1c2e8181fcb9339e5b256dcf8f488d0dfa"
+      },
+      "category": "docs",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/7787163534cb198f0a7a637b944f1d1c2e8181fcb9339e5b256dcf8f488d0dfa.md.txt",
+      "public": {
+        "bytes": 3117,
+        "sha256": "7787163534cb198f0a7a637b944f1d1c2e8181fcb9339e5b256dcf8f488d0dfa"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "tools/check_sources.py",
+      "original": {
+        "bytes": 1817,
+        "sha256": "8586140a88c8783be7356a567f6a5ef8067b6bab134583e96cc995a0125f3e22"
+      },
+      "category": "tools",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/8586140a88c8783be7356a567f6a5ef8067b6bab134583e96cc995a0125f3e22.py",
+      "public": {
+        "bytes": 1817,
+        "sha256": "8586140a88c8783be7356a567f6a5ef8067b6bab134583e96cc995a0125f3e22"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "설치.ps1",
+      "original": {
+        "bytes": 904,
+        "sha256": "c86ee8978e0bd23af6bc9bf3be20eba68a4c8750cba284c320397803deefbebd"
+      },
+      "category": "root_document",
+      "status": "정제 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/1f432082b7d49c2b16a5121f2eeff6b08734b923cca731bb25df0b7fadbb7fb0.ps1",
+      "public": {
+        "bytes": 895,
+        "sha256": "1f432082b7d49c2b16a5121f2eeff6b08734b923cca731bb25df0b7fadbb7fb0"
+      },
+      "edits": [
+        "사용자 홈 절대경로를 USER_HOME으로 치환"
+      ]
+    },
+    {
+      "original_path": "시작.ps1",
+      "original": {
+        "bytes": 575,
+        "sha256": "01db4e03500723c56864e8a767930e8db0000e298a68182728e4e91e9605aa81"
+      },
+      "category": "root_document",
+      "status": "정제 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/05acd998a20441a1673d335c865a3fdf5e14675d52bd2486243577740306d308.ps1",
+      "public": {
+        "bytes": 566,
+        "sha256": "05acd998a20441a1673d335c865a3fdf5e14675d52bd2486243577740306d308"
+      },
+      "edits": [
+        "사용자 홈 절대경로를 USER_HOME으로 치환"
+      ]
+    },
+    {
+      "original_path": "제거.ps1",
+      "original": {
+        "bytes": 428,
+        "sha256": "4894f3d3ebfe0e4a2ddd8957333556f9f094c879b21945c33b61c30247d69a99"
+      },
+      "category": "root_document",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/4894f3d3ebfe0e4a2ddd8957333556f9f094c879b21945c33b61c30247d69a99.ps1",
+      "public": {
+        "bytes": 428,
+        "sha256": "4894f3d3ebfe0e4a2ddd8957333556f9f094c879b21945c33b61c30247d69a99"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "중지.ps1",
+      "original": {
+        "bytes": 415,
+        "sha256": "d8a849ea4fb9930dfc9f42cf040557bb00d0189b25a21a60966b2cb488c8dc14"
+      },
+      "category": "root_document",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/d8a849ea4fb9930dfc9f42cf040557bb00d0189b25a21a60966b2cb488c8dc14.ps1",
+      "public": {
+        "bytes": 415,
+        "sha256": "d8a849ea4fb9930dfc9f42cf040557bb00d0189b25a21a60966b2cb488c8dc14"
+      },
+      "edits": []
+    }
+  ]
+}

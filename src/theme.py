@@ -6,46 +6,49 @@ from PySide6.QtWidgets import QApplication, QFileDialog, QHeaderView, QProxyStyl
 
 
 STYLE = '''
-QWidget {background:#101C29;color:#edf4f4;font-family:SUIT;font-weight:500;font-size:13px;}
-QDialog {background:#101C29;}
-QFrame#usagePanel {background:qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 #243B4C,stop:0.55 #1B2D3D,stop:1 #172838);border:1px solid #385064;border-radius:20px;}
+QWidget {background:#f3faf7;color:#193c36;font-family:"NanumGothic";font-weight:700;font-size:13px;}
+QDialog {background:#f3faf7;}
+QFrame#usagePanel {background:qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 #e4f5ed,stop:0.55 #f6fffb,stop:1 #ffffff);border:1px solid #c2dbd0;border-radius:20px;}
 QLabel {background:transparent;border:none;}
-QFrame#eventCard {background:#1e3540;border:1px solid #344e5a;border-radius:16px;}
-QLineEdit,QPlainTextEdit,QTreeView,QComboBox {background:#203842;border:1px solid #3a5662;border-radius:10px;padding:10px;selection-background-color:#436976;selection-color:#ffffff;}
+QFrame#observatoryHero {background:qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 #dbf6e9,stop:1 #fbfffd);border:1px solid #c8e5d7;border-radius:22px;}
+QLabel#currentTask {font-size:23px;color:#143e30;}
+QPushButton:checked {background:#cbf0dd;border-color:#269b6c;color:#114a32;}
+QFrame#eventCard {background:#ffffff;border:1px solid #d0e5db;border-radius:16px;}
+QLineEdit,QPlainTextEdit,QTreeView,QComboBox {background:#ffffff;border:1px solid #c1d9cf;border-radius:10px;padding:10px;selection-background-color:#caeddc;selection-color:#ffffff;}
 QLineEdit,QComboBox {min-height:22px;}
 QLineEdit:focus,QPlainTextEdit:focus,QComboBox:focus {border:1px solid #9bdbc9;}
 QTreeView::item {min-height:24px;padding:3px;}
-QListWidget {background:#1b333e;border:1px solid #324b56;border-radius:14px;padding:10px;outline:0;}
-QListWidget::item {padding:17px 12px;border-bottom:1px solid #304a55;border-radius:10px;color:#b9cbd3;}
-QListWidget::item:selected {background:#2d4955;color:#ffffff;border-left:3px solid #9adfc9;}
-QListWidget::item:hover {background:#263f4a;}
-QPushButton,QToolButton {background:#2b4551;color:#edf5f7;border:1px solid #46616d;border-radius:10px;padding:8px 12px;min-height:18px;}
-QPushButton:hover,QToolButton:hover {background:#375763;border-color:#88b9bd;}
-QPushButton:pressed,QToolButton:pressed {background:#436573;}
-QPushButton:disabled {color:#8199a4;background:#203640;border-color:#344c58;}
-QPushButton#disclosure {background:#203943;border:1px solid #3a5560;text-align:left;padding:14px 12px;}
-QTabWidget::pane {border:0;border-top:1px solid #35505a;}
-QTabBar::tab {padding:16px 17px;background:transparent;color:#a8beca;border-bottom:2px solid transparent;font-size:15px;}
-QTabBar::tab:selected {font-weight:600;background:#263f4b;color:#ffffff;border-bottom:2px solid #98dfd5;border-top-left-radius:10px;border-top-right-radius:10px;}
-QTabBar::tab:hover {color:#d5f5ee;}
+QListWidget {background:#ffffff;border:1px solid #d0e5db;border-radius:14px;padding:10px;outline:0;}
+QListWidget::item {padding:17px 12px;border-bottom:1px solid #e3eee9;border-radius:10px;color:#45675b;}
+QListWidget::item:selected {background:#d9f6e8;color:#355c50;border-left:3px solid #168565;}
+QListWidget::item:hover {background:#e5f7ee;}
+QPushButton,QToolButton {background:#eaf7f0;color:#193c36;border:1px solid #bfdacf;border-radius:10px;padding:8px 12px;min-height:18px;}
+QPushButton:hover,QToolButton:hover {background:#d6f2e3;border-color:#88b9bd;}
+QPushButton:pressed,QToolButton:pressed {background:#c0e6d5;}
+QPushButton:disabled {color:#355c50;background:#f2f5f3;border-color:#344c58;}
+QPushButton#disclosure {background:#eff8f3;border:1px solid #3a5560;text-align:left;padding:14px 12px;}
+QTabWidget::pane {border:0;border-top:1px solid #d3e8de;}
+QTabBar::tab {padding:16px 17px;background:transparent;color:#476a5d;border-bottom:2px solid transparent;font-size:15px;}
+QTabBar::tab:selected {font-weight:600;background:#dcf5e8;color:#355c50;border-bottom:2px solid #168565;border-top-left-radius:10px;border-top-right-radius:10px;}
+QTabBar::tab:hover {color:#355c50;}
 QSplitter::handle {background:transparent;width:1px;}
 QScrollArea {border:0;background:transparent;}
 QCheckBox {spacing:10px;background:transparent;padding:7px;}
 QCheckBox::indicator {width:18px;height:18px;border:1px solid #829da7;border-radius:5px;background:#243d48;}
 QCheckBox::indicator:checked {background:#a3dfcd;border:4px solid #426d69;}
-QProgressBar {border:0;border-radius:6px;text-align:center;background:#304b57;color:#f4f8f9;}
-QProgressBar::chunk {background:#78bdb3;border-radius:6px;}
+QProgressBar {border:0;border-radius:6px;text-align:center;background:#dcece4;color:#193c36;}
+QProgressBar::chunk {background:#1aa676;border-radius:6px;}
 QScrollBar:vertical {background:#19313b;width:8px;margin:0;}
 QScrollBar::handle:vertical {background:#4c6a77;min-height:28px;border-radius:4px;}
 QScrollBar::add-line:vertical,QScrollBar::sub-line:vertical {height:0;}
 QScrollBar:horizontal {background:#213b47;height:8px;}
 QScrollBar::handle:horizontal {background:#65818c;min-width:24px;border-radius:4px;}
 QScrollBar::add-line:horizontal,QScrollBar::sub-line:horizontal {width:0;}
-QMenu {background:#203a45;border:1px solid #526c77;padding:7px;}
+QMenu {background:#ffffff;border:1px solid #bed9cc;padding:7px;}
 QMenu::item {padding:10px 26px;border-radius:7px;}
-QMenu::item:selected {background:#395967;color:#ffffff;}
+QMenu::item:selected {background:#dcf6e9;color:#355c50;}
 QMenu::separator {height:1px;background:#3b5662;margin:5px;}
-QToolTip {background:#294550;color:#f0f6f7;border:1px solid #627f8c;padding:8px;}
+QToolTip {background:#fafffc;color:#23483a;border:1px solid #a4c9b5;padding:8px;}
 QMessageBox QLabel {min-width:300px;}
 '''
 
@@ -123,7 +126,7 @@ def apply_theme():
     if app.property('orbit_monochrome'):
         return
     app.setStyle(MonochromeStyle())
-    app.styleHints().setColorScheme(Qt.ColorScheme.Dark)
+    app.styleHints().setColorScheme(Qt.ColorScheme.Light)
     translator = KoreanDialogs(app)
     app.installTranslator(translator)
     app.orbit_translator = translator
@@ -131,16 +134,16 @@ def apply_theme():
     app.installEventFilter(dialog_layout)
     app.orbit_dialog_layout = dialog_layout
     palette = QPalette()
-    for role, value in ((QPalette.ColorRole.Window, 20), (QPalette.ColorRole.WindowText, 237),
+    for role, value in ((QPalette.ColorRole.Window, 20), (QPalette.ColorRole.WindowText, 35),
                         (QPalette.ColorRole.Base, 25), (QPalette.ColorRole.AlternateBase, 35),
-                        (QPalette.ColorRole.Text, 237), (QPalette.ColorRole.Button, 48),
-                        (QPalette.ColorRole.ButtonText, 240), (QPalette.ColorRole.Highlight, 80),
+                        (QPalette.ColorRole.Text, 35), (QPalette.ColorRole.Button, 48),
+                        (QPalette.ColorRole.ButtonText, 35), (QPalette.ColorRole.Highlight, 80),
                         (QPalette.ColorRole.HighlightedText, 255), (QPalette.ColorRole.ToolTipBase, 32),
                         (QPalette.ColorRole.ToolTipText, 255), (QPalette.ColorRole.Link, 220)):
         palette.setColor(role, QColor(value, value, value))
-    for role, value in ((QPalette.ColorRole.Window, '#142a33'), (QPalette.ColorRole.Base, '#203842'),
-                        (QPalette.ColorRole.Button, '#2b4551'), (QPalette.ColorRole.Highlight, '#436976'),
-                        (QPalette.ColorRole.Link, '#a2e2d2')):
+    for role, value in ((QPalette.ColorRole.Window, '#f3faf7'), (QPalette.ColorRole.Base, '#ffffff'),
+                        (QPalette.ColorRole.Button, '#eaf7f0'), (QPalette.ColorRole.Highlight, '#caeddc'),
+                        (QPalette.ColorRole.Link, '#12815c')):
         palette.setColor(role, QColor(value))
     app.setPalette(palette)
     app.setStyleSheet(STYLE)

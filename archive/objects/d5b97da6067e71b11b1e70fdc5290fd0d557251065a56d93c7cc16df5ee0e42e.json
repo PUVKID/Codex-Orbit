@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "width": 96,
+  "height": 96,
+  "files": {
+    "model": {
+      "filename": "model.png",
+      "sha256": "bb7c421f41ebfaf82c4e199eb05d597082a154a0dac1d684e56e73543bf4aaeb",
+      "glb": "model.glb",
+      "glb_sha256": "c5c165fa9ab8b01f5fa946a65b7079c44470f45a81b223cfd658a0176b9e905d"
+    },
+    "reasoning": {
+      "filename": "reasoning.png",
+      "sha256": "26dc660d27c7bc95df0fb3bcb38d09b5b7f9eb9b3849b847ac2f2efc432dbd80",
+      "glb": "reasoning.glb",
+      "glb_sha256": "0c0b18442e8a691b765a71ff6c5409f860efec28e11f236053b4dc5310de451a"
+    },
+    "time": {
+      "filename": "time.png",
+      "sha256": "e12ad0b6e2b803bff50cf872e9b4699b1ddbf9722b8b9cb59e0c3f78528e5d58",
+      "glb": "time.glb",
+      "glb_sha256": "5da42b95503e59ab12c12166a515379d9f01606efdc924c3482f49f0a571a7fb"
+    },
+    "reason": {
+      "filename": "reason.png",
+      "sha256": "424239c4696afefb40398f8f58691fbab263ad66fd599920978297bec5709464",
+      "glb": "reason.glb",
+      "glb_sha256": "35ba7751185788caf69a4183c5f35dd8058eb2d35542bdea403e2088e0b3e663"
+    },
+    "usage": {
+      "filename": "usage.png",
+      "sha256": "03427cf44bab6629e52080db7765a0198a001b5f68555c9a42c001953e2e909a",
+      "glb": "usage.glb",
+      "glb_sha256": "3128e5053c2a2e65c32f2d8288f2a4e89195d70858057955445e449f2af6985c"
+    },
+    "refresh": {
+      "filename": "refresh.png",
+      "sha256": "8b52cc839b8094f2a9615cf16c7694b9bcc2cd6c2eb70b490a4c813b32e131ea",
+      "glb": "refresh.glb",
+      "glb_sha256": "1bc989b388713e21ad76fd7313aed8b8b2e6462fc8a68ee95b5a560c84cc9d75"
+    },
+    "history": {
+      "filename": "history.png",
+      "sha256": "929f163baac8a08b6e8493be15864b687207bb17abc6406c37b81f786466cf38",
+      "glb": "history.glb",
+      "glb_sha256": "e271ffcddfffc8a0285f57958172cf66cc7c689f8e7970b02edd1d91fe0196e5"
+    }
+  },
+  "geometry": "실제 둥근 모서리 육면체·타원 단면 곡선·두께 있는 화살촉, 정규화 법선과 깊이 버퍼",
+  "lighting": "원자와 동일한48표본 스튜디오 환경반사/GGX; 새틴 거칠기0.28",
+  "source": {
+    "tool": "tools/render_symbols3d.py",
+    "sha256": "29b434c2b3b8e9767dc94f62cd22970f27ea325b345ab79f299e75019bdbc0fb",
+    "renderer_sha256": "ccff511722619c25aab834f3a93231971e7e1f188ea5752a43de97fdbbb081ac",
+    "external_assets": false,
+    "license": "프로젝트 소유자 곽윤석님 사용·수정·재배포용 직접 생성 자산"
+  }
+}

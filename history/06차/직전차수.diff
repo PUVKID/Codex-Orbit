@@ -1,5 +1,7 @@
---- 이전/src/app.py
-+++ 현재/src/app.py
+diff --git a/src/app.py b/src/app.py
+index 0c4f5d5837f2657d9d5b9c9d6eacb9d5dfcc0e1f..9a3fac9b2205c0fc15e8bb10daa5d16181f60585 100644
+--- a/src/app.py
++++ b/src/app.py
 @@ -1,1199 +1,1203 @@
 -"""Codex Orbit: 투명 궤도와 로컬 감시, 명시적 Markdown 지침 적용."""
 -import argparse
@@ -2403,8 +2405,11 @@
 +
 +if __name__ == '__main__':
 +    sys.exit(main())
---- 이전/src/theme.py
-+++ 현재/src/theme.py
+diff --git a/b/src/theme.py b/src/theme.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..1463c37363eb1a192761add297610da6c4701369
+--- /dev/null
++++ b/src/theme.py
 @@ -0,0 +1,136 @@
 +"""앱이 소유하는 모든 화면과 대화상자의 공통 무채색 테마입니다."""
 +from PySide6.QtCore import QEvent, QObject, QTimer, QTranslator, Qt
@@ -2542,8 +2547,11 @@
 +    app.setPalette(palette)
 +    app.setStyleSheet(STYLE)
 +    app.setProperty('orbit_monochrome', True)
---- 이전/src/visuals.py
-+++ 현재/src/visuals.py
+diff --git a/b/src/visuals.py b/src/visuals.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..86eaee1439de67a000f9b5c3ff5768a4b732d66d
+--- /dev/null
++++ b/src/visuals.py
 @@ -0,0 +1,138 @@
 +"""실제 3차원 궤도 좌표와 무채색 금속 렌더링입니다."""
 +import math

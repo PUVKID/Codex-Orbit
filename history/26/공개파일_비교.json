@@ -2,6 +2,7 @@
   "version": 26,
   "folder": "26",
   "previous": "25",
+  "scope": "실행 src 전체(보조 PowerShell 포함)와 존재하는 requirements.txt. 부가자료는 별도 보존 명세 참조.",
   "files": [
     {
       "path": "requirements.txt",
@@ -277,5 +278,11 @@
       ],
       "definitions_removed": []
     }
-  ]
+  ],
+  "patch": {
+    "bytes": 28119,
+    "sha256": "f68cef8cd87e7da0f35420514b4a129d878c5b5b29f821d066dc7c06b435fdba",
+    "format": "Git binary full-index; core.autocrlf=false; -p1"
+  },
+  "source_reference": "src"
 }

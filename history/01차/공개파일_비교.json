@@ -2,11 +2,18 @@
   "version": 1,
   "folder": "01차",
   "previous": null,
+  "scope": "실행 src 전체(보조 PowerShell 포함)와 존재하는 requirements.txt. 부가자료는 별도 보존 명세 참조.",
   "files": [
     {
       "path": "src/notifier.py",
       "bytes": 26813,
       "sha256": "2059fcac37723f34535eba05d83443a9dbd7e3dfb771200f190f2c8ed2ffb9a8",
+      "utf8_text": true
+    },
+    {
+      "path": "src/toast.ps1",
+      "bytes": 7245,
+      "sha256": "c877819c267970a4ee8a13e23994b6d828344ba35e44f61ddb8606d43ff6b723",
       "utf8_text": true
     }
   ],
@@ -44,6 +51,24 @@
         "units"
       ],
       "definitions_removed": []
+    },
+    {
+      "path": "src/toast.ps1",
+      "status": "추가",
+      "before": null,
+      "after": {
+        "bytes": 7245,
+        "sha256": "c877819c267970a4ee8a13e23994b6d828344ba35e44f61ddb8606d43ff6b723"
+      },
+      "binary": false,
+      "definitions_added": [],
+      "definitions_removed": []
     }
-  ]
+  ],
+  "patch": {
+    "bytes": 35092,
+    "sha256": "5d6cf0c488778aac5209f8a6a06c048af3aaed77411b092f18f045665f8d5a58",
+    "format": "Git binary full-index; core.autocrlf=false; -p1"
+  },
+  "source_reference": "src"
 }

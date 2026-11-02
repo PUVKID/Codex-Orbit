@@ -1,0 +1,163 @@
+{
+  "revision": "최종",
+  "scope": "원본 docs/tools/assets/루트 공개 후보 문서와 별도 디자인시안. 운영·대화·인증·실관측 원문 제외. 경로는 저장소 루트 기준이며 원문 상대경로와 대응합니다.",
+  "historical_notice": "당시 내용이며 현재 앱의 동작·다운로드·검증 결과를 의미하지 않습니다. 과거 문서의 원래 상대 링크는 당시 폴더 기준입니다. .md.txt는 원문 표시용이며 내용이 동일한 경우 바이트를 보존합니다.",
+  "files": [
+    {
+      "original_path": "2026-10-25_모델_추론변경_확인.md",
+      "original": {
+        "bytes": 3517,
+        "sha256": "cd2009133e370d97913b47fc32ca21ecf1eb507f9a08c7118993d7e6fef883c3"
+      },
+      "category": "root_document",
+      "status": "비공개 제외",
+      "reason": "비공개 운영 기록·개인 기억·실관측 검증 또는 인증/개인정보 검토 대상. 원본은 로컬에 보존하며 본문을 공개하지 않습니다.",
+      "public_path": null,
+      "public": null,
+      "edits": []
+    },
+    {
+      "original_path": "2026-10-25_선택즉시_동시알림_확인.md",
+      "original": {
+        "bytes": 4009,
+        "sha256": "8d6b5bc9af1037f6e49a87105ed95542b4d93de074e47aca9f4c002dd24a00db"
+      },
+      "category": "root_document",
+      "status": "비공개 제외",
+      "reason": "비공개 운영 기록·개인 기억·실관측 검증 또는 인증/개인정보 검토 대상. 원본은 로컬에 보존하며 본문을 공개하지 않습니다.",
+      "public_path": null,
+      "public": null,
+      "edits": []
+    },
+    {
+      "original_path": "2026-10-25_자율마무리_10차_최종검증.md",
+      "original": {
+        "bytes": 7496,
+        "sha256": "7191dcfdd7a7c4fd6f16a3b69760bc79d490a471ea80301fc433124ffa807952"
+      },
+      "category": "root_document",
+      "status": "비공개 제외",
+      "reason": "비공개 운영 기록·개인 기억·실관측 검증 또는 인증/개인정보 검토 대상. 원본은 로컬에 보존하며 본문을 공개하지 않습니다.",
+      "public_path": null,
+      "public": null,
+      "edits": []
+    },
+    {
+      "original_path": "2026-10-26_13차_원본모션_최종검증.md",
+      "original": {
+        "bytes": 7317,
+        "sha256": "34b043f18a8752194143985367248ac15c4ea9a4b4ea02137cd4a4296b59a28a"
+      },
+      "category": "root_document",
+      "status": "비공개 제외",
+      "reason": "비공개 운영 기록·개인 기억·실관측 검증 또는 인증/개인정보 검토 대상. 원본은 로컬에 보존하며 본문을 공개하지 않습니다.",
+      "public_path": null,
+      "public": null,
+      "edits": []
+    },
+    {
+      "original_path": "2026-10-26_14차_독립회전과간소화_검증.md",
+      "original": {
+        "bytes": 6253,
+        "sha256": "c9830c88607cdf28e9ac4363030f304d6c37efb69a4aa35c335f51295a5ad481"
+      },
+      "category": "root_document",
+      "status": "비공개 제외",
+      "reason": "비공개 운영 기록·개인 기억·실관측 검증 또는 인증/개인정보 검토 대상. 원본은 로컬에 보존하며 본문을 공개하지 않습니다.",
+      "public_path": null,
+      "public": null,
+      "edits": []
+    },
+    {
+      "original_path": "2026-10-26_15차_금속원자3D_검증.md",
+      "original": {
+        "bytes": 5895,
+        "sha256": "aae9c7ded2594410bab8a9bde78774640447997b4705f48776052dea58d91e55"
+      },
+      "category": "root_document",
+      "status": "비공개 제외",
+      "reason": "비공개 운영 기록·개인 기억·실관측 검증 또는 인증/개인정보 검토 대상. 원본은 로컬에 보존하며 본문을 공개하지 않습니다.",
+      "public_path": null,
+      "public": null,
+      "edits": []
+    },
+    {
+      "original_path": "2026-10-26_16차_이전모델과추론표시_검증.md",
+      "original": {
+        "bytes": 4508,
+        "sha256": "47cf6440c4cea3353c6a4380e849f81ea8fd279c25b1774e227f667d4e3239ca"
+      },
+      "category": "root_document",
+      "status": "비공개 제외",
+      "reason": "비공개 운영 기록·개인 기억·실관측 검증 또는 인증/개인정보 검토 대상. 원본은 로컬에 보존하며 본문을 공개하지 않습니다.",
+      "public_path": null,
+      "public": null,
+      "edits": []
+    },
+    {
+      "original_path": "2026-10-26_17차_3D전체디자인_검증.md",
+      "original": {
+        "bytes": 4302,
+        "sha256": "80315820cf9921bcba6d3b62c3b5c5d163cca5f1979a684293aca2d6f722d12b"
+      },
+      "category": "root_document",
+      "status": "비공개 제외",
+      "reason": "비공개 운영 기록·개인 기억·실관측 검증 또는 인증/개인정보 검토 대상. 원본은 로컬에 보존하며 본문을 공개하지 않습니다.",
+      "public_path": null,
+      "public": null,
+      "edits": []
+    },
+    {
+      "original_path": "2026-10-26_18차_활동알림과오늘의원소_검증.md",
+      "original": {
+        "bytes": 6117,
+        "sha256": "b117e95a61324824819a26bb8202d7e3d4d0e7f362e6cf828513d38c6fd9631c"
+      },
+      "category": "root_document",
+      "status": "비공개 제외",
+      "reason": "비공개 운영 기록·개인 기억·실관측 검증 또는 인증/개인정보 검토 대상. 원본은 로컬에 보존하며 본문을 공개하지 않습니다.",
+      "public_path": null,
+      "public": null,
+      "edits": []
+    },
+    {
+      "original_path": "2026-10-26_19차_원소가독성과SUIT_검증.md",
+      "original": {
+        "bytes": 2902,
+        "sha256": "65c58dbdbf18c00bf46eb586bba8cb5c85121c8f39b9da2a5c949e18b0c16577"
+      },
+      "category": "root_document",
+      "status": "비공개 제외",
+      "reason": "비공개 운영 기록·개인 기억·실관측 검증 또는 인증/개인정보 검토 대상. 원본은 로컬에 보존하며 본문을 공개하지 않습니다.",
+      "public_path": null,
+      "public": null,
+      "edits": []
+    },
+    {
+      "original_path": "2026-10-26_21차_원소31종_하단도크와잔량막대_검증.md",
+      "original": {
+        "bytes": 3364,
+        "sha256": "5d6be51bd302d0f7c94887df170674279e0815569fa5bb2b20a34d78d3eedf28"
+      },
+      "category": "root_document",
+      "status": "비공개 제외",
+      "reason": "비공개 운영 기록·개인 기억·실관측 검증 또는 인증/개인정보 검토 대상. 원본은 로컬에 보존하며 본문을 공개하지 않습니다.",
+      "public_path": null,
+      "public": null,
+      "edits": []
+    },
+    {
+      "original_path": "2026-10-28_22차_월별3D달력과전후값_검증.md",
+      "original": {
+        "bytes": 4054,
+        "sha256": "e121b44d3165e27fa20b136be6032d8ed7dbd32ac795faddb36db34a8721541e"
+      },
+      "category": "root_document",
+      "status": "비공개 제외",
+      "reason": "비공개 운영 기록·개인 기억·실관측 검증 또는 인증/개인정보 검토 대상. 원본은 로컬에 보존하며 본문을 공개하지 않습니다.",
+      "public_path": null,
+      "public": null,
+      "edits": []
+    }
+  ]
+}

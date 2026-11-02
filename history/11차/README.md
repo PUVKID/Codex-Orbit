@@ -9,7 +9,7 @@
 - **기능 코드:** [src/app.py:1019](src/app.py#L1019) `Controller` 정의 본문 변경; [src/app.py:525](src/app.py#L525) `Details` 정의 본문 변경; [src/app.py:339](src/app.py#L339) `Notice` 정의 본문 변경; [src/app.py:623](src/app.py#L623) `build_history` 정의 본문 변경; [src/app.py:839](src/app.py#L839) `build_instructions` 정의 본문 변경; [src/app.py:761](src/app.py#L761) `build_settings` 정의 본문 변경; [src/app.py:563](src/app.py#L563) `build_usage` 정의 본문 변경; [src/app.py:460](src/app.py#L460) `display` 정의 본문 변경; [src/app.py:593](src/app.py#L593) `display_usage` 정의 본문 변경; [src/app.py:66](src/app.py#L66) `friendly_effort` 정의 추가; [src/app.py:61](src/app.py#L61) `friendly_model` 정의 추가; [src/app.py:1308](src/app.py#L1308) `preferences` 정의 본문 변경 외 5건은 전체 차이 참조.
 - **설정:** 숫자·불리언 상수 또는 의존성 파일에서 이 요약 조건에 맞는 변경은 확인되지 않았습니다.
 - **화면 코드:** `src/app.py:765`의 `QLabel` 호출 (이전 코드); `src/app.py:667`의 `QLabel` 호출 (현재 코드); `src/app.py:498`의 `QLabel` 호출 (이전 코드); `src/app.py:675`의 `QLabel` 호출 (현재 코드); `src/app.py:874`의 `QLabel` 호출 (현재 코드); `src/app.py:604`의 `QLabel` 호출 (이전 코드 · 라벨 `공개 이유`); `src/app.py:850`의 `QLabel` 호출 (현재 코드 · 라벨 `내 지침`); `src/app.py:541`의 `QLabel` 호출 (현재 코드 · 라벨 `사용 한도 미확인`); `src/app.py:853`의 `QLabel` 호출 (현재 코드 · 라벨 `작성한 내용을 확인한 뒤 적용하세요. 파일은 명시 적용할 때만 바뀝니다.`); `src/app.py:900`의 `QLabel` 호출 (현재 코드 · 라벨 `적용 전 원문을 자동 백업합니다. 적용 후 대상이 바뀌면 충돌을 거부합니다.`); `src/app.py:857`의 `QLabel` 호출 (현재 코드 · 라벨 `적용할 파일`); `src/app.py:798`의 `QPushButton` 호출 (이전 코드) 외 15건은 전체 차이 참조.
-- **문서:** 이 공개 이력에는 비교할 문서를 보존하지 않아 문서 변경은 확인할 수 없습니다.
+- **문서:** 이번 보완에서 당시 문서·도구·자산의 원문 또는 정제본을 별도 [보존 목록](보존자료.md)에 연결했습니다. 파일별 원본 해시와 정제 사유를 구분하며 실제 실행 결과를 새로 추정하지 않습니다.
 - **검증:** 당시 실행 결과는 이 공개 이력에 보존되지 않아 실행 여부를 확인할 수 없습니다. 여기서는 공개 소스 바이트만 비교했습니다.
 
 아래 요약은 대표 코드 위치이며 전체 변경은 비교 파일에서 확인할 수 있습니다.
@@ -22,3 +22,12 @@
 - **수정** `src/visuals.py`: 이전 6995바이트, SHA-256 `60af8348b66e84a9c37c11f3c700579db137fd6b5b5ef2ad25f748253071e05e`; 현재 7287바이트, SHA-256 `6c1102f74fb8b1c9cd551ac05931465852e5815a088421aec11ec60e8fb88132`.
 
 동일 이름 정의 내부의 변경, 설정값, 주석과 공백은 전체 차이에서 확인할 수 있습니다. 실행이나 성능 검증 결과는 이 비교에서 추론하지 않습니다.
+
+
+## 역사 자료 추가 보존
+
+당시의 [문서·제작 도구·자산·시안 목록](보존자료.md)과 [원본/공개 해시·정제·제외 대응](부가자료_보존.json)을 제공합니다. 같은 SHA의 파일은 공통 보관 파일을 참조하며 실제 원본 경로와 버전을 보존합니다. 운영 기억·실제 계정/채팅 원문·비공개 검증은 제외하고 이유를 명시합니다. 보존 문서는 당시 내용이며 현재 안내는 저장소 첫 화면을 사용하십시오.
+
+[실행 소스 전체 Git 비교](직전차수.diff)와 [실제 바이트 명세](공개파일_비교.json)는 Python뿐 아니라 존재하는 보조 PowerShell과 의존성 목록을 포함합니다. `git -c core.autocrlf=false apply --reverse --binary -p1`로 현재 소스 사본에서 직전 소스의 파일 부재·신규·삭제 상태까지 복원해 원문 바이트를 대조했습니다. 부가 자료는 이 소스 비교에 섞지 않고 위 명세로 구분합니다.
+
+이번에 실제 전체 비교로 확인한 변경 파일: `src/app.py`, `src/theme.py`, `src/visuals.py`.

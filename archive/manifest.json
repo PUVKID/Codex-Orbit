@@ -1,0 +1,295 @@
+{
+  "format": 1,
+  "scope": "차수별 명세가 동일 내용 주소의 공유 파일을 참조합니다.",
+  "revisions": [
+    {
+      "revision": "1차",
+      "folder": "history/01차",
+      "items": 7,
+      "counts": {
+        "정제 보존": 3,
+        "원문 보존": 4
+      }
+    },
+    {
+      "revision": "2차",
+      "folder": "history/02차",
+      "items": 14,
+      "counts": {
+        "원문 보존": 13,
+        "정제 보존": 1
+      }
+    },
+    {
+      "revision": "3차",
+      "folder": "history/03차",
+      "items": 14,
+      "counts": {
+        "원문 보존": 13,
+        "정제 보존": 1
+      }
+    },
+    {
+      "revision": "4차",
+      "folder": "history/04차",
+      "items": 15,
+      "counts": {
+        "원문 보존": 13,
+        "정제 보존": 2
+      }
+    },
+    {
+      "revision": "5차",
+      "folder": "history/05차",
+      "items": 16,
+      "counts": {
+        "원문 보존": 14,
+        "정제 보존": 2
+      }
+    },
+    {
+      "revision": "6차",
+      "folder": "history/06차",
+      "items": 21,
+      "counts": {
+        "원문 보존": 18,
+        "정제 보존": 2,
+        "비공개 제외": 1
+      }
+    },
+    {
+      "revision": "7차",
+      "folder": "history/07차",
+      "items": 23,
+      "counts": {
+        "원문 보존": 19,
+        "정제 보존": 2,
+        "비공개 제외": 2
+      }
+    },
+    {
+      "revision": "8차",
+      "folder": "history/08차",
+      "items": 22,
+      "counts": {
+        "원문 보존": 19,
+        "정제 보존": 2,
+        "비공개 제외": 1
+      }
+    },
+    {
+      "revision": "9차",
+      "folder": "history/09차",
+      "items": 23,
+      "counts": {
+        "원문 보존": 20,
+        "정제 보존": 2,
+        "비공개 제외": 1
+      }
+    },
+    {
+      "revision": "10차",
+      "folder": "history/10차",
+      "items": 24,
+      "counts": {
+        "원문 보존": 21,
+        "정제 보존": 2,
+        "비공개 제외": 1
+      }
+    },
+    {
+      "revision": "11차",
+      "folder": "history/11차",
+      "items": 25,
+      "counts": {
+        "원문 보존": 22,
+        "정제 보존": 2,
+        "비공개 제외": 1
+      }
+    },
+    {
+      "revision": "12차",
+      "folder": "history/12차",
+      "items": 26,
+      "counts": {
+        "원문 보존": 23,
+        "정제 보존": 2,
+        "비공개 제외": 1
+      }
+    },
+    {
+      "revision": "13차",
+      "folder": "history/13차",
+      "items": 27,
+      "counts": {
+        "원문 보존": 24,
+        "정제 보존": 2,
+        "비공개 제외": 1
+      }
+    },
+    {
+      "revision": "14차",
+      "folder": "history/14차",
+      "items": 30,
+      "counts": {
+        "원문 보존": 26,
+        "정제 보존": 2,
+        "비공개 제외": 2
+      }
+    },
+    {
+      "revision": "15차",
+      "folder": "history/15차",
+      "items": 42,
+      "counts": {
+        "원문 보존": 34,
+        "정제 보존": 6,
+        "비공개 제외": 2
+      }
+    },
+    {
+      "revision": "16차",
+      "folder": "history/16차",
+      "items": 43,
+      "counts": {
+        "원문 보존": 35,
+        "정제 보존": 6,
+        "비공개 제외": 2
+      }
+    },
+    {
+      "revision": "17차",
+      "folder": "history/17차",
+      "items": 64,
+      "counts": {
+        "원문 보존": 55,
+        "정제 보존": 7,
+        "비공개 제외": 2
+      }
+    },
+    {
+      "revision": "18차",
+      "folder": "history/18차",
+      "items": 65,
+      "counts": {
+        "원문 보존": 55,
+        "정제 보존": 8,
+        "비공개 제외": 2
+      }
+    },
+    {
+      "revision": "19차",
+      "folder": "history/19차",
+      "items": 70,
+      "counts": {
+        "원문 보존": 60,
+        "정제 보존": 8,
+        "비공개 제외": 2
+      }
+    },
+    {
+      "revision": "20차",
+      "folder": "docs/20차",
+      "items": 39,
+      "counts": {
+        "원문 보존": 39
+      }
+    },
+    {
+      "revision": "21차",
+      "folder": "history/21차",
+      "items": 308,
+      "counts": {
+        "원문 보존": 298,
+        "정제 보존": 8,
+        "비공개 제외": 2
+      }
+    },
+    {
+      "revision": "22차",
+      "folder": "history/22차",
+      "items": 203,
+      "counts": {
+        "원문 보존": 193,
+        "정제 보존": 8,
+        "비공개 제외": 2
+      }
+    },
+    {
+      "revision": "23차",
+      "folder": "history/23차",
+      "items": 211,
+      "counts": {
+        "원문 보존": 201,
+        "정제 보존": 8,
+        "비공개 제외": 2
+      }
+    },
+    {
+      "revision": "24차",
+      "folder": "history/24차",
+      "items": 214,
+      "counts": {
+        "원문 보존": 203,
+        "비공개 제외": 3,
+        "정제 보존": 8
+      }
+    },
+    {
+      "revision": "25차",
+      "folder": "history/25",
+      "items": 217,
+      "counts": {
+        "비공개 제외": 3,
+        "원문 보존": 206,
+        "정제 보존": 8
+      }
+    },
+    {
+      "revision": "26차",
+      "folder": "history/26",
+      "items": 219,
+      "counts": {
+        "비공개 제외": 3,
+        "원문 보존": 208,
+        "정제 보존": 8
+      }
+    },
+    {
+      "revision": "27차",
+      "folder": "history/27",
+      "items": 67,
+      "counts": {
+        "원문 보존": 65,
+        "정제 보존": 2
+      }
+    },
+    {
+      "revision": "28차",
+      "folder": "history/28",
+      "items": 220,
+      "counts": {
+        "원문 보존": 210,
+        "정제 보존": 8,
+        "비공개 제외": 2
+      }
+    },
+    {
+      "revision": "최종",
+      "folder": "docs/최종",
+      "items": 12,
+      "counts": {
+        "비공개 제외": 12
+      }
+    }
+  ],
+  "totals": {
+    "groups": 29,
+    "items": 2281,
+    "counts": {
+      "정제 보존": 120,
+      "원문 보존": 2111,
+      "비공개 제외": 50
+    }
+  }
+}

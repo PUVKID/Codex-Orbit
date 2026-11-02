@@ -1,0 +1,27 @@
+# 25차 전 세계 지역과 한국어·영어 추가 명세
+
+2026-10-30 사용자 추가 요구: 우리나라뿐 아니라 전 세계 지역, 한국어·영어 언어 선택. 기존4K·240fps목표/GitHub24차및25차보존은유지. 미납품25차의확장으로같은task orbit-korean-4k240와repair3/input0/vf0을유지합니다.
+
+## 선택과 근거
+
+지명은기존기상제공자Open-Meteo Geocoding의language=ko/en,countryCode필터를사용합니다. 공식문서https://open-meteo.com/en/docs/geocoding-api 에따라번역이없으면영어/현지이름으로fallback합니다. 전세계지명을전부한국어로창작하지않습니다. 무료BigDataCloud는제3자IP추정좌표를clientGPS로가장하는용도가맞지않고,공개Nominatim은자동지오코딩플랫폼·정기요청정책이맞지않아선택하지않습니다. 신규계정/키/결제/Windows위치서비스요구0.
+
+## 경계와 인터페이스
+
+- build_orbit24 소유: src/weather.py와필요새순수지명helper,tests/test_4k240.py의지명검사및tests/test_weather_global.py신규,assets/GeoNames-LICENSE.txt. 다른app/i18n/visuals파일수정금지.
+- build_i18n25 소유: src/i18n.py 신규,app.py/visuals.py/theme.py/usage_widgets.py/brand.py의사용자표시다국어연결과필요지역명출처툴팁,tests/test_i18n.py 신규. weather.py/기존감시·코어·계정모듈직접수정금지. 부모가문서/빌드/공개를담당.
+- i18n 공개인터페이스: get_language()->ko|en,set_language(str)->언어변경,translate(text, **values)->str. default ko. 모듈기본정의에QApplication필수생성을하지않고CLI/API호환유지. 실제UI제어는메인스레드.
+- WeatherClient(parent=None, language='ko'),set_language(language). 기본ko로기존생성호환. UI는Settings.values['language'](기본ko)저장후set_language로기상client에도전달. weather는i18n모듈을import하지않아독립검증가능.
+- 기존snapshot의temperature/region/region_original/checked_at/observed_at/status/stale/busy는유지. 상태의backend의미값은기존한국어로유지하고UI가translate하여내부비교나기록을깨뜨리지않음. 'language','region_source'등은필요시추가. 좌표/IP/이동이력은snapshot·로그·디스크에추가하지않음.
+
+## 날씨·지명 성공 조건
+
+IPwho.is전세계좌표와원래city/region/country_code를사용하고기온Open-Meteo유지. 도시검색시국가필터·실제좌표최근접/거리및입력검증으로동명다른도시연결방지. 번역없는지역/검색실패/국가불일치/영문아닌원문도실제지역명을숨기지않고원문fallback. 알려진국내사전은fallback으로만유지하며광주모호성수리보존. 지역번역실패때유효한기온을버리거나필수날씨조회를영구중단하지않음. 언어바꾸기중늦은이전요청/close뒤응답무시. 동일지역/언어반복은인메모리소량cache로줄이고날씨5분/크기64KiB/타임아웃8초를약화하지않음. GeoNames/Open-Meteo출처와기존라이선스보존.
+
+## UI 성공 조건
+
+상세창상단언어선택한국어/English,위젯우클릭동일선택. 선택은기존설정에저장되어재실행유지. 앱자체표시(탭/버튼/알림/이전→현재/추론라벨/상태/기온·잔량/툴팁/우클릭메뉴)를선택언어로즉시갱신. 미확인지원외언어는ko로명확히처리하거나입력거부. 실제채팅제목·모델ID·역할ID·원문이유·작업내용·사용자MD를자동번역하거나수정하지않음. 이벤트원본의before/after/이유및감시상태데이터는보존. 기존크기/시계/드래그/클릭/주기/이력/알림상한/계정조회유지. 영어긴문구의겹침/잘림을대표최소180x250/기본220x332/상세창에서시각검토. SUIT사용자글꼴예외유지.
+
+## 검증과 공개
+
+국내외4대륙이상대표fixture/번역유무/동명도시·국가불일치·이전언어늦은응답·실패fallback·응답/메모리상한검사. 언어전환ko→en→ko와설정재로드,실제토스트·선택이력·이전모델/추론·UI라벨·원문불변·기온/실제잔량막대검사. 테스트뒤언어기본ko원상복원. 전체중앙30/15/45기준유지. 실제240고정미달(약233~235fps)과모니터59.973Hz한계는보존하고달성으로꾸미지않음. 독립검증후단일EXE/설치형/소스ZIP/GitHub25차후속commit및원격blob검증. 개인지역/계정/대화/로그/지침은공개제외.

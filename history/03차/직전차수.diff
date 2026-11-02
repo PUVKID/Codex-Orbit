@@ -1,6 +1,8 @@
---- 이전/src/app.py
-+++ 현재/src/app.py
-@@ -7,6 +7,8 @@
+diff --git a/src/app.py b/src/app.py
+index ad7d7aeea8ffa9477e96e462c2d751b386262b65..d7d560034883077a9b73474bbec4d7a34f522141 100644
+--- a/src/app.py
++++ b/src/app.py
+@@ -7,6 +7,8 @@ import os
  from pathlib import Path
  import sys
  import time
@@ -9,7 +11,7 @@
  
  from PySide6.QtCore import QLockFile, QPoint, QPointF, QRectF, Qt, QThread, QTimer, Signal
  from PySide6.QtGui import QColor, QFont, QFontDatabase, QIcon, QPainter, QPen
-@@ -16,7 +18,7 @@
+@@ -16,7 +18,7 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDialog, QFil
                               QPlainTextEdit, QPushButton, QSplitter, QTabWidget,
                               QSizePolicy, QVBoxLayout, QWidget)
  
@@ -18,12 +20,10 @@
  from notifier import Watcher, append_log, atomic_json, stamp
  
  
-@@ -29,6 +31,52 @@
-     if value is None:
-         return '미배정'
+@@ -31,17 +33,67 @@ def model_label(value):
      return f"{value.get('model', '확인 불가')} / {value.get('effort', '확인 불가')}"
-+
-+
+ 
+ 
 +def model_card_label(value):
 +    if value is None:
 +        return '미배정'
@@ -68,10 +68,11 @@
 +    if event.get('before') is None:
 +        return '자식 작업자 첫 배정' if event.get('parent') else '첫 관측'
 +    return '모델 · 추론 강도 변경'
- 
- 
++
++
  def event_description(event):
-@@ -37,11 +85,15 @@
+     return '\n'.join([
+         '채팅: ' + str(event.get('chat_name') or event.get('target', '확인 불가')),
          '채팅 ID: ' + str(event.get('target', '확인 불가')),
          '구분: ' + ('자식 작업' if event.get('parent') else 'main 또는 부모 정보 미기록'),
          '역할: ' + str(event.get('role', '확인 불가')),
@@ -88,7 +89,7 @@
          '기록 종류: ' + str(event.get('kind', '확인 불가')),
          '', '공개 이유', str(event.get('reason') or '확인 불가'),
          '', '근거 수준', str(event.get('evidence') or '확인 불가'),
-@@ -56,7 +108,7 @@
+@@ -56,7 +108,7 @@ class Settings:
          self.directory.mkdir(parents=True, exist_ok=True)
          self.path = self.directory / 'settings.json'
          home = Path(os.environ.get('CODEX_HOME') or (Path.home() / '.codex'))
@@ -97,7 +98,7 @@
          if self.path.exists():
              value = json.loads(read_text_strict(self.path))
              if not isinstance(value, dict):
-@@ -70,17 +122,19 @@
+@@ -70,17 +122,19 @@ class Settings:
  class Monitor(QThread):
      event = Signal(dict)
      status = Signal(dict)
@@ -119,7 +120,7 @@
          self.event.emit(value)
          return value['delivery']
  
-@@ -91,8 +145,16 @@
+@@ -91,8 +145,16 @@ class Monitor(QThread):
                  try:
                      if not self.sessions.is_dir():
                          raise FileNotFoundError('세션 폴더가 없거나 접근할 수 없습니다: ' + str(self.sessions))
@@ -137,7 +138,7 @@
                      diagnostics, problems = read_jsonl_tail(self.work / 'diagnostics.jsonl', max_records=5)
                      status = {'time': stamp(), 'state': '감시 중', 'sessions': str(self.sessions),
                                'files': len(watcher.state['files']), 'pending': len(watcher.state['pending']),
-@@ -217,16 +279,25 @@
+@@ -217,16 +279,25 @@ class Notice(QFrame):
          super().__init__(None, Qt.WindowType.Tool | Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
          self.open_details = open_details
          self.setObjectName('notice')
@@ -166,25 +167,25 @@
          layout.addWidget(self.text)
          hint = QLabel('클릭하여 전체 이유와 근거 보기')
          layout.addWidget(hint)
-@@ -234,22 +305,33 @@
+@@ -234,22 +305,33 @@ class Notice(QFrame):
          self.timer.setSingleShot(True)
          self.timer.timeout.connect(self.hide)
  
 -    def display(self, event, orbit):
+-        name = str(event.get('chat_name') or event.get('target'))
+-        self.title.setText('모델 · 추론 강도 변경')
+-        self.text.setText(name[:70] + '\n' + model_label(event.get('before'))[:90] + '\n→ ' + model_label(event.get('after'))[:90])
 +    def fit_content(self):
 +        # 고정 폭에서 필요한 줄바꿈 높이를 먼저 확보해 마지막 줄 잘림을 막습니다.
 +        self.layout().activate()
 +        margins = self.layout().contentsMargins()
 +        width = self.contentsRect().width() - margins.left() - margins.right()
 +        self.text.setMinimumHeight(self.text.heightForWidth(width))
-+        self.adjustSize()
+         self.adjustSize()
 +
 +    def display(self, event, orbit, timeout_ms=30000, replay=False):
 +        self.event_id = event.get('id')
-         name = str(event.get('chat_name') or event.get('target'))
--        self.title.setText('모델 · 추론 강도 변경')
--        self.text.setText(name[:70] + '\n' + model_label(event.get('before'))[:90] + '\n→ ' + model_label(event.get('after'))[:90])
--        self.adjustSize()
++        name = str(event.get('chat_name') or event.get('target'))
 +        self.title.setText(name)
 +        self.text.setText(('기록 다시 보기 · ' if replay else '') + event_kind(event) + '\n' + model_label(event.get('before')) + '\n→ ' + model_label(event.get('after')) + '\n\n' + short_reason(event))
 +        self.fit_content()
@@ -206,7 +207,7 @@
  
  
  class Details(QDialog):
-@@ -275,7 +357,7 @@
+@@ -275,7 +357,7 @@ class Details(QDialog):
          help_text.setReadOnly(True)
          help_text.setPlainText(read_text_strict(asset('사용법.md')))
          self.tabs.addTab(help_text, '사용 설명')
@@ -215,7 +216,7 @@
  
      def build_history(self):
          page = QWidget()
-@@ -288,20 +370,82 @@
+@@ -288,20 +370,82 @@ class Details(QDialog):
          split = QSplitter()
          self.history = QListWidget()
          self.history.currentItemChanged.connect(self.select_event)
@@ -300,7 +301,7 @@
          item = QListWidgetItem(str(event.get('chat_name') or event.get('target'))[:100] + '\n' + model_label(event.get('after'))[:100])
          item.setData(Qt.ItemDataRole.UserRole, event)
          self.history.insertItem(0, item)
-@@ -327,6 +471,9 @@
+@@ -327,6 +471,9 @@ class Details(QDialog):
          self.popup = QCheckBox('변경 시 클릭 가능한 말풍선 표시')
          self.popup.setChecked(self.controller.settings.values.get('popup', True))
          form.addRow('', self.popup)
@@ -310,7 +311,7 @@
          layout.addLayout(form)
          save = QPushButton('설정 저장 · 감시 다시 시작')
          save.clicked.connect(self.save_settings)
-@@ -348,7 +495,8 @@
+@@ -348,7 +495,8 @@ class Details(QDialog):
              if not path.is_dir():
                  raise ValueError('존재하는 sessions 폴더를 선택하세요.')
              values = self.controller.settings.values
@@ -320,7 +321,7 @@
              self.controller.settings.save()
              self.controller.start_monitor()
              QMessageBox.information(self, '설정 저장', '앱 설정을 저장하고 감시를 시작했습니다.')
-@@ -507,12 +655,12 @@
+@@ -507,12 +655,12 @@ class Controller:
          self.monitor = Monitor(self.settings.values['sessions'], self.settings.directory)
          self.monitor.event.connect(self.receive)
          self.monitor.status.connect(self.status)
@@ -336,7 +337,7 @@
          if problems:
              self.window.diagnostics.setPlainText('\n'.join(problems))
          self.monitor.start()
-@@ -521,14 +669,38 @@
+@@ -521,14 +669,38 @@ class Controller:
          self.window.add_event(event)
          self.orbit.unread = True
          if self.settings.values.get('popup', True):
@@ -378,7 +379,7 @@
          self.window.tabs.setCurrentIndex(0)
          self.window.show()
          self.window.raise_()
-@@ -553,6 +725,7 @@
+@@ -553,6 +725,7 @@ def main():
      parser.add_argument('--smoke-test', action='store_true')
      parser.add_argument('--smoke-report', type=Path)
      parser.add_argument('--show-details', action='store_true')
@@ -386,7 +387,7 @@
      args = parser.parse_args()
      app = QApplication(sys.argv[:1])
      app.setApplicationName('Codex Orbit')
-@@ -579,6 +752,8 @@
+@@ -579,6 +752,8 @@ def main():
      app.aboutToQuit.connect(controller.close)
      if args.show_details:
          controller.show()
@@ -395,9 +396,11 @@
      if args.smoke_test:
          first = controller.orbit.grab().toImage()
          if args.smoke_report:
---- 이전/src/core.py
-+++ 현재/src/core.py
-@@ -52,6 +52,38 @@
+diff --git a/src/core.py b/src/core.py
+index 74356eb88cafac3aa42e69d8b7c7b3ccd9c9fb81..c658f93168fc60ec863f8a693801be8a569ba33e 100644
+--- a/src/core.py
++++ b/src/core.py
+@@ -52,6 +52,38 @@ def session_titles(path):
              and r['thread_name'].strip()}
  
  
@@ -436,9 +439,11 @@
  def clamp_position(position, screens, size=140):
      for x, y, width, height in screens:
          if x <= position[0] and y <= position[1] and position[0] + size <= x + width and position[1] + size <= y + height:
---- 이전/src/notifier.py
-+++ 현재/src/notifier.py
-@@ -12,6 +12,7 @@
+diff --git a/src/notifier.py b/src/notifier.py
+index a482223d1ae50ac325477d2c6f3c828c208ed623..6fe4a3c1fbd24ba0ce2b4d17b4b042bf170fdb83 100644
+--- a/src/notifier.py
++++ b/src/notifier.py
+@@ -12,6 +12,7 @@ import time
  import uuid
  from datetime import datetime, timezone
  from pathlib import Path
@@ -446,7 +451,7 @@
  
  ROOT = Path(__file__).resolve().parents[1]
  APP_ID = 'Yunseok.Codex.ModelChangeNotifier'
-@@ -62,6 +63,8 @@
+@@ -62,6 +63,8 @@ class Watcher:
          self.state.setdefault('reasons', {})
          self.state.setdefault('seen', [])
          self.seen = set(self.state['seen'])
@@ -455,7 +460,7 @@
  
      def diagnostic(self, error, **details):
          append_log(self.work / 'diagnostics.jsonl', {'time': stamp(), 'error': str(error)[:2000], **details})
-@@ -190,7 +193,9 @@
+@@ -190,7 +193,9 @@ class Watcher:
              if not call_id or not isinstance(arguments.get('task_name'), str):
                  return
              calls = info.setdefault('spawn_calls', {})
@@ -466,7 +471,7 @@
              while len(calls) > 16:
                  del calls[next(iter(calls))]
          elif kind == 'function_call_output':
-@@ -205,9 +210,75 @@
+@@ -205,10 +210,76 @@ class Watcher:
              if not isinstance(task, str) or not task.startswith('/') or task.rsplit('/', 1)[-1] != call['requested_task']:
                  return
              key = info['sid'] + '|' + task
@@ -476,7 +481,7 @@
 +                                        'role': call.get('role')}
              while len(self.state['reasons']) > 128:
                  del self.state['reasons'][next(iter(self.state['reasons']))]
-+
+ 
 +    def lookup_parent_reason(self, event):
 +        """큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다."""
 +        try:
@@ -540,10 +545,11 @@
 +        value.update(reason=reason['text'], reason_call_id=reason['call_id'],
 +                     evidence='배정 전 공개 설명: 부모 call_id/호출 결과/자식 경로 정확 연결; 서버 변경 원인 미확인')
 +        return value
- 
++
      def read_file(self, path, info):
          stat = path.stat()
-@@ -250,6 +321,7 @@
+         identity = [stat.st_dev, stat.st_ino]
+@@ -250,6 +321,7 @@ class Watcher:
          return total
  
      def poll(self):
@@ -551,7 +557,7 @@
          paths = []
          if not self.sessions.is_dir():
              self.diagnostic('세션 폴더에 접근할 수 없습니다.', path=str(self.sessions))
-@@ -306,7 +378,9 @@
+@@ -306,7 +378,9 @@ class Watcher:
                      if path.stat().st_size > 20000:
                          raise ValueError('명시 알림 파일 상한 초과')
                      item = json.loads(path.read_text(encoding='utf-8'))
@@ -562,7 +568,7 @@
                      atomic_json(self.state_path, self.state)
                      path.unlink()
                  except (OSError, ValueError, KeyError) as error:
-@@ -316,12 +390,8 @@
+@@ -316,12 +390,8 @@ class Watcher:
          # 영속 pending 후 API를 호출합니다. API 성공과 상태 저장 사이 강제 종료는 재알림 가능성이 있습니다.
          for event in list(self.state['pending'])[:16]:
              try:

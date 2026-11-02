@@ -1,0 +1,322 @@
+{
+  "schema_version": 1,
+  "width": 192,
+  "height": 192,
+  "fps": 30,
+  "period_seconds": 18,
+  "frame_count_per_element": 540,
+  "element_count": 31,
+  "elements": [
+    {
+      "number": 1,
+      "symbol": "H",
+      "name": "수소",
+      "directory": "01_H",
+      "shape": "가벼운 단일 물방울",
+      "color": "#53c9ef",
+      "archive_sha256": "996bdc146b0d6099978e14f451eef8045452a1112a015fe22021b6a9178b6eb6",
+      "manifest_sha256": "d0fa63de116cf948e1829c46db287414911f35222bce1242d8dbd16600928b53"
+    },
+    {
+      "number": 2,
+      "symbol": "He",
+      "name": "헬륨",
+      "directory": "02_He",
+      "shape": "서로 뜬 쌍구체",
+      "color": "#b3a0f5",
+      "archive_sha256": "4302334fd851a55fcf494d0b7c2e99f4cb146e0e9554fca1fe125c6a1175136c",
+      "manifest_sha256": "1bb9ebd4431e757ae7915a582227c1ff42691903f5b36cd7d16f23357edf8d64"
+    },
+    {
+      "number": 3,
+      "symbol": "Li",
+      "name": "리튬",
+      "directory": "03_Li",
+      "shape": "배터리 코어",
+      "color": "#ef718c",
+      "archive_sha256": "eef7fd9f4d611371824c667a64c471f091f259f99100373dfad89d72f03476f6",
+      "manifest_sha256": "318a25409311c9ecfba4cb396b32956c2534ea8134ed08ba7e402ca6c320b442"
+    },
+    {
+      "number": 4,
+      "symbol": "Be",
+      "name": "베릴륨",
+      "directory": "04_Be",
+      "shape": "항공 합금 십자빔",
+      "color": "#69c8b5",
+      "archive_sha256": "45e97c291e7051eae983f75d128299c32fcbd2f3410b747cdfb9d3a911eacd88",
+      "manifest_sha256": "12fd7b5b1f0b7630d2caaf8e66a11be82713043ce02f6235931a1d40e717e770"
+    },
+    {
+      "number": 5,
+      "symbol": "B",
+      "name": "붕소",
+      "directory": "05_B",
+      "shape": "보라색 다면 결정",
+      "color": "#a77bcb",
+      "archive_sha256": "463e812f6fead5a9db3f7aeb250ac6244e302ed8eb2a89fef64d804d49a96205",
+      "manifest_sha256": "add5a10b5965a5b1b1026bc17055ae372fbb144a4cae2b3d7a0313be27dd2eb5"
+    },
+    {
+      "number": 6,
+      "symbol": "C",
+      "name": "탄소",
+      "directory": "06_C",
+      "shape": "컷 다이아몬드",
+      "color": "#99ddf4",
+      "archive_sha256": "cb8042a9466f91a94ec114dbcad4020d137f7cf03dedeedda4acce149e5914bd",
+      "manifest_sha256": "9b40305d9dd4880aa769100ff5d3dabb52f8e9892cf45d40beb5059838a28f0b"
+    },
+    {
+      "number": 7,
+      "symbol": "N",
+      "name": "질소",
+      "directory": "07_N",
+      "shape": "삼중 연결 캡슐",
+      "color": "#668ce9",
+      "archive_sha256": "f9e4b2805be44cd725e62d4ff01a5cf7a100979191e9c1442826c7462c2023ef",
+      "manifest_sha256": "97a3ba00e5d59fecec9280a3c12c031eac904249e03c701394ec7fffde1923f3"
+    },
+    {
+      "number": 8,
+      "symbol": "O",
+      "name": "산소",
+      "directory": "08_O",
+      "shape": "겹친 산소 구체",
+      "color": "#e96d7e",
+      "archive_sha256": "d589fe6e389c6ce374c55d566e228c0d3af14ed44b8a1ec66237f8985f2f3553",
+      "manifest_sha256": "cddab8c38fdb3e0777025b8bb3c3013bae3efed02b09d562f64ae9a2481d5886"
+    },
+    {
+      "number": 9,
+      "symbol": "F",
+      "name": "플루오린",
+      "directory": "09_F",
+      "shape": "형석 영감 결정군",
+      "color": "#a1cf62",
+      "archive_sha256": "f53f906d0bb6f6dfe6e1d1d791ec69e412a3b8fce4e7ac126e81176c2c68dd4c",
+      "manifest_sha256": "a2f9a360d7fc67011e55188475dec26aebccf6e93e141ccead27b28bd7b7c170"
+    },
+    {
+      "number": 10,
+      "symbol": "Ne",
+      "name": "네온",
+      "directory": "10_Ne",
+      "shape": "광관 매듭",
+      "color": "#f68d58",
+      "archive_sha256": "8081c6c7a64cf56c84865b277134782bb8e155fe76ef092ae6403ff76d0a2418",
+      "manifest_sha256": "73967080d22664a956510d456b5c969515348f59bf377bcda70097d20b5fefa6"
+    },
+    {
+      "number": 11,
+      "symbol": "Na",
+      "name": "나트륨",
+      "directory": "11_Na",
+      "shape": "분할 소금 큐브",
+      "color": "#f1c455",
+      "archive_sha256": "1550842592f193e26665c3ac34f5d10b98f51097f1101760b64fd387eec44e32",
+      "manifest_sha256": "3ca36a57275a4da6f2253af37e99e0532cbb79614327d06a274b065d9dcf4348"
+    },
+    {
+      "number": 12,
+      "symbol": "Mg",
+      "name": "마그네슘",
+      "directory": "12_Mg",
+      "shape": "금속 빛살",
+      "color": "#c4dbe9",
+      "archive_sha256": "e9b4117fc94dd18116686b33f0781fb79f25d92691e4feb941b31aecf8c5fe8b",
+      "manifest_sha256": "cfc1950f7ee6390a120787cd32912c74075d67427e64ce1c69c0d76a4399b380"
+    },
+    {
+      "number": 13,
+      "symbol": "Al",
+      "name": "알루미늄",
+      "directory": "13_Al",
+      "shape": "겹친 금속 포일",
+      "color": "#9ebbd5",
+      "archive_sha256": "a9f88e29e3025ddc8ca6bf04152c0b4ac934bd5aa5ce6312e838682c3d4c35f0",
+      "manifest_sha256": "aeec55b418226344c80767375a4406ad93ce185ed4449ac0164e7208c6a62b37"
+    },
+    {
+      "number": 14,
+      "symbol": "Si",
+      "name": "규소",
+      "directory": "14_Si",
+      "shape": "반도체 웨이퍼",
+      "color": "#7889d9",
+      "archive_sha256": "e29b316625a2c3b6fecfdf821ac36b105b746cc668685eb026bd439870cb2d53",
+      "manifest_sha256": "8cbe6b8288fcb0444e789d5d9d3a86aa596bf4f5cb7f8cff0c6ff2a8b0b1e85b"
+    },
+    {
+      "number": 15,
+      "symbol": "P",
+      "name": "인",
+      "directory": "15_P",
+      "shape": "사면체 결절",
+      "color": "#dc8167",
+      "archive_sha256": "3ebfbd36a5c728ee680aece8b18089aff7934ee552c12c69e311accd23cbf646",
+      "manifest_sha256": "17cfc07b0d37aa09f2f71cea6f9360e61b9e6a780e7b0bb5d868e8924a91d368"
+    },
+    {
+      "number": 16,
+      "symbol": "S",
+      "name": "황",
+      "directory": "16_S",
+      "shape": "노란 결정 왕관",
+      "color": "#e9d34a",
+      "archive_sha256": "26b719b21248af4a358a6bd5820e967533501f2f8950d085cdcad8024655e0a8",
+      "manifest_sha256": "12747e61f3e899dfebb6622d45aca65df5026b6a1712de3d8c1d3d4708ae391d"
+    },
+    {
+      "number": 17,
+      "symbol": "Cl",
+      "name": "염소",
+      "directory": "17_Cl",
+      "shape": "쌍기둥 정화체",
+      "color": "#84c754",
+      "archive_sha256": "9b758ce4374f952eb519309bddccdde8c84aa2cb11906b976cb981f7e701874b",
+      "manifest_sha256": "8b761e7a7adf47db78db07a3a053a6ecfafd98eecd1f8334f57cc2d635fc301a"
+    },
+    {
+      "number": 18,
+      "symbol": "Ar",
+      "name": "아르곤",
+      "directory": "18_Ar",
+      "shape": "보호 가스 격자",
+      "color": "#a197e5",
+      "archive_sha256": "d894f15512b9acd0fc04c1d88edc6e3e823687bc9d66c619d436f0d4ff33fbd2",
+      "manifest_sha256": "767da9aa525e60ce93a9067f823a323f96c98741368800baa6ee30d93f4c368f"
+    },
+    {
+      "number": 19,
+      "symbol": "K",
+      "name": "칼륨",
+      "directory": "19_K",
+      "shape": "보라 세잎",
+      "color": "#c284dd",
+      "archive_sha256": "dbeb96d19ee28eeddad93424f6a4274eee0eef221c3955e47e4cfb3bdf90105e",
+      "manifest_sha256": "cde8ce7c7287a9ed6028ea423cc4355e719c8945086f767edfa61aef84baa95a"
+    },
+    {
+      "number": 20,
+      "symbol": "Ca",
+      "name": "칼슘",
+      "directory": "20_Ca",
+      "shape": "방해석 경사 결정",
+      "color": "#ddd0a6",
+      "archive_sha256": "02feb13b78b73021cf62514a619e50062fa4ab914e19aaaedf6379a66f7f097a",
+      "manifest_sha256": "64e83f3331f68284ca820e0a2156bcd62e9f75089ef7dcb2049a84d0573f0a96"
+    },
+    {
+      "number": 21,
+      "symbol": "Sc",
+      "name": "스칸듐",
+      "directory": "21_Sc",
+      "shape": "세날 합금 로터",
+      "color": "#77bdc8",
+      "archive_sha256": "9a4621f0b378b4f9dd399a2c8b45c2f20d839ad94c219ce131465da5113801ae",
+      "manifest_sha256": "1bdbb8e1597b058cb2b7f18f834df10eed29ad753875960f28af5a2640fda825"
+    },
+    {
+      "number": 22,
+      "symbol": "Ti",
+      "name": "타이타늄",
+      "directory": "22_Ti",
+      "shape": "육각 체결 코어",
+      "color": "#96adce",
+      "archive_sha256": "112a09ef85aa0ea69f7fe3b53881c753e8066876b412db7dde099adc6f0d6928",
+      "manifest_sha256": "559d0c6a4fd9b1247c0162726836ab5d1e73d5138ddee655891cc2fa49064d81"
+    },
+    {
+      "number": 23,
+      "symbol": "V",
+      "name": "바나듐",
+      "directory": "23_V",
+      "shape": "강철 V 지지대",
+      "color": "#7b83cb",
+      "archive_sha256": "ef86924dd36036c19ea8ce4f8959c1f9d808cb8d38dd375fcd18e5d0dd9a6aab",
+      "manifest_sha256": "cd10204c7c20ff125d5832188212d4727bf29508747620225d0ba20d6108dd6d"
+    },
+    {
+      "number": 24,
+      "symbol": "Cr",
+      "name": "크로뮴",
+      "directory": "24_Cr",
+      "shape": "크롬 반사 껍질",
+      "color": "#69b6ae",
+      "archive_sha256": "33ecefa04582b1cf680acb8be45c3f02ea2a52d43617438587bcd5a9ea3d753b",
+      "manifest_sha256": "5045366334f09f3dcf589d570aa0fd09d63aed4ac14d1ba498906ef440cf44fe"
+    },
+    {
+      "number": 25,
+      "symbol": "Mn",
+      "name": "망가니즈",
+      "directory": "25_Mn",
+      "shape": "층진 광석 탑",
+      "color": "#b67db5",
+      "archive_sha256": "3340e2090ec2c117f186bc4e7c15f59bf36aa27c3c1ff8d435ef05aff7fc270b",
+      "manifest_sha256": "a552a9172adbe9fef5817b253b401734377a20efe91f6323f3bec65922a8f0c4"
+    },
+    {
+      "number": 26,
+      "symbol": "Fe",
+      "name": "철",
+      "directory": "26_Fe",
+      "shape": "자성 말굽 구조",
+      "color": "#b87561",
+      "archive_sha256": "af06d277b4acdfe3b8bba155cc3a63cf1c2e2b0393977456d8cc607ddc4a6aac",
+      "manifest_sha256": "5d27a72fe7903345d325ad9162a02855fa32ec23e53460ba3b20c07063040f5b"
+    },
+    {
+      "number": 27,
+      "symbol": "Co",
+      "name": "코발트",
+      "directory": "27_Co",
+      "shape": "코발트 터빈",
+      "color": "#477bd9",
+      "archive_sha256": "a32d84e12254ce618223cf289477227a3877a2050d595ef9be5cfe921a83ac2f",
+      "manifest_sha256": "fcf93557be3edb0fee760de2ba9fff15336dbd40d1e6c36b82ea8cb06d8384c6"
+    },
+    {
+      "number": 28,
+      "symbol": "Ni",
+      "name": "니켈",
+      "directory": "28_Ni",
+      "shape": "니켈 주화",
+      "color": "#91b59b",
+      "archive_sha256": "23a252fbc8f0e4cacb64d368de184f2277523f7113c944bdcb44ee028e5f665d",
+      "manifest_sha256": "140c9b37a97d336d6866f36307ba416704d5ffd54c44fd8c0515033d44ec3b33"
+    },
+    {
+      "number": 29,
+      "symbol": "Cu",
+      "name": "구리",
+      "directory": "29_Cu",
+      "shape": "구리 전도 코일",
+      "color": "#d38951",
+      "archive_sha256": "9f036d3517e93d3bca45067bd1e31546722f33be03b68f6338345b7ce1f3cc05",
+      "manifest_sha256": "51f6dfb85b1fc798486dd294f15d44ce23c8292887c33cf43b85e70db41da6fb"
+    },
+    {
+      "number": 30,
+      "symbol": "Zn",
+      "name": "아연",
+      "directory": "30_Zn",
+      "shape": "아연 육각 기둥",
+      "color": "#81acc2",
+      "archive_sha256": "e98771ccc576e5e72f1e2788c09383ff54cf0c96bcca95ad48eb06065f08531d",
+      "manifest_sha256": "7b8aea67319cd282afb590b07f0fed0d2a6288caf4ffc88e6df0d044be29b485"
+    },
+    {
+      "number": 31,
+      "symbol": "Ga",
+      "name": "갈륨",
+      "directory": "31_Ga",
+      "shape": "액체 금속 방울",
+      "color": "#a7c3e4",
+      "archive_sha256": "9d4c8882489516538c09c6a736936505b27e40cf8a9fa16b16472635a3139439",
+      "manifest_sha256": "1eadb5144da9d70d980666f9888d23fe26c821dadf7f63aa97abf74e7f70e0c0"
+    }
+  ],
+  "license": "LICENSE.txt"
+}

@@ -1,12 +1,14 @@
---- 이전/src/app.py
-+++ 현재/src/app.py
+diff --git a/src/app.py b/src/app.py
+index 5dd2eabd941bfeeb31859d537036f374b0926d6d..d5b2f9c367bffcace4a5abf0a861a9a2f73c6d2b 100644
+--- a/src/app.py
++++ b/src/app.py
 @@ -1,4 +1,4 @@
 -"""Codex Orbit: 투명 궤도와 로컬 감시, 명시적 Markdown 지침 적용."""
 +"""Codex Orbit: 독립 회전 위젯과 로컬 변경 기록·사용 한도."""
  import argparse
  import hashlib
  import json
-@@ -12,13 +12,13 @@
+@@ -12,13 +12,13 @@ from collections import deque
  
  from PySide6.QtCore import QEvent, QObject, QLockFile, Qt, QThread, QTimer, Signal, QPropertyAnimation, QEasingCurve
  from PySide6.QtGui import QFont, QFontDatabase, QIcon, QPainter, QPixmap
@@ -17,15 +19,14 @@
                               QListWidget, QListWidgetItem, QMenu, QMessageBox,
                               QPlainTextEdit, QPushButton, QSplitter, QTabWidget,
 -                             QProgressBar, QScrollArea, QSizePolicy, QLayout, QVBoxLayout, QWidget, QTextBrowser)
--
--from core import InstructionStore, clamp_position, read_jsonl_tail, read_text_strict, title_catalog, resolve_title
 +                             QProgressBar, QScrollArea, QSizePolicy, QLayout, QVBoxLayout, QWidget)
-+
+ 
+-from core import InstructionStore, clamp_position, read_jsonl_tail, read_text_strict, title_catalog, resolve_title
 +from core import clamp_position, read_jsonl_tail, read_text_strict, title_catalog, resolve_title
  from notifier import Watcher, append_log, atomic_json, stamp, POLL_INTERVAL_SECONDS
  from usage import UsageClient, reset_label
  from visuals import draw_orbit
-@@ -253,13 +253,13 @@
+@@ -253,13 +253,13 @@ class Monitor(QThread):
  
  
  class OrbitWidget(QWidget):
@@ -41,7 +42,7 @@
          self.origin_time = time.monotonic()
          self.render_time = None
          self.healthy = False
-@@ -270,7 +270,7 @@
+@@ -270,7 +270,7 @@ class OrbitWidget(QWidget):
          self.press_global = None
          self.dragged = False
          self.setCursor(Qt.CursorShape.OpenHandCursor)
@@ -50,7 +51,7 @@
          self.timer = QTimer(self)
          self.timer.timeout.connect(self.update)
          self.timer.start(20)
-@@ -331,7 +331,6 @@
+@@ -331,7 +331,6 @@ class OrbitWidget(QWidget):
      def create_menu(self):
          menu = QMenu(self)
          menu.addAction('상세 이력 열기', self.details)
@@ -58,7 +59,7 @@
          menu.addSeparator()
          menu.addAction('종료', self.quit_app)
          return menu
-@@ -383,8 +382,8 @@
+@@ -383,8 +382,8 @@ class Notice(QFrame):
          self.model_current = QLabel()
          self.effort_previous = QLabel()
          self.effort_current = QLabel()
@@ -69,7 +70,7 @@
              column = QVBoxLayout()
              column.setSpacing(4)
              for label, pixels, color in ((previous, 11, '#aaaaaa'), (current, size, '#ffffff')):
-@@ -529,12 +528,35 @@
+@@ -529,12 +528,35 @@ class Notice(QFrame):
              self.dismiss()
  
  
@@ -107,7 +108,7 @@
          self.setWindowTitle('Codex Orbit · 로컬 모델 변경 기록')
          self.resize(1120, 780)
          self.setMinimumSize(740, 540)
-@@ -559,13 +581,6 @@
+@@ -559,13 +581,6 @@ class Details(QDialog):
          self.tabs = QTabWidget()
          layout.addWidget(self.tabs, 1)
          self.build_history()
@@ -121,7 +122,7 @@
          usage_page = QWidget()
          usage_layout = QVBoxLayout(usage_page)
          usage_layout.setContentsMargins(32, 28, 32, 28)
-@@ -664,24 +679,20 @@
+@@ -664,24 +679,20 @@ class Details(QDialog):
          card_layout = QVBoxLayout(self.card)
          card_layout.setContentsMargins(0, 12, 20, 20)
          card_layout.setSpacing(12)
@@ -152,7 +153,7 @@
          self.before_value = QLabel('변경 전  ·  —')
          self.after_value = QLabel('변경 후  ·  —')
          self.after_value.setStyleSheet('font-size:12px;color:#a0a0a0;padding:0;')
-@@ -692,14 +703,33 @@
+@@ -692,14 +703,33 @@ class Details(QDialog):
          self.reason_value.setStyleSheet('font-size:16px;padding:4px 0 12px 0;')
          self.event_time = QLabel('')
          self.event_time.setStyleSheet('color:#969696;font-size:11px;padding-top:12px;')
@@ -190,7 +191,7 @@
          cards.addWidget(self.card)
          self.evidence_toggle = QPushButton('▸ 원문 · ID · 근거 펼치기')
          self.evidence_toggle.setObjectName('disclosure')
-@@ -731,16 +761,14 @@
+@@ -731,16 +761,14 @@ class Details(QDialog):
          if current:
              value = current.data(Qt.ItemDataRole.UserRole)
              self.detail.setPlainText(event_description(value))
@@ -211,7 +212,7 @@
              self.before_value.setText('이전  ' + model_card_label(value.get('before')))
              self.after_value.setText('→  ' + model_card_label(value.get('after')))
              self.reason_value.setText(short_reason(value, 180))
-@@ -772,248 +800,6 @@
+@@ -772,248 +800,6 @@ class Details(QDialog):
              self.history.takeItem(self.history.count() - 1)
          self.history.setCurrentItem(item)
  
@@ -460,7 +461,7 @@
  
  
  class QuitGuard(QObject):
-@@ -1055,7 +841,7 @@
+@@ -1055,7 +841,7 @@ class Controller:
          self.monitor_health_timer.setInterval(1000)
          self.monitor_health_timer.timeout.connect(self.check_monitor_health)
          self.window = Details(self)
@@ -469,7 +470,7 @@
          self.notice = None
          for screen in QApplication.screens():
              screen.availableGeometryChanged.connect(self.layout_notices)
-@@ -1163,11 +949,11 @@
+@@ -1163,11 +949,11 @@ class Controller:
                  try:
                      self.start_monitor()
                  except Exception as error:
@@ -483,30 +484,32 @@
              if self.monitor_retries < 3 and not self.monitor_retry_timer.isActive():
                  self.monitor_retry_timer.start(3000 * (self.monitor_retries + 1))
          elif time.monotonic() - self.last_monitor_progress > 20:
-@@ -1318,10 +1104,6 @@
-         self.window.raise_()
+@@ -1319,10 +1105,6 @@ class Controller:
          self.window.activateWindow()
          self.orbit.unread = False
--
+ 
 -    def preferences(self):
 -        self.show()
 -        self.window.tabs.setCurrentWidget(self.window.settings_page)
- 
+-
      def request_quit(self):
          if self.quit_requested or self.cleaned:
---- 이전/src/brand.py
-+++ 현재/src/brand.py
+             return
+diff --git a/src/brand.py b/src/brand.py
+index 38a706cf5c7826c1818427b6e0596f3b2de8acae..e00bae0ce9d77ea8476824ef368d2debda186ae8 100644
+--- a/src/brand.py
++++ b/src/brand.py
 @@ -1,26 +1,29 @@
 -"""작은 크기에서도 읽히는 Codex Orbit의 단일 정적 브랜드 마크입니다."""
 -from PySide6.QtCore import QPointF, QRectF, Qt
 -from PySide6.QtGui import QColor, QImage, QPainter, QPen
+-
 +"""실시간 캐릭터와 같은 세 링을 사용하는 절제된 정적 마크입니다."""
 +from functools import lru_cache
 +from PySide6.QtCore import QPointF, Qt
 +from PySide6.QtGui import QColor, QImage, QPainter, QPainterPath, QPen
 +from visuals import ring_points, project_point
  
--
 +@lru_cache(maxsize=7)
  def brand_image(size):
 -    """검은 경계·굵은 흰 궤도·비대칭 위성을 원래 해상도에서 그립니다."""
@@ -545,8 +548,10 @@
 +    painter.setBrush(QColor('#141414'));painter.setPen(QPen(QColor('#a0a0a0'),max(.7,padding/size*.4)))
 +    painter.drawEllipse(QPointF(0,0),15,15)
 +    painter.end();return image
---- 이전/src/visuals.py
-+++ 현재/src/visuals.py
+diff --git a/src/visuals.py b/src/visuals.py
+index 1ca76ed365d7d03e96ace9d4d65aa29d7e754b72..58ff561f674f36c814db7396bf84426adc09eb63 100644
+--- a/src/visuals.py
++++ b/src/visuals.py
 @@ -2,7 +2,7 @@
  import math
  
@@ -556,7 +561,7 @@
  
  
  def rotate_point(point, angles):
-@@ -20,21 +20,44 @@
+@@ -20,21 +20,44 @@ def project_point(point):
      return x * scale, y * scale
  
  
@@ -613,7 +618,7 @@
      return sorted(segments, key=lambda segment: segment[0])
  
  
-@@ -50,31 +73,35 @@
+@@ -50,31 +73,35 @@ def status_label(healthy, unread):
  
  def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', healthy=False, unread=False, light=False):
      """3~5px의 선형 타원과 깊이 가림을 그리고 실제 숫자는 고정합니다."""
@@ -660,7 +665,7 @@
              painter.drawPath(path)
  
      lines(False)
-@@ -120,13 +147,13 @@
+@@ -120,13 +147,13 @@ def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', he
      status_layer.fill(Qt.GlobalColor.transparent)
      status_painter = QPainter(status_layer)
      status_painter.setRenderHint(QPainter.RenderHint.Antialiasing)

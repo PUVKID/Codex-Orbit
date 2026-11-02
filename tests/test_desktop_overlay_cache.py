@@ -24,9 +24,9 @@ BASELINE_SOURCE_SHA256 = 'd4bb20ebbfa421b5f05a482aedbb0b2202b7f7ffc2e6f7e22916ac
 
 def _baseline_layout(width, height, title, show_weather=False, show_location=False):
     """이름을 화면 픽셀 크기로 줄 바꿈하고 조형·잔량 영역을 분리합니다."""
-    name_font = app_font(weight=QFont.Weight.DemiBold)
+    name_font = app_font(weight=QFont.Weight.Bold)
     name_font.setPixelSize(16)
-    date_font = app_font(weight=QFont.Weight.DemiBold)
+    date_font = app_font(weight=QFont.Weight.Bold)
     date_font.setPixelSize(14)
     metrics = QFontMetricsF(name_font)
     text_width = max(1, width - 32)
@@ -107,7 +107,7 @@ def _baseline_draw(painter, width, height, source, design, fraction, state, cloc
     fill_rect = QRectF(track.left(), track.top(), track.width()*fill.width()/USAGE_TRACK_RECT.width(), track.height())
     painter.drawRect(fill_rect)
     layout['track'], layout['fill'] = track, fill_rect
-    font = app_font(weight=QFont.Weight.DemiBold)
+    font = app_font(weight=QFont.Weight.Bold)
     font.setPixelSize(14)
     painter.setFont(font)
     painter.setPen(gray(248))

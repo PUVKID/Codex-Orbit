@@ -1,13 +1,14 @@
---- 이전/src/app.py
-+++ 현재/src/app.py
-@@ -9,17 +9,19 @@
+diff --git a/src/app.py b/src/app.py
+index d7d560034883077a9b73474bbec4d7a34f522141..30d32916d75ae455896e220544c6d1b7f1bb8645 100644
+--- a/src/app.py
++++ b/src/app.py
+@@ -9,17 +9,19 @@ import sys
  import time
  from datetime import datetime, timezone, timedelta
  import re
--
--from PySide6.QtCore import QLockFile, QPoint, QPointF, QRectF, Qt, QThread, QTimer, Signal
 +from collections import deque
-+
+ 
+-from PySide6.QtCore import QLockFile, QPoint, QPointF, QRectF, Qt, QThread, QTimer, Signal
 +from PySide6.QtCore import QEvent, QObject, QLockFile, QPoint, QPointF, QRectF, Qt, QThread, QTimer, Signal
  from PySide6.QtGui import QColor, QFont, QFontDatabase, QIcon, QPainter, QPen
  from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDialog, QFileDialog,
@@ -23,7 +24,7 @@
  
  
  def asset(name):
-@@ -184,6 +186,7 @@
+@@ -184,6 +186,7 @@ class OrbitWidget(QWidget):
          self.render_time = None
          self.healthy = True
          self.unread = False
@@ -31,7 +32,7 @@
          self.press_global = None
          self.dragged = False
          self.setCursor(Qt.CursorShape.OpenHandCursor)
-@@ -229,9 +232,9 @@
+@@ -229,9 +232,9 @@ class OrbitWidget(QWidget):
              painter.restore()
          painter.setPen(QPen(QColor('#ECF7FF'), 2))
          painter.setBrush(QColor('#111B2E'))
@@ -44,7 +45,7 @@
          painter.setPen(QPen(QColor('#101827'), 1.5))
          painter.setBrush(QColor('#FFB85C' if not self.healthy else ('#FF7095' if self.unread else '#52E5B7')))
          painter.drawEllipse(QPointF(14, 14), 5, 5)
-@@ -275,6 +278,8 @@
+@@ -275,6 +278,8 @@ class OrbitWidget(QWidget):
  
  
  class Notice(QFrame):
@@ -53,7 +54,7 @@
      def __init__(self, open_details):
          super().__init__(None, Qt.WindowType.Tool | Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
          self.open_details = open_details
-@@ -295,15 +300,26 @@
+@@ -295,15 +300,26 @@ class Notice(QFrame):
          close = QPushButton('×')
          close.setToolTip('알림 닫기 · 이력은 유지됩니다')
          close.setFixedSize(28, 28)
@@ -82,7 +83,7 @@
  
      def fit_content(self):
          # 고정 폭에서 필요한 줄바꿈 높이를 먼저 확보해 마지막 줄 잘림을 막습니다.
-@@ -314,6 +330,7 @@
+@@ -314,6 +330,7 @@ class Notice(QFrame):
          self.adjustSize()
  
      def display(self, event, orbit, timeout_ms=30000, replay=False):
@@ -90,7 +91,7 @@
          self.event_id = event.get('id')
          name = str(event.get('chat_name') or event.get('target'))
          self.title.setText(name)
-@@ -330,8 +347,8 @@
+@@ -330,8 +347,8 @@ class Notice(QFrame):
  
      def mouseReleaseEvent(self, event):
          if event.button() == Qt.MouseButton.LeftButton:
@@ -100,7 +101,7 @@
  
  
  class Details(QDialog):
-@@ -348,6 +365,7 @@
+@@ -348,6 +365,7 @@ class Details(QDialog):
          heading.setStyleSheet('font-size:24px;color:#57DBD7;')
          layout.addWidget(heading)
          layout.addWidget(QLabel('로컬 관측 · 공개된 배정 이유 · 내 지침'))
@@ -108,7 +109,7 @@
          self.tabs = QTabWidget()
          layout.addWidget(self.tabs)
          self.build_history()
-@@ -359,6 +377,65 @@
+@@ -359,6 +377,65 @@ class Details(QDialog):
          self.tabs.addTab(help_text, '사용 설명')
          self.setStyleSheet('QDialog,QWidget {background:#070B10;color:#E5F1F4;font-weight:700;} QLabel {background:transparent;} QFrame#eventCard {background:#0D151D;border:1px solid #24454E;border-radius:10px;} QLineEdit,QPlainTextEdit,QListWidget,QComboBox {background:#0C131B;border:1px solid #25434B;border-radius:6px;padding:8px;} QListWidget::item {padding:12px 6px;border-bottom:1px solid #1D3038;} QListWidget::item:selected {background:#12343C;color:#8CFFF1;} QPushButton {background:#12252E;border:1px solid #2D6570;border-radius:5px;padding:8px 12px;} QPushButton:hover {background:#1C3B45;border-color:#61DCD4;} QPushButton:disabled {color:#718198;} QTabBar::tab {padding:10px;background:#0E1922;} QTabBar::tab:selected {color:#75F1E1;border-bottom:2px solid #55DDD1;} QSplitter::handle {background:#1E424A;}')
  
@@ -174,7 +175,7 @@
      def build_history(self):
          page = QWidget()
          layout = QVBoxLayout(page)
-@@ -367,6 +444,9 @@
+@@ -367,6 +444,9 @@ class Details(QDialog):
          self.summary.setWordWrap(True)
          self.summary.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
          layout.addWidget(self.summary)
@@ -184,7 +185,7 @@
          split = QSplitter()
          self.history = QListWidget()
          self.history.currentItemChanged.connect(self.select_event)
-@@ -464,6 +544,14 @@
+@@ -464,6 +544,14 @@ class Details(QDialog):
          pick.clicked.connect(self.choose_sessions)
          row.addWidget(pick)
          form.addRow('Codex sessions 폴더', row)
@@ -199,7 +200,7 @@
          self.theme = QComboBox()
          self.theme.addItems(['자동', '어두운 배경', '밝은 배경'])
          self.theme.setCurrentText(self.controller.settings.values.get('theme', '자동'))
-@@ -489,16 +577,27 @@
+@@ -489,16 +577,27 @@ class Details(QDialog):
          if path:
              self.sessions.setText(path)
  
@@ -228,7 +229,7 @@
              QMessageBox.information(self, '설정 저장', '앱 설정을 저장하고 감시를 시작했습니다.')
          except Exception as error:
              self.error(error)
-@@ -633,29 +732,99 @@
+@@ -633,29 +732,99 @@ class Details(QDialog):
          QMessageBox.warning(self, '작업을 완료하지 못했습니다', str(error))
  
  
@@ -332,7 +333,7 @@
          history, problems = read_jsonl_tail(self.monitor.work / 'history.jsonl')
          self.window.history.clear()
          titles = title_catalog(Path(self.settings.values['sessions']).parent / 'session_index.jsonl', self.settings.directory / 'title-cache.json')
-@@ -664,12 +833,73 @@
+@@ -664,12 +833,73 @@ class Controller:
          if problems:
              self.window.diagnostics.setPlainText('\n'.join(problems))
          self.monitor.start()
@@ -407,7 +408,7 @@
  
      def replay_event(self, event_id):
          for index in range(self.window.history.count()):
-@@ -677,30 +907,44 @@
+@@ -677,30 +907,44 @@ class Controller:
              event = item.data(Qt.ItemDataRole.UserRole)
              if event_id in (event.get('id'), event.get('target')):
                  self.window.history.setCurrentItem(item)
@@ -453,7 +454,7 @@
          self.window.tabs.setCurrentIndex(0)
          self.window.show()
          self.window.raise_()
-@@ -711,11 +955,50 @@
+@@ -711,11 +955,50 @@ class Controller:
          self.show()
          self.window.tabs.setCurrentIndex(1)
  
@@ -504,7 +505,7 @@
  
  
  def main():
-@@ -723,6 +1006,7 @@
+@@ -723,6 +1006,7 @@ def main():
      parser.add_argument('--data-dir', type=Path, default=Path(os.environ.get('LOCALAPPDATA', Path.home())) / 'CodexOrbit')
      parser.add_argument('--sessions', type=Path)
      parser.add_argument('--smoke-test', action='store_true')
@@ -512,7 +513,7 @@
      parser.add_argument('--smoke-report', type=Path)
      parser.add_argument('--show-details', action='store_true')
      parser.add_argument('--show-event', help='기존 이력의 이벤트 ID 또는 대상 ID를 다시 표시')
-@@ -742,7 +1026,7 @@
+@@ -742,7 +1026,7 @@ def main():
          lock = QLockFile(str(args.data_dir / 'app.lock'))
          if not lock.tryLock(100):
              raise RuntimeError('같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다.')
@@ -521,7 +522,7 @@
      except Exception as error:
          if args.smoke_report:
              args.smoke_report.write_text(json.dumps({'ok': False, 'error': str(error)}, ensure_ascii=False), encoding='utf-8')
-@@ -752,6 +1036,31 @@
+@@ -752,6 +1036,31 @@ def main():
      app.aboutToQuit.connect(controller.close)
      if args.show_details:
          controller.show()
@@ -553,8 +554,11 @@
      if args.show_event and not controller.replay_event(args.show_event):
          controller.window.summary.setText('지정한 이력을 찾지 못했습니다. 감시가 기록을 읽은 뒤 이력에서 확인하세요.')
      if args.smoke_test:
---- 이전/src/usage.py
-+++ 현재/src/usage.py
+diff --git a/b/src/usage.py b/src/usage.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..80772728d91f39766a967e6654611923c0d1ec43
+--- /dev/null
++++ b/src/usage.py
 @@ -0,0 +1,357 @@
 +"""Codex App Server의 계정 사용 한도를 읽기 전용으로 조회합니다."""
 +from datetime import datetime, timedelta, timezone

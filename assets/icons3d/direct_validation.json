@@ -1,14 +1,4 @@
 {
-  "kst": "2026-10-26T07:40:51.746106+09:00",
-  "argv": [
-    "D:\\2026\\Codex 관련\\Codex 모델 변경 알림\\17차\\work\\venv\\Scripts\\python.exe",
-    "-B",
-    "-X",
-    "utf8",
-    "tools/render_symbols3d.py",
-    "work/icons3d-final17"
-  ],
-  "cwd": "D:\\2026\\Codex 관련\\Codex 모델 변경 알림\\17차",
   "exit_code": 0,
   "symbols": {
     "model": {

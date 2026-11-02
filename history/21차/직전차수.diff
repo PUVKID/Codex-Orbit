@@ -1,6 +1,8 @@
---- 이전/src/app.py
-+++ 현재/src/app.py
-@@ -21,11 +21,13 @@
+diff --git a/src/app.py b/src/app.py
+index 754089335484928205a1aaf84db5f90506be71ef..4a6e0ec0b26991db3332cb8b44c9cd48489421ee 100644
+--- a/src/app.py
++++ b/src/app.py
+@@ -21,11 +21,13 @@ from PySide6.QtWidgets import (QApplication, QDialog,
  from core import clamp_position, read_jsonl_tail, read_text_strict, title_catalog, resolve_title
  from notifier import Watcher, append_log, atomic_json, stamp, POLL_INTERVAL_SECONDS
  from usage import UsageClient, reset_label
@@ -15,7 +17,7 @@
  
  
  def asset(name):
-@@ -760,12 +762,12 @@
+@@ -760,12 +762,12 @@ class Details(QDialog):
                  text += '  ·  이전 조회 값'
              texts.append(text)
              bar = QProgressBar()
@@ -31,7 +33,7 @@
              self.usage_rows_layout.addWidget(bar)
          self.usage_compact.setText(('이전 조회 · ' if stale and checked else '') + (f"{rows[0]['remaining']:g}% 남음" if rows and rows[0].get('remaining') is not None else '사용 한도 미확인'))
          self.usage_values.setText('\n'.join(texts) if texts else '계정 한도 미확인 · 남은 토큰 개수가 아닌 사용 한도 비율입니다.')
-@@ -991,6 +993,7 @@
+@@ -991,6 +993,7 @@ class Controller:
      def __init__(self, settings, start_worker=True, start_usage=None):
          # 필수 이미지가 손상됐으면 타이머나 창을 만들기 전에 시작 실패로 전달합니다.
          get_atom_frames()
@@ -39,7 +41,7 @@
          validate_symbols()
          apply_theme()
          self.settings = settings
-@@ -1384,6 +1387,7 @@
+@@ -1384,6 +1387,7 @@ def main():
          stage = 'visual-assets-preflight'
          log_error = operation_record(args.data_dir, stage, effective_sessions, lock_acquired=True) or log_error
          get_atom_frames()
@@ -47,7 +49,7 @@
          validate_symbols()
          stage = 'controller-prepare'
          log_error = operation_record(args.data_dir, stage, effective_sessions, lock_acquired=True) or log_error
-@@ -1414,6 +1418,9 @@
+@@ -1414,6 +1418,9 @@ def main():
              usage_finished = True
              report = {**value, 'ok': ok, 'frozen': bool(getattr(sys, 'frozen', False)),
                        'widget_badge': controller.orbit.usage_badge,
@@ -57,9 +59,11 @@
                        'display_text': controller.window.usage_values.text(),
                        'display_status': controller.window.usage_status.text(),
                        'time': stamp()}
---- 이전/src/brand.py
-+++ 현재/src/brand.py
-@@ -12,7 +12,7 @@
+diff --git a/src/brand.py b/src/brand.py
+index b79b3d067a613684f43d7e6df8692434e53a2ee3..10e4fa9fb65e3f4953ca04e7d6217a9fbe67782b 100644
+--- a/src/brand.py
++++ b/src/brand.py
+@@ -12,7 +12,7 @@ from PySide6.QtWidgets import QApplication, QLabel, QWidget, QHBoxLayout
  from shiboken6 import isValid
  from atom_frames import get_atom_frames, asset_directory, AtomAssetError
  from elements import daily_element
@@ -68,7 +72,7 @@
  
  
  @lru_cache(maxsize=7)
-@@ -28,6 +28,14 @@
+@@ -28,6 +28,14 @@ def brand_image(size):
                                              Qt.TransformationMode.SmoothTransformation)
  
  
@@ -83,7 +87,7 @@
  class BrandClock(QObject):
      """보이는 로고만 단일 시계에서 같은 프레임으로 갱신합니다."""
      def __init__(self):
-@@ -62,12 +70,12 @@
+@@ -62,12 +70,12 @@ class BrandClock(QObject):
              self.timer.stop()
              return
          elapsed = time.monotonic() - self.origin
@@ -98,8 +102,11 @@
                  pixmaps[size] = QPixmap.fromImage(image.scaled(size, size, Qt.AspectRatioMode.KeepAspectRatio,
                                                                Qt.TransformationMode.SmoothTransformation))
              mark.setPixmap(pixmaps[size])
---- 이전/src/element_frames.py
-+++ 현재/src/element_frames.py
+diff --git a/b/src/element_frames.py b/src/element_frames.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..0e9bbb767b27c11d68b36f54115478101e9e4e1f
+--- /dev/null
++++ b/src/element_frames.py
 @@ -0,0 +1,146 @@
 +"""오늘 원소 하나의 압축 프레임만 여는 제한 메모리 재생기입니다."""
 +from collections import OrderedDict
@@ -247,9 +254,11 @@
 +
 +
 +atexit.register(close_element_frames)
---- 이전/src/elements.py
-+++ 현재/src/elements.py
-@@ -19,22 +19,22 @@
+diff --git a/src/elements.py b/src/elements.py
+index 79d5e2599ba216779f6b8da69bd8a93108502be2..f5e6067270bcc42daf5c9e29eb8a78ee1eab6299 100644
+--- a/src/elements.py
++++ b/src/elements.py
+@@ -19,22 +19,22 @@ class Element:
  
  # 번호·기호는 NIST 표를 따르며 색은 시각 디자인을 위한 별도 선택입니다.
  _ROWS = (
@@ -288,8 +297,10 @@
  )
  ELEMENTS = tuple(Element(index,symbol,name,color,accent)
                   for index,(symbol,name,color,accent) in enumerate(_ROWS,1))
---- 이전/src/visuals.py
-+++ 현재/src/visuals.py
+diff --git a/src/visuals.py b/src/visuals.py
+index ea06483ceb1375522fc4ffd431078c6c52004c44..3e31f107160f99442704d09dd10284ddb40b5bb8 100644
+--- a/src/visuals.py
++++ b/src/visuals.py
 @@ -2,10 +2,9 @@
  import math
  
@@ -302,7 +313,7 @@
  from typography import app_font
  
  
-@@ -88,23 +87,41 @@
+@@ -88,23 +87,41 @@ def element_labels(element, badge, state, healthy, unread):
      return str(element.number), element.symbol, element.name, usage, status_label(healthy, unread)
  
  
@@ -353,7 +364,7 @@
      layer = QImage(math.ceil(148*scale),math.ceil(148*scale),QImage.Format.Format_ARGB32_Premultiplied)
      layer.setDevicePixelRatio(scale)
      layer.fill(Qt.GlobalColor.transparent)
-@@ -116,20 +133,24 @@
+@@ -116,20 +133,24 @@ def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', he
          measured=QFontMetricsF(local).horizontalAdvance(value)
          if measured>rect.width()-2:local.setPixelSize(max(7,int(pixels*(rect.width()-2)/measured)))
          text.setFont(local)

@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "width": 296,
+  "height": 296,
+  "fps": 30,
+  "period_seconds": 18,
+  "frame_count": 540,
+  "frame_pattern": "frame_{:04d}.png",
+  "archive": "frames.zip",
+  "archive_sha256": "ba6c6f377e0f8fe6998a2359c6303837a32d15fcfb9a907ec9a7acdbbd20d68b",
+  "geometry": {
+    "type": "실제 삼각형 메시와 정규화 표면 법선",
+    "ring_radii": [
+      45.0,
+      51.0,
+      57.0
+    ],
+    "ring_width": 5.2,
+    "ring_depth": 2.8,
+    "cross_section": "폭5.2/깊이2.8의 완만한 볼록 타원 단면",
+    "core_radius": 22.7,
+    "electron_radius": 3.25,
+    "rings": 3,
+    "electrons": 3,
+    "units": "제작 1단위 = 논리 1px; GLB는 0.01m로 환산",
+    "pivots": [
+      0,
+      0,
+      0
+    ],
+    "initial_tilts_degrees": [
+      50.0,
+      52.0,
+      54.0
+    ],
+    "initial_azimuths_degrees": [
+      8.0,
+      70.0,
+      132.0
+    ],
+    "axes": [
+      [
+        0.06,
+        -0.025,
+        1.0
+      ],
+      [
+        -0.04,
+        0.04,
+        1.0
+      ],
+      [
+        0.03,
+        0.06,
+        1.0
+      ]
+    ],
+    "ring_turns_per_period": [
+      1,
+      -2,
+      3
+    ],
+    "electron_turns_per_period": [
+      2,
+      -3,
+      4
+    ],
+    "triangles_per_mesh": [
+      24576,
+      24576,
+      24576,
+      9216,
+      2304
+    ],
+    "camera": {
+      "position": [
+        0,
+        0,
+        700.0
+      ],
+      "half_extent_at_origin": 77.0,
+      "projection": "perspective"
+    },
+    "depth_buffer": true
+  },
+  "lighting": {
+    "model": "GGX 직접광 + 월드 반사 방향 기반 절차적 스튜디오 환경반사",
+    "environment": "3개 긴 소프트박스와 낮은 보조광; 검은 환경의 음영",
+    "ring_metallic": 1.0,
+    "ring_roughness": 0.18,
+    "core_metallic": 0.3,
+    "core_roughness": 0.39,
+    "color": "무채색",
+    "tone_mapping": "ACES 근사 + gamma 2.2",
+    "reflection_samples": 48,
+    "anti_aliasing": "4x MSAA + 296px의 3배 또는 600px의 2배 제작 후 축소",
+    "alpha_encoding": "MSAA 사전곱 RGBA → 사전곱 축소 → straight RGBA PNG; alpha0의 RGB0",
+    "transparent_background": true,
+    "floor": false,
+    "limitation": "경로추적·다중반사·물리기반 면광원 적분은 아님; GLB의 표준 PBR에는 절차 조명이 포함되지 않음"
+  },
+  "source": {
+    "tool": "tools/render_atom3d.py",
+    "tool_sha256": "d64c5f053d0c7e046f048dba0d2a34429734b20be41af60992745972592ed36a",
+    "renderer": "NVIDIA GeForce RTX 4090/PCIe/SSE2",
+    "opengl_version": "3.3.0 NVIDIA 617.42",
+    "moderngl": "5.13.0",
+    "numpy": "2.5.4",
+    "generated_geometry": true,
+    "external_meshes": false,
+    "external_textures": false,
+    "runtime_gpu_required": false,
+    "license": "이 프로젝트에서 직접 생성한 기하와 셰이더; 외부 모델·HDRI·텍스처 없음",
+    "glb": "atom3d.glb",
+    "glb_sha256": "c775ad1e14f9d4e95b1569ec3e67db37b65e94f90ba7af76a2df65badb74a7b7",
+    "export_tool": "tools/atom3d_glb.py",
+    "export_tool_sha256": "b0f49439c8a7470f054b681c292e85ee230c042528138d3fbb87cb921f245e36"
+  }
+}

@@ -128,7 +128,7 @@ def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', he
         accent = element.accent
     painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
     painter.drawImage(ATOM_RECT,source)
-    font = app_font(weight=QFont.Weight.DemiBold)
+    font = app_font(weight=QFont.Weight.Bold)
     painter.setFont(font)
     scale = max(1.,abs(painter.combinedTransform().m11())*painter.device().devicePixelRatioF())
     # 투명 ARGB 글자층은 서브픽셀 색 프린지 없이 모션과 독립적으로 고정됩니다.
@@ -173,12 +173,14 @@ def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', he
     painter.drawImage(QRectF(-74,-74,148,148),layer)
 
 
-def desktop_widget_layout(width, height, title, show_weather=False, show_location=False):
+def desktop_widget_layout(width, height, title, show_weather=False, show_location=False, text_scale=1.0):
     """이름을 화면 픽셀 크기로 줄 바꿈하고 조형·잔량 영역을 분리합니다."""
-    name_font = app_font(weight=QFont.Weight.DemiBold)
-    name_font.setPixelSize(16)
-    date_font = app_font(weight=QFont.Weight.DemiBold)
-    date_font.setPixelSize(14)
+    if type(text_scale) not in (int,float) or not math.isfinite(text_scale) or not .9 <= text_scale <= 1.5:
+        raise ValueError('위젯 글자 배율은 0.9~1.5 범위여야 합니다.')
+    name_font = app_font(weight=QFont.Weight.Bold)
+    name_font.setPixelSize(round(16*text_scale))
+    date_font = app_font(weight=QFont.Weight.Bold)
+    date_font.setPixelSize(round(14*text_scale))
     metrics = QFontMetricsF(name_font)
     text_width = max(1, width - 32)
     layout = QTextLayout(title, name_font)
@@ -195,26 +197,26 @@ def desktop_widget_layout(width, height, title, show_weather=False, show_locatio
         lines.append(title[line.textStart():line.textStart()+line.textLength()])
     layout.endLayout()
     line_height = math.ceil(metrics.height())
-    dock_height = 24 + line_height * max(1, len(lines)) + 8
-    usage = QRectF(8, height - 34, width - 16, 26)
-    weather = QRectF(8, usage.top() - 32, width - 16, 26) if show_weather else QRectF()
+    dock_height = 24*text_scale + line_height * max(1, len(lines)) + 8
+    usage = QRectF(8, height - 26*text_scale - 8, width - 16, 26*text_scale)
+    weather = QRectF(8, usage.top() - 26*text_scale - 6, width - 16, 26*text_scale) if show_weather else QRectF()
     info_bottom = weather.top() - 6 if show_weather else usage.top() - 6
-    location = QRectF(8, info_bottom - 26, width - 16, 26) if show_location else QRectF()
+    location = QRectF(8, info_bottom - 26*text_scale, width - 16, 26*text_scale) if show_location else QRectF()
     dock_bottom = location.top() - 6 if show_location else info_bottom
     dock = QRectF(8, dock_bottom - dock_height, width - 16, dock_height)
     art_bottom = max(0, dock.top() - 5)
     side = max(0, min(width - 20, art_bottom - 6))
     art = QRectF((width-side)/2, max(0, (art_bottom-side)/2), side, side)
     return {'art': art, 'dock': dock, 'location': location, 'weather': weather, 'usage': usage, 'lines': lines, 'name_font': name_font,
-            'date_font': date_font, 'line_height': line_height}
+            'date_font': date_font, 'line_height': line_height, 'text_scale':text_scale}
 
 
-def draw_desktop_orbit(painter, width, height, source, design, fraction, state, clock_text=None, weather_text=None, location_text=None, cache=None):
+def draw_desktop_orbit(painter, width, height, source, design, fraction, state, clock_text=None, weather_text=None, location_text=None, cache=None, text_scale=1.0):
     """위젯의 조형과 글자를 별개 영역에 그려 작은 글자 축소를 막습니다."""
     if cache is not None:
         return cache.draw(painter, width, height, source, design, fraction, state,
-                          clock_text, weather_text, location_text)
-    layout = desktop_widget_layout(width, height, t(design.title), weather_text is not None, location_text is not None)
+                          clock_text, weather_text, location_text, text_scale=text_scale)
+    layout = desktop_widget_layout(width, height, t(design.title), weather_text is not None, location_text is not None,text_scale=text_scale)
     painter.save()
     painter.setRenderHint(QPainter.RenderHint.Antialiasing)
     painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
@@ -235,15 +237,16 @@ def _draw_desktop_information(painter, layout, design, fraction, state, clock_te
         painter.setBrush(gradient)
         painter.drawRoundedRect(rect, radius, radius)
     dock, usage = layout['dock'], layout['usage']
+    scale=layout.get('text_scale',1.0)
     surface(dock, 8)
     painter.setFont(layout['date_font'])
     painter.setPen(QColor(design.accent))
-    painter.drawText(QRectF(dock.left()+8, dock.top()+3, dock.width()-16, 20),
+    painter.drawText(QRectF(dock.left()+8, dock.top()+3*scale, dock.width()-16, 20*scale),
                      Qt.AlignmentFlag.AlignCenter, f'{design.date.month}/{design.date.day}' + ('  ' + clock_text if clock_text else ''))
     painter.setFont(layout['name_font'])
     painter.setPen(gray(248))
     for index, line in enumerate(layout['lines']):
-        painter.drawText(QRectF(dock.left()+8, dock.top()+24+index*layout['line_height'],
+        painter.drawText(QRectF(dock.left()+8, dock.top()+24*scale+index*layout['line_height'],
                                dock.width()-16, layout['line_height']), Qt.AlignmentFlag.AlignCenter, line)
     if location_text is not None:
         surface(layout['location'], 6)
@@ -268,11 +271,11 @@ def _draw_desktop_information(painter, layout, design, fraction, state, clock_te
     fill_rect = QRectF(track.left(), track.top(), track.width()*fill.width()/USAGE_TRACK_RECT.width(), track.height())
     painter.drawRect(fill_rect)
     layout['track'], layout['fill'] = track, fill_rect
-    font = app_font(weight=QFont.Weight.DemiBold)
-    font.setPixelSize(14)
+    font = app_font(weight=QFont.Weight.Bold)
+    font.setPixelSize(round(14*scale))
     painter.setFont(font)
     painter.setPen(gray(248))
-    painter.drawText(QRectF(usage.left()+5, usage.top()+1, usage.width()-10, 18), Qt.AlignmentFlag.AlignCenter, label)
+    painter.drawText(QRectF(usage.left()+5, usage.top()+1, usage.width()-10, 18*scale), Qt.AlignmentFlag.AlignCenter, label)
 
 
 class DesktopOverlayCache:
@@ -283,16 +286,16 @@ class DesktopOverlayCache:
         self.image = None
 
     def draw(self, painter, width, height, source, design, fraction, state,
-             clock_text, weather_text, location_text):
+             clock_text, weather_text, location_text, text_scale=1.0):
         dpr = painter.device().devicePixelRatioF()
         title = t(design.title)
-        font_key = app_font(weight=QFont.Weight.DemiBold).key()
+        font_key = app_font(weight=QFont.Weight.Bold).key()
         key = (width, height, dpr, design.date, title, design.accent,
                fraction, state, clock_text, weather_text, location_text,
-               get_language(), font_key)
+               get_language(), font_key, text_scale)
         if self.key != key:
             layout = desktop_widget_layout(width, height, title,
-                                           weather_text is not None, location_text is not None)
+                                           weather_text is not None, location_text is not None,text_scale=text_scale)
             image = QImage(math.ceil(width*dpr), math.ceil(height*dpr),
                            QImage.Format.Format_ARGB32_Premultiplied)
             image.setDevicePixelRatio(dpr)

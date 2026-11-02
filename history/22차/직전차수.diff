@@ -1,5 +1,7 @@
---- 이전/requirements.txt
-+++ 현재/requirements.txt
+diff --git a/requirements.txt b/requirements.txt
+index 9e8718497264384c91449d4e90ad6708c67ae31a..8fff11dea37ef2fe7aa05ab01715e6132fb2123e 100644
+--- a/requirements.txt
++++ b/requirements.txt
 @@ -1,2 +1,6 @@
  PySide6-Essentials==6.12.0
  PyInstaller==6.22.3
@@ -7,21 +9,22 @@
 +glcontext==3.1.0
 +numpy==2.5.4
 +Pillow==13.0.0
---- 이전/src/app.py
-+++ 현재/src/app.py
-@@ -9,8 +9,9 @@
+diff --git a/src/app.py b/src/app.py
+index 4a6e0ec0b26991db3332cb8b44c9cd48489421ee..397bc6a7827c688c75d6339bd08f1204a1c4d8a4 100644
+--- a/src/app.py
++++ b/src/app.py
+@@ -9,8 +9,9 @@ import time
  from datetime import datetime, timezone, timedelta
  import re
  from collections import deque
--
--from PySide6.QtCore import QEvent, QObject, QLockFile, Qt, QSize, QThread, QTimer, Signal, QPropertyAnimation, QEasingCurve
 +from shiboken6 import isValid
-+
+ 
+-from PySide6.QtCore import QEvent, QObject, QLockFile, Qt, QSize, QThread, QTimer, Signal, QPropertyAnimation, QEasingCurve
 +from PySide6.QtCore import QEvent, QObject, QLockFile, Qt, QSize, QThread, QTimer, Signal, Slot, QPropertyAnimation, QEasingCurve
  from PySide6.QtGui import QIcon, QPainter, QPixmap, QColor, QImage
  from PySide6.QtWidgets import (QApplication, QDialog,
                               QFrame, QGridLayout, QHBoxLayout, QLabel,
-@@ -23,11 +24,25 @@
+@@ -23,11 +24,25 @@ from notifier import Watcher, append_log, atomic_json, stamp, POLL_INTERVAL_SECO
  from usage import UsageClient, reset_label
  from visuals import draw_orbit, status_label, usage_bar
  from atom_frames import get_atom_frames
@@ -48,7 +51,7 @@
  
  
  def asset(name):
-@@ -362,8 +377,24 @@
+@@ -362,8 +377,24 @@ class Monitor(QThread):
  
  
  class OrbitWidget(QWidget):
@@ -75,7 +78,7 @@
          self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
          self.setWindowTitle('Codex Orbit')
          self.setFixedSize(148, 148)
-@@ -386,7 +417,7 @@
+@@ -386,7 +417,7 @@ class OrbitWidget(QWidget):
          self.restore_position()
          for screen in QApplication.screens():
              screen.availableGeometryChanged.connect(self.restore_position)
@@ -84,7 +87,7 @@
  
      def restore_position(self, *_):
          screens = [(r.x(), r.y(), r.width(), r.height()) for r in
-@@ -450,8 +481,9 @@
+@@ -450,8 +481,9 @@ class OrbitWidget(QWidget):
  class Notice(QFrame):
      completed = Signal(str)
  
@@ -96,7 +99,7 @@
          self.open_details = open_details
          self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
          self.setObjectName('notice')
-@@ -488,23 +520,28 @@
+@@ -488,23 +520,28 @@ class Notice(QFrame):
          self.task_value.setWordWrap(True)
          self.task_value.setTextFormat(Qt.TextFormat.PlainText)
          layout.addWidget(self.task_value)
@@ -136,7 +139,7 @@
          layout.addLayout(values)
          # 기존 필드는 실제 보이는 이전 행과 연결하며 숨김 호환 라벨은 만들지 않습니다.
          self.before_value = self.model_previous
-@@ -522,6 +559,7 @@
+@@ -522,6 +559,7 @@ class Notice(QFrame):
          self.selection_reason.setTextFormat(Qt.TextFormat.PlainText)
          layout.addWidget(self.selection_reason)
          hint = QLabel('이 변경 자세히 보기  ›')
@@ -144,7 +147,7 @@
          hint.setStyleSheet('font-size:12px;color:#FFFFFF;')
          layout.addWidget(hint)
          self.queue_hint = QLabel('')
-@@ -547,6 +585,13 @@
+@@ -547,6 +585,13 @@ class Notice(QFrame):
          # 제목은 닫기 버튼을 뺀 실제 폭으로 측정하며 원본 이벤트는 바꾸지 않습니다.
          if rect is not None:
              self.available_rect = rect
@@ -158,7 +161,7 @@
          self.layout().activate()
          margins = self.layout().contentsMargins()
          width = self.contentsRect().width() - margins.left() - margins.right()
-@@ -610,8 +655,8 @@
+@@ -610,8 +655,8 @@ class Notice(QFrame):
          if event.get('kind') == 'activity' or before is None:
              category = event_kind(event)
          else:
@@ -169,7 +172,7 @@
              category = ('모델·추론 변경' if model_changed and effort_changed else '모델 변경' if model_changed
                          else '추론 강도 변경' if effort_changed else '설정 관측')
          if event.get('kind') == 'settings':
-@@ -624,10 +669,15 @@
+@@ -624,10 +669,15 @@ class Notice(QFrame):
          self.task_value.setToolTip(task_explanation(event, 2000))
          self.selection_reason.setText(selection_explanation(event))
          after_map = after or {}
@@ -185,7 +188,7 @@
          self.after_value.setText(('현재 설정 · ' if event.get('kind') == 'activity' else '→ 변경 후 · ') + (self.setting_label(after).replace('\n',' · ') if after is not None else '확인 불가'))
          reason = short_reason(event)
          reason = '확인되지 않음' if reason == '확인 불가' else reason
-@@ -677,8 +727,9 @@
+@@ -677,8 +727,9 @@ class DiagnosticLabel(QLabel):
  
  
  class Details(QDialog):
@@ -197,7 +200,7 @@
          self.controller = controller
          self.setWindowTitle('Codex Orbit · 로컬 모델 변경 기록')
          self.resize(1120, 780)
-@@ -703,23 +754,39 @@
+@@ -703,23 +754,39 @@ class Details(QDialog):
          self.build_history()
          usage_page = QWidget()
          usage_layout = QVBoxLayout(usage_page)
@@ -208,7 +211,7 @@
          self.tabs.insertTab(1, usage_page, symbol_icon('quota'), '사용 한도')
 +        self.tabs.currentChanged.connect(self.update_usage_motion)
          self.setStyleSheet(STYLE)
-+
+ 
 +    def update_usage_motion(self, *args):
 +        self.usage_hero.set_active(self.isVisible() and self.tabs.currentIndex() == 1)
 +
@@ -219,7 +222,7 @@
 +    def hideEvent(self, event):
 +        self.usage_hero.set_active(False)
 +        super().hideEvent(event)
- 
++
      def build_usage(self, layout):
          panel = QFrame()
 -        panel.setObjectName('eventCard')
@@ -242,7 +245,7 @@
          self.usage_refresh.setAccessibleName('계정 사용 한도 새로고침')
          self.usage_refresh.clicked.connect(lambda: self.controller.usage.manual_refresh())
          heading.addWidget(self.usage_refresh)
-@@ -727,33 +794,49 @@
+@@ -727,33 +794,49 @@ class Details(QDialog):
          self.usage_status = QLabel('잔량 조회 준비 · 30초마다 자동 갱신')
          self.usage_status.setWordWrap(True)
          self.usage_status.setTextFormat(Qt.TextFormat.PlainText)
@@ -288,20 +291,20 @@
                                    '  ·  최종 조회: ' + updated + '  ·  30초 자동 갱신')
          self.usage_refresh.setEnabled(not busy)
          rows = value.get('rows', [])
+-        texts = []
 +        self.usage_panel.setMaximumHeight(430 if len(rows) <= 1 else 16777215)
 +        self.usage_page_layout.setStretch(1, 1 if len(rows) <= 1 else 0)
-+        while self.usage_rows_layout.count() > 1:
+         while self.usage_rows_layout.count() > 1:
+-            child = self.usage_rows_layout.takeAt(1).widget()
+-            child.deleteLater()
 +            item = self.usage_rows_layout.takeAt(1)
 +            if item.widget():
 +                item.widget().deleteLater()
-         texts = []
--        while self.usage_rows_layout.count() > 1:
--            child = self.usage_rows_layout.takeAt(1).widget()
--            child.deleteLater()
++        texts = []
          for row in rows:
              remaining = row['remaining']
              label = f"{remaining:g}% 남음" if remaining is not None else '잔량 미확인'
-@@ -763,14 +846,33 @@
+@@ -763,14 +846,33 @@ class Details(QDialog):
              texts.append(text)
              bar = QProgressBar()
              bar.setRange(0, 1000000)
@@ -338,7 +341,7 @@
  
      def build_history(self):
          page = QWidget()
-@@ -807,12 +909,12 @@
+@@ -807,12 +909,12 @@ class Details(QDialog):
          self.change_heading = QLabel('변경을 기다리고 있습니다')
          self.change_heading.setStyleSheet('font-size:13px;color:#a7e7d0;padding:5px 8px;')
          self.model_transition = QLabel('')
@@ -353,7 +356,7 @@
          self.effort_previous = self.effort_transition
          self.effort_current = QLabel('—')
          self.effort_current.setStyleSheet('font-size:26px;font-weight:600;color:#edf4f5;')
-@@ -847,10 +949,12 @@
+@@ -847,10 +949,12 @@ class Details(QDialog):
          table = QGridLayout()
          table.setHorizontalSpacing(18)
          table.setVerticalSpacing(12)
@@ -366,7 +369,7 @@
                  table.addWidget(with_symbol(label, 'model' if row == 0 else 'effort'),row*3,col)
              arrow=QLabel('→');arrow.setStyleSheet('font-size:16px;color:#8ea9b6;')
              table.addWidget(previous,row*3+1,0)
-@@ -900,8 +1004,8 @@
+@@ -900,8 +1004,8 @@ class Details(QDialog):
              self.detail.setPlainText(event_description(value))
              self.chat_title.setText(str(value.get('chat_name') or '채팅 제목 확인 불가'))
              before, after = value.get('before') or {}, value.get('after') or {}
@@ -377,7 +380,7 @@
              if value.get('kind') == 'activity' or value.get('before') is None:
                  heading = event_kind(value)
              else:
-@@ -916,10 +1020,17 @@
+@@ -916,10 +1020,17 @@ class Details(QDialog):
              self.activity_message.setVisible(bool(activity_message(value)))
              self.task_value.setText(task_explanation(value))
              self.selection_reason.setText(selection_explanation(value))
@@ -395,7 +398,7 @@
              self.before_value.setText('이전 기록 없음' if value.get('before') is None
                                        else '이전  ' + model_card_label(value['before']))
              self.after_value.setText(('현재  ' if value.get('kind') == 'activity' else '→  ') + model_card_label(value.get('after')))
-@@ -989,13 +1100,15 @@
+@@ -989,13 +1100,15 @@ class QuitGuard(QObject):
          return False
  
  
@@ -414,7 +417,7 @@
          self.settings = settings
          self.monitor = None
          self.closing = False
-@@ -1011,19 +1124,24 @@
+@@ -1011,19 +1124,24 @@ class Controller:
          self.notice_overflow = 0
          self.presentation_error = None
          self.operation_log_error = None
@@ -445,7 +448,7 @@
          self.usage.changed.connect(self.update_usage)
          self.update_usage(self.usage.snapshot)
          self.quit_guard = QuitGuard(self)
-@@ -1043,12 +1161,15 @@
+@@ -1043,12 +1161,15 @@ class Controller:
      def restart_usage(self):
          self.usage.close()
          self.usage.deleteLater()
@@ -462,7 +465,7 @@
          self.window.display_usage(value)
          valid = [row for row in value.get('rows', []) if row.get('remaining') is not None]
          self.orbit.usage_fraction = min(row['remaining'] for row in valid) / 100 if valid else None
-@@ -1117,6 +1238,7 @@
+@@ -1117,6 +1238,7 @@ class Controller:
          self.monitor_health_timer.start()
          return True
  
@@ -470,7 +473,7 @@
      def check_monitor_health(self):
          if self.closing or not self.monitor_enabled or self.monitor is None:
              return
-@@ -1138,6 +1260,7 @@
+@@ -1138,6 +1260,7 @@ class Controller:
              self.window.summary.setText('감시 지연 · 20초 이상 진행 확인 없음. 작업자는 실행 중이며 강제 재시작하지 않습니다.')
          self.orbit.update()
  
@@ -478,7 +481,7 @@
      def restart_dead_monitor(self):
          if self.closing or not self.monitor_enabled or self.monitor_retries >= 3:
              return
-@@ -1146,6 +1269,7 @@
+@@ -1146,6 +1269,7 @@ class Controller:
          self.monitor_retries += 1
          self.start_monitor()
  
@@ -486,7 +489,7 @@
      def receive(self, event):
          if self.closing:
              return
-@@ -1177,9 +1301,9 @@
+@@ -1177,9 +1301,9 @@ class Controller:
          self.window.notice_summary.setText(text)
          for notice in self.notices.values():
              notice.queue_hint.setText(text)
@@ -497,7 +500,7 @@
      def layout_notices(self, *_):
          if self.closing or not self.notices:
              return
-@@ -1194,9 +1318,11 @@
+@@ -1194,9 +1318,11 @@ class Controller:
          # 모두 들어가지 않아도 새 카드를 기다리게 하지 않고 화면 안에서 어긋나게 겹칩니다.
          overlap = total > rect.height()
          for index, card in enumerate(cards):
@@ -511,7 +514,7 @@
                  span = max(0, rect.height() - max(c.height() for c in cards))
                  y = rect.top() + (span * index // max(1, len(cards) - 1))
              card.move(max(rect.left(), min(x, rect.right() + 1 - card.width())),
-@@ -1224,7 +1350,7 @@
+@@ -1224,7 +1350,7 @@ class Controller:
          self.update_notice_count()
  
      def display_notice(self, event, replay=False):
@@ -520,7 +523,7 @@
          self.notices[event.get('id')] = self.notice
          self.notice.completed.connect(self.remove_notice)
          self.notice.display(event, self.orbit, self.settings.values.get('notice_timeout_ms', 30000), replay=replay)
-@@ -1241,6 +1367,7 @@
+@@ -1241,6 +1367,7 @@ class Controller:
              self.window.diagnostics.setPlainText(json.dumps({'state': '알림 표시 기록 실패', 'error': str(error)},
                                                              ensure_ascii=False, indent=2))
  
@@ -528,7 +531,7 @@
      def remove_notice(self, event_id):
          notice = self.notices.pop(event_id, None)
          if notice is not None:
-@@ -1257,6 +1384,7 @@
+@@ -1257,6 +1384,7 @@ class Controller:
                  return True
          return False
  
@@ -536,7 +539,7 @@
      def refresh_history(self, events):
          if self.closing:
              return
-@@ -1267,6 +1395,7 @@
+@@ -1267,6 +1395,7 @@ class Controller:
                  notice.update_event(event)
          self.layout_notices()
  
@@ -544,7 +547,7 @@
      def status(self, value):
          if self.closing:
              return
-@@ -1320,6 +1449,7 @@
+@@ -1320,6 +1449,7 @@ class Controller:
                  return
          self.finish_quit()
  
@@ -552,7 +555,7 @@
      def finish_quit(self):
          if not self.quit_requested or (self.monitor is not None and self.monitor.isRunning()):
              return
-@@ -1337,6 +1467,7 @@
+@@ -1337,6 +1467,7 @@ class Controller:
          self.monitor_health_timer.stop()
          self.monitor_retry_timer.stop()
          self.usage.close()
@@ -560,7 +563,7 @@
          self.stop_monitor()
          for notice in list(self.notices.values()):
              notice.close()
-@@ -1345,6 +1476,62 @@
+@@ -1345,6 +1476,62 @@ class Controller:
          self.window.close()
          QApplication.instance().removeEventFilter(self.quit_guard)
          self.quit_guard.deleteLater()
@@ -623,7 +626,7 @@
  
  
  def main():
-@@ -1387,7 +1574,7 @@
+@@ -1387,7 +1574,7 @@ def main():
          stage = 'visual-assets-preflight'
          log_error = operation_record(args.data_dir, stage, effective_sessions, lock_acquired=True) or log_error
          get_atom_frames()
@@ -632,7 +635,7 @@
          validate_symbols()
          stage = 'controller-prepare'
          log_error = operation_record(args.data_dir, stage, effective_sessions, lock_acquired=True) or log_error
-@@ -1402,17 +1589,19 @@
+@@ -1402,17 +1589,19 @@ def main():
          return 1
      controller.operation_log_error = operation_record(args.data_dir, 'controller-ready', effective_sessions) or log_error or controller.operation_log_error
      app.aboutToQuit.connect(controller.close)
@@ -655,7 +658,7 @@
              if not ok and not timed_out:
                  return
              usage_finished = True
-@@ -1423,27 +1612,50 @@
+@@ -1423,27 +1612,50 @@ def main():
                        'bar_fill_width': usage_bar(controller.orbit.usage_badge,controller.orbit.usage_fraction,controller.orbit.usage_state)[0].width(),
                        'display_text': controller.window.usage_values.text(),
                        'display_status': controller.window.usage_status.text(),
@@ -712,7 +715,7 @@
                        'translucent': controller.orbit.testAttribute(Qt.WidgetAttribute.WA_TranslucentBackground),
                        'always_on_top': bool(controller.orbit.windowFlags() & Qt.WindowType.WindowStaysOnTopHint),
                        'font_families': families, 'time': stamp(), 'frozen': bool(getattr(sys, 'frozen', False))}
-@@ -1452,7 +1664,8 @@
+@@ -1452,7 +1664,8 @@ def main():
              if sys.stdout:
                  print(json.dumps(report, ensure_ascii=False))
              app.exit(0 if report['ok'] else 1)
@@ -722,9 +725,11 @@
      return app.exec()
  
  
---- 이전/src/brand.py
-+++ 현재/src/brand.py
-@@ -52,12 +52,16 @@
+diff --git a/src/brand.py b/src/brand.py
+index 10e4fa9fb65e3f4953ca04e7d6217a9fbe67782b..6b6eca20ad6b68a7b9942c85e4606ed1c45f2ee0 100644
+--- a/src/brand.py
++++ b/src/brand.py
+@@ -52,12 +52,16 @@ class BrandClock(QObject):
  
      def watch(self, mark):
          self.members.add(mark)
@@ -741,7 +746,7 @@
          self.prune()
  
      def prune(self, *_):
-@@ -70,7 +74,8 @@
+@@ -70,7 +74,8 @@ class BrandClock(QObject):
              self.timer.stop()
              return
          elapsed = time.monotonic() - self.origin
@@ -751,8 +756,11 @@
          pixmaps = {}
          for mark in marks:
              size = mark.width()
---- 이전/src/calendar_art.py
-+++ 현재/src/calendar_art.py
+diff --git a/b/src/calendar_art.py b/src/calendar_art.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2d6e8babd250c8c4159a0ca47214293d5610526c
+--- /dev/null
++++ b/src/calendar_art.py
 @@ -0,0 +1,51 @@
 +"""2026~2099년의 날짜별 조형 규칙입니다. 외부 데이터와 계정 정보를 사용하지 않습니다."""
 +from dataclasses import dataclass
@@ -805,8 +813,11 @@
 +    while value<=LAST_DATE:
 +        yield design_for_date(value)
 +        value+=timedelta(days=1)
---- 이전/src/calendar_motion.py
-+++ 현재/src/calendar_motion.py
+diff --git a/b/src/calendar_motion.py b/src/calendar_motion.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..20d054809a3807dd6a8e590ad837e70e9027295c
+--- /dev/null
++++ b/src/calendar_motion.py
 @@ -0,0 +1,200 @@
 +"""한 GPU 작업 스레드와 최대 네 이미지로 날짜별 모션을 공유합니다."""
 +from __future__ import annotations
@@ -1008,8 +1019,11 @@
 +
 +
 +atexit.register(close_calendar_motion)
---- 이전/src/calendar_renderer.py
-+++ 현재/src/calendar_renderer.py
+diff --git a/b/src/calendar_renderer.py b/src/calendar_renderer.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..f55c7d13b831f0cdacf1882894e81448ed04e770
+--- /dev/null
++++ b/src/calendar_renderer.py
 @@ -0,0 +1,362 @@
 +"""현재 날짜의 실제 메시를 소유 스레드의 오프스크린 GPU에서 렌더합니다."""
 +
@@ -1373,9 +1387,11 @@
 +    renderer=CalendarRenderer(size)
 +    try:return renderer.render(value,elapsed)
 +    finally:renderer.close()
---- 이전/src/theme.py
-+++ 현재/src/theme.py
-@@ -5,8 +5,9 @@
+diff --git a/src/theme.py b/src/theme.py
+index a7abf246de1e9b39caac7af1ce35a0b2fe8e3a0e..fe2f0bb33efdf4a51c24c55b8928aa840867080b 100644
+--- a/src/theme.py
++++ b/src/theme.py
+@@ -5,8 +5,9 @@ from PySide6.QtWidgets import QApplication, QFileDialog, QHeaderView, QProxyStyl
  
  
  STYLE = '''
@@ -1387,8 +1403,11 @@
  QLabel {background:transparent;border:none;}
  QFrame#eventCard {background:#1e3540;border:1px solid #344e5a;border-radius:16px;}
  QLineEdit,QPlainTextEdit,QTreeView,QComboBox {background:#203842;border:1px solid #3a5662;border-radius:10px;padding:10px;selection-background-color:#436976;selection-color:#ffffff;}
---- 이전/src/usage_frames.py
-+++ 현재/src/usage_frames.py
+diff --git a/b/src/usage_frames.py b/src/usage_frames.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..f3042092badfe8d825c2fd508f50332aecb92aa2
+--- /dev/null
++++ b/src/usage_frames.py
 @@ -0,0 +1,210 @@
 +"""검증된 대시보드 조형 프레임을 추출 없이 읽는 제한 메모리 재생기입니다."""
 +from collections import OrderedDict
@@ -1600,8 +1619,11 @@
 +    """공유 팩의 한 프레임을 반환하며 계정 조회 상태에는 관여하지 않습니다."""
 +    UsageFrames.frame_index(elapsed)
 +    return preflight_usage_frames().frame(elapsed)
---- 이전/src/usage_widgets.py
-+++ 현재/src/usage_widgets.py
+diff --git a/b/src/usage_widgets.py b/src/usage_widgets.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..d362edc9259a5f5d6618322ec10c041f70da6bbf
+--- /dev/null
++++ b/src/usage_widgets.py
 @@ -0,0 +1,39 @@
 +from PySide6.QtCore import Qt, QTimer
 +from PySide6.QtGui import QPixmap
@@ -1642,9 +1664,11 @@
 +            pixmap = QPixmap.fromImage(image)
 +            self.setPixmap(pixmap.scaled(self.size(), Qt.AspectRatioMode.KeepAspectRatio,
 +                                         Qt.TransformationMode.SmoothTransformation))
---- 이전/src/visuals.py
-+++ 현재/src/visuals.py
-@@ -114,10 +114,19 @@
+diff --git a/src/visuals.py b/src/visuals.py
+index 3e31f107160f99442704d09dd10284ddb40b5bb8..46fe32bbce517ae3b7b7d3e1d506774fdda69663 100644
+--- a/src/visuals.py
++++ b/src/visuals.py
+@@ -114,10 +114,19 @@ def _frame_for_element(element, elapsed):
  
  
  def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', healthy=False, unread=False, light=False, element=None):
@@ -1667,7 +1691,7 @@
      font = app_font(weight=QFont.Weight.DemiBold)
      painter.setFont(font)
      scale = max(1.,abs(painter.combinedTransform().m11())*painter.device().devicePixelRatioF())
-@@ -141,16 +150,23 @@
+@@ -141,16 +150,23 @@ def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', he
          text.setPen(QColor('#778b9f'))
          text.setBrush(gradient);text.drawRoundedRect(rect,radius,radius)
      surface(DOCK_RECT,8)

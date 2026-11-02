@@ -1,6 +1,8 @@
---- 이전/src/app.py
-+++ 현재/src/app.py
-@@ -11,7 +11,7 @@
+diff --git a/src/app.py b/src/app.py
+index a39e35d13f5d06e8663327e7377883ac9a9cdc5f..754089335484928205a1aaf84db5f90506be71ef 100644
+--- a/src/app.py
++++ b/src/app.py
+@@ -11,7 +11,7 @@ import re
  from collections import deque
  
  from PySide6.QtCore import QEvent, QObject, QLockFile, Qt, QSize, QThread, QTimer, Signal, QPropertyAnimation, QEasingCurve
@@ -9,7 +11,7 @@
  from PySide6.QtWidgets import (QApplication, QDialog,
                               QFrame, QGridLayout, QHBoxLayout, QLabel,
                               QListWidget, QListWidgetItem, QMenu, QMessageBox,
-@@ -21,10 +21,11 @@
+@@ -21,10 +21,11 @@ from PySide6.QtWidgets import (QApplication, QDialog,
  from core import clamp_position, read_jsonl_tail, read_text_strict, title_catalog, resolve_title
  from notifier import Watcher, append_log, atomic_json, stamp, POLL_INTERVAL_SECONDS
  from usage import UsageClient, reset_label
@@ -22,7 +24,7 @@
  
  
  def asset(name):
-@@ -394,6 +395,8 @@
+@@ -394,6 +395,8 @@ class OrbitWidget(QWidget):
          self.move(*clamp_position(value, screens, self.width()))
  
      def paintEvent(self, _):
@@ -31,7 +33,7 @@
          elapsed = self.render_time if self.render_time is not None else time.monotonic() - self.origin_time
          painter = QPainter(self)
          painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-@@ -450,7 +453,7 @@
+@@ -450,7 +453,7 @@ class Notice(QFrame):
          self.open_details = open_details
          self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
          self.setObjectName('notice')
@@ -40,7 +42,7 @@
          self.setFixedWidth(410)
          layout = QVBoxLayout(self)
          layout.setContentsMargins(18, 14, 18, 14)
-@@ -710,7 +713,7 @@
+@@ -710,7 +713,7 @@ class Details(QDialog):
          box = QVBoxLayout(panel)
          heading = QHBoxLayout()
          title = QLabel('계정 사용 한도 · 남은 비율')
@@ -49,7 +51,7 @@
          heading.addWidget(with_symbol(title, 'quota'), 1)
          self.usage_refresh = QPushButton('새로고침')
          self.usage_refresh.setIcon(symbol_icon('refresh'))
-@@ -798,30 +801,30 @@
+@@ -798,30 +801,30 @@ class Details(QDialog):
          card_layout.setContentsMargins(20, 20, 20, 20)
          card_layout.setSpacing(12)
          self.chat_title = QLabel('변경을 기다리고 있습니다')
@@ -87,7 +89,7 @@
          self.selection_reason.setStyleSheet('font-size:11px;color:#a6becb;padding:4px 0;')
          self.reason_title = QLabel('왜 맡겼나요? · 공개 설명')
          self.reason_title.setStyleSheet('color:#afc5ce;font-size:11px;padding-top:10px;')
-@@ -1357,16 +1360,13 @@
+@@ -1357,16 +1360,13 @@ def main():
      apply_theme()
      app.setWindowIcon(QIcon(str(asset('Orbit.ico'))))
      app.setQuitOnLastWindowClosed(False)
@@ -107,8 +109,10 @@
          settings = Settings(args.data_dir)
          if args.sessions:
              settings.values['sessions'] = str(args.sessions.absolute())
---- 이전/src/element_visuals.py
-+++ 현재/src/element_visuals.py
+diff --git a/src/element_visuals.py b/src/element_visuals.py
+index 2d8db8a4a58619bbc358fa775744c95def3e0ebb..6c7471e14afaf04a5cdbc693989c1c230773b2a6 100644
+--- a/src/element_visuals.py
++++ b/src/element_visuals.py
 @@ -1,19 +1,19 @@
 -"""원본3D 자산을 변경하지 않는 제한 메모리 Qt 색 합성입니다."""
 -from PySide6.QtGui import QColor, QImage, QPainter
@@ -148,8 +152,10 @@
 +        painter.end()
 +    # 색 프레임은 보관하지 않습니다. 원본24장 캐시는 기존 재생기만 소유합니다.
 +    return result
---- 이전/src/elements.py
-+++ 현재/src/elements.py
+diff --git a/src/elements.py b/src/elements.py
+index 98b9d3b6530fac8ed80add95c93270f67eb45d27..79d5e2599ba216779f6b8da69bd8a93108502be2 100644
+--- a/src/elements.py
++++ b/src/elements.py
 @@ -1,48 +1,48 @@
 -"""한국 날짜의1~31일에 대응하는 원소와 디자인 영감 팔레트입니다."""
 -from dataclasses import dataclass
@@ -247,9 +253,11 @@
 +    if value.tzinfo is None or value.utcoffset() is None:
 +        raise ValueError('원소 날짜에는 시간대가 있는 datetime이 필요합니다.')
 +    return ELEMENTS[value.astimezone(KST).day-1]
---- 이전/src/theme.py
-+++ 현재/src/theme.py
-@@ -5,7 +5,7 @@
+diff --git a/src/theme.py b/src/theme.py
+index ea34496655cb3fc2e950582c8b4ebe154cf399b5..a7abf246de1e9b39caac7af1ce35a0b2fe8e3a0e 100644
+--- a/src/theme.py
++++ b/src/theme.py
+@@ -5,7 +5,7 @@ from PySide6.QtWidgets import QApplication, QFileDialog, QHeaderView, QProxyStyl
  
  
  STYLE = '''
@@ -258,7 +266,7 @@
  QDialog {background:#142a33;}
  QLabel {background:transparent;border:none;}
  QFrame#eventCard {background:#1e3540;border:1px solid #344e5a;border-radius:16px;}
-@@ -24,7 +24,7 @@
+@@ -24,7 +24,7 @@ QPushButton:disabled {color:#8199a4;background:#203640;border-color:#344c58;}
  QPushButton#disclosure {background:#203943;border:1px solid #3a5560;text-align:left;padding:14px 12px;}
  QTabWidget::pane {border:0;border-top:1px solid #35505a;}
  QTabBar::tab {padding:16px 17px;background:transparent;color:#a8beca;border-bottom:2px solid transparent;font-size:15px;}
@@ -267,8 +275,11 @@
  QTabBar::tab:hover {color:#d5f5ee;}
  QSplitter::handle {background:transparent;width:1px;}
  QScrollArea {border:0;background:transparent;}
---- 이전/src/typography.py
-+++ 현재/src/typography.py
+diff --git a/b/src/typography.py b/src/typography.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..241a41a94507f4eabe66b4b8cdd3a8b4214df2de
+--- /dev/null
++++ b/src/typography.py
 @@ -0,0 +1,26 @@
 +"""번들 SUIT 글꼴을 앱과 투명 렌더에서 동일하게 사용합니다."""
 +from pathlib import Path
@@ -296,9 +307,11 @@
 +    if pixels is not None:font.setPixelSize(pixels)
 +    font.setStyleStrategy(font.styleStrategy() | QFont.StyleStrategy.NoSubpixelAntialias)
 +    return font
---- 이전/src/visuals.py
-+++ 현재/src/visuals.py
-@@ -6,6 +6,7 @@
+diff --git a/src/visuals.py b/src/visuals.py
+index 4fee84616c2e647d1e4cc061e4a1f8441a4d3a1c..ea06483ceb1375522fc4ffd431078c6c52004c44 100644
+--- a/src/visuals.py
++++ b/src/visuals.py
+@@ -6,6 +6,7 @@ from PySide6.QtGui import QColor, QFont, QFontMetricsF, QImage, QPainter
  from atom_frames import get_atom_frames
  from elements import daily_element
  from element_visuals import colorize_atom
@@ -306,7 +319,7 @@
  
  
  def rotate_point(point, angles):
-@@ -87,14 +88,19 @@
+@@ -87,14 +88,19 @@ def element_labels(element, badge, state, healthy, unread):
      return str(element.number), element.symbol, element.name, usage, status_label(healthy, unread)
  
  
@@ -329,7 +342,7 @@
      font.setStyleStrategy(font.styleStrategy() | QFont.StyleStrategy.NoSubpixelAntialias)
      painter.setFont(font)
      scale = max(1.,abs(painter.combinedTransform().m11())*painter.device().devicePixelRatioF())
-@@ -115,14 +121,15 @@
+@@ -115,14 +121,15 @@ def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', he
              text.drawText(rect.translated(x,y),Qt.AlignmentFlag.AlignCenter,value)
          text.setPen(color)
          text.drawText(rect,Qt.AlignmentFlag.AlignCenter,value)

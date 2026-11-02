@@ -1,4 +1,4 @@
-"""번들 SUIT 글꼴을 앱과 투명 렌더에서 동일하게 사용합니다."""
+"""번들 나눔고딕 Bold 글꼴을 앱과 투명 렌더에서 동일하게 사용합니다."""
 from pathlib import Path
 import sys
 from PySide6.QtGui import QFont,QFontDatabase
@@ -16,10 +16,14 @@ def register_fonts():
             identity=QFontDatabase.addApplicationFont(str(path))
             if identity<0 or 'SUIT' not in QFontDatabase.applicationFontFamilies(identity):
                 raise RuntimeError('필수 SUIT 글꼴 등록 실패: '+str(path))
-        _family='SUIT'
+        path=root/'NanumGothic-Bold.ttf'
+        identity=QFontDatabase.addApplicationFont(str(path))
+        families=QFontDatabase.applicationFontFamilies(identity) if identity>=0 else []
+        if not families:raise RuntimeError('필수 나눔고딕 글꼴 등록 실패: '+str(path))
+        _family=families[0]
     return _family
 
-def app_font(pixels=None,weight=QFont.Weight.Medium):
+def app_font(pixels=None,weight=QFont.Weight.Bold):
     font=QFont(register_fonts(),10,weight)
     if pixels is not None:font.setPixelSize(pixels)
     font.setStyleStrategy(font.styleStrategy() | QFont.StyleStrategy.NoSubpixelAntialias)

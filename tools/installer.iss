@@ -1,7 +1,7 @@
-[Setup]
+﻿[Setup]
 AppId=CodexOrbit.Desktop
 AppName=Codex Orbit
-AppVersion=2.11.0
+AppVersion=3.0.0
 AppPublisher=Codex Orbit
 DefaultDirName={localappdata}\Programs\CodexOrbit
 DefaultGroupName=Codex Orbit
@@ -9,7 +9,7 @@ PrivilegesRequired=lowest
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 MinVersion=10.0
-WizardStyle=modern dark includetitlebar
+WizardStyle=modern light includetitlebar
 SetupIconFile=..\assets\Orbit.ico
 WizardImageFile=..\assets\SetupBanner.bmp
 WizardSmallImageFile=..\assets\SetupSmall.bmp
@@ -28,8 +28,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "korean"; MessagesFile: "compiler:Languages\Korean.isl"
 
 [LangOptions]
-DialogFontName=SUIT
-WelcomeFontName=SUIT
+DialogFontName=NanumGothic
+WelcomeFontName=NanumGothic
 
 [CustomMessages]
 korean.DesktopShortcut=바탕화면 바로가기 만들기
@@ -48,10 +48,9 @@ Name: "desktopicon"; Description: "{cm:DesktopShortcut}"; Flags: unchecked
 
 [Files]
 Source: "..\배포\Usage.en.md"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\assets\SUIT-SemiBold.ttf"; DestDir: "{app}\assets"; Flags: ignoreversion
+Source: "..\assets\NanumGothic-Bold.ttf"; DestDir: "{app}\assets"; Flags: ignoreversion
 Source: "..\assets\SUIT-Medium.ttf"; DestDir: "{app}\assets"; Flags: ignoreversion
 Source: "..\assets\SUIT-Regular.ttf"; DestDir: "{app}\assets"; Flags: ignoreversion
-Source: "..\assets\NanumGothic-Bold.ttf"; DestDir: "{app}\assets"; Flags: ignoreversion
 Source: "..\배포\CodexOrbit.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\배포\사용법.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\배포\기본_지침.md"; DestDir: "{app}"; Flags: ignoreversion
@@ -81,8 +80,8 @@ function RemoveFontResourceExW(FileName: String; Flags: Cardinal; Reserved: Inte
 
 function InitializeSetup(): Boolean;
 begin
-  ExtractTemporaryFile('SUIT-SemiBold.ttf');
-  PrivateFontPath := ExpandConstant('{tmp}\SUIT-SemiBold.ttf');
+  ExtractTemporaryFile('NanumGothic-Bold.ttf');
+  PrivateFontPath := ExpandConstant('{tmp}\NanumGothic-Bold.ttf');
   Result := AddFontResourceExW(PrivateFontPath, $10, 0) > 0;
   if not Result then
     MsgBox(ExpandConstant('{cm:FontError}'), mbError, MB_OK);
@@ -90,7 +89,7 @@ end;
 
 procedure InitializeWizard();
 begin
-  WizardForm.Font.Name := 'SUIT';
+  WizardForm.Font.Name := 'NanumGothic';
   WizardForm.Font.Style := [fsBold];
 end;
 

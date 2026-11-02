@@ -1,6 +1,8 @@
---- 이전/src/app.py
-+++ 현재/src/app.py
-@@ -447,12 +447,12 @@
+diff --git a/src/app.py b/src/app.py
+index ee64a5769437ade82159264a5908fdb36d82558d..89514db2774f361088ee5117017a9d3eb51dec3e 100644
+--- a/src/app.py
++++ b/src/app.py
+@@ -447,12 +447,12 @@ class OrbitWidget(QWidget):
                           Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.Tool)
          self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
          self.setWindowTitle('Codex Orbit')
@@ -17,7 +19,7 @@
          self.quit_app = quit_app
          self.origin_time = brand_clock().origin
          self.render_time = None
-@@ -462,6 +462,7 @@
+@@ -462,6 +462,7 @@ class OrbitWidget(QWidget):
          self.usage_fraction = None
          self.usage_state = 'unknown'
          self.weather_text = '기온 미확인'
@@ -25,7 +27,7 @@
          self.weather_tooltip = ''
          self.usage_tooltip = ''
          self.press_global = None
-@@ -511,7 +512,7 @@
+@@ -511,7 +512,7 @@ class OrbitWidget(QWidget):
          from calendar_motion import get_calendar_frame
          design = design_for_date(current_date())
          draw_desktop_orbit(painter, self.width(), self.height(), get_calendar_frame(elapsed), design,
@@ -34,7 +36,7 @@
          painter.setPen(QColor('#B5C8D4'))
          painter.drawLine(self.width()-4, self.height()//2-12, self.width()-4, self.height()//2+12)
          painter.drawLine(self.width()//2-12, self.height()-4, self.width()//2+12, self.height()-4)
-@@ -1338,6 +1339,7 @@
+@@ -1338,6 +1339,7 @@ class Controller(QObject):
          if self.closing:
              return
          temperature = value.get("temperature")
@@ -42,8 +44,10 @@
          self.orbit.weather_text = (f"이전 {temperature:g}℃" if value.get("stale") else f"{temperature:g}℃") if temperature is not None else ("기온 조회 중" if value.get("busy") else "기온 미확인")
          checked = value.get("checked_at")
          checked_label = datetime.fromtimestamp(checked).astimezone().strftime("%Y-%m-%d %H:%M:%S") if checked is not None else "미확인"
---- 이전/src/calendar_renderer.py
-+++ 현재/src/calendar_renderer.py
+diff --git a/src/calendar_renderer.py b/src/calendar_renderer.py
+index 42ef3b0eac3611db1db4a8e77d867ed14aa6a1a1..df9cd39c685988c22f3043f7a79afdf8e717afeb 100644
+--- a/src/calendar_renderer.py
++++ b/src/calendar_renderer.py
 @@ -3,6 +3,7 @@
  from __future__ import annotations
  
@@ -52,7 +56,7 @@
  
  import hashlib
  
-@@ -318,6 +319,18 @@
+@@ -318,6 +319,18 @@ def _object_geometry(spec, color):
      return parts
  
  
@@ -71,7 +75,7 @@
  def build_geometry(design):
      """날짜별 주연과 서로 다른 두 월 모티프를 명시적 대상 사전에서 렌더합니다."""
      from calendar_catalog import OBJECTS
-@@ -342,9 +355,7 @@
+@@ -342,9 +355,7 @@ def build_geometry(design):
          for mesh,base,metal,rough in _object_geometry(spec,tint):
              result.append((_transformed(mesh,pos,scale,angle),base,metal,rough))
      silver=(.66,.74,.80)
@@ -82,7 +86,7 @@
          result.append((mesh,silver,1.,.23))
      return result
  
-@@ -357,8 +368,9 @@
+@@ -357,8 +368,9 @@ def matrices(elapsed):
      phase=math.tau*(elapsed%PERIOD)/PERIOD
      center=np.eye(4); center[:3,:3]=rotation((0,1,0),.20*math.sin(phase))@rotation((1,0,0),.10*math.sin(phase+.5)); center[1,3]=1.4*math.sin(phase)
      result=[center]
@@ -94,7 +98,7 @@
          result.append(matrix)
      return result
  
-@@ -400,7 +412,7 @@
+@@ -400,7 +412,7 @@ class CalendarRenderer:
          self._assert_thread(); transforms=matrices(elapsed); self.set_date(value)
          self.target.use(); self.target.clear(0,0,0,0,depth=1)
          for index,(_,color,metal,rough) in enumerate(self.parts):
@@ -103,9 +107,11 @@
              self.program['model'].write(transform.T.astype('f4').tobytes())
              self.program['metallic'].value=metal; self.program['base_color'].value=color; self.program['roughness'].value=rough
              self.vaos[index].render(moderngl.TRIANGLES)
---- 이전/src/visuals.py
-+++ 현재/src/visuals.py
-@@ -172,7 +172,7 @@
+diff --git a/src/visuals.py b/src/visuals.py
+index 59b10d7f151e94521a3f91548bcb05dece77b72b..691219d479fceaecf1fdaed457ab3389ef985bbd 100644
+--- a/src/visuals.py
++++ b/src/visuals.py
+@@ -172,7 +172,7 @@ def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', he
      painter.drawImage(QRectF(-74,-74,148,148),layer)
  
  
@@ -114,7 +120,7 @@
      """이름을 화면 픽셀 크기로 줄 바꿈하고 조형·잔량 영역을 분리합니다."""
      name_font = app_font(weight=QFont.Weight.DemiBold)
      name_font.setPixelSize(16)
-@@ -197,18 +197,20 @@
+@@ -197,18 +197,20 @@ def desktop_widget_layout(width, height, title, show_weather=False):
      dock_height = 24 + line_height * max(1, len(lines)) + 8
      usage = QRectF(8, height - 34, width - 16, 26)
      weather = QRectF(8, usage.top() - 32, width - 16, 26) if show_weather else QRectF()
@@ -139,7 +145,7 @@
      painter.save()
      painter.setRenderHint(QPainter.RenderHint.Antialiasing)
      painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
-@@ -232,6 +234,14 @@
+@@ -232,6 +234,14 @@ def draw_desktop_orbit(painter, width, height, source, design, fraction, state,
      for index, line in enumerate(layout['lines']):
          painter.drawText(QRectF(dock.left()+8, dock.top()+24+index*layout['line_height'],
                                 dock.width()-16, layout['line_height']), Qt.AlignmentFlag.AlignCenter, line)

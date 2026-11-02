@@ -1,6 +1,8 @@
---- 이전/src/app.py
-+++ 현재/src/app.py
-@@ -391,18 +391,48 @@
+diff --git a/src/app.py b/src/app.py
+index bbef25bb7bd39d4e741db3ed8816f0f822684522..75cbe78ede46c92de129e1ff1e1ae61dcb930cbd 100644
+--- a/src/app.py
++++ b/src/app.py
+@@ -391,18 +391,48 @@ class Notice(QFrame):
          self.dismiss()
          super().closeEvent(event)
  
@@ -44,16 +46,16 @@
 +            self.adjustSize()
  
      def display(self, event, orbit, timeout_ms=30000, replay=False):
-+        screen = QApplication.screenAt(orbit.pos()) or QApplication.primaryScreen()
-+        self.available_rect = screen.availableGeometry()
-         self.update_event(event, replay)
--        screen = QApplication.screenAt(orbit.pos()) or QApplication.primaryScreen()
+-        self.update_event(event, replay)
+         screen = QApplication.screenAt(orbit.pos()) or QApplication.primaryScreen()
 -        rect = screen.availableGeometry()
++        self.available_rect = screen.availableGeometry()
++        self.update_event(event, replay)
 +        rect = self.available_rect
          self.move(max(rect.left(), min(orbit.x() - self.width(), rect.right() - self.width() + 1)),
                    max(rect.top(), min(orbit.y(), rect.bottom() - self.height() + 1)))
          self.show()
-@@ -714,16 +744,24 @@
+@@ -714,16 +744,24 @@ class Details(QDialog):
              values.update(sessions=str(path), theme=self.theme.currentText(), popup=self.popup.isChecked(),
                            notice_timeout_ms=0 if self.hold_notice.isChecked() else 30000, codex_exe=chosen_exe)
              self.controller.settings.save()
@@ -82,7 +84,7 @@
          intro = QLabel('UTF-8 Markdown을 편집한 뒤 대상을 선택하고 미리보기를 확인하세요. 적용 버튼을 눌러야 파일이 바뀝니다.')
          intro.setWordWrap(True)
          layout.addWidget(intro)
-@@ -734,6 +772,7 @@
+@@ -734,6 +772,7 @@ class Details(QDialog):
              buttons.addWidget(button)
          layout.addLayout(buttons)
          self.editor = QPlainTextEdit()
@@ -90,7 +92,7 @@
          custom = self.controller.settings.directory / 'instructions.md'
          self.editor.setPlainText(read_text_strict(custom if custom.exists() else asset('기본_지침.md')))
          self.editor.textChanged.connect(self.invalidate_plan)
-@@ -762,6 +801,7 @@
+@@ -762,6 +801,7 @@ class Details(QDialog):
              actions.addWidget(button)
          layout.addLayout(actions)
          self.preview = QPlainTextEdit()
@@ -98,7 +100,7 @@
          self.preview.setReadOnly(True)
          self.preview.setPlaceholderText('적용 후 전체 문서가 표시됩니다. 기존 구역은 유지하며 앱 관리구역만 추가·교체합니다.')
          layout.addWidget(self.preview, 2)
-@@ -877,6 +917,7 @@
+@@ -877,6 +917,7 @@ class Controller:
          self.monitor_enabled = start_worker
          self.last_monitor_progress = time.monotonic()
          self.monitor_retries = 0
@@ -106,7 +108,7 @@
          self.notices = {}
          self.max_visible_notices = 8
          self.notice_overflow = 0
-@@ -946,6 +987,17 @@
+@@ -946,6 +987,17 @@ class Controller:
      def start_monitor(self):
          if self.closing:
              return False
@@ -124,7 +126,7 @@
          if not self.stop_monitor():
              self.orbit.healthy = False
              self.window.summary.setText('감시 지연 · 이전 작업자가 종료 중입니다. 종료 후 다시 시작하세요.')
-@@ -981,6 +1033,14 @@
+@@ -981,6 +1033,14 @@ class Controller:
          if self.closing or not self.monitor_enabled or self.monitor is None:
              return
          if not self.monitor.isRunning():
@@ -139,7 +141,7 @@
              self.orbit.healthy = False
              self.window.summary.setText('감시 중단 · ' + ('자동 재시도 대기' if self.monitor_retries < 3 else '설정에서 감시 다시 시작 필요'))
              if self.monitor_retries < 3 and not self.monitor_retry_timer.isActive():
-@@ -1022,6 +1082,8 @@
+@@ -1022,6 +1082,8 @@ class Controller:
          screen = QApplication.screenAt(self.orbit.pos()) or QApplication.primaryScreen()
          rect = screen.availableGeometry()
          cards = list(self.notices.values())
@@ -148,7 +150,7 @@
          total = sum(card.height() for card in cards) + 10 * (len(cards) - 1)
          top = max(rect.top(), min(self.orbit.y(), rect.bottom() + 1 - total))
          y = top
-@@ -1104,6 +1166,8 @@
+@@ -1104,6 +1166,8 @@ class Controller:
      def status(self, value):
          if self.closing:
              return
@@ -157,7 +159,7 @@
          self.last_monitor_progress = time.monotonic()
          if self.presentation_error or self.operation_log_error:
              value = {**value, 'notice_presentation_error': self.presentation_error,
-@@ -1139,6 +1203,7 @@
+@@ -1139,6 +1203,7 @@ class Controller:
              return
          self.quit_requested = True
          self.closing = True
@@ -165,7 +167,7 @@
          self.monitor_enabled = False
          self.monitor_health_timer.stop()
          self.monitor_retry_timer.stop()
-@@ -1167,6 +1232,7 @@
+@@ -1167,6 +1232,7 @@ class Controller:
              return
          self.cleaned = True
          self.closing = True

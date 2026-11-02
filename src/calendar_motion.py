@@ -16,6 +16,7 @@ FPS = 240
 SIZE = 384
 RENDER_SIZE = (3840, 2160)
 _logger = logging.getLogger(__name__)
+_UNCHANGED = object()
 
 
 def next_frame_deadline(previous, now):
@@ -70,12 +71,37 @@ class _Worker(QThread):
         self.output_size=SIZE; self.notification_pending=False; self.notification_count=0
         self.first_render_at=None; self.last_render_at=None; self.render_seconds=0.
         self.pacing_backend='준비 중'; self.pacing_warning=''
+        self.scene=None; self.options=None; self.scene_version=0; self.rendered_scene_version=-1; self.scene_elapsed=0.
+        self.scene_sample_at=self.started_at
 
-    def configure(self,visible=None,value=None,elapsed=None,output_size=None,motion_speed=None):
+    def _render_options(self):
+        from observatory_scene import scene_fps
+        paused=bool(self.options and self.options['paused']) or bool(self.scene and self.scene['paused'])
+        reduced=bool(self.options and self.options['reduced_motion']) or bool(self.scene and self.scene['reduced_motion'])
+        fps=scene_fps(self.scene) if self.scene is not None else FPS
+        if self.options is not None:fps=min(fps,scene_fps(self.options))
+        return paused,reduced,fps
+
+    def configure(self,visible=None,value=None,elapsed=None,output_size=None,motion_speed=None,scene=_UNCHANGED,options=_UNCHANGED):
         with self.condition:
+            previous_flags=self._render_options()
+            previous_controlled=self.scene is not None or self.options is not None
             if visible is not None:self.visible=visible
-            if output_size is not None:self.output_size=output_size
-            if motion_speed is not None:self.motion_clock.set_speed(motion_speed,time.perf_counter())
+            if output_size is not None and output_size!=self.output_size:
+                self.output_size=output_size
+                if self.scene is not None or self.options is not None:self.scene_version+=1
+            if motion_speed is not None:
+                self.motion_clock.set_speed(motion_speed,time.perf_counter())
+                if self.scene is not None:self.scene_version+=1
+            if scene is not _UNCHANGED and scene!=self.scene:
+                self.scene=scene; self.scene_version+=1
+            if options is not _UNCHANGED and options!=self.options:
+                self.options=options; self.scene_version+=1
+            controlled=self.scene is not None or self.options is not None
+            if controlled!=previous_controlled or self._render_options()[:2]!=previous_flags[:2]:
+                now=time.perf_counter()
+                if not previous_controlled:self.scene_elapsed=self.motion_clock.sample(now)
+                self.scene_sample_at=now
             if elapsed is not None:
                 self.requested_date=value; self.requested_elapsed=elapsed; self.requested_at=time.perf_counter()
             self.condition.notify_all()
@@ -93,7 +119,13 @@ class _Worker(QThread):
             while True:
                 with self.condition:
                     # 요청 수·재생 배율과 무관하게 240Hz 목표의 다음 시각까지 유휴 대기합니다.
-                    while not self.stopping and not self.visible:self.condition.wait()
+                    while not self.stopping:
+                        paused,reduced,_=self._render_options()
+                        static_done=((paused or reduced) and self.rendered_scene_version==self.scene_version
+                                     and self.latest_date==(self.requested_date or current_date()))
+                        if self.visible and not static_done:break
+                        # 정적 달력도 날짜가 바뀌면 한 프레임만 갱신하며 보이지 않으면 쉬어 둡니다.
+                        self.condition.wait(1.0 if self.visible else None)
                     if self.stopping:break
                     remaining=next_frame_at-time.perf_counter()
                 if remaining>0:
@@ -106,19 +138,28 @@ class _Worker(QThread):
                     # 각 호출자의 서로 다른 타이머 원점 대신 서비스의 한 시계를 공유합니다.
                     elapsed=self.motion_clock.sample(time.perf_counter())
                     output_size=self.output_size
+                    scene=self.scene; scene_version=self.scene_version
+                    paused,reduced,fps=self._render_options()
+                    sample_at=time.perf_counter()
+                    if scene is not None or self.options is not None:
+                        if reduced:elapsed=0.
+                        elif paused:elapsed=self.scene_elapsed
+                        else:elapsed=self.scene_elapsed+(sample_at-self.scene_sample_at)*self.motion_clock.speed
                 start=time.perf_counter()
                 if renderer is None:
                     from calendar_renderer import CalendarRenderer
                     renderer=CalendarRenderer(RENDER_SIZE); self.renderer_name=renderer.ctx.info.get('GL_RENDERER','확인 불가')
                 if hasattr(renderer,'set_output_size'):renderer.set_output_size(output_size)
-                image=renderer.render(value,elapsed)
+                image=renderer.render(value,elapsed) if scene is None else renderer.render_observatory(scene,elapsed)
                 finished=time.perf_counter()
                 with self.condition:
                     self.render_count+=1; image.setText('calendar_frame_id',str(self.render_count))
                     self.latest=image; self.latest_date=value
+                    self.rendered_scene_version=scene_version; self.scene_elapsed=elapsed; self.scene_sample_at=sample_at
                     if self.first_render_at is None:self.first_render_at=finished
                     self.last_render_at=finished; self.render_seconds+=finished-start
-                    next_frame_at=next_frame_deadline(next_frame_at if next_frame_at else start,finished)
+                    next_frame_at=(next_frame_deadline(next_frame_at if next_frame_at else start,finished)
+                                   if scene is None and fps==FPS else max((next_frame_at if next_frame_at else start)+1/fps,finished))
                     notify=not self.notification_pending and self.visible
                     if notify:self.notification_pending=True; self.notification_count+=1
                     self.condition.notify_all()
@@ -265,6 +306,26 @@ def set_calendar_motion_speed(value: float):
     _get_service().worker.configure(motion_speed=speed)
 
 
+def set_calendar_observatory_scene(scene):
+    """메인 스레드가 전달한 최신 독립 스냅샷 하나만 기존 GPU 작업자에 공유합니다."""
+    from observatory_scene import normalize_scene
+    _main_thread()
+    snapshot=None if scene is None else normalize_scene(scene)
+    _get_service().worker.configure(scene=snapshot)
+
+
+def set_calendar_motion_options(paused=False,reduced_motion=False,quality='balanced'):
+    """달력과 관측소에 공통 자원 옵션을 적용하며 paused=None은 기존 기본값을 복원합니다."""
+    _main_thread()
+    if paused is None:
+        options=None
+    else:
+        from observatory_scene import normalize_scene
+        value=normalize_scene({'paused':paused,'reduced_motion':reduced_motion,'quality':quality})
+        options={key:value[key] for key in ('paused','reduced_motion','quality')}
+    _get_service().worker.configure(options=options)
+
+
 def set_calendar_motion_size(owner,size):
     """현재 보이는 각 소유자의 실제 픽셀 요구 중 최대 크기만 전달합니다."""
     if type(size) is not int or not 32<=size<=2160:raise ValueError('전달 크기는32~2160 정수여야 합니다.')
@@ -292,11 +353,17 @@ def get_calendar_error():
 def calendar_motion_status():
     if _service is None:return {'running':False,'owners':0,'images':0,'motion_speed':1.0,'error':get_calendar_error()}
     with _service.worker.condition:
+        scene=_service.worker.scene
+        paused,reduced,fps=_service.worker._render_options()
         return {'running':_service.worker.isRunning(),'owners':len(_service.owners),
                 'images':int(_service.worker.latest is not None)+int(_service.fallback is not None),
                 'render_count':_service.worker.render_count,'date':str(_service.worker.latest_date),
                 'motion_speed':_service.worker.motion_clock.speed,
-                'target_fps':FPS,'source_dimensions':list(RENDER_SIZE),
+                'target_fps':fps,'source_dimensions':list(RENDER_SIZE),
+                'paused':paused,'reduced_motion':reduced,
+                'mode':'calendar' if scene is None else 'observatory',
+                'scene_elapsed':_service.worker.scene_elapsed,'scene_version':_service.worker.scene_version,
+                'rendered_scene_version':_service.worker.rendered_scene_version,
                 'delivery_dimensions':list(_service.worker.latest.size().toTuple()) if _service.worker.latest is not None else None,
                 'requested_delivery_size':_service.worker.output_size,
                 'notification_count':_service.worker.notification_count,'dispatch_count':_service.dispatch_count,

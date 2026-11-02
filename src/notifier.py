@@ -13,7 +13,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 from core import read_jsonl_tail
-from activity import ActivityTracker, safe_public_text
+from activity import ActivityTracker, safe_public_text, explicit_lifecycle
 
 ROOT = Path(__file__).resolve().parents[1]
 APP_ID = 'Yunseok.Codex.ModelChangeNotifier'
@@ -140,6 +140,17 @@ class Watcher:
         self.reason_budget = POLL_READ_BYTES
         self.diagnostic_failures = []
         self.activity = ActivityTracker(self.state)
+        self.lifecycle_queue = []
+        self.state.setdefault('lifecycle_seen', [])
+        if (not isinstance(self.state['lifecycle_seen'], list)
+                or any(not isinstance(value, str) for value in self.state['lifecycle_seen'])):
+            raise ValueError('생명주기 관측 상태 오류입니다. 원본을 초기화하지 않습니다.')
+        self.lifecycle_seen = set(self.state['lifecycle_seen'])
+
+    def drain_lifecycle(self):
+        """기존 sender 알림과 별도로 모은 명시 상태를 한 번만 소비합니다."""
+        rows, self.lifecycle_queue = self.lifecycle_queue, []
+        return rows
 
     def diagnostic(self, error, **details):
         value = {'time': stamp(), 'error': str(error)[:2000], **details}
@@ -287,6 +298,16 @@ class Watcher:
         sid = info.get('sid')
         if not sid:
             return
+        if not baseline and not activity_only:
+            lifecycle = explicit_lifecycle(record, info)
+            if lifecycle is not None and lifecycle['id'] not in self.lifecycle_seen:
+                lifecycle['time'] = stamp()
+                self.lifecycle_queue.append(lifecycle)
+                del self.lifecycle_queue[:-512]
+                seen = self.state['lifecycle_seen']
+                seen.append(lifecycle['id'])
+                del seen[:-512]
+                self.lifecycle_seen = set(seen)
         if kind == 'response_item' and info.get('owner_active'):
             self.activity.response(payload, info)
             if not activity_only:
@@ -695,7 +716,9 @@ class NativeToast:
         visual = ET.SubElement(toast, 'visual')
         binding = ET.SubElement(visual, 'binding', {'template': 'ToastGeneric'})
         before, after = event.get('before'), event.get('after') or {}
-        title = limited(str(event.get('chat_name') or t('채팅 제목 확인 불가')), 64)
+        from orbit_features import clean_chat_title
+        title = limited(clean_chat_title(event.get('chat_name') or event.get('title'))
+                        or t('채팅 제목 확인 불가'), 64)
         # Shell 본문 한도 안에서 네 값의 이름을 구분하고 원문 ID는 명시적으로만 줄입니다.
         fields = [limited(t('이전 모델') + ': ' + notice_previous_model(before), 52),
                   limited(t('이전 추론 강도') + ': 🧠 ' + previous_field(before, 'effort'), 52),

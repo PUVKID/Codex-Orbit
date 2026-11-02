@@ -9,7 +9,7 @@
 - **기능 코드:** [src/activity.py:53](src/activity.py#L53) `ActivityTracker` 정의 추가; [src/activity.py:54](src/activity.py#L54) `__init__` 정의 추가; [src/activity.py:43](src/activity.py#L43) `_failed` 정의 추가; [src/activity.py:33](src/activity.py#L33) `_instant` 정의 추가; [src/activity.py:267](src/activity.py#L267) `_matches` 정의 추가; [src/activity.py:28](src/activity.py#L28) `_text` 정의 추가; [src/activity.py:48](src/activity.py#L48) `_trim` 정의 추가; [src/activity.py:181](src/activity.py#L181) `complete` 정의 추가; [src/activity.py:76](src/activity.py#L76) `configuration` 정의 추가; [src/activity.py:91](src/activity.py#L91) `configuration_pair` 정의 추가; [src/activity.py:160](src/activity.py#L160) `defer` 정의 추가; [src/activity.py:294](src/activity.py#L294) `enrich` 정의 추가 외 53건은 전체 차이 참조.
 - **설정:** `src/activity.py:9`의 숫자·불리언 상수 `MAX_ACTIVITY_CALLS = 32` (추가 또는 현재 값); `src/activity.py:7`의 숫자·불리언 상수 `MAX_ACTIVITY_EVENTS = 128` (추가 또는 현재 값); `src/activity.py:8`의 숫자·불리언 상수 `MAX_ACTIVITY_SEEN = 8192` (추가 또는 현재 값); `src/activity.py:12`의 숫자·불리언 상수 `MAX_CONFIGURATION_SNAPSHOTS = 256` (추가 또는 현재 값); `src/activity.py:11`의 숫자·불리언 상수 `MAX_DEFERRED_ACTIVITIES = 32` (추가 또는 현재 값); `src/activity.py:10`의 숫자·불리언 상수 `MAX_PUBLIC_CALLS = 128` (추가 또는 현재 값).
 - **화면 코드:** `src/app.py:823`의 `QLabel` 호출 (현재 코드); `src/app.py:706`의 `QLabel` 호출 (이전 코드); `src/app.py:826`의 `QLabel` 호출 (현재 코드); `src/app.py:822`의 `QLabel` 호출 (현재 코드 · 라벨 `공개된 작업 설명을 기다립니다.`); `src/app.py:910`의 `setText` 호출 (현재 코드); `src/app.py:792`의 `setText` 호출 (이전 코드); `src/app.py:515`의 `setText` 호출 (이전 코드); `src/app.py:626`의 `setText` 호출 (현재 코드); `src/app.py:920`의 `setText` 호출 (현재 코드); `src/app.py:922`의 `setText` 호출 (현재 코드); `src/app.py:793`의 `setText` 호출 (이전 코드); `src/app.py:620`의 `setText` 호출 (현재 코드) 외 8건은 전체 차이 참조.
-- **문서:** 이 공개 이력에는 비교할 문서를 보존하지 않아 문서 변경은 확인할 수 없습니다.
+- **문서:** 이번 보완에서 당시 문서·도구·자산의 원문 또는 정제본을 별도 [보존 목록](보존자료.md)에 연결했습니다. 파일별 원본 해시와 정제 사유를 구분하며 실제 실행 결과를 새로 추정하지 않습니다.
 - **검증:** 당시 실행 결과는 이 공개 이력에 보존되지 않아 실행 여부를 확인할 수 없습니다. 여기서는 공개 소스 바이트만 비교했습니다.
 
 아래 요약은 대표 코드 위치이며 전체 변경은 비교 파일에서 확인할 수 있습니다.
@@ -34,3 +34,12 @@
   - Python 정의 이름: 추가 `element_labels`, `label`; 삭제 없음. 이름의 변화는 기능 효과를 보장하지 않습니다.
 
 동일 이름 정의 내부의 변경, 설정값, 주석과 공백은 전체 차이에서 확인할 수 있습니다. 실행이나 성능 검증 결과는 이 비교에서 추론하지 않습니다.
+
+
+## 역사 자료 추가 보존
+
+당시의 [문서·제작 도구·자산·시안 목록](보존자료.md)과 [원본/공개 해시·정제·제외 대응](부가자료_보존.json)을 제공합니다. 같은 SHA의 파일은 공통 보관 파일을 참조하며 실제 원본 경로와 버전을 보존합니다. 운영 기억·실제 계정/채팅 원문·비공개 검증은 제외하고 이유를 명시합니다. 보존 문서는 당시 내용이며 현재 안내는 저장소 첫 화면을 사용하십시오.
+
+[실행 소스 전체 Git 비교](직전차수.diff)와 [실제 바이트 명세](공개파일_비교.json)는 Python뿐 아니라 존재하는 보조 PowerShell과 의존성 목록을 포함합니다. `git -c core.autocrlf=false apply --reverse --binary -p1`로 현재 소스 사본에서 직전 소스의 파일 부재·신규·삭제 상태까지 복원해 원문 바이트를 대조했습니다. 부가 자료는 이 소스 비교에 섞지 않고 위 명세로 구분합니다.
+
+이번에 실제 전체 비교로 확인한 변경 파일: `src/activity.py`, `src/app.py`, `src/brand.py`, `src/core.py`, `src/element_visuals.py`, `src/elements.py`, `src/notifier.py`, `src/theme.py`, `src/visuals.py`.

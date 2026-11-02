@@ -1,6 +1,8 @@
---- 이전/src/app.py
-+++ 현재/src/app.py
-@@ -6,6 +6,7 @@
+diff --git a/src/app.py b/src/app.py
+index 397bc6a7827c688c75d6339bd08f1204a1c4d8a4..ee64a5769437ade82159264a5908fdb36d82558d 100644
+--- a/src/app.py
++++ b/src/app.py
+@@ -6,6 +6,7 @@ import os
  from pathlib import Path
  import sys
  import time
@@ -8,7 +10,7 @@
  from datetime import datetime, timezone, timedelta
  import re
  from collections import deque
-@@ -20,9 +21,10 @@
+@@ -20,9 +21,10 @@ from PySide6.QtWidgets import (QApplication, QDialog,
                               QProgressBar, QScrollArea, QSizePolicy, QLayout, QVBoxLayout, QWidget)
  
  from core import clamp_position, read_jsonl_tail, read_text_strict, title_catalog, resolve_title
@@ -21,7 +23,7 @@
  from atom_frames import get_atom_frames
  from calendar_art import design_for_date, current_date
  from brand import brand_image, AnimatedBrand, brand_clock, symbol_icon, with_symbol, validate_symbols
-@@ -286,8 +288,43 @@
+@@ -286,8 +288,43 @@ class Settings:
          atomic_json(self.path, self.values)
  
  
@@ -66,7 +68,7 @@
      status = Signal(dict)
      enriched = Signal(list)
  
-@@ -300,17 +337,27 @@
+@@ -300,17 +337,27 @@ class Monitor(QThread):
          self.cache_path = Path(directory) / 'title-cache.json'
          self.titles = {}
          self.recent_errors = deque(maxlen=5)
@@ -95,7 +97,7 @@
              while not self.isInterruptionRequested():
                  try:
                      watcher.diagnostic_failures.clear()
-@@ -324,7 +371,10 @@
+@@ -324,7 +371,10 @@ class Monitor(QThread):
                          if event.get('reason') == '확인 불가':
                              watcher.lookup_parent_reason(event)
                          values.append(resolve_title(watcher.enrich_event(event), self.titles))
@@ -107,7 +109,7 @@
                      atomic_json(watcher.state_path, watcher.state)
                      diagnostics, problems = read_jsonl_tail(self.work / 'diagnostics.jsonl', max_records=5)
                      remaining = sum(max(0, info.get('baseline_end', 0) - info['offset'])
-@@ -397,8 +447,12 @@
+@@ -397,8 +447,12 @@ class OrbitWidget(QWidget):
                           Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.Tool)
          self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
          self.setWindowTitle('Codex Orbit')
@@ -121,7 +123,7 @@
          self.quit_app = quit_app
          self.origin_time = brand_clock().origin
          self.render_time = None
-@@ -407,10 +461,15 @@
+@@ -407,10 +461,15 @@ class OrbitWidget(QWidget):
          self.usage_badge = '—'
          self.usage_fraction = None
          self.usage_state = 'unknown'
@@ -138,7 +140,7 @@
          self.timer = QTimer(self)
          self.timer.timeout.connect(self.update)
          self.timer.start(20)
-@@ -420,12 +479,28 @@
+@@ -420,12 +479,28 @@ class OrbitWidget(QWidget):
          QApplication.instance().screenRemoved.connect(self.restore_position)
  
      def restore_position(self, *_):
@@ -171,7 +173,7 @@
  
      def paintEvent(self, _):
          base_tooltip = self.toolTip().split('\n감시 상태:')[0]
-@@ -433,24 +508,52 @@
+@@ -433,38 +508,71 @@ class OrbitWidget(QWidget):
          elapsed = self.render_time if self.render_time is not None else time.monotonic() - self.origin_time
          painter = QPainter(self)
          painter.setRenderHint(QPainter.RenderHint.Antialiasing)
@@ -229,14 +231,14 @@
  
      def mouseReleaseEvent(self, event):
          if event.button() == Qt.MouseButton.LeftButton and self.press_global is not None:
-@@ -458,13 +561,18 @@
+             self.press_global = None
              self.setCursor(Qt.CursorShape.OpenHandCursor)
              if self.dragged:
-                 self.settings.values['position'] = [self.x(), self.y()]
++                self.settings.values['position'] = [self.x(), self.y()]
 +                if any(self.resize_edges):
 +                    self.settings.values['size'] = [self.width(), self.height()]
 +                self.restore_position()
-+                self.settings.values['position'] = [self.x(), self.y()]
+                 self.settings.values['position'] = [self.x(), self.y()]
                  try:
                      self.settings.save()
                  except Exception as error:
@@ -250,7 +252,7 @@
  
      def contextMenuEvent(self, event):
          menu = self.create_menu()
-@@ -581,11 +689,49 @@
+@@ -581,11 +689,49 @@ class Notice(QFrame):
          self.dismiss()
          super().closeEvent(event)
  
@@ -300,7 +302,7 @@
          compact = available is not None and available.height() <= 400
          self.layout().setContentsMargins(*( (10, 6, 10, 6) if compact else (18, 14, 18, 14) ))
          self.layout().setSpacing(2 if compact else 5)
-@@ -624,6 +770,7 @@
+@@ -624,6 +770,7 @@ class Notice(QFrame):
              self.title.setFixedHeight(max(self.title.fontMetrics().height(), self.title.heightForWidth(title_width)))
              self.layout().activate()
              self.adjustSize()
@@ -308,7 +310,7 @@
  
      def display(self, event, orbit, timeout_ms=30000, replay=False):
          screen = QApplication.screenAt(orbit.pos()) or QApplication.primaryScreen()
-@@ -1042,11 +1189,28 @@
+@@ -1042,11 +1189,28 @@ class Details(QDialog):
          self.detail.setVisible(checked)
          self.evidence_toggle.setText('▾ 원문 · ID · 근거 접기' if checked else '▸ 원문 · ID · 근거 펼치기')
  
@@ -339,7 +341,7 @@
                  item.setData(Qt.ItemDataRole.UserRole, event)
                  item.setText(history_label(event))
                  item.setIcon(event_icon(event))
-@@ -1101,7 +1265,7 @@
+@@ -1101,7 +1265,7 @@ class QuitGuard(QObject):
  
  
  class Controller(QObject):
@@ -348,7 +350,7 @@
          # 필수 이미지와 오늘의 조형을 창과 타이머 생성 전에 검사합니다.
          get_atom_frames()
          design_for_date(current_date())
-@@ -1120,14 +1284,20 @@
+@@ -1120,14 +1284,20 @@ class Controller(QObject):
          self.monitor_retries = 0
          self.monitor_restart_pending = False
          self.notices = {}
@@ -369,7 +371,7 @@
          self.monitor_retry_timer = QTimer(self.gui_owner)
          self.monitor_retry_timer.setSingleShot(True)
          self.monitor_retry_timer.timeout.connect(self.restart_dead_monitor)
-@@ -1144,6 +1314,9 @@
+@@ -1144,6 +1314,9 @@ class Controller(QObject):
          self.usage = UsageClient(settings.values.get('codex_exe', ''), self.gui_owner)
          self.usage.changed.connect(self.update_usage)
          self.update_usage(self.usage.snapshot)
@@ -379,7 +381,7 @@
          self.quit_guard = QuitGuard(self)
          QApplication.instance().installEventFilter(self.quit_guard)
          if start_worker:
-@@ -1157,6 +1330,25 @@
+@@ -1157,6 +1330,25 @@ class Controller(QObject):
          self.orbit.show()
          if (start_worker if start_usage is None else start_usage):
              self.usage.start()
@@ -405,7 +407,7 @@
  
      def restart_usage(self):
          self.usage.close()
-@@ -1180,8 +1372,9 @@
+@@ -1180,8 +1372,9 @@ class Controller(QObject):
              self.orbit.usage_badge = f"{min(row['remaining'] for row in valid):g}%"
          else:
              self.orbit.usage_badge = '—'
@@ -417,7 +419,7 @@
          self.orbit.update()
  
      def stop_monitor(self):
-@@ -1218,7 +1411,9 @@
+@@ -1218,7 +1411,9 @@ class Controller(QObject):
          self.operation_log_error = operation_record(self.settings.directory, 'monitor-preparation', self.settings.values['sessions'])
          try:
              self.monitor = Monitor(self.settings.values['sessions'], self.settings.directory)
@@ -428,11 +430,10 @@
              self.monitor.status.connect(self.status)
              self.monitor.enriched.connect(self.refresh_history)
              self.monitor.finished.connect(self.check_monitor_health)
-@@ -1268,6 +1463,37 @@
-             return
+@@ -1269,6 +1464,37 @@ class Controller(QObject):
          self.monitor_retries += 1
          self.start_monitor()
-+
+ 
 +    @Slot(dict)
 +    def queue_receive(self, event):
 +        if not self.closing:
@@ -463,10 +464,11 @@
 +        self.notice_delivery_timer.stop()
 +        self.notice_queue.clear()
 +        self.notice_delivery.close()
- 
++
      @Slot(dict)
      def receive(self, event):
-@@ -1344,7 +1570,12 @@
+         if self.closing:
+@@ -1344,7 +1570,12 @@ class Controller(QObject):
              return
          if len(self.notices) >= self.max_visible_notices:
              oldest = next(iter(self.notices.values()))
@@ -480,7 +482,7 @@
              self.notice_overflow += 1
          self.display_notice(event, replay=replay)
          self.update_notice_count()
-@@ -1372,7 +1603,8 @@
+@@ -1372,7 +1603,8 @@ class Controller(QObject):
          notice = self.notices.pop(event_id, None)
          if notice is not None:
              notice.deleteLater()
@@ -490,7 +492,7 @@
  
      def replay_event(self, event_id):
          for index in range(self.window.history.count()):
-@@ -1388,12 +1620,16 @@
+@@ -1388,12 +1620,16 @@ class Controller(QObject):
      def refresh_history(self, events):
          if self.closing:
              return
@@ -510,7 +512,7 @@
  
      @Slot(dict)
      def status(self, value):
-@@ -1432,11 +1668,13 @@
+@@ -1432,11 +1668,13 @@ class Controller(QObject):
              return
          self.quit_requested = True
          self.closing = True
@@ -524,7 +526,7 @@
          for notice in list(self.notices.values()):
              notice.dismiss()
          self.orbit.healthy = False
-@@ -1462,11 +1700,13 @@
+@@ -1462,11 +1700,13 @@ class Controller(QObject):
              return
          self.cleaned = True
          self.closing = True
@@ -538,7 +540,7 @@
          worker = self.monitor
          self.stop_monitor()
          for notice in list(self.notices.values()):
-@@ -1576,9 +1816,16 @@
+@@ -1576,9 +1816,16 @@ def main():
          get_atom_frames()
          design_for_date(current_date())
          validate_symbols()
@@ -556,8 +558,10 @@
      except Exception as error:
          log_error = operation_record(args.data_dir, stage + '-failed', effective_sessions, error) or log_error
          message = str(error) + ('\n시작 운영 기록 실패: ' + log_error if log_error else '')
---- 이전/src/calendar_art.py
-+++ 현재/src/calendar_art.py
+diff --git a/src/calendar_art.py b/src/calendar_art.py
+index 2d6e8babd250c8c4159a0ca47214293d5610526c..dee858a0d432508b3ae9056acd10affd6e5aa3f6 100644
+--- a/src/calendar_art.py
++++ b/src/calendar_art.py
 @@ -2,14 +2,15 @@
  from dataclasses import dataclass
  from datetime import date, datetime, timedelta, timezone
@@ -578,7 +582,7 @@
  
  
  @dataclass(frozen=True)
-@@ -22,6 +23,11 @@
+@@ -22,6 +23,11 @@ class Design:
      seed: int
      variant: int
      year_variant: float
@@ -590,7 +594,7 @@
  
  
  def current_date():
-@@ -29,6 +35,46 @@
+@@ -29,6 +35,46 @@ def current_date():
      return datetime.now(KST).date()
  
  
@@ -637,7 +641,7 @@
  def design_for_date(value):
      """유효한 날짜만 허용하며 지원 범위 밖을 다른 날짜로 몰래 대체하지 않습니다."""
      if type(value) is not date:
-@@ -36,11 +82,14 @@
+@@ -36,11 +82,14 @@ def design_for_date(value):
      if not FIRST_DATE <= value <= LAST_DATE:
          raise ValueError('날짜별 조형 지원 범위는 2026-01-01부터 2099-12-31까지입니다.')
      key=value.isoformat()
@@ -657,8 +661,11 @@
  
  
  def all_designs():
---- 이전/src/calendar_catalog.py
-+++ 현재/src/calendar_catalog.py
+diff --git a/b/src/calendar_catalog.py b/src/calendar_catalog.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..412838644aefdd5c4fc77fdd3aff2bf0d41a5d39
+--- /dev/null
++++ b/src/calendar_catalog.py
 @@ -0,0 +1,233 @@
 +"""실제 대상 이름과 조형 특징을 연결하는 편집 사전입니다.
 +
@@ -893,9 +900,11 @@
 +
 +def all_collections():
 +    return tuple(collection_for_month(year,month) for year in range(2026,2100) for month in range(1,13))
---- 이전/src/calendar_motion.py
-+++ 현재/src/calendar_motion.py
-@@ -90,8 +90,11 @@
+diff --git a/src/calendar_motion.py b/src/calendar_motion.py
+index 20d054809a3807dd6a8e590ad837e70e9027295c..37fb9854ea720750e872da607ee15eca152dcdff 100644
+--- a/src/calendar_motion.py
++++ b/src/calendar_motion.py
+@@ -90,8 +90,11 @@ class _Worker(QThread):
                  with self.condition:
                      self.latest=image; self.latest_date=value; self.render_count+=1
                      next_frame_at=start+1/FPS
@@ -908,7 +917,7 @@
              _logger.exception('날짜별 3D 렌더가 중단되어 정적 월 표식을 표시합니다.')
          finally:
              if renderer is not None:
-@@ -167,6 +170,31 @@
+@@ -167,6 +170,31 @@ def get_calendar_frame(elapsed=0.0,date=None):
      return _get_service().frame(elapsed,date)
  
  
@@ -940,8 +949,10 @@
  def set_calendar_motion_visible(owner,visible):
      if type(visible) is not bool:raise TypeError('표시 상태는 bool이어야 합니다.')
      _get_service().visible(owner,visible)
---- 이전/src/calendar_renderer.py
-+++ 현재/src/calendar_renderer.py
+diff --git a/src/calendar_renderer.py b/src/calendar_renderer.py
+index f55c7d13b831f0cdacf1882894e81448ed04e770..42ef3b0eac3611db1db4a8e77d867ed14aa6a1a1 100644
+--- a/src/calendar_renderer.py
++++ b/src/calendar_renderer.py
 @@ -1,362 +1,429 @@
 -"""현재 날짜의 실제 메시를 소유 스레드의 오프스크린 GPU에서 렌더합니다."""
 -
@@ -1734,8 +1745,10 @@
 +    renderer=CalendarRenderer(size)
 +    try:return renderer.render(value,elapsed)
 +    finally:renderer.close()
---- 이전/src/visuals.py
-+++ 현재/src/visuals.py
+diff --git a/src/visuals.py b/src/visuals.py
+index 46fe32bbce517ae3b7b7d3e1d506774fdda69663..59b10d7f151e94521a3f91548bcb05dece77b72b 100644
+--- a/src/visuals.py
++++ b/src/visuals.py
 @@ -2,7 +2,7 @@
  import math
  
@@ -1745,7 +1758,7 @@
  from atom_frames import get_atom_frames
  from elements import daily_element
  from typography import app_font
-@@ -170,3 +170,87 @@
+@@ -170,3 +170,87 @@ def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', he
      label(QRectF(5,56,60,16),usage,10)
      text.end()
      painter.drawImage(QRectF(-74,-74,148,148),layer)
@@ -1833,8 +1846,11 @@
 +    painter.drawText(QRectF(usage.left()+5, usage.top()+1, usage.width()-10, 18), Qt.AlignmentFlag.AlignCenter, label)
 +    painter.restore()
 +    return layout
---- 이전/src/weather.py
-+++ 현재/src/weather.py
+diff --git a/b/src/weather.py b/src/weather.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..38f904f3196c95141fbfe649a684555edc6646af
+--- /dev/null
++++ b/src/weather.py
 @@ -0,0 +1,159 @@
 +"""네트워크로 대략적인 지역과 현재 기온을 비동기 조회합니다."""
 +import json

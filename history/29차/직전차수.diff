@@ -1,0 +1,3006 @@
+diff --git a/src/activity.py b/src/activity.py
+index 4dd591583529e02da11b9bada82b48f59f35c49d..e5ad3e5aa5e2b68fddd455ad4ade4d04fbab25bd 100644
+--- a/src/activity.py
++++ b/src/activity.py
+@@ -12,6 +12,35 @@ MAX_DEFERRED_ACTIVITIES = 32
+ MAX_CONFIGURATION_SNAPSHOTS = 256
+ 
+ 
++def explicit_lifecycle(record, info):
++    """소유자가 확인된 명시 이벤트의 상태만 반환하며 메시지 본문은 복제하지 않습니다."""
++    payload = record.get('payload')
++    sid = _text(info.get('sid'))
++    if (not sid or not info.get('owner_active') or not isinstance(payload, dict)
++            or payload.get('thread_id') not in (None, sid)):
++        return None
++    event_type = payload.get('type')
++    states = {'task_started': 'running', 'task_complete': 'completed',
++              'turn_aborted': 'aborted', 'error': 'error', 'request_user_input': 'waiting'}
++    status = states.get(event_type) if record.get('type') == 'event_msg' else None
++    if (record.get('type') == 'response_item' and event_type == 'function_call'
++            and payload.get('name') in ('request_user_input', 'functions.request_user_input',
++                                        'request_user_input_async', 'functions.request_user_input_async')):
++        event_type, status = 'request_user_input', 'waiting'
++    if status is None:
++        return None
++    source_time = record.get('timestamp') if _instant(record.get('timestamp')) is not None else None
++    turn_id = _text(payload.get('turn_id'), 256)
++    identity = [sid, event_type, turn_id, source_time, _text(payload.get('call_id'), 128)]
++    if not source_time and not turn_id and not identity[-1]:
++        identity.append(info.get('offset', 0))
++    digest = hashlib.sha256(json.dumps(identity, ensure_ascii=False).encode('utf-8')).hexdigest()
++    return {'id': 'lifecycle-' + digest, 'kind': 'lifecycle', 'target': sid,
++            'status': status, 'source_time': source_time, 'turn_id': turn_id,
++            'role': _text(info.get('role'), 64), 'parent': _text(info.get('parent')),
++            'agent_path': _text(info.get('agent_path')), 'evidence': '명시 ' + event_type + ' 기록'}
++
++
+ def safe_public_text(value, limit=12000):
+     """보호문·비공개 표식·긴 인코딩 덩어리는 해석하거나 노출하지 않습니다."""
+     if not isinstance(value, str) or not value.strip():
+diff --git a/src/app.py b/src/app.py
+index ae0289f2b9099b327c6338f518888cea5adb1b36..4fe10d085dcf95ce9ad3a7daa487dc310fff36c1 100644
+--- a/src/app.py
++++ b/src/app.py
+@@ -175,13 +175,13 @@ def selection_explanation(event):
+ 
+ def event_accent(event):
+     if event.get('kind') == 'activity':
+-        return '#a0e6cc' if event.get('activity_type') == 'assigned' else '#f2b18e'
++        return '#11764f' if event.get('activity_type') == 'assigned' else '#915024'
+     before, after = event.get('before') or {}, event.get('after') or {}
+     if event.get('before') is None:
+-        return '#b2c8d4'
++        return '#496578'
+     if before.get('model') != after.get('model'):
+-        return '#cbb6ed'
+-    return '#94d9eb' if before.get('effort') != after.get('effort') else '#b2c8d4'
++        return '#70499d'
++    return '#1a6b83' if before.get('effort') != after.get('effort') else '#496578'
+ 
+ 
+ def activity_message(event):
+@@ -193,7 +193,8 @@ def activity_message(event):
+ 
+ 
+ def history_label(event):
+-    title = str(event.get('chat_name') or event.get('target') or t('채팅 제목 확인 불가'))
++    from orbit_features import clean_chat_title
++    title = clean_chat_title(str(event.get('chat_name') or t('채팅 제목 확인 불가')))
+     if event.get('kind') == 'activity':
+         return title+'\n'+event_kind(event)+'\n'+task_explanation(event, 70)
+     return title+'\n'+model_label(event.get('after'))
+@@ -308,6 +309,7 @@ class Monitor(QThread):
+     event = Signal((dict,), (object, dict))
+     status = Signal(dict)
+     enriched = Signal(list)
++    lifecycle_event = Signal(dict)
+ 
+     def __init__(self, sessions, directory):
+         super().__init__()
+@@ -346,6 +348,8 @@ class Monitor(QThread):
+                         raise FileNotFoundError('세션 폴더가 없거나 접근할 수 없습니다: ' + str(self.sessions))
+                     self.titles = title_catalog(self.sessions.parent / 'session_index.jsonl', self.cache_path)
+                     watcher.poll()
++                    for lifecycle in watcher.drain_lifecycle():
++                        self.lifecycle_event.emit(resolve_title(lifecycle, self.titles))
+                     history, _ = read_jsonl_tail(self.work / 'history.jsonl')
+                     values = []
+                     for event in history:
+@@ -490,7 +494,7 @@ class OrbitWidget(QWidget):
+     def _refresh_static_clock(self):
+         from calendar_motion import calendar_motion_status
+         status=calendar_motion_status()
+-        if status.get('error') or not status.get('render_count'):self.update()
++        self.update()  # 모션이 정지되어도 시각·기온·잔량 표시는 갱신합니다.
+ 
+     @Slot()
+     def calendar_frame_ready(self):
+@@ -500,7 +504,7 @@ class OrbitWidget(QWidget):
+         if not hasattr(self,'timer') or not self.isVisible():return
+         from calendar_motion import set_calendar_motion_size
+         design=design_for_date(current_date())
+-        layout=desktop_widget_layout(self.width(),self.height(),t(design.title),True,True)
++        layout=desktop_widget_layout(self.width(),self.height(),t(design.title),True,True,text_scale=self.settings.values.get('text_scale',100)/100)
+         size=max(32,min(2160,round(layout['art'].width()*self.devicePixelRatioF())))
+         set_calendar_motion_size(self,size)
+ 
+@@ -516,22 +520,31 @@ class OrbitWidget(QWidget):
+         self.refresh_tooltip()
+         elapsed = self.render_time if self.render_time is not None else time.monotonic() - self.origin_time
+         painter = QPainter(self)
+-        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+-        from calendar_motion import get_calendar_frame,record_calendar_presentation
+-        design = design_for_date(current_date())
+-        source=get_calendar_frame(elapsed)
+-        from visuals import DesktopOverlayCache
+-        if not hasattr(self, '_desktop_overlay_cache'):
+-            self._desktop_overlay_cache = DesktopOverlayCache()
+-        draw_desktop_orbit(painter, self.width(), self.height(), source, design,
+-                           self.usage_fraction, self.usage_state, self.clock_text(), self.weather_text, self.location_text,
+-                           cache=self._desktop_overlay_cache)
+-        record_calendar_presentation(self,source)
+-        painter.setPen(QColor('#B5C8D4'))
+-        painter.drawLine(self.width()-4, self.height()//2-12, self.width()-4, self.height()//2+12)
+-        painter.drawLine(self.width()//2-12, self.height()-4, self.width()//2+12, self.height()-4)
+-        for offset in (5, 9, 13):
+-            painter.drawLine(self.width()-offset, self.height()-3, self.width()-3, self.height()-offset)
++        try:
++            painter.setRenderHint(QPainter.RenderHint.Antialiasing)
++            from calendar_motion import get_calendar_frame,record_calendar_presentation
++            design = design_for_date(current_date())
++            if hasattr(self,'experience') and self.settings.values.get('scene_mode','observatory')=='observatory':
++                from dataclasses import replace
++                model=self.experience.scene.get('model')
++                name={'gpt-6.1-sol':'Sol','gpt-6-sol':'Sol','gpt-6-astra':'Astra','gpt-6.1-terra':'Terra','gpt-6-luna':'Luna'}.get(model,t('모델 확인 불가'))
++                design=replace(design,title=name,accent='#77c9aa')
++            source=get_calendar_frame(elapsed)
++            from visuals import DesktopOverlayCache
++            if not hasattr(self, '_desktop_overlay_cache'):
++                self._desktop_overlay_cache = DesktopOverlayCache()
++            draw_desktop_orbit(painter, self.width(), self.height(), source, design,
++                               self.usage_fraction, self.usage_state, self.clock_text(), self.weather_text, self.location_text,
++                               cache=self._desktop_overlay_cache,text_scale=self.settings.values.get('text_scale',100)/100)
++            record_calendar_presentation(self,source)
++            painter.setPen(QColor('#B5C8D4'))
++            painter.drawLine(self.width()-4, self.height()//2-12, self.width()-4, self.height()//2+12)
++            painter.drawLine(self.width()//2-12, self.height()-4, self.width()//2+12, self.height()-4)
++            for offset in (5, 9, 13):
++                painter.drawLine(self.width()-offset, self.height()-3, self.width()-3, self.height()-offset)
++        finally:
++            # 그리기 구간을 벗어나기 전에 모의 호출이 보관한 참조도 비활성화합니다.
++            painter.end()
+ 
+     def mousePressEvent(self, event):
+         if event.button() == Qt.MouseButton.LeftButton:
+@@ -548,6 +561,9 @@ class OrbitWidget(QWidget):
+     def mouseMoveEvent(self, event):
+         if self.press_global is None:
+             point = event.position()
++            if hasattr(self,'experience'):
++                self.experience.pointer=[point.x()/max(1,self.width())*2-1,point.y()/max(1,self.height())*2-1]
++                self.experience.feed_scene()
+             right = point.x() >= self.width()-14
+             bottom = point.y() >= self.height()-14
+             self.setCursor(Qt.CursorShape.SizeFDiagCursor if right and bottom else
+@@ -586,9 +602,24 @@ class OrbitWidget(QWidget):
+                     QMessageBox.warning(self, '위젯 설정 저장 실패', str(error))
+             elif not any(self.resize_edges):
+                 self.unread = False
+-                self.details()
++                if hasattr(self,'experience') and self.settings.values.get('scene_mode','observatory')=='observatory':
++                    layout=desktop_widget_layout(self.width(),self.height(),'',True,True,text_scale=self.settings.values.get('text_scale',100)/100)
++                    art=layout['art'];point=event.position()
++                    self.experience.hit((point.x()-art.x())/max(1,art.width()),(point.y()-art.y())/max(1,art.height()))
++                else:self.details()
+             self.resize_edges = (False, False)
+ 
++    def enterEvent(self, event):
++        if hasattr(self,'experience'):self.experience.expand()
++        super().enterEvent(event)
++
++    def leaveEvent(self, event):
++        if hasattr(self,'experience'):QTimer.singleShot(900, self._dock_if_outside)
++        super().leaveEvent(event)
++
++    def _dock_if_outside(self):
++        if not self.underMouse() and hasattr(self,'experience'):self.experience.dock()
++
+     def contextMenuEvent(self, event):
+         menu = self.create_menu()
+         menu.exec(event.globalPos())
+@@ -611,6 +642,8 @@ class OrbitWidget(QWidget):
+             action.setChecked(self.settings.values['motion_speed'] == value)
+             action.triggered.connect(lambda checked=False, speed=value: self.motion_speed_changed(speed))
+         menu.addSeparator()
++        if hasattr(self,'experience'):
++            menu.addMenu(self.experience.menu)
+         menu.addAction(t('종료'), self.quit_app)
+         return menu
+ 
+@@ -624,7 +657,7 @@ class Notice(QFrame):
+         self.open_details = open_details
+         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
+         self.setObjectName('notice')
+-        self.setStyleSheet('#notice {background:#203641;border:1px solid #526d78;border-radius:16px;} QLabel {color:#edf4f6;background:transparent;border:none;font-weight:500;}')
++        self.setStyleSheet('#notice {background:#f9fffc;border:1px solid #bad8ce;border-radius:16px;} QLabel {color:#193c36;background:transparent;border:none;font-weight:700;}')
+         self.setFixedWidth(410)
+         layout = QVBoxLayout(self)
+         layout.setContentsMargins(18, 14, 18, 14)
+@@ -633,7 +666,7 @@ class Notice(QFrame):
+         self.text = QLabel()
+         self.title.setTextFormat(Qt.TextFormat.PlainText)
+         self.title.setWordWrap(True)
+-        self.title.setStyleSheet('font-size:16px;color:#FFFFFF;')
++        self.title.setStyleSheet('font-size:16px;color:#193c36;')
+         self.text.setTextFormat(Qt.TextFormat.PlainText)
+         self.text.setWordWrap(True)
+         heading = QHBoxLayout()
+@@ -652,12 +685,12 @@ class Notice(QFrame):
+         heading.addWidget(close, 0, Qt.AlignmentFlag.AlignTop)
+         layout.addLayout(heading)
+         self.category = QLabel()
+-        self.category.setStyleSheet('font-size:13px;color:#9be3cc;padding:2px 0;')
++        self.category.setStyleSheet('font-size:13px;color:#355c50;padding:2px 0;')
+         self.category.setWordWrap(True)
+         self.category.setTextFormat(Qt.TextFormat.PlainText)
+         layout.addWidget(self.category)
+         self.task_value = QLabel()
+-        self.task_value.setStyleSheet('font-size:13px;color:#dce9ec;padding:0;')
++        self.task_value.setStyleSheet('font-size:13px;color:#355c50;padding:0;')
+         self.task_value.setWordWrap(True)
+         self.task_value.setTextFormat(Qt.TextFormat.PlainText)
+         self.task_value.hide()
+@@ -672,14 +705,14 @@ class Notice(QFrame):
+         self.notice_after_heading = QLabel(t('변경 후'))
+         for column, text in ((0, '⬅️ ' + t('이전')), (1, '→'), (2, '➡️ ' + t('현재'))):
+             label = self.notice_after_heading if column == 2 else QLabel(text)
+-            label.setStyleSheet('font-size:12px;color:#B5C8D4;')
++            label.setStyleSheet('font-size:12px;color:#355c50;')
+             values.addWidget(label, 0, column)
+         for row, (previous, current) in enumerate(((self.model_previous, self.model_current),
+                                                     (self.effort_previous, self.effort_current)), 1):
+             for column, label in ((0, previous), (2, current)):
+                 label.setWordWrap(True)
+                 label.setTextFormat(Qt.TextFormat.PlainText)
+-                label.setStyleSheet('font-size:18px;font-weight:600;color:#F1F6FA;padding:3px;')
++                label.setStyleSheet('font-size:18px;font-weight:700;color:#355c50;padding:3px;')
+                 values.addWidget(label, row, column)
+         values.setColumnStretch(0, 1)
+         values.setColumnStretch(2, 1)
+@@ -690,18 +723,18 @@ class Notice(QFrame):
+         self.after_value = QLabel()
+         self.after_value.setWordWrap(True)
+         self.after_value.setTextFormat(Qt.TextFormat.PlainText)
+-        self.after_value.setStyleSheet('font-size:10px;color:#9db6c2;padding:0;')
++        self.after_value.setStyleSheet('font-size:10px;color:#355c50;padding:0;')
+         self.after_value.hide()
+-        self.text.setStyleSheet('font-size:12px;color:#C9C9C9;')
++        self.text.setStyleSheet('font-size:12px;color:#355c50;')
+         layout.addWidget(self.text)
+         self.selection_reason = QLabel()
+-        self.selection_reason.setStyleSheet('font-size:10px;color:#a5bdc9;padding:0;')
++        self.selection_reason.setStyleSheet('font-size:10px;color:#355c50;padding:0;')
+         self.selection_reason.setWordWrap(True)
+         self.selection_reason.setTextFormat(Qt.TextFormat.PlainText)
+         self.selection_reason.hide()
+         hint = QLabel(t('🔎 자세히 보기'))
+         self.detail_hint = hint
+-        hint.setStyleSheet('font-size:12px;color:#FFFFFF;')
++        hint.setStyleSheet('font-size:12px;color:#193c36;')
+         layout.addWidget(hint)
+         self.queue_hint = QLabel('')
+         self.queue_hint.setWordWrap(True)
+@@ -710,8 +743,33 @@ class Notice(QFrame):
+         self.timer = QTimer(self)
+         self.timer.setSingleShot(True)
+         self.timer.timeout.connect(self.dismiss)
++        self.pinned = False
++        self.hold = QPushButton(t('📌 고정'))
++        self.hold.setCheckable(True)
++        self.hold.toggled.connect(self.set_pinned)
++        layout.addWidget(self.hold)
++        self.bookmark_callback = lambda key: None
++        self.bookmark_button = QPushButton(t('☆ 기록 보관'))
++        self.bookmark_button.clicked.connect(lambda: self.bookmark_callback(self.event_id))
++        layout.addWidget(self.bookmark_button)
+         remember_translations(self)
+ 
++    def enterEvent(self, event):
++        from observatory_panel import pause_notice
++        pause_notice(self)
++        super().enterEvent(event)
++
++    def leaveEvent(self, event):
++        from observatory_panel import resume_notice
++        resume_notice(self)
++        super().leaveEvent(event)
++
++    def set_pinned(self, value):
++        from observatory_panel import pause_notice, resume_notice
++        self.pinned = bool(value)
++        if value:pause_notice(self)
++        elif not self.underMouse():resume_notice(self)
++
+     def dismiss(self):
+         if not self.isVisible():
+             return
+@@ -733,7 +791,7 @@ class Notice(QFrame):
+         queue_height = 0
+         for label in self.findChildren(QLabel):
+             if label is self.title:
+-                content = (str(getattr(self, 'event', {}).get('chat_name') or t('채팅 제목 확인 불가')), label.text())
++                content = (str(getattr(self, 'notice_event', {}).get('chat_name') or t('채팅 제목 확인 불가')), label.text())
+             elif label is self.queue_hint:
+                 queue_height = 0 if compact else label.heightForWidth(width)
+                 content = None
+@@ -766,7 +824,8 @@ class Notice(QFrame):
+         if previous == signature:
+             return
+         available = getattr(self, 'available_rect', None)
+-        full_title = str(getattr(self, 'event', {}).get('chat_name') or t('채팅 제목 확인 불가'))
++        from observatory_panel import present_event
++        full_title = str(present_event(getattr(self, 'notice_event', {}), getattr(self, 'broadcast_mode', False)).get('chat_name') or t('채팅 제목 확인 불가'))
+         if previous is not None and previous[:-1] == signature[:-1] and self.title.text() == full_title:
+             # 안내의 줄 높이만 바뀌었으면 제목·여백을 초기화하지 않고 실제 카드 크기만 갱신합니다.
+             self.layout().activate()
+@@ -786,7 +845,8 @@ class Notice(QFrame):
+         margins = self.layout().contentsMargins()
+         width = self.contentsRect().width() - margins.left() - margins.right()
+         self.text.setMinimumHeight(self.text.heightForWidth(width))
+-        full_title = str(getattr(self, 'event', {}).get('chat_name') or t('채팅 제목 확인 불가'))
++        from observatory_panel import present_event
++        full_title = str(present_event(getattr(self, 'notice_event', {}), getattr(self, 'broadcast_mode', False)).get('chat_name') or t('채팅 제목 확인 불가'))
+         self.title.setToolTip(full_title)
+         self.title.setText(full_title)
+         self.title.setMinimumHeight(0)
+@@ -838,8 +898,10 @@ class Notice(QFrame):
+         # 제목 보강과 동일 ID 갱신은 다른 카드나 남은 표시 시간을 바꾸지 않습니다.
+         if replay is not None:
+             self.replay = replay
+-        self.event = dict(event)
++        self.notice_event = dict(event)
+         self.event_id = event.get('id')
++        from observatory_panel import present_event, style_notice
++        event = present_event(event, getattr(self, 'broadcast_mode', False))
+         name = str(event.get('chat_name') or t('채팅 제목 확인 불가'))
+         self.title.setText(name)
+         before, after = event.get('before'), event.get('after')
+@@ -869,10 +931,11 @@ class Notice(QFrame):
+         for key, labels in (('model', (self.model_previous, self.model_current)), ('effort', (self.effort_previous, self.effort_current))):
+             changed = event.get('kind') != 'activity' and before is not None and before.get(key) and after_map.get(key) and before.get(key) != after_map.get(key)
+             for label in labels:
+-                label.setStyleSheet('font-size:18px;font-weight:600;color:#F1F6FA;padding:3px;' + ('background:#385064;border-radius:6px;' if changed else ''))
++                label.setStyleSheet('font-size:18px;font-weight:700;color:#355c50;padding:3px;' + ('background:#d4f3e7;border-radius:6px;' if changed else ''))
+         self.after_value.setText((t('현재 설정 · ') if event.get('kind') == 'activity' else t('→ 변경 후 · ')) + (self.setting_label(after).replace('\n',' · ') if after is not None else t('확인 불가')))
+         self.text.setText(t('💬 이유: ') + notice_reason(event))
+         self.text.setToolTip(notice_reason_original(event))
++        style_notice(self)
+         self.fit_content()
+ 
+     @staticmethod
+@@ -898,7 +961,7 @@ class DiagnosticLabel(QLabel):
+         self.setWordWrap(True)
+         self.setTextFormat(Qt.TextFormat.PlainText)
+         self.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+-        self.setStyleSheet('font-size:12px;color:#dddddd;border-left:2px solid #aaaaaa;padding:10px;')
++        self.setStyleSheet('font-size:12px;color:#49615b;border-left:2px solid #aaaaaa;padding:10px;')
+         self.original_text = ''
+         self.hide()
+     def setPlainText(self, text):
+@@ -932,7 +995,7 @@ class Details(QDialog):
+         header.addWidget(self.brand_mark)
+         self.setWindowIcon(QIcon(QPixmap.fromImage(brand_image(32))))
+         heading = QLabel('Codex Orbit')
+-        heading.setStyleSheet('font-size:19px;color:#f5f5f5;')
++        heading.setStyleSheet('font-size:19px;color:#183c36;')
+         header.addWidget(heading, 1)
+         self.language_combo = QComboBox()
+         self.language_combo.addItem('한국어', 'ko')
+@@ -943,7 +1006,7 @@ class Details(QDialog):
+             lambda index: self.controller.set_language(self.language_combo.itemData(index)))
+         header.addWidget(self.language_combo)
+         self.usage_compact = QLabel(t('사용 한도 미확인'))
+-        self.usage_compact.setStyleSheet('font-size:12px;color:#b0b0b0;')
++        self.usage_compact.setStyleSheet('font-size:12px;color:#55736b;')
+         header.addWidget(with_symbol(self.usage_compact, 'quota'))
+         layout.addLayout(header)
+         motion_controls = QHBoxLayout()
+@@ -972,7 +1035,7 @@ class Details(QDialog):
+         self.motion_speed_error.setTextFormat(Qt.TextFormat.PlainText)
+         self.motion_speed_error.setWordWrap(True)
+         self.motion_speed_error.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
+-        self.motion_speed_error.setStyleSheet('color:#efb0aa;font-size:12px;')
++        self.motion_speed_error.setStyleSheet('color:#355c50;font-size:12px;')
+         self.motion_speed_error.hide()
+         layout.addWidget(self.motion_speed_error)
+         self.tabs = QTabWidget()
+@@ -988,6 +1051,9 @@ class Details(QDialog):
+         self.setStyleSheet(STYLE)
+         remember_translations(self)
+ 
++    def resizeEvent(self,event):
++        super().resizeEvent(event)
++
+     def update_motion_speed(self):
+         value = self.controller.settings.values['motion_speed'] if self.controller is not None else 1.0
+         self.motion_speed_slider.blockSignals(True)
+@@ -1042,7 +1108,7 @@ class Details(QDialog):
+         box.setSpacing(12)
+         heading = QHBoxLayout()
+         title = QLabel(t('계정 사용 한도'))
+-        title.setStyleSheet('color:#F1F6FA;font-size:25px;font-weight:600;')
++        title.setStyleSheet('color:#355c50;font-size:25px;font-weight:700;')
+         heading.addWidget(with_symbol(title, 'quota'), 1)
+         self.usage_refresh = QPushButton(t('새로고침'))
+         self.usage_refresh.setIcon(symbol_icon('refresh'))
+@@ -1055,7 +1121,7 @@ class Details(QDialog):
+         self.usage_status = QLabel(t('잔량 조회 준비 · 30초마다 자동 갱신'))
+         self.usage_status.setWordWrap(True)
+         self.usage_status.setTextFormat(Qt.TextFormat.PlainText)
+-        self.usage_status.setStyleSheet('color:#B5C8D4;font-size:13px;')
++        self.usage_status.setStyleSheet('color:#355c50;font-size:13px;')
+         box.addWidget(self.usage_status)
+         content = QHBoxLayout()
+         content.setSpacing(14)
+@@ -1115,22 +1181,22 @@ class Details(QDialog):
+             bar.setAccessibleName(text)
+             bar.setEnabled(not stale and remaining is not None)
+             bar.setFixedHeight(12)
+-            bar.setStyleSheet('QProgressBar {border:0;border-radius:6px;background:#30485A;} QProgressBar::chunk {background:#8EDCCB;border-radius:6px;}')
++            bar.setStyleSheet('QProgressBar {border:0;border-radius:6px;background:#dceee4;} QProgressBar::chunk {background:#159e6c;border-radius:6px;}')
+             self.usage_rows_layout.addWidget(bar)
+             info = QLabel(str(row['bucket']) + " · " + t(row['period']))
+             info.setTextFormat(Qt.TextFormat.PlainText)
+             info.setWordWrap(True)
+-            info.setStyleSheet('color:#B5C8D4;font-size:15px;')
++            info.setStyleSheet('color:#355c50;font-size:15px;')
+             self.usage_rows_layout.addWidget(info)
+             number = QLabel(label)
+             number.setTextFormat(Qt.TextFormat.PlainText)
+             number.setWordWrap(True)
+-            number.setStyleSheet('color:#F1F6FA;font-size:42px;font-weight:600;')
++            number.setStyleSheet('color:#355c50;font-size:42px;font-weight:700;')
+             self.usage_rows_layout.addWidget(number)
+             reset = QLabel(t('초기화: ') + t(reset_label(row['resets_at'])) + (t(' · 이전 조회 값') if stale else ''))
+             reset.setTextFormat(Qt.TextFormat.PlainText)
+             reset.setWordWrap(True)
+-            reset.setStyleSheet('color:#B5C8D4;font-size:13px;padding-bottom:18px;')
++            reset.setStyleSheet('color:#355c50;font-size:13px;padding-bottom:18px;')
+             self.usage_rows_layout.addWidget(reset)
+         self.usage_rows_layout.addStretch()
+         self.usage_compact.setText((t('이전 조회 · ') if stale and checked else '') + (t("{percent:g}% 남음", percent=rows[0]['remaining']) if rows and rows[0].get('remaining') is not None else t('사용 한도 미확인')))
+@@ -1143,13 +1209,13 @@ class Details(QDialog):
+         layout.setContentsMargins(0, 12, 0, 0)
+         layout.setSpacing(8)
+         self.summary = QLabel(t('감시 준비 중'))
+-        self.summary.setStyleSheet('color:#8ea9b6;font-size:11px;')
++        self.summary.setStyleSheet('color:#55736b;font-size:11px;')
+         self.summary.setTextFormat(Qt.TextFormat.PlainText)
+         self.summary.setWordWrap(True)
+         self.summary.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
+         layout.addWidget(self.summary)
+         self.notice_summary = QLabel(t('알림 대기 0건'))
+-        self.notice_summary.setStyleSheet('color:#8ea9b6;font-size:11px;')
++        self.notice_summary.setStyleSheet('color:#55736b;font-size:11px;')
+         layout.addWidget(self.notice_summary)
+         self.notice_summary.setWordWrap(True)
+         split = QSplitter()
+@@ -1168,37 +1234,37 @@ class Details(QDialog):
+         card_layout.setContentsMargins(20, 20, 20, 20)
+         card_layout.setSpacing(12)
+         self.chat_title = QLabel(t('변경을 기다리고 있습니다'))
+-        self.chat_title.setStyleSheet('font-size:23px;font-weight:600;color:#f1f7f8;padding:2px 0 6px 0;')
++        self.chat_title.setStyleSheet('font-size:23px;font-weight:700;color:#183c36;padding:2px 0 6px 0;')
+         self.change_heading = QLabel(t('변경을 기다리고 있습니다'))
+-        self.change_heading.setStyleSheet('font-size:13px;color:#a7e7d0;padding:5px 8px;')
++        self.change_heading.setStyleSheet('font-size:13px;color:#14785d;padding:5px 8px;')
+         self.model_transition = QLabel('')
+-        self.model_transition.setStyleSheet('font-size:26px;font-weight:600;color:#edf4f5;')
++        self.model_transition.setStyleSheet('font-size:26px;font-weight:700;color:#23453f;')
+         self.model_previous = self.model_transition
+         self.model_current = QLabel('—')
+-        self.model_current.setStyleSheet('font-size:26px;font-weight:600;color:#edf4f5;')
++        self.model_current.setStyleSheet('font-size:26px;font-weight:700;color:#23453f;')
+         self.effort_transition = QLabel('')
+-        self.effort_transition.setStyleSheet('font-size:26px;font-weight:600;color:#edf4f5;')
++        self.effort_transition.setStyleSheet('font-size:26px;font-weight:700;color:#23453f;')
+         self.effort_previous = self.effort_transition
+         self.effort_current = QLabel('—')
+-        self.effort_current.setStyleSheet('font-size:26px;font-weight:600;color:#edf4f5;')
++        self.effort_current.setStyleSheet('font-size:26px;font-weight:700;color:#23453f;')
+         self.before_value = QLabel(t('변경 전  ·  —'))
+         self.after_value = QLabel(t('변경 후  ·  —'))
+-        self.after_value.setStyleSheet('font-size:12px;color:#b1c5d0;padding:0;')
+-        self.before_value.setStyleSheet('font-size:12px;color:#8ea9b6;')
++        self.after_value.setStyleSheet('font-size:12px;color:#55736b;padding:0;')
++        self.before_value.setStyleSheet('font-size:12px;color:#55736b;')
+         self.activity_message = QLabel()
+         self.activity_message.setWordWrap(True)
+-        self.activity_message.setStyleSheet('font-size:22px;font-weight:600;color:#f1f5f7;padding:6px 0;')
++        self.activity_message.setStyleSheet('font-size:22px;font-weight:700;color:#183c36;padding:6px 0;')
+         self.activity_message.hide()
+         self.task_value = QLabel(t('공개된 작업 설명을 기다립니다.'))
+         self.selection_reason = QLabel(t('모델·추론 강도 선택 이유는 공개되지 않았습니다.'))
+-        self.task_value.setStyleSheet('font-size:20px;font-weight:600;color:#e6f2f1;padding:4px 0 10px 0;')
+-        self.selection_reason.setStyleSheet('font-size:11px;color:#a6becb;padding:4px 0;')
++        self.task_value.setStyleSheet('font-size:20px;font-weight:700;color:#23453f;padding:4px 0 10px 0;')
++        self.selection_reason.setStyleSheet('font-size:11px;color:#55736b;padding:4px 0;')
+         self.reason_title = QLabel(t('왜 맡겼나요? · 공개 설명'))
+-        self.reason_title.setStyleSheet('color:#afc5ce;font-size:11px;padding-top:10px;')
++        self.reason_title.setStyleSheet('color:#355c50;font-size:11px;padding-top:10px;')
+         self.reason_value = QLabel(t('첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'))
+-        self.reason_value.setStyleSheet('font-size:15px;background:#253f4a;border:1px solid #3a5662;border-radius:12px;padding:14px;color:#e6f0f3;')
++        self.reason_value.setStyleSheet('font-size:15px;background:#edf8f2;border:1px solid #c4dfd0;border-radius:12px;padding:14px;color:#355c50;')
+         self.event_time = QLabel('')
+-        self.event_time.setStyleSheet('color:#9ab4c0;font-size:11px;padding:0;')
++        self.event_time.setStyleSheet('color:#355c50;font-size:11px;padding:0;')
+         all_labels = (self.chat_title, self.event_time, self.change_heading, self.model_previous, self.model_current,
+                       self.effort_previous, self.effort_current, self.before_value, self.after_value,
+                       self.reason_title, self.reason_value, self.task_value, self.selection_reason)
+@@ -1216,10 +1282,10 @@ class Details(QDialog):
+         for row, (kind, previous, current) in enumerate((('모델',self.model_previous,self.model_current),
+                                                        ('추론 강도',self.effort_previous,self.effort_current))):
+             for col, text in ((0,t('이전')+' '+t(kind)),(2,t('새')+' '+t(kind))):
+-                label=QLabel(text + (' 🧠' if row == 1 else ''));label.setStyleSheet('font-size:12px;color:#a4bbc7;')
++                label=QLabel(text + (' 🧠' if row == 1 else ''));label.setStyleSheet('font-size:12px;color:#355c50;')
+                 if col == 2: self.after_headings.append((label, kind))
+                 table.addWidget(with_symbol(label, 'model' if row == 0 else 'effort'),row*3,col)
+-            arrow=QLabel('→');arrow.setStyleSheet('font-size:16px;color:#8ea9b6;')
++            arrow=QLabel('→');arrow.setStyleSheet('font-size:16px;color:#55736b;')
+             table.addWidget(previous,row*3+1,0)
+             table.addWidget(arrow,row*3+1,1)
+             table.addWidget(current,row*3+1,2)
+@@ -1265,6 +1331,8 @@ class Details(QDialog):
+     def select_event(self, current, _previous):
+         if current:
+             value = current.data(Qt.ItemDataRole.UserRole)
++            from observatory_panel import present_event
++            value = present_event(value, bool(self.controller and self.controller.settings.values.get('broadcast_mode',False)))
+             self.detail.setPlainText(event_description(value))
+             self.chat_title.setText(str(value.get('chat_name') or t('채팅 제목 확인 불가')))
+             before, after = value.get('before') or {}, value.get('after') or {}
+@@ -1279,7 +1347,7 @@ class Details(QDialog):
+             if value.get('kind') == 'activity' and value.get('before') is not None and value['before'] == value.get('after'):
+                 heading += ' · ' + t('설정 유지')
+             self.change_heading.setText(t(heading))
+-            self.change_heading.setStyleSheet('font-size:13px;padding:5px 8px;border-radius:8px;color:'+event_accent(value)+';background:#2d4550;')
++            self.change_heading.setStyleSheet('font-size:13px;padding:5px 8px;border-radius:8px;color:'+event_accent(value)+';background:#e0f4e9;')
+             self.activity_message.setText(activity_message(value))
+             self.activity_message.setVisible(bool(activity_message(value)))
+             self.task_value.setText(task_explanation(value))
+@@ -1294,7 +1362,7 @@ class Details(QDialog):
+             for key, labels in (('model', (self.model_previous, self.model_current)), ('effort', (self.effort_previous, self.effort_current))):
+                 changed = value.get('kind') != 'activity' and before is not None and before.get(key) and after.get(key) and before.get(key) != after.get(key)
+                 for label in labels:
+-                    label.setStyleSheet('font-size:26px;font-weight:600;color:#edf4f5;' + ('background:#385064;border-radius:8px;padding:4px;' if changed else ''))
++                    label.setStyleSheet('font-size:26px;font-weight:700;color:#23453f;' + ('background:#d4f3e7;border-radius:8px;padding:4px;' if changed else ''))
+             self.before_value.setText(t('이전 기록 없음') if value.get('before') is None
+                                       else t('이전') + '  ' + model_card_label(value['before']))
+             self.after_value.setText((t('현재') + '  ' if value.get('kind') == 'activity' else '→  ') + model_card_label(value.get('after')))
+@@ -1392,6 +1460,8 @@ class Controller(QObject):
+         # Qt 수신자 문맥에 수명을 결합해 종료된 Python 객체로 예약 신호가 전달되지 않게 합니다.
+         super().__init__(_application_gui_root())
+         self.settings = settings
++        from orbit_features import FeatureStore
++        self.features = FeatureStore(settings.directory)
+         set_language(settings.values.get('language', 'ko'))
+         from calendar_motion import set_calendar_motion_speed
+         set_calendar_motion_speed(settings.values['motion_speed'])
+@@ -1430,6 +1500,9 @@ class Controller(QObject):
+         self.orbit = OrbitWidget(settings, self.show, self.request_quit, self.gui_owner)
+         self.orbit.language_changed = self.set_language
+         self.orbit.motion_speed_changed = self.change_motion_speed
++        from observatory_panel import OrbitExperience
++        self.orbit29 = OrbitExperience(self)
++        self.orbit.experience = self.orbit29
+         self.notice = None
+         self.screen_connections = []
+         for screen in QApplication.screens():
+@@ -1510,6 +1583,9 @@ class Controller(QObject):
+             raise
+         set_language(language)
+         self.window.retranslate()
++        self.orbit29.panel.refresh()
++        self.orbit29.retranslate()
++        if hasattr(self,"update_dialog29"):self.update_dialog29.retranslate()
+         if self.window.diagnostics.original_text:
+             self.window.diagnostics.setPlainText(self.window.diagnostics.original_text)
+         self.weather.set_language(language)
+@@ -1519,8 +1595,10 @@ class Controller(QObject):
+             self.status(self.last_monitor_status)
+         for notice in self.notices.values():
+             retranslate_widgets(notice)
+-            notice.update_event(notice.event)
++            notice.update_event(notice.notice_event)
+         self.update_notice_count()
++        from observatory_panel import mask_details
++        mask_details(self.window)
+         self.orbit.update()
+ 
+     @Slot(dict)
+@@ -1569,6 +1647,7 @@ class Controller(QObject):
+                                     ' · ' + t(value.get('status', '미확인')) + t('\n클릭: 기간별 잔량과 변경 이력 · 드래그: 이동'))
+         self.orbit.refresh_tooltip()
+         self.orbit.update()
++        self.orbit29.feed_scene()
+ 
+     def stop_monitor(self):
+         if self.monitor:
+@@ -1609,6 +1688,7 @@ class Controller(QObject):
+             self.monitor.event[object, dict].connect(self.queue_delivery)
+             self.monitor.status.connect(self.status)
+             self.monitor.enriched.connect(self.refresh_history)
++            self.monitor.lifecycle_event.connect(self.receive_lifecycle)
+             self.monitor.finished.connect(self.check_monitor_health)
+             history, problems = read_jsonl_tail(self.monitor.work / 'history.jsonl')
+             self.window.history.clear()
+@@ -1688,10 +1768,16 @@ class Controller(QObject):
+         self.notice_queue.clear()
+         self.notice_delivery.close()
+ 
++    @Slot(dict)
++    def receive_lifecycle(self, event):
++        if not self.closing:
++            self.orbit29.ingest(event)
++
+     @Slot(dict)
+     def receive(self, event):
+         if self.closing:
+             return
++        self.orbit29.ingest(event)
+         if (event.get('kind') == 'activity' and event.get('first_observation_already_delivered') is True
+                 and isinstance(event.get('first_observation_id'), str)):
+             promoted = self.window.promote_first_observation(event)
+@@ -1700,8 +1786,8 @@ class Controller(QObject):
+                     self.window.add_event(event)
+                 prior_id = event['first_observation_id']
+                 notice = self.notices.get(prior_id)
+-                if (notice is not None and notice.event.get('target') == event.get('target')
+-                        and notice.event.get('before') is None and notice.event.get('kind') != 'activity'):
++                if (notice is not None and notice.notice_event.get('target') == event.get('target')
++                        and notice.notice_event.get('before') is None and notice.notice_event.get('kind') != 'activity'):
+                     self.notices.pop(prior_id)
+                     self.notices[event.get('id')] = notice
+                     # 만료 시간·최초 표시 기록·애니메이션을 재시작하지 않고 정확한 ID만 보강합니다.
+@@ -1709,6 +1795,9 @@ class Controller(QObject):
+                 self.update_notice_count()
+                 return
+         self.window.add_event(event)
++        if self.settings.values.get('broadcast_mode'):
++            from observatory_panel import mask_details
++            mask_details(self.window)
+         self.orbit.unread = True
+         if self.settings.values.get('popup', True):
+             self.enqueue_notice(event)
+@@ -1761,8 +1850,9 @@ class Controller(QObject):
+                 notice.update_event(event)
+             self.update_notice_count()
+             return
+-        if len(self.notices) >= self.max_visible_notices:
+-            oldest = next(iter(self.notices.values()))
++        unpinned = [n for n in self.notices.values() if not getattr(n,'pinned',False)]
++        if len(unpinned) >= self.max_visible_notices:
++            oldest = unpinned[0]
+             # 교체 도중의 중간 정렬은 새 카드가 들어간 뒤 최종 정렬 한 번으로 합칩니다.
+             self.replacing_notice = True
+             try:
+@@ -1776,6 +1866,8 @@ class Controller(QObject):
+     def display_notice(self, event, replay=False):
+         self.notice = Notice(self.show, self.gui_owner)
+         self.notices[event.get('id')] = self.notice
++        self.notice.broadcast_mode = bool(self.settings.values.get('broadcast_mode', False))
++        self.notice.bookmark_callback = lambda key: self.features.set_bookmark(key, key not in self.features.bookmarks)
+         self.notice.completed.connect(self.remove_notice)
+         self.notice.display(event, self.orbit, self.settings.values.get('notice_timeout_ms', 30000), replay=replay)
+         after = event.get('after') or {}
+@@ -1813,14 +1905,20 @@ class Controller(QObject):
+     def refresh_history(self, events):
+         if self.closing:
+             return
++        self.features.load_history(events)
++        self.orbit29.panel.refresh()
++        self.orbit29.feed_scene()
+         items = self.window._history_items_by_id()
+         notice_changed = False
+         for event in events:
+             self.window.update_event(event, items)
+             notice = self.notices.get(event.get('id'))
+-            if notice is not None and notice.event != event:
++            if notice is not None and notice.notice_event != event:
+                 notice.update_event(event)
+                 notice_changed = True
++        if self.settings.values.get('broadcast_mode'):
++            from observatory_panel import mask_details
++            mask_details(self.window)
+         if notice_changed:
+             self.layout_notices()
+ 
+@@ -1836,8 +1934,10 @@ class Controller(QObject):
+                      'operation_log_error': self.operation_log_error}
+         self.last_monitor_status = dict(value)
+         self.orbit.healthy = value.get('state') == '감시 중'
++        self.orbit29.health(value)
+         self.window.summary.setText('● ' + t(value.get('state', '')) + '  ·  ' + kst_label(value.get('time')))
+         self.window.diagnostics.setPlainText(json.dumps(value, ensure_ascii=False, indent=2))
++        if self.settings.values.get('broadcast_mode'):self.window.diagnostics.hide()
+ 
+     def show(self, event_id=None):
+         if event_id:
+@@ -1850,8 +1950,10 @@ class Controller(QObject):
+                     break
+             if not found and event_id in self.notices:
+                 # 화면 이력 상한 밖으로 밀려나도 클릭한 원래 알림을 정확히 엽니다.
+-                self.window.add_event(self.notices[event_id].event)
+-        self.window.tabs.setCurrentIndex(0)
++                self.window.add_event(self.notices[event_id].notice_event)
++        self.orbit29.open_page(0)
++        self.orbit29.panel.refresh()
++        self.features.mark_seen()
+         self.window.show()
+         self.window.raise_()
+         self.window.activateWindow()
+@@ -1894,6 +1996,7 @@ class Controller(QObject):
+             return
+         self.cleaned = True
+         self.closing = True
++        if hasattr(self,"orbit29"):self.orbit29.timer.stop()
+         self.close_notice_delivery()
+         self.monitor_restart_pending = False
+         self.monitor_enabled = False
+@@ -1969,6 +2072,9 @@ def motion_smoke_stage(status, baseline_count, expired):
+ 
+ 
+ def main():
++    from safe_update import handle_update_cli
++    result = handle_update_cli(sys.argv[1:])
++    if result is not None:return result
+     parser = argparse.ArgumentParser(description='Codex Orbit · 로컬 모델 변경 투명 궤도')
+     parser.add_argument('--data-dir', type=Path, default=Path(os.environ.get('LOCALAPPDATA', Path.home())) / 'CodexOrbit')
+     parser.add_argument('--sessions', type=Path)
+diff --git a/src/calendar_motion.py b/src/calendar_motion.py
+index a1b751f6bb15dbbbe8dd8677143e89bdddb24899..a76bb558fcfaa06466aeac6e081e0bff7af5cea1 100644
+--- a/src/calendar_motion.py
++++ b/src/calendar_motion.py
+@@ -16,6 +16,7 @@ FPS = 240
+ SIZE = 384
+ RENDER_SIZE = (3840, 2160)
+ _logger = logging.getLogger(__name__)
++_UNCHANGED = object()
+ 
+ 
+ def next_frame_deadline(previous, now):
+@@ -70,12 +71,37 @@ class _Worker(QThread):
+         self.output_size=SIZE; self.notification_pending=False; self.notification_count=0
+         self.first_render_at=None; self.last_render_at=None; self.render_seconds=0.
+         self.pacing_backend='준비 중'; self.pacing_warning=''
+-
+-    def configure(self,visible=None,value=None,elapsed=None,output_size=None,motion_speed=None):
++        self.scene=None; self.options=None; self.scene_version=0; self.rendered_scene_version=-1; self.scene_elapsed=0.
++        self.scene_sample_at=self.started_at
++
++    def _render_options(self):
++        from observatory_scene import scene_fps
++        paused=bool(self.options and self.options['paused']) or bool(self.scene and self.scene['paused'])
++        reduced=bool(self.options and self.options['reduced_motion']) or bool(self.scene and self.scene['reduced_motion'])
++        fps=scene_fps(self.scene) if self.scene is not None else FPS
++        if self.options is not None:fps=min(fps,scene_fps(self.options))
++        return paused,reduced,fps
++
++    def configure(self,visible=None,value=None,elapsed=None,output_size=None,motion_speed=None,scene=_UNCHANGED,options=_UNCHANGED):
+         with self.condition:
++            previous_flags=self._render_options()
++            previous_controlled=self.scene is not None or self.options is not None
+             if visible is not None:self.visible=visible
+-            if output_size is not None:self.output_size=output_size
+-            if motion_speed is not None:self.motion_clock.set_speed(motion_speed,time.perf_counter())
++            if output_size is not None and output_size!=self.output_size:
++                self.output_size=output_size
++                if self.scene is not None or self.options is not None:self.scene_version+=1
++            if motion_speed is not None:
++                self.motion_clock.set_speed(motion_speed,time.perf_counter())
++                if self.scene is not None:self.scene_version+=1
++            if scene is not _UNCHANGED and scene!=self.scene:
++                self.scene=scene; self.scene_version+=1
++            if options is not _UNCHANGED and options!=self.options:
++                self.options=options; self.scene_version+=1
++            controlled=self.scene is not None or self.options is not None
++            if controlled!=previous_controlled or self._render_options()[:2]!=previous_flags[:2]:
++                now=time.perf_counter()
++                if not previous_controlled:self.scene_elapsed=self.motion_clock.sample(now)
++                self.scene_sample_at=now
+             if elapsed is not None:
+                 self.requested_date=value; self.requested_elapsed=elapsed; self.requested_at=time.perf_counter()
+             self.condition.notify_all()
+@@ -93,7 +119,13 @@ class _Worker(QThread):
+             while True:
+                 with self.condition:
+                     # 요청 수·재생 배율과 무관하게 240Hz 목표의 다음 시각까지 유휴 대기합니다.
+-                    while not self.stopping and not self.visible:self.condition.wait()
++                    while not self.stopping:
++                        paused,reduced,_=self._render_options()
++                        static_done=((paused or reduced) and self.rendered_scene_version==self.scene_version
++                                     and self.latest_date==(self.requested_date or current_date()))
++                        if self.visible and not static_done:break
++                        # 정적 달력도 날짜가 바뀌면 한 프레임만 갱신하며 보이지 않으면 쉬어 둡니다.
++                        self.condition.wait(1.0 if self.visible else None)
+                     if self.stopping:break
+                     remaining=next_frame_at-time.perf_counter()
+                 if remaining>0:
+@@ -106,19 +138,28 @@ class _Worker(QThread):
+                     # 각 호출자의 서로 다른 타이머 원점 대신 서비스의 한 시계를 공유합니다.
+                     elapsed=self.motion_clock.sample(time.perf_counter())
+                     output_size=self.output_size
++                    scene=self.scene; scene_version=self.scene_version
++                    paused,reduced,fps=self._render_options()
++                    sample_at=time.perf_counter()
++                    if scene is not None or self.options is not None:
++                        if reduced:elapsed=0.
++                        elif paused:elapsed=self.scene_elapsed
++                        else:elapsed=self.scene_elapsed+(sample_at-self.scene_sample_at)*self.motion_clock.speed
+                 start=time.perf_counter()
+                 if renderer is None:
+                     from calendar_renderer import CalendarRenderer
+                     renderer=CalendarRenderer(RENDER_SIZE); self.renderer_name=renderer.ctx.info.get('GL_RENDERER','확인 불가')
+                 if hasattr(renderer,'set_output_size'):renderer.set_output_size(output_size)
+-                image=renderer.render(value,elapsed)
++                image=renderer.render(value,elapsed) if scene is None else renderer.render_observatory(scene,elapsed)
+                 finished=time.perf_counter()
+                 with self.condition:
+                     self.render_count+=1; image.setText('calendar_frame_id',str(self.render_count))
+                     self.latest=image; self.latest_date=value
++                    self.rendered_scene_version=scene_version; self.scene_elapsed=elapsed; self.scene_sample_at=sample_at
+                     if self.first_render_at is None:self.first_render_at=finished
+                     self.last_render_at=finished; self.render_seconds+=finished-start
+-                    next_frame_at=next_frame_deadline(next_frame_at if next_frame_at else start,finished)
++                    next_frame_at=(next_frame_deadline(next_frame_at if next_frame_at else start,finished)
++                                   if scene is None and fps==FPS else max((next_frame_at if next_frame_at else start)+1/fps,finished))
+                     notify=not self.notification_pending and self.visible
+                     if notify:self.notification_pending=True; self.notification_count+=1
+                     self.condition.notify_all()
+@@ -265,6 +306,26 @@ def set_calendar_motion_speed(value: float):
+     _get_service().worker.configure(motion_speed=speed)
+ 
+ 
++def set_calendar_observatory_scene(scene):
++    """메인 스레드가 전달한 최신 독립 스냅샷 하나만 기존 GPU 작업자에 공유합니다."""
++    from observatory_scene import normalize_scene
++    _main_thread()
++    snapshot=None if scene is None else normalize_scene(scene)
++    _get_service().worker.configure(scene=snapshot)
++
++
++def set_calendar_motion_options(paused=False,reduced_motion=False,quality='balanced'):
++    """달력과 관측소에 공통 자원 옵션을 적용하며 paused=None은 기존 기본값을 복원합니다."""
++    _main_thread()
++    if paused is None:
++        options=None
++    else:
++        from observatory_scene import normalize_scene
++        value=normalize_scene({'paused':paused,'reduced_motion':reduced_motion,'quality':quality})
++        options={key:value[key] for key in ('paused','reduced_motion','quality')}
++    _get_service().worker.configure(options=options)
++
++
+ def set_calendar_motion_size(owner,size):
+     """현재 보이는 각 소유자의 실제 픽셀 요구 중 최대 크기만 전달합니다."""
+     if type(size) is not int or not 32<=size<=2160:raise ValueError('전달 크기는32~2160 정수여야 합니다.')
+@@ -292,11 +353,17 @@ def get_calendar_error():
+ def calendar_motion_status():
+     if _service is None:return {'running':False,'owners':0,'images':0,'motion_speed':1.0,'error':get_calendar_error()}
+     with _service.worker.condition:
++        scene=_service.worker.scene
++        paused,reduced,fps=_service.worker._render_options()
+         return {'running':_service.worker.isRunning(),'owners':len(_service.owners),
+                 'images':int(_service.worker.latest is not None)+int(_service.fallback is not None),
+                 'render_count':_service.worker.render_count,'date':str(_service.worker.latest_date),
+                 'motion_speed':_service.worker.motion_clock.speed,
+-                'target_fps':FPS,'source_dimensions':list(RENDER_SIZE),
++                'target_fps':fps,'source_dimensions':list(RENDER_SIZE),
++                'paused':paused,'reduced_motion':reduced,
++                'mode':'calendar' if scene is None else 'observatory',
++                'scene_elapsed':_service.worker.scene_elapsed,'scene_version':_service.worker.scene_version,
++                'rendered_scene_version':_service.worker.rendered_scene_version,
+                 'delivery_dimensions':list(_service.worker.latest.size().toTuple()) if _service.worker.latest is not None else None,
+                 'requested_delivery_size':_service.worker.output_size,
+                 'notification_count':_service.worker.notification_count,'dispatch_count':_service.dispatch_count,
+diff --git a/src/calendar_renderer.py b/src/calendar_renderer.py
+index fa5989792571a90093df126c26343451d3a25d36..ef976825b0d617d71e9e40849b280f72b869bbe2 100644
+--- a/src/calendar_renderer.py
++++ b/src/calendar_renderer.py
+@@ -375,6 +375,96 @@ def matrices(elapsed):
+     return result
+ 
+ 
++def _crescent_geometry():
++    """평면 그림이 아닌 앞뒤 면과 곡면 옆면을 갖는 초승달 메시입니다."""
++    outer = [(22 * math.cos(t), 22 * math.sin(t)) for t in np.linspace(math.pi / 3, 5 * math.pi / 3, 49)]
++    angle = math.atan2(-outer[-1][1], outer[-1][0] - 14)
++    inner = [(14 + math.hypot(3, outer[0][1]) * math.cos(t),
++              math.hypot(3, outer[0][1]) * math.sin(t))
++             for t in np.linspace(-angle, angle - math.tau, 49)]
++    points = outer + inner
++    vertices, indices = [], []
++    for z, nz in ((5, 1), (-5, -1)):
++        start = len(vertices)
++        vertices.append((-13, 0, z, 0, 0, nz))
++        vertices.extend((x, y, z, 0, 0, nz) for x, y in points)
++        for i in range(len(points)):
++            indices.extend((start, start + 1 + i, start + 1 + (i + 1) % len(points)))
++    for i, (x, y) in enumerate(points):
++        nx, ny = points[(i + 1) % len(points)]
++        normal = np.array((ny - y, x - nx, 0.), dtype=float)
++        if np.linalg.norm(normal) < 1e-8:
++            continue
++        normal /= np.linalg.norm(normal)
++        start = len(vertices)
++        vertices.extend((a, b, z, *normal) for a, b, z in ((x, y, -5), (nx, ny, -5), (nx, ny, 5), (x, y, 5)))
++        indices.extend((start, start + 1, start + 2, start, start + 2, start + 3))
++    return finish(vertices, indices)
++
++
++def build_observatory_geometry(scene):
++    """모델 코어·입자·용기·명시 작업자 위성을 실제 삼각형 부품으로 만듭니다."""
++    from observatory_scene import normalize_scene, model_family, particle_count
++    scene = normalize_scene(scene)
++    family = model_family(scene['model'])
++    parts = []
++    silver = (.67, .74, .79)
++    def add(mesh, color=silver, metal=1., rough=.23, kind='core', index=0):
++        parts.append((mesh, color, metal, rough, kind, index))
++    if family == 'sol':
++        add(sphere_mesh(16, 32, 20), (.82, .50, .13), .78, .25)
++        for i in range(12):
++            angle = i * math.tau / 12
++            add(_transformed(lathe([(0, -5), (2.4, -4), (1.7, 3), (0, 7)], 10),
++                             (22 * math.cos(angle), 22 * math.sin(angle), 0), angle=angle - math.pi / 2),
++                (.90, .63, .20), .85, .25)
++    elif family == 'astra':
++        add(lathe([(0, -25), (16, -3), (14, 6), (0, 25)], 6, False), (.49, .35, .78), .8, .20)
++    elif family == 'terra':
++        add(sphere_mesh(19, 36, 24), (.14, .47, .44), .65, .27)
++        for angle in (0, math.pi / 3, 2 * math.pi / 3):
++            mesh = tube([(19.4 * math.cos(t), 19.4 * math.sin(t), 0) for t in np.linspace(0, math.tau, 64, endpoint=False)], .65, True, 8)
++            vertices, indices = mesh
++            vertices[:, :3] = vertices[:, :3] @ rotation((0, 1, 0), angle).T
++            vertices[:, 3:] = vertices[:, 3:] @ rotation((0, 1, 0), angle).T
++            add((vertices, indices), (.38, .78, .66), .9, .20)
++    elif family == 'luna':
++        add(_crescent_geometry(), (.68, .72, .86), .87, .22)
++    else:
++        add(sphere_mesh(17, 24, 16), (.44, .49, .52), .85, .30)
++    for index, mesh in enumerate(_ring_geometry()):
++        add(mesh, kind='ring', index=index)
++    count = particle_count(scene['effort'])
++    if count:
++        chunks, indices, offset = [], [], 0
++        for i in range(count):
++            angle = i * 2.39996323
++            z = 24 * (2 * (i + .5) / count - 1)
++            radius = math.sqrt(max(0, 37 ** 2 - z ** 2))
++            vertices, ix = _transformed(sphere_mesh(1.1, 8, 5), (radius * math.cos(angle), radius * math.sin(angle), z))
++            chunks.append(vertices); indices.append(ix + offset); offset += len(vertices)
++        add((np.concatenate(chunks), np.concatenate(indices)), (.46, .80, .74), .75, .22, 'particles')
++    colors = {'running': (.20, .73, .55), 'working': (.20, .73, .55), 'assigned': (.24, .70, .62),
++              'resumed': (.24, .70, .62), 'waiting': (.86, .65, .22), 'waiting_user': (.86, .65, .22),
++              'completed': (.32, .57, .86), 'done': (.32, .57, .86), 'error': (.86, .24, .26),
++              'retrying': (.94, .46, .18), 'retry': (.94, .46, .18)}
++    for index, agent in enumerate(scene['agents']):
++        add(sphere_mesh(3.4 if agent['pinned'] else 2.8, 16, 10),
++            colors.get(agent['status'], silver), .75, .24, 'agent', index)
++    for y in (-49, -29):
++        add(tube([(9 * math.cos(t), y, 12 + 9 * math.sin(t)) for t in np.linspace(0, math.tau, 48, endpoint=False)], .7, True, 8), kind='vessel')
++    for x, z in ((-9, 12), (9, 12), (0, 3), (0, 21)):
++        add(tube([(x, -49, z), (x, -29, z)], .55, False, 8), kind='vessel')
++    fraction = scene['usage_fraction']
++    if fraction is None:
++        add(_transformed(sphere_mesh(2.2, 12, 8), (0, -39, 12)), (.45, .49, .53), .4, .4, 'usage_unknown')
++    elif fraction > 0:
++        height = 18 * fraction
++        add(_transformed(lathe([(0, 0), (7.8, 0), (7.8, height), (0, height)], 32), (0, -48, 12)),
++            (.13, .64, .48), .35, .25, 'usage_fill')
++    return parts
++
++
+ class CalendarRenderer:
+     """컨텍스트를 만든 스레드에서만 사용하고 현재 날짜의 버퍼만 보유합니다."""
+     def __init__(self,size=384):
+@@ -385,7 +475,7 @@ class CalendarRenderer:
+         else:raise ValueError('렌더 크기는32~768 정수 또는3840×2160이어야 합니다.')
+         width,height=dimensions
+         self.thread_id=threading.get_ident(); self.size=size; self.dimensions=dimensions; self.ctx=None; self.resources=[]; self.vaos=[]; self.buffers=[]; self.parts=[]; self.design=None
+-        self.output_resources=[]; self.output_size=0; self.output=None
++        self.output_resources=[]; self.output_size=0; self.output=None; self.observatory_key=None
+         try:
+             self.ctx=moderngl.create_standalone_context(require=330)
+             self.program=self.ctx.program(vertex_shader=VERTEX,fragment_shader=FRAGMENT); self.resources.append(self.program)
+@@ -441,7 +531,51 @@ class CalendarRenderer:
+             vertex=self.ctx.buffer(vertices.tobytes()); self.buffers.append(vertex)
+             index=self.ctx.buffer(indices.tobytes()); self.buffers.append(index)
+             self.vaos.append(self.ctx.vertex_array(self.program,[(vertex,'3f 3f','in_position','in_normal')],index))
+-        self.design=design
++        self.design=design; self.observatory_key=None
++
++    def _draw_observatory(self, scene, elapsed):
++        from observatory_scene import normalize_scene, scene_time, world_matrix, agent_world_positions
++        self._assert_thread()
++        scene = normalize_scene(scene); elapsed = scene_time(scene, elapsed)
++        key = (scene['model'], scene['effort'], scene['usage_fraction'],
++               tuple((a['target'], a['status'], a['pinned']) for a in scene['agents']))
++        if self.observatory_key != key:
++            self._clear_meshes(); self.parts = build_observatory_geometry(scene)
++            for (vertices, indices), *_ in self.parts:
++                vertex = self.ctx.buffer(vertices.tobytes()); self.buffers.append(vertex)
++                index = self.ctx.buffer(indices.tobytes()); self.buffers.append(index)
++                self.vaos.append(self.ctx.vertex_array(self.program, [(vertex, '3f 3f', 'in_position', 'in_normal')], index))
++            self.observatory_key = key
++        world = np.asarray(world_matrix(scene), dtype=float)
++        agents = agent_world_positions(scene, elapsed)
++        transition = scene['transition']; blend = transition * transition * (3 - 2 * transition)
++        self.ctx.enable(moderngl.DEPTH_TEST); self.target.use(); self.target.clear(0, 0, 0, 0, depth=1)
++        for index, (_, color, metal, rough, kind, part_index) in enumerate(self.parts):
++            transform = np.eye(4)
++            if kind == 'ring':
++                axis = ((.6, 1, .3), (-.3, 1, .4), (.4, -.8, 1))[part_index]
++                phase = math.tau * elapsed / 12 * (1, -2, 3)[part_index] * blend
++                transform[:3, :3] = rotation(axis, phase) @ rotation((1, 0, 0), (.8, -.7, 1.1)[part_index] * blend)
++            elif kind == 'agent':
++                transform[:3, 3] = agents[part_index]['position']
++            elif kind == 'particles':
++                transform[:3, :3] = rotation((.2, 1, .3), elapsed * .16)
++            elif kind == 'core':
++                transform[:3, :3] = rotation((0, 1, 0), .10 * math.sin(elapsed)) * (.78 + .22 * blend)
++                transform[1, 3] = 1.2 * math.sin(elapsed)
++            transform = world @ transform
++            self.program['model'].write(transform.T.astype('f4').tobytes())
++            self.program['metallic'].value = metal; self.program['base_color'].value = color; self.program['roughness'].value = rough
++            self.vaos[index].render(moderngl.TRIANGLES)
++        self.ctx.copy_framebuffer(self.resolved, self.target)
++
++    def render_observatory(self, scene, elapsed=0):
++        """같은 컨텍스트·4K 타깃과 깊이 버퍼에서 관측소를 렌더합니다."""
++        self._draw_observatory(scene, elapsed)
++        self.ctx.disable(moderngl.DEPTH_TEST)
++        self.output.use(); self.texture.use(location=0)
++        self.downsample_vao.render(moderngl.TRIANGLES, vertices=3)
++        return self._image(self.output, self.output_size, self.output_size)
+ 
+     def _draw(self,value,elapsed):
+         self._assert_thread(); transforms=matrices(elapsed); self.set_date(value)
+@@ -475,7 +609,7 @@ class CalendarRenderer:
+     def _clear_meshes(self):
+         for value in reversed(self.vaos):value.release()
+         for value in reversed(self.buffers):value.release()
+-        self.vaos.clear(); self.buffers.clear(); self.parts=[]; self.design=None
++        self.vaos.clear(); self.buffers.clear(); self.parts=[]; self.design=None; self.observatory_key=None
+ 
+     def close(self):
+         self._assert_thread(); self._clear_meshes()
+diff --git a/src/i18n.py b/src/i18n.py
+index 9af71311feb657add6b6afd44d25b3ec569a5482..fc12ee6f60691e09a83d7f83a41e116965b054fb 100644
+--- a/src/i18n.py
++++ b/src/i18n.py
+@@ -90,3 +90,6 @@ def retranslate_widgets(root):
+             source = widget.property('orbit_i18n_' + getter)
+             if source is not None:
+                 getattr(widget, setter)(translate(source))
++
++# 29차 알림 조작의 번역입니다.
++_EN.update({'📌 고정':'📌 Pin','☆ 기록 보관':'☆ Bookmark','기록 보관':'Bookmark','표시 조작':'Display controls','진단 ZIP 저장':'Save diagnostics ZIP','방송 모드':'Broadcast mode','모션 축소':'Reduce motion','가장자리 도킹':'Edge docking','업데이트 확인':'Check for updates','입체 관측소':'3D observatory','날짜별 조형':'Daily sculpture'})
+diff --git a/src/notifier.py b/src/notifier.py
+index 8d7b669c0f3ecff01fbfbbf7fdb8e5d88330d1ba..5199f4e014f6c9270f1fee390bc8b61e063486d9 100644
+--- a/src/notifier.py
++++ b/src/notifier.py
+@@ -13,7 +13,7 @@ import uuid
+ from datetime import datetime, timezone
+ from pathlib import Path
+ from core import read_jsonl_tail
+-from activity import ActivityTracker, safe_public_text
++from activity import ActivityTracker, safe_public_text, explicit_lifecycle
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+ APP_ID = 'Yunseok.Codex.ModelChangeNotifier'
+@@ -140,6 +140,17 @@ class Watcher:
+         self.reason_budget = POLL_READ_BYTES
+         self.diagnostic_failures = []
+         self.activity = ActivityTracker(self.state)
++        self.lifecycle_queue = []
++        self.state.setdefault('lifecycle_seen', [])
++        if (not isinstance(self.state['lifecycle_seen'], list)
++                or any(not isinstance(value, str) for value in self.state['lifecycle_seen'])):
++            raise ValueError('생명주기 관측 상태 오류입니다. 원본을 초기화하지 않습니다.')
++        self.lifecycle_seen = set(self.state['lifecycle_seen'])
++
++    def drain_lifecycle(self):
++        """기존 sender 알림과 별도로 모은 명시 상태를 한 번만 소비합니다."""
++        rows, self.lifecycle_queue = self.lifecycle_queue, []
++        return rows
+ 
+     def diagnostic(self, error, **details):
+         value = {'time': stamp(), 'error': str(error)[:2000], **details}
+@@ -287,6 +298,16 @@ class Watcher:
+         sid = info.get('sid')
+         if not sid:
+             return
++        if not baseline and not activity_only:
++            lifecycle = explicit_lifecycle(record, info)
++            if lifecycle is not None and lifecycle['id'] not in self.lifecycle_seen:
++                lifecycle['time'] = stamp()
++                self.lifecycle_queue.append(lifecycle)
++                del self.lifecycle_queue[:-512]
++                seen = self.state['lifecycle_seen']
++                seen.append(lifecycle['id'])
++                del seen[:-512]
++                self.lifecycle_seen = set(seen)
+         if kind == 'response_item' and info.get('owner_active'):
+             self.activity.response(payload, info)
+             if not activity_only:
+@@ -695,7 +716,9 @@ class NativeToast:
+         visual = ET.SubElement(toast, 'visual')
+         binding = ET.SubElement(visual, 'binding', {'template': 'ToastGeneric'})
+         before, after = event.get('before'), event.get('after') or {}
+-        title = limited(str(event.get('chat_name') or t('채팅 제목 확인 불가')), 64)
++        from orbit_features import clean_chat_title
++        title = limited(clean_chat_title(event.get('chat_name') or event.get('title'))
++                        or t('채팅 제목 확인 불가'), 64)
+         # Shell 본문 한도 안에서 네 값의 이름을 구분하고 원문 ID는 명시적으로만 줄입니다.
+         fields = [limited(t('이전 모델') + ': ' + notice_previous_model(before), 52),
+                   limited(t('이전 추론 강도') + ': 🧠 ' + previous_field(before, 'effort'), 52),
+diff --git a/src/observatory_panel.py b/src/observatory_panel.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2f73d2530a5757620847fd68d72724ad98324468
+--- /dev/null
++++ b/src/observatory_panel.py
+@@ -0,0 +1,354 @@
++"""29차 관측소의 화면 조작과 실제 관측값 연결입니다."""
++from copy import deepcopy
++from pathlib import Path
++import time
++from PySide6.QtCore import Qt,QTimer,QSize
++from PySide6.QtGui import QPainter,QColor
++from PySide6.QtWidgets import (QWidget,QFrame,QVBoxLayout,QHBoxLayout,QLabel,QPushButton,
++    QListWidget,QListWidgetItem,QSlider,QComboBox,QFileDialog,QMessageBox,QApplication,QStackedWidget)
++from i18n import translate as t,get_language
++from typography import app_font
++
++
++def tr(ko,en):
++    return en if get_language()=='en' else ko
++
++
++def present_event(event,private=False):
++    """저장 원문은 유지하고 표시 사본만 정리합니다."""
++    from orbit_features import clean_chat_title
++    if private:
++        keys=('id','target','time','before','after','kind','role','activity_type','activity_action')
++        value={key:deepcopy(event[key]) for key in keys if key in event}
++        value.update(chat_name=tr('비공개 채팅','Private chat'),task_summary='',reason=tr('방송 모드에서 설명을 가렸습니다.','Details hidden in broadcast mode.'))
++        return value
++    value=deepcopy(event)
++    for key in ('chat_name','title','chat_title'):
++        if key in value:value[key]=clean_chat_title(value[key])
++    return value
++
++
++def pause_notice(notice):
++    notice._hover_remaining=notice.timer.remainingTime() if notice.timer.isActive() else getattr(notice,'_hover_remaining',-1)
++    notice.timer.stop()
++
++
++def resume_notice(notice):
++    remaining=getattr(notice,'_hover_remaining',-1)
++    if remaining>0 and not getattr(notice,'pinned',False):notice.timer.start(remaining)
++
++
++def mask_details(window):
++    """목록·선택 카드·원문·툴팁을 함께 갱신해 기존 열린 정보도 가립니다."""
++    from app import history_label
++    private=window.controller.settings.values.get('broadcast_mode',False)
++    for i in range(window.history.count()):
++        item=window.history.item(i);event=item.data(Qt.ItemDataRole.UserRole)
++        item.setText(history_label(present_event(event,private)))
++        item.setToolTip('')
++    window.select_event(window.history.currentItem(),None)
++    if private:
++        window.diagnostics.hide()
++        for child in window.findChildren(QWidget):child.setToolTip('')
++    elif window.diagnostics.original_text:window.diagnostics.setPlainText(window.diagnostics.original_text)
++
++
++def style_notice(notice):
++    notice.setStyleSheet('#notice{background:#fbfffe;border:1px solid #bdd8d0;border-radius:18px;} QLabel{background:transparent;color:#193a37;font-weight:700;}')
++    notice.title_marker.hide()
++    for label in notice.findChildren(QLabel):
++        css=label.styleSheet()
++        import re
++        css=re.sub(r'color:#[0-9a-fA-F]{3,8}', 'color:#23433f',css)
++        css=css.replace('background:#385064','background:#d4f3e7')
++        label.setStyleSheet(css.replace('font-weight:600','font-weight:700').replace('font-weight:500','font-weight:700'))
++
++
++class SceneCanvas(QWidget):
++    """기존 GPU 작업자의 실제 투명 프레임을 공유합니다."""
++    def __init__(self,controller):
++        super().__init__();self.controller=controller;self.setMinimumSize(200,180)
++        self.setMouseTracking(True);self.setAccessibleName(tr('실시간 입체 관측소','Live 3D observatory'))
++    def showEvent(self,event):
++        from calendar_motion import set_calendar_motion_visible,set_calendar_motion_size
++        set_calendar_motion_visible(self,True);set_calendar_motion_size(self,max(32,min(2160,round(min(self.width(),self.height())*self.devicePixelRatioF()))))
++        super().showEvent(event)
++    def hideEvent(self,event):
++        from calendar_motion import set_calendar_motion_visible
++        set_calendar_motion_visible(self,False);super().hideEvent(event)
++    def resizeEvent(self,event):
++        super().resizeEvent(event)
++        if self.isVisible():
++            from calendar_motion import set_calendar_motion_size
++            set_calendar_motion_size(self,max(32,min(2160,round(min(self.width(),self.height())*self.devicePixelRatioF()))))
++    def calendar_frame_ready(self):
++        if self.isVisible():self.update()
++    def paintEvent(self,event):
++        from calendar_motion import get_calendar_frame
++        image=get_calendar_frame();p=QPainter(self)
++        try:
++            if image is not None and not image.isNull():
++                side=min(self.width(),self.height());x=(self.width()-side)//2;y=(self.height()-side)//2
++                p.drawImage(x,y,image.scaled(side,side,Qt.AspectRatioMode.KeepAspectRatio,Qt.TransformationMode.SmoothTransformation))
++        finally:
++            # 그리기 구간을 벗어나기 전에 모의 호출이 보관한 참조도 비활성화합니다.
++            p.end()
++    def mouseMoveEvent(self,event):
++        self.controller.orbit29.pointer=[event.position().x()/max(1,self.width())*2-1,event.position().y()/max(1,self.height())*2-1]
++        self.controller.orbit29.feed_scene()
++    def mouseReleaseEvent(self,event):
++        if event.button()==Qt.MouseButton.LeftButton:
++            side=min(self.width(),self.height());x=(event.position().x()-(self.width()-side)/2)/side;y=(event.position().y()-(self.height()-side)/2)/side
++            self.controller.orbit29.hit(x,y)
++
++
++class ObservatoryPanel(QFrame):
++    def __init__(self,controller):
++        super().__init__();self.controller=controller;self.setObjectName('observatoryHero')
++        outer=QHBoxLayout(self);outer.setContentsMargins(20,12,20,12);outer.setSpacing(20)
++        self.canvas=SceneCanvas(controller);outer.addWidget(self.canvas,2)
++        body=QVBoxLayout();body.setSpacing(14);outer.addLayout(body,3);outer.setAlignment(body,Qt.AlignmentFlag.AlignVCenter)
++        self.heading=QLabel();self.heading.setObjectName('currentTask');self.heading.setWordWrap(True);body.addWidget(self.heading)
++        self.state=QLabel();self.state.setWordWrap(True);body.addWidget(self.state)
++        self.observations=QLabel();self.observations.setWordWrap(True);body.addWidget(self.observations)
++        self.away=QLabel();self.away.setWordWrap(True);body.addWidget(self.away)
++        self.agents=QListWidget();self.agents.setMaximumHeight(120);body.addWidget(self.agents)
++        self.agents.itemClicked.connect(self.select_agent)
++        row=QHBoxLayout();body.addLayout(row)
++        self.pin=QPushButton();self.pin.clicked.connect(self.pin_agent);row.addWidget(self.pin)
++        self.bookmark=QPushButton();self.bookmark.clicked.connect(self.bookmark_event);row.addWidget(self.bookmark)
++        self.copy=QPushButton();self.copy.clicked.connect(self.copy_id);row.addWidget(self.copy)
++        self.timeline=QSlider(Qt.Orientation.Horizontal);self.timeline.setAccessibleName(tr('저장 기록 재생','Replay saved history'));self.timeline.valueChanged.connect(self.seek);body.addWidget(self.timeline)
++        replay_row=QHBoxLayout();body.addLayout(replay_row)
++        self.replay_label=QLabel();self.replay_label.setWordWrap(True);replay_row.addWidget(self.replay_label,1)
++        self.live=QPushButton(tr('실시간 복귀','Return to live'));self.live.clicked.connect(lambda:self.seek(len(self.controller.features.snapshot().get('events',[]))));replay_row.addWidget(self.live)
++        self.selected_target=None;self.replaying=False;self.refresh()
++    def refresh(self):
++        features=self.controller.features; private=self.controller.settings.values.get('broadcast_mode',False)
++        live_snapshot=features.snapshot()
++        # 재생 자료는 고정하되 개인정보 가림과 번역은 현재 표시 설정을 적용합니다.
++        snapshot=self.replay_snapshot if self.replaying else live_snapshot
++        if not self.replaying and hasattr(self.controller,'orbit29'):self.controller.orbit29.snapshot_cache=snapshot
++        agents=snapshot.get('agents',[])
++        self.agents.clear()
++        labels={'active':('진행 중','Active'),'running':('진행 중','Active'),'assigned':('배정','Assigned'),'resumed':('재개','Resumed'),'complete':('완료','Complete'),'completed':('완료','Complete'),'waiting':('응답 대기','Waiting'),'error':('오류','Error'),'retrying':('재시도','Retrying'),'unknown':('상태 미확인','State unknown'),'aborted':('■ 중단','■ Aborted')}
++        for agent in sorted(agents,key=lambda a:not a.get('pinned')):
++            title=tr('비공개 채팅','Private chat') if private else str(agent.get('title') or agent.get('chat_name') or tr('제목 미확인','Title unavailable'))
++            status=tr(*labels.get(agent.get('status'),labels['unknown']))
++            item=QListWidgetItem(('★ ' if agent.get('pinned') else '')+title+' · '+status)
++            item.setData(Qt.ItemDataRole.UserRole,agent.get('target'));self.agents.addItem(item)
++        events=snapshot.get('events',[]);last=events[-1] if events else {}
++        shown=present_event(last,private)
++        self.heading.setText(shown.get('chat_name') or shown.get('title') or tr('새 변경을 기다립니다','Waiting for changes'))
++        from orbit_features import task_hint
++        self.state.setText(task_hint(shown,get_language()) if last else tr('실제 로컬 기록을 관측하면 표시됩니다.','Appears when local activity is observed.'))
++        target=last.get('target')
++        selected=snapshot.get('selected',{}).get(target,{})
++        executed=snapshot.get('executed',{}).get(target,{})
++        def setting(value):return str(value.get('model') or tr('미확인','Unknown'))+' / '+str(value.get('effort') or tr('미확인','Unknown'))
++        self.observations.setText(tr('선택 설정: ','Selected: ')+setting(selected)+'\n'+tr('실행 관측: ','Executed: ')+setting(executed))
++        summary=features.away_summary()
++        count=summary.get('count',summary.get('total',0)) if isinstance(summary,dict) else len(summary) if isinstance(summary,list) else 0
++        self.away.setText(tr('자리비움 이후','Since last visit')+f' · {count} '+tr('건 · 실제 기록 기준','events · recorded activity'))
++        self.pin.setText(tr('★ 관심 채팅','★ Pin chat'));self.bookmark.setText(tr('☆ 기록 보관','☆ Bookmark'));self.copy.setText(tr('채팅 ID 복사','Copy chat ID'))
++        self.copy.setToolTip(tr('직접 이동은 지원 확인 전 제공하지 않습니다.','Direct navigation is unavailable until verified.'))
++        self.live.setText(tr('실시간 복귀','Return to live'))
++        self.timeline.setAccessibleName(tr('저장 기록 재생','Replay saved history'))
++        self.timeline.blockSignals(True);self.timeline.setRange(0,len(live_snapshot.get('events',[])))
++        if not self.replaying:self.timeline.setValue(len(events))
++        self.timeline.blockSignals(False)
++        if self.replaying:
++            self.replay_label.setText(tr('기록 재생 · 실제 설정은 바뀌지 않습니다','History replay · actual settings stay unchanged')+' · '+str(last.get('time','')))
++        else:self.replay_label.setText(tr('실시간 · 슬라이더를 움직이면 저장 기록만 재생합니다.','Live · move the slider to replay saved history.'))
++    def select_agent(self,item):
++        self.selected_target=item.data(Qt.ItemDataRole.UserRole);self.controller.orbit29.open_target(self.selected_target)
++    def pin_agent(self):
++        target=self.selected_target or (self.controller.features.snapshot().get('events') or [{}])[-1].get('target')
++        if target:
++            self.controller.features.set_pin(target,target not in self.controller.features.pins);self.refresh();self.controller.orbit29.feed_scene()
++    def bookmark_event(self):
++        item=self.controller.window.history.currentItem()
++        if item:
++            key=item.data(Qt.ItemDataRole.UserRole).get('id')
++            if key:self.controller.features.set_bookmark(key,key not in self.controller.features.bookmarks);self.controller.orbit29.show_bookmarks()
++    def copy_id(self):
++        item=self.controller.window.history.currentItem()
++        target=self.selected_target or (item.data(Qt.ItemDataRole.UserRole).get('target') if item else '')
++        if target:QApplication.clipboard().setText(str(target))
++    def seek(self,index):
++        events=self.controller.features.snapshot().get('events',[])
++        if index>=len(events):self.replaying=False;self.refresh();self.controller.orbit29.feed_scene();return
++        event=events[index];snapshot=self.controller.features.snapshot(through=event['id']);self.replay_snapshot=snapshot;self.replay_id=event['id'];self.replaying=True
++        self.replay_label.setText(tr('기록 재생 · 실제 설정은 바뀌지 않습니다','History replay · actual settings stay unchanged')+' · '+str(event.get('time','')))
++        self.controller.orbit29.feed_scene(snapshot=snapshot);self.controller.show(event.get('id'))
++
++
++class OrbitExperience:
++    def __init__(self,controller):
++        self.controller=controller;self.pointer=[0,0];self.transition=1.;self.transition_started=time.monotonic();self.last_health=None
++        self.snapshot_cache=controller.features.snapshot()
++        self.click_started=None
++        self.scene={};self.docked=False;self.expanded_size=None;self._notifying_health=False
++        self.timer=QTimer(controller.gui_owner);self.timer.setInterval(40);self.timer.timeout.connect(self.animate)
++        self.panel=ObservatoryPanel(controller)
++        self.install_navigation();self.install_controls();self.apply_text_size();self.feed_scene()
++    def install_navigation(self):
++        window=self.controller.window;layout=window.layout();tabs=window.tabs
++        layout.removeWidget(tabs);wrapper=QWidget();row=QHBoxLayout(wrapper);row.setContentsMargins(0,0,0,0)
++        nav=QVBoxLayout();row.addLayout(nav);self.stack=QStackedWidget();self.stack.addWidget(self.panel);self.stack.addWidget(tabs);self.stack.setCurrentIndex(1);row.addWidget(self.stack,1);tabs.tabBar().hide()
++        self.observatory_button=QPushButton(tr('입체 관측소','3D observatory'));self.observatory_button.setCheckable(True);self.observatory_button.clicked.connect(lambda:(self.stack.setCurrentIndex(0),self.update_navigation()));nav.addWidget(self.observatory_button)
++        self.nav_buttons=[]
++        for index,ko,en in ((0,'변경 기록','Activity'),(1,'사용 한도','Usage')):
++            button=QPushButton(tr(ko,en));button.setMinimumWidth(130);button.setCheckable(True);button.clicked.connect(lambda checked=False,i=index:self.open_page(i));nav.addWidget(button);self.nav_buttons.append(button)
++        self.bookmarks=QPushButton(tr('★ 보관한 기록','★ Bookmarks'));self.bookmarks.clicked.connect(self.show_bookmarks);nav.addWidget(self.bookmarks)
++        self.all_records=QPushButton(tr('전체 기록','All activity'));self.all_records.clicked.connect(self.show_all);nav.addWidget(self.all_records);nav.addStretch()
++        tabs.currentChanged.connect(self.update_navigation);self.stack.currentChanged.connect(self.update_navigation)
++        self.update_navigation();layout.addWidget(wrapper,1)
++    def update_navigation(self,*_):
++        observatory=self.stack.currentIndex()==0
++        self.observatory_button.setChecked(observatory)
++        for index,button in enumerate(self.nav_buttons):button.setChecked(not observatory and self.controller.window.tabs.currentIndex()==index)
++    def open_page(self,index):
++        self.stack.setCurrentIndex(1);self.controller.window.tabs.setCurrentIndex(index);self.update_navigation()
++
++    def install_controls(self):
++        from PySide6.QtWidgets import QMenu
++        c=self.controller;row=QHBoxLayout();c.window.layout().insertLayout(2,row)
++        self.view=QComboBox();self.view.addItem(tr('입체 관측소','3D observatory'),'observatory');self.view.addItem(tr('날짜별 조형','Daily sculpture'),'calendar')
++        self.view.setCurrentIndex(1 if c.settings.values.get('scene_mode','observatory')=='calendar' else 0)
++        self.view.currentIndexChanged.connect(lambda _:self.option('scene_mode',self.view.currentData()));row.addWidget(self.view)
++        self.play=QPushButton();self.play.setCheckable(True);self.play.setChecked(c.settings.values.get('motion_paused',False));self.play.toggled.connect(lambda v:self.option('motion_paused',v));row.addWidget(self.play)
++        self.privacy=QPushButton();self.privacy.setCheckable(True);self.privacy.setChecked(c.settings.values.get('broadcast_mode',False));self.privacy.toggled.connect(lambda v:self.option('broadcast_mode',v));row.addWidget(self.privacy)
++        self.text_size=QComboBox()
++        for value in (90,100,115,130,150):self.text_size.addItem(str(value)+'%',value)
++        self.text_size.setCurrentIndex(max(0,self.text_size.findData(c.settings.values.get('text_scale',100))))
++        self.text_size.setAccessibleName(tr('글자 크기','Text size'));self.text_size.currentIndexChanged.connect(lambda _:self.option('text_scale',self.text_size.currentData()));row.addWidget(self.text_size)
++        self.more=QPushButton(tr('표시 조작 ⋯','Display ⋯'));self.menu=QMenu(self.more)
++        for key,ko,en in (('reduced_motion','모션 축소','Reduce motion'),('edge_docking','가장자리 도킹','Edge docking'),('notification_sound','알림음','Notification sound')):
++            action=self.menu.addAction(tr(ko,en));action.setCheckable(True);action.setChecked(c.settings.values.get(key,False));action.toggled.connect(lambda value,k=key:self.option(k,value))
++        quality=self.menu.addMenu(tr('자원 사용','Resource use'))
++        for value,ko,en in (('eco','절전','Eco'),('balanced','균형','Balanced'),('high','고화질','High quality')):quality.addAction(tr(ko,en),lambda v=value:self.option('render_quality',v))
++        self.menu.addAction(tr('진단 ZIP 저장','Save diagnostics ZIP'),self.diagnostics)
++        self.menu.addAction(tr('업데이트 확인','Check for updates'),self.check_update)
++        self.menu.setTitle(tr('표시 조작','Display controls'));self.more.setMenu(self.menu);row.addWidget(self.more);row.addStretch();self.update_labels()
++    def update_labels(self):
++        c=self.controller
++        self.play.setText(tr('▶ 재생','▶ Play') if c.settings.values.get('motion_paused') else tr('Ⅱ 일시정지','Ⅱ Pause'))
++        self.privacy.setText(tr('방송 모드 켜짐','Broadcast on') if c.settings.values.get('broadcast_mode') else tr('방송 모드','Broadcast mode'))
++    def retranslate(self):
++        pairs=[('변경 기록','Activity'),('사용 한도','Usage'),('★ 보관한 기록','★ Bookmarks'),('전체 기록','All activity'),('입체 관측소','3D observatory'),('날짜별 조형','Daily sculpture'),('표시 조작 ⋯','Display ⋯'),('표시 조작','Display controls'),('모션 축소','Reduce motion'),('가장자리 도킹','Edge docking'),('알림음','Notification sound'),('자원 사용','Resource use'),('절전','Eco'),('균형','Balanced'),('고화질','High quality'),('진단 ZIP 저장','Save diagnostics ZIP'),('업데이트 확인','Check for updates')]
++        translations={text:tr(ko,en) for ko,en in pairs for text in (ko,en)}
++        for button in self.nav_buttons+[self.bookmarks,self.all_records,self.more,self.observatory_button]:button.setText(translations.get(button.text(),button.text()))
++        self.view.blockSignals(True)
++        self.view.setItemText(0,tr('입체 관측소','3D observatory'));self.view.setItemText(1,tr('날짜별 조형','Daily sculpture'));self.view.blockSignals(False)
++        def menu_labels(menu):
++            menu.setTitle(translations.get(menu.title(),menu.title()))
++            for action in menu.actions():
++                action.setText(translations.get(action.text(),action.text()))
++                if action.menu():menu_labels(action.menu())
++        menu_labels(self.menu)
++        self.text_size.setAccessibleName(tr('글자 크기','Text size'));self.panel.live.setText(tr('실시간 복귀','Return to live'))
++        self.update_labels();self.panel.refresh()
++
++    def option(self,key,value):
++        c=self.controller;previous=c.settings.values.get(key)
++        c.settings.values[key]=value
++        try:c.settings.save()
++        except Exception as error:
++            c.settings.values[key]=previous;QMessageBox.warning(c.window,tr('저장 실패','Save failed'),str(error));return
++        if key=='broadcast_mode':
++            for notice in c.notices.values():notice.broadcast_mode=bool(value);notice.update_event(notice.notice_event)
++            mask_details(c.window);self.panel.refresh()
++        if key=='text_scale':self.apply_text_size();c.orbit._request_motion_size()
++        if key=='edge_docking' and not value:self.expand()
++        self.update_labels();self.feed_scene()
++    def apply_text_size(self):
++        c=self.controller;scale=c.settings.values.get('text_scale',100)/100
++        font=app_font(round(13*scale));c.window.setFont(font)
++        for label in c.window.findChildren(QLabel):
++            base=label.property('baseFont29')
++            if base is None:base=max(12,label.font().pixelSize() if label.font().pixelSize()>0 else 13);label.setProperty('baseFont29',base)
++            label.setFont(app_font(round(base*scale)))
++        # 스타일의 px 우선순위에도 사용자 선택이 적용되도록 각 크기를 함께 조정합니다.
++        import re
++        from theme import STYLE
++        c.window.setStyleSheet(re.sub(r'font-size:(\d+)px',lambda m:'font-size:'+str(round(int(m[1])*scale))+'px',STYLE))
++        for child in c.window.findChildren(QWidget):
++            original=child.property('baseStyle29')
++            if original is None:original=child.styleSheet();child.setProperty('baseStyle29',original)
++            child.setStyleSheet(re.sub(r'font-size:(\d+)px',lambda m:'font-size:'+str(round(int(m[1])*scale))+'px',original))
++    def ingest(self,event):
++        c=self.controller
++        if not isinstance(event.get('target'),str) or not event['target'].strip():return
++        c.features.ingest(event);self.snapshot_cache=c.features.snapshot();self.panel.refresh();self.transition=0.;self.transition_started=time.monotonic();self.timer.start();self.feed_scene()
++        if c.settings.values.get('notification_sound',False):
++            # 자산이 없는 환경에서도 운영체제의 짧은 신호음을 사용합니다.
++            import winsound
++            flags={'settings':winsound.MB_OK,'activity':winsound.MB_ICONASTERISK,'lifecycle':winsound.MB_ICONEXCLAMATION}
++            winsound.MessageBeep(flags.get(event.get('kind'),winsound.MB_OK))
++    def animate(self):
++        self.transition=min(1,(time.monotonic()-self.transition_started)/.9);self.feed_scene()
++        if self.transition>=1 and (self.click_started is None or time.monotonic()-self.click_started>=.35):self.click_started=None;self.timer.stop()
++    def feed_scene(self,snapshot=None):
++        c=self.controller
++        if not hasattr(c,'orbit'):return
++        from calendar_motion import set_calendar_observatory_scene,set_calendar_motion_options
++        set_calendar_motion_options(paused=bool(c.settings.values.get("motion_paused",False)),reduced_motion=bool(c.settings.values.get("reduced_motion",False)),quality=c.settings.values.get("render_quality","balanced"))
++        if c.settings.values.get('scene_mode','observatory')=='calendar':set_calendar_observatory_scene(None);return
++        snapshot=snapshot or (self.panel.replay_snapshot if self.panel.replaying else self.snapshot_cache);agents=sorted(snapshot.get('agents',[]),key=lambda a:not a.get('pinned'))
++        events=snapshot.get('events',[]);last=events[-1] if events else {};target=last.get('target');current=last.get('after') or snapshot.get('executed',{}).get(target) or snapshot.get('selected',{}).get(target) or {}
++        self.scene={'model':current.get('model'),'effort':current.get('effort'),'agents':[{'target':a['target'],'status':a.get('status','unknown'),'pinned':a.get('pinned',False)} for a in agents[:24]],
++          'usage_fraction':c.orbit.usage_fraction if c.orbit.usage_state=='fresh' else None,'paused':bool(c.settings.values.get('motion_paused',False) or self.panel.replaying),'reduced_motion':bool(c.settings.values.get('reduced_motion',False)),
++          'quality':c.settings.values.get('render_quality','balanced'),'pointer':self.pointer,'transition':self.transition,'press':max(0.,1.-(time.monotonic()-self.click_started)/.35) if self.click_started else 0.}
++        set_calendar_observatory_scene(self.scene);self.panel.canvas.update();c.orbit.update()
++    def open_target(self,target):
++        events=self.controller.features.snapshot().get('events',[])
++        event=next((e for e in reversed(events) if e.get('target')==target and e.get('kind')!='lifecycle'),None)
++        self.controller.show(event.get('id') if event else None)
++    def hit(self,x,y):
++        from observatory_scene import observatory_positions
++        from calendar_motion import calendar_motion_status
++        positions=observatory_positions(self.scene,calendar_motion_status().get('scene_elapsed',0.))
++        nearest=min(positions,key=lambda p:(p['x']-x)**2+(p['y']-y)**2,default=None)
++        if nearest and (nearest['x']-x)**2+(nearest['y']-y)**2<.035**2:self.open_target(nearest['target'])
++        else:self.click_started=time.monotonic();self.timer.start();self.feed_scene();self.controller.show()
++    def show_bookmarks(self):
++        self.open_page(0)
++        c=self.controller
++        for i in range(c.window.history.count()):
++            item=c.window.history.item(i);item.setHidden(item.data(Qt.ItemDataRole.UserRole).get('id') not in c.features.bookmarks)
++    def show_all(self):
++        self.open_page(0)
++        for i in range(self.controller.window.history.count()):self.controller.window.history.item(i).setHidden(False)
++    def diagnostics(self):
++        from calendar_motion import calendar_motion_status
++        path,_=QFileDialog.getSaveFileName(self.controller.window,tr('진단 ZIP 저장','Save diagnostics ZIP'),'CodexOrbit-diagnostics.zip','ZIP (*.zip)')
++        if path:
++            try:self.controller.features.write_diagnostics(path,self.controller.last_monitor_status or {},calendar_motion_status())
++            except Exception as error:QMessageBox.warning(self.controller.window,tr('저장 실패','Save failed'),str(error))
++    def check_update(self):
++        from update_widgets import show_update
++        show_update(self.controller)
++    def health(self,value):
++        state=value.get('state','');healthy=state=='감시 중';problem=any(x in state for x in ('오류','중단','지연','실패'))
++        if self.last_health is None:
++            if healthy:self.last_health=True
++            elif problem:self.last_health=False
++            return
++        if (healthy or problem) and healthy!=self.last_health:
++            self.last_health=healthy
++            c=self.controller;event={'id':'health-'+str(time.time_ns()),'kind':'health','chat_name':tr('Codex 감시 상태','Codex monitor status'),'time':value.get('time'),'reason':tr('감시 연결이 복구되어 새 변경을 계속 알려드립니다.','Monitoring recovered; new changes will be reported.') if healthy else tr('변경을 확인하지 못하고 있습니다. 연결을 다시 확인하는 중입니다.','Changes cannot be observed. Retrying the connection.'),'before':None,'after':None}
++            c.enqueue_notice(event)
++    def dock(self):
++        c=self.controller;orbit=c.orbit
++        if not c.settings.values.get('edge_docking') or self.docked:return
++        screen=QApplication.screenAt(orbit.pos()) or QApplication.primaryScreen()
++        if not screen:return
++        rect=screen.availableGeometry()
++        if abs(orbit.x()-rect.left())>32 and abs(rect.right()+1-orbit.x()-orbit.width())>32:return
++        self.expanded_size=orbit.size();self.expanded_position=orbit.pos();self.docked=True
++        orbit.setMinimumSize(32,80);orbit.resize(40,120)
++        orbit.move(rect.left() if orbit.x()-rect.left()<32 else rect.right()-39,max(rect.top(),min(orbit.y(),rect.bottom()-119)))
++    def expand(self):
++        if self.docked:
++            orbit=self.controller.orbit;self.docked=False;orbit.resize(self.expanded_size);orbit.move(self.expanded_position);orbit.setMinimumSize(180,250);orbit.restore_position()
+diff --git a/src/observatory_scene.py b/src/observatory_scene.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..beb73ae917117703840a2f00ff510b9ce4b934e3
+--- /dev/null
++++ b/src/observatory_scene.py
+@@ -0,0 +1,144 @@
++"""관측소 스냅샷 검증과 렌더·클릭이 공유하는 실제 3D 배치입니다."""
++import math
++import re
++
++MAX_AGENTS = 24
++CAMERA = 700.0
++EXTENT = 69.0
++
++
++def _number(value, low, high, name):
++    if type(value) not in (int, float):
++        raise ValueError(name + ' 값은 유한한 숫자여야 합니다.')
++    try:
++        valid = math.isfinite(value) and low <= value <= high
++    except OverflowError:
++        valid = False
++    if not valid:
++        raise ValueError(name + ' 값이 허용 범위를 벗어났습니다.')
++    return float(value)
++
++
++def normalize_scene(scene):
++    """개인 기록을 추가 수집하지 않고 전달받은 최신 값만 독립 복사합니다."""
++    if not isinstance(scene, dict):
++        raise TypeError('관측소 장면은 dict여야 합니다.')
++    result = {}
++    for key in ('model', 'effort'):
++        value = scene.get(key)
++        if value is not None and (not isinstance(value, str) or len(value) > 128):
++            raise ValueError(key + ' 값은 짧은 원문 문자열 또는 None이어야 합니다.')
++        result[key] = value
++    quality = scene.get('quality', 'balanced')
++    if quality not in ('eco', 'balanced', 'high'):
++        raise ValueError('품질은 eco, balanced, high 중 하나여야 합니다.')
++    result['quality'] = quality
++    for key in ('paused', 'reduced_motion'):
++        value = scene.get(key, False)
++        if type(value) is not bool:
++            raise ValueError(key + ' 값은 bool이어야 합니다.')
++        result[key] = value
++    usage = scene.get('usage_fraction')
++    result['usage_fraction'] = None if usage is None else _number(usage, 0, 1, '사용 한도')
++    pointer = scene.get('pointer', (0, 0))
++    if not isinstance(pointer, (tuple, list)) or len(pointer) != 2:
++        raise ValueError('포인터는 두 정규 좌표여야 합니다.')
++    result['pointer'] = [_number(v, -1, 1, '포인터') for v in pointer]
++    result['transition'] = _number(scene.get('transition', 1), 0, 1, '전환')
++    result['press'] = _number(scene.get('press', 0), 0, 1, '눌림')
++    agents = scene.get('agents', [])
++    if not isinstance(agents, (list, tuple)) or len(agents) > MAX_AGENTS:
++        raise ValueError('GPU 작업자 위성은 최대 24개여야 합니다.')
++    result['agents'] = []
++    targets = set()
++    for agent in agents:
++        if not isinstance(agent, dict):
++            raise ValueError('작업자 항목은 dict여야 합니다.')
++        target = agent.get('target')
++        status = agent.get('status', 'unknown')
++        pinned = agent.get('pinned', False)
++        if not isinstance(target, str) or not target or len(target) > 200 or target in targets:
++            raise ValueError('작업자 target은 중복 없는 원문 ID여야 합니다.')
++        if not isinstance(status, str) or len(status) > 64 or type(pinned) is not bool:
++            raise ValueError('작업자 상태와 고정 여부를 확인할 수 없습니다.')
++        targets.add(target)
++        result['agents'].append({'target': target, 'status': status, 'pinned': pinned})
++    return result
++
++
++def model_family(model):
++    match = re.fullmatch(r'gpt-\d+(?:\.\d+)?-(sol|astra|terra|luna)', model or '')
++    return match.group(1) if match else 'unknown'
++
++
++def particle_count(effort):
++    return {'none': 0, 'minimal': 3, 'low': 6, 'medium': 12,
++            'high': 20, 'xhigh': 32, 'ultra': 48}.get(effort, 0)
++
++
++def scene_fps(scene):
++    return {'eco': 20, 'balanced': 30, 'high': 60}[scene.get('quality', 'balanced')]
++
++
++def scene_time(scene, elapsed):
++    value = _number(elapsed, -1e12, 1e12, '모션 시각')
++    return 0.0 if scene.get('reduced_motion') else value
++
++
++def world_matrix(scene):
++    """렌더와 클릭 위치에 동일한 미세 시점 이동·눌림 배율을 적용합니다."""
++    x, y = scene.get('pointer', (0, 0))
++    ax, ay = y * .09, x * .09
++    cx, sx, cy, sy = math.cos(ax), math.sin(ax), math.cos(ay), math.sin(ay)
++    scale = 1 - .08 * scene.get('press', 0)
++    return [[scale * cy, scale * sy * sx, scale * sy * cx, 0],
++            [0, scale * cx, -scale * sx, 0],
++            [-scale * sy, scale * cy * sx, scale * cy * cx, 0],
++            [0, 0, 0, 1]]
++
++
++def transform_point(scene, point):
++    matrix = world_matrix(scene)
++    return tuple(sum(matrix[i][j] * point[j] for j in range(3)) for i in range(3))
++
++
++def project_point(point):
++    """실제 카메라와 중앙 정사각 crop에 대응하는 0..1 좌표입니다."""
++    x, y, z = point
++    perspective = CAMERA / (CAMERA - z)
++    return .5 + x * perspective / (2 * EXTENT), .5 - y * perspective / (2 * EXTENT), .5 + z / 140
++
++
++def agent_world_positions(scene, elapsed):
++    scene = normalize_scene(scene)
++    elapsed = scene_time(scene, elapsed)
++    result = []
++    count = len(scene['agents'])
++    for index, agent in enumerate(scene['agents']):
++        phase = math.tau * index / max(1, count)
++        if not agent['pinned']:
++            phase += elapsed * .22
++        radius = 52 if agent['pinned'] else 57
++        status = agent['status']
++        bob = 2 * math.sin(elapsed * (4 if status in ('retrying', 'retry') else 1.3) + index)
++        shake = 1.2 * math.sin(elapsed * 10) if status == 'error' else 0
++        x = radius * math.cos(phase) + shake
++        y = radius * .66 * math.sin(phase) + bob
++        # 용기 윗부분을 가리는 중앙 하단 구역에서는 궤도를 부드럽게 들어 올립니다.
++        weight = min(1., max(0., (26 - abs(x)) / 10))
++        weight = weight * weight * (3 - 2 * weight)
++        y += max(0., -22 - y) * weight
++        result.append({**agent, 'position': (x, y,
++                                           21 * math.sin(phase + .4))})
++    return result
++
++
++def observatory_positions(scene, elapsed):
++    """같은 표시 프레임의 scene_elapsed를 받아 위성의 정확한 클릭 중심을 돌려줍니다."""
++    scene = normalize_scene(scene)
++    result = []
++    for agent in agent_world_positions(scene, elapsed):
++        x, y, depth = project_point(transform_point(scene, agent['position']))
++        result.append({'target': agent['target'], 'status': agent['status'], 'pinned': agent['pinned'],
++                       'x': x, 'y': y, 'depth': depth})
++    return result
+diff --git a/src/orbit_features.py b/src/orbit_features.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..846f00fd473d99948c9118ed5bb72950c39cb8af
+--- /dev/null
++++ b/src/orbit_features.py
+@@ -0,0 +1,292 @@
++"""원문 이벤트와 표시를 분리하는 관측소 기록·관심 항목·개인정보 제외 진단입니다."""
++from collections import OrderedDict
++from copy import deepcopy
++from datetime import datetime, timezone
++import hashlib
++import json
++import math
++import os
++from pathlib import Path
++import re
++import tempfile
++import zipfile
++
++from activity import safe_public_text
++
++
++_EMOJI = re.compile('[\U0001f000-\U0001faff\u2600-\u27bf\u2300-\u23ff\u2b05-\u2b07\u2b1b\u2b1c\u2b50\u2b55\u00a9\u00ae\u203c\u2049\u2122\u2139\u2194-\u2199\u21a9\u21aa\u2934\u2935\u3030\u303d\u3297\u3299]')
++_KEYCAP = re.compile('[0-9#*]\ufe0f?\u20e3')
++_STATUS = {'running', 'completed', 'waiting', 'error', 'aborted'}
++_LIFECYCLE_FIELDS = {'id', 'target', 'status', 'time', 'source_time', 'role', 'parent', 'parent_id'}
++_IDENTITY = re.compile(r'[A-Za-z0-9_.-]{1,128}\Z')
++_LIFECYCLE_LIMIT = 1048576
++_EVENT_FIELDS = {'id', 'target', 'title', 'chat_title', 'chat_name', 'before', 'after', 'time',
++                 'source_time', 'reason', 'kind', 'role', 'parent', 'parent_id', 'agent_path',
++                 'task_summary', 'task_name', 'activity_action', 'activity_type', 'status',
++                 'turn_id', 'evidence', 'requested', 'source', 'short_reason', 'task_source'}
++
++
++def clean_chat_title(text):
++    """장식 이모지 시퀀스만 표시에서 제거하고 일반 숫자·문자는 유지합니다."""
++    if not isinstance(text, str):
++        return ''
++    if not (_KEYCAP.search(text) or _EMOJI.search(text)):
++        return text
++    text = _KEYCAP.sub(' ', text)
++    text = _EMOJI.sub(' ', text)
++    text = re.sub('[\u200d\ufe0e\ufe0f\U000e0020-\U000e007f]', '', text)
++    return ' '.join(text.split())
++
++
++def changed_fields(event):
++    before = event.get('before') if isinstance(event.get('before'), dict) else {}
++    after = event.get('after') if isinstance(event.get('after'), dict) else {}
++    return {key for key in ('model', 'effort') if before.get(key) != after.get(key)}
++
++
++def task_hint(event, language='ko'):
++    """명시한 공개 작업 요약만 사용하며 모델 이름이나 변경 이유로 작업을 만들지 않습니다."""
++    value = safe_public_text(event.get('task_summary') or event.get('task_name'), 240)
++    return ' '.join(value.split()) if value else ('Task not observed' if language == 'en' else '확인된 작업 정보 없음')
++
++
++def _instant(value):
++    if isinstance(value, datetime):
++        if value.tzinfo is None:
++            raise ValueError('재생 시각에는 시간대가 필요합니다.')
++        return value.timestamp()
++    if type(value) in (int, float):
++        if not math.isfinite(value):
++            raise ValueError('재생 시각은 유한해야 합니다.')
++        return float(value)
++    if isinstance(value, str):
++        return _instant(datetime.fromisoformat(value.replace('Z', '+00:00')))
++    raise ValueError('재생 시각은 시간대가 있는 시각 또는 Unix 초여야 합니다.')
++
++
++def _atomic(path, data):
++    path.parent.mkdir(parents=True, exist_ok=True)
++    handle, name = tempfile.mkstemp(prefix='.features-', suffix='.tmp', dir=path.parent)
++    try:
++        with os.fdopen(handle, 'w', encoding='utf-8', newline='\n') as stream:
++            json.dump(data, stream, ensure_ascii=False, indent=2)
++        os.replace(name, path)
++    finally:
++        Path(name).unlink(missing_ok=True)
++
++
++def _lifecycle_row(value):
++    """복원 가능한 식별·상태·시각만 검증하며 본문 필드는 받지 않습니다."""
++    if not isinstance(value, dict) or set(value) - _LIFECYCLE_FIELDS:
++        raise ValueError('생명주기 상태의 허용 필드가 아닙니다. 원본을 초기화하지 않습니다.')
++    for key in ('id', 'target', 'parent', 'parent_id'):
++        item = value.get(key)
++        if item is None and key in ('parent', 'parent_id'):
++            continue
++        if not isinstance(item, str) or not _IDENTITY.fullmatch(item):
++            raise ValueError('생명주기 ID는 1~128자의 영문·숫자·밑줄·점·하이픈이어야 합니다.')
++    if not isinstance(value.get('status'), str) or value['status'] not in _STATUS:
++        raise ValueError('명시된 생명주기 상태가 필요합니다.')
++    for key in ('time', 'source_time'):
++        item = value.get(key)
++        if item is None and key == 'source_time':
++            continue
++        if not isinstance(item, str) or len(item) > 64:
++            raise ValueError('생명주기 시각은 64자 이하의 시간대가 있는 문자열이어야 합니다.')
++        _instant(item)
++    role = value.get('role')
++    if role is not None and (not isinstance(role, str) or not role or len(role) > 64
++                             or any(ord(char) < 32 or 127 <= ord(char) <= 159
++                                    or 0xD800 <= ord(char) <= 0xDFFF for char in role)):
++        raise ValueError('생명주기 역할은 제어문자 없는 1~64자 문자열이어야 합니다.')
++    return deepcopy(value)
++
++
++class FeatureStore:
++    """본문은 메모리에 두고 관심 ID·읽음·허용된 생명주기 상태만 개인 폴더에 저장합니다."""
++    def __init__(self, directory):
++        self.directory = Path(directory)
++        self.path = self.directory / 'features-v1.json'
++        self.lifecycle_path = self.directory / 'lifecycle-v1.json'
++        self._state = {'schema_version': 1, 'pins': [], 'bookmarks': [], 'seen_ids': []}
++        if self.path.exists():
++            if self.path.stat().st_size > 262144:
++                raise ValueError('관심 항목 상태 파일이 상한을 초과했습니다.')
++            state = json.loads(self.path.read_text(encoding='utf-8'))
++            if (not isinstance(state, dict) or state.get('schema_version') != 1
++                    or any(not isinstance(state.get(key), list)
++                           or any(not isinstance(value, str) or len(value) > 256 for value in state[key])
++                           for key in ('pins', 'bookmarks', 'seen_ids'))):
++                raise ValueError('관심 항목 상태 오류입니다. 원본을 초기화하지 않습니다.')
++            self._state = state
++        self._events = OrderedDict()
++        self._lifecycles = OrderedDict()
++        if self.lifecycle_path.exists():
++            if self.lifecycle_path.stat().st_size > _LIFECYCLE_LIMIT:
++                raise ValueError('생명주기 상태 파일이 상한을 초과했습니다.')
++            state = json.loads(self.lifecycle_path.read_text(encoding='utf-8'))
++            if (not isinstance(state, dict) or set(state) != {'schema_version', 'events'}
++                    or type(state.get('schema_version')) is not int or state['schema_version'] != 1
++                    or not isinstance(state.get('events'), list) or len(state['events']) > 512):
++                raise ValueError('생명주기 상태 오류입니다. 원본을 초기화하지 않습니다.')
++            for item in state['events']:
++                row = _lifecycle_row(item)
++                if row['id'] in self._lifecycles:
++                    raise ValueError('생명주기 ID가 중복됩니다. 원본을 초기화하지 않습니다.')
++                self._lifecycles[row['id']] = row
++
++    @property
++    def pins(self):
++        return frozenset(self._state['pins'])
++
++    @property
++    def bookmarks(self):
++        return frozenset(self._state['bookmarks'])
++
++    def _preference(self, key, identity, enabled, limit):
++        if not isinstance(identity, str) or not identity or len(identity) > 256:
++            raise ValueError('관심 항목 ID는 1~256자 문자열이어야 합니다.')
++        if type(enabled) is not bool:
++            raise TypeError('관심 항목 설정은 bool이어야 합니다.')
++        state = deepcopy(self._state)
++        values = [value for value in state[key] if value != identity]
++        if enabled:
++            if len(values) >= limit:
++                raise ValueError('관심 항목 저장 상한을 초과했습니다.')
++            values.append(identity)
++        state[key] = values
++        _atomic(self.path, state)
++        self._state = state
++
++    def set_pin(self, target, enabled):
++        self._preference('pins', target, enabled, 64)
++
++    def set_bookmark(self, event_id, enabled):
++        self._preference('bookmarks', event_id, enabled, 256)
++
++    def ingest(self, event):
++        if not isinstance(event, dict):
++            raise TypeError('이벤트는 객체여야 합니다.')
++        # payload/content/messages 같은 대화 원문은 새 저장소에 복제하지 않습니다.
++        value = {key: deepcopy(item) for key, item in event.items() if key in _EVENT_FIELDS}
++        if not isinstance(value.get('target'), str) or not value['target']:
++            raise ValueError('이벤트 대상이 필요합니다.')
++        identity = value.get('id')
++        if not isinstance(identity, str) or not identity:
++            identity = hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False).encode('utf-8')).hexdigest()
++            value['id'] = identity
++        previous = self._events.get(identity)
++        if previous is None:
++            previous = ({'kind': 'lifecycle', **self._lifecycles[identity]}
++                        if identity in self._lifecycles else {})
++        merged = {**previous, **value}
++        if merged.get('kind') == 'lifecycle':
++            row = _lifecycle_row({key: deepcopy(item) for key, item in merged.items()
++                                  if key in _LIFECYCLE_FIELDS})
++            if self._lifecycles.get(identity) != row:
++                lifecycles = self._lifecycles.copy()
++                lifecycles[identity] = row
++                while len(lifecycles) > 512:
++                    lifecycles.popitem(last=False)
++                state = {'schema_version': 1, 'events': list(lifecycles.values())}
++                if len(json.dumps(state, ensure_ascii=False, indent=2).encode('utf-8')) > _LIFECYCLE_LIMIT:
++                    raise ValueError('생명주기 상태 파일이 상한을 초과했습니다.')
++                _atomic(self.lifecycle_path, state)
++                self._lifecycles = lifecycles
++        self._events[identity] = merged
++        while len(self._events) > 512:
++            self._events.popitem(last=False)
++
++    def load_history(self, events):
++        # 상세 정보가 보강된 같은 ID는 교체하고 이미 관측한 생명주기는 유지합니다.
++        for event in events:
++            self.ingest(event)
++
++    @staticmethod
++    def _time(event):
++        for key in ('source_time', 'time'):
++            try:
++                return _instant(event.get(key))
++            except (ValueError, TypeError, OverflowError):
++                pass
++        return None
++
++    def snapshot(self, at=None, through=None):
++        cutoff = None if at is None else _instant(at)
++        combined = {identity: {'kind': 'lifecycle', **row} for identity, row in self._lifecycles.items()}
++        for identity, event in self._events.items():
++            combined[identity] = {**combined.get(identity, {}), **event}
++        rows = [event for event in combined.values()
++                if cutoff is None or (self._time(event) is not None and self._time(event) <= cutoff)]
++        rows.sort(key=lambda event: self._time(event) if self._time(event) is not None else float('-inf'))
++        if through is not None:
++            # 감지 지연이나 같은 시각의 기록도 선택한 이벤트 다음 상태가 섞이지 않게 합니다.
++            boundary = next((index for index, event in enumerate(rows) if event['id'] == through), None)
++            if boundary is None:
++                raise ValueError('재생할 기록 ID를 현재 저장 기록에서 찾을 수 없습니다.')
++            rows = rows[:boundary + 1]
++        selected, executed, agents = {}, {}, {}
++        for event in rows:
++            target = event['target']
++            agent = agents.setdefault(target, {'target': target, 'status': 'unknown', 'pinned': target in self.pins})
++            raw_title = event.get('chat_name') or event.get('chat_title') or event.get('title')
++            if isinstance(raw_title, str) and raw_title:
++                agent['title'] = agent['chat_name'] = clean_chat_title(raw_title)
++            agent.setdefault('title', target)
++            agent.setdefault('chat_name', agent['title'])
++            for key in ('role', 'parent', 'parent_id', 'agent_path', 'time'):
++                if key in event:
++                    agent[key] = deepcopy(event[key])
++            if event.get('task_summary') or event.get('task_name'):
++                agent['task_hint'] = task_hint(event)
++            if event.get('kind') == 'lifecycle' and event.get('status') in _STATUS:
++                agent['status'] = event['status']
++            if isinstance(event.get('after'), dict):
++                if event.get('kind') == 'settings':
++                    selected[target] = deepcopy(event['after'])
++                elif event.get('kind') == 'observed':
++                    executed[target] = deepcopy(event['after'])
++            observed = executed.get(target) or selected.get(target) or {}
++            agent.update(model=observed.get('model'), effort=observed.get('effort'))
++        ordered = sorted(agents.values(), key=lambda agent: (not agent['pinned'], agent['target']))
++        return deepcopy({'agents': ordered, 'events': rows[-512:], 'selected': selected, 'executed': executed})
++
++    def mark_seen(self):
++        state = deepcopy(self._state)
++        state['seen_ids'] = [event['id'] for event in self.snapshot()['events']]
++        _atomic(self.path, state)
++        self._state = state
++
++    def away_summary(self, since=None):
++        rows = self.snapshot()['events']
++        if since is None:
++            rows = [event for event in rows if event['id'] not in self._state['seen_ids']]
++        else:
++            cutoff = _instant(since)
++            rows = [event for event in rows if self._time(event) is not None and self._time(event) > cutoff]
++        return {'count': len(rows), 'total': len(rows), 'events': deepcopy(rows),
++                'completed': sum(event.get('status') == 'completed' for event in rows),
++                'waiting': sum(event.get('status') == 'waiting' for event in rows),
++                'errors': sum(event.get('status') == 'error' for event in rows)}
++
++    def write_diagnostics(self, path, health, render):
++        """대화·제목·대상·경로·에러 원문 없이 숫자와 bool 지표만 내보냅니다."""
++        allowed_health = {'running', 'watcher_running', 'connected', 'retries', 'pending', 'events_count'}
++        allowed_render = {'render_count', 'fps', 'target_fps', 'dispatch_count', 'presentation_count',
++                          'owners', 'images', 'running', 'render_seconds', 'dropped_frames'}
++        def metrics(source, allowed):
++            return {key: value for key, value in source.items() if key in allowed
++                    and (type(value) is bool or (type(value) in (int, float) and math.isfinite(value)))}
++        data = {'schema_version': 1, 'health': metrics(health, allowed_health),
++                'render': metrics(render, allowed_render)}
++        destination = Path(path)
++        destination.parent.mkdir(parents=True, exist_ok=True)
++        handle, name = tempfile.mkstemp(prefix='.diagnostics-', suffix='.zip', dir=destination.parent)
++        os.close(handle)
++        try:
++            with zipfile.ZipFile(name, 'w', compression=zipfile.ZIP_DEFLATED) as archive:
++                archive.writestr('diagnostics.json', json.dumps(data, ensure_ascii=False, indent=2))
++            os.replace(name, destination)
++        finally:
++            Path(name).unlink(missing_ok=True)
++        return destination
+diff --git a/src/safe_update.py b/src/safe_update.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..281a0e234a82f79419d0664ba815b5e78092554a
+--- /dev/null
++++ b/src/safe_update.py
+@@ -0,0 +1,383 @@
++"""공식 릴리스만 준비하고 별도 프로세스에서 설치 EXE를 교체·검사·복구합니다."""
++from datetime import datetime, timezone
++import ctypes
++import hashlib
++import json
++import os
++from pathlib import Path
++import re
++import shutil
++import subprocess
++import sys
++import tempfile
++import time
++import urllib.parse
++import urllib.request
++
++from windows_job import WindowsJob
++
++
++API = 'https://api.github.com/repos/PUVKID/Codex-Orbit/releases/latest'
++REPOSITORY = 'https://github.com/PUVKID/Codex-Orbit'
++MAX_DOWNLOAD = 512 * 1024 * 1024
++_VERSION = re.compile(r'(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:-([0-9A-Za-z.-]+))?(?:\+([0-9A-Za-z.-]+))?')
++
++
++class UpdateError(ValueError):
++    """공식 출처·무결성·교체 조건이 충족되지 않은 업데이트입니다."""
++
++
++def _version(value):
++    match = _VERSION.fullmatch(value) if isinstance(value, str) else None
++    if (not match or any(not piece or (piece.isdigit() and len(piece) > 1 and piece[0] == '0')
++                         for piece in (match.group(4) or '').split('.') if match.group(4) is not None)
++            or (match.group(5) is not None and any(not piece for piece in match.group(5).split('.')))):
++        raise UpdateError('정상적인 SemVer 버전이 필요합니다.')
++    return tuple(map(int, match.group(1, 2, 3))), match.group(4)
++
++
++def _newer(candidate, current):
++    left, left_pre = _version(candidate)
++    right, right_pre = _version(current)
++    if left != right:
++        return left > right
++    if left_pre is None:
++        return right_pre is not None
++    if right_pre is None:
++        return False
++    for a, b in zip(left_pre.split('.'), right_pre.split('.')):
++        if a != b:
++            if a.isdigit() and b.isdigit():
++                return int(a) > int(b)
++            if a.isdigit() != b.isdigit():
++                return not a.isdigit()
++            return a > b
++    return len(left_pre.split('.')) > len(right_pre.split('.'))
++
++
++def _secure_url(url):
++    parts = urllib.parse.urlsplit(url) if isinstance(url, str) else None
++    if (parts is None or parts.scheme != 'https' or not parts.hostname or parts.username
++            or parts.password or parts.port is not None or parts.fragment):
++        raise UpdateError('공식 HTTPS 주소만 허용합니다.')
++    return parts
++
++
++def validate_download_redirect(url):
++    parts = _secure_url(url)
++    if parts.hostname not in ('release-assets.githubusercontent.com', 'objects.githubusercontent.com'):
++        raise UpdateError('GitHub 공식 릴리스 자산 CDN만 허용합니다.')
++    return url
++
++
++def _asset_url(url, tag):
++    parts = _secure_url(url)
++    expected = '/PUVKID/Codex-Orbit/releases/download/' + urllib.parse.quote(tag, safe='') + '/CodexOrbit.exe'
++    if parts.hostname != 'github.com' or parts.path != expected or parts.query:
++        raise UpdateError('PUVKID/Codex-Orbit의 해당 릴리스 EXE만 허용합니다.')
++    return url
++
++
++class _OfficialRedirect(urllib.request.HTTPRedirectHandler):
++    def redirect_request(self, request, file, code, message, headers, new_url):
++        # 검증된 GitHub 다운로드에서 시작한 자산 CDN 이동만 뒤따릅니다.
++        if request.full_url == API:
++            raise UpdateError('릴리스 API의 예상하지 못한 리디렉션입니다.')
++        validate_download_redirect(new_url)
++        return super().redirect_request(request, file, code, message, headers, new_url)
++
++
++def fetch_bytes(url, maximum):
++    if url != API:
++        parts = _secure_url(url)
++        prefix = '/PUVKID/Codex-Orbit/releases/download/'
++        if parts.hostname != 'github.com' or not parts.path.startswith(prefix) or parts.query:
++            raise UpdateError('공식 릴리스 요청만 허용합니다.')
++    request = urllib.request.Request(url, headers={'User-Agent': 'CodexOrbit-Updater',
++             'Accept': 'application/vnd.github+json' if url == API else 'application/octet-stream',
++             'X-GitHub-Api-Version': '2026-03-10'})
++    opener = urllib.request.build_opener(_OfficialRedirect())
++    chunks, size = [], 0
++    with opener.open(request, timeout=20) as response:
++        while True:
++            chunk = response.read(min(65536, maximum - size + 1))
++            if not chunk:
++                break
++            size += len(chunk)
++            if size > maximum:
++                raise UpdateError('릴리스 응답이 허용 크기를 초과했습니다.')
++            chunks.append(chunk)
++    return b''.join(chunks)
++
++
++def _local_root():
++    value = os.environ.get('LOCALAPPDATA')
++    if not value:
++        raise UpdateError('현재 사용자의 LOCALAPPDATA를 확인할 수 없습니다.')
++    return Path(value).resolve()
++
++
++def _stage_root():
++    local = _local_root()
++    path = (local / 'CodexOrbit/updates').resolve()
++    if not path.is_relative_to(local):
++        raise UpdateError('업데이트 준비 폴더가 현재 AppData 밖으로 연결되어 있습니다.')
++    return path
++
++
++def _digest(path):
++    hasher = hashlib.sha256()
++    with Path(path).open('rb') as handle:
++        for chunk in iter(lambda: handle.read(1024 * 1024), b''):
++            hasher.update(chunk)
++    return hasher.hexdigest()
++
++
++def _description(value):
++    if not isinstance(value, dict):
++        raise UpdateError('릴리스 정보가 객체가 아닙니다.')
++    version, digest, size = value.get('version'), value.get('sha256'), value.get('size')
++    _version(version)
++    if (_version(version)[1] is not None or not isinstance(digest, str)
++            or re.fullmatch('[0-9a-fA-F]{64}', digest) is None
++            or type(size) is not int or not 2 <= size <= MAX_DOWNLOAD):
++        raise UpdateError('정식 버전·SHA256·자산 크기가 필요합니다.')
++    return version, digest.lower(), size
++
++
++def _stage_path(value, verify=True):
++    version, digest, size = _description(value)
++    expected = (_stage_root() / (version + '-' + digest[:12]) / 'CodexOrbit.update.exe').resolve()
++    path = Path(value.get('path', '')).resolve()
++    if path != expected or not path.is_relative_to(_stage_root()):
++        raise UpdateError('준비 EXE의 경로가 업데이트 전용 폴더와 다릅니다.')
++    if verify and (not path.is_file() or path.stat().st_size != size or _digest(path) != digest):
++        raise UpdateError('준비 EXE의 크기 또는 SHA256이 일치하지 않습니다.')
++    return path
++
++
++def _installed(executable):
++    path = Path(executable).resolve()
++    local = _local_root()
++    expected = (local / 'Programs/CodexOrbit/CodexOrbit.exe').resolve()
++    if path != expected or not path.is_relative_to(local) or not path.is_file():
++        raise UpdateError('자동 교체는 현재 사용자 AppData의 설치본에서만 지원합니다. 소스·휴대용 실행은 공식 릴리스를 직접 설치하세요.')
++    return path
++
++
++def _write_json(path, value):
++    path = Path(path)
++    path.parent.mkdir(parents=True, exist_ok=True)
++    handle, temporary = tempfile.mkstemp(prefix='.update-', suffix='.json', dir=path.parent)
++    try:
++        with os.fdopen(handle, 'w', encoding='utf-8', newline='\n') as stream:
++            json.dump(value, stream, ensure_ascii=False, indent=2)
++        os.replace(temporary, path)
++    finally:
++        Path(temporary).unlink(missing_ok=True)
++
++
++def _replace_file(source, destination):
++    """Windows의 짧은 공유 경합만 유한하게 재시도하고 다른 오류는 그대로 전달합니다."""
++    delays = (.02, .04, .08, .12)
++    for attempt in range(len(delays) + 1):
++        try:
++            os.replace(source, destination)
++            return
++        except OSError as error:
++            if getattr(error, 'winerror', None) not in (5, 32, 33) or attempt == len(delays):
++                raise
++            time.sleep(delays[attempt])
++
++
++class SafeUpdater:
++    def __init__(self, data_directory, executable=None):
++        self.data_directory = Path(data_directory).resolve()
++        self.executable = Path(executable or sys.executable).resolve()
++
++    def check(self, current_version):
++        _version(current_version)
++        try:
++            metadata = json.loads(fetch_bytes(API, 1024 * 1024).decode('utf-8'))
++        except (ValueError, UnicodeError) as error:
++            raise UpdateError('릴리스 응답을 읽을 수 없습니다.') from error
++        if not isinstance(metadata, dict) or metadata.get('draft') is not False or metadata.get('prerelease') is not False:
++            raise UpdateError('공개된 정식 릴리스만 사용할 수 있습니다.')
++        tag = metadata.get('tag_name')
++        version = tag[1:] if isinstance(tag, str) and tag.startswith('v') else tag
++        _version(version)
++        release_url = REPOSITORY + '/releases/tag/' + urllib.parse.quote(tag, safe='')
++        if metadata.get('html_url') != release_url:
++            raise UpdateError('공식 릴리스 페이지 주소가 일치하지 않습니다.')
++        assets = metadata.get('assets')
++        assets = [asset for asset in assets if isinstance(asset, dict) and asset.get('name') == 'CodexOrbit.exe'] if isinstance(assets, list) else []
++        if len(assets) != 1 or assets[0].get('state') != 'uploaded':
++            raise UpdateError('공식 CodexOrbit.exe 자산 하나가 필요합니다.')
++        asset = assets[0]
++        digest = asset.get('digest', '')
++        value = {'version': version, 'tag': tag, 'asset_url': _asset_url(asset.get('browser_download_url'), tag),
++                 'sha256': digest[7:] if isinstance(digest, str) and digest.startswith('sha256:') else '',
++                 'size': asset.get('size'), 'release_url': release_url,
++                 'available': _newer(version, current_version)}
++        _description(value)
++        return value
++
++    def stage(self, release):
++        version, digest, size = _description(release)
++        tag = release.get('tag')
++        if release.get('available') is not True or tag not in (version, 'v' + version):
++            raise UpdateError('확인된 새 정식 릴리스만 준비할 수 있습니다.')
++        url = _asset_url(release.get('asset_url'), tag)
++        body = fetch_bytes(url, size)
++        if len(body) != size or hashlib.sha256(body).hexdigest() != digest or not body.startswith(b'MZ'):
++            raise UpdateError('다운로드 EXE의 크기·SHA256·파일 형식이 일치하지 않습니다.')
++        folder = _stage_root() / (version + '-' + digest[:12])
++        folder.mkdir(parents=True, exist_ok=True)
++        destination = folder / 'CodexOrbit.update.exe'
++        handle, temporary = tempfile.mkstemp(prefix='.download-', suffix='.exe', dir=folder)
++        try:
++            with os.fdopen(handle, 'wb') as stream:
++                stream.write(body)
++            os.replace(temporary, destination)
++        finally:
++            Path(temporary).unlink(missing_ok=True)
++        return {'version': version, 'path': str(destination), 'sha256': digest, 'size': size}
++
++    def apply(self, staged, parent_pid=None):
++        executable = _installed(self.executable)
++        path = _stage_path(staged)
++        pid = os.getpid() if parent_pid is None else parent_pid
++        if type(pid) is not int or pid <= 0:
++            raise UpdateError('현재 앱의 유효한 프로세스 ID가 필요합니다.')
++        plan = path.parent / 'plan.json'
++        lock = _stage_root() / 'apply.lock'
++        try:
++            with lock.open('x', encoding='utf-8') as stream:
++                stream.write(str(plan))
++        except FileExistsError as error:
++            raise UpdateError('이전 업데이트 준비가 남아 있습니다. 실행 상태를 확인해 주세요.') from error
++        try:
++            value = {'schema_version': 1, 'staged': dict(staged), 'executable': str(executable),
++                     'data_directory': str(self.data_directory), 'parent_pid': pid,
++                     'current_sha256': _digest(executable), 'created': datetime.now(timezone.utc).isoformat()}
++            _write_json(plan, value)
++            process = subprocess.Popen([str(path), '--orbit-apply-update', str(plan)],
++                        cwd=executable.parent, close_fds=True,
++                        creationflags=getattr(subprocess, 'DETACHED_PROCESS', 0) | getattr(subprocess, 'CREATE_NEW_PROCESS_GROUP', 0))
++            return {'pending': True, 'pid': process.pid, 'plan': str(plan)}
++        except Exception:
++            lock.unlink(missing_ok=True)
++            raise
++
++
++def _wait_for_parent(pid):
++    if os.name != 'nt':
++        raise UpdateError('설치 EXE 교체는 Windows에서만 지원합니다.')
++    kernel = ctypes.WinDLL('kernel32', use_last_error=True)
++    kernel.OpenProcess.argtypes = (ctypes.c_uint, ctypes.c_int, ctypes.c_uint)
++    kernel.OpenProcess.restype = ctypes.c_void_p
++    kernel.WaitForSingleObject.argtypes = (ctypes.c_void_p, ctypes.c_uint)
++    kernel.WaitForSingleObject.restype = ctypes.c_uint
++    kernel.CloseHandle.argtypes = (ctypes.c_void_p,)
++    handle = kernel.OpenProcess(0x00100000, False, pid)
++    if not handle:
++        if ctypes.get_last_error() == 87:
++            return
++        raise UpdateError('현재 앱의 안전한 종료를 확인할 수 없습니다.')
++    try:
++        if kernel.WaitForSingleObject(handle, 30000) != 0:
++            raise UpdateError('현재 앱이 30초 안에 종료되지 않아 교체하지 않았습니다.')
++    finally:
++        kernel.CloseHandle(handle)
++
++
++def _smoke(executable, folder):
++    data = folder / 'smoke-data'
++    sessions = data / 'sessions'
++    sessions.mkdir(parents=True, exist_ok=True)
++    report = folder / 'smoke-result.json'
++    with WindowsJob() as job:
++        process = job.start([str(executable), '--smoke-test', '--data-dir', str(data),
++                  '--sessions', str(sessions), '--smoke-report', str(report)], cwd=executable.parent,
++                  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
++        timed_out = False
++        try:
++            process.communicate(timeout=45)
++        except subprocess.TimeoutExpired:
++            timed_out = True
++        finally:
++            # 부모 선종료·상속 pipe도 Job의 후손 전체가 종료된 뒤 기존 5초 안에 회수합니다.
++            job.finish(timeout=5)
++        return (not timed_out and process.returncode == 0 and report.is_file() and report.stat().st_size <= 65536
++                and json.loads(report.read_text(encoding='utf-8')).get('ok') is True)
++
++
++def _restart(executable, data_directory):
++    process = subprocess.Popen([str(executable), '--data-dir', str(data_directory)], cwd=executable.parent,
++              close_fds=True, creationflags=getattr(subprocess, 'DETACHED_PROCESS', 0) | getattr(subprocess, 'CREATE_NEW_PROCESS_GROUP', 0))
++    try:
++        process.wait(timeout=2)
++    except subprocess.TimeoutExpired:
++        return True
++    return False
++
++
++def apply_update_plan(plan_path, *, wait_for_parent=None, smoke=None, restart=None):
++    """앱 종료 후에만 EXE를 바꾸며 새 검사·시작이 실패하면 이전 EXE를 복원합니다."""
++    plan = Path(plan_path).resolve()
++    if not plan.is_relative_to(_stage_root()) or plan.name != 'plan.json' or not plan.is_file() or plan.stat().st_size > 65536:
++        raise UpdateError('허용된 AppData 업데이트 계획 파일이 아닙니다.')
++    value = json.loads(plan.read_text(encoding='utf-8'))
++    if not isinstance(value, dict) or value.get('schema_version') != 1:
++        raise UpdateError('업데이트 계획 구조가 올바르지 않습니다.')
++    staged = _stage_path(value.get('staged'))
++    executable = _installed(value.get('executable', ''))
++    if plan.parent != staged.parent or _digest(executable) != value.get('current_sha256'):
++        raise UpdateError('준비 이후 설치 EXE 또는 계획 경로가 바뀌었습니다.')
++    pid = value.get('parent_pid')
++    if type(pid) is not int or pid <= 0 or pid == os.getpid():
++        raise UpdateError('교체 대상 앱의 프로세스 ID가 올바르지 않습니다.')
++    data_directory = Path(value.get('data_directory', '')).resolve()
++    backup, candidate = staged.parent / 'previous.exe', executable.with_name('CodexOrbit.pending.exe')
++    if backup.exists() or candidate.exists():
++        raise UpdateError('이전 교체 자료가 남아 있어 자동으로 덮어쓰지 않습니다.')
++    wait_for_parent, smoke, restart = wait_for_parent or _wait_for_parent, smoke or _smoke, restart or _restart
++    moved = False
++    try:
++        wait_for_parent(pid)
++        # 같은 설치 폴더에 먼저 복사하여 마지막 교체를 같은 볼륨의 원자 이동으로 만듭니다.
++        shutil.copy2(staged, candidate)
++        if _digest(candidate) != value['staged']['sha256'] or _digest(executable) != value['current_sha256']:
++            raise UpdateError('교체 직전 파일의 무결성이 달라졌습니다.')
++        _replace_file(executable, backup)
++        moved = True
++        _replace_file(candidate, executable)
++        if smoke(executable, staged.parent) is not True:
++            raise UpdateError('새 실행 파일의 시작 검사가 실패했습니다.')
++        if restart(executable, data_directory) is not True:
++            raise UpdateError('새 실행 파일의 재시작이 실패했습니다.')
++        result = {'updated': True, 'rolled_back': False, 'version': value['staged']['version']}
++    except Exception as error:
++        if not moved:
++            raise
++        _replace_file(backup, executable)
++        recovered = restart(executable, data_directory)
++        result = {'updated': False, 'rolled_back': True, 'error': str(error), 'rollback_restarted': recovered is True}
++    finally:
++        candidate.unlink(missing_ok=True)
++        (_stage_root() / 'apply.lock').unlink(missing_ok=True)
++    _write_json(staged.parent / 'update-result.json', result)
++    return result
++
++
++def handle_update_cli(argv):
++    if not argv or argv[0] != '--orbit-apply-update':
++        return None
++    try:
++        if len(argv) != 2:
++            raise UpdateError('업데이트 계획 파일 인자가 필요합니다.')
++        result = apply_update_plan(argv[1])
++        return 0 if result.get('updated') else 1
++    except Exception as error:
++        print('Codex Orbit 업데이트 실패: ' + str(error), file=sys.stderr)
++        return 1
+diff --git a/src/theme.py b/src/theme.py
+index 7beed1d6c72013c0642e820115dcb50009e74505..2f6a2cce9002a8543db8c821fb324a26c7adee9c 100644
+--- a/src/theme.py
++++ b/src/theme.py
+@@ -6,46 +6,49 @@ from PySide6.QtWidgets import QApplication, QFileDialog, QHeaderView, QProxyStyl
+ 
+ 
+ STYLE = '''
+-QWidget {background:#101C29;color:#edf4f4;font-family:SUIT;font-weight:500;font-size:13px;}
+-QDialog {background:#101C29;}
+-QFrame#usagePanel {background:qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 #243B4C,stop:0.55 #1B2D3D,stop:1 #172838);border:1px solid #385064;border-radius:20px;}
++QWidget {background:#f3faf7;color:#193c36;font-family:"NanumGothic";font-weight:700;font-size:13px;}
++QDialog {background:#f3faf7;}
++QFrame#usagePanel {background:qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 #e4f5ed,stop:0.55 #f6fffb,stop:1 #ffffff);border:1px solid #c2dbd0;border-radius:20px;}
+ QLabel {background:transparent;border:none;}
+-QFrame#eventCard {background:#1e3540;border:1px solid #344e5a;border-radius:16px;}
+-QLineEdit,QPlainTextEdit,QTreeView,QComboBox {background:#203842;border:1px solid #3a5662;border-radius:10px;padding:10px;selection-background-color:#436976;selection-color:#ffffff;}
++QFrame#observatoryHero {background:qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 #dbf6e9,stop:1 #fbfffd);border:1px solid #c8e5d7;border-radius:22px;}
++QLabel#currentTask {font-size:23px;color:#143e30;}
++QPushButton:checked {background:#cbf0dd;border-color:#269b6c;color:#114a32;}
++QFrame#eventCard {background:#ffffff;border:1px solid #d0e5db;border-radius:16px;}
++QLineEdit,QPlainTextEdit,QTreeView,QComboBox {background:#ffffff;border:1px solid #c1d9cf;border-radius:10px;padding:10px;selection-background-color:#caeddc;selection-color:#ffffff;}
+ QLineEdit,QComboBox {min-height:22px;}
+ QLineEdit:focus,QPlainTextEdit:focus,QComboBox:focus {border:1px solid #9bdbc9;}
+ QTreeView::item {min-height:24px;padding:3px;}
+-QListWidget {background:#1b333e;border:1px solid #324b56;border-radius:14px;padding:10px;outline:0;}
+-QListWidget::item {padding:17px 12px;border-bottom:1px solid #304a55;border-radius:10px;color:#b9cbd3;}
+-QListWidget::item:selected {background:#2d4955;color:#ffffff;border-left:3px solid #9adfc9;}
+-QListWidget::item:hover {background:#263f4a;}
+-QPushButton,QToolButton {background:#2b4551;color:#edf5f7;border:1px solid #46616d;border-radius:10px;padding:8px 12px;min-height:18px;}
+-QPushButton:hover,QToolButton:hover {background:#375763;border-color:#88b9bd;}
+-QPushButton:pressed,QToolButton:pressed {background:#436573;}
+-QPushButton:disabled {color:#8199a4;background:#203640;border-color:#344c58;}
+-QPushButton#disclosure {background:#203943;border:1px solid #3a5560;text-align:left;padding:14px 12px;}
+-QTabWidget::pane {border:0;border-top:1px solid #35505a;}
+-QTabBar::tab {padding:16px 17px;background:transparent;color:#a8beca;border-bottom:2px solid transparent;font-size:15px;}
+-QTabBar::tab:selected {font-weight:600;background:#263f4b;color:#ffffff;border-bottom:2px solid #98dfd5;border-top-left-radius:10px;border-top-right-radius:10px;}
+-QTabBar::tab:hover {color:#d5f5ee;}
++QListWidget {background:#ffffff;border:1px solid #d0e5db;border-radius:14px;padding:10px;outline:0;}
++QListWidget::item {padding:17px 12px;border-bottom:1px solid #e3eee9;border-radius:10px;color:#45675b;}
++QListWidget::item:selected {background:#d9f6e8;color:#355c50;border-left:3px solid #168565;}
++QListWidget::item:hover {background:#e5f7ee;}
++QPushButton,QToolButton {background:#eaf7f0;color:#193c36;border:1px solid #bfdacf;border-radius:10px;padding:8px 12px;min-height:18px;}
++QPushButton:hover,QToolButton:hover {background:#d6f2e3;border-color:#88b9bd;}
++QPushButton:pressed,QToolButton:pressed {background:#c0e6d5;}
++QPushButton:disabled {color:#355c50;background:#f2f5f3;border-color:#344c58;}
++QPushButton#disclosure {background:#eff8f3;border:1px solid #3a5560;text-align:left;padding:14px 12px;}
++QTabWidget::pane {border:0;border-top:1px solid #d3e8de;}
++QTabBar::tab {padding:16px 17px;background:transparent;color:#476a5d;border-bottom:2px solid transparent;font-size:15px;}
++QTabBar::tab:selected {font-weight:600;background:#dcf5e8;color:#355c50;border-bottom:2px solid #168565;border-top-left-radius:10px;border-top-right-radius:10px;}
++QTabBar::tab:hover {color:#355c50;}
+ QSplitter::handle {background:transparent;width:1px;}
+ QScrollArea {border:0;background:transparent;}
+ QCheckBox {spacing:10px;background:transparent;padding:7px;}
+ QCheckBox::indicator {width:18px;height:18px;border:1px solid #829da7;border-radius:5px;background:#243d48;}
+ QCheckBox::indicator:checked {background:#a3dfcd;border:4px solid #426d69;}
+-QProgressBar {border:0;border-radius:6px;text-align:center;background:#304b57;color:#f4f8f9;}
+-QProgressBar::chunk {background:#78bdb3;border-radius:6px;}
++QProgressBar {border:0;border-radius:6px;text-align:center;background:#dcece4;color:#193c36;}
++QProgressBar::chunk {background:#1aa676;border-radius:6px;}
+ QScrollBar:vertical {background:#19313b;width:8px;margin:0;}
+ QScrollBar::handle:vertical {background:#4c6a77;min-height:28px;border-radius:4px;}
+ QScrollBar::add-line:vertical,QScrollBar::sub-line:vertical {height:0;}
+ QScrollBar:horizontal {background:#213b47;height:8px;}
+ QScrollBar::handle:horizontal {background:#65818c;min-width:24px;border-radius:4px;}
+ QScrollBar::add-line:horizontal,QScrollBar::sub-line:horizontal {width:0;}
+-QMenu {background:#203a45;border:1px solid #526c77;padding:7px;}
++QMenu {background:#ffffff;border:1px solid #bed9cc;padding:7px;}
+ QMenu::item {padding:10px 26px;border-radius:7px;}
+-QMenu::item:selected {background:#395967;color:#ffffff;}
++QMenu::item:selected {background:#dcf6e9;color:#355c50;}
+ QMenu::separator {height:1px;background:#3b5662;margin:5px;}
+-QToolTip {background:#294550;color:#f0f6f7;border:1px solid #627f8c;padding:8px;}
++QToolTip {background:#fafffc;color:#23483a;border:1px solid #a4c9b5;padding:8px;}
+ QMessageBox QLabel {min-width:300px;}
+ '''
+ 
+@@ -123,7 +126,7 @@ def apply_theme():
+     if app.property('orbit_monochrome'):
+         return
+     app.setStyle(MonochromeStyle())
+-    app.styleHints().setColorScheme(Qt.ColorScheme.Dark)
++    app.styleHints().setColorScheme(Qt.ColorScheme.Light)
+     translator = KoreanDialogs(app)
+     app.installTranslator(translator)
+     app.orbit_translator = translator
+@@ -131,16 +134,16 @@ def apply_theme():
+     app.installEventFilter(dialog_layout)
+     app.orbit_dialog_layout = dialog_layout
+     palette = QPalette()
+-    for role, value in ((QPalette.ColorRole.Window, 20), (QPalette.ColorRole.WindowText, 237),
++    for role, value in ((QPalette.ColorRole.Window, 20), (QPalette.ColorRole.WindowText, 35),
+                         (QPalette.ColorRole.Base, 25), (QPalette.ColorRole.AlternateBase, 35),
+-                        (QPalette.ColorRole.Text, 237), (QPalette.ColorRole.Button, 48),
+-                        (QPalette.ColorRole.ButtonText, 240), (QPalette.ColorRole.Highlight, 80),
++                        (QPalette.ColorRole.Text, 35), (QPalette.ColorRole.Button, 48),
++                        (QPalette.ColorRole.ButtonText, 35), (QPalette.ColorRole.Highlight, 80),
+                         (QPalette.ColorRole.HighlightedText, 255), (QPalette.ColorRole.ToolTipBase, 32),
+                         (QPalette.ColorRole.ToolTipText, 255), (QPalette.ColorRole.Link, 220)):
+         palette.setColor(role, QColor(value, value, value))
+-    for role, value in ((QPalette.ColorRole.Window, '#142a33'), (QPalette.ColorRole.Base, '#203842'),
+-                        (QPalette.ColorRole.Button, '#2b4551'), (QPalette.ColorRole.Highlight, '#436976'),
+-                        (QPalette.ColorRole.Link, '#a2e2d2')):
++    for role, value in ((QPalette.ColorRole.Window, '#f3faf7'), (QPalette.ColorRole.Base, '#ffffff'),
++                        (QPalette.ColorRole.Button, '#eaf7f0'), (QPalette.ColorRole.Highlight, '#caeddc'),
++                        (QPalette.ColorRole.Link, '#12815c')):
+         palette.setColor(role, QColor(value))
+     app.setPalette(palette)
+     app.setStyleSheet(STYLE)
+diff --git a/src/typography.py b/src/typography.py
+index 241a41a94507f4eabe66b4b8cdd3a8b4214df2de..e069a5b8659f92043c2aa3ae961ecf4a6d48c780 100644
+--- a/src/typography.py
++++ b/src/typography.py
+@@ -1,4 +1,4 @@
+-"""번들 SUIT 글꼴을 앱과 투명 렌더에서 동일하게 사용합니다."""
++"""번들 나눔고딕 Bold 글꼴을 앱과 투명 렌더에서 동일하게 사용합니다."""
+ from pathlib import Path
+ import sys
+ from PySide6.QtGui import QFont,QFontDatabase
+@@ -16,10 +16,14 @@ def register_fonts():
+             identity=QFontDatabase.addApplicationFont(str(path))
+             if identity<0 or 'SUIT' not in QFontDatabase.applicationFontFamilies(identity):
+                 raise RuntimeError('필수 SUIT 글꼴 등록 실패: '+str(path))
+-        _family='SUIT'
++        path=root/'NanumGothic-Bold.ttf'
++        identity=QFontDatabase.addApplicationFont(str(path))
++        families=QFontDatabase.applicationFontFamilies(identity) if identity>=0 else []
++        if not families:raise RuntimeError('필수 나눔고딕 글꼴 등록 실패: '+str(path))
++        _family=families[0]
+     return _family
+ 
+-def app_font(pixels=None,weight=QFont.Weight.Medium):
++def app_font(pixels=None,weight=QFont.Weight.Bold):
+     font=QFont(register_fonts(),10,weight)
+     if pixels is not None:font.setPixelSize(pixels)
+     font.setStyleStrategy(font.styleStrategy() | QFont.StyleStrategy.NoSubpixelAntialias)
+diff --git a/src/update_widgets.py b/src/update_widgets.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..55a2bfda38df5a0d6d6661160634d015b6c5c94b
+--- /dev/null
++++ b/src/update_widgets.py
+@@ -0,0 +1,87 @@
++"""공식 릴리스 확인과 검증된 업데이트 준비 화면입니다."""
++import os,sys,threading
++from pathlib import Path
++from PySide6.QtCore import QObject,Signal,Qt
++from PySide6.QtWidgets import QDialog,QVBoxLayout,QLabel,QPushButton
++from shiboken6 import isValid
++from observatory_panel import tr
++
++VERSION='3.0.0'
++
++class UpdateBridge(QObject):
++    result=Signal(object,object)
++
++class UpdateDialog(QDialog):
++    def __init__(self,controller):
++        super().__init__(controller.window);self.controller=controller;self.release=None;self.staged=None;self.busy=False;self.latest=False;self.error_text=None
++        from safe_update import SafeUpdater
++        self.updater=SafeUpdater(controller.settings.directory)
++        self.setWindowTitle(tr('공식 업데이트','Official update'));self.resize(540,260)
++        layout=QVBoxLayout(self);self.label=QLabel(tr('현재 버전 3.0.0 · 공식 저장소의 릴리스만 확인합니다.','Version 3.0.0 · Only releases from the official repository are checked.'));self.label.setWordWrap(True);self.label.setTextFormat(Qt.TextFormat.PlainText);layout.addWidget(self.label)
++        self.action=QPushButton(tr('새 버전 확인','Check for update'));self.action.clicked.connect(self.next_step);layout.addWidget(self.action)
++        self.close_button=QPushButton(tr('닫기','Close'));self.close_button.clicked.connect(self.close);layout.addWidget(self.close_button)
++        self.bridge=UpdateBridge(self);self.bridge.result.connect(self.done)
++        self.stage_kind=None
++        self.retranslate()
++    def next_step(self):
++        if self.busy:return
++        if self.staged:
++            try:
++                self.updater.apply(self.staged,parent_pid=os.getpid())
++            except Exception as error:self.label.setText(tr('업데이트를 시작하지 못했습니다: ','Could not start the update: ')+str(error));return
++            self.accept();self.controller.request_quit();return
++        self.busy=True;self.error_text=None;self.retranslate();self.action.setEnabled(False)
++        function=(lambda:self.updater.stage(self.release)) if self.release else (lambda:self.updater.check(VERSION))
++        self.stage_kind='stage' if self.release else 'check';bridge=self.bridge
++        def work():
++            try:value=function();error=None
++            except Exception as problem:value=None;error=str(problem)
++            if isValid(bridge):
++                try:bridge.result.emit(value,error)
++                except RuntimeError:pass
++        threading.Thread(target=work,name='orbit-update-check',daemon=True).start()
++    def done(self,value,error):
++        self.busy=False;self.action.setEnabled(True)
++        if error:self.error_text=str(error);self.retranslate();return
++        if self.stage_kind=='check':
++            if not value.get('available'):
++                self.latest=True;self.retranslate();return
++            self.release=value
++            self.label.setText(tr('새 버전: ','New version: ')+str(value['version'])+'\n'+tr('공식 릴리스에서 내려받고 SHA-256을 검증합니다. 개인 설정과 MD는 보존합니다.','Download from the official release and verify SHA-256. Your settings and MD files are preserved.'))
++            self.action.setText(tr('검증하여 준비','Download and verify'))
++        else:
++            self.staged=value
++            self.label.setText(tr('다운로드 검증 완료. 재시작 검사에 실패하면 이전 실행 파일을 복구합니다.','Download verified. The previous executable is restored if the restart check fails.')+'\nSHA-256: '+str(value['sha256']))
++            self.action.setText(tr('설치하고 재시작','Install and restart'))
++            if not getattr(sys,'frozen',False):
++                self.action.setEnabled(False);self.label.setText(self.label.text()+'\n'+tr('소스 실행 중입니다. 배포 EXE에서 설치할 수 있습니다.','Running from source. Install from the distributed EXE.'))
++
++
++    def retranslate(self):
++        self.setWindowTitle(tr('공식 업데이트','Official update'))
++        self.close_button.setText(tr('닫기','Close'))
++        self.action.setEnabled(not self.busy)
++        if self.error_text:
++            self.label.setText(tr('확인 실패: ','Check failed: ')+self.error_text)
++            self.action.setText(tr('다시 시도','Retry'))
++        elif self.busy:
++            self.label.setText(tr('공식 릴리스를 확인하고 있습니다. 잠시만 기다려 주세요.','Checking the official release. Please wait.'))
++            self.action.setText(tr('확인 중','Checking'))
++        elif self.staged:
++            self.label.setText(tr('검증 완료. 재시작 검사에 실패하면 이전 실행 파일을 복구합니다.','Verified. The previous executable is restored if the restart check fails.')+'\nSHA-256: '+str(self.staged['sha256']))
++            self.action.setText(tr('설치하고 재시작','Install and restart'))
++            if not getattr(sys,'frozen',False):
++                self.action.setEnabled(False);self.label.setText(self.label.text()+'\n'+tr('소스 실행 중입니다. 배포 EXE에서 설치할 수 있습니다.','Running from source. Install from the distributed EXE.'))
++        elif self.release:
++            self.label.setText(tr('새 버전: ','New version: ')+str(self.release['version'])+'\n'+tr('공식 릴리스에서 내려받아 SHA-256을 검증합니다. 개인 설정과 MD는 보존합니다.','Download from the official release and verify SHA-256. Your settings and MD are preserved.'))
++            self.action.setText(tr('검증하여 준비','Download and verify'))
++        elif self.latest:
++            self.label.setText(tr('현재 버전이 최신 공개 버전입니다.','The current version is up to date.'));self.action.setText(tr('다시 확인','Check again'))
++        else:
++            self.label.setText(tr('현재 버전 3.0.0 · 공식 저장소의 릴리스만 확인합니다.','Version 3.0.0 · Only releases from the official repository are checked.'));self.action.setText(tr('새 버전 확인','Check for update'))
++
++
++def show_update(controller):
++    dialog=getattr(controller,'update_dialog29',None)
++    if dialog is None or not isValid(dialog):dialog=UpdateDialog(controller);controller.update_dialog29=dialog
++    dialog.show();dialog.raise_();dialog.activateWindow()
+diff --git a/src/visuals.py b/src/visuals.py
+index cec62af7b7f81208f023650d403964a69b88327a..4520dce5506f0dfe00f59877780f3c2685a4fc1c 100644
+--- a/src/visuals.py
++++ b/src/visuals.py
+@@ -128,7 +128,7 @@ def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', he
+         accent = element.accent
+     painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+     painter.drawImage(ATOM_RECT,source)
+-    font = app_font(weight=QFont.Weight.DemiBold)
++    font = app_font(weight=QFont.Weight.Bold)
+     painter.setFont(font)
+     scale = max(1.,abs(painter.combinedTransform().m11())*painter.device().devicePixelRatioF())
+     # 투명 ARGB 글자층은 서브픽셀 색 프린지 없이 모션과 독립적으로 고정됩니다.
+@@ -173,12 +173,14 @@ def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', he
+     painter.drawImage(QRectF(-74,-74,148,148),layer)
+ 
+ 
+-def desktop_widget_layout(width, height, title, show_weather=False, show_location=False):
++def desktop_widget_layout(width, height, title, show_weather=False, show_location=False, text_scale=1.0):
+     """이름을 화면 픽셀 크기로 줄 바꿈하고 조형·잔량 영역을 분리합니다."""
+-    name_font = app_font(weight=QFont.Weight.DemiBold)
+-    name_font.setPixelSize(16)
+-    date_font = app_font(weight=QFont.Weight.DemiBold)
+-    date_font.setPixelSize(14)
++    if type(text_scale) not in (int,float) or not math.isfinite(text_scale) or not .9 <= text_scale <= 1.5:
++        raise ValueError('위젯 글자 배율은 0.9~1.5 범위여야 합니다.')
++    name_font = app_font(weight=QFont.Weight.Bold)
++    name_font.setPixelSize(round(16*text_scale))
++    date_font = app_font(weight=QFont.Weight.Bold)
++    date_font.setPixelSize(round(14*text_scale))
+     metrics = QFontMetricsF(name_font)
+     text_width = max(1, width - 32)
+     layout = QTextLayout(title, name_font)
+@@ -195,26 +197,26 @@ def desktop_widget_layout(width, height, title, show_weather=False, show_locatio
+         lines.append(title[line.textStart():line.textStart()+line.textLength()])
+     layout.endLayout()
+     line_height = math.ceil(metrics.height())
+-    dock_height = 24 + line_height * max(1, len(lines)) + 8
+-    usage = QRectF(8, height - 34, width - 16, 26)
+-    weather = QRectF(8, usage.top() - 32, width - 16, 26) if show_weather else QRectF()
++    dock_height = 24*text_scale + line_height * max(1, len(lines)) + 8
++    usage = QRectF(8, height - 26*text_scale - 8, width - 16, 26*text_scale)
++    weather = QRectF(8, usage.top() - 26*text_scale - 6, width - 16, 26*text_scale) if show_weather else QRectF()
+     info_bottom = weather.top() - 6 if show_weather else usage.top() - 6
+-    location = QRectF(8, info_bottom - 26, width - 16, 26) if show_location else QRectF()
++    location = QRectF(8, info_bottom - 26*text_scale, width - 16, 26*text_scale) if show_location else QRectF()
+     dock_bottom = location.top() - 6 if show_location else info_bottom
+     dock = QRectF(8, dock_bottom - dock_height, width - 16, dock_height)
+     art_bottom = max(0, dock.top() - 5)
+     side = max(0, min(width - 20, art_bottom - 6))
+     art = QRectF((width-side)/2, max(0, (art_bottom-side)/2), side, side)
+     return {'art': art, 'dock': dock, 'location': location, 'weather': weather, 'usage': usage, 'lines': lines, 'name_font': name_font,
+-            'date_font': date_font, 'line_height': line_height}
++            'date_font': date_font, 'line_height': line_height, 'text_scale':text_scale}
+ 
+ 
+-def draw_desktop_orbit(painter, width, height, source, design, fraction, state, clock_text=None, weather_text=None, location_text=None, cache=None):
++def draw_desktop_orbit(painter, width, height, source, design, fraction, state, clock_text=None, weather_text=None, location_text=None, cache=None, text_scale=1.0):
+     """위젯의 조형과 글자를 별개 영역에 그려 작은 글자 축소를 막습니다."""
+     if cache is not None:
+         return cache.draw(painter, width, height, source, design, fraction, state,
+-                          clock_text, weather_text, location_text)
+-    layout = desktop_widget_layout(width, height, t(design.title), weather_text is not None, location_text is not None)
++                          clock_text, weather_text, location_text, text_scale=text_scale)
++    layout = desktop_widget_layout(width, height, t(design.title), weather_text is not None, location_text is not None,text_scale=text_scale)
+     painter.save()
+     painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+     painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
+@@ -235,15 +237,16 @@ def _draw_desktop_information(painter, layout, design, fraction, state, clock_te
+         painter.setBrush(gradient)
+         painter.drawRoundedRect(rect, radius, radius)
+     dock, usage = layout['dock'], layout['usage']
++    scale=layout.get('text_scale',1.0)
+     surface(dock, 8)
+     painter.setFont(layout['date_font'])
+     painter.setPen(QColor(design.accent))
+-    painter.drawText(QRectF(dock.left()+8, dock.top()+3, dock.width()-16, 20),
++    painter.drawText(QRectF(dock.left()+8, dock.top()+3*scale, dock.width()-16, 20*scale),
+                      Qt.AlignmentFlag.AlignCenter, f'{design.date.month}/{design.date.day}' + ('  ' + clock_text if clock_text else ''))
+     painter.setFont(layout['name_font'])
+     painter.setPen(gray(248))
+     for index, line in enumerate(layout['lines']):
+-        painter.drawText(QRectF(dock.left()+8, dock.top()+24+index*layout['line_height'],
++        painter.drawText(QRectF(dock.left()+8, dock.top()+24*scale+index*layout['line_height'],
+                                dock.width()-16, layout['line_height']), Qt.AlignmentFlag.AlignCenter, line)
+     if location_text is not None:
+         surface(layout['location'], 6)
+@@ -268,11 +271,11 @@ def _draw_desktop_information(painter, layout, design, fraction, state, clock_te
+     fill_rect = QRectF(track.left(), track.top(), track.width()*fill.width()/USAGE_TRACK_RECT.width(), track.height())
+     painter.drawRect(fill_rect)
+     layout['track'], layout['fill'] = track, fill_rect
+-    font = app_font(weight=QFont.Weight.DemiBold)
+-    font.setPixelSize(14)
++    font = app_font(weight=QFont.Weight.Bold)
++    font.setPixelSize(round(14*scale))
+     painter.setFont(font)
+     painter.setPen(gray(248))
+-    painter.drawText(QRectF(usage.left()+5, usage.top()+1, usage.width()-10, 18), Qt.AlignmentFlag.AlignCenter, label)
++    painter.drawText(QRectF(usage.left()+5, usage.top()+1, usage.width()-10, 18*scale), Qt.AlignmentFlag.AlignCenter, label)
+ 
+ 
+ class DesktopOverlayCache:
+@@ -283,16 +286,16 @@ class DesktopOverlayCache:
+         self.image = None
+ 
+     def draw(self, painter, width, height, source, design, fraction, state,
+-             clock_text, weather_text, location_text):
++             clock_text, weather_text, location_text, text_scale=1.0):
+         dpr = painter.device().devicePixelRatioF()
+         title = t(design.title)
+-        font_key = app_font(weight=QFont.Weight.DemiBold).key()
++        font_key = app_font(weight=QFont.Weight.Bold).key()
+         key = (width, height, dpr, design.date, title, design.accent,
+                fraction, state, clock_text, weather_text, location_text,
+-               get_language(), font_key)
++               get_language(), font_key, text_scale)
+         if self.key != key:
+             layout = desktop_widget_layout(width, height, title,
+-                                           weather_text is not None, location_text is not None)
++                                           weather_text is not None, location_text is not None,text_scale=text_scale)
+             image = QImage(math.ceil(width*dpr), math.ceil(height*dpr),
+                            QImage.Format.Format_ARGB32_Premultiplied)
+             image.setDevicePixelRatio(dpr)
+diff --git a/src/windows_job.py b/src/windows_job.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bc65235428dd3ac7e19b9dca30aef27708a98e58
+--- /dev/null
++++ b/src/windows_job.py
+@@ -0,0 +1,323 @@
++"""스모크에서 직접 만든 프로세스를 실행 전부터 전용 Windows Job에 묶습니다.
++
++공식 근거:
++https://learn.microsoft.com/en-us/windows/win32/procthread/job-objects
++https://learn.microsoft.com/en-us/windows/win32/toolhelp/traversing-the-thread-list
++https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-resumethread
++https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_basic_accounting_information
++https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminateprocess
++https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-jobobject_basic_process_id_list
++https://learn.microsoft.com/en-us/windows/win32/api/jobapi/nf-jobapi-isprocessinjob
++"""
++import ctypes
++from ctypes import wintypes
++import math
++import os
++import subprocess
++import time
++import threading
++
++
++class _BasicLimit(ctypes.Structure):
++    _fields_ = [('PerProcessUserTimeLimit', ctypes.c_longlong), ('PerJobUserTimeLimit', ctypes.c_longlong),
++                ('LimitFlags', wintypes.DWORD), ('MinimumWorkingSetSize', ctypes.c_size_t),
++                ('MaximumWorkingSetSize', ctypes.c_size_t), ('ActiveProcessLimit', wintypes.DWORD),
++                ('Affinity', ctypes.c_size_t), ('PriorityClass', wintypes.DWORD), ('SchedulingClass', wintypes.DWORD)]
++
++
++class _IoCounters(ctypes.Structure):
++    _fields_ = [(name, ctypes.c_ulonglong) for name in ('ReadOperationCount', 'WriteOperationCount',
++                'OtherOperationCount', 'ReadTransferCount', 'WriteTransferCount', 'OtherTransferCount')]
++
++
++class _ExtendedLimit(ctypes.Structure):
++    _fields_ = [('BasicLimitInformation', _BasicLimit), ('IoInfo', _IoCounters),
++                ('ProcessMemoryLimit', ctypes.c_size_t), ('JobMemoryLimit', ctypes.c_size_t),
++                ('PeakProcessMemoryUsed', ctypes.c_size_t), ('PeakJobMemoryUsed', ctypes.c_size_t)]
++
++
++class _Accounting(ctypes.Structure):
++    _fields_ = [(name, ctypes.c_longlong) for name in ('TotalUserTime', 'TotalKernelTime',
++                'ThisPeriodTotalUserTime', 'ThisPeriodTotalKernelTime')] + [
++                (name, wintypes.DWORD) for name in ('TotalPageFaultCount', 'TotalProcesses',
++                                                   'ActiveProcesses', 'TotalTerminatedProcesses')]
++
++
++class _ThreadEntry(ctypes.Structure):
++    _fields_ = [('dwSize', wintypes.DWORD), ('cntUsage', wintypes.DWORD), ('th32ThreadID', wintypes.DWORD),
++                ('th32OwnerProcessID', wintypes.DWORD), ('tpBasePri', wintypes.LONG),
++                ('tpDeltaPri', wintypes.LONG), ('dwFlags', wintypes.DWORD)]
++
++
++def _require(result, description):
++    if not result:
++        error = ctypes.WinError(ctypes.get_last_error())
++        error.add_note(description)
++        raise error
++    return result
++
++
++class WindowsJob:
++    """이 객체가 만든 root와 자동 상속된 후손만 관리하며 재사용하지 않습니다."""
++    def __init__(self):
++        if os.name != 'nt':
++            raise OSError('소유 프로세스 Job 검사는 Windows에서만 지원합니다.')
++        self.kernel = ctypes.WinDLL('kernel32', use_last_error=True)
++        signatures = {
++            'CreateJobObjectW': ((ctypes.c_void_p, wintypes.LPCWSTR), ctypes.c_void_p),
++            'SetInformationJobObject': ((ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p, wintypes.DWORD), wintypes.BOOL),
++            'AssignProcessToJobObject': ((ctypes.c_void_p, ctypes.c_void_p), wintypes.BOOL),
++            'TerminateJobObject': ((ctypes.c_void_p, wintypes.UINT), wintypes.BOOL),
++            'QueryInformationJobObject': ((ctypes.c_void_p, ctypes.c_int, ctypes.c_void_p,
++                                           wintypes.DWORD, ctypes.c_void_p), wintypes.BOOL),
++            'OpenProcess': ((wintypes.DWORD, wintypes.BOOL, wintypes.DWORD), ctypes.c_void_p),
++            'CreateToolhelp32Snapshot': ((wintypes.DWORD, wintypes.DWORD), ctypes.c_void_p),
++            'Thread32First': ((ctypes.c_void_p, ctypes.POINTER(_ThreadEntry)), wintypes.BOOL),
++            'Thread32Next': ((ctypes.c_void_p, ctypes.POINTER(_ThreadEntry)), wintypes.BOOL),
++            'OpenThread': ((wintypes.DWORD, wintypes.BOOL, wintypes.DWORD), ctypes.c_void_p),
++            'GetProcessIdOfThread': ((ctypes.c_void_p,), wintypes.DWORD),
++            'ResumeThread': ((ctypes.c_void_p,), wintypes.DWORD),
++            'CloseHandle': ((ctypes.c_void_p,), wintypes.BOOL),
++            'IsProcessInJob': ((ctypes.c_void_p, ctypes.c_void_p, ctypes.POINTER(wintypes.BOOL)), wintypes.BOOL),
++            'GetProcessTimes': ((ctypes.c_void_p,) + (ctypes.POINTER(wintypes.FILETIME),) * 4, wintypes.BOOL),
++            'WaitForSingleObject': ((ctypes.c_void_p, wintypes.DWORD), wintypes.DWORD),
++        }
++        for name, (arguments, result) in signatures.items():
++            function = getattr(self.kernel, name)
++            function.argtypes, function.restype = arguments, result
++        self.process = None
++        self._assigned = False
++        self._cleanup_started = False
++        self._finished = False
++        self._members = {}
++        self._tracking_stop = threading.Event()
++        self._tracker = None
++        self._tracking_error = None
++        self._resource_lock = threading.Lock()
++        self._tracker_done = False
++        self._deferred_close = False
++        self.handle = _require(self.kernel.CreateJobObjectW(None, None), '스모크 전용 Job 생성 실패')
++        try:
++            limits = _ExtendedLimit()
++            # breakaway를 허용하지 않고 마지막 Job 핸들이 닫혀도 정확한 소유 후손을 정리합니다.
++            limits.BasicLimitInformation.LimitFlags = 0x00002000
++            _require(self.kernel.SetInformationJobObject(self.handle, 9, ctypes.byref(limits), ctypes.sizeof(limits)),
++                     '스모크 Job 종료 경계 설정 실패')
++        except BaseException:
++            self.kernel.CloseHandle(self.handle)
++            self.handle = None
++            raise
++
++    def __enter__(self):
++        return self
++
++    def __exit__(self, *_):
++        self.close()
++
++    def _assign_process(self, process):
++        # Popen이 생성해 보유 중인 정확한 PID만 엽니다. 다른 앱을 검색하거나 연결하지 않습니다.
++        handle = _require(self.kernel.OpenProcess(0x00100101, False, process.pid), '생성 root 핸들 확인 실패')
++        try:
++            _require(self.kernel.AssignProcessToJobObject(self.handle, handle), '스모크 root의 Job 연결 실패')
++        finally:
++            _require(self.kernel.CloseHandle(handle), '생성 root 핸들 회수 실패')
++
++    def _resume_process(self, process):
++        snapshot = self.kernel.CreateToolhelp32Snapshot(0x00000004, 0)
++        if snapshot == ctypes.c_void_p(-1).value:
++            _require(False, '초기 스레드 목록 확인 실패')
++        threads = []
++        try:
++            entry = _ThreadEntry()
++            entry.dwSize = ctypes.sizeof(entry)
++            _require(self.kernel.Thread32First(snapshot, ctypes.byref(entry)), '초기 스레드 목록이 없습니다.')
++            while True:
++                if entry.th32OwnerProcessID == process.pid:
++                    threads.append(entry.th32ThreadID)
++                if not self.kernel.Thread32Next(snapshot, ctypes.byref(entry)):
++                    if ctypes.get_last_error() != 18:
++                        _require(False, '초기 스레드 목록 순회 실패')
++                    break
++        finally:
++            _require(self.kernel.CloseHandle(snapshot), '스레드 목록 핸들 회수 실패')
++        if len(threads) != 1:
++            raise OSError('일시 정지한 root의 초기 스레드를 하나로 확인하지 못해 실행하지 않았습니다.')
++        thread = _require(self.kernel.OpenThread(0x00000802, False, threads[0]), '생성 초기 스레드 핸들 확인 실패')
++        try:
++            if self.kernel.GetProcessIdOfThread(thread) != process.pid:
++                raise OSError('초기 스레드 소유 PID가 달라 재개하지 않았습니다.')
++            previous = self.kernel.ResumeThread(thread)
++            if previous == 0xFFFFFFFF:
++                _require(False, '생성 초기 스레드 재개 실패')
++            if previous != 1:
++                raise OSError('생성 초기 스레드의 정지 횟수가 예상과 달라 종료합니다.')
++        finally:
++            _require(self.kernel.CloseHandle(thread), '생성 초기 스레드 핸들 회수 실패')
++
++    def start(self, argv, **kwargs):
++        if self.process is not None or not self.handle or self._cleanup_started:
++            raise OSError('소유 Job은 한 번만 실행할 수 있습니다.')
++        flags = kwargs.pop('creationflags', 0)
++        if flags & 0x01000000:
++            raise OSError('상위 Job의 보안 경계를 우회하는 실행은 허용하지 않습니다.')
++        # 사용자 코드가 후손을 만들기 전에 반드시 Job 연결을 마칩니다.
++        self.process = subprocess.Popen(argv, creationflags=flags | 0x00000004, **kwargs)
++        self._assign_process(self.process)
++        self._assigned = True
++        # root를 실행하기 전에 정확한 핸들을 확보하고 이 Job에만 속한 추적을 시작합니다.
++        self._capture_members()
++        self._tracker = threading.Thread(target=self._track_members, name='OrbitSmokeJob', daemon=False)
++        self._tracker.start()
++        self._resume_process(self.process)
++        return self.process
++
++    def _accounting(self):
++        value = _Accounting()
++        _require(self.kernel.QueryInformationJobObject(self.handle, 1, ctypes.byref(value),
++                                                      ctypes.sizeof(value), None), '소유 후손 종료 확인 실패')
++        return value
++
++    def _active_processes(self):
++        return self._accounting().ActiveProcesses
++
++    def _member_pids(self):
++        capacity = 16
++        while capacity <= 4096:
++            # DWORD 두 개 뒤 ULONG_PTR 배열이며 x64에서도 첫 PID 오프셋은 8입니다.
++            buffer = ctypes.create_string_buffer(8 + ctypes.sizeof(ctypes.c_size_t) * capacity)
++            result = self.kernel.QueryInformationJobObject(self.handle, 3, buffer, len(buffer), None)
++            assigned, count = (wintypes.DWORD * 2).from_buffer(buffer)
++            if result and assigned == count and count <= capacity:
++                return list((ctypes.c_size_t * count).from_buffer(buffer, 8))
++            if not result and ctypes.get_last_error() != 234:
++                _require(False, '전용 Job 구성원 목록 확인 실패')
++            capacity = max(capacity * 2, assigned)
++        raise OSError('전용 Job 구성원 추적 상한을 넘어 종료 성공으로 처리하지 않습니다.')
++
++    def _capture_members(self):
++        for pid in self._member_pids():
++            # 이미 보유한 프로세스 객체의 핸들이 살아 있어 같은 PID의 재사용도 막습니다.
++            if any(key[0] == pid for key in self._members):
++                continue
++            handle = _require(self.kernel.OpenProcess(0x00101000, False, pid),
++                              '전용 Job 구성원 핸들을 확보하지 못했습니다.')
++            try:
++                member = wintypes.BOOL()
++                _require(self.kernel.IsProcessInJob(handle, self.handle, ctypes.byref(member)),
++                         '전용 Job 구성원 소유 확인 실패')
++                if not member.value:
++                    raise OSError('구성원 PID의 소유 Job이 달라 변경하지 않고 종료 확인을 중단합니다.')
++                created, exited, kernel, user = (wintypes.FILETIME() for _ in range(4))
++                _require(self.kernel.GetProcessTimes(handle, ctypes.byref(created), ctypes.byref(exited),
++                                                     ctypes.byref(kernel), ctypes.byref(user)),
++                         '소유 구성원 생성 시각 확인 실패')
++                identity = (pid, (created.dwHighDateTime << 32) | created.dwLowDateTime)
++                self._members[identity] = handle
++                handle = None
++            finally:
++                if handle:
++                    _require(self.kernel.CloseHandle(handle), '미확정 구성원 핸들 회수 실패')
++
++    def _track_members(self):
++        # 전역 daemon이 아니라 단일 스모크 수명 안에서만 동작하는 유한 추적입니다.
++        deadline = time.monotonic() + 45
++        try:
++            while not self._tracking_stop.is_set() and time.monotonic() < deadline:
++                self._capture_members()
++                self._tracking_stop.wait(.01)
++        except BaseException as error:
++            self._tracking_error = error
++        finally:
++            with self._resource_lock:
++                self._tracker_done = True
++                if self._deferred_close:
++                    try:
++                        self._release_resources()
++                    except BaseException as error:
++                        self._tracking_error = error
++
++    @staticmethod
++    def _remaining(deadline):
++        remaining = deadline - time.monotonic()
++        if remaining <= 0:
++            raise OSError('소유 프로세스의 실제 종료 확인이 정리 시간 상한을 넘었습니다.')
++        return remaining
++
++    def finish(self, timeout=5):
++        if type(timeout) not in (int, float) or not math.isfinite(timeout) or not 0 < timeout <= 5:
++            raise ValueError('소유 프로세스 정리 상한은 0초 초과 5초 이하이어야 합니다.')
++        if self._finished:
++            return
++        if self._cleanup_started:
++            raise OSError('소유 프로세스 정리가 이미 실패하여 성공으로 처리하지 않습니다.')
++        self._cleanup_started = True
++        if self.process is None:
++            self._finished = True
++            return
++        deadline = time.monotonic() + timeout
++        if self._assigned:
++            self._tracking_stop.set()
++            if self._tracker is not None:
++                self._tracker.join(self._remaining(deadline))
++            alive = self._tracker is not None and self._tracker.is_alive()
++            if not alive:
++                try:
++                    self._capture_members()
++                except BaseException as error:
++                    self._tracking_error = error
++            # 수집 실패여도 이 Job에 대해서만 종료를 요청하며 성공을 보고하지 않습니다.
++            _require(self.kernel.TerminateJobObject(self.handle, 1), '소유 Job 종료 요청 실패')
++            if alive:
++                raise OSError('구성원 추적 스레드가 정리 시간 안에 종료되지 않았습니다.')
++            for handle in self._members.values():
++                while True:
++                    milliseconds = max(1, math.floor(self._remaining(deadline) * 1000))
++                    result = self.kernel.WaitForSingleObject(handle, milliseconds)
++                    if result == 0:
++                        break
++                    if result == 0xFFFFFFFF:
++                        _require(False, '소유 구성원의 실제 종료 대기 실패')
++                    if result != 258:
++                        raise OSError('소유 구성원 종료 대기 결과를 확인할 수 없습니다.')
++        elif self.process.poll() is None:
++            # Job 할당에 실패한 root는 아직 정지 상태이므로 이 생성 PID만 종료합니다.
++            self.process.kill()
++        self.process.communicate(timeout=self._remaining(deadline))
++        if self._assigned:
++            accounting = self._accounting()
++            if self._tracking_error is not None:
++                raise OSError('구성원 추적 실패로 전체 종료를 확인할 수 없습니다.') from self._tracking_error
++            # 수집 사이 생성·종료나 종료 직전 생성 경쟁도 누적 수가 다르면 성공 금지입니다.
++            if accounting.TotalProcesses != len(self._members) or accounting.ActiveProcesses != 0:
++                raise OSError('추적한 고유 구성원과 Job 누적 수가 달라 전체 종료를 확인할 수 없습니다.')
++        self._remaining(deadline)
++        self._finished = True
++
++    def _release_resources(self):
++        try:
++            for identity, handle in list(self._members.items()):
++                _require(self.kernel.CloseHandle(handle), '소유 구성원 핸들 회수 실패')
++                del self._members[identity]
++        finally:
++            try:
++                if self.handle:
++                    handle, self.handle = self.handle, None
++                    _require(self.kernel.CloseHandle(handle), '스모크 Job 핸들 회수 실패')
++            finally:
++                if self.process is not None:
++                    for stream in (self.process.stdin, self.process.stdout, self.process.stderr):
++                        if stream is not None and not stream.closed:
++                            stream.close()
++
++    def close(self):
++        try:
++            if not self._cleanup_started:
++                self.finish(timeout=5)
++        finally:
++            self._tracking_stop.set()
++            with self._resource_lock:
++                if self._tracker is not None and self._tracker.is_alive() and not self._tracker_done:
++                    # 기한을 넘긴 시스템 호출과 핸들 닫기의 경쟁을 피하고 추적자가 회수합니다.
++                    self._deferred_close = True
++                else:
++                    self._release_resources()

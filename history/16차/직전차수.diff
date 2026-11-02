@@ -1,11 +1,11 @@
---- 이전/src/app.py
-+++ 현재/src/app.py
-@@ -69,6 +69,16 @@
-     labels = {'none': '없음', 'minimal': '최소', 'low': '낮음', 'medium': '보통',
-               'high': '높음', 'xhigh': '매우 높음', 'ultra': '최고'}
+diff --git a/src/app.py b/src/app.py
+index a43745b0eb27a7b4c53653a9bc9afcbdd0a14cd4..d73e532e79883ebf50d96e74eccec1caacc8d3d2 100644
+--- a/src/app.py
++++ b/src/app.py
+@@ -71,6 +71,16 @@ def friendly_effort(value):
      return labels.get(value, str(value or '미확인')) + (f' ({value})' if value in labels else '')
-+
-+
+ 
+ 
 +def previous_field(value, key):
 +    """이전 기록 전체 부재와 개별 필드 미기록을 구분하고 관측값만 표시합니다."""
 +    if value is None:
@@ -14,10 +14,12 @@
 +    if not isinstance(raw, str) or not raw:
 +        return '확인 불가'
 +    return friendly_effort(raw) if key == 'effort' else raw
- 
- 
++
++
  ROLE_LABELS = {'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',
-@@ -118,7 +128,7 @@
+                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}
+ 
+@@ -118,7 +128,7 @@ def event_kind(event):
      if event.get('assignment_type') == 'replacement':
          return '새 작업자 배정 · 이전 작업자 교체'
      if event.get('before') is None:
@@ -26,7 +28,7 @@
      return '모델 · 추론 강도 변경'
  
  
-@@ -134,7 +144,7 @@
+@@ -134,7 +144,7 @@ def event_description(event):
          '제목 출처: ' + str(event.get('title_source') or '확인 불가'),
          '제목 확인 시각: ' + kst_label(event.get('title_checked_at')),
          '이유 호출 ID: ' + str(event.get('reason_call_id') or '기록 없음'),
@@ -35,7 +37,7 @@
          '변경 후: ' + model_label(event.get('after')),
          '감지 시각: ' + kst_label(event.get('time')),
          '원본 기록 시각: ' + kst_label(event.get('source_time')),
-@@ -501,12 +511,11 @@
+@@ -501,12 +511,11 @@ class Notice(QFrame):
          if event.get('kind') == 'settings':
              category += ' · 선택 설정'
          self.category.setText(category)
@@ -52,7 +54,7 @@
          self.after_value.setText('→ 변경 후\n' + self.setting_label(after))
          reason = short_reason(event)
          reason = '확인되지 않음' if reason == '확인 불가' else reason
-@@ -516,7 +525,7 @@
+@@ -516,7 +525,7 @@ class Notice(QFrame):
      @staticmethod
      def setting_label(value):
          if value is None:
@@ -61,7 +63,7 @@
          effort = value.get('effort')
          labels = {'none': '없음', 'minimal': '최소', 'low': '낮음', 'medium': '보통',
                    'high': '높음', 'xhigh': '매우 높음', 'ultra': '최고'}
-@@ -765,12 +774,20 @@
+@@ -765,12 +774,20 @@ class Details(QDialog):
              self.chat_title.setText(str(value.get('chat_name') or '채팅 제목 확인 불가'))
              before, after = value.get('before') or {}, value.get('after') or {}
              model_changed = before.get('model') != after.get('model')

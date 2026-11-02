@@ -1,21 +1,6 @@
 {
-  "created_kst": "2026-10-26T07:38:33.916608+09:00",
-  "command": [
-    "D:\\2026\\Codex 관련\\Codex 모델 변경 알림\\17차\\work\\venv\\Scripts\\python.exe",
-    "-B",
-    "-X",
-    "utf8",
-    "tools/render_atom3d.py",
-    "--bake",
-    "--output",
-    "work/atom3d-final17"
-  ],
-  "cwd": "D:\\2026\\Codex 관련\\Codex 모델 변경 알림\\17차",
   "exit_code": 0,
-  "repair_used": 48,
-  "input_fix_used": 33,
   "frames": 540,
-  "elapsed_seconds": 9.469406899996102,
   "archive_bytes": 26728135,
   "glb": {
     "bytes": 2105480,

@@ -1,6 +1,8 @@
---- 이전/src/app.py
-+++ 현재/src/app.py
-@@ -10,13 +10,13 @@
+diff --git a/src/app.py b/src/app.py
+index 75cbe78ede46c92de129e1ff1e1ae61dcb930cbd..dcdbfc2ca53e523039d06126869523985966ac94 100644
+--- a/src/app.py
++++ b/src/app.py
+@@ -10,13 +10,13 @@ from datetime import datetime, timezone, timedelta
  import re
  from collections import deque
  
@@ -16,12 +18,10 @@
  
  from core import InstructionStore, clamp_position, read_jsonl_tail, read_text_strict, title_catalog, resolve_title
  from notifier import Watcher, append_log, atomic_json, stamp, POLL_INTERVAL_SECONDS
-@@ -56,6 +56,17 @@
-     if value is None:
-         return '미배정'
+@@ -58,6 +58,17 @@ def model_card_label(value):
      return f"{value.get('model', '확인 불가')} · 추론 {value.get('effort', '확인 불가')}"
-+
-+
+ 
+ 
 +def friendly_model(value):
 +    return {'gpt-6.1-sol': 'Sol', 'gpt-6-sol': 'Sol', 'gpt-6-astra': 'Astra',
 +            'gpt-6-luna': 'Luna'}.get(value, str(value or '미배정'))
@@ -31,10 +31,12 @@
 +    labels = {'none': '없음', 'minimal': '최소', 'low': '낮음', 'medium': '보통',
 +              'high': '높음', 'xhigh': '매우 높음', 'ultra': '최고'}
 +    return labels.get(value, str(value or '미확인')) + (f' ({value})' if value in labels else '')
- 
- 
++
++
  ROLE_LABELS = {'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',
-@@ -333,16 +344,16 @@
+                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}
+ 
+@@ -333,16 +344,16 @@ class Notice(QFrame):
          self.open_details = open_details
          self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
          self.setObjectName('notice')
@@ -55,7 +57,7 @@
          self.text.setTextFormat(Qt.TextFormat.PlainText)
          self.text.setWordWrap(True)
          heading = QHBoxLayout()
-@@ -355,18 +366,36 @@
+@@ -355,18 +366,36 @@ class Notice(QFrame):
          heading.addWidget(close, 0, Qt.AlignmentFlag.AlignTop)
          layout.addLayout(heading)
          self.category = QLabel()
@@ -100,7 +102,7 @@
          self.text.setStyleSheet('font-size:12px;color:#C9C9C9;')
          layout.addWidget(self.text)
          hint = QLabel('이 변경 자세히 보기  ›')
-@@ -436,6 +465,12 @@
+@@ -436,6 +465,12 @@ class Notice(QFrame):
          self.move(max(rect.left(), min(orbit.x() - self.width(), rect.right() - self.width() + 1)),
                    max(rect.top(), min(orbit.y(), rect.bottom() - self.height() + 1)))
          self.show()
@@ -113,7 +115,7 @@
          self.timer.stop()
          if timeout_ms != 0:
              self.timer.start(max(30000, min(300000, int(timeout_ms))))
-@@ -459,6 +494,11 @@
+@@ -459,6 +494,11 @@ class Notice(QFrame):
          if event.get('kind') == 'settings':
              category += ' · 선택 설정'
          self.category.setText(category)
@@ -125,7 +127,7 @@
          self.before_value.setText('이전  ' + self.setting_label(before))
          self.after_value.setText('→ 변경 후\n' + self.setting_label(after))
          reason = short_reason(event)
-@@ -489,23 +529,35 @@
+@@ -489,23 +529,35 @@ class Details(QDialog):
          self.store = InstructionStore(controller.settings.directory)
          self.plan = None
          self.setWindowTitle('Codex Orbit · 로컬 모델 변경 기록')
@@ -170,7 +172,7 @@
          self.setStyleSheet(STYLE)
  
      def build_usage(self, layout):
-@@ -514,7 +566,7 @@
+@@ -514,7 +566,7 @@ class Details(QDialog):
          box = QVBoxLayout(panel)
          heading = QHBoxLayout()
          title = QLabel('계정 사용 한도 · 남은 비율')
@@ -179,7 +181,7 @@
          heading.addWidget(title, 1)
          self.usage_refresh = QPushButton('새로고침')
          self.usage_refresh.clicked.connect(lambda: self.controller.usage.manual_refresh())
-@@ -529,7 +581,7 @@
+@@ -529,7 +581,7 @@ class Details(QDialog):
          self.usage_values.setTextFormat(Qt.TextFormat.PlainText)
          self.usage_scroll = QScrollArea()
          self.usage_scroll.setWidgetResizable(True)
@@ -188,7 +190,7 @@
          self.usage_rows = QWidget()
          self.usage_rows_layout = QVBoxLayout(self.usage_rows)
          self.usage_rows_layout.setContentsMargins(0, 0, 0, 0)
-@@ -565,17 +617,22 @@
+@@ -565,17 +617,22 @@ class Details(QDialog):
              bar.setFixedHeight(19)
              bar.setStyleSheet('QProgressBar {border:1px solid #3C3C3C;border-radius:4px;text-align:center;background:#131313;color:#EEEEEE;} QProgressBar::chunk {background:#555555;}')
              self.usage_rows_layout.addWidget(bar)
@@ -211,7 +213,7 @@
          layout.addWidget(self.notice_summary)
          self.notice_summary.setWordWrap(True)
          split = QSplitter()
-@@ -585,30 +642,45 @@
+@@ -585,30 +642,45 @@ class Details(QDialog):
          self.history.currentItemChanged.connect(self.select_event)
          panel = QWidget()
          cards = QVBoxLayout(panel)
@@ -265,7 +267,7 @@
              label.setTextFormat(Qt.TextFormat.PlainText)
              label.setWordWrap(True)
              label.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
-@@ -616,6 +688,7 @@
+@@ -616,6 +688,7 @@ class Details(QDialog):
              card_layout.addWidget(label)
          cards.addWidget(self.card)
          self.evidence_toggle = QPushButton('▸ 원문 · ID · 근거 펼치기')
@@ -273,7 +275,7 @@
          self.evidence_toggle.setCheckable(True)
          cards.addWidget(self.evidence_toggle)
          self.detail = QPlainTextEdit()
-@@ -634,9 +707,11 @@
+@@ -634,9 +707,11 @@ class Details(QDialog):
          self.history_detail_scroll.setWidget(panel)
          split.addWidget(self.history)
          split.addWidget(self.history_detail_scroll)
@@ -287,7 +289,7 @@
  
      def select_event(self, current, _previous):
          if current:
-@@ -645,6 +720,13 @@
+@@ -645,6 +720,13 @@ class Details(QDialog):
              self.event_badge.setText('● ' + event_kind(value))
              self.chat_title.setText(str(value.get('chat_name') or '채팅 제목 확인 불가'))
              self.task_title.setText(ROLE_LABELS.get(value.get('role'), '역할 확인 불가') + ('  ·  자식 작업' if value.get('parent') else '  ·  현재 채팅'))
@@ -301,7 +303,7 @@
              self.before_value.setText('이전  ' + model_card_label(value.get('before')))
              self.after_value.setText('→  ' + model_card_label(value.get('after')))
              self.reason_value.setText(short_reason(value, 180))
-@@ -719,7 +801,8 @@
+@@ -719,7 +801,8 @@ class Details(QDialog):
          self.diagnostics.setReadOnly(True)
          layout.addWidget(QLabel('감시 상태와 최근 진단 · 오류는 숨기지 않습니다'))
          layout.addWidget(self.diagnostics)
@@ -311,7 +313,7 @@
  
      def choose_sessions(self):
          path = QFileDialog.getExistingDirectory(self, 'Codex sessions 폴더 선택', self.sessions.text(), options=QFileDialog.Option.DontUseNativeDialog)
-@@ -761,51 +844,79 @@
+@@ -761,51 +844,79 @@ class Details(QDialog):
          content = QWidget()
          page.setWidget(content)
          layout = QVBoxLayout(content)
@@ -424,7 +426,7 @@
  
      def invalidate_plan(self):
          self.plan = None
-@@ -1196,7 +1307,7 @@
+@@ -1196,7 +1307,7 @@ class Controller:
  
      def preferences(self):
          self.show()
@@ -433,8 +435,10 @@
  
      def request_quit(self):
          if self.quit_requested or self.cleaned:
---- 이전/src/theme.py
-+++ 현재/src/theme.py
+diff --git a/src/theme.py b/src/theme.py
+index 1463c37363eb1a192761add297610da6c4701369..2572f8f3284fbfdd9eb2cea49d1197ee57d211d8 100644
+--- a/src/theme.py
++++ b/src/theme.py
 @@ -1,136 +1,141 @@
 -"""앱이 소유하는 모든 화면과 대화상자의 공통 무채색 테마입니다."""
 -from PySide6.QtCore import QEvent, QObject, QTimer, QTranslator, Qt
@@ -713,8 +717,10 @@
 +    app.setPalette(palette)
 +    app.setStyleSheet(STYLE)
 +    app.setProperty('orbit_monochrome', True)
---- 이전/src/visuals.py
-+++ 현재/src/visuals.py
+diff --git a/src/visuals.py b/src/visuals.py
+index 86eaee1439de67a000f9b5c3ff5768a4b732d66d..3900d35ed6fcaf9fe41e753c57fb16595b01f94e 100644
+--- a/src/visuals.py
++++ b/src/visuals.py
 @@ -1,138 +1,139 @@
 -"""실제 3차원 궤도 좌표와 무채색 금속 렌더링입니다."""
 -import math

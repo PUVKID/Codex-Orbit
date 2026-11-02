@@ -1,6 +1,8 @@
---- 이전/src/app.py
-+++ 현재/src/app.py
-@@ -234,9 +234,11 @@
+diff --git a/src/app.py b/src/app.py
+index 9a3fac9b2205c0fc15e8bb10daa5d16181f60585..3eac7313a084493bdd0bebe79a85cb9960acda4b 100644
+--- a/src/app.py
++++ b/src/app.py
+@@ -234,9 +234,11 @@ class Monitor(QThread):
  
  class OrbitWidget(QWidget):
      def __init__(self, settings, details, preferences, quit_app):

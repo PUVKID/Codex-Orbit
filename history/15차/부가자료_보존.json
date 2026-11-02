@@ -1,0 +1,694 @@
+{
+  "revision": "15차",
+  "scope": "원본 docs/tools/assets/루트 공개 후보 문서와 별도 디자인시안. 운영·대화·인증·실관측 원문 제외. 경로는 저장소 루트 기준이며 원문 상대경로와 대응합니다.",
+  "historical_notice": "당시 내용이며 현재 앱의 동작·다운로드·검증 결과를 의미하지 않습니다. 과거 문서의 원래 상대 링크는 당시 폴더 기준입니다. .md.txt는 원문 표시용이며 내용이 동일한 경우 바이트를 보존합니다.",
+  "files": [
+    {
+      "original_path": "README.md",
+      "original": {
+        "bytes": 3266,
+        "sha256": "75b70a779a6128b26d3c9524200a385b822622c3a39de7bd8c9e45d1edc18041"
+      },
+      "category": "root_document",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/75b70a779a6128b26d3c9524200a385b822622c3a39de7bd8c9e45d1edc18041.md.txt",
+      "public": {
+        "bytes": 3266,
+        "sha256": "75b70a779a6128b26d3c9524200a385b822622c3a39de7bd8c9e45d1edc18041"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "assets/NanumGothic-Bold.ttf",
+      "original": {
+        "bytes": 2073868,
+        "sha256": "f96298f9fb18e364d2370f4c3ce948ac67a2b61af992d7234bc15c42b033c674"
+      },
+      "category": "assets",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/f96298f9fb18e364d2370f4c3ce948ac67a2b61af992d7234bc15c42b033c674.ttf",
+      "public": {
+        "bytes": 2073868,
+        "sha256": "f96298f9fb18e364d2370f4c3ce948ac67a2b61af992d7234bc15c42b033c674"
+      },
+      "edits": [],
+      "representation_reason": "현재 편집되는 공개 경로와 역사 원문을 분리한 불변 내용 주소 사본"
+    },
+    {
+      "original_path": "assets/OFL.txt",
+      "original": {
+        "bytes": 4534,
+        "sha256": "eeacf16032901d0ed0456876ec77b8f0fda6b3fecec7d972f8543eb602e6c30f"
+      },
+      "category": "assets",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/eeacf16032901d0ed0456876ec77b8f0fda6b3fecec7d972f8543eb602e6c30f.txt",
+      "public": {
+        "bytes": 4534,
+        "sha256": "eeacf16032901d0ed0456876ec77b8f0fda6b3fecec7d972f8543eb602e6c30f"
+      },
+      "edits": [],
+      "representation_reason": "현재 편집되는 공개 경로와 역사 원문을 분리한 불변 내용 주소 사본"
+    },
+    {
+      "original_path": "assets/Orbit.ico",
+      "original": {
+        "bytes": 71100,
+        "sha256": "67c4462e898110a4e92964c19570e0e42a60f35ebd02347722166910da6bdd97"
+      },
+      "category": "assets",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/67c4462e898110a4e92964c19570e0e42a60f35ebd02347722166910da6bdd97.ico",
+      "public": {
+        "bytes": 71100,
+        "sha256": "67c4462e898110a4e92964c19570e0e42a60f35ebd02347722166910da6bdd97"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "assets/PyInstaller-LICENSE.txt",
+      "original": {
+        "bytes": 32604,
+        "sha256": "0598064c7d2718e38d7914a7d08343b2fa008e3bea9ebba2aa7a6ffa5900dd64"
+      },
+      "category": "assets",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/0598064c7d2718e38d7914a7d08343b2fa008e3bea9ebba2aa7a6ffa5900dd64.txt",
+      "public": {
+        "bytes": 32604,
+        "sha256": "0598064c7d2718e38d7914a7d08343b2fa008e3bea9ebba2aa7a6ffa5900dd64"
+      },
+      "edits": [],
+      "representation_reason": "현재 편집되는 공개 경로와 역사 원문을 분리한 불변 내용 주소 사본"
+    },
+    {
+      "original_path": "assets/Python-LICENSE.txt",
+      "original": {
+        "bytes": 13936,
+        "sha256": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf"
+      },
+      "category": "assets",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf.txt",
+      "public": {
+        "bytes": 13936,
+        "sha256": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf"
+      },
+      "edits": [],
+      "representation_reason": "현재 편집되는 공개 경로와 역사 원문을 분리한 불변 내용 주소 사본"
+    },
+    {
+      "original_path": "assets/Qt-GPL-3.0-LICENSE.txt",
+      "original": {
+        "bytes": 35147,
+        "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+      },
+      "category": "assets",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903.txt",
+      "public": {
+        "bytes": 35147,
+        "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+      },
+      "edits": [],
+      "representation_reason": "현재 편집되는 공개 경로와 역사 원문을 분리한 불변 내용 주소 사본"
+    },
+    {
+      "original_path": "assets/Qt-LGPL-3.0-LICENSE.txt",
+      "original": {
+        "bytes": 7651,
+        "sha256": "da7eabb7bafdf7d3ae5e9f223aa5bdc1eece45ac569dc21b3b037520b4464768"
+      },
+      "category": "assets",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/da7eabb7bafdf7d3ae5e9f223aa5bdc1eece45ac569dc21b3b037520b4464768.txt",
+      "public": {
+        "bytes": 7651,
+        "sha256": "da7eabb7bafdf7d3ae5e9f223aa5bdc1eece45ac569dc21b3b037520b4464768"
+      },
+      "edits": [],
+      "representation_reason": "현재 편집되는 공개 경로와 역사 원문을 분리한 불변 내용 주소 사본"
+    },
+    {
+      "original_path": "assets/SetupBanner.bmp",
+      "original": {
+        "bytes": 618006,
+        "sha256": "9979a300fd33aecd3efaad0a21754b058e1a91c6e11b9ff2b4910196a942c708"
+      },
+      "category": "assets",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/9979a300fd33aecd3efaad0a21754b058e1a91c6e11b9ff2b4910196a942c708.bmp",
+      "public": {
+        "bytes": 618006,
+        "sha256": "9979a300fd33aecd3efaad0a21754b058e1a91c6e11b9ff2b4910196a942c708"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "assets/SetupSmall.bmp",
+      "original": {
+        "bytes": 36574,
+        "sha256": "00f7b4d0833e8d2f89799b6f7c79998fa9bd41f83d2ed29c8bc1074f49a86b04"
+      },
+      "category": "assets",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/00f7b4d0833e8d2f89799b6f7c79998fa9bd41f83d2ed29c8bc1074f49a86b04.bmp",
+      "public": {
+        "bytes": 36574,
+        "sha256": "00f7b4d0833e8d2f89799b6f7c79998fa9bd41f83d2ed29c8bc1074f49a86b04"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "assets/atom3d/LICENSE.txt",
+      "original": {
+        "bytes": 419,
+        "sha256": "0ecc98e4ccaacf471829f67cd78dbaf0f81968dacf020164dac76ea57164d01e"
+      },
+      "category": "assets",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/0ecc98e4ccaacf471829f67cd78dbaf0f81968dacf020164dac76ea57164d01e.txt",
+      "public": {
+        "bytes": 419,
+        "sha256": "0ecc98e4ccaacf471829f67cd78dbaf0f81968dacf020164dac76ea57164d01e"
+      },
+      "edits": [],
+      "representation_reason": "현재 편집되는 공개 경로와 역사 원문을 분리한 불변 내용 주소 사본"
+    },
+    {
+      "original_path": "assets/atom3d/atom3d.glb",
+      "original": {
+        "bytes": 2073792,
+        "sha256": "c775ad1e14f9d4e95b1569ec3e67db37b65e94f90ba7af76a2df65badb74a7b7"
+      },
+      "category": "assets",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/c775ad1e14f9d4e95b1569ec3e67db37b65e94f90ba7af76a2df65badb74a7b7.glb",
+      "public": {
+        "bytes": 2073792,
+        "sha256": "c775ad1e14f9d4e95b1569ec3e67db37b65e94f90ba7af76a2df65badb74a7b7"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "assets/atom3d/creation_report.json",
+      "original": {
+        "bytes": 33276,
+        "sha256": "55d763bf0a78154fa6e8b97d81b8dddc5e8c8d67a3d7ac20bbd0eff1e25cf590"
+      },
+      "category": "assets",
+      "status": "정제 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/77ef437985492c2255ea2a7e1c6baf964ac9600a3f36a14d84f9555158e47a6c.json",
+      "public": {
+        "bytes": 29568,
+        "sha256": "77ef437985492c2255ea2a7e1c6baf964ac9600a3f36a14d84f9555158e47a6c"
+      },
+      "edits": [
+        "제작 기술 수치는 보존하고 실행 명령·PC 환경·시각·누적 운영 상태 필드는 제외"
+      ]
+    },
+    {
+      "original_path": "assets/atom3d/frame_hashes.json",
+      "original": {
+        "bytes": 48063,
+        "sha256": "d9b44fc22cd5b247c524755c70ca3b350290698edcee179163967b7e70b398cd"
+      },
+      "category": "assets",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/d9b44fc22cd5b247c524755c70ca3b350290698edcee179163967b7e70b398cd.json",
+      "public": {
+        "bytes": 48063,
+        "sha256": "d9b44fc22cd5b247c524755c70ca3b350290698edcee179163967b7e70b398cd"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "assets/atom3d/frames.zip",
+      "original": {
+        "bytes": 24862704,
+        "sha256": "ba6c6f377e0f8fe6998a2359c6303837a32d15fcfb9a907ec9a7acdbbd20d68b"
+      },
+      "category": "assets",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/ba6c6f377e0f8fe6998a2359c6303837a32d15fcfb9a907ec9a7acdbbd20d68b.zip",
+      "public": {
+        "bytes": 24862704,
+        "sha256": "ba6c6f377e0f8fe6998a2359c6303837a32d15fcfb9a907ec9a7acdbbd20d68b"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "assets/atom3d/manifest.json",
+      "original": {
+        "bytes": 3223,
+        "sha256": "da037ef80edd7bc9be8a0d4bc9978932378977cf472529345ae02cd16446e202"
+      },
+      "category": "assets",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/da037ef80edd7bc9be8a0d4bc9978932378977cf472529345ae02cd16446e202.json",
+      "public": {
+        "bytes": 3223,
+        "sha256": "da037ef80edd7bc9be8a0d4bc9978932378977cf472529345ae02cd16446e202"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "assets/atom3d/motion.json",
+      "original": {
+        "bytes": 228248,
+        "sha256": "d6595591332663d6619a3829b6fe3e91511926c93392b217f20d9f20e54b8bcf"
+      },
+      "category": "assets",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/d6595591332663d6619a3829b6fe3e91511926c93392b217f20d9f20e54b8bcf.json",
+      "public": {
+        "bytes": 228248,
+        "sha256": "d6595591332663d6619a3829b6fe3e91511926c93392b217f20d9f20e54b8bcf"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "assets/기본_지침.md",
+      "original": {
+        "bytes": 1611,
+        "sha256": "5634440761f27d248bf27403a3664776357a207aab872825499bbd69c28eaec9"
+      },
+      "category": "assets",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/5634440761f27d248bf27403a3664776357a207aab872825499bbd69c28eaec9.md.txt",
+      "public": {
+        "bytes": 1611,
+        "sha256": "5634440761f27d248bf27403a3664776357a207aab872825499bbd69c28eaec9"
+      },
+      "edits": [],
+      "representation_reason": "현재 편집되는 공개 경로와 역사 원문을 분리한 불변 내용 주소 사본"
+    },
+    {
+      "original_path": "assets/사용법.md",
+      "original": {
+        "bytes": 6877,
+        "sha256": "347cdfdd6869f1cdbc2bf8e15a873c79202b9ca8d9dc410a7096377fca005c9c"
+      },
+      "category": "assets",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/347cdfdd6869f1cdbc2bf8e15a873c79202b9ca8d9dc410a7096377fca005c9c.md.txt",
+      "public": {
+        "bytes": 6877,
+        "sha256": "347cdfdd6869f1cdbc2bf8e15a873c79202b9ca8d9dc410a7096377fca005c9c"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "docs/2026-10-24_무채색입체모션_설계와계획.md",
+      "original": {
+        "bytes": 4466,
+        "sha256": "57122fb2d5b39659ebb7affb1e41920b0e9887102b918143bd39173138ff1e2e"
+      },
+      "category": "docs",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/57122fb2d5b39659ebb7affb1e41920b0e9887102b918143bd39173138ff1e2e.md.txt",
+      "public": {
+        "bytes": 4466,
+        "sha256": "57122fb2d5b39659ebb7affb1e41920b0e9887102b918143bd39173138ff1e2e"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "docs/2026-10-24_잔량표시_계획.md",
+      "original": {
+        "bytes": 5415,
+        "sha256": "f70f8de70f00694a6c5474ecb90fa6b1ad96b622c9ad128ba33c6af48931f773"
+      },
+      "category": "docs",
+      "status": "정제 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/a2a30bace0607f0684ea9ed558d9c5bd773b23e75ae9ba8de82e3f4418c12370.md.txt",
+      "public": {
+        "bytes": 5335,
+        "sha256": "a2a30bace0607f0684ea9ed558d9c5bd773b23e75ae9ba8de82e3f4418c12370"
+      },
+      "edits": [
+        "실제 계정 조회 수치 제외"
+      ]
+    },
+    {
+      "original_path": "docs/2026-10-24_최초중단과실제연속알림.md",
+      "original": {
+        "bytes": 4753,
+        "sha256": "6f4b184aaf2be1dc88fab3299d046a955977108c2ca0dbb2f9fabb2e519b98b8"
+      },
+      "category": "docs",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/6f4b184aaf2be1dc88fab3299d046a955977108c2ca0dbb2f9fabb2e519b98b8.md.txt",
+      "public": {
+        "bytes": 4753,
+        "sha256": "6f4b184aaf2be1dc88fab3299d046a955977108c2ca0dbb2f9fabb2e519b98b8"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "docs/2026-10-25_동시알림_계획.md",
+      "original": {
+        "bytes": 1910,
+        "sha256": "8fe8cd99c1ab4d23c9174924911ad25fc73999a2fc63afc0715caaa11d38e382"
+      },
+      "category": "docs",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/8fe8cd99c1ab4d23c9174924911ad25fc73999a2fc63afc0715caaa11d38e382.md.txt",
+      "public": {
+        "bytes": 1910,
+        "sha256": "8fe8cd99c1ab4d23c9174924911ad25fc73999a2fc63afc0715caaa11d38e382"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "docs/2026-10-25_선택순간알림_설계와계획.md",
+      "original": {
+        "bytes": 4768,
+        "sha256": "86e92d8ff6e02accaf1329b6feb93bdd7aa4f3d72682739e840f99657b244661"
+      },
+      "category": "docs",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/86e92d8ff6e02accaf1329b6feb93bdd7aa4f3d72682739e840f99657b244661.md.txt",
+      "public": {
+        "bytes": 4768,
+        "sha256": "86e92d8ff6e02accaf1329b6feb93bdd7aa4f3d72682739e840f99657b244661"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "docs/2026-10-25_자율마무리_계획.md",
+      "original": {
+        "bytes": 3456,
+        "sha256": "23f2a5ca6e574a5aeb9c91045c532b301c31958cc11b681b9319fac577f2ba72"
+      },
+      "category": "docs",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/23f2a5ca6e574a5aeb9c91045c532b301c31958cc11b681b9319fac577f2ba72.md.txt",
+      "public": {
+        "bytes": 3456,
+        "sha256": "23f2a5ca6e574a5aeb9c91045c532b301c31958cc11b681b9319fac577f2ba72"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "docs/2026-10-26_금속원자_3D모션.md",
+      "original": {
+        "bytes": 7271,
+        "sha256": "a0e44782e5475e65d7c4912d821dc2d40749cd7d012d15c26ad39a0a36fe18f8"
+      },
+      "category": "docs",
+      "status": "정제 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/d94cf33cca13d5e2f27371be3bc25c2ead1460338c6a89d2d36f3800acb87d40.md.txt",
+      "public": {
+        "bytes": 7278,
+        "sha256": "d94cf33cca13d5e2f27371be3bc25c2ead1460338c6a89d2d36f3800acb87d40"
+      },
+      "edits": [
+        "실행 PC 하드웨어 식별 설명 일반화"
+      ]
+    },
+    {
+      "original_path": "docs/2026-10-26_독립회전과간소화.md",
+      "original": {
+        "bytes": 4410,
+        "sha256": "c3068fabe1ee43495e9e04e6d4b4b299f0533794d9fc4d995611bfcfd6462d60"
+      },
+      "category": "docs",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/c3068fabe1ee43495e9e04e6d4b4b299f0533794d9fc4d995611bfcfd6462d60.md.txt",
+      "public": {
+        "bytes": 4410,
+        "sha256": "c3068fabe1ee43495e9e04e6d4b4b299f0533794d9fc4d995611bfcfd6462d60"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "docs/2026-10-26_식별성_수정.md",
+      "original": {
+        "bytes": 4071,
+        "sha256": "6ae11ef6cf171e9a95b007f71a1dba855ef282bb4fe2abd2032c2bc901831930"
+      },
+      "category": "docs",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/6ae11ef6cf171e9a95b007f71a1dba855ef282bb4fe2abd2032c2bc901831930.md.txt",
+      "public": {
+        "bytes": 4071,
+        "sha256": "6ae11ef6cf171e9a95b007f71a1dba855ef282bb4fe2abd2032c2bc901831930"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "docs/2026-10-26_전면재디자인.md",
+      "original": {
+        "bytes": 6259,
+        "sha256": "d94f879b8ce9d325b044ea2c0b71bb475f9ea8d447416d926504f584ba887c08"
+      },
+      "category": "docs",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/d94f879b8ce9d325b044ea2c0b71bb475f9ea8d447416d926504f584ba887c08.md.txt",
+      "public": {
+        "bytes": 6259,
+        "sha256": "d94f879b8ce9d325b044ea2c0b71bb475f9ea8d447416d926504f584ba887c08"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "docs/2026-10-26_최초형태_복원.md",
+      "original": {
+        "bytes": 4302,
+        "sha256": "844e655ab5f7c251a74ee31255f8f7934e8399d4032cbf3842c98aa4839b2471"
+      },
+      "category": "docs",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/844e655ab5f7c251a74ee31255f8f7934e8399d4032cbf3842c98aa4839b2471.md.txt",
+      "public": {
+        "bytes": 4302,
+        "sha256": "844e655ab5f7c251a74ee31255f8f7934e8399d4032cbf3842c98aa4839b2471"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "docs/계획.md",
+      "original": {
+        "bytes": 4348,
+        "sha256": "b1d9ba5d49a99aba34240636f4c9aee457c1eb2d43559a51483bacf749b23e28"
+      },
+      "category": "docs",
+      "status": "정제 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/a7f9df6bdb6881d9d0f9832c6a5c4b026dbd86ae1f3ec310e655fd18b41ade9b.md.txt",
+      "public": {
+        "bytes": 3855,
+        "sha256": "a7f9df6bdb6881d9d0f9832c6a5c4b026dbd86ae1f3ec310e655fd18b41ade9b"
+      },
+      "edits": [
+        "실제 채팅 또는 실행 환경 관측 문단 제외"
+      ]
+    },
+    {
+      "original_path": "docs/운영_기억.md",
+      "original": {
+        "bytes": 1592,
+        "sha256": "5180a72fcdc9f90d72abfd589e64b222abc2e1045f5cd200eb43adefada5117b"
+      },
+      "category": "docs",
+      "status": "비공개 제외",
+      "reason": "비공개 운영 기록·개인 기억·실관측 검증 또는 인증/개인정보 검토 대상. 원본은 로컬에 보존하며 본문을 공개하지 않습니다.",
+      "public_path": null,
+      "public": null,
+      "edits": []
+    },
+    {
+      "original_path": "tools/atom3d_glb.py",
+      "original": {
+        "bytes": 5266,
+        "sha256": "b0f49439c8a7470f054b681c292e85ee230c042528138d3fbb87cb921f245e36"
+      },
+      "category": "tools",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/b0f49439c8a7470f054b681c292e85ee230c042528138d3fbb87cb921f245e36.py",
+      "public": {
+        "bytes": 5266,
+        "sha256": "b0f49439c8a7470f054b681c292e85ee230c042528138d3fbb87cb921f245e36"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "tools/build_distribution.py",
+      "original": {
+        "bytes": 5445,
+        "sha256": "2236b08f49ea1d226f9596f51221d18142ed37110423d34275c4d40baa286d1b"
+      },
+      "category": "tools",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/2236b08f49ea1d226f9596f51221d18142ed37110423d34275c4d40baa286d1b.py",
+      "public": {
+        "bytes": 5445,
+        "sha256": "2236b08f49ea1d226f9596f51221d18142ed37110423d34275c4d40baa286d1b"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "tools/capture_kinetic.py",
+      "original": {
+        "bytes": 4027,
+        "sha256": "1ff7c20c1b073cf983589de5edbbaeb0646e643f694b1fd27d0eb84628158b2d"
+      },
+      "category": "tools",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/1ff7c20c1b073cf983589de5edbbaeb0646e643f694b1fd27d0eb84628158b2d.py",
+      "public": {
+        "bytes": 4027,
+        "sha256": "1ff7c20c1b073cf983589de5edbbaeb0646e643f694b1fd27d0eb84628158b2d"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "tools/capture_visual_review.py",
+      "original": {
+        "bytes": 7043,
+        "sha256": "2ed1ef337cd349bfe355514916e0f10d845a27e3daa9c858c30153546b027bca"
+      },
+      "category": "tools",
+      "status": "비공개 제외",
+      "reason": "사적 실사용 검증 fixture를 포함한 비공개 운영 캡처 도구입니다. 원문은 로컬 보존하며 원문·정제본 모두 공개하지 않습니다.",
+      "public_path": null,
+      "public": null,
+      "edits": []
+    },
+    {
+      "original_path": "tools/check_sources.py",
+      "original": {
+        "bytes": 818,
+        "sha256": "4982033896dd1c2775ebfd3e59f06c44d866cc7a4b313c14de4fa2fe4dfafe27"
+      },
+      "category": "tools",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/4982033896dd1c2775ebfd3e59f06c44d866cc7a4b313c14de4fa2fe4dfafe27.py",
+      "public": {
+        "bytes": 818,
+        "sha256": "4982033896dd1c2775ebfd3e59f06c44d866cc7a4b313c14de4fa2fe4dfafe27"
+      },
+      "edits": [],
+      "representation_reason": "현재 편집되는 공개 경로와 역사 원문을 분리한 불변 내용 주소 사본"
+    },
+    {
+      "original_path": "tools/generate_visual_assets.py",
+      "original": {
+        "bytes": 5122,
+        "sha256": "3da90df75bc058f831375905b16e8f8bce98567bd97931a9082869b3ac8deb66"
+      },
+      "category": "tools",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/3da90df75bc058f831375905b16e8f8bce98567bd97931a9082869b3ac8deb66.py",
+      "public": {
+        "bytes": 5122,
+        "sha256": "3da90df75bc058f831375905b16e8f8bce98567bd97931a9082869b3ac8deb66"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "tools/installer.iss",
+      "original": {
+        "bytes": 2785,
+        "sha256": "aa2309fdb0a54342e259fc102ca39384b37df2e473cc7f0c78e70b5397ad6b69"
+      },
+      "category": "tools",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/aa2309fdb0a54342e259fc102ca39384b37df2e473cc7f0c78e70b5397ad6b69.iss",
+      "public": {
+        "bytes": 2785,
+        "sha256": "aa2309fdb0a54342e259fc102ca39384b37df2e473cc7f0c78e70b5397ad6b69"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "tools/render_atom3d.py",
+      "original": {
+        "bytes": 21375,
+        "sha256": "d64c5f053d0c7e046f048dba0d2a34429734b20be41af60992745972592ed36a"
+      },
+      "category": "tools",
+      "status": "정제 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/b7b4630fa844b6a73184012010403538b23e1a5201214d19e010adc6210d1161.py",
+      "public": {
+        "bytes": 21349,
+        "sha256": "b7b4630fa844b6a73184012010403538b23e1a5201214d19e010adc6210d1161"
+      },
+      "edits": [
+        "실제 세션 식별자를 SESSION_ID로 치환"
+      ]
+    },
+    {
+      "original_path": "tools/requirements-3d.txt",
+      "original": {
+        "bytes": 143,
+        "sha256": "03cb7648a80c72b28bcedf605fb0d5386d3d2727bef0363e7a7315c42604b032"
+      },
+      "category": "tools",
+      "status": "원문 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/03cb7648a80c72b28bcedf605fb0d5386d3d2727bef0363e7a7315c42604b032.txt",
+      "public": {
+        "bytes": 143,
+        "sha256": "03cb7648a80c72b28bcedf605fb0d5386d3d2727bef0363e7a7315c42604b032"
+      },
+      "edits": []
+    },
+    {
+      "original_path": "tools/validate_atom3d.py",
+      "original": {
+        "bytes": 7580,
+        "sha256": "43b5e6ea0653eaf1876ea1d2b69c323ea049a3e8e632d6fc8ca5ff8f440f5f6f"
+      },
+      "category": "tools",
+      "status": "정제 보존",
+      "reason": "역사 시점의 문서·도구·디자인·자체 생성 자산 또는 기존 권리 고지. 현행 기능·검증 결과로 대체하지 않습니다.",
+      "public_path": "archive/objects/4404098742227e2454d7a675982aec709e186f8b35793e5712dbc48cfeb386b0.py",
+      "public": {
+        "bytes": 7554,
+        "sha256": "4404098742227e2454d7a675982aec709e186f8b35793e5712dbc48cfeb386b0"
+      },
+      "edits": [
+        "실제 세션 식별자를 SESSION_ID로 치환"
+      ]
+    }
+  ]
+}

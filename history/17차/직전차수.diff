@@ -1,6 +1,8 @@
---- 이전/src/app.py
-+++ 현재/src/app.py
-@@ -10,7 +10,7 @@
+diff --git a/src/app.py b/src/app.py
+index d73e532e79883ebf50d96e74eccec1caacc8d3d2..1859ee7fac4eb31e9c910ef87f93797df4ca4b91 100644
+--- a/src/app.py
++++ b/src/app.py
+@@ -10,7 +10,7 @@ from datetime import datetime, timezone, timedelta
  import re
  from collections import deque
  
@@ -9,7 +11,7 @@
  from PySide6.QtGui import QFont, QFontDatabase, QIcon, QPainter, QPixmap
  from PySide6.QtWidgets import (QApplication, QDialog,
                               QFrame, QGridLayout, QHBoxLayout, QLabel,
-@@ -23,7 +23,7 @@
+@@ -23,7 +23,7 @@ from notifier import Watcher, append_log, atomic_json, stamp, POLL_INTERVAL_SECO
  from usage import UsageClient, reset_label
  from visuals import draw_orbit
  from atom_frames import get_atom_frames
@@ -18,7 +20,7 @@
  from theme import STYLE, apply_theme
  
  
-@@ -271,7 +271,7 @@
+@@ -271,7 +271,7 @@ class OrbitWidget(QWidget):
          self.setFixedSize(148, 148)
          self.settings, self.details = settings, details
          self.quit_app = quit_app
@@ -27,7 +29,7 @@
          self.render_time = None
          self.healthy = False
          self.unread = False
-@@ -368,11 +368,7 @@
+@@ -368,11 +368,7 @@ class Notice(QFrame):
          self.text.setTextFormat(Qt.TextFormat.PlainText)
          self.text.setWordWrap(True)
          heading = QHBoxLayout()
@@ -40,7 +42,7 @@
          heading.addWidget(self.brand_mark, 0, Qt.AlignmentFlag.AlignTop)
          heading.addWidget(self.title, 1)
          close = QPushButton('닫기')
-@@ -574,11 +570,7 @@
+@@ -574,11 +570,7 @@ class Details(QDialog):
          layout.setContentsMargins(24, 16, 24, 20)
          layout.setSpacing(10)
          header = QHBoxLayout()
@@ -53,7 +55,7 @@
          header.addWidget(self.brand_mark)
          self.setWindowIcon(QIcon(QPixmap.fromImage(brand_image(32))))
          heading = QLabel('Codex Orbit')
-@@ -586,9 +578,10 @@
+@@ -586,9 +578,10 @@ class Details(QDialog):
          header.addWidget(heading, 1)
          self.usage_compact = QLabel('사용 한도 미확인')
          self.usage_compact.setStyleSheet('font-size:12px;color:#b0b0b0;')
@@ -65,7 +67,7 @@
          layout.addWidget(self.tabs, 1)
          self.build_history()
          usage_page = QWidget()
-@@ -596,7 +589,7 @@
+@@ -596,7 +589,7 @@ class Details(QDialog):
          usage_layout.setContentsMargins(32, 28, 32, 28)
          self.build_usage(usage_layout)
          usage_layout.addStretch()
@@ -74,7 +76,7 @@
          self.setStyleSheet(STYLE)
  
      def build_usage(self, layout):
-@@ -606,8 +599,11 @@
+@@ -606,8 +599,11 @@ class Details(QDialog):
          heading = QHBoxLayout()
          title = QLabel('계정 사용 한도 · 남은 비율')
          title.setStyleSheet('color:#eeeeee;font-size:25px;padding-bottom:18px;')
@@ -87,7 +89,7 @@
          self.usage_refresh.clicked.connect(lambda: self.controller.usage.manual_refresh())
          heading.addWidget(self.usage_refresh)
          box.addLayout(heading)
-@@ -721,14 +717,16 @@
+@@ -721,14 +717,16 @@ class Details(QDialog):
              label.setWordWrap(True)
              label.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
              label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
@@ -106,7 +108,7 @@
              arrow=QLabel('→');arrow.setStyleSheet('font-size:16px;color:#888888;')
              table.addWidget(previous,row*3+1,0)
              table.addWidget(arrow,row*3+1,1)
-@@ -737,12 +735,15 @@
+@@ -737,12 +735,15 @@ class Details(QDialog):
              table.addWidget(line,row*3+2,0,1,3)
          table.setColumnStretch(0,1);table.setColumnStretch(2,1)
          card_layout.addLayout(table)
@@ -123,7 +125,7 @@
          self.evidence_toggle.setCheckable(True)
          cards.addWidget(self.evidence_toggle)
          self.detail = QPlainTextEdit()
-@@ -765,7 +766,7 @@
+@@ -765,7 +766,7 @@ class Details(QDialog):
          self.history.setMinimumWidth(200)
          split.setSizes([310, 700])
          layout.addWidget(split, 1)
@@ -132,7 +134,7 @@
  
      def select_event(self, current, _previous):
          if current:
-@@ -838,6 +839,7 @@
+@@ -838,6 +839,7 @@ class Controller:
      def __init__(self, settings, start_worker=True, start_usage=None):
          # 필수 이미지가 손상됐으면 타이머나 창을 만들기 전에 시작 실패로 전달합니다.
          get_atom_frames()
@@ -140,7 +142,7 @@
          apply_theme()
          self.settings = settings
          self.monitor = None
-@@ -1217,6 +1219,7 @@
+@@ -1217,6 +1219,7 @@ def main():
          stage = 'visual-assets-preflight'
          log_error = operation_record(args.data_dir, stage, effective_sessions, lock_acquired=True) or log_error
          get_atom_frames()
@@ -148,8 +150,10 @@
          stage = 'controller-prepare'
          log_error = operation_record(args.data_dir, stage, effective_sessions, lock_acquired=True) or log_error
          controller = Controller(settings, start_worker=not (args.smoke_test or args.usage_smoke_test))
---- 이전/src/brand.py
-+++ 현재/src/brand.py
+diff --git a/src/brand.py b/src/brand.py
+index e553211d8161806b73ee87da2b42bcfda4d0bae1..32ff572664463ae151edd7aa9dee94e4bf2ef890 100644
+--- a/src/brand.py
++++ b/src/brand.py
 @@ -1,7 +1,16 @@
 -"""같은 금속 원자 제작 프레임을 사용하는 정적 앱 마크입니다."""
 +"""같은 실제3D 자산을 공유하는 정적 마크와 가시성 기반 내부 모션입니다."""
@@ -170,7 +174,7 @@
  
  
  @lru_cache(maxsize=7)
-@@ -15,3 +24,174 @@
+@@ -15,3 +24,174 @@ def brand_image(size):
          source = source.copy(QRect(16, 16, 264, 264))
      return source.scaled(size, size, Qt.AspectRatioMode.KeepAspectRatio,
                                              Qt.TransformationMode.SmoothTransformation)
@@ -345,9 +349,11 @@
 +    layout.addWidget(mark,0,Qt.AlignmentFlag.AlignVCenter)
 +    layout.addWidget(label,1)
 +    return row
---- 이전/src/visuals.py
-+++ 현재/src/visuals.py
-@@ -23,10 +23,15 @@
+diff --git a/src/visuals.py b/src/visuals.py
+index 72f62963f9feb6e6a41a2c0aa6dee7f265982f86..96470df877ebb949099e23c408649d3ced0539fd 100644
+--- a/src/visuals.py
++++ b/src/visuals.py
+@@ -23,10 +23,15 @@ def project_point(point):
  
  MOTION_PERIOD = 18
  RING_TURNS = (1, -2, 3)

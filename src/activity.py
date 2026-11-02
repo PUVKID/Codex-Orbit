@@ -12,6 +12,35 @@ MAX_DEFERRED_ACTIVITIES = 32
 MAX_CONFIGURATION_SNAPSHOTS = 256
 
 
+def explicit_lifecycle(record, info):
+    """소유자가 확인된 명시 이벤트의 상태만 반환하며 메시지 본문은 복제하지 않습니다."""
+    payload = record.get('payload')
+    sid = _text(info.get('sid'))
+    if (not sid or not info.get('owner_active') or not isinstance(payload, dict)
+            or payload.get('thread_id') not in (None, sid)):
+        return None
+    event_type = payload.get('type')
+    states = {'task_started': 'running', 'task_complete': 'completed',
+              'turn_aborted': 'aborted', 'error': 'error', 'request_user_input': 'waiting'}
+    status = states.get(event_type) if record.get('type') == 'event_msg' else None
+    if (record.get('type') == 'response_item' and event_type == 'function_call'
+            and payload.get('name') in ('request_user_input', 'functions.request_user_input',
+                                        'request_user_input_async', 'functions.request_user_input_async')):
+        event_type, status = 'request_user_input', 'waiting'
+    if status is None:
+        return None
+    source_time = record.get('timestamp') if _instant(record.get('timestamp')) is not None else None
+    turn_id = _text(payload.get('turn_id'), 256)
+    identity = [sid, event_type, turn_id, source_time, _text(payload.get('call_id'), 128)]
+    if not source_time and not turn_id and not identity[-1]:
+        identity.append(info.get('offset', 0))
+    digest = hashlib.sha256(json.dumps(identity, ensure_ascii=False).encode('utf-8')).hexdigest()
+    return {'id': 'lifecycle-' + digest, 'kind': 'lifecycle', 'target': sid,
+            'status': status, 'source_time': source_time, 'turn_id': turn_id,
+            'role': _text(info.get('role'), 64), 'parent': _text(info.get('parent')),
+            'agent_path': _text(info.get('agent_path')), 'evidence': '명시 ' + event_type + ' 기록'}
+
+
 def safe_public_text(value, limit=12000):
     """보호문·비공개 표식·긴 인코딩 덩어리는 해석하거나 노출하지 않습니다."""
     if not isinstance(value, str) or not value.strip():

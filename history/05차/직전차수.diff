@@ -1,6 +1,8 @@
---- 이전/src/app.py
-+++ 현재/src/app.py
-@@ -17,7 +17,7 @@
+diff --git a/src/app.py b/src/app.py
+index 30d32916d75ae455896e220544c6d1b7f1bb8645..0c4f5d5837f2657d9d5b9c9d6eacb9d5dfcc0e1f 100644
+--- a/src/app.py
++++ b/src/app.py
+@@ -17,7 +17,7 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDialog, QFil
                               QFormLayout, QFrame, QHBoxLayout, QLabel, QLineEdit,
                               QListWidget, QListWidgetItem, QMenu, QMessageBox,
                               QPlainTextEdit, QPushButton, QSplitter, QTabWidget,
@@ -9,12 +11,10 @@
  
  from core import InstructionStore, clamp_position, read_jsonl_tail, read_text_strict, title_catalog, resolve_title
  from notifier import Watcher, append_log, atomic_json, stamp
-@@ -27,6 +27,22 @@
- def asset(name):
-     root = Path(getattr(sys, '_MEIPASS', Path(__file__).resolve().parents[1]))
+@@ -29,6 +29,22 @@ def asset(name):
      return root / 'assets' / name
-+
-+
+ 
+ 
 +def operation_record(directory, stage, sessions=None, error=None, **details):
 +    """대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다."""
 +    value = {'time': stamp(), 'kst': datetime.now(timezone(timedelta(hours=9))).isoformat(),
@@ -29,10 +29,12 @@
 +    except Exception as log_error:
 +        return str(log_error)
 +    return None
- 
- 
++
++
  def model_label(value):
-@@ -96,6 +112,7 @@
+     if value is None:
+         return '미배정'
+@@ -96,6 +112,7 @@ def event_description(event):
          '변경 전: ' + model_label(event.get('before')),
          '변경 후: ' + model_label(event.get('after')),
          '감지 시각: ' + kst_label(event.get('time')),
@@ -40,7 +42,7 @@
          '기록 종류: ' + str(event.get('kind', '확인 불가')),
          '', '공개 이유', str(event.get('reason') or '확인 불가'),
          '', '근거 수준', str(event.get('evidence') or '확인 불가'),
-@@ -131,8 +148,10 @@
+@@ -131,8 +148,10 @@ class Monitor(QThread):
          self.sessions = Path(sessions)
          key = hashlib.sha256(str(self.sessions.absolute()).encode('utf-8')).hexdigest()[:16]
          self.work = Path(directory) / 'watches' / key
@@ -51,7 +53,7 @@
  
      def send(self, event):
          value = resolve_title(event, self.titles)
-@@ -141,10 +160,12 @@
+@@ -141,10 +160,12 @@ class Monitor(QThread):
          return value['delivery']
  
      def run(self):
@@ -64,7 +66,7 @@
                      if not self.sessions.is_dir():
                          raise FileNotFoundError('세션 폴더가 없거나 접근할 수 없습니다: ' + str(self.sessions))
                      self.titles = title_catalog(self.sessions.parent / 'session_index.jsonl', self.cache_path)
-@@ -160,18 +181,47 @@
+@@ -160,18 +181,47 @@ class Monitor(QThread):
                      diagnostics, problems = read_jsonl_tail(self.work / 'diagnostics.jsonl', max_records=5)
                      status = {'time': stamp(), 'state': '감시 중', 'sessions': str(self.sessions),
                                'files': len(watcher.state['files']), 'pending': len(watcher.state['pending']),
@@ -116,7 +118,7 @@
  
  
  class OrbitWidget(QWidget):
-@@ -184,7 +234,7 @@
+@@ -184,7 +234,7 @@ class OrbitWidget(QWidget):
          self.preferences, self.quit_app = preferences, quit_app
          self.origin_time = time.monotonic()
          self.render_time = None
@@ -125,7 +127,7 @@
          self.unread = False
          self.usage_badge = '—'
          self.press_global = None
-@@ -453,8 +503,10 @@
+@@ -453,8 +503,10 @@ class Details(QDialog):
          panel = QWidget()
          cards = QVBoxLayout(panel)
          cards.setContentsMargins(12, 0, 0, 0)
@@ -136,7 +138,7 @@
          card_layout = QVBoxLayout(self.card)
          card_layout.setContentsMargins(20, 18, 20, 18)
          self.event_badge = QLabel('● 변경 기록')
-@@ -476,6 +528,7 @@
+@@ -476,6 +528,7 @@ class Details(QDialog):
                        self.reason_title, self.reason_value, self.event_time):
              label.setTextFormat(Qt.TextFormat.PlainText)
              label.setWordWrap(True)
@@ -144,7 +146,7 @@
              label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
              card_layout.addWidget(label)
          cards.addWidget(self.card)
-@@ -484,13 +537,20 @@
+@@ -484,13 +537,20 @@ class Details(QDialog):
          cards.addWidget(self.evidence_toggle)
          self.detail = QPlainTextEdit()
          self.detail.setReadOnly(True)
@@ -166,7 +168,7 @@
          split.setSizes([280, 600])
          layout.addWidget(split, 1)
          self.tabs.addTab(page, '변경 이력')
-@@ -504,7 +564,7 @@
+@@ -504,7 +564,7 @@ class Details(QDialog):
              self.task_title.setText(ROLE_LABELS.get(value.get('role'), '역할 확인 불가') + ('  ·  자식 작업' if value.get('parent') else '  ·  현재 채팅'))
              self.before_value.setText('이전  ' + model_card_label(value.get('before')))
              self.after_value.setText('→  ' + model_card_label(value.get('after')))
@@ -175,7 +177,7 @@
              self.event_time.setText(kst_label(value.get('time')))
  
      def toggle_evidence(self, checked):
-@@ -759,6 +819,8 @@
+@@ -759,6 +819,8 @@ class Controller:
          self.monitor_retries = 0
          self.notice_queue = deque()
          self.notice_overflow = 0
@@ -184,11 +186,14 @@
          self.monitor_retry_timer = QTimer()
          self.monitor_retry_timer.setSingleShot(True)
          self.monitor_retry_timer.timeout.connect(self.restart_dead_monitor)
-@@ -774,10 +836,15 @@
+@@ -774,10 +836,15 @@ class Controller:
          self.update_usage(self.usage.snapshot)
          self.quit_guard = QuitGuard(self)
          QApplication.instance().installEventFilter(self.quit_guard)
-+        if start_worker:
+-        self.orbit.show()
+         if start_worker:
+-            self.start_monitor()
+-            self.monitor_health_timer.start()
 +            try:
 +                self.start_monitor()
 +                self.monitor_health_timer.start()
@@ -196,14 +201,11 @@
 +                # 필수 준비 실패 시 오류창의 이벤트 루프에 회전 위젯을 남기지 않습니다.
 +                self.close()
 +                raise
-         self.orbit.show()
--        if start_worker:
--            self.start_monitor()
--            self.monitor_health_timer.start()
++        self.orbit.show()
          if (start_worker if start_usage is None else start_usage):
              self.usage.start()
  
-@@ -819,20 +886,29 @@
+@@ -819,20 +886,29 @@ class Controller:
              self.window.summary.setText('감시 지연 · 이전 작업자가 종료 중입니다. 종료 후 다시 시작하세요.')
              return False
          self.monitor_enabled = True
@@ -246,7 +248,7 @@
          self.monitor_health_timer.start()
          return True
  
-@@ -877,7 +953,7 @@
+@@ -877,7 +953,7 @@ class Controller:
      def enqueue_notice(self, event, replay=False):
          if self.notice.isVisible() and self.notice.event_id == event.get('id'):
              if replay:
@@ -255,14 +257,14 @@
              return
          for index, (queued, was_replay) in enumerate(self.notice_queue):
              if queued.get('id') == event.get('id'):
-@@ -890,15 +966,29 @@
+@@ -890,15 +966,29 @@ class Controller:
                  self.notice_overflow += 1
              self.update_notice_count()
          else:
 -            self.notice.display(event, self.orbit, self.settings.values.get('notice_timeout_ms', 30000), replay=replay)
 +            self.display_notice(event, replay=replay)
              self.update_notice_count()
-+
+ 
 +    def display_notice(self, event, replay=False):
 +        self.notice.display(event, self.orbit, self.settings.values.get('notice_timeout_ms', 30000), replay=replay)
 +        after = event.get('after') or {}
@@ -276,7 +278,7 @@
 +            self.presentation_error = str(error)
 +            self.window.diagnostics.setPlainText(json.dumps({'state': '알림 표시 기록 실패', 'error': str(error)},
 +                                                            ensure_ascii=False, indent=2))
- 
++
      def advance_notice(self):
          if self.closing:
              return
@@ -287,7 +289,7 @@
          self.update_notice_count()
  
      def replay_event(self, event_id):
-@@ -929,6 +1019,9 @@
+@@ -929,6 +1019,9 @@ class Controller:
          if self.closing:
              return
          self.last_monitor_progress = time.monotonic()
@@ -297,7 +299,7 @@
          self.orbit.healthy = value.get('state') == '감시 중'
          self.window.summary.setText('● ' + value.get('state', '') + '  ·  ' + kst_label(value.get('time')))
          self.window.diagnostics.setPlainText(json.dumps(value, ensure_ascii=False, indent=2))
-@@ -1011,6 +1104,7 @@
+@@ -1011,6 +1104,7 @@ def main():
      parser.add_argument('--show-details', action='store_true')
      parser.add_argument('--show-event', help='기존 이력의 이벤트 ID 또는 대상 ID를 다시 표시')
      args = parser.parse_args()
@@ -305,7 +307,7 @@
      app = QApplication(sys.argv[:1])
      app.setApplicationName('Codex Orbit')
      app.setWindowIcon(QIcon(str(asset('Orbit.ico'))))
-@@ -1019,20 +1113,36 @@
+@@ -1019,20 +1113,36 @@ def main():
      families = QFontDatabase.applicationFontFamilies(font_id)
      font = QFont(families[0] if families else 'NanumGothic', 10, QFont.Weight.Bold)
      app.setFont(font)
@@ -344,9 +346,11 @@
      app.aboutToQuit.connect(controller.close)
      if args.show_details:
          controller.show()
---- 이전/src/notifier.py
-+++ 현재/src/notifier.py
-@@ -29,10 +29,44 @@
+diff --git a/src/notifier.py b/src/notifier.py
+index 6fe4a3c1fbd24ba0ce2b4d17b4b042bf170fdb83..d4a39d8376031610c1b109575b28915c8940a7a6 100644
+--- a/src/notifier.py
++++ b/src/notifier.py
+@@ -29,10 +29,44 @@ def stamp():
  
  
  def atomic_json(path, value):
@@ -394,7 +398,7 @@
  
  
  def append_log(path, value):
-@@ -65,9 +99,18 @@
+@@ -65,9 +99,18 @@ class Watcher:
          self.seen = set(self.state['seen'])
          self.reason_reads = {}
          self.reason_budget = POLL_READ_BYTES
@@ -414,7 +418,7 @@
  
      def event(self, sid, after, reason='확인 불가', evidence='로컬 turn_context 관측', **extra):
          before = self.state['models'].get(sid)
-@@ -172,7 +215,8 @@
+@@ -172,7 +215,8 @@ class Watcher:
              self.state['models'][sid] = after
          else:
              self.event(sid, after, role=info.get('role', '확인 불가'), turn_id=payload.get('turn_id'),
@@ -424,7 +428,7 @@
  
      def public_reason(self, payload, info):
          kind = payload.get('type')
-@@ -385,6 +429,12 @@
+@@ -385,6 +429,12 @@ class Watcher:
                      path.unlink()
                  except (OSError, ValueError, KeyError) as error:
                      self.diagnostic(error, path=str(path))

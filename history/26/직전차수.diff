@@ -1,5 +1,7 @@
---- 이전/src/app.py
-+++ 현재/src/app.py
+diff --git a/src/app.py b/src/app.py
+index 5655f9d34121e0f97b31f2ebc2085bca79c4906c..68f2f267e3c44f57a2aff5586b0f78a667a409ac 100644
+--- a/src/app.py
++++ b/src/app.py
 @@ -1,6 +1,7 @@
  """Codex Orbit: 독립 회전 위젯과 로컬 변경 기록·사용 한도."""
  import argparse
@@ -8,7 +10,7 @@
  import json
  import os
  from pathlib import Path
-@@ -19,7 +20,7 @@
+@@ -19,7 +20,7 @@ from PySide6.QtWidgets import (QApplication, QDialog,
                               QFrame, QGridLayout, QHBoxLayout, QLabel, QComboBox,
                               QListWidget, QListWidgetItem, QMenu, QMessageBox,
                               QPlainTextEdit, QPushButton, QSplitter, QTabWidget,
@@ -17,21 +19,21 @@
  
  from core import clamp_position, read_jsonl_tail, read_text_strict, title_catalog, resolve_title
  from notifier import Watcher, append_log, atomic_json, stamp, POLL_INTERVAL_SECONDS, MAX_PENDING
-@@ -36,6 +37,13 @@
- 
- 
+@@ -38,6 +39,13 @@ from usage_widgets import CalendarHero
  EMPTY_HISTORY_GUIDANCE = '변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'
-+
-+
+ 
+ 
 +def validated_motion_speed(value):
 +    """설정과 UI의 속도는 유한한 실제 숫자 범위로 제한합니다."""
 +    if type(value) not in (int, float) or not .25 <= value <= 3.0 or not math.isfinite(value):
 +        raise ValueError(t('회전 속도는 0.25~3배의 유한한 숫자여야 합니다.'))
 +    return float(value)
- 
- 
++
++
  def _application_gui_root():
-@@ -281,7 +289,7 @@
+     """Python 순환 수집과 무관하게 살아 있는 GUI 소유자를 앱에 보관합니다."""
+     application = QApplication.instance()
+@@ -281,7 +289,7 @@ class Settings:
          self.directory.mkdir(parents=True, exist_ok=True)
          self.path = self.directory / 'settings.json'
          home = Path(os.environ.get('CODEX_HOME') or (Path.home() / '.codex'))
@@ -40,7 +42,7 @@
          if self.path.exists():
              value = json.loads(read_text_strict(self.path))
              if not isinstance(value, dict):
-@@ -289,6 +297,10 @@
+@@ -289,6 +297,10 @@ class Settings:
              self.values.update(value)
          if self.values.get('language') not in ('ko', 'en'):
              self.values['language'] = 'ko'
@@ -51,7 +53,7 @@
  
      def save(self):
          atomic_json(self.path, self.values)
-@@ -460,6 +472,7 @@
+@@ -460,6 +472,7 @@ class OrbitWidget(QWidget):
          self.setMinimumSize(180, 250)
          self.settings, self.details = settings, details
          self.language_changed = lambda language: None
@@ -59,7 +61,7 @@
          size = settings.values.get('size', [220, 332])
          if not isinstance(size, (list, tuple)) or len(size) != 2 or any(type(v) is not int for v in size):
              size = [220, 332]
-@@ -544,8 +557,12 @@
+@@ -544,8 +557,12 @@ class OrbitWidget(QWidget):
          from calendar_motion import get_calendar_frame,record_calendar_presentation
          design = design_for_date(current_date())
          source=get_calendar_frame(elapsed)
@@ -73,7 +75,7 @@
          record_calendar_presentation(self,source)
          painter.setPen(QColor('#B5C8D4'))
          painter.drawLine(self.width()-4, self.height()//2-12, self.width()-4, self.height()//2+12)
-@@ -622,6 +639,14 @@
+@@ -622,6 +639,14 @@ class OrbitWidget(QWidget):
              action.setCheckable(True)
              action.setChecked(get_language() == language)
              action.triggered.connect(lambda checked=False, value=language: self.language_changed(value))
@@ -88,7 +90,7 @@
          menu.addSeparator()
          menu.addAction(t('종료'), self.quit_app)
          return menu
-@@ -945,6 +970,35 @@
+@@ -945,6 +970,35 @@ class Details(QDialog):
          self.usage_compact.setStyleSheet('font-size:12px;color:#b0b0b0;')
          header.addWidget(with_symbol(self.usage_compact, 'quota'))
          layout.addLayout(header)
@@ -124,7 +126,7 @@
          self.tabs = QTabWidget()
          self.tabs.setIconSize(QSize(20, 20))
          layout.addWidget(self.tabs, 1)
-@@ -958,8 +1012,24 @@
+@@ -958,8 +1012,24 @@ class Details(QDialog):
          self.setStyleSheet(STYLE)
          remember_translations(self)
  
@@ -149,7 +151,7 @@
          self.language_combo.blockSignals(True)
          self.language_combo.setCurrentIndex(0 if get_language() == 'ko' else 1)
          self.language_combo.blockSignals(False)
-@@ -1346,6 +1416,8 @@
+@@ -1346,6 +1416,8 @@ class Controller(QObject):
          super().__init__(_application_gui_root())
          self.settings = settings
          set_language(settings.values.get('language', 'ko'))
@@ -158,7 +160,7 @@
          self.last_monitor_status = None
          self.monitor = None
          self.closing = False
-@@ -1380,6 +1452,7 @@
+@@ -1380,6 +1452,7 @@ class Controller(QObject):
          self.window = Details(self)
          self.orbit = OrbitWidget(settings, self.show, self.request_quit, self.gui_owner)
          self.orbit.language_changed = self.set_language
@@ -166,11 +168,10 @@
          self.notice = None
          self.screen_connections = []
          for screen in QApplication.screens():
-@@ -1406,6 +1479,43 @@
-             self.usage.start()
+@@ -1407,6 +1480,43 @@ class Controller(QObject):
          if start_weather:
              self.weather.start()
-+
+ 
 +    @Slot(float)
 +    def change_motion_speed(self, value):
 +        """사용자 조작의 실패는 실제 속도를 복원한 뒤 상세창에서 안내합니다."""
@@ -207,12 +208,15 @@
 +            raise
 +        self.window.update_motion_speed()
 +        self.window.show_motion_speed_error('')
- 
++
      @Slot(str)
      def set_language(self, language):
---- 이전/src/calendar_motion.py
-+++ 현재/src/calendar_motion.py
-@@ -10,7 +10,7 @@
+         application = QApplication.instance()
+diff --git a/src/calendar_motion.py b/src/calendar_motion.py
+index a3b1d604d8334728a3dc6a70230383106de89ea3..a1b751f6bb15dbbbe8dd8677143e89bdddb24899 100644
+--- a/src/calendar_motion.py
++++ b/src/calendar_motion.py
+@@ -10,7 +10,7 @@ from PySide6.QtCore import QCoreApplication, QObject, QThread, Qt, QRectF, Signa
  from PySide6.QtGui import QColor, QImage, QPainter, QPainterPath, QPen
  from shiboken6 import isValid
  from calendar_art import current_date, design_for_date
@@ -221,7 +225,7 @@
  
  FPS = 240
  SIZE = 384
-@@ -19,12 +19,8 @@
+@@ -19,12 +19,8 @@ _logger = logging.getLogger(__name__)
  
  
  def next_frame_deadline(previous, now):
@@ -236,7 +240,7 @@
  
  
  def fallback_image(value):
-@@ -69,15 +65,17 @@
+@@ -69,15 +65,17 @@ class _Worker(QThread):
          super().__init__(); self.condition=threading.Condition(); self.stopping=False; self.visible=False
          self.requested_date=None; self.requested_elapsed=0.; self.requested_at=time.perf_counter()
          self.started_at=time.perf_counter()
@@ -255,7 +259,7 @@
              if elapsed is not None:
                  self.requested_date=value; self.requested_elapsed=elapsed; self.requested_at=time.perf_counter()
              self.condition.notify_all()
-@@ -94,7 +92,7 @@
+@@ -94,7 +92,7 @@ class _Worker(QThread):
              if waiter.warning:_logger.warning(waiter.warning)
              while True:
                  with self.condition:
@@ -264,7 +268,7 @@
                      while not self.stopping and not self.visible:self.condition.wait()
                      if self.stopping:break
                      remaining=next_frame_at-time.perf_counter()
-@@ -106,7 +104,7 @@
+@@ -106,7 +104,7 @@ class _Worker(QThread):
                      if not self.visible:continue
                      value=self.requested_date or current_date()
                      # 각 호출자의 서로 다른 타이머 원점 대신 서비스의 한 시계를 공유합니다.
@@ -273,7 +277,7 @@
                      output_size=self.output_size
                  start=time.perf_counter()
                  if renderer is None:
-@@ -261,6 +259,12 @@
+@@ -261,6 +259,12 @@ def set_calendar_motion_visible(owner,visible):
      _get_service().visible(owner,visible)
  
  
@@ -286,7 +290,7 @@
  def set_calendar_motion_size(owner,size):
      """현재 보이는 각 소유자의 실제 픽셀 요구 중 최대 크기만 전달합니다."""
      if type(size) is not int or not 32<=size<=2160:raise ValueError('전달 크기는32~2160 정수여야 합니다.')
-@@ -286,11 +290,12 @@
+@@ -286,11 +290,12 @@ def get_calendar_error():
  
  
  def calendar_motion_status():
@@ -300,15 +304,17 @@
                  'target_fps':FPS,'source_dimensions':list(RENDER_SIZE),
                  'delivery_dimensions':list(_service.worker.latest.size().toTuple()) if _service.worker.latest is not None else None,
                  'requested_delivery_size':_service.worker.output_size,
---- 이전/src/frame_pacing.py
-+++ 현재/src/frame_pacing.py
-@@ -1,6 +1,38 @@
+diff --git a/src/frame_pacing.py b/src/frame_pacing.py
+index 6fb14a74031fc0820694fde9ea1afef377beab24..318bb40c3ee99fd50e843a7288d9485eaa21be68 100644
+--- a/src/frame_pacing.py
++++ b/src/frame_pacing.py
+@@ -1,8 +1,40 @@
  """프로세스 전용 고해상도 대기로 전역 타이머 설정 없이 프레임을 조율합니다."""
  import ctypes
 +import math
  import os
-+
-+
+ 
+ 
 +def validate_motion_speed(value):
 +    """유한한 0.25~3배 숫자만 받아 bool과 잘못된 설정을 거부합니다."""
 +    if type(value) not in (int, float):
@@ -338,12 +344,16 @@
 +        speed = validate_motion_speed(value)
 +        self.sample(now)
 +        self.speed = speed
- 
- 
++
++
  class FrameWaiter:
---- 이전/src/i18n.py
-+++ 현재/src/i18n.py
-@@ -5,6 +5,11 @@
+     def __init__(self):
+         self.handle = None
+diff --git a/src/i18n.py b/src/i18n.py
+index fa56e3db52395a96ef8d93931eefcd5ef78d1241..fcfee2dac40c5214c584626f4de748a2ed4320c1 100644
+--- a/src/i18n.py
++++ b/src/i18n.py
+@@ -5,6 +5,11 @@ _language = 'ko'
  
  # 이 사전의 키는 앱 표시 문구이며 사용자 기록을 검색·치환하지 않습니다.
  _EN = {
@@ -355,8 +365,11 @@
  '확인 불가':'Unavailable','미확인':'Unknown','없음':'None','최소':'Minimal','낮음':'Low','보통':'Medium','높음':'High','매우 높음':'Very high','최고':'Maximum',
  '이전 기록 없음':'No previous record','기록 없음':'Not recorded','해당 없음':'Not applicable','모델·추론 확인 불가':'Model / reasoning unavailable','모델 확인 불가':'Model unavailable',
  '모델':'Model','추론':'Reasoning','추론 강도':'Reasoning effort','이전 모델':'Previous model','이전 추론 강도':'Previous reasoning effort','이전':'Previous','새':'New','현재':'Current','변경 전':'Before','변경 후':'After',
---- 이전/src/motion_label.py
-+++ 현재/src/motion_label.py
+diff --git a/b/src/motion_label.py b/src/motion_label.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..92bb18674a89090c86a8d68e5cecd89bcd4d86ee
+--- /dev/null
++++ b/src/motion_label.py
 @@ -0,0 +1,59 @@
 +"""같은 논리 크기의 최신 모션 이미지를 부모 재배치 없이 표시합니다."""
 +from PySide6.QtGui import QIcon, QPainter
@@ -417,8 +430,10 @@
 +            self.style().drawItemPixmap(painter, rect, alignment.value, image)
 +        finally:
 +            painter.end()
---- 이전/src/usage_widgets.py
-+++ 현재/src/usage_widgets.py
+diff --git a/src/usage_widgets.py b/src/usage_widgets.py
+index 7d74f8aee28467abac4b95e7e7eef6e9efb97ebe..7b49fb55f7f7106cfc1deb8953649415e752a71a 100644
+--- a/src/usage_widgets.py
++++ b/src/usage_widgets.py
 @@ -1,11 +1,12 @@
  from i18n import translate as t
  from PySide6.QtCore import Qt, QTimer
@@ -434,8 +449,10 @@
      """사용 한도 화면에서만 날짜별 입체 이미지를 갱신합니다."""
      def __init__(self, parent=None):
          super().__init__(t('입체 이미지 준비 중'), parent)
---- 이전/src/visuals.py
-+++ 현재/src/visuals.py
+diff --git a/src/visuals.py b/src/visuals.py
+index 339700cfda5c0d71a161dbf5befca4a64bbf0bba..cec62af7b7f81208f023650d403964a69b88327a 100644
+--- a/src/visuals.py
++++ b/src/visuals.py
 @@ -1,7 +1,7 @@
  """제작된 실제3D 금속 프레임과 고정된 실제 잔량·상태를 합성합니다."""
  import math
@@ -445,7 +462,7 @@
  from PySide6.QtCore import QPointF, QRectF, Qt
  from PySide6.QtGui import QColor, QFont, QFontMetricsF, QImage, QPainter, QLinearGradient, QTextLayout, QTextOption
  from atom_frames import get_atom_frames
-@@ -209,13 +209,23 @@
+@@ -209,13 +209,23 @@ def desktop_widget_layout(width, height, title, show_weather=False, show_locatio
              'date_font': date_font, 'line_height': line_height}
  
  
@@ -470,7 +487,7 @@
      def surface(rect, radius):
          gradient = QLinearGradient(rect.topLeft(), rect.bottomLeft())
          gradient.setColorAt(0, QColor('#34414f'))
-@@ -263,5 +273,44 @@
+@@ -263,5 +273,44 @@ def draw_desktop_orbit(painter, width, height, source, design, fraction, state,
      painter.setFont(font)
      painter.setPen(gray(248))
      painter.drawText(QRectF(usage.left()+5, usage.top()+1, usage.width()-10, 18), Qt.AlignmentFlag.AlignCenter, label)

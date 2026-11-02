@@ -1,31 +1,45 @@
-# 🪐 Codex Orbit 2.11.0 · Quick guide
+# 🪐 Codex Orbit 3.0.0 · User guide
 
-Run `CodexOrbit.exe` without installation, or install for the current Windows user with `CodexOrbit-Setup.exe`. Windows 10/11 x64 is required. Python is bundled. The animated 3D widget requires an OpenGL 3.3 capable graphics driver; loading and failures are shown separately.
+Run the portable `CodexOrbit.exe` or install `CodexOrbit-Setup.exe` for the current Windows user. Do not run both against the same data directory. Click the transparent widget for history and account usage; drag to move and use the right/bottom edges to resize.
 
-Drag the transparent widget to move it. Drag its right/bottom edges or bottom-right corner to resize it. Click to open details. Position and size persist. Select Korean or English in the details header or widget context menu.
+## Notifications
 
-Use the rotation speed slider or context menu to select 0.25–3×. Reset restores 1×. The setting persists and preserves animation phase; clock, weather and usage refresh intervals remain unchanged.
+Notifications show the chat title, previous model and reasoning effort, current model and reasoning effort, and a short explanation. Decorative emoji are removed from the displayed title without renaming the original chat. ☀️ Sol, ✨ Astra, 🌍 Terra and 🌙 Luna retain exact model IDs. Effort levels use distinct emoji. Unknown values and unpublished reasons are never invented.
 
-Model and reasoning changes show **before → after** separately. Worker assignments and resumptions are distinct event types. Recorded chat titles, tasks and public reasons are preserved. Missing previous values or reasons are shown as unavailable; private reasoning is not reconstructed.
+Each change is presented independently. Hover pauses dismissal; pin keeps a card open; bookmark saves it in history. Changes beyond the visible-card limit remain in history. Assignment and resumed work are distinguished from setting changes.
 
-Monitoring observes local selection state before message submission once locally recorded. Remote/cloud chats, unrecorded UI choices and server model identity are outside its assurance. Limits include 4,096 files, 2MiB records and a per-cycle read budget. Up to eight notices are visible; older notices are hidden while the latest 500 history entries are retained. First launch establishes a baseline without replaying old events.
+## Live 3D observatory
 
-The clock uses PC local time. Approximate worldwide location uses the connection IP without Windows Location Services. Temperature refreshes every five minutes using Open-Meteo; IP location uses ipwho.is. VPNs and carrier networks may report a different region. Failed/stale readings are identified.
+Three thick metallic rings rotate on independent axes with actual depth and lighting. Model cores use a sun, crystal, globe or crescent; an unknown model uses a neutral core. Observed workers appear as satellites. Click a satellite or list entry to open its history. Pinned chats take priority, with up to 24 satellites and all workers available in the list.
 
-Usage bars show the account's actual **remaining rate-limit percentage**, not an exact remaining token count. The read-only account query refreshes every 30 seconds. Missing readings are not replaced with invented values.
+Only explicit local records supply running, completed, waiting, error or aborted states. Selected settings and observed execution settings are shown separately. Previous and current values have equal emphasis; only changed fields are highlighted.
 
-Daily sculptures cover 27,028 Korean-calendar dates across 2026–2099, using 888 year/month motif combinations and shared geometry rules. These are not individually handcrafted models. Daily art changes at Korean midnight, while the displayed clock follows PC local time.
+The history slider replays saved events without changing Codex settings. Since-last-visit summaries and bookmarks help find changes. Direct chat navigation is not claimed; copying a chat ID is available instead.
 
-The GPU source is 3840×2160, downsampled to widget size. Fixed 240fps was not achieved; further attempts were withdrawn. Generated frames, Qt paints and physical display refresh are different measurements. EXE/shortcut icons are static; motion appears in the running widget.
+## Display controls
 
-User settings, MD instructions, backups and history remain in `%LOCALAPPDATA%/CodexOrbit`. Settings, My Instructions and Help tabs are not exposed. Included instructions are not applied silently or injected into every chat. The uninstaller preserves user instructions, backups and history. Never share credentials, local chats or personal instruction files.
+Choose English or Korean, observatory or calendar mode, rotation speed, pause, reduced motion, and Eco/Balanced/High quality. Text scale is independent of widget size. Use the left navigation to view the observatory, activity or usage separately, including in smaller windows. Edge docking folds the widget into a handle near a screen edge and expands it on hover. Monitor changes correct off-screen positions.
 
-Check downloads against `SHA256SUMS.txt`; dependency licenses are in `Licenses.zip`. Public source and 108 public tests are available in the [repository](https://github.com/PUVKID/Codex-Orbit). GitHub's automatic source ZIP contains public repository files only; the private local full-source archive is not distributed.
+High-quality source frames are 3840×2160 and are delivered at the required display size. A fixed 240 fps is not promised or newly targeted. Pausing motion keeps monitoring, notifications and the clock active.
 
-## Clearer notifications
+Broadcast mode immediately masks titles and work descriptions in existing notifications and the open detail view, while preserving stored originals. Optional short notification sounds are off by default.
 
-Notifications show the chat title, previous model and reasoning effort, current model and reasoning effort, and an understandable recorded reason. Model families use ☀️ Sol, ✨ Astra, 🌍 Terra and 🌙 Luna; exact model IDs remain visible. Missing reasons are identified rather than invented. Assignments and resumptions remain distinct from setting changes.
+## Usage, temperature and time
 
-## Reasoning effort icons
+Remaining usage is the actual account-limit percentage provided through the signed-in Codex installation, **not an exact remaining-token count**. Numbers, bars and the 3D container distinguish unavailable data from 0%. Stale data retain an explicit status.
 
-⚪ None (none) · 💧 Minimal (minimal) · 🌱 Low (low) · ⚖️ Medium (medium) · 🔥 High (high) · 🚀 Very high (xhigh) · ⚡ Maximum (ultra). Each previous and current effort gets its own icon. Missing or unknown values use ❔ while retaining the original record or missing-record explanation.
+The widget shows the time, current temperature and IP-estimated location worldwide where the services provide data. Windows Location Services are not required. VPNs and network routing may change the estimated region.
+
+Calendar mode retains 888 monthly themes for 2026–2099 and procedural daily subjects. See the monthly-theme Markdown and CSV. This does not mean that every date has a separately hand-built model file.
+
+## MD, diagnostics and updates
+
+`기본_지침.md` is a shareable starter. Remove personal conversations, contact information and secrets before sharing your own Markdown. To apply instructions in Codex, use a supported instruction file in the intended project; this widget does not force instructions into all chats or expose private reasoning.
+
+Save diagnostics ZIP writes only whitelisted, non-sensitive diagnostics locally. It excludes conversation/event originals, credentials and personal paths, and never sends the archive automatically.
+
+Check for updates uses only official `PUVKID/Codex-Orbit` HTTPS releases. Downloads are SHA-256 verified before the user installs and restarts. A failed restart check restores the previous executable. Personal settings and Markdown are preserved. Source runs do not install themselves as a distributed EXE.
+
+## Requirements and limits
+
+Windows 10/11 x64 with an OpenGL 3.3 graphics driver. Monitoring uses locally available Codex records and settings, not server identity proof or private reasoning. Unrecorded reasons, previous values and activity states remain unknown. Monitor interruption/recovery notifications are emitted only when the state changes. Personal data stay in the user's AppData/CodexOrbit folder; uninstall does not silently erase them. Bundled license notices cover redistribution.

@@ -1,6 +1,8 @@
---- 이전/src/app.py
-+++ 현재/src/app.py
-@@ -19,7 +19,7 @@
+diff --git a/src/app.py b/src/app.py
+index 3eac7313a084493bdd0bebe79a85cb9960acda4b..aa6f3b9ecd4db15a9a170f8b95e33cd3a968b9dc 100644
+--- a/src/app.py
++++ b/src/app.py
+@@ -19,7 +19,7 @@ from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDialog, QFil
                               QProgressBar, QScrollArea, QSizePolicy, QLayout, QVBoxLayout, QWidget)
  
  from core import InstructionStore, clamp_position, read_jsonl_tail, read_text_strict, title_catalog, resolve_title
@@ -9,7 +11,7 @@
  from usage import UsageClient, reset_label
  from visuals import draw_orbit
  from theme import STYLE, apply_theme
-@@ -98,6 +98,10 @@
+@@ -98,6 +98,10 @@ def short_reason(event, limit=180):
  
  
  def event_kind(event):
@@ -20,7 +22,7 @@
      if event.get('assignment_type') == 'replacement':
          return '새 작업자 배정 · 이전 작업자 교체'
      if event.get('before') is None:
-@@ -124,6 +128,7 @@
+@@ -124,6 +128,7 @@ def event_description(event):
          '기록 종류: ' + str(event.get('kind', '확인 불가')),
          '', '공개 이유', str(event.get('reason') or '확인 불가'),
          '', '근거 수준', str(event.get('evidence') or '확인 불가'),
@@ -28,7 +30,7 @@
          '', '표시 기록', str(event.get('delivery') or '앱 표시 요청; 사용자 수신 미확인'),
          '', '로컬 기록과 공개 이유의 연결 근거입니다. 서버 모델 신원이나 비공개 추론을 증명하지 않습니다.'
      ])
-@@ -187,8 +192,11 @@
+@@ -187,8 +192,11 @@ class Monitor(QThread):
                      self.enriched.emit(values)
                      atomic_json(watcher.state_path, watcher.state)
                      diagnostics, problems = read_jsonl_tail(self.work / 'diagnostics.jsonl', max_records=5)
@@ -41,7 +43,7 @@
                                'diagnostics': diagnostics, 'read_problems': problems,
                                'recent_errors': list(self.recent_errors)}
                      if watcher.diagnostic_failures:
-@@ -205,7 +213,7 @@
+@@ -205,7 +213,7 @@ class Monitor(QThread):
                      atomic_json(self.work / 'heartbeat.json', status)
                  except Exception as error:
                      self.report_failure(error, watcher)
@@ -50,7 +52,7 @@
                      if self.isInterruptionRequested():
                          break
                      self.msleep(100)
-@@ -234,11 +242,9 @@
+@@ -234,11 +242,9 @@ class Monitor(QThread):
  
  class OrbitWidget(QWidget):
      def __init__(self, settings, details, preferences, quit_app):
@@ -63,9 +65,11 @@
          self.setFixedSize(148, 148)
          self.settings, self.details = settings, details
          self.preferences, self.quit_app = preferences, quit_app
---- 이전/src/notifier.py
-+++ 현재/src/notifier.py
-@@ -22,6 +22,7 @@
+diff --git a/src/notifier.py b/src/notifier.py
+index d4a39d8376031610c1b109575b28915c8940a7a6..c48a71bb8a2c44f0e9b90a65d4a5fe3e7fb7e0f4 100644
+--- a/src/notifier.py
++++ b/src/notifier.py
+@@ -22,6 +22,7 @@ MAX_FILES = 4096
  LOG_BYTES = 2 * 1024 * 1024
  POLL_READ_BYTES = 8 * 1024 * 1024
  MAX_PENDING = 256
@@ -73,7 +77,7 @@
  
  
  def stamp():
-@@ -82,18 +83,38 @@
+@@ -82,18 +83,38 @@ class Watcher:
          self.sessions, self.work, self.sender = Path(sessions), Path(work), sender
          self.work.mkdir(parents=True, exist_ok=True)
          self.state_path = self.work / 'state.json'
@@ -115,7 +119,7 @@
          self.state.setdefault('reasons', {})
          self.state.setdefault('seen', [])
          self.seen = set(self.state['seen'])
-@@ -115,6 +136,15 @@
+@@ -115,6 +136,15 @@ class Watcher:
      def event(self, sid, after, reason='확인 불가', evidence='로컬 turn_context 관측', **extra):
          before = self.state['models'].get(sid)
          declared = self.state['declarations'].get(sid)
@@ -131,11 +135,10 @@
          if 'declared_before' in extra:
              # 요청은 관측 기준선을 변경하지 않습니다. 동시에 대기하는 정확한 전후만 연결합니다.
              pending = next((e for e in reversed(self.state['pending']) if e['target'] == sid
-@@ -150,6 +180,51 @@
-                 append_log(self.work / 'observations.jsonl', event)
+@@ -151,6 +181,51 @@ class Watcher:
                  return
          self.state['pending'].append(event)
-+
+ 
 +    def duplicate_record(self, identity, baseline):
 +        """원본 시각이 있는 복제 기록만 제외하며 기준선 재생의 순서는 복원합니다."""
 +        fingerprint = hashlib.sha256(json.dumps(identity, sort_keys=True).encode('utf-8')).hexdigest()
@@ -180,10 +183,11 @@
 +                   configuration_evidence=evidence, selection_source=selection_source,
 +                   role=info.get('role', '확인 불가'), parent=info.get('parent'),
 +                   agent_path=info.get('agent_path'), source_time=record.get('timestamp'))
- 
++
      def record(self, record, info, baseline):
          kind, payload = record.get('type'), record.get('payload')
-@@ -188,6 +263,8 @@
+         if not isinstance(payload, dict):
+@@ -188,6 +263,8 @@ class Watcher:
              event_kind = payload.get('type')
              if event_kind == 'thread_settings_applied':
                  info['owner_active'] = payload.get('thread_id') == sid
@@ -192,7 +196,7 @@
              if event_kind == 'token_usage_record' and payload.get('thread_id') == sid:
                  turn = payload.get('turn_id')
                  if turn and turn not in info['turns']:
-@@ -203,14 +280,9 @@
+@@ -203,14 +280,9 @@ class Watcher:
          if info.get('child') and payload.get('turn_id') not in info.get('turns', []):
              return
          after = {'model': payload['model'][:256], 'effort': str(payload.get('effort') or '확인 불가')[:64]}
@@ -210,7 +214,7 @@
          if baseline:
              self.state['models'][sid] = after
          else:
-@@ -322,14 +394,18 @@
+@@ -322,14 +394,18 @@ class Watcher:
              return value
          value.update(reason=reason['text'], reason_call_id=reason['call_id'],
                       evidence='배정 전 공개 설명: 부모 call_id/호출 결과/자식 경로 정확 연결; 서버 변경 원인 미확인')
@@ -230,7 +234,7 @@
              if changed:
                  info['baseline_end'] = 0
                  self.diagnostic('파일 교체 또는 잘림: 현재 모델과 비교하여 재검사합니다.', path=str(path))
-@@ -362,6 +438,8 @@
+@@ -362,6 +438,8 @@ class Watcher:
                  except (ValueError, TypeError, KeyError) as error:
                      self.diagnostic('레코드 오류: ' + str(error), path=str(path), offset=position, bytes=len(raw))
                  info['offset'] = handle.tell()
@@ -239,7 +243,7 @@
          return total
  
      def poll(self):
-@@ -455,6 +533,8 @@
+@@ -455,6 +533,8 @@ class Watcher:
              self.state['models'] = dict(list(self.state['models'].items())[-MAX_FILES * 2:])
          if len(self.state['declarations']) > MAX_FILES * 2:
              self.state['declarations'] = dict(list(self.state['declarations'].items())[-MAX_FILES * 2:])
@@ -248,7 +252,7 @@
          atomic_json(self.state_path, self.state)
          return sent
  
-@@ -601,7 +681,7 @@
+@@ -601,7 +681,7 @@ def main():
                      atomic_json(args.work / 'heartbeat.json', {'pid': os.getpid(), 'time': stamp(), 'status': '감시 중', 'pending': len(watcher.state['pending'])})
                  except Exception as error:
                      watcher.diagnostic(error)

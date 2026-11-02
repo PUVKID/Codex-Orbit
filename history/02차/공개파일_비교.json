@@ -2,6 +2,7 @@
   "version": 2,
   "folder": "02차",
   "previous": "01차",
+  "scope": "실행 src 전체(보조 PowerShell 포함)와 존재하는 requirements.txt. 부가자료는 별도 보존 명세 참조.",
   "files": [
     {
       "path": "requirements.txt",
@@ -127,6 +128,24 @@
         "session_titles"
       ],
       "definitions_removed": []
+    },
+    {
+      "path": "src/toast.ps1",
+      "status": "삭제",
+      "before": {
+        "bytes": 7245,
+        "sha256": "c877819c267970a4ee8a13e23994b6d828344ba35e44f61ddb8606d43ff6b723"
+      },
+      "after": null,
+      "binary": false,
+      "definitions_added": [],
+      "definitions_removed": []
     }
-  ]
+  ],
+  "patch": {
+    "bytes": 46445,
+    "sha256": "59103277c72f46c24588414f0b9aed576c4132b60035b75c1cd2c23053e0407e",
+    "format": "Git binary full-index; core.autocrlf=false; -p1"
+  },
+  "source_reference": "src"
 }

@@ -375,6 +375,96 @@ def matrices(elapsed):
     return result
 
 
+def _crescent_geometry():
+    """평면 그림이 아닌 앞뒤 면과 곡면 옆면을 갖는 초승달 메시입니다."""
+    outer = [(22 * math.cos(t), 22 * math.sin(t)) for t in np.linspace(math.pi / 3, 5 * math.pi / 3, 49)]
+    angle = math.atan2(-outer[-1][1], outer[-1][0] - 14)
+    inner = [(14 + math.hypot(3, outer[0][1]) * math.cos(t),
+              math.hypot(3, outer[0][1]) * math.sin(t))
+             for t in np.linspace(-angle, angle - math.tau, 49)]
+    points = outer + inner
+    vertices, indices = [], []
+    for z, nz in ((5, 1), (-5, -1)):
+        start = len(vertices)
+        vertices.append((-13, 0, z, 0, 0, nz))
+        vertices.extend((x, y, z, 0, 0, nz) for x, y in points)
+        for i in range(len(points)):
+            indices.extend((start, start + 1 + i, start + 1 + (i + 1) % len(points)))
+    for i, (x, y) in enumerate(points):
+        nx, ny = points[(i + 1) % len(points)]
+        normal = np.array((ny - y, x - nx, 0.), dtype=float)
+        if np.linalg.norm(normal) < 1e-8:
+            continue
+        normal /= np.linalg.norm(normal)
+        start = len(vertices)
+        vertices.extend((a, b, z, *normal) for a, b, z in ((x, y, -5), (nx, ny, -5), (nx, ny, 5), (x, y, 5)))
+        indices.extend((start, start + 1, start + 2, start, start + 2, start + 3))
+    return finish(vertices, indices)
+
+
+def build_observatory_geometry(scene):
+    """모델 코어·입자·용기·명시 작업자 위성을 실제 삼각형 부품으로 만듭니다."""
+    from observatory_scene import normalize_scene, model_family, particle_count
+    scene = normalize_scene(scene)
+    family = model_family(scene['model'])
+    parts = []
+    silver = (.67, .74, .79)
+    def add(mesh, color=silver, metal=1., rough=.23, kind='core', index=0):
+        parts.append((mesh, color, metal, rough, kind, index))
+    if family == 'sol':
+        add(sphere_mesh(16, 32, 20), (.82, .50, .13), .78, .25)
+        for i in range(12):
+            angle = i * math.tau / 12
+            add(_transformed(lathe([(0, -5), (2.4, -4), (1.7, 3), (0, 7)], 10),
+                             (22 * math.cos(angle), 22 * math.sin(angle), 0), angle=angle - math.pi / 2),
+                (.90, .63, .20), .85, .25)
+    elif family == 'astra':
+        add(lathe([(0, -25), (16, -3), (14, 6), (0, 25)], 6, False), (.49, .35, .78), .8, .20)
+    elif family == 'terra':
+        add(sphere_mesh(19, 36, 24), (.14, .47, .44), .65, .27)
+        for angle in (0, math.pi / 3, 2 * math.pi / 3):
+            mesh = tube([(19.4 * math.cos(t), 19.4 * math.sin(t), 0) for t in np.linspace(0, math.tau, 64, endpoint=False)], .65, True, 8)
+            vertices, indices = mesh
+            vertices[:, :3] = vertices[:, :3] @ rotation((0, 1, 0), angle).T
+            vertices[:, 3:] = vertices[:, 3:] @ rotation((0, 1, 0), angle).T
+            add((vertices, indices), (.38, .78, .66), .9, .20)
+    elif family == 'luna':
+        add(_crescent_geometry(), (.68, .72, .86), .87, .22)
+    else:
+        add(sphere_mesh(17, 24, 16), (.44, .49, .52), .85, .30)
+    for index, mesh in enumerate(_ring_geometry()):
+        add(mesh, kind='ring', index=index)
+    count = particle_count(scene['effort'])
+    if count:
+        chunks, indices, offset = [], [], 0
+        for i in range(count):
+            angle = i * 2.39996323
+            z = 24 * (2 * (i + .5) / count - 1)
+            radius = math.sqrt(max(0, 37 ** 2 - z ** 2))
+            vertices, ix = _transformed(sphere_mesh(1.1, 8, 5), (radius * math.cos(angle), radius * math.sin(angle), z))
+            chunks.append(vertices); indices.append(ix + offset); offset += len(vertices)
+        add((np.concatenate(chunks), np.concatenate(indices)), (.46, .80, .74), .75, .22, 'particles')
+    colors = {'running': (.20, .73, .55), 'working': (.20, .73, .55), 'assigned': (.24, .70, .62),
+              'resumed': (.24, .70, .62), 'waiting': (.86, .65, .22), 'waiting_user': (.86, .65, .22),
+              'completed': (.32, .57, .86), 'done': (.32, .57, .86), 'error': (.86, .24, .26),
+              'retrying': (.94, .46, .18), 'retry': (.94, .46, .18)}
+    for index, agent in enumerate(scene['agents']):
+        add(sphere_mesh(3.4 if agent['pinned'] else 2.8, 16, 10),
+            colors.get(agent['status'], silver), .75, .24, 'agent', index)
+    for y in (-49, -29):
+        add(tube([(9 * math.cos(t), y, 12 + 9 * math.sin(t)) for t in np.linspace(0, math.tau, 48, endpoint=False)], .7, True, 8), kind='vessel')
+    for x, z in ((-9, 12), (9, 12), (0, 3), (0, 21)):
+        add(tube([(x, -49, z), (x, -29, z)], .55, False, 8), kind='vessel')
+    fraction = scene['usage_fraction']
+    if fraction is None:
+        add(_transformed(sphere_mesh(2.2, 12, 8), (0, -39, 12)), (.45, .49, .53), .4, .4, 'usage_unknown')
+    elif fraction > 0:
+        height = 18 * fraction
+        add(_transformed(lathe([(0, 0), (7.8, 0), (7.8, height), (0, height)], 32), (0, -48, 12)),
+            (.13, .64, .48), .35, .25, 'usage_fill')
+    return parts
+
+
 class CalendarRenderer:
     """컨텍스트를 만든 스레드에서만 사용하고 현재 날짜의 버퍼만 보유합니다."""
     def __init__(self,size=384):
@@ -385,7 +475,7 @@ class CalendarRenderer:
         else:raise ValueError('렌더 크기는32~768 정수 또는3840×2160이어야 합니다.')
         width,height=dimensions
         self.thread_id=threading.get_ident(); self.size=size; self.dimensions=dimensions; self.ctx=None; self.resources=[]; self.vaos=[]; self.buffers=[]; self.parts=[]; self.design=None
-        self.output_resources=[]; self.output_size=0; self.output=None
+        self.output_resources=[]; self.output_size=0; self.output=None; self.observatory_key=None
         try:
             self.ctx=moderngl.create_standalone_context(require=330)
             self.program=self.ctx.program(vertex_shader=VERTEX,fragment_shader=FRAGMENT); self.resources.append(self.program)
@@ -441,7 +531,51 @@ class CalendarRenderer:
             vertex=self.ctx.buffer(vertices.tobytes()); self.buffers.append(vertex)
             index=self.ctx.buffer(indices.tobytes()); self.buffers.append(index)
             self.vaos.append(self.ctx.vertex_array(self.program,[(vertex,'3f 3f','in_position','in_normal')],index))
-        self.design=design
+        self.design=design; self.observatory_key=None
+
+    def _draw_observatory(self, scene, elapsed):
+        from observatory_scene import normalize_scene, scene_time, world_matrix, agent_world_positions
+        self._assert_thread()
+        scene = normalize_scene(scene); elapsed = scene_time(scene, elapsed)
+        key = (scene['model'], scene['effort'], scene['usage_fraction'],
+               tuple((a['target'], a['status'], a['pinned']) for a in scene['agents']))
+        if self.observatory_key != key:
+            self._clear_meshes(); self.parts = build_observatory_geometry(scene)
+            for (vertices, indices), *_ in self.parts:
+                vertex = self.ctx.buffer(vertices.tobytes()); self.buffers.append(vertex)
+                index = self.ctx.buffer(indices.tobytes()); self.buffers.append(index)
+                self.vaos.append(self.ctx.vertex_array(self.program, [(vertex, '3f 3f', 'in_position', 'in_normal')], index))
+            self.observatory_key = key
+        world = np.asarray(world_matrix(scene), dtype=float)
+        agents = agent_world_positions(scene, elapsed)
+        transition = scene['transition']; blend = transition * transition * (3 - 2 * transition)
+        self.ctx.enable(moderngl.DEPTH_TEST); self.target.use(); self.target.clear(0, 0, 0, 0, depth=1)
+        for index, (_, color, metal, rough, kind, part_index) in enumerate(self.parts):
+            transform = np.eye(4)
+            if kind == 'ring':
+                axis = ((.6, 1, .3), (-.3, 1, .4), (.4, -.8, 1))[part_index]
+                phase = math.tau * elapsed / 12 * (1, -2, 3)[part_index] * blend
+                transform[:3, :3] = rotation(axis, phase) @ rotation((1, 0, 0), (.8, -.7, 1.1)[part_index] * blend)
+            elif kind == 'agent':
+                transform[:3, 3] = agents[part_index]['position']
+            elif kind == 'particles':
+                transform[:3, :3] = rotation((.2, 1, .3), elapsed * .16)
+            elif kind == 'core':
+                transform[:3, :3] = rotation((0, 1, 0), .10 * math.sin(elapsed)) * (.78 + .22 * blend)
+                transform[1, 3] = 1.2 * math.sin(elapsed)
+            transform = world @ transform
+            self.program['model'].write(transform.T.astype('f4').tobytes())
+            self.program['metallic'].value = metal; self.program['base_color'].value = color; self.program['roughness'].value = rough
+            self.vaos[index].render(moderngl.TRIANGLES)
+        self.ctx.copy_framebuffer(self.resolved, self.target)
+
+    def render_observatory(self, scene, elapsed=0):
+        """같은 컨텍스트·4K 타깃과 깊이 버퍼에서 관측소를 렌더합니다."""
+        self._draw_observatory(scene, elapsed)
+        self.ctx.disable(moderngl.DEPTH_TEST)
+        self.output.use(); self.texture.use(location=0)
+        self.downsample_vao.render(moderngl.TRIANGLES, vertices=3)
+        return self._image(self.output, self.output_size, self.output_size)
 
     def _draw(self,value,elapsed):
         self._assert_thread(); transforms=matrices(elapsed); self.set_date(value)
@@ -475,7 +609,7 @@ class CalendarRenderer:
     def _clear_meshes(self):
         for value in reversed(self.vaos):value.release()
         for value in reversed(self.buffers):value.release()
-        self.vaos.clear(); self.buffers.clear(); self.parts=[]; self.design=None
+        self.vaos.clear(); self.buffers.clear(); self.parts=[]; self.design=None; self.observatory_key=None
 
     def close(self):
         self._assert_thread(); self._clear_meshes()

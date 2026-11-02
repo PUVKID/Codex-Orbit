@@ -1,6 +1,8 @@
---- 이전/src/app.py
-+++ 현재/src/app.py
-@@ -11,7 +11,7 @@
+diff --git a/src/app.py b/src/app.py
+index dcdbfc2ca53e523039d06126869523985966ac94..5dd2eabd941bfeeb31859d537036f374b0926d6d 100644
+--- a/src/app.py
++++ b/src/app.py
+@@ -11,7 +11,7 @@ import re
  from collections import deque
  
  from PySide6.QtCore import QEvent, QObject, QLockFile, Qt, QThread, QTimer, Signal, QPropertyAnimation, QEasingCurve
@@ -9,7 +11,7 @@
  from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDialog, QFileDialog,
                               QFormLayout, QFrame, QHBoxLayout, QLabel, QLineEdit,
                               QListWidget, QListWidgetItem, QMenu, QMessageBox,
-@@ -22,6 +22,7 @@
+@@ -22,6 +22,7 @@ from core import InstructionStore, clamp_position, read_jsonl_tail, read_text_st
  from notifier import Watcher, append_log, atomic_json, stamp, POLL_INTERVAL_SECONDS
  from usage import UsageClient, reset_label
  from visuals import draw_orbit
@@ -17,7 +19,7 @@
  from theme import STYLE, apply_theme
  
  
-@@ -357,6 +358,12 @@
+@@ -357,6 +358,12 @@ class Notice(QFrame):
          self.text.setTextFormat(Qt.TextFormat.PlainText)
          self.text.setWordWrap(True)
          heading = QHBoxLayout()
@@ -30,7 +32,7 @@
          heading.addWidget(self.title, 1)
          close = QPushButton('닫기')
          close.setToolTip('알림 닫기 · 이력은 유지됩니다')
-@@ -535,6 +542,13 @@
+@@ -535,6 +542,13 @@ class Details(QDialog):
          layout.setContentsMargins(24, 16, 24, 20)
          layout.setSpacing(10)
          header = QHBoxLayout()
@@ -44,8 +46,11 @@
          heading = QLabel('Codex Orbit')
          heading.setStyleSheet('font-size:19px;color:#f5f5f5;')
          header.addWidget(heading, 1)
---- 이전/src/brand.py
-+++ 현재/src/brand.py
+diff --git a/b/src/brand.py b/src/brand.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..38a706cf5c7826c1818427b6e0596f3b2de8acae
+--- /dev/null
++++ b/src/brand.py
 @@ -0,0 +1,26 @@
 +"""작은 크기에서도 읽히는 Codex Orbit의 단일 정적 브랜드 마크입니다."""
 +from PySide6.QtCore import QPointF, QRectF, Qt
@@ -73,8 +78,10 @@
 +    painter.drawEllipse(QPointF(.79, .22), .115, .115)
 +    painter.end()
 +    return image
---- 이전/src/visuals.py
-+++ 현재/src/visuals.py
+diff --git a/src/visuals.py b/src/visuals.py
+index 3900d35ed6fcaf9fe41e753c57fb16595b01f94e..ec553468551034f08c83d48ac7fd1cab11b0698c 100644
+--- a/src/visuals.py
++++ b/src/visuals.py
 @@ -2,7 +2,7 @@
  import math
  
@@ -84,19 +91,19 @@
  
  
  def rotate_point(point, angles):
-@@ -50,6 +50,11 @@
- def gray(level, alpha=255):
-     level = max(0, min(255, int(level)))
+@@ -52,6 +52,11 @@ def gray(level, alpha=255):
      return QColor(level, level, level, alpha)
-+
-+
+ 
+ 
 +def status_label(healthy, unread):
 +    """읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다."""
 +    return '새 변경' if unread else '감시 중' if healthy else '확인 필요'
- 
- 
++
++
  def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', healthy=False, unread=False, light=False):
-@@ -113,7 +118,10 @@
+     """장식 모션과 실제 계정 숫자를 분리하고 앞쪽 튜브로 중심을 가립니다."""
+     # 눈금 없는 크롬 리본만 투명 정사각형 캔버스에 그립니다.
+@@ -113,7 +118,10 @@ def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', he
      font.setWeight(QFont.Weight.Bold)
      # 투명 위젯의 Windows 렌더에서도 숫자와 한글에 색 프린지를 만들지 않습니다.
      font.setStyleStrategy(font.styleStrategy() | QFont.StyleStrategy.NoSubpixelAntialias)
@@ -108,7 +115,7 @@
      painter.setFont(font)
      # Windows 위젯 엔진이 글꼴 힌트를 무시하더라도 투명 ARGB 표면은 회색조로 합성합니다.
      scale = max(1., abs(painter.combinedTransform().m11()) * painter.device().devicePixelRatioF())
-@@ -132,8 +140,19 @@
+@@ -132,8 +140,19 @@ def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', he
                            '잔량' if state == 'fresh' else '지연' if state == 'stale' else '미확인')
      text_painter.end()
      painter.drawImage(QRectF(-24, -22, 48, 44), text_layer)
