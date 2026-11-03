@@ -1,0 +1,235 @@
+{
+  "version": 31,
+  "previous": "30차",
+  "files": [
+    {
+      "path": "requirements.txt",
+      "bytes": 109,
+      "sha256": "76b74752d8b722fc13167e416df61ed80798286ac4762a5a8668b21ab4d93024"
+    },
+    {
+      "path": "src/activity.py",
+      "bytes": 17688,
+      "sha256": "aa6ed1bceb5d28966a13dad64a9b05d9ac15de24427b237f7e9dd71a84df116a"
+    },
+    {
+      "path": "src/app.py",
+      "bytes": 123142,
+      "sha256": "99c8ac92dd8c5def02c39df09672a74e2f0419ceae120691d0a53ebeda7d0755"
+    },
+    {
+      "path": "src/atom_frames.py",
+      "bytes": 8515,
+      "sha256": "af5b5331068fb58b1daf33d124bd4d8bb33b76bc017435aa79b4ed701b7ed962"
+    },
+    {
+      "path": "src/brand.py",
+      "bytes": 10147,
+      "sha256": "bec1e0eff2b42da530b779b48fae0f0ceba56ff83a2872a8b7912d3939153852"
+    },
+    {
+      "path": "src/calendar_art.py",
+      "bytes": 4132,
+      "sha256": "5495a4f01dc6a30b47d94730f311f340aad081a658d8133f5bf2b0d112a54dc0"
+    },
+    {
+      "path": "src/calendar_catalog.py",
+      "bytes": 16113,
+      "sha256": "99e0b12a22a6c13cb10d7920781844844951abd469c96ad0bb8022936528b960"
+    },
+    {
+      "path": "src/calendar_motion.py",
+      "bytes": 20496,
+      "sha256": "31880cfbb091de241f8e7ca6d036d7cb4e8c64b41deb39e172d40968572a0a40"
+    },
+    {
+      "path": "src/calendar_renderer.py",
+      "bytes": 38208,
+      "sha256": "56eeae18f7158a6f7305591cf912aeef9119d5001b1bb556e88eed00f3505996"
+    },
+    {
+      "path": "src/core.py",
+      "bytes": 11186,
+      "sha256": "6578aa45d58a7e2d501d52c52689b233f993c6bc7af6196428efdc03338641bf"
+    },
+    {
+      "path": "src/element_frames.py",
+      "bytes": 7096,
+      "sha256": "0d72e490fbc2680b3bd9bac16c5da13288c61d6e9a08049bb5b8bf072a0a1342"
+    },
+    {
+      "path": "src/element_visuals.py",
+      "bytes": 819,
+      "sha256": "33ceea060b073d5a03af097d8e35e7f38ad5ec2252534402bd6a965328276f94"
+    },
+    {
+      "path": "src/elements.py",
+      "bytes": 2532,
+      "sha256": "2f4b017f3ea1d8212dfe22b0db43e82cdf01d5ab6a298a60d446e1cc1599c90c"
+    },
+    {
+      "path": "src/frame_pacing.py",
+      "bytes": 3692,
+      "sha256": "09cd3768e4baa326bb0e08e4d7fd8130f05526024686b88f8ef2f9b0366b1bb1"
+    },
+    {
+      "path": "src/i18n.py",
+      "bytes": 21588,
+      "sha256": "c6ec7b06a59a3fd53ac8fba7b8f88e95a2d308818cb74b2f848b66e335b7cb47"
+    },
+    {
+      "path": "src/motion_label.py",
+      "bytes": 2380,
+      "sha256": "f76a05b63a676282ff4816c25ce0d7bc4aa01396889559c76021d5f858a0c60d"
+    },
+    {
+      "path": "src/notice_format.py",
+      "bytes": 5988,
+      "sha256": "fdcc1756889ad84ff1e9eed5bf911d5f78708c2f80e9fb3a200719089670726e"
+    },
+    {
+      "path": "src/notifier.py",
+      "bytes": 46415,
+      "sha256": "58346e8f9c1c40932e8579075e0f07824c93fec3ee7ab7513a02f77f60b3ee52"
+    },
+    {
+      "path": "src/observatory_panel.py",
+      "bytes": 37592,
+      "sha256": "c666630c1726a1263d1fd53e82681ad7812fbd902d4b2bfb3382925bb1987398"
+    },
+    {
+      "path": "src/observatory_scene.py",
+      "bytes": 6214,
+      "sha256": "80ab5187a117d524e62862e0813e26ebaa2a2f02b8c32525c9feebc362d42ae1"
+    },
+    {
+      "path": "src/orbit_features.py",
+      "bytes": 15659,
+      "sha256": "c38b49656800b60f1792b452c24d7deac41b8f60ca43b8c8e02a5ee35ed00797"
+    },
+    {
+      "path": "src/safe_update.py",
+      "bytes": 18186,
+      "sha256": "2cdf3627a398e7e9595cc106bad07ec385a0d3de606a4673121dbf131602e2aa"
+    },
+    {
+      "path": "src/theme.py",
+      "bytes": 16880,
+      "sha256": "189c18bd99ae47b993c7b60ba9947bb0ede241a6c5b60b0d1bbede45869cd5b6"
+    },
+    {
+      "path": "src/typography.py",
+      "bytes": 1504,
+      "sha256": "44e44bb2385c202b2d72bc8e6ca2d21ccff29d99afe0a31e1d1e2212b1b79a01"
+    },
+    {
+      "path": "src/ui_layout.py",
+      "bytes": 2238,
+      "sha256": "bceb590fdcde16fc8b641ac97735dc116f9dd80f59ec6c38eae99947674573e2"
+    },
+    {
+      "path": "src/update_widgets.py",
+      "bytes": 6420,
+      "sha256": "cc54522847cf1908e6c635e50a563bb5fa8f5db43a481023aae4de39c9a853e1"
+    },
+    {
+      "path": "src/usage.py",
+      "bytes": 15245,
+      "sha256": "dddcd5beef9281e9652c0cceff77f0240df669396a2bae18370ef30144a1406e"
+    },
+    {
+      "path": "src/usage_frames.py",
+      "bytes": 9564,
+      "sha256": "a141ce6eaeefefbe942cf04116c032ec3c8ab383bbb07a028e5961c5026c9957"
+    },
+    {
+      "path": "src/usage_widgets.py",
+      "bytes": 2516,
+      "sha256": "9ad1be24d27cbf072db6892a2bc3c431304002f90f9a9d46d59494a91b74814c"
+    },
+    {
+      "path": "src/visuals.py",
+      "bytes": 16439,
+      "sha256": "61558ca91efb11e34647f67db0fc4bcf579674b5431291a1043bfccfb12fae00"
+    },
+    {
+      "path": "src/weather.py",
+      "bytes": 17524,
+      "sha256": "acbb6804da7bde516461c739ed3e5c17bd26edee4f299b995822853dddd1b5e4"
+    },
+    {
+      "path": "src/windows_job.py",
+      "bytes": 17549,
+      "sha256": "7204c5855cfb4c973487f0cba1c5554cb025528cb1f6744e74561bb311d97667"
+    }
+  ],
+  "changes": [
+    {
+      "path": "src/app.py",
+      "before": {
+        "bytes": 119660,
+        "sha256": "af0833be4ba09c91fc7197af30f15c2c19049f656089c4e4909bc7d544bd6e0e"
+      },
+      "after": {
+        "bytes": 123142,
+        "sha256": "99c8ac92dd8c5def02c39df09672a74e2f0419ceae120691d0a53ebeda7d0755"
+      }
+    },
+    {
+      "path": "src/i18n.py",
+      "before": {
+        "bytes": 21581,
+        "sha256": "d05355ddb6c0c28742662a5fbda489513baa1acb1e2d12f18893a683a163c5f7"
+      },
+      "after": {
+        "bytes": 21588,
+        "sha256": "c6ec7b06a59a3fd53ac8fba7b8f88e95a2d308818cb74b2f848b66e335b7cb47"
+      }
+    },
+    {
+      "path": "src/observatory_panel.py",
+      "before": {
+        "bytes": 28446,
+        "sha256": "b480c739c16c8377454d51a75f5fa7a024a0122970953fea8d8dedb14cd9d6ea"
+      },
+      "after": {
+        "bytes": 37592,
+        "sha256": "c666630c1726a1263d1fd53e82681ad7812fbd902d4b2bfb3382925bb1987398"
+      }
+    },
+    {
+      "path": "src/theme.py",
+      "before": {
+        "bytes": 9583,
+        "sha256": "ea7d30a2818b1362da768e685c18d4066a73a41ae9d77802ce08765738fa5bc6"
+      },
+      "after": {
+        "bytes": 16880,
+        "sha256": "189c18bd99ae47b993c7b60ba9947bb0ede241a6c5b60b0d1bbede45869cd5b6"
+      }
+    },
+    {
+      "path": "src/ui_layout.py",
+      "before": null,
+      "after": {
+        "bytes": 2238,
+        "sha256": "bceb590fdcde16fc8b641ac97735dc116f9dd80f59ec6c38eae99947674573e2"
+      }
+    },
+    {
+      "path": "src/update_widgets.py",
+      "before": {
+        "bytes": 6420,
+        "sha256": "2ef1b7caa1be35ff205a798a1c48edea4f3d3baf6616cf8ac7d15d76904073a1"
+      },
+      "after": {
+        "bytes": 6420,
+        "sha256": "cc54522847cf1908e6c635e50a563bb5fa8f5db43a481023aae4de39c9a853e1"
+      }
+    }
+  ],
+  "patch": {
+    "bytes": 80992,
+    "sha256": "0ae6c11af2a802ec9d3cb8adfb1a7fae82314ad6756da1c0c2567a1b36bd2549"
+  }
+}

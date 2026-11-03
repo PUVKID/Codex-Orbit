@@ -1,0 +1,1046 @@
+diff --git a/src/app.py b/src/app.py
+index f8e209e1b2f27b373d48d04550aad252fb9c9044..c696fbc49ece742038d8c9089ceaf1011983bb4b 100644
+--- a/src/app.py
++++ b/src/app.py
+@@ -33,7 +33,8 @@ from visuals import draw_orbit, draw_desktop_orbit, desktop_widget_layout, statu
+ from atom_frames import get_atom_frames
+ from calendar_art import design_for_date, current_date
+ from brand import brand_image, AnimatedBrand, brand_clock, symbol_icon, with_symbol, validate_symbols
+-from theme import STYLE, apply_theme
++from theme import apply_theme, set_ui_style, themed_stylesheet
++from ui_layout import OrbitComboBox as QComboBox
+ from typography import app_font
+ from elements import daily_element
+ from usage_widgets import CalendarHero
+@@ -657,7 +658,7 @@ class Notice(QFrame):
+         self.open_details = open_details
+         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
+         self.setObjectName('notice')
+-        self.setStyleSheet('#notice {background:#f9fffc;border:1px solid #bad8ce;border-radius:16px;} QLabel {color:#193c36;background:transparent;border:none;font-weight:700;}')
++        set_ui_style(self,'#notice {background:#f9fffc;border:1px solid #bad8ce;border-radius:16px;} QLabel {color:#193c36;background:transparent;border:none;font-weight:700;}')
+         self.setFixedWidth(410)
+         layout = QVBoxLayout(self)
+         layout.setContentsMargins(18, 14, 18, 14)
+@@ -666,7 +667,7 @@ class Notice(QFrame):
+         self.text = QLabel()
+         self.title.setTextFormat(Qt.TextFormat.PlainText)
+         self.title.setWordWrap(True)
+-        self.title.setStyleSheet('font-size:16px;color:#193c36;')
++        set_ui_style(self.title,'font-size:16px;color:#193c36;')
+         self.text.setTextFormat(Qt.TextFormat.PlainText)
+         self.text.setWordWrap(True)
+         heading = QHBoxLayout()
+@@ -674,23 +675,23 @@ class Notice(QFrame):
+         heading.addWidget(self.brand_mark, 0, Qt.AlignmentFlag.AlignTop)
+         self.title_marker = QLabel('💬')
+         self.title_marker.setAccessibleName(t('채팅 제목'))
+-        self.title_marker.setStyleSheet('font-size:16px;')
++        set_ui_style(self.title_marker,'font-size:16px;')
+         heading.addWidget(self.title_marker, 0, Qt.AlignmentFlag.AlignTop)
+         heading.addWidget(self.title, 1)
+         close = QPushButton(t('✕ 닫기'))
+         close.setToolTip(t('알림 닫기 · 이력은 유지됩니다'))
+-        close.setStyleSheet('padding:0;min-height:28px;max-height:28px;font-size:12px;')
++        set_ui_style(close,'padding:0;min-height:28px;max-height:28px;font-size:12px;')
+         close.setFixedSize(64, 30)
+         close.clicked.connect(self.dismiss)
+         heading.addWidget(close, 0, Qt.AlignmentFlag.AlignTop)
+         layout.addLayout(heading)
+         self.category = QLabel()
+-        self.category.setStyleSheet('font-size:13px;color:#355c50;padding:2px 0;')
++        set_ui_style(self.category,'font-size:13px;color:#355c50;padding:2px 0;')
+         self.category.setWordWrap(True)
+         self.category.setTextFormat(Qt.TextFormat.PlainText)
+         layout.addWidget(self.category)
+         self.task_value = QLabel()
+-        self.task_value.setStyleSheet('font-size:13px;color:#355c50;padding:0;')
++        set_ui_style(self.task_value,'font-size:13px;color:#355c50;padding:0;')
+         self.task_value.setWordWrap(True)
+         self.task_value.setTextFormat(Qt.TextFormat.PlainText)
+         self.task_value.hide()
+@@ -705,14 +706,14 @@ class Notice(QFrame):
+         self.notice_after_heading = QLabel(t('변경 후'))
+         for column, text in ((0, '⬅️ ' + t('이전')), (1, '→'), (2, '➡️ ' + t('현재'))):
+             label = self.notice_after_heading if column == 2 else QLabel(text)
+-            label.setStyleSheet('font-size:12px;color:#355c50;')
++            set_ui_style(label,'font-size:12px;color:#355c50;')
+             values.addWidget(label, 0, column)
+         for row, (previous, current) in enumerate(((self.model_previous, self.model_current),
+                                                     (self.effort_previous, self.effort_current)), 1):
+             for column, label in ((0, previous), (2, current)):
+                 label.setWordWrap(True)
+                 label.setTextFormat(Qt.TextFormat.PlainText)
+-                label.setStyleSheet('font-size:18px;font-weight:700;color:#355c50;padding:3px;')
++                set_ui_style(label,'font-size:18px;font-weight:700;color:#355c50;padding:3px;')
+                 values.addWidget(label, row, column)
+         values.setColumnStretch(0, 1)
+         values.setColumnStretch(2, 1)
+@@ -723,18 +724,18 @@ class Notice(QFrame):
+         self.after_value = QLabel()
+         self.after_value.setWordWrap(True)
+         self.after_value.setTextFormat(Qt.TextFormat.PlainText)
+-        self.after_value.setStyleSheet('font-size:10px;color:#355c50;padding:0;')
++        set_ui_style(self.after_value,'font-size:10px;color:#355c50;padding:0;')
+         self.after_value.hide()
+-        self.text.setStyleSheet('font-size:12px;color:#355c50;')
++        set_ui_style(self.text,'font-size:12px;color:#355c50;')
+         layout.addWidget(self.text)
+         self.selection_reason = QLabel()
+-        self.selection_reason.setStyleSheet('font-size:10px;color:#355c50;padding:0;')
++        set_ui_style(self.selection_reason,'font-size:10px;color:#355c50;padding:0;')
+         self.selection_reason.setWordWrap(True)
+         self.selection_reason.setTextFormat(Qt.TextFormat.PlainText)
+         self.selection_reason.hide()
+         hint = QLabel(t('🔎 자세히 보기'))
+         self.detail_hint = hint
+-        hint.setStyleSheet('font-size:12px;color:#193c36;')
++        set_ui_style(hint,'font-size:12px;color:#193c36;')
+         layout.addWidget(hint)
+         self.queue_hint = QLabel('')
+         self.queue_hint.setWordWrap(True)
+@@ -918,7 +919,7 @@ class Notice(QFrame):
+             category += ' · ' + t('설정 유지')
+         icon = '📋' if event.get('kind') == 'activity' and event.get('activity_type') == 'assigned' else '▶️' if event.get('kind') == 'activity' else '⚙️' if event.get('kind') == 'settings' else '🔄'
+         self.category.setText(('🔁 ' + t('기록 다시 보기 · ') if self.replay else '') + icon + ' ' + t(category))
+-        self.category.setStyleSheet('font-size:13px;padding:2px 0;color:'+event_accent(event)+';')
++        set_ui_style(self.category,'font-size:13px;padding:2px 0;color:'+event_accent(event)+';')
+         self.task_value.setText(task_explanation(event, 100))
+         self.task_value.setToolTip(task_explanation(event, 2000))
+         self.selection_reason.setText(selection_explanation(event))
+@@ -931,7 +932,7 @@ class Notice(QFrame):
+         for key, labels in (('model', (self.model_previous, self.model_current)), ('effort', (self.effort_previous, self.effort_current))):
+             changed = event.get('kind') != 'activity' and before is not None and before.get(key) and after_map.get(key) and before.get(key) != after_map.get(key)
+             for label in labels:
+-                label.setStyleSheet('font-size:18px;font-weight:700;color:#355c50;padding:3px;' + ('background:#d4f3e7;border-radius:6px;' if changed else ''))
++                set_ui_style(label,'font-size:18px;font-weight:700;color:#355c50;padding:3px;' + ('background:#d4f3e7;border-radius:6px;' if changed else ''))
+         self.after_value.setText((t('현재 설정 · ') if event.get('kind') == 'activity' else t('→ 변경 후 · ')) + (self.setting_label(after).replace('\n',' · ') if after is not None else t('확인 불가')))
+         self.text.setText(t('💬 이유: ') + notice_reason(event))
+         self.text.setToolTip(notice_reason_original(event))
+@@ -961,7 +962,7 @@ class DiagnosticLabel(QLabel):
+         self.setWordWrap(True)
+         self.setTextFormat(Qt.TextFormat.PlainText)
+         self.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+-        self.setStyleSheet('font-size:12px;color:#49615b;border-left:2px solid #aaaaaa;padding:10px;')
++        set_ui_style(self,'font-size:12px;color:#49615b;border-left:2px solid #aaaaaa;padding:10px;')
+         self.original_text = ''
+         self.hide()
+     def setPlainText(self, text):
+@@ -995,7 +996,7 @@ class Details(QDialog):
+         header.addWidget(self.brand_mark)
+         self.setWindowIcon(QIcon(QPixmap.fromImage(brand_image(32))))
+         heading = QLabel('Codex Orbit')
+-        heading.setStyleSheet('font-size:19px;color:#183c36;')
++        set_ui_style(heading,'font-size:19px;color:#183c36;')
+         header.addWidget(heading, 1)
+         self.language_combo = QComboBox()
+         self.language_combo.addItem('한국어', 'ko')
+@@ -1006,7 +1007,7 @@ class Details(QDialog):
+             lambda index: self.controller.set_language(self.language_combo.itemData(index)))
+         header.addWidget(self.language_combo)
+         self.usage_compact = QLabel(t('사용 한도 미확인'))
+-        self.usage_compact.setStyleSheet('font-size:12px;color:#55736b;')
++        set_ui_style(self.usage_compact,'font-size:12px;color:#55736b;')
+         header.addWidget(with_symbol(self.usage_compact, 'quota'))
+         layout.addLayout(header)
+         motion_controls = QHBoxLayout()
+@@ -1035,7 +1036,7 @@ class Details(QDialog):
+         self.motion_speed_error.setTextFormat(Qt.TextFormat.PlainText)
+         self.motion_speed_error.setWordWrap(True)
+         self.motion_speed_error.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
+-        self.motion_speed_error.setStyleSheet('color:#355c50;font-size:12px;')
++        set_ui_style(self.motion_speed_error,'color:#355c50;font-size:12px;')
+         self.motion_speed_error.hide()
+         layout.addWidget(self.motion_speed_error)
+         self.tabs = QTabWidget()
+@@ -1046,13 +1047,35 @@ class Details(QDialog):
+         usage_layout = QVBoxLayout(usage_page)
+         usage_layout.setContentsMargins(12, 16, 12, 12)
+         self.build_usage(usage_layout)
+-        self.tabs.insertTab(1, usage_page, symbol_icon('quota'), t('사용 한도'))
++        usage_outer=QScrollArea();usage_outer.setWidgetResizable(True);usage_outer.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff);usage_outer.setWidget(usage_page)
++        self.tabs.insertTab(1, usage_outer, symbol_icon('quota'), t('사용 한도'))
+         self.tabs.currentChanged.connect(self.update_usage_motion)
+-        self.setStyleSheet(STYLE)
++        self.setStyleSheet('')
+         remember_translations(self)
+ 
+     def resizeEvent(self,event):
+         super().resizeEvent(event)
++        if hasattr(self,'history_layout_timer'):self.history_layout_timer.start(0)
++
++    def update_history_layout(self):
++        if not hasattr(self,'history_splitter'):return
++        split=self.history_splitter;grid=self.history_comparison_grid
++        # 현재 글꼴의 실제 헤더·값 권장 폭과 기존 여백으로 두 열에 필요한 폭을 구합니다.
++        column=max([label.sizeHint().width()+27 for label in self.history_comparison_headers]+
++                   [label.minimumSizeHint().width() for label in (self.model_previous,self.model_current,self.effort_previous,self.effort_current)])
++        arrow=max(label.sizeHint().width() for label in self.history_comparison_arrows)
++        card_margin=self.card.layout().contentsMargins();panel_margin=self.history_detail_scroll.widget().layout().contentsMargins()
++        detail_width=2*column+arrow+2*grid.horizontalSpacing()+card_margin.left()+card_margin.right()+panel_margin.left()+panel_margin.right()
++        # 수리 전 영문100% 상세의 실측 최소461px를 공통 읽기 폭 하한으로 유지합니다.
++        scale=self.controller.settings.values.get('text_scale',100)/100 if self.controller is not None else 1.0
++        detail_width=max(detail_width,round(461*scale))
++        required=self.history.minimumWidth()+split.handleWidth()+self.history_detail_scroll.verticalScrollBar().sizeHint().width()+detail_width
++        orientation=Qt.Orientation.Vertical if split.width()<required else Qt.Orientation.Horizontal
++        if split.orientation()==orientation:return
++        if orientation==Qt.Orientation.Vertical:
++            self.history_horizontal_sizes=split.sizes();split.setOrientation(orientation);split.setSizes([1,3])
++        else:
++            split.setOrientation(orientation);split.setSizes(getattr(self,'history_horizontal_sizes',[310,700]))
+ 
+     def update_motion_speed(self):
+         value = self.controller.settings.values['motion_speed'] if self.controller is not None else 1.0
+@@ -1108,8 +1131,9 @@ class Details(QDialog):
+         box.setSpacing(12)
+         heading = QHBoxLayout()
+         title = QLabel(t('계정 사용 한도'))
+-        title.setStyleSheet('color:#355c50;font-size:25px;font-weight:700;')
+-        heading.addWidget(with_symbol(title, 'quota'), 1)
++        set_ui_style(title,'color:#355c50;font-size:25px;font-weight:700;')
++        title.setWordWrap(True);title.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Preferred)
++        usage_title=with_symbol(title,'quota');usage_title.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Preferred);heading.addWidget(usage_title,1)
+         self.usage_refresh = QPushButton(t('새로고침'))
+         self.usage_refresh.setIcon(symbol_icon('refresh'))
+         self.usage_refresh.setIconSize(QSize(20, 20))
+@@ -1121,17 +1145,17 @@ class Details(QDialog):
+         self.usage_status = QLabel(t('잔량 조회 준비 · 30초마다 자동 갱신'))
+         self.usage_status.setWordWrap(True)
+         self.usage_status.setTextFormat(Qt.TextFormat.PlainText)
+-        self.usage_status.setStyleSheet('color:#355c50;font-size:13px;')
++        set_ui_style(self.usage_status,'color:#355c50;font-size:13px;')
+         box.addWidget(self.usage_status)
+         content = QHBoxLayout()
+         content.setSpacing(14)
+         self.usage_scroll = QScrollArea()
+         self.usage_scroll.setWidgetResizable(True)
+-        self.usage_scroll.setMinimumHeight(200)
++        self.usage_scroll.setMinimumHeight(120)
+         self.usage_rows = QWidget()
+         self.usage_rows.setObjectName('usageRows')
+-        self.usage_rows.setStyleSheet('QWidget#usageRows {background:transparent;}')
+-        self.usage_scroll.setStyleSheet('QScrollArea {background:transparent;border:0;} QScrollArea > QWidget {background:transparent;}')
++        set_ui_style(self.usage_rows,'QWidget#usageRows {background:transparent;}')
++        set_ui_style(self.usage_scroll,'QScrollArea {background:transparent;border:0;} QScrollArea > QWidget {background:transparent;}')
+         self.usage_rows_layout = QVBoxLayout(self.usage_rows)
+         self.usage_rows_layout.setContentsMargins(0, 0, 0, 0)
+         self.usage_rows_layout.setSpacing(10)
+@@ -1145,7 +1169,7 @@ class Details(QDialog):
+         self.usage_hero.setFixedHeight(230)
+         content.addWidget(self.usage_hero, 35, Qt.AlignmentFlag.AlignTop)
+         box.addLayout(content, 1)
+-        layout.addWidget(panel, 1)
++        layout.addWidget(panel, 0)
+         layout.addStretch(1)
+         panel.setMaximumHeight(430)
+ 
+@@ -1157,6 +1181,8 @@ class Details(QDialog):
+                                   t('  ·  최종 조회: ') + updated + t('  ·  30초 자동 갱신'))
+         self.usage_refresh.setEnabled(not busy)
+         rows = value.get('rows', [])
++        self.usage_hero.setFixedHeight(230 if rows else 140)
++        self.usage_scroll.setMinimumHeight(180 if rows else 100)
+         self.usage_panel.setMaximumHeight(430 if len(rows) <= 1 else 16777215)
+         self.usage_page_layout.setStretch(1, 1 if len(rows) <= 1 else 0)
+         while self.usage_rows_layout.count() > 1:
+@@ -1181,22 +1207,22 @@ class Details(QDialog):
+             bar.setAccessibleName(text)
+             bar.setEnabled(not stale and remaining is not None)
+             bar.setFixedHeight(12)
+-            bar.setStyleSheet('QProgressBar {border:0;border-radius:6px;background:#dceee4;} QProgressBar::chunk {background:#159e6c;border-radius:6px;}')
++            set_ui_style(bar,'QProgressBar {border:0;border-radius:6px;background:#dceee4;} QProgressBar::chunk {background:#159e6c;border-radius:6px;}')
+             self.usage_rows_layout.addWidget(bar)
+             info = QLabel(str(row['bucket']) + " · " + t(row['period']))
+             info.setTextFormat(Qt.TextFormat.PlainText)
+             info.setWordWrap(True)
+-            info.setStyleSheet('color:#355c50;font-size:15px;')
++            set_ui_style(info,'color:#355c50;font-size:15px;')
+             self.usage_rows_layout.addWidget(info)
+             number = QLabel(label)
+             number.setTextFormat(Qt.TextFormat.PlainText)
+             number.setWordWrap(True)
+-            number.setStyleSheet('color:#355c50;font-size:42px;font-weight:700;')
++            set_ui_style(number,'color:#355c50;font-size:42px;font-weight:700;')
+             self.usage_rows_layout.addWidget(number)
+             reset = QLabel(t('초기화: ') + t(reset_label(row['resets_at'])) + (t(' · 이전 조회 값') if stale else ''))
+             reset.setTextFormat(Qt.TextFormat.PlainText)
+             reset.setWordWrap(True)
+-            reset.setStyleSheet('color:#355c50;font-size:13px;padding-bottom:18px;')
++            set_ui_style(reset,'color:#355c50;font-size:13px;padding-bottom:18px;')
+             self.usage_rows_layout.addWidget(reset)
+         self.usage_rows_layout.addStretch()
+         self.usage_compact.setText((t('이전 조회 · ') if stale and checked else '') + (t("{percent:g}% 남음", percent=rows[0]['remaining']) if rows and rows[0].get('remaining') is not None else t('사용 한도 미확인')))
+@@ -1209,91 +1235,94 @@ class Details(QDialog):
+         layout.setContentsMargins(0, 12, 0, 0)
+         layout.setSpacing(8)
+         self.summary = QLabel(t('감시 준비 중'))
+-        self.summary.setStyleSheet('color:#55736b;font-size:11px;')
++        set_ui_style(self.summary,'color:#55736b;font-size:11px;')
+         self.summary.setTextFormat(Qt.TextFormat.PlainText)
+         self.summary.setWordWrap(True)
+         self.summary.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
+         layout.addWidget(self.summary)
+         self.notice_summary = QLabel(t('알림 대기 0건'))
+-        self.notice_summary.setStyleSheet('color:#55736b;font-size:11px;')
++        set_ui_style(self.notice_summary,'color:#55736b;font-size:11px;')
+         layout.addWidget(self.notice_summary)
+         self.notice_summary.setWordWrap(True)
+-        split = QSplitter()
++        split = QSplitter();self.history_splitter=split
++        self.history_layout_timer=QTimer(self);self.history_layout_timer.setSingleShot(True);self.history_layout_timer.timeout.connect(self.update_history_layout)
+         self.history = QListWidget()
+         self.history.setWordWrap(True)
+         self.history.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+         self.history.currentItemChanged.connect(self.select_event)
+-        panel = QWidget()
++        panel = QWidget();panel.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Preferred)
+         cards = QVBoxLayout(panel)
+         cards.setContentsMargins(16, 6, 0, 0)
+         cards.setSizeConstraint(QLayout.SizeConstraint.SetMinAndMaxSize)
+         self.card = QFrame()
+         self.card.setObjectName('eventCard')
+-        self.card.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
++        self.card.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Minimum)
+         card_layout = QVBoxLayout(self.card)
+         card_layout.setContentsMargins(20, 20, 20, 20)
+         card_layout.setSpacing(12)
+         self.chat_title = QLabel(t('변경을 기다리고 있습니다'))
+-        self.chat_title.setStyleSheet('font-size:23px;font-weight:700;color:#183c36;padding:2px 0 6px 0;')
++        set_ui_style(self.chat_title,'font-size:23px;font-weight:700;color:#183c36;padding:2px 0 6px 0;')
+         self.change_heading = QLabel(t('변경을 기다리고 있습니다'))
+-        self.change_heading.setStyleSheet('font-size:13px;color:#14785d;padding:5px 8px;')
++        set_ui_style(self.change_heading,'font-size:13px;color:#14785d;padding:5px 8px;')
+         self.model_transition = QLabel('')
+-        self.model_transition.setStyleSheet('font-size:26px;font-weight:700;color:#23453f;')
++        set_ui_style(self.model_transition,'font-size:26px;font-weight:700;color:#23453f;')
+         self.model_previous = self.model_transition
+         self.model_current = QLabel('—')
+-        self.model_current.setStyleSheet('font-size:26px;font-weight:700;color:#23453f;')
++        set_ui_style(self.model_current,'font-size:26px;font-weight:700;color:#23453f;')
+         self.effort_transition = QLabel('')
+-        self.effort_transition.setStyleSheet('font-size:26px;font-weight:700;color:#23453f;')
++        set_ui_style(self.effort_transition,'font-size:26px;font-weight:700;color:#23453f;')
+         self.effort_previous = self.effort_transition
+         self.effort_current = QLabel('—')
+-        self.effort_current.setStyleSheet('font-size:26px;font-weight:700;color:#23453f;')
++        set_ui_style(self.effort_current,'font-size:26px;font-weight:700;color:#23453f;')
+         self.before_value = QLabel(t('변경 전  ·  —'))
+         self.after_value = QLabel(t('변경 후  ·  —'))
+-        self.after_value.setStyleSheet('font-size:12px;color:#55736b;padding:0;')
+-        self.before_value.setStyleSheet('font-size:12px;color:#55736b;')
++        set_ui_style(self.after_value,'font-size:12px;color:#55736b;padding:0;')
++        set_ui_style(self.before_value,'font-size:12px;color:#55736b;')
+         self.activity_message = QLabel()
+         self.activity_message.setWordWrap(True)
+-        self.activity_message.setStyleSheet('font-size:22px;font-weight:700;color:#183c36;padding:6px 0;')
++        set_ui_style(self.activity_message,'font-size:22px;font-weight:700;color:#183c36;padding:6px 0;')
+         self.activity_message.hide()
+         self.task_value = QLabel(t('공개된 작업 설명을 기다립니다.'))
+         self.selection_reason = QLabel(t('모델·추론 강도 선택 이유는 공개되지 않았습니다.'))
+-        self.task_value.setStyleSheet('font-size:20px;font-weight:700;color:#23453f;padding:4px 0 10px 0;')
+-        self.selection_reason.setStyleSheet('font-size:11px;color:#55736b;padding:4px 0;')
++        set_ui_style(self.task_value,'font-size:20px;font-weight:700;color:#23453f;padding:4px 0 10px 0;')
++        set_ui_style(self.selection_reason,'font-size:11px;color:#55736b;padding:4px 0;')
+         self.reason_title = QLabel(t('왜 맡겼나요? · 공개 설명'))
+-        self.reason_title.setStyleSheet('color:#355c50;font-size:11px;padding-top:10px;')
++        set_ui_style(self.reason_title,'color:#355c50;font-size:11px;padding-top:10px;')
+         self.reason_value = QLabel(t('첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'))
+-        self.reason_value.setStyleSheet('font-size:15px;background:#edf8f2;border:1px solid #c4dfd0;border-radius:12px;padding:14px;color:#355c50;')
++        set_ui_style(self.reason_value,'font-size:15px;background:#edf8f2;border:1px solid #c4dfd0;border-radius:12px;padding:14px;color:#355c50;')
+         self.event_time = QLabel('')
+-        self.event_time.setStyleSheet('color:#355c50;font-size:11px;padding:0;')
++        set_ui_style(self.event_time,'color:#355c50;font-size:11px;padding:0;')
+         all_labels = (self.chat_title, self.event_time, self.change_heading, self.model_previous, self.model_current,
+                       self.effort_previous, self.effort_current, self.before_value, self.after_value,
+-                      self.reason_title, self.reason_value, self.task_value, self.selection_reason)
++                      self.reason_title, self.reason_value, self.task_value, self.selection_reason, self.activity_message)
+         for label in all_labels:
+             label.setTextFormat(Qt.TextFormat.PlainText)
+             label.setWordWrap(True)
+-            label.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
++            label.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Minimum)
+             label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+         card_layout.addWidget(with_symbol(self.event_time, 'time'))
+         for label in (self.chat_title, self.change_heading, self.activity_message, self.task_value):card_layout.addWidget(label)
+-        table = QGridLayout()
++        table = QGridLayout();self.history_comparison_grid=table
++        self.history_comparison_headers=[];self.history_comparison_arrows=[]
+         table.setHorizontalSpacing(18)
+         table.setVerticalSpacing(12)
+         self.after_headings = []
+         for row, (kind, previous, current) in enumerate((('모델',self.model_previous,self.model_current),
+                                                        ('추론 강도',self.effort_previous,self.effort_current))):
+             for col, text in ((0,t('이전')+' '+t(kind)),(2,t('새')+' '+t(kind))):
+-                label=QLabel(text + (' 🧠' if row == 1 else ''));label.setStyleSheet('font-size:12px;color:#355c50;')
++                label=QLabel(text + (' 🧠' if row == 1 else ''));set_ui_style(label,'font-size:12px;color:#355c50;')
++                label.setWordWrap(True);label.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Minimum);self.history_comparison_headers.append(label)
+                 if col == 2: self.after_headings.append((label, kind))
+                 table.addWidget(with_symbol(label, 'model' if row == 0 else 'effort'),row*3,col)
+-            arrow=QLabel('→');arrow.setStyleSheet('font-size:16px;color:#55736b;')
++            arrow=QLabel('→');set_ui_style(arrow,'font-size:16px;color:#55736b;')
+             table.addWidget(previous,row*3+1,0)
+-            table.addWidget(arrow,row*3+1,1)
++            self.history_comparison_arrows.append(arrow);table.addWidget(arrow,row*3+1,1)
+             table.addWidget(current,row*3+1,2)
+-            line=QFrame();line.setFrameShape(QFrame.Shape.HLine);line.setStyleSheet('color:#3c5662;')
++            line=QFrame();line.setFrameShape(QFrame.Shape.HLine);set_ui_style(line,'color:#3c5662;')
+             table.addWidget(line,row*3+2,0,1,3)
+         table.setColumnStretch(0,1);table.setColumnStretch(2,1)
+         card_layout.addLayout(table)
+-        for label in (self.before_value,self.after_value):card_layout.addWidget(label)
++        for label in (self.before_value,self.after_value):card_layout.addWidget(label);label.hide()
+         card_layout.addWidget(with_symbol(self.reason_title, 'reason'))
+         card_layout.addWidget(self.reason_value)
+         card_layout.addWidget(self.selection_reason)
+@@ -1347,7 +1376,7 @@ class Details(QDialog):
+             if value.get('kind') == 'activity' and value.get('before') is not None and value['before'] == value.get('after'):
+                 heading += ' · ' + t('설정 유지')
+             self.change_heading.setText(t(heading))
+-            self.change_heading.setStyleSheet('font-size:13px;padding:5px 8px;border-radius:8px;color:'+event_accent(value)+';background:#e0f4e9;')
++            set_ui_style(self.change_heading,'font-size:13px;padding:5px 8px;border-radius:8px;color:'+event_accent(value)+';background:#e0f4e9;')
+             self.activity_message.setText(activity_message(value))
+             self.activity_message.setVisible(bool(activity_message(value)))
+             self.task_value.setText(task_explanation(value))
+@@ -1362,7 +1391,7 @@ class Details(QDialog):
+             for key, labels in (('model', (self.model_previous, self.model_current)), ('effort', (self.effort_previous, self.effort_current))):
+                 changed = value.get('kind') != 'activity' and before is not None and before.get(key) and after.get(key) and before.get(key) != after.get(key)
+                 for label in labels:
+-                    label.setStyleSheet('font-size:26px;font-weight:700;color:#23453f;' + ('background:#d4f3e7;border-radius:8px;padding:4px;' if changed else ''))
++                    set_ui_style(label,'font-size:26px;font-weight:700;color:#23453f;' + ('background:#d4f3e7;border-radius:8px;padding:4px;' if changed else ''))
+             self.before_value.setText(t('이전 기록 없음') if value.get('before') is None
+                                       else t('이전') + '  ' + model_card_label(value['before']))
+             self.after_value.setText((t('현재') + '  ' if value.get('kind') == 'activity' else '→  ') + model_card_label(value.get('after')))
+@@ -1370,6 +1399,7 @@ class Details(QDialog):
+             self.reason_value.setText(notice_reason(value, 600))
+             self.reason_value.setToolTip(notice_reason_original(value))
+             self.event_time.setText(kst_label(value.get('time')))
++            self.history_layout_timer.start(0)
+ 
+     def toggle_evidence(self, checked):
+         self.detail.setVisible(checked)
+@@ -1456,7 +1486,11 @@ class Controller(QObject):
+         get_atom_frames()
+         design_for_date(current_date())
+         validate_symbols()
+-        apply_theme()
++        from theme import normalize_theme_mode
++        mode=normalize_theme_mode(settings.values.get('ui_theme',settings.values.get('defaultTheme','system')))
++        if settings.values.get('ui_theme')!=mode:
++            settings.values['ui_theme']=mode;settings.save()
++        apply_theme(mode)
+         # Qt 수신자 문맥에 수명을 결합해 종료된 Python 객체로 예약 신호가 전달되지 않게 합니다.
+         super().__init__(_application_gui_root())
+         self.settings = settings
+@@ -1585,6 +1619,7 @@ class Controller(QObject):
+         self.window.retranslate()
+         self.orbit29.panel.refresh()
+         self.orbit29.retranslate()
++        self.window.history_layout_timer.start(0)
+         if hasattr(self,"update_dialog29"):self.update_dialog29.retranslate()
+         if self.window.diagnostics.original_text:
+             self.window.diagnostics.setPlainText(self.window.diagnostics.original_text)
+@@ -1634,6 +1669,7 @@ class Controller(QObject):
+         if self.closing:
+             return
+         self.window.display_usage(value)
++        if hasattr(self,'orbit29'):self.orbit29.apply_text_size()
+         valid = [row for row in value.get('rows', []) if row.get('remaining') is not None]
+         self.orbit.usage_fraction = min(row['remaining'] for row in valid) / 100 if valid else None
+         self.orbit.usage_state = 'stale' if value.get('stale') and value.get('checked_at') else 'fresh' if valid and not value.get('stale') else 'unknown'
+diff --git a/src/i18n.py b/src/i18n.py
+index fc12ee6f60691e09a83d7f83a41e116965b054fb..01e4d34ab6a7b1479fba5bdca31fc504e2f1219a 100644
+--- a/src/i18n.py
++++ b/src/i18n.py
+@@ -92,4 +92,4 @@ def retranslate_widgets(root):
+                 getattr(widget, setter)(translate(source))
+ 
+ # 29차 알림 조작의 번역입니다.
+-_EN.update({'📌 고정':'📌 Pin','☆ 기록 보관':'☆ Bookmark','기록 보관':'Bookmark','표시 조작':'Display controls','진단 ZIP 저장':'Save diagnostics ZIP','방송 모드':'Broadcast mode','모션 축소':'Reduce motion','가장자리 도킹':'Edge docking','업데이트 확인':'Check for updates','입체 관측소':'3D observatory','날짜별 조형':'Daily sculpture'})
++_EN.update({'📌 고정':'📌 Pin','☆ 기록 보관':'☆ Bookmark','기록 보관':'Bookmark','화면 설정':'Display settings','진단 ZIP 저장':'Save diagnostics ZIP','프라이버시 모드':'Privacy mode','모션 축소':'Reduce motion','가장자리 도킹':'Edge docking','업데이트 확인':'Check for updates','입체 관측소':'3D observatory','날짜별 조형':'Daily sculpture'})
+diff --git a/src/observatory_panel.py b/src/observatory_panel.py
+index 6d5fd7e7cc494a739b19dfb7c03cb8a58747f6e8..7a46755fe76d9551e71913f123fece226421490c 100644
+--- a/src/observatory_panel.py
++++ b/src/observatory_panel.py
+@@ -1,13 +1,15 @@
++from theme import set_ui_style, themed_stylesheet
+ """29차 관측소의 화면 조작과 실제 관측값 연결입니다."""
+ from copy import deepcopy
+ from pathlib import Path
+ import time
+-from PySide6.QtCore import Qt,QTimer,QSize
+-from PySide6.QtGui import QPainter,QColor
++from PySide6.QtCore import Qt,QTimer,QSize,QRect
++from PySide6.QtGui import QPainter,QColor,QActionGroup
+ from PySide6.QtWidgets import (QWidget,QFrame,QVBoxLayout,QHBoxLayout,QLabel,QPushButton,
+-    QListWidget,QListWidgetItem,QSlider,QComboBox,QFileDialog,QMessageBox,QApplication,QStackedWidget)
++    QListWidget,QListWidgetItem,QSlider,QComboBox,QFileDialog,QMessageBox,QApplication,QStackedWidget,QScrollArea,QSizePolicy,QWidgetAction,QCheckBox,QRadioButton)
+ from i18n import translate as t,get_language
+ from typography import app_font
++from ui_layout import OrbitComboBox as QComboBox,ResponsiveRow,PageStack as QStackedWidget
+ 
+ 
+ def tr(ko,en):
+@@ -20,7 +22,7 @@ def present_event(event,private=False):
+     if private:
+         keys=('id','target','time','before','after','kind','role','activity_type','activity_action')
+         value={key:deepcopy(event[key]) for key in keys if key in event}
+-        value.update(chat_name=tr('비공개 채팅','Private chat'),task_summary='',reason=tr('방송 모드에서 설명을 가렸습니다.','Details hidden in broadcast mode.'))
++        value.update(chat_name=tr('비공개 채팅','Private chat'),task_summary='',reason=tr('프라이버시 모드에서 설명을 가렸습니다.','Details hidden in privacy mode.'))
+         return value
+     value=deepcopy(event)
+     for key in ('chat_name','title','chat_title'):
+@@ -54,14 +56,14 @@ def mask_details(window):
+ 
+ 
+ def style_notice(notice):
+-    notice.setStyleSheet('#notice{background:#fbfffe;border:1px solid #bdd8d0;border-radius:18px;} QLabel{background:transparent;color:#193a37;font-weight:700;}')
++    set_ui_style(notice,'#notice{background:#fbfffe;border:1px solid #bdd8d0;border-radius:18px;} QLabel{background:transparent;color:#193a37;font-weight:700;}')
+     notice.title_marker.hide()
+     for label in notice.findChildren(QLabel):
+-        css=label.styleSheet()
++        css=label.property('orbit_style_source') or label.styleSheet()
+         import re
+         css=re.sub(r'color:#[0-9a-fA-F]{3,8}', 'color:#23433f',css)
+         css=css.replace('background:#385064','background:#d4f3e7')
+-        label.setStyleSheet(css.replace('font-weight:600','font-weight:700').replace('font-weight:500','font-weight:700'))
++        set_ui_style(label,css.replace('font-weight:600','font-weight:700').replace('font-weight:500','font-weight:700'))
+ 
+ 
+ class SceneCanvas(QWidget):
+@@ -102,28 +104,47 @@ class SceneCanvas(QWidget):
+             self.controller.orbit29.hit(x,y)
+ 
+ 
++class WrappedAgents(QListWidget):
++    """긴 이름은 가로 스크롤 없이 전체 행 높이에 맞춰 표시합니다."""
++    def resizeEvent(self,event):
++        super().resizeEvent(event);self.fit_rows()
++    def fit_rows(self):
++        width=max(80,self.viewport().width()-28)
++        for index in range(self.count()):
++            item=self.item(index)
++            height=self.fontMetrics().boundingRect(QRect(0,0,width,3000),Qt.TextFlag.TextWordWrap,item.text()).height()
++            item.setSizeHint(QSize(0,max(48,height+24)))
++
++
+ class ObservatoryPanel(QFrame):
+     def __init__(self,controller):
+         super().__init__();self.controller=controller;self.setObjectName('observatoryHero')
+-        outer=QHBoxLayout(self);outer.setContentsMargins(20,12,20,12);outer.setSpacing(20)
++        outer=QHBoxLayout(self);outer.setContentsMargins(20,20,20,20);outer.setSpacing(24)
+         self.canvas=SceneCanvas(controller);outer.addWidget(self.canvas,2)
+-        body=QVBoxLayout();body.setSpacing(14);outer.addLayout(body,3);outer.setAlignment(body,Qt.AlignmentFlag.AlignVCenter)
+-        self.heading=QLabel();self.heading.setObjectName('currentTask');self.heading.setWordWrap(True);body.addWidget(self.heading)
+-        self.state=QLabel();self.state.setWordWrap(True);body.addWidget(self.state)
+-        self.observations=QLabel();self.observations.setWordWrap(True);body.addWidget(self.observations)
+-        self.away=QLabel();self.away.setWordWrap(True);body.addWidget(self.away)
+-        self.agents=QListWidget();self.agents.setMaximumHeight(120);body.addWidget(self.agents)
++        right=QWidget();right.setMinimumWidth(0);right.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Expanding);outer.addWidget(right,3)
++        body=QVBoxLayout(right);body.setContentsMargins(0,0,0,0);body.setSpacing(12)
++        self.content_scroll=QScrollArea();self.content_scroll.setWidgetResizable(True);self.content_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff);body.addWidget(self.content_scroll,1)
++        content=QWidget();content.setMinimumWidth(0);self.content_scroll.setWidget(content);section=QVBoxLayout(content);section.setContentsMargins(0,0,8,0);section.setSpacing(10)
++        self.caption=QLabel(tr('현재 작업','Current activity'));self.caption.setObjectName('sectionCaption');section.addWidget(self.caption)
++        self.heading=QLabel();self.heading.setObjectName('currentTask');self.heading.setWordWrap(True);self.heading.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Preferred);set_ui_style(self.heading,'font-size:22px;');section.addWidget(self.heading)
++        self.state=QLabel();self.state.setWordWrap(True);self.state.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Preferred);section.addWidget(self.state)
++        card=QFrame();card.setObjectName('observationCard');info=QVBoxLayout(card);info.setContentsMargins(14,12,14,12)
++        self.observations=QLabel();self.observations.setWordWrap(True);self.observations.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Preferred);info.addWidget(self.observations);section.addWidget(card)
++        self.away=QLabel();self.away.setWordWrap(True);self.away.setObjectName('sectionCaption');section.addWidget(self.away)
++        self.agents=WrappedAgents();self.agents.setWordWrap(True);self.agents.setTextElideMode(Qt.TextElideMode.ElideRight);self.agents.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff);self.agents.setMinimumHeight(100);self.agents.setMaximumHeight(210);section.addWidget(self.agents,1)
+         self.agents.itemClicked.connect(self.select_agent)
+-        row=QHBoxLayout();body.addLayout(row)
+-        self.pin=QPushButton();self.pin.clicked.connect(self.pin_agent);row.addWidget(self.pin)
+-        self.bookmark=QPushButton();self.bookmark.clicked.connect(self.bookmark_event);row.addWidget(self.bookmark)
+-        self.copy=QPushButton();self.copy.clicked.connect(self.copy_id);row.addWidget(self.copy)
+-        self.timeline=QSlider(Qt.Orientation.Horizontal);self.timeline.setAccessibleName(tr('저장 기록 재생','Replay saved history'));self.timeline.valueChanged.connect(self.seek);body.addWidget(self.timeline)
+-        replay_row=QHBoxLayout();body.addLayout(replay_row)
+-        self.replay_label=QLabel();self.replay_label.setWordWrap(True);replay_row.addWidget(self.replay_label,1)
++        row_buttons=[]
++        self.pin=QPushButton();self.pin.clicked.connect(self.pin_agent);row_buttons.append(self.pin)
++        self.bookmark=QPushButton();self.bookmark.clicked.connect(self.bookmark_event);row_buttons.append(self.bookmark)
++        self.copy=QPushButton();self.copy.clicked.connect(self.copy_id);row_buttons.append(self.copy);section.addWidget(ResponsiveRow(row_buttons))
++        replay=QFrame();replay.setObjectName('replayBar');controls=QVBoxLayout(replay);controls.setContentsMargins(12,10,12,10);controls.setSpacing(8);body.addWidget(replay)
++        self.timeline=QSlider(Qt.Orientation.Horizontal);self.timeline.setAccessibleName(tr('저장 기록 재생','Replay saved history'));self.timeline.valueChanged.connect(self.seek);controls.addWidget(self.timeline)
++        replay_row=QHBoxLayout();controls.addLayout(replay_row)
++        self.replay_label=QLabel();self.replay_label.setWordWrap(True);self.replay_label.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Preferred);replay_row.addWidget(self.replay_label,1)
+         self.live=QPushButton(tr('실시간 복귀','Return to live'));self.live.clicked.connect(lambda:self.seek(len(self.controller.features.snapshot().get('events',[]))));replay_row.addWidget(self.live)
+         self.selected_target=None;self.replaying=False;self.refresh()
+     def refresh(self):
++        self.caption.setText(tr('현재 작업','Current activity'))
+         features=self.controller.features; private=self.controller.settings.values.get('broadcast_mode',False)
+         live_snapshot=features.snapshot()
+         # 재생 자료는 고정하되 개인정보 가림과 번역은 현재 표시 설정을 적용합니다.
+@@ -136,17 +157,18 @@ class ObservatoryPanel(QFrame):
+             title=tr('비공개 채팅','Private chat') if private else str(agent.get('title') or agent.get('chat_name') or tr('제목 미확인','Title unavailable'))
+             status=tr(*labels.get(agent.get('status'),labels['unknown']))
+             item=QListWidgetItem(('★ ' if agent.get('pinned') else '')+title+' · '+status)
+-            item.setData(Qt.ItemDataRole.UserRole,agent.get('target'));self.agents.addItem(item)
++            item.setToolTip('' if private else title+' · '+status);item.setData(Qt.ItemDataRole.UserRole,agent.get('target'));self.agents.addItem(item)
+         events=snapshot.get('events',[]);last=events[-1] if events else {}
+         shown=present_event(last,private)
+         self.heading.setText(shown.get('chat_name') or shown.get('title') or tr('새 변경을 기다립니다','Waiting for changes'))
+         from orbit_features import task_hint
+-        self.state.setText(task_hint(shown,get_language()) if last else tr('실제 로컬 기록을 관측하면 표시됩니다.','Appears when local activity is observed.'))
++        self.state.setText((tr('기록된 작업 · ','Recorded task · ')+task_hint(shown,get_language())) if last and task_hint(shown,get_language()) else tr('기록된 작업을 기다립니다.','Waiting for recorded activity.'))
+         target=last.get('target')
+         selected=snapshot.get('selected',{}).get(target,{})
+         executed=snapshot.get('executed',{}).get(target,{})
+         def setting(value):return str(value.get('model') or tr('미확인','Unknown'))+' / '+str(value.get('effort') or tr('미확인','Unknown'))
+-        self.observations.setText(tr('선택 설정: ','Selected: ')+setting(selected)+'\n'+tr('실행 관측: ','Executed: ')+setting(executed))
++        self.observations.setText(tr('선택한 설정','Selected settings')+'\n'+(setting(selected) if selected else tr('선택 기록이 아직 없습니다.','No selection has been recorded yet.'))+'\n\n'+tr('최근 실행에서 확인','Observed in the latest run')+'\n'+(setting(executed) if executed else tr('실행 기록이 아직 없습니다.','No execution has been recorded yet.')))
++        self.agents.fit_rows()
+         summary=features.away_summary()
+         count=summary.get('count',summary.get('total',0)) if isinstance(summary,dict) else len(summary) if isinstance(summary,list) else 0
+         self.away.setText(tr('자리비움 이후','Since last visit')+f' · {count} '+tr('건 · 실제 기록 기준','events · recorded activity'))
+@@ -159,7 +181,8 @@ class ObservatoryPanel(QFrame):
+         self.timeline.blockSignals(False)
+         if self.replaying:
+             self.replay_label.setText(tr('기록 재생 · 실제 설정은 바뀌지 않습니다','History replay · actual settings stay unchanged')+' · '+str(last.get('time','')))
+-        else:self.replay_label.setText(tr('실시간 · 슬라이더를 움직이면 저장 기록만 재생합니다.','Live · move the slider to replay saved history.'))
++        else:
++            self.replay_label.setText(tr('실시간','Live'));self.replay_label.setToolTip(tr('슬라이더를 움직이면 저장한 기록만 다시 봅니다. 실제 설정은 바뀌지 않습니다.','Move the slider to replay saved history. Actual settings stay unchanged.'))
+     def select_agent(self,item):
+         self.selected_target=item.data(Qt.ItemDataRole.UserRole);self.controller.orbit29.open_target(self.selected_target)
+     def pin_agent(self):
+@@ -195,12 +218,12 @@ class OrbitExperience:
+     def install_navigation(self):
+         window=self.controller.window;layout=window.layout();tabs=window.tabs
+         layout.removeWidget(tabs);wrapper=QWidget();row=QHBoxLayout(wrapper);row.setContentsMargins(0,0,0,0)
+-        nav=QVBoxLayout();row.addLayout(nav);self.stack=QStackedWidget();self.stack.addWidget(self.panel);self.stack.addWidget(tabs);self.stack.setCurrentIndex(1);row.addWidget(self.stack,1);tabs.tabBar().hide()
+-        self.observatory_button=QPushButton(tr('입체 관측소','3D observatory'));self.observatory_button.setCheckable(True);self.observatory_button.clicked.connect(lambda:(self.stack.setCurrentIndex(0),self.update_navigation()));nav.addWidget(self.observatory_button)
++        navigation=QFrame();navigation.setObjectName('navigationSurface');nav=QVBoxLayout(navigation);nav.setContentsMargins(8,12,8,12);nav.setSpacing(4);row.addWidget(navigation);self.stack=QStackedWidget();self.stack.setSizePolicy(QSizePolicy.Policy.Expanding,QSizePolicy.Policy.Ignored);self.stack.addWidget(self.panel);self.stack.addWidget(tabs);self.stack.setCurrentIndex(1);row.addWidget(self.stack,1);tabs.tabBar().hide()
++        self.observatory_button=QPushButton(tr('작업 현황','Overview'));self.observatory_button.setCheckable(True);self.observatory_button.clicked.connect(lambda:(self.stack.setCurrentIndex(0),self.update_navigation()));nav.addWidget(self.observatory_button)
+         self.nav_buttons=[]
+         for index,ko,en in ((0,'변경 기록','Activity'),(1,'사용 한도','Usage')):
+             button=QPushButton(tr(ko,en));button.setMinimumWidth(130);button.setCheckable(True);button.clicked.connect(lambda checked=False,i=index:self.open_page(i));nav.addWidget(button);self.nav_buttons.append(button)
+-        self.bookmarks=QPushButton(tr('★ 보관한 기록','★ Bookmarks'));self.bookmarks.clicked.connect(self.show_bookmarks);nav.addWidget(self.bookmarks)
++        self.bookmarks=QPushButton(tr('★ 보관한 기록','★ Bookmarks'));self.bookmarks.clicked.connect(self.show_bookmarks);nav.addSpacing(12);nav.addWidget(self.bookmarks)
+         self.all_records=QPushButton(tr('전체 기록','All activity'));self.all_records.clicked.connect(self.show_all);nav.addWidget(self.all_records);nav.addStretch()
+         tabs.currentChanged.connect(self.update_navigation);self.stack.currentChanged.connect(self.update_navigation)
+         self.update_navigation();layout.addWidget(wrapper,1)
+@@ -213,30 +236,56 @@ class OrbitExperience:
+ 
+     def install_controls(self):
+         from PySide6.QtWidgets import QMenu
+-        c=self.controller;row=QHBoxLayout();c.window.layout().insertLayout(2,row)
++        c=self.controller;self.ui_labels=[]
++        self.controls=QFrame();self.controls.setObjectName('controlsBar');rows=QVBoxLayout(self.controls);rows.setContentsMargins(12,10,12,10);rows.setSpacing(8);c.window.layout().insertWidget(1,self.controls)
++        preference_groups=[]
++        c.window.layout().itemAt(0).layout().removeWidget(c.window.language_combo)
++        def group(ko,en,widget):
++            container=QWidget();layout=QHBoxLayout(container);layout.setContentsMargins(0,0,0,0);layout.setSpacing(8);label=QLabel(tr(ko,en));label.setObjectName('sectionCaption');self.ui_labels.append((label,ko,en));layout.addWidget(label);layout.addWidget(widget,1);preference_groups.append(container)
++        group('언어','Language',c.window.language_combo)
++        self.theme_combo=QComboBox()
++        for ko,en,value in [('시스템','System','system'),('라이트','Light','light'),('다크','Dark','dark')]:self.theme_combo.addItem(tr(ko,en),value)
++        self.theme_combo.setCurrentIndex(max(0,self.theme_combo.findData(c.settings.values.get('ui_theme','system'))));self.theme_combo.setAccessibleName(tr('화면 테마','Appearance'))
++        self.theme_combo.currentIndexChanged.connect(lambda _:self.option('ui_theme',self.theme_combo.currentData()));group('화면 테마','Appearance',self.theme_combo)
++        self.text_size=QComboBox()
++        for value in (90,100,115,130,150):self.text_size.addItem(str(value)+'%',value)
++        self.text_size.setCurrentIndex(max(0,self.text_size.findData(c.settings.values.get('text_scale',100))));self.text_size.setAccessibleName(tr('글자 크기','Text size'))
++        self.text_size.currentIndexChanged.connect(lambda _:self.option('text_scale',self.text_size.currentData()));group('글자 크기','Text size',self.text_size);self.preferences=ResponsiveRow(preference_groups);rows.addWidget(self.preferences)
++        row=QHBoxLayout();row.setSpacing(8);rows.addLayout(row)
+         self.view=QComboBox();self.view.addItem(tr('입체 관측소','3D observatory'),'observatory');self.view.addItem(tr('날짜별 조형','Daily sculpture'),'calendar')
+-        self.view.setCurrentIndex(1 if c.settings.values.get('scene_mode','calendar')=='calendar' else 0)
+-        self.view.currentIndexChanged.connect(lambda _:self.option('scene_mode',self.view.currentData()));row.addWidget(self.view)
++        self.view.setCurrentIndex(1 if c.settings.values.get('scene_mode','calendar')=='calendar' else 0);self.view.currentIndexChanged.connect(lambda _:self.option('scene_mode',self.view.currentData()));row.addWidget(self.view)
+         self.play=QPushButton();self.play.setCheckable(True);self.play.setChecked(c.settings.values.get('motion_paused',False));self.play.toggled.connect(lambda v:self.option('motion_paused',v));row.addWidget(self.play)
+         self.privacy=QPushButton();self.privacy.setCheckable(True);self.privacy.setChecked(c.settings.values.get('broadcast_mode',False));self.privacy.toggled.connect(lambda v:self.option('broadcast_mode',v));row.addWidget(self.privacy)
+-        self.text_size=QComboBox()
+-        for value in (90,100,115,130,150):self.text_size.addItem(str(value)+'%',value)
+-        self.text_size.setCurrentIndex(max(0,self.text_size.findData(c.settings.values.get('text_scale',100))))
+-        self.text_size.setAccessibleName(tr('글자 크기','Text size'));self.text_size.currentIndexChanged.connect(lambda _:self.option('text_scale',self.text_size.currentData()));row.addWidget(self.text_size)
+-        self.more=QPushButton(tr('표시 조작 ⋯','Display ⋯'));self.menu=QMenu(self.more)
+-        for key,ko,en in (('reduced_motion','모션 축소','Reduce motion'),('edge_docking','가장자리 도킹','Edge docking'),('notification_sound','알림음','Notification sound')):
+-            action=self.menu.addAction(tr(ko,en));action.setCheckable(True);action.setChecked(c.settings.values.get(key,False));action.toggled.connect(lambda value,k=key:self.option(k,value))
+-        quality=self.menu.addMenu(tr('자원 사용','Resource use'))
+-        for value,ko,en in (('eco','절전','Eco'),('balanced','균형','Balanced'),('high','고화질','High quality')):quality.addAction(tr(ko,en),lambda v=value:self.option('render_quality',v))
+-        self.menu.addAction(tr('진단 ZIP 저장','Save diagnostics ZIP'),self.diagnostics)
+-        self.menu.addAction(tr('업데이트 확인','Check for updates'),self.check_update)
+-        self.menu.setTitle(tr('표시 조작','Display controls'));self.more.setMenu(self.menu);row.addWidget(self.more);row.addStretch();self.update_labels()
++        self.more=QPushButton(tr('화면 설정','Display settings'));self.menu=QMenu(self.more);self.menu.setTitle(tr('화면 설정','Display settings'));self.more.setMenu(self.menu);row.addWidget(self.more);row.addStretch()
++        self.menu_rows=[];self.menu_sections=[]
++        def menu_heading(ko,en):
++            label=QLabel(tr(ko,en));label.setObjectName('sectionCaption');set_ui_style(label,'font-size:12px;padding:8px 12px;')
++            action=QWidgetAction(self.menu);action.setDefaultWidget(label);self.menu.addAction(action);self.menu_sections.append((label,ko,en))
++        menu_heading('움직임과 알림','Motion and alerts')
++        def menu_row(menu,ko,en,description_ko,description_en,check=None):
++            action=QWidgetAction(menu);box=QWidget();layout=QVBoxLayout(box);layout.setContentsMargins(12,8,12,8);layout.setSpacing(4)
++            button=QCheckBox() if check is not None else QPushButton();button.setText(tr(ko,en));layout.addWidget(button)
++            label=QLabel(tr(description_ko,description_en));label.setObjectName('sectionCaption');label.setWordWrap(True);layout.addWidget(label);box.setMinimumWidth(300)
++            if check is not None:
++                key=check;button.setChecked(c.settings.values.get(key,False));button.toggled.connect(lambda value:self.option(key,value))
++            action.setDefaultWidget(box);menu.addAction(action);self.menu_rows.append((button,label,ko,en,description_ko,description_en));return action,button
++        for key,ko,en,dk,de in [('reduced_motion','움직임 줄이기','Reduce motion','입체 조형의 움직임을 최소화합니다.','Minimize animation of the sculpture.'),('edge_docking','화면 가장자리에 붙이기','Dock at screen edge','가장자리에서는 작게 접고 마우스를 올리면 펼칩니다.','Fold near the edge; hover to expand.'),('notification_sound','알림 소리','Notification sound','변경 알림이 올 때 짧은 소리를 냅니다.','Play a short sound for new notifications.')]:menu_row(self.menu,ko,en,dk,de,key)
++        self.menu.addSeparator();quality=self.menu.addMenu(tr('성능·화질','Performance and quality'));self.quality_menu=quality;self.quality_group=QActionGroup(self.menu);self.quality_group.setExclusive(True)
++        for value,ko,en,dk,de in [('eco','절전','Eco','움직임을 초당 최대20회로 제한합니다.','Limit animation to 20 frames per second.'),('balanced','균형','Balanced','움직임을 초당 최대30회로 제한합니다.','Limit animation to 30 frames per second.'),('high','고화질','High quality','움직임을 초당 최대60회로 제한합니다.','Limit animation to 60 frames per second.')]:
++            action=quality.addAction(tr(ko,en));action.setCheckable(True);action.setData(value);action.setChecked(c.settings.values.get('render_quality','balanced')==value);self.quality_group.addAction(action);action.triggered.connect(lambda checked=False,v=value:self.option('render_quality',v));action.setToolTip(tr(dk,de))
++        menu_heading('도움말과 업데이트','Help and updates')
++        action,button=menu_row(self.menu,'문제 확인용 파일 저장','Save diagnostic file','개인 원문 없이 진단 ZIP을 저장합니다.','Save a diagnostic ZIP without private source records.');button.clicked.connect(lambda:(self.menu.hide(),self.diagnostics()))
++        action,button=menu_row(self.menu,'새 버전 확인','Check for update','공식 저장소에서 새 버전을 확인합니다.','Check the official repository for a newer version.');button.clicked.connect(lambda:(self.menu.hide(),self.check_update()))
++        for combo in (self.theme_combo,self.text_size,c.window.language_combo,self.view):combo.setMinimumHeight(38)
++        motion=c.window.layout().takeAt(2).layout();c.window.motion_speed_slider.setMaximumWidth(340);motion.addStretch();rows.addLayout(motion)
++        self.update_labels()
+     def update_labels(self):
+         c=self.controller
+         self.play.setText(tr('▶ 재생','▶ Play') if c.settings.values.get('motion_paused') else tr('Ⅱ 일시정지','Ⅱ Pause'))
+-        self.privacy.setText(tr('방송 모드 켜짐','Broadcast on') if c.settings.values.get('broadcast_mode') else tr('방송 모드','Broadcast mode'))
++        self.privacy.setToolTip(tr('화면에서 채팅 제목과 작업 설명을 가립니다. 저장된 기록은 그대로 유지됩니다.','Hide chat titles and task descriptions on screen. Stored records stay unchanged.'))
++        self.privacy.setText(tr('프라이버시 모드 켜짐','Privacy on') if c.settings.values.get('broadcast_mode') else tr('프라이버시 모드','Privacy mode'))
+     def retranslate(self):
+-        pairs=[('변경 기록','Activity'),('사용 한도','Usage'),('★ 보관한 기록','★ Bookmarks'),('전체 기록','All activity'),('입체 관측소','3D observatory'),('날짜별 조형','Daily sculpture'),('표시 조작 ⋯','Display ⋯'),('표시 조작','Display controls'),('모션 축소','Reduce motion'),('가장자리 도킹','Edge docking'),('알림음','Notification sound'),('자원 사용','Resource use'),('절전','Eco'),('균형','Balanced'),('고화질','High quality'),('진단 ZIP 저장','Save diagnostics ZIP'),('업데이트 확인','Check for updates')]
++        pairs=[('작업 현황','Overview'),('변경 기록','Activity'),('사용 한도','Usage'),('★ 보관한 기록','★ Bookmarks'),('전체 기록','All activity'),('입체 관측소','3D observatory'),('날짜별 조형','Daily sculpture'),('화면 설정','Display settings'),('화면 설정','Display settings'),('모션 축소','Reduce motion'),('가장자리 도킹','Edge docking'),('알림음','Notification sound'),('자원 사용','Resource use'),('절전','Eco'),('균형','Balanced'),('고화질','High quality'),('진단 ZIP 저장','Save diagnostics ZIP'),('업데이트 확인','Check for updates')]
+         translations={text:tr(ko,en) for ko,en in pairs for text in (ko,en)}
+         for button in self.nav_buttons+[self.bookmarks,self.all_records,self.more,self.observatory_button]:button.setText(translations.get(button.text(),button.text()))
+         self.view.blockSignals(True)
+@@ -248,9 +297,20 @@ class OrbitExperience:
+                 if action.menu():menu_labels(action.menu())
+         menu_labels(self.menu)
+         self.text_size.setAccessibleName(tr('글자 크기','Text size'));self.panel.live.setText(tr('실시간 복귀','Return to live'))
++        for label,ko,en in self.ui_labels:label.setText(tr(ko,en))
++        for button,label,ko,en,dk,de in self.menu_rows:button.setText(tr(ko,en));label.setText(tr(dk,de))
++        for action,ko,en in self.menu_sections:action.setText(tr(ko,en))
++        self.quality_menu.setTitle(tr('성능·화질','Performance and quality'))
++        for action,(ko,en) in zip(self.quality_group.actions(),[('절전','Eco'),('균형','Balanced'),('고화질','High quality')]):action.setText(tr(ko,en))
++        self.theme_combo.blockSignals(True)
++        for i,(ko,en) in enumerate([('시스템','System'),('라이트','Light'),('다크','Dark')]):self.theme_combo.setItemText(i,tr(ko,en))
++        self.theme_combo.blockSignals(False)
+         self.update_labels();self.panel.refresh()
+ 
+     def option(self,key,value):
++        if key=='ui_theme':
++            from theme import normalize_theme_mode
++            value=normalize_theme_mode(value)
+         c=self.controller;previous=c.settings.values.get(key)
+         c.settings.values[key]=value
+         try:c.settings.save()
+@@ -259,24 +319,33 @@ class OrbitExperience:
+         if key=='broadcast_mode':
+             for notice in c.notices.values():notice.broadcast_mode=bool(value);notice.update_event(notice.notice_event)
+             mask_details(c.window);self.panel.refresh()
++        for setting,combo in [('ui_theme',self.theme_combo),('text_scale',self.text_size),('scene_mode',self.view)]:
++            if key==setting:
++                combo.blockSignals(True);combo.setCurrentIndex(max(0,combo.findData(value)));combo.blockSignals(False)
++        for setting,button in [('broadcast_mode',self.privacy),('motion_paused',self.play)]:
++            if key==setting:button.blockSignals(True);button.setChecked(bool(value));button.blockSignals(False)
++        if key=='render_quality':
++            for action in self.quality_group.actions():action.setChecked(action.data()==value)
++        if key=='ui_theme':
++            from theme import apply_theme
++            apply_theme(value);self.apply_text_size()
+         if key=='text_scale':self.apply_text_size();c.orbit._request_motion_size()
+         if key=='edge_docking' and not value:self.expand()
+         self.update_labels();self.feed_scene()
+     def apply_text_size(self):
+         c=self.controller;scale=c.settings.values.get('text_scale',100)/100
+-        font=app_font(round(13*scale));c.window.setFont(font)
+-        for label in c.window.findChildren(QLabel):
+-            base=label.property('baseFont29')
+-            if base is None:base=max(12,label.font().pixelSize() if label.font().pixelSize()>0 else 13);label.setProperty('baseFont29',base)
+-            label.setFont(app_font(round(base*scale)))
+-        # 스타일의 px 우선순위에도 사용자 선택이 적용되도록 각 크기를 함께 조정합니다.
+-        import re
+-        from theme import STYLE
+-        c.window.setStyleSheet(re.sub(r'font-size:(\d+)px',lambda m:'font-size:'+str(round(int(m[1])*scale))+'px',STYLE))
+-        for child in c.window.findChildren(QWidget):
+-            original=child.property('baseStyle29')
+-            if original is None:original=child.styleSheet();child.setProperty('baseStyle29',original)
+-            child.setStyleSheet(re.sub(r'font-size:(\d+)px',lambda m:'font-size:'+str(round(int(m[1])*scale))+'px',original))
++        from theme import unscaled_font_size
++        c.window.setStyleSheet('');c.window.setProperty('orbit_text_scale31',scale)
++        children=c.window.findChildren(QWidget)
++        # 부모 글꼴을 바꾸기 전에 모든 자식의 비배율 크기를 먼저 확정합니다.
++        bases=[unscaled_font_size(child) for child in children]
++        for child,base in zip(children,bases):
++            child.setFont(app_font(round(base*scale)))
++            child.setProperty('orbit_text_scale31',scale)
++            source=child.property('orbit_style_source')
++            if source is None:source=child.styleSheet()
++            set_ui_style(child,source)
++        self.panel.agents.fit_rows();c.window.history_layout_timer.start(0)
+     def ingest(self,event):
+         c=self.controller
+         if not isinstance(event.get('target'),str) or not event['target'].strip():return
+diff --git a/src/theme.py b/src/theme.py
+index 2f6a2cce9002a8543db8c821fb324a26c7adee9c..94c3c3865cb909bc4b700524643a887e5b859131 100644
+--- a/src/theme.py
++++ b/src/theme.py
+@@ -72,6 +72,7 @@ class MonochromeStyle(QProxyStyle):
+                 for x in range(source.width()):
+                     color = source.pixelColor(x, y)
+                     level = round(.299 * color.red() + .587 * color.green() + .114 * color.blue())
++                    if effective_theme()=='dark':level=max(190,level)
+                     source.setPixelColor(x, y, QColor(level, level, level, color.alpha()))
+             result.addPixmap(QPixmap.fromImage(source), QIcon.Mode.Normal, QIcon.State.Off)
+         self.icons[standard_icon] = result
+@@ -80,7 +81,7 @@ class MonochromeStyle(QProxyStyle):
+ 
+ class KoreanDialogs(QTranslator):
+     """별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역합니다."""
+-    labels = {'Look in:': '위치:', 'File name:': '파일 이름:', 'Files of type:': '파일 형식:',
++    labels = {'All Files (*)':'모든 파일 (*)', 'All Files':'모든 파일', 'Look in:': '위치:', 'File name:': '파일 이름:', 'Files of type:': '파일 형식:',
+               'Open': '열기', '&Open': '열기', 'Save': '저장', '&Save': '저장', 'Cancel': '취소',
+               '&Cancel': '취소', 'OK': '확인', '&OK': '확인', 'Yes': '예', '&Yes': '예',
+               'No': '아니요', '&No': '아니요', 'Name': '이름', 'Size': '크기', 'Type': '종류',
+@@ -116,35 +117,158 @@ class DialogLayout(QObject):
+         for tree in dialog.findChildren(QTreeView):
+             if tree.model() and tree.model().columnCount() >= 4:
+                 tree.header().setMinimumSectionSize(60)
+-                tree.header().setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
++                tree.header().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+                 for column, width in enumerate((260, 70, 100, 180)):
+-                    tree.header().resizeSection(column, width)
++                    
++                    if column:tree.header().setSectionResizeMode(column,QHeaderView.ResizeMode.ResizeToContents)
+ 
+ 
+-def apply_theme():
++# 의미색은 앱 소유 화면 전체에서 함께 바뀌며 날짜별 투명 조형에는 적용하지 않습니다.
++PALETTES = {
++    'light': dict(bg='#f3f8f6', surface='#ffffff', raised='#eaf5ef', text='#193c36', muted='#49665d', border='#bfd5cc', accent='#157f5e', selected='#d8f1e4', focus='#168b66', track='#e1ece6'),
++    'dark': dict(bg='#121d1b', surface='#1b2b27', raised='#233b33', text='#e9f5ee', muted='#b1c9bd', border='#3e5a4e', accent='#83dcb1', selected='#294d3e', focus='#83dcb1', track='#30483c'),
++}
++
++
++def normalize_theme_mode(value):
++    value = str(value or 'system').strip().lower()
++    return {'자동':'system', 'auto':'system', 'automatic':'system', 'default':'system', '시스템':'system', '라이트':'light', '다크':'dark'}.get(value, value if value in ('light','dark','system') else 'system')
++
++
++def effective_theme():
++    app = QApplication.instance()
++    return (app.property('orbit_effective_theme') if app else None) or 'light'
++
++
++def colors():
++    return PALETTES[effective_theme()]
++
++
++def theme_style(css):
++    """이전 지역 스타일의 색을 의미색으로 바꾸되 크기·간격은 보존합니다."""
++    import re
++    c = colors()
++    foreground = {'#55736b', '#355c50', '#49615b', '#45675b', '#476a5d', '#55736b', '#b5c8d4'}
++    def color(match):
++        value = match.group(0).lower()
++        if value in foreground: return c['muted']
++        if value in ('#ffffff','#f9fffc','#fbfffe','#fbfffd','#fafffc'): return c['surface']
++        if value in ('#f3faf7','#f2f5f3'): return c['bg']
++        if value in ('#d4f3e7','#e0f4e9','#385064','#caeddc','#cbf0dd','#dcf5e8','#d9f6e8'): return c['selected']
++        q = QColor(value)
++        if q.lightnessF() > .72: return c['border'] if q.lightnessF() < .88 else c['raised']
++        if value in ('#193c36','#183c36','#23453f','#23433f','#193a37','#143e30','#114a32','#355c50'): return c['text']
++        return q.lighter(170).name() if effective_theme()=='dark' else value
++    result=re.sub(r'#[0-9a-fA-F]{6}', color, css)
++    return re.sub(r'selection-color:#[0-9a-fA-F]{6}', 'selection-color:'+c['text'], result)
++
++
++def unscaled_font_size(widget):
++    base=widget.property('baseFont31')
++    if base is None:
++        # 새 자식이 이미 확대된 부모 글꼴을 상속했으면 부모의 원래 크기를 사용합니다.
++        parent=widget.parentWidget()
++        if not widget.testAttribute(Qt.WidgetAttribute.WA_SetFont):
++            while parent is not None and base is None:
++                base=parent.property('baseFont31');parent=parent.parentWidget()
++        if base is None:base=max(13,widget.font().pixelSize())
++        widget.setProperty('baseFont31',base)
++    return base
++
++
++def set_ui_style(widget, css):
++    widget.setProperty('orbit_style_source', css)
++    # 배율 변환 결과를 원문에 되쓰지 않아 동적 변경과 반복 배율을 보존합니다.
++    owner=widget
++    scale=None
++    while owner is not None and scale is None:
++        scale=owner.property('orbit_text_scale31')
++        owner=owner.parentWidget()
++    styled=css
++    if scale is not None:
++        import re
++        styled=re.sub(r'font-size:(\d+)px',lambda match:'font-size:'+str(round(int(match[1])*scale))+'px',css)
++        if not re.search(r'font-size:',styled):
++            base=unscaled_font_size(widget)
++            styled+=';font-size:'+str(round(base*scale))+'px;font-weight:700;'
++    rendered=theme_style(styled)
++    if widget.styleSheet()!=rendered:
++        widget.setStyleSheet(rendered)
++
++
++def themed_stylesheet():
++    c = colors()
++    style = theme_style(STYLE)
++    style += """
++    QWidget {font-weight:700;}
++    QComboBox {padding:5px 32px 5px 10px;min-height:26px;border:1px solid BORDER;border-radius:8px;background:SURFACE;color:TEXT;}
++    QComboBox:hover {border-color:FOCUS;}
++    QComboBox:focus {border:2px solid FOCUS;padding:4px 31px 4px 9px;}
++    QComboBox::drop-down {subcontrol-origin:padding;subcontrol-position:top right;width:28px;border:0;background:transparent;}
++    QComboBox::down-arrow {image:none;width:0;height:0;}
++    QComboBox QAbstractItemView {background:SURFACE;color:TEXT;border:1px solid BORDER;outline:0;selection-background-color:SELECTED;selection-color:TEXT;padding:4px;}
++    QComboBox QAbstractItemView::item {min-height:28px;padding:5px 10px;}
++    QFrame#controlsBar,QFrame#observationCard,QFrame#replayBar {background:SURFACE;border:1px solid BORDER;border-radius:12px;}
++    QFrame#observatoryHero {background:BG;border:1px solid BORDER;border-radius:16px;}
++    QLabel#currentTask {color:TEXT;font-size:22px;}
++    QLabel#sectionCaption {color:MUTED;font-size:12px;}
++    QPushButton:focus,QToolButton:focus {border:2px solid FOCUS;}
++    QListWidget::item:selected {background:SELECTED;color:TEXT;}
++    QMenu::section {color:MUTED;padding:8px 12px;}
++    QFrame#navigationSurface {background:SURFACE;border:1px solid BORDER;border-radius:12px;}
++    QFrame#navigationSurface QPushButton {background:transparent;border:0;text-align:left;padding:10px 12px;border-radius:8px;}
++    QFrame#navigationSurface QPushButton:checked {background:SELECTED;color:TEXT;border-left:3px solid FOCUS;}
++    QFrame#navigationSurface QPushButton:hover {background:RAISED;}
++
++    QAbstractItemView::item:selected {background:SELECTED;color:TEXT;}
++    QCheckBox::indicator {background:SURFACE;border:1px solid MUTED;}
++    QCheckBox::indicator:checked {background:SELECTED;border:3px solid FOCUS;}
++    QSlider::groove:horizontal {height:4px;background:BORDER;border-radius:2px;}
++    QSlider::handle:horizontal {background:FOCUS;border:1px solid BORDER;width:12px;margin:-5px 0;border-radius:6px;}
++    QTabBar::tab:selected {font-weight:700;}
++    QScrollBar:vertical,QScrollBar:horizontal {background:BG;}
++    QScrollBar::handle:vertical,QScrollBar::handle:horizontal {background:BORDER;}
++    """
++    for token,key in [('RAISED','raised'),('BORDER','border'),('SURFACE','surface'),('SELECTED','selected'),('MUTED','muted'),('FOCUS','focus'),('TEXT','text'),('BG','bg')]:style=style.replace(token,c[key])
++    return style
++
++
++def _apply_colors(scheme=None):
+     app = QApplication.instance()
+-    if app.property('orbit_monochrome'):
+-        return
+-    app.setStyle(MonochromeStyle())
+-    app.styleHints().setColorScheme(Qt.ColorScheme.Light)
+-    translator = KoreanDialogs(app)
+-    app.installTranslator(translator)
+-    app.orbit_translator = translator
+-    dialog_layout = DialogLayout(app)
+-    app.installEventFilter(dialog_layout)
+-    app.orbit_dialog_layout = dialog_layout
+-    palette = QPalette()
+-    for role, value in ((QPalette.ColorRole.Window, 20), (QPalette.ColorRole.WindowText, 35),
+-                        (QPalette.ColorRole.Base, 25), (QPalette.ColorRole.AlternateBase, 35),
+-                        (QPalette.ColorRole.Text, 35), (QPalette.ColorRole.Button, 48),
+-                        (QPalette.ColorRole.ButtonText, 35), (QPalette.ColorRole.Highlight, 80),
+-                        (QPalette.ColorRole.HighlightedText, 255), (QPalette.ColorRole.ToolTipBase, 32),
+-                        (QPalette.ColorRole.ToolTipText, 255), (QPalette.ColorRole.Link, 220)):
+-        palette.setColor(role, QColor(value, value, value))
+-    for role, value in ((QPalette.ColorRole.Window, '#f3faf7'), (QPalette.ColorRole.Base, '#ffffff'),
+-                        (QPalette.ColorRole.Button, '#eaf7f0'), (QPalette.ColorRole.Highlight, '#caeddc'),
+-                        (QPalette.ColorRole.Link, '#12815c')):
+-        palette.setColor(role, QColor(value))
+-    app.setPalette(palette)
+-    app.setStyleSheet(STYLE)
+-    app.setProperty('orbit_monochrome', True)
++    mode = app.property('orbit_theme_mode') or 'system'
++    resolved = mode if mode!='system' else ('dark' if (scheme or app.styleHints().colorScheme())==Qt.ColorScheme.Dark else 'light')
++    app.setProperty('orbit_effective_theme', resolved)
++    style=app.style()
++    if hasattr(style,'icons'):style.icons.clear()
++    c = colors();palette=QPalette()
++    roles={'Window':'bg','WindowText':'text','Base':'surface','AlternateBase':'raised','Text':'text','Button':'raised','ButtonText':'text','Highlight':'selected','HighlightedText':'text','ToolTipBase':'surface','ToolTipText':'text','Link':'accent','PlaceholderText':'muted'}
++    for role,key in roles.items():palette.setColor(getattr(QPalette.ColorRole,role),QColor(c[key]))
++    app.setPalette(palette);app.setStyleSheet(themed_stylesheet())
++    # 위젯별 원본 스타일은 누적 변환하지 않고 매번 원문에서 다시 계산합니다.
++    for widget in app.allWidgets():
++        original=widget.property('orbit_style_source')
++        if original is not None:set_ui_style(widget,original)
++        widget.update()
++
++
++def _system_changed(scheme):
++    if QApplication.instance().property('orbit_theme_mode')=='system':_apply_colors(scheme)
++
++
++def apply_theme(mode=None):
++    app=QApplication.instance()
++    selected=normalize_theme_mode(mode if mode is not None else app.property('orbit_theme_mode'))
++    resolved=selected if selected!='system' else ('dark' if app.styleHints().colorScheme()==Qt.ColorScheme.Dark else 'light')
++    if app.property('orbit_monochrome') and app.property('orbit_theme_mode')==selected and effective_theme()==resolved:return
++    if not app.property('orbit_monochrome'):
++        app.setStyle(MonochromeStyle())
++        translator=KoreanDialogs(app);app.installTranslator(translator);app.orbit_translator=translator
++        layout=DialogLayout(app);app.installEventFilter(layout);app.orbit_dialog_layout=layout
++        app.styleHints().colorSchemeChanged.connect(_system_changed)
++        app.setProperty('orbit_monochrome',True)
++    from typography import app_font
++    app.setFont(app_font())
++    selected=normalize_theme_mode(mode if mode is not None else app.property('orbit_theme_mode'))
++    app.setProperty('orbit_theme_mode',selected)
++    app.styleHints().setColorScheme({'light':Qt.ColorScheme.Light,'dark':Qt.ColorScheme.Dark,'system':Qt.ColorScheme.Unknown}[selected])
++    _apply_colors()
+diff --git a/src/ui_layout.py b/src/ui_layout.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..e1accd379caab714e8a5cea52bd6add5e3c73b86
+--- /dev/null
++++ b/src/ui_layout.py
+@@ -0,0 +1,41 @@
++"""앱 소유 조작부의 폭 대응과 명확한 콤보 펼침 표시입니다."""
++from PySide6.QtCore import QPointF,Qt
++from PySide6.QtGui import QPainter,QPen,QPolygonF
++from PySide6.QtWidgets import QWidget,QComboBox,QGridLayout,QSizePolicy,QLayout,QStackedWidget
++
++
++class OrbitComboBox(QComboBox):
++    def paintEvent(self,event):
++        super().paintEvent(event)
++        painter=QPainter(self)
++        try:
++            painter.setRenderHint(QPainter.RenderHint.Antialiasing)
++            pen=QPen(self.palette().buttonText().color(),1.7);pen.setCapStyle(Qt.PenCapStyle.RoundCap);pen.setJoinStyle(Qt.PenJoinStyle.RoundJoin);painter.setPen(pen)
++            x=self.width()-17;y=self.height()/2
++            painter.drawPolyline(QPolygonF([QPointF(x-4,y-2),QPointF(x,y+2),QPointF(x+4,y-2)]))
++        finally:painter.end()
++
++
++class ResponsiveRow(QWidget):
++    """사용 가능한 폭에 맞춰 조작 그룹을 여러 줄로 배치합니다."""
++    def __init__(self,widgets,minimum_columns=1):
++        super().__init__();self.widgets=widgets;self.columns=0;self.minimum_columns=minimum_columns
++        self.grid=QGridLayout(self);self.grid.setSizeConstraint(QLayout.SizeConstraint.SetNoConstraint);self.grid.setContentsMargins(0,0,0,0);self.grid.setSpacing(8)
++        self.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Preferred)
++        self.reflow()
++    def resizeEvent(self,event):
++        super().resizeEvent(event);self.reflow()
++    def reflow(self):
++        widths=[widget.minimumSizeHint().width() for widget in self.widgets]
++        columns=len(self.widgets)
++        while columns>self.minimum_columns and sum(sorted(widths,reverse=True)[:columns])+8*(columns-1)>max(100,self.width()):columns-=1
++        if columns==self.columns:return
++        self.columns=columns
++        while self.grid.count():self.grid.takeAt(0)
++        for index,widget in enumerate(self.widgets):self.grid.addWidget(widget,index//columns,index%columns)
++
++
++class PageStack(QStackedWidget):
++    """페이지 내부의 스크롤이 긴 내용의 높이를 담당하고 바깥 창은 작게 줄일 수 있습니다."""
++    def hasHeightForWidth(self):return False
++    def heightForWidth(self,width):return -1
+diff --git a/src/update_widgets.py b/src/update_widgets.py
+index 5f8b48b76641f660f73135f5e61df8954ef3b0c9..3ee69c84597ebcbe3e78fb7d9bf2b0fa622f8ffb 100644
+--- a/src/update_widgets.py
++++ b/src/update_widgets.py
+@@ -6,7 +6,7 @@ from PySide6.QtWidgets import QDialog,QVBoxLayout,QLabel,QPushButton
+ from shiboken6 import isValid
+ from observatory_panel import tr
+ 
+-VERSION='3.0.1'
++VERSION='3.1.0'
+ 
+ class UpdateBridge(QObject):
+     result=Signal(object,object)
+@@ -17,7 +17,7 @@ class UpdateDialog(QDialog):
+         from safe_update import SafeUpdater
+         self.updater=SafeUpdater(controller.settings.directory)
+         self.setWindowTitle(tr('공식 업데이트','Official update'));self.resize(540,260)
+-        layout=QVBoxLayout(self);self.label=QLabel(tr('현재 버전 3.0.1 · 공식 저장소의 릴리스만 확인합니다.','Version 3.0.1 · Only releases from the official repository are checked.'));self.label.setWordWrap(True);self.label.setTextFormat(Qt.TextFormat.PlainText);layout.addWidget(self.label)
++        layout=QVBoxLayout(self);self.label=QLabel(tr('현재 버전 3.1.0 · 공식 저장소의 릴리스만 확인합니다.','Version 3.1.0 · Only releases from the official repository are checked.'));self.label.setWordWrap(True);self.label.setTextFormat(Qt.TextFormat.PlainText);layout.addWidget(self.label)
+         self.action=QPushButton(tr('새 버전 확인','Check for update'));self.action.clicked.connect(self.next_step);layout.addWidget(self.action)
+         self.close_button=QPushButton(tr('닫기','Close'));self.close_button.clicked.connect(self.close);layout.addWidget(self.close_button)
+         self.bridge=UpdateBridge(self);self.bridge.result.connect(self.done)
+@@ -78,7 +78,7 @@ class UpdateDialog(QDialog):
+         elif self.latest:
+             self.label.setText(tr('현재 버전이 최신 공개 버전입니다.','The current version is up to date.'));self.action.setText(tr('다시 확인','Check again'))
+         else:
+-            self.label.setText(tr('현재 버전 3.0.1 · 공식 저장소의 릴리스만 확인합니다.','Version 3.0.1 · Only releases from the official repository are checked.'));self.action.setText(tr('새 버전 확인','Check for update'))
++            self.label.setText(tr('현재 버전 3.1.0 · 공식 저장소의 릴리스만 확인합니다.','Version 3.1.0 · Only releases from the official repository are checked.'));self.action.setText(tr('새 버전 확인','Check for update'))
+ 
+ 
+ def show_update(controller):

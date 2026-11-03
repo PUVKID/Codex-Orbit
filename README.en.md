@@ -1,14 +1,27 @@
-# 🪐 Codex Orbit 3.0.1
+# 🪐 Codex Orbit 3.1.0
 
 A Windows desktop app with the original date-based 3D calendar themes enabled by default. The observatory remains available as an explicit choice. Model-change notifications, account rate-limit percentages, time and weather are preserved.
 
-[한국어](README.md) · [Downloads](docs/DOWNLOADS.md) · [User guide](docs/Usage.en.md) · [Validation scope](docs/공개검증_30차.md) · [All revisions](docs/REVISION_INDEX.md)
+[한국어](README.md) · [Downloads](docs/DOWNLOADS.md) · [User guide](docs/Usage.en.md) · [Validation scope](docs/공개검증_31차.md) · [All revisions](docs/REVISION_INDEX.md)
 
 Three silver mesh rings surround model-specific sun, crystal, sphere or crescent cores. Explicitly recorded agent states appear as satellites. Pins, bookmarks, history replay and an away summary help navigate records. Unknown values remain unknown. Replay does not change model settings, and local observations do not certify the server's model identity.
 
 Notifications compare the chat title, previous model/reasoning, current model/reasoning and recorded reason. Original IDs and records are preserved. Hover pauses dismissal; notifications can be pinned. Broadcast mode masks titles, tasks and tooltips. Local diagnostic ZIPs exclude conversations, credentials, paths and raw events. User-triggered updates accept official releases, verify SHA-256 and restore the previous executable if the replacement fails its startup check.
 
 The mint/white interface uses Nanum Gothic Bold. Docking, text scale, pause, reduced motion and resource quality are available. Monitoring continues while motion is paused. Remaining limits are percentages, not token counts. The calendar mode preserves 888 monthly themes for 2026–2099 and daily procedural geometry. One GPU worker keeps the 3840×2160 render source; observatory quality caps are 20/30/60fps. These are not claims of a fixed 240fps or monitor refresh rate.
+
+
+## Revision 31: synthetic screens from the packaged app
+
+These screens use synthetic activity without personal records. Model and reasoning values are test examples, not claims about actual execution or account state.
+
+![Light synthetic screen](docs/images/31-light-synthetic.png)
+
+![Dark synthetic screen](docs/images/31-dark-synthetic.png)
+
+## Version 3.1.0
+
+Choose System, Light or Dark appearance with saved preferences. Language, text size and rotation speed share a settings area. Overview separates selected settings from observed execution. Display settings explains motion, docking, sound, quality, diagnostics and updates. Privacy mode masks titles and task descriptions while preserving stored records. Date-based artwork and notification behavior are retained. [Revision 31](history/31차/README.md)
 
 ## Version 3.0.1
 
@@ -48,6 +61,7 @@ Missing display-mode settings now select the calendar. Model events preserve the
 | 28차 | [폴더](history/28/) | [설명](history/28/README.md) | 27차 · [전체 차이](docs/28차_전체변경.diff) |
 | 29차 | [폴더](history/29차/) | [설명](history/29차/README.md) | 28차 · [전체 차이](history/29차/직전차수.diff) |
 | 30차 | [폴더](history/30차/) | [설명](history/30차/README.md) | 29차 · [전체 차이](history/30차/직전차수.diff) |
+| 31차 | [폴더](history/31차/) | [설명](history/31차/README.md) | 30차 · [전체 차이](history/31차/직전차수.diff) |
 | 최종 | [폴더](docs/최종/) | [설명](docs/최종/README.md) | [비교 대상 없는 근거](docs/최종/README.md) |
 
 Historical sources and supporting documents/assets are preserved with full comparisons, byte counts and SHA-256. [Archive manifests](docs/ARCHIVE_FILES.md) distinguish original copies, privacy edits and exclusions. Design images use synthetic examples. No private full-source ZIP, personal conversations, operating memories or credentials are published. Existing legal notices are preserved; no new license is assigned. This software work has no manuscript requiring a paper PDF.

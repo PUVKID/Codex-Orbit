@@ -6,7 +6,7 @@ from PySide6.QtWidgets import QDialog,QVBoxLayout,QLabel,QPushButton
 from shiboken6 import isValid
 from observatory_panel import tr
 
-VERSION='3.0.1'
+VERSION='3.1.0'
 
 class UpdateBridge(QObject):
     result=Signal(object,object)
@@ -17,7 +17,7 @@ class UpdateDialog(QDialog):
         from safe_update import SafeUpdater
         self.updater=SafeUpdater(controller.settings.directory)
         self.setWindowTitle(tr('공식 업데이트','Official update'));self.resize(540,260)
-        layout=QVBoxLayout(self);self.label=QLabel(tr('현재 버전 3.0.1 · 공식 저장소의 릴리스만 확인합니다.','Version 3.0.1 · Only releases from the official repository are checked.'));self.label.setWordWrap(True);self.label.setTextFormat(Qt.TextFormat.PlainText);layout.addWidget(self.label)
+        layout=QVBoxLayout(self);self.label=QLabel(tr('현재 버전 3.1.0 · 공식 저장소의 릴리스만 확인합니다.','Version 3.1.0 · Only releases from the official repository are checked.'));self.label.setWordWrap(True);self.label.setTextFormat(Qt.TextFormat.PlainText);layout.addWidget(self.label)
         self.action=QPushButton(tr('새 버전 확인','Check for update'));self.action.clicked.connect(self.next_step);layout.addWidget(self.action)
         self.close_button=QPushButton(tr('닫기','Close'));self.close_button.clicked.connect(self.close);layout.addWidget(self.close_button)
         self.bridge=UpdateBridge(self);self.bridge.result.connect(self.done)
@@ -78,7 +78,7 @@ class UpdateDialog(QDialog):
         elif self.latest:
             self.label.setText(tr('현재 버전이 최신 공개 버전입니다.','The current version is up to date.'));self.action.setText(tr('다시 확인','Check again'))
         else:
-            self.label.setText(tr('현재 버전 3.0.1 · 공식 저장소의 릴리스만 확인합니다.','Version 3.0.1 · Only releases from the official repository are checked.'));self.action.setText(tr('새 버전 확인','Check for update'))
+            self.label.setText(tr('현재 버전 3.1.0 · 공식 저장소의 릴리스만 확인합니다.','Version 3.1.0 · Only releases from the official repository are checked.'));self.action.setText(tr('새 버전 확인','Check for update'))
 
 
 def show_update(controller):

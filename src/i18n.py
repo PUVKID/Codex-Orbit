@@ -92,4 +92,4 @@ def retranslate_widgets(root):
                 getattr(widget, setter)(translate(source))
 
 # 29차 알림 조작의 번역입니다.
-_EN.update({'📌 고정':'📌 Pin','☆ 기록 보관':'☆ Bookmark','기록 보관':'Bookmark','표시 조작':'Display controls','진단 ZIP 저장':'Save diagnostics ZIP','방송 모드':'Broadcast mode','모션 축소':'Reduce motion','가장자리 도킹':'Edge docking','업데이트 확인':'Check for updates','입체 관측소':'3D observatory','날짜별 조형':'Daily sculpture'})
+_EN.update({'📌 고정':'📌 Pin','☆ 기록 보관':'☆ Bookmark','기록 보관':'Bookmark','화면 설정':'Display settings','진단 ZIP 저장':'Save diagnostics ZIP','프라이버시 모드':'Privacy mode','모션 축소':'Reduce motion','가장자리 도킹':'Edge docking','업데이트 확인':'Check for updates','입체 관측소':'3D observatory','날짜별 조형':'Daily sculpture'})

@@ -1,4 +1,6 @@
-# 🪐 Codex Orbit 3.0.1 · User guide
+# 🪐 Codex Orbit 3.1.0 · User guide
+
+Appearance, language and text size are grouped at the top. Choose System, Light or Dark; the choice is saved and System follows the operating system. Overview shows recorded activity. Display settings explains reduced motion, edge docking, sound and performance options. Privacy mode hides chat titles and task descriptions on screen; stored records are unchanged.
 
 The original daily calendar sculpture is the default desktop view. Model notifications keep its date-based title and artwork. The 3D observatory remains available as an explicit display-mode choice.
 
@@ -24,7 +26,7 @@ Choose English or Korean, observatory or calendar mode, rotation speed, pause, r
 
 High-quality source frames are 3840×2160 and are delivered at the required display size. A fixed 240 fps is not promised or newly targeted. Pausing motion keeps monitoring, notifications and the clock active.
 
-Broadcast mode immediately masks titles and work descriptions in existing notifications and the open detail view, while preserving stored originals. Optional short notification sounds are off by default.
+Privacy mode immediately masks titles and work descriptions in existing notifications and the open detail view, while preserving stored originals. Optional short notification sounds are off by default.
 
 ## Usage, temperature and time
 
@@ -38,9 +40,9 @@ Calendar mode retains 888 monthly themes for 2026–2099 and procedural daily su
 
 `기본_지침.md` is a shareable starter. Remove personal conversations, contact information and secrets before sharing your own Markdown. To apply instructions in Codex, use a supported instruction file in the intended project; this widget does not force instructions into all chats or expose private reasoning.
 
-Save diagnostics ZIP writes only whitelisted, non-sensitive diagnostics locally. It excludes conversation/event originals, credentials and personal paths, and never sends the archive automatically.
+Save diagnostic file writes only whitelisted, non-sensitive diagnostics locally. It excludes conversation/event originals, credentials and personal paths, and never sends the archive automatically.
 
-Check for updates uses only official `PUVKID/Codex-Orbit` HTTPS releases. Downloads are SHA-256 verified before the user installs and restarts. A failed restart check restores the previous executable. Personal settings and Markdown are preserved. Source runs do not install themselves as a distributed EXE.
+Check for update uses only official `PUVKID/Codex-Orbit` HTTPS releases. Downloads are SHA-256 verified before the user installs and restarts. A failed restart check restores the previous executable. Personal settings and Markdown are preserved. Source runs do not install themselves as a distributed EXE.
 
 ## Requirements and limits
 
