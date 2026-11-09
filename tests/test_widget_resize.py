@@ -22,7 +22,7 @@ class WidgetResizeTests(unittest.TestCase):
             opened = []
             widget = OrbitWidget(settings, lambda: opened.append(True), lambda: None)
             try:
-                self.assertEqual((widget.width(), widget.height()), (220, 332))
+                self.assertEqual((widget.width(), widget.height()), (220, 432))
                 start = QPoint(widget.width()-2, widget.height()//2)
                 origin = widget.mapToGlobal(start)
                 def event(kind, point, global_point, button, buttons):
@@ -30,16 +30,16 @@ class WidgetResizeTests(unittest.TestCase):
                 widget.mousePressEvent(event(QEvent.Type.MouseButtonPress, start, origin, Qt.MouseButton.LeftButton, Qt.MouseButton.LeftButton))
                 widget.mouseMoveEvent(event(QEvent.Type.MouseMove, start+QPoint(60,0), origin+QPoint(60,0), Qt.MouseButton.NoButton, Qt.MouseButton.LeftButton))
                 widget.mouseReleaseEvent(event(QEvent.Type.MouseButtonRelease, start+QPoint(60,0), origin+QPoint(60,0), Qt.MouseButton.LeftButton, Qt.MouseButton.NoButton))
-                self.assertEqual((widget.width(), widget.height()), (280, 332))
-                self.assertEqual(settings.values['size'], [280,332])
+                self.assertEqual((widget.width(), widget.height()), (280, 432))
+                self.assertEqual(settings.values['size'], [280,432])
                 self.assertFalse(opened)
                 start = QPoint(widget.width()//2, widget.height()-2)
                 origin = widget.mapToGlobal(start)
                 widget.mousePressEvent(event(QEvent.Type.MouseButtonPress, start, origin, Qt.MouseButton.LeftButton, Qt.MouseButton.LeftButton))
                 widget.mouseMoveEvent(event(QEvent.Type.MouseMove, start+QPoint(0,35), origin+QPoint(0,35), Qt.MouseButton.NoButton, Qt.MouseButton.LeftButton))
                 widget.mouseReleaseEvent(event(QEvent.Type.MouseButtonRelease, start+QPoint(0,35), origin+QPoint(0,35), Qt.MouseButton.LeftButton, Qt.MouseButton.NoButton))
-                self.assertEqual((widget.width(), widget.height()), (280, 367))
-                self.assertEqual(settings.values['size'], [280,367])
+                self.assertEqual((widget.width(), widget.height()), (280, 467))
+                self.assertEqual(settings.values['size'], [280,467])
                 self.assertFalse(opened)
                 middle = QPoint(widget.width()//2, widget.height()//2)
                 global_middle = widget.mapToGlobal(middle)
@@ -48,7 +48,7 @@ class WidgetResizeTests(unittest.TestCase):
                 self.assertEqual(opened, [True])
                 again = OrbitWidget(Settings(folder), lambda: None, lambda: None)
                 try:
-                    self.assertEqual((again.width(), again.height()), (280,367))
+                    self.assertEqual((again.width(), again.height()), (280,467))
                 finally:
                     again.close(); again.deleteLater()
                     QCoreApplication.sendPostedEvents(again, QEvent.Type.DeferredDelete)
@@ -63,7 +63,7 @@ class WidgetResizeTests(unittest.TestCase):
             settings.values.update({'size': ['bad', 300], 'position': [900000, 900000]})
             widget = OrbitWidget(settings, lambda: None, lambda: None)
             try:
-                self.assertEqual((widget.width(), widget.height()), (220, 332))
+                self.assertEqual((widget.width(), widget.height()), (220, 432))
                 screen = self.qt.primaryScreen().availableGeometry()
                 self.assertTrue(screen.contains(widget.geometry()))
             finally:

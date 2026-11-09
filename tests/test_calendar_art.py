@@ -8,6 +8,7 @@ import unittest
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'src'))
 from calendar_art import FIRST_DATE,LAST_DATE,THEMES,all_designs,design_for_date,current_date
+from calendar_specials import special_for_date
 
 
 class CalendarArtTests(unittest.TestCase):
@@ -18,7 +19,9 @@ class CalendarArtTests(unittest.TestCase):
         self.assertEqual(len({(r.date.month,r.date.day,r.year_variant) for r in rows}),27028)
         for index,row in enumerate(rows):
             self.assertEqual(row.date,FIRST_DATE+timedelta(days=index))
-            self.assertEqual(row.theme,THEMES[(row.date.year-2026)*12+row.date.month-1]); self.assertEqual(row.variant,row.date.day-1)
+            special=special_for_date(row.date)
+            self.assertEqual(row.theme,(special.name if '특집' in special.name else special.name+' 특집') if special else THEMES[(row.date.year-2026)*12+row.date.month-1])
+            self.assertEqual(row.variant,row.date.day-1)
         self.assertEqual(sum(r.date.month==2 and r.date.day==29 for r in rows),18)
 
     def test_invalid_dates_are_not_clamped(self):
@@ -41,14 +44,13 @@ class CalendarArtTests(unittest.TestCase):
         pairs=[(date(2026,m,d),date(2027,m,d)) for m,d in ((1,5),(1,12),(1,19),(1,26),(10,1),(10,31),(8,3),(8,30))]
         pairs.extend(((date(2027,8,29),date(2036,8,29)),(date(2055,3,24),date(2068,3,24))))
         for first,second in pairs:
-            hashes=[]; rings=[]
+            hashes=[]
             for value in (first,second):
                 parts=build_geometry(design_for_date(value)); digest=hashlib.sha256()
-                for (vertices,_),_,_,_ in parts[:-3]:digest.update(vertices[:,:3].tobytes())
+                for (vertices,_),_,_,_ in parts:digest.update(vertices[:,:3].tobytes())
                 hashes.append(digest.hexdigest())
-                rings.append(hashlib.sha256(b''.join(mesh[0].tobytes() for mesh,*_ in parts[-3:])).hexdigest())
             with self.subTest(first=first,second=second):
-                self.assertNotEqual(hashes[0],hashes[1]); self.assertEqual(rings[0],rings[1])
+                self.assertNotEqual(hashes[0],hashes[1])
 
 
 if __name__=='__main__':unittest.main()

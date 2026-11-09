@@ -36,3 +36,4 @@
 | 29차 | [자료 폴더](../history/29%EC%B0%A8) | [상세 설명](../history/29%EC%B0%A8/README.md) | [전체 비교·범위](29%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD.diff) · [소스 비교](../history/29%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
 | 30차 | [자료 폴더](../history/30%EC%B0%A8) | [상세 설명](../history/30%EC%B0%A8/README.md) | [전체 비교·범위](../history/30%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
 | 31차 | [자료 폴더](../history/31%EC%B0%A8) | [상세 설명](../history/31%EC%B0%A8/README.md) | [전체 비교·범위](../history/31%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 32차 | [자료 폴더](../history/32차) | [상세 설명](../history/32차/README.md) | [전체 비교·범위](../docs/32차_전체변경.diff) |

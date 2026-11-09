@@ -1,4 +1,4 @@
-"""앱이 소유하는 화면과 대화상자의 부드러운 청록 테마입니다."""
+"""앱이 소유하는 화면과 대화상자의 차분한 회청색 테마입니다."""
 from i18n import translate as t, get_language
 from PySide6.QtCore import QEvent, QObject, QTimer, QTranslator, Qt
 from PySide6.QtGui import QColor, QIcon, QPalette, QPixmap
@@ -125,8 +125,8 @@ class DialogLayout(QObject):
 
 # 의미색은 앱 소유 화면 전체에서 함께 바뀌며 날짜별 투명 조형에는 적용하지 않습니다.
 PALETTES = {
-    'light': dict(bg='#f3f8f6', surface='#ffffff', raised='#eaf5ef', text='#193c36', muted='#49665d', border='#bfd5cc', accent='#157f5e', selected='#d8f1e4', focus='#168b66', track='#e1ece6'),
-    'dark': dict(bg='#121d1b', surface='#1b2b27', raised='#233b33', text='#e9f5ee', muted='#b1c9bd', border='#3e5a4e', accent='#83dcb1', selected='#294d3e', focus='#83dcb1', track='#30483c'),
+    'light': dict(bg='#f6f8fb', surface='#ffffff', raised='#edf1f6', text='#202e43', muted='#52647b', border='#c5cfdd', accent='#40659a', selected='#dde7f4', focus='#446ea7', track='#e4eaf2'),
+    'dark': dict(bg='#141c29', surface='#1d2839', raised='#273449', text='#edf2fa', muted='#b6c3d6', border='#435570', accent='#a9c6ee', selected='#344d70', focus='#a9c6ee', track='#2c3b52'),
 }
 
 
@@ -152,6 +152,7 @@ def theme_style(css):
     def color(match):
         value = match.group(0).lower()
         if value in foreground: return c['muted']
+        if value in ('#168565','#168b66','#157f5e','#269b6c','#1aa676','#9bdbc9','#a3dfcd','#426d69'): return c['accent']
         if value in ('#ffffff','#f9fffc','#fbfffe','#fbfffd','#fafffc'): return c['surface']
         if value in ('#f3faf7','#f2f5f3'): return c['bg']
         if value in ('#d4f3e7','#e0f4e9','#385064','#caeddc','#cbf0dd','#dcf5e8','#d9f6e8'): return c['selected']
@@ -201,7 +202,7 @@ def themed_stylesheet():
     style = theme_style(STYLE)
     style += """
     QWidget {font-weight:700;}
-    QComboBox {padding:5px 32px 5px 10px;min-height:26px;border:1px solid BORDER;border-radius:8px;background:SURFACE;color:TEXT;}
+    QComboBox {combobox-popup:0;padding:5px 32px 5px 10px;min-height:26px;border:1px solid BORDER;border-radius:8px;background:SURFACE;color:TEXT;}
     QComboBox:hover {border-color:FOCUS;}
     QComboBox:focus {border:2px solid FOCUS;padding:4px 31px 4px 9px;}
     QComboBox::drop-down {subcontrol-origin:padding;subcontrol-position:top right;width:28px;border:0;background:transparent;}

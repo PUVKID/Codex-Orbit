@@ -1,0 +1,10 @@
+주소·장소 검색 결과의 지명·주소 자료: © OpenStreetMap contributors
+검색 서비스: Photon / komoot
+
+OpenStreetMap 자료는 Open Database License(ODbL)로 제공됩니다.
+저작권·자료 이용 안내: https://www.openstreetmap.org/copyright
+ODbL 1.0 원문: https://opendatacommons.org/licenses/odbl/1-0/
+Photon: https://github.com/komoot/photon
+
+앱은 사용자가 명시적으로 검색할 때 질의를 전송합니다. 검색 결과의
+상세 주소와 위치 정확도는 원본 자료에 따라 다르며 보장되지 않습니다.

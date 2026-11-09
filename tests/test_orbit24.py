@@ -1,4 +1,4 @@
-"""24차의 세 금속 링과 별도 추정 위치 행을 검증합니다."""
+"""날짜별 단일 대상과 기존 회전 유틸·별도 추정 위치 행을 검증합니다."""
 import os
 import sys
 import tempfile
@@ -22,34 +22,27 @@ from visuals import draw_desktop_orbit
 
 
 class ThreeRingTests(unittest.TestCase):
-    def test_fixed_rings_are_shared_read_only_and_date_motifs_stay_distinct(self):
-        first = build_geometry(design_for_date(date(2026, 10, 30)))
-        second = build_geometry(design_for_date(date(2026, 10, 31)))
-        for left, right in zip(first[-3:], second[-3:]):
-            for initial, reused in zip(left[0], right[0]):
-                self.assertIs(initial, reused)
-                self.assertFalse(initial.flags.writeable)
-                with self.assertRaises(ValueError):
-                    reused.flat[0] = 0
-        from calendar_renderer import _ring_geometry
-        self.assertEqual(_ring_geometry.cache_info().maxsize, 1)
-        self.assertEqual(_ring_geometry.cache_info().currsize, 1)
-        self.assertNotEqual(b''.join(part[0][0].tobytes() for part in first[:-3]),
-                            b''.join(part[0][0].tobytes() for part in second[:-3]))
+    def test_calendar_uses_only_daily_subject_and_never_builds_rings(self):
+        import calendar_renderer as renderer
+        for value in (date(2026,10,30),date(2026,10,31),date(2026,11,10)):
+            design=design_for_date(value)
+            with patch.object(renderer,'_object_geometry',wraps=renderer._object_geometry) as objects, patch.object(renderer,'_ring_geometry',side_effect=AssertionError('날짜 표시의 고리 생성 금지')):
+                parts=build_geometry(design)
+            self.assertTrue(parts)
+            self.assertEqual(objects.call_count,1)
+            self.assertEqual(objects.call_args.args[0].key,design.object_id)
 
-    def test_three_metal_tubes_have_requested_radius_and_thickness(self):
-        parts = build_geometry(design_for_date(date(2026, 10, 30)))
-        rings = [part for part in parts if part[2] == 1.0]
-        self.assertEqual(len(rings), 3)
-        for part, radius in zip(rings, (49, 56, 62)):
-            (vertices, indices), _, metal, roughness = part
-            radial = np.linalg.norm(vertices[:, :2], axis=1)
-            self.assertAlmostEqual(float(radial.max()), radius + 2.5, places=4)
-            self.assertAlmostEqual(float(radial.min()), radius - 2.5, places=4)
-            self.assertAlmostEqual(float(np.ptp(vertices[:, 2])), 5, places=4)
-            self.assertTrue(np.isfinite(vertices).all())
-            self.assertLess(int(indices.max()), len(vertices))
-            self.assertEqual((metal, roughness), (1.0, .23))
+    def test_daily_natural_subject_is_large_nonmetal_and_finite(self):
+        for value in (date(2026,10,30),date(2026,11,10)):
+            parts=build_geometry(design_for_date(value))
+            points=np.concatenate([part[0][0][:,:3] for part in parts])
+            self.assertGreater(float(np.ptp(points,axis=0).max()),85)
+            for (vertices,indices),_,metal,roughness in parts:
+                self.assertEqual(metal,0.)
+                self.assertGreaterEqual(roughness,.45)
+                self.assertTrue(np.isfinite(vertices).all())
+                self.assertTrue(np.allclose(np.linalg.norm(vertices[:,3:],axis=1),1,atol=2e-5))
+                self.assertLess(int(indices.max()),len(vertices))
 
     def test_independent_full_rotations_and_twelve_second_loop(self):
         start = matrices(0)
@@ -84,13 +77,13 @@ class LocationRowTests(unittest.TestCase):
         region = '서울특별시 아주 긴 추정 지역 이름'
         value = dict(temperature=12.5, region=region, stale=False, busy=False)
         c.update_weather(value)
-        self.assertEqual(c.orbit.location_text, region)
-        self.assertEqual(c.orbit.weather_text, '12.5℃')
+        self.assertEqual(c.orbit.location_text, '네트워크 추정 · ' + region)
+        self.assertEqual(c.orbit.weather_text, '12.5℃ · 날씨 미확인')
         self.assertIn('네트워크 추정 지역: ' + region, c.orbit.toolTip())
         c.update_usage(c.usage.snapshot)
         self.assertIn(region, c.orbit.toolTip())
         c.update_weather(dict(value, region=''))
-        self.assertEqual(c.orbit.location_text, '위치 정보 없음')
+        self.assertEqual(c.orbit.location_text, '네트워크 추정 · 위치 정보 없음')
 
     def test_location_elision_and_all_rows_do_not_overlap_at_minimum_size(self):
         title = '열여섯글자까지길어지는실제꽃이름입니다'

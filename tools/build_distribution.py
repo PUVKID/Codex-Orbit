@@ -70,6 +70,25 @@ def run(argv, name, timeout):
         raise SystemExit(exit_code or 1)
 
 
+def copy_runtime_assets(source, destination):
+    """기존 실행 자산 범위를 유지하고 내부 생성 기록 두 개만 제외합니다."""
+    source = Path(source)
+    destination = Path(destination)
+    excluded = {Path('atom3d/creation_report.json'), Path('icons3d/direct_validation.json')}
+
+    def ignore(directory, names):
+        relative = Path(directory).relative_to(source)
+        return [name for name in names if relative / name in excluded]
+
+    for item in source.iterdir():
+        if item.name == 'elements3d':
+            continue
+        if item.is_dir():
+            shutil.copytree(item, destination / item.name, ignore=ignore)
+        else:
+            shutil.copy2(item, destination / item.name)
+
+
 def main():
     # 새로 받은 공개 소스에도 검사용·빌드용 비공개 작업 폴더를 준비합니다.
     (ROOT / 'work').mkdir(exist_ok=True)
@@ -79,17 +98,13 @@ def main():
     os.environ['PYINSTALLER_CONFIG_DIR'] = str(ROOT / 'work' / 'pyinstaller-cache')
     os.environ['PYTHONUTF8'] = '1'
     os.environ['PYTHONIOENCODING'] = 'utf-8'
-    run([sys.executable, '-B', '-X', 'utf8', '-m', 'unittest', 'discover', '-s', 'tests', '-v'], 'build-tests', 90)
+    # 전체 개발 회귀는 항목을 생략하지 않고 두 프로세스로 실행합니다. 중앙 운영 검사의 시간 상한과 별도로 기록합니다.
+    for pattern, suffix in (('test_[0-m]*.py', 'front'), ('test_[n-z]*.py', 'back')):
+        run([sys.executable, '-B', '-X', 'utf8', '-m', 'unittest', 'discover', '-s', 'tests', '-p', pattern, '-v'], 'build-tests-'+suffix, 180)
     run([sys.executable, '-B', '-X', 'utf8', 'tools/check_sources.py'], 'build-sources', 30)
     # 교체된 원소 영상은 소스 자료에 보존하고 현재 달력 GUI에 필요한 자산만 실행본에 넣습니다.
     runtime_assets = Path(tempfile.mkdtemp(prefix='runtime-assets-', dir=ROOT / 'work'))
-    for source in (ROOT / 'assets').iterdir():
-        if source.name == 'elements3d':
-            continue
-        if source.is_dir():
-            shutil.copytree(source, runtime_assets / source.name)
-        else:
-            shutil.copy2(source, runtime_assets / source.name)
+    copy_runtime_assets(ROOT / 'assets', runtime_assets)
     args = [sys.executable, '-m', 'PyInstaller', '--noconfirm', '--clean', '--onefile',
             '--windowed', '--name', 'CodexOrbit', '--icon', str(ROOT / 'assets' / 'Orbit.ico'), '--distpath', str(release),
             '--workpath', str(ROOT / 'work' / 'pyinstaller'),
@@ -109,8 +124,9 @@ def main():
                      release / ('연도별_월별_테마_전체.' + suffix))
     license_dir = release / '라이선스'
     license_dir.mkdir(exist_ok=True)
-    for path in (ROOT / 'assets').glob('*LICENSE*'):
-        shutil.copy2(path, license_dir / path.name)
+    for path in (ROOT / 'assets').iterdir():
+        if path.is_file() and any(word in path.name.upper() for word in ('LICENSE', 'NOTICE')):
+            shutil.copy2(path, license_dir / path.name)
     shutil.copy2(ROOT / 'assets' / 'OFL.txt', license_dir / 'NanumGothic-OFL.txt')
     shutil.copy2(ROOT / 'assets' / 'atom3d' / 'LICENSE.txt', license_dir / 'Atom3D-LICENSE.txt')
     shutil.copy2(ROOT / 'assets' / 'icons3d' / 'LICENSE.txt', license_dir / 'Icons3D-LICENSE.txt')
@@ -132,7 +148,12 @@ def main():
                 if path.is_file() and '__pycache__' not in path.parts:
                     bundle.write(path, path.relative_to(ROOT))
         for name in ('requirements.txt', 'README.md', 'README.en.md'):
-            bundle.write(ROOT / name, name)
+            if name == 'README.md':
+                # 재빌드 소스 ZIP에서는 월 테마가 docs 안에 있으므로 해당 위치로 연결합니다.
+                text=(ROOT/name).read_text(encoding='utf-8').replace('](연도별_월별_테마_전체.md)', '](docs/연도별_월별_테마_전체.md)')
+                bundle.writestr(name,text.encode('utf-8'))
+            else:
+                bundle.write(ROOT / name, name)
         for suffix in ('md', 'csv'):
             name = 'docs/연도별_월별_테마_전체.' + suffix
             bundle.write(ROOT / name, name)

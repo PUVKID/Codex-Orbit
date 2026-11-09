@@ -19,21 +19,48 @@ def notice_previous_model(value):
 
 
 def notice_reason(event, limit=210):
-    """공개 이유와 실제 맡긴 일만 짧게 연결하며 없는 선택 동기를 만들지 않습니다."""
-    reason = public_text(event.get('reason'), '', 1000000)
-    # 감지기의 명시적인 미기록 표식만 처리하며 정상 문장 속 같은 단어는 보존합니다.
-    if reason in ('확인 불가', '확인되지 않음'):
-        reason = ''
-    text = public_text(short_reason({**event, 'reason': reason, 'short_reason': ''}, limit), '', limit) if reason else t('이유가 기록되지 않았습니다.')
-    if get_language() == 'ko':
-        # 뜻이 분명한 표시 용어만 풀어 쓰며 전체 원문은 툴팁과 상세에 남깁니다.
-        for original, plain in ((r'\bUI\b', '화면'), (r'\bfixture\b', '검사용 예시'), (r'\bassert\b', '검사 조건')):
-            text = re.sub(original, plain, text)
+    """공개 목적 문장만 한두 개 골라 보여 주며 원문과 선택 동기는 새로 만들지 않습니다."""
+    raw = public_text(event.get('reason'), '', 1000000)
+    missing = raw in ('', '확인 불가', '확인되지 않음')
+    text = '' if missing else raw
+    marked = re.search(r'(?:핵심 이유|모델(?:·추론 강도)? 선택 이유|선택 이유|이유)\s*[:：]\s*', text)
+    if marked:
+        text = text[marked.end():]
+    # 실행 식별자와 운영 메타 행은 선택 이유로 해석하지 않습니다.
+    text = re.sub(r'([\U0001f300-\U0001faff])\1{3,}', r'\1', text)
+    text = re.sub(r'[\x00-\x08\x0b-\x1f]', ' ', text)
+    sentences = re.split(r'(?<=[.!?。])\s+|\n+', text)
+    # 실패나 명시 목적을 먼저 읽되 앞뒤 원문 자체는 별도로 보존합니다.
+    observed_problem = [sentence for sentence in sentences if re.search(r'실패했|실패하였|오류가|겹쳐|잘렸', sentence)]
+    if observed_problem:
+        sentences = [sentence for sentence in sentences if sentence in observed_problem or not re.search(r'(?:\d+개|\d+건).*(?:직접 실행|회귀|검증|확인)', sentence)]
+    important = [sentence for sentence in sentences if re.search(r'이유|때문|위해|겹쳐|실패했|실패하였|오류가', sentence)]
+    sentences = important + [sentence for sentence in sentences if sentence not in important]
+    selected = []
+    for sentence in sentences:
+        sentence = sentence.strip()
+        if not sentence or re.search(r'(?:^|[ /·,])(?:role|task|session|target|repair_used|input_fix_used|argv|cwd)\s*[:=]', sentence, re.I):
+            continue
+        if re.fullmatch(r'(?:gpt-[\w.-]+|(?:main|build|verifier|deep|escalate)\s*[/·]\s*\w+)[.!]?', sentence):
+            continue
+        if sentence in selected:
+            continue
+        for original, plain in ((r'\bUI\b', '화면'), (r'\bfixture\b', '검사용 예시'), (r'\bassert\b', '검사 조건'), (r'회귀(?:\s*검사)?', '기존 기능 재확인'), (r'파서', '기록 읽기'), (r'\bverifier\b', '확인 작업')) if get_language() == 'ko' else ():
+            sentence = re.sub(original, plain, sentence)
+        if len(' '.join(selected + [sentence])) <= limit:
+            selected.append(sentence)
+        if len(selected) == 2:
+            break
+    result = ' '.join(selected)
+    if not result:
+        result = (t('이유가 기록되지 않았습니다.') if missing else t('설명이 길어 원문에서 전체 내용을 확인해 주세요.') if any(len(x.strip()) > limit for x in sentences) else t('공개된 선택 이유를 확인할 수 없습니다.'))
     if event.get('kind') == 'activity':
         task = public_text(event.get('task_summary'), '', 1000000)
-        if task and task not in text:
-            text += '\n' + t('맡긴 일: ') + task
-    return text if len(text) <= limit else text[:limit-1].rstrip() + '…'
+        if task and task not in result:
+            short_task = next((x.strip() for x in re.split(r'(?<=[.!?。])\s+|\n+', task) if x.strip() and len(x.strip()) <= 100), '')
+            if short_task:
+                result += '\n' + t('맡긴 일: ') + short_task
+    return result
 
 
 def notice_reason_original(event):
@@ -105,3 +132,10 @@ def public_text(value, fallback='공개된 설명이 기록되지 않았습니�
 def public_reason_original(event):
     value = event.get('reason')
     return str(value) if public_text(value, '', 1) else t('공개된 설명이 기록되지 않았습니다.')
+
+
+def notice_reason_caption(event):
+    """공개 선택 이유와 단순 작업 설명을 같은 의미로 표시하지 않습니다."""
+    raw = public_text(event.get('reason'), '', 1000000)
+    explained = re.search(r'이유|때문|위해|겹쳐|확인해|발견해', raw)
+    return t('이유: ') if explained or raw in ('', '확인 불가', '확인되지 않음') else t('작업 설명: ')

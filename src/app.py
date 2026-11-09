@@ -16,19 +16,20 @@ from shiboken6 import isValid
 from i18n import translate as t, get_language, set_language, remember_translations, retranslate_widgets
 from notice_format import (friendly_effort, previous_field, short_reason, public_text,
                            public_reason_original, notice_model_label, notice_previous_model,
-                           notice_reason, notice_reason_original)
+                           notice_reason, notice_reason_original, notice_reason_caption)
 from PySide6.QtCore import QEvent, QObject, QLockFile, Qt, QSize, QThread, QTimer, Signal, Slot, QPropertyAnimation, QEasingCurve
 from PySide6.QtGui import QIcon, QPainter, QPixmap, QColor, QImage
 from PySide6.QtWidgets import (QApplication, QDialog,
                              QFrame, QGridLayout, QHBoxLayout, QLabel, QComboBox,
                              QListWidget, QListWidgetItem, QMenu, QMessageBox,
                              QPlainTextEdit, QPushButton, QSplitter, QTabWidget,
-                             QProgressBar, QScrollArea, QSizePolicy, QSlider, QLayout, QVBoxLayout, QWidget)
+                             QProgressBar, QScrollArea, QSizePolicy, QSlider, QLayout, QVBoxLayout, QWidget, QLineEdit)
 
 from core import clamp_position, read_jsonl_tail, read_text_strict, title_catalog, resolve_title
 from notifier import Watcher, append_log, atomic_json, stamp, POLL_INTERVAL_SECONDS, MAX_PENDING
 from usage import UsageClient, reset_label
-from weather import WeatherClient
+from weather import WeatherClient, CitySearchClient, PlaceSearchClient, normalize_city
+from holiday_calendar import available_countries, find_countries, country_status, normalize_country
 from visuals import draw_orbit, draw_desktop_orbit, desktop_widget_layout, status_label, usage_bar
 from atom_frames import get_atom_frames
 from calendar_art import design_for_date, current_date
@@ -248,13 +249,49 @@ def event_description(event):
     ])
 
 
+def weather_widget_text(value):
+    """기온과 부가정보를 분리하고 일출·일몰은 제공된 지역 시간대로만 표시합니다."""
+    temperature = value.get('temperature')
+    code = value.get('weather_code')
+    if code is None:
+        description = t('날씨 미확인')
+    else:
+        from weather import weather_description
+        description = weather_description(code, get_language())
+    primary = (f'{temperature:g}℃' if type(temperature) in (int,float) and math.isfinite(temperature) else t('기온 미확인')) + ' · ' + description
+    stale = bool(value.get('stale')) and temperature is not None
+    if stale:primary = t('이전 정보: ') + primary
+    humidity = value.get('humidity')
+    humidity_text = f'{humidity:g}%' if type(humidity) in (int,float) and math.isfinite(humidity) and 0 <= humidity <= 100 else '—'
+    offset = value.get('utc_offset_seconds')
+    from weather import weather_sun_time
+    def local_time(key):return weather_sun_time(value.get(key), offset)
+    extras = ((t('이전 습도 ') if stale else t('습도 '))+humidity_text+' · '+t('현지 시각'),
+              t('일출 ')+local_time('sunrise')+' · '+t('일몰 ')+local_time('sunset'))
+    return primary, extras
+
+
+def regional_calendar_date():
+    """제목과 그림에 같은 공통 지역 날짜를 사용합니다."""
+    from calendar_motion import get_calendar_date
+    return get_calendar_date()
+
+
+def validated_theme_country(value):
+    """검색 목록에 실제로 존재하는 국가·지역 코드만 사용합니다."""
+    code = normalize_country(value)
+    if not any(row['code'] == code for row in available_countries()):
+        raise ValueError(t('국가 목록에서 선택해 주세요.'))
+    return code
+
+
 class Settings:
     def __init__(self, directory):
         self.directory = Path(directory)
         self.directory.mkdir(parents=True, exist_ok=True)
         self.path = self.directory / 'settings.json'
         home = Path(os.environ.get('CODEX_HOME') or (Path.home() / '.codex'))
-        self.values = {'sessions': str(home / 'sessions'), 'theme': '자동', 'popup': True, 'notice_timeout_ms': 30000, 'language': 'ko', 'motion_speed': 1.0}
+        self.values = {'sessions': str(home / 'sessions'), 'theme': '자동', 'popup': True, 'notice_timeout_ms': 30000, 'language': 'ko', 'motion_speed': 1.0, 'weather_location': None, 'theme_country_mode': 'auto', 'theme_country': 'KR'}
         if self.path.exists():
             value = json.loads(read_text_strict(self.path))
             if not isinstance(value, dict):
@@ -439,11 +476,12 @@ class OrbitWidget(QWidget):
         self.setWindowTitle('Codex Orbit')
         self.setMinimumSize(180, 250)
         self.settings, self.details = settings, details
+        self.theme_country = validated_theme_country(settings.values.get('theme_country', 'KR'))
         self.language_changed = lambda language: None
         self.motion_speed_changed = lambda value: None
-        size = settings.values.get('size', [220, 332])
+        size = settings.values.get('size', [220, 432])
         if not isinstance(size, (list, tuple)) or len(size) != 2 or any(type(v) is not int for v in size):
-            size = [220, 332]
+            size = [220, 432]
         self.resize(max(180, min(size[0], 4096)), max(250, min(size[1], 4096)))
         self.quit_app = quit_app
         self.origin_time = brand_clock().origin
@@ -454,6 +492,7 @@ class OrbitWidget(QWidget):
         self.usage_fraction = None
         self.usage_state = 'unknown'
         self.weather_text = t('기온 미확인')
+        self.weather_extras = ()
         self.location_text = t('위치 정보 없음')
         self.weather_tooltip = ''
         self.usage_tooltip = ''
@@ -490,7 +529,9 @@ class OrbitWidget(QWidget):
         self.move(x, y)
 
     def clock_text(self):
-        return datetime.now().strftime('%H:%M:%S')
+        from calendar_motion import get_calendar_utc_offset
+        offset=get_calendar_utc_offset()
+        return datetime.now(timezone(timedelta(seconds=9*3600 if offset is None else offset))).strftime('%H:%M:%S')
 
     def _refresh_static_clock(self):
         from calendar_motion import calendar_motion_status
@@ -504,8 +545,10 @@ class OrbitWidget(QWidget):
     def _request_motion_size(self):
         if not hasattr(self,'timer') or not self.isVisible():return
         from calendar_motion import set_calendar_motion_size
-        design=design_for_date(current_date())
-        layout=desktop_widget_layout(self.width(),self.height(),t(design.title),True,True,text_scale=self.settings.values.get('text_scale',100)/100)
+        design=design_for_date(regional_calendar_date(),country=self.theme_country)
+        layout=desktop_widget_layout(self.width(),self.height(),t(design.title),True,True,text_scale=self.settings.values.get('text_scale',100)/100,weather_extras=self.weather_extras)
+        if self.weather_extras and self.minimumHeight()!=layout['minimum_height']:
+            self.setMinimumHeight(layout['minimum_height'])
         size=max(32,min(2160,round(layout['art'].width()*self.devicePixelRatioF())))
         set_calendar_motion_size(self,size)
 
@@ -524,7 +567,7 @@ class OrbitWidget(QWidget):
         try:
             painter.setRenderHint(QPainter.RenderHint.Antialiasing)
             from calendar_motion import get_calendar_frame,record_calendar_presentation
-            design = design_for_date(current_date())
+            design = design_for_date(regional_calendar_date(),country=self.theme_country)
             if hasattr(self,'experience') and self.settings.values.get('scene_mode','calendar')=='observatory':
                 from dataclasses import replace
                 model=self.experience.scene.get('model')
@@ -536,7 +579,7 @@ class OrbitWidget(QWidget):
                 self._desktop_overlay_cache = DesktopOverlayCache()
             draw_desktop_orbit(painter, self.width(), self.height(), source, design,
                                self.usage_fraction, self.usage_state, self.clock_text(), self.weather_text, self.location_text,
-                               cache=self._desktop_overlay_cache,text_scale=self.settings.values.get('text_scale',100)/100)
+                               cache=self._desktop_overlay_cache,text_scale=self.settings.values.get('text_scale',100)/100,weather_extras=self.weather_extras)
             record_calendar_presentation(self,source)
             painter.setPen(QColor('#B5C8D4'))
             painter.drawLine(self.width()-4, self.height()//2-12, self.width()-4, self.height()//2+12)
@@ -604,7 +647,7 @@ class OrbitWidget(QWidget):
             elif not any(self.resize_edges):
                 self.unread = False
                 if hasattr(self,'experience') and self.settings.values.get('scene_mode','calendar')=='observatory':
-                    layout=desktop_widget_layout(self.width(),self.height(),'',True,True,text_scale=self.settings.values.get('text_scale',100)/100)
+                    layout=desktop_widget_layout(self.width(),self.height(),'',True,True,text_scale=self.settings.values.get('text_scale',100)/100,weather_extras=self.weather_extras)
                     art=layout['art'];point=event.position()
                     self.experience.hit((point.x()-art.x())/max(1,art.width()),(point.y()-art.y())/max(1,art.height()))
                 else:self.details()
@@ -672,15 +715,16 @@ class Notice(QFrame):
         self.text.setWordWrap(True)
         heading = QHBoxLayout()
         self.brand_mark = AnimatedBrand(32)
-        heading.addWidget(self.brand_mark, 0, Qt.AlignmentFlag.AlignTop)
-        self.title_marker = QLabel('💬')
+        self.brand_mark.hide()
+        self.title_marker = QLabel('')
         self.title_marker.setAccessibleName(t('채팅 제목'))
         set_ui_style(self.title_marker,'font-size:16px;')
         heading.addWidget(self.title_marker, 0, Qt.AlignmentFlag.AlignTop)
         heading.addWidget(self.title, 1)
         close = QPushButton(t('✕ 닫기'))
+        self.close_button = close
         close.setToolTip(t('알림 닫기 · 이력은 유지됩니다'))
-        set_ui_style(close,'padding:0;min-height:28px;max-height:28px;font-size:12px;')
+        set_ui_style(close,'padding:0;font-size:12px;min-height:28px;max-height:28px;border-width:1px;')
         close.setFixedSize(64, 30)
         close.clicked.connect(self.dismiss)
         heading.addWidget(close, 0, Qt.AlignmentFlag.AlignTop)
@@ -713,7 +757,7 @@ class Notice(QFrame):
             for column, label in ((0, previous), (2, current)):
                 label.setWordWrap(True)
                 label.setTextFormat(Qt.TextFormat.PlainText)
-                set_ui_style(label,'font-size:18px;font-weight:700;color:#355c50;padding:3px;')
+                set_ui_style(label,'font-size:16px;font-weight:700;color:#355c50;padding:3px;')
                 values.addWidget(label, row, column)
         values.setColumnStretch(0, 1)
         values.setColumnStretch(2, 1)
@@ -726,7 +770,7 @@ class Notice(QFrame):
         self.after_value.setTextFormat(Qt.TextFormat.PlainText)
         set_ui_style(self.after_value,'font-size:10px;color:#355c50;padding:0;')
         self.after_value.hide()
-        set_ui_style(self.text,'font-size:12px;color:#355c50;')
+        set_ui_style(self.text,'font-size:13px;color:#355c50;')
         layout.addWidget(self.text)
         self.selection_reason = QLabel()
         set_ui_style(self.selection_reason,'font-size:10px;color:#355c50;padding:0;')
@@ -737,6 +781,17 @@ class Notice(QFrame):
         self.detail_hint = hint
         set_ui_style(hint,'font-size:12px;color:#193c36;')
         layout.addWidget(hint)
+        self.reason_disclosure = QPushButton(t('이유 원문 펼치기'))
+        self.reason_disclosure.setCheckable(True)
+        self.reason_disclosure.toggled.connect(self.show_reason_original)
+        set_ui_style(self.reason_disclosure,'font-size:12px;padding:2px 4px;min-height:20px;text-align:left;')
+        layout.addWidget(self.reason_disclosure)
+        self.reason_original = QPlainTextEdit()
+        self.reason_original.setReadOnly(True)
+        self.reason_original.setMaximumHeight(120)
+        self.reason_original.setMinimumHeight(90)
+        self.reason_original.hide()
+        layout.addWidget(self.reason_original)
         self.queue_hint = QLabel('')
         self.queue_hint.setWordWrap(True)
         self.queue_hint.setTextFormat(Qt.TextFormat.PlainText)
@@ -748,12 +803,39 @@ class Notice(QFrame):
         self.hold = QPushButton(t('📌 고정'))
         self.hold.setCheckable(True)
         self.hold.toggled.connect(self.set_pinned)
-        layout.addWidget(self.hold)
+        actions = QHBoxLayout()
+        actions.setSpacing(8)
+        actions.addWidget(self.hold)
         self.bookmark_callback = lambda key: None
         self.bookmark_button = QPushButton(t('☆ 기록 보관'))
         self.bookmark_button.clicked.connect(lambda: self.bookmark_callback(self.event_id))
-        layout.addWidget(self.bookmark_button)
+        actions.addWidget(self.bookmark_button)
+        layout.addLayout(actions)
         remember_translations(self)
+
+    def apply_text_scale(self, scale):
+        """독립 알림 창도 같은 기준 글꼴에서만 배율을 계산합니다."""
+        from theme import unscaled_font_size
+        widgets = [self, *self.findChildren(QWidget)]
+        bases = [unscaled_font_size(widget) for widget in widgets]
+        self.setFixedWidth(round(410*min(scale,1.25)))
+        for widget,base in zip(widgets,bases):
+            widget.setFont(app_font(round(base*scale)))
+            widget.setProperty('orbit_text_scale31',scale)
+            source = widget.property('orbit_style_source')
+            set_ui_style(widget,widget.styleSheet() if source is None else source)
+        height=round(30*scale)
+        # 폴리시가 전역 최소 높이로 낮추지 않도록 실제 테두리 안쪽 높이도 명시합니다.
+        set_ui_style(self.close_button,f'padding:0;font-size:12px;min-height:{height-2}px;max-height:{height-2}px;border-width:1px;')
+        self.close_button.setFixedSize(round(64*scale),height)
+        self._last_fit_signature = None
+        if hasattr(self,'notice_event'):self.fit_content()
+
+    def show_reason_original(self, expanded):
+        self.reason_original.setVisible(expanded)
+        self.reason_disclosure.setText(t('이유 원문 접기') if expanded else t('이유 원문 펼치기'))
+        self._last_fit_signature = None
+        self.fit_content()
 
     def enterEvent(self, event):
         from observatory_panel import pause_notice
@@ -925,16 +1007,20 @@ class Notice(QFrame):
         self.selection_reason.setText(selection_explanation(event))
         after_map = after or {}
         self.notice_after_heading.setText('➡️ ' + t('현재'))
-        self.model_previous.setText(t('이전 모델') + '  ' + notice_previous_model(before))
-        self.model_current.setText(t('현재 모델') + '  ' + notice_model_label(after_map.get('model')))
-        self.effort_previous.setText(t('이전 추론 강도') + ' 🧠  ' + previous_field(before, 'effort'))
-        self.effort_current.setText(t('현재 추론 강도') + ' 🧠  ' + friendly_effort(after_map.get('effort')))
+        for label, caption in ((self.model_previous, '이전 모델'), (self.model_current, '현재 모델'), (self.effort_previous, '이전 추론 강도'), (self.effort_current, '현재 추론 강도')):
+            label.setAccessibleName(t(caption))
+        self.model_previous.setText(notice_previous_model(before))
+        self.model_current.setText(notice_model_label(after_map.get('model')))
+        self.effort_previous.setText(previous_field(before, 'effort'))
+        self.effort_current.setText(friendly_effort(after_map.get('effort')))
         for key, labels in (('model', (self.model_previous, self.model_current)), ('effort', (self.effort_previous, self.effort_current))):
             changed = event.get('kind') != 'activity' and before is not None and before.get(key) and after_map.get(key) and before.get(key) != after_map.get(key)
             for label in labels:
-                set_ui_style(label,'font-size:18px;font-weight:700;color:#355c50;padding:3px;' + ('background:#d4f3e7;border-radius:6px;' if changed else ''))
+                set_ui_style(label,'font-size:16px;font-weight:700;color:#355c50;padding:3px;' + ('background:#d4f3e7;border-radius:6px;' if changed else ''))
         self.after_value.setText((t('현재 설정 · ') if event.get('kind') == 'activity' else t('→ 변경 후 · ')) + (self.setting_label(after).replace('\n',' · ') if after is not None else t('확인 불가')))
-        self.text.setText(t('💬 이유: ') + notice_reason(event))
+        self.text.setText(notice_reason_caption(event) + notice_reason(event))
+        self.reason_original.setPlainText(notice_reason_original(event))
+        self.reason_disclosure.setText(t('이유 원문 접기') if self.reason_disclosure.isChecked() else t('이유 원문 펼치기'))
         self.text.setToolTip(notice_reason_original(event))
         style_notice(self)
         self.fit_content()
@@ -953,6 +1039,142 @@ class Notice(QFrame):
         if event.button() == Qt.MouseButton.LeftButton:
             self.open_details(self.event_id)
             self.dismiss()
+
+
+class WeatherLocationDialog(QDialog):
+    """도시 검색은 명시한 요청에만 수행하고 검증된 후보만 저장합니다."""
+    def __init__(self, controller):
+        super().__init__(controller.window)
+        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
+        self.controller = controller
+        self.setWindowTitle(t('지역 선택'))
+        self.resize(500, 410)
+        layout = QVBoxLayout(self)
+        explanation = QLabel(t('도시·장소를 고르면 행사와 날씨를 함께 바꿉니다. 네트워크 추정은 실제 주소가 아닙니다.'))
+        explanation.setWordWrap(True)
+        layout.addWidget(explanation)
+        search_row = QHBoxLayout()
+        self.search_kind = QComboBox()
+        for caption, kind in (('도시·지역','city'), ('주소·장소','place'), ('국가','country')):
+            self.search_kind.addItem(t(caption), kind)
+        search_row.addWidget(self.search_kind)
+        self.query = QLineEdit()
+        self.query.setMaxLength(80)
+        self.query.setPlaceholderText(t('도시 이름 · 예: 수원, Paris'))
+        self.query.setAccessibleName(t('도시 이름'))
+        self.search_button = QPushButton(t('검색'))
+        search_row.addWidget(self.query, 1)
+        search_row.addWidget(self.search_button)
+        layout.addLayout(search_row)
+        self.status_label = QLabel(t('검색어는 검색 버튼을 누를 때 Open-Meteo로 전송됩니다.'))
+        self.status_label.setWordWrap(True)
+        layout.addWidget(self.status_label)
+        self.attribution = QLabel('© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> · Photon')
+        self.attribution.setWordWrap(True)
+        self.attribution.setOpenExternalLinks(True)
+        layout.addWidget(self.attribution)
+        self.cities = QListWidget()
+        self.cities.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.cities.setWordWrap(True)
+        layout.addWidget(self.cities, 1)
+        buttons = QHBoxLayout()
+        self.automatic_button = QPushButton(t('네트워크 추정으로 복귀'))
+        self.apply_button = QPushButton(t('선택한 지역 적용'))
+        self.apply_button.setEnabled(False)
+        self.cancel_button = QPushButton(t('취소'))
+        for button in (self.automatic_button, self.apply_button, self.cancel_button):
+            buttons.addWidget(button)
+        layout.addLayout(buttons)
+        self.client = None
+        self.search_kind.currentIndexChanged.connect(self.change_search_kind)
+        self.search_button.clicked.connect(self.search)
+        self.query.returnPressed.connect(self.search)
+        self.cities.currentRowChanged.connect(lambda row: self.apply_button.setEnabled(row >= 0))
+        self.cities.itemDoubleClicked.connect(lambda item: self.apply_selection())
+        self.apply_button.clicked.connect(self.apply_selection)
+        self.automatic_button.clicked.connect(lambda: self.apply_city(None))
+        self.cancel_button.clicked.connect(self.reject)
+        self.finished.connect(lambda result: self.close_search())
+        self.change_search_kind()
+        remember_translations(self)
+
+    def retranslate(self):
+        retranslate_widgets(self)
+        for index,caption in enumerate(('도시·지역','주소·장소','국가')):
+            self.search_kind.setItemText(index,t(caption))
+        self.change_search_kind()
+
+    def close_search(self):
+        if self.client is not None:self.client.close()
+
+    def change_search_kind(self):
+        self.close_search()
+        self.client = None
+        self.cities.clear()
+        self.apply_button.setEnabled(False)
+        kind = self.search_kind.currentData()
+        self.query.setPlaceholderText(t('국가 이름 · 예: 대한민국, Japan') if kind=='country' else t('주소나 장소 이름') if kind=='place' else t('도시 이름 · 예: 수원, Paris'))
+        if kind == 'country':
+            self.status_label.setText(t('국가만 고르면 행사 기준만 바뀌고 날씨 지역은 유지됩니다.'))
+        else:
+            self.client = (PlaceSearchClient if kind=='place' else CitySearchClient)(self,language=get_language())
+            client = self.client
+            client.results.connect(lambda rows: self.show_results(rows) if self.client is client else None)
+            client.failed.connect(lambda message: self.show_error(message) if self.client is client else None)
+            if kind == 'place':
+                if self.controller.settings.values.get('theme_country_mode')=='selected':
+                    client.set_country(self.controller.settings.values.get('theme_country'))
+                self.status_label.setText(t('검색할 때만 Photon / OpenStreetMap으로 장소 이름을 보냅니다.'))
+            else:self.status_label.setText(t('검색할 때만 Open-Meteo로 도시 이름을 보냅니다.'))
+
+    def search(self):
+        self.cities.clear()
+        self.apply_button.setEnabled(False)
+        if self.search_kind.currentData() == 'country':
+            for row in find_countries(self.query.text(),get_language()):
+                item = QListWidgetItem(row['name']+' · '+row['code'])
+                item.setData(Qt.ItemDataRole.UserRole,dict(country_only=True,country_code=row['code']))
+                self.cities.addItem(item)
+            self.status_label.setText(t('나라를 고르면 그 나라의 행사 기준을 적용합니다. 날씨는 도시·장소를 따로 골라 주세요.'))
+        else:
+            self.status_label.setText(t('지역을 찾는 중입니다.'))
+            self.client.search(self.query.text())
+
+    def show_results(self, rows):
+        self.cities.clear()
+        for row in rows:
+            city = normalize_city(row)
+            if city is None:
+                continue
+            label = city.get('display_name') or ' · '.join(dict.fromkeys(x for x in (city['name'], city['admin1'], city['country']) if x))
+            item = QListWidgetItem(label)
+            item.setData(Qt.ItemDataRole.UserRole, city)
+            item.setToolTip(label)
+            self.cities.addItem(item)
+        self.status_label.setText(t('동명 지역이 있으니 도시·행정구역·나라를 확인한 뒤 골라 주세요.') if self.cities.count() else t('검색 결과가 없습니다. 영문 도시 이름이나 주소·장소 검색을 이용해 보세요.'))
+
+    def show_error(self, message):
+        self.status_label.setText(t(message))
+        self.status_label.setToolTip(t(message))
+
+    def apply_selection(self):
+        item = self.cities.currentItem()
+        if item is not None:
+            value = item.data(Qt.ItemDataRole.UserRole)
+            if value.get('country_only'):
+                try:self.controller.set_theme_country(value['country_code'])
+                except (ValueError,OSError):
+                    self.status_label.setText(t('지역을 저장하지 못했습니다. 다시 시도해 주세요.'));return
+                self.accept()
+            else:self.apply_city(value)
+
+    def apply_city(self, city):
+        try:
+            self.controller.set_weather_location(city)
+        except (ValueError, OSError) as error:
+            self.status_label.setText(t('지역을 저장하지 못했습니다. 다시 시도해 주세요.'))
+            return
+        self.accept()
 
 
 class DiagnosticLabel(QLabel):
@@ -1483,6 +1705,7 @@ class QuitGuard(QObject):
 class Controller(QObject):
     def __init__(self, settings, start_worker=True, start_usage=None, start_weather=False):
         # 필수 이미지와 오늘의 조형을 창과 타이머 생성 전에 검사합니다.
+        validated_theme_country(settings.values.get('theme_country','KR'))
         get_atom_frames()
         design_for_date(current_date())
         validate_symbols()
@@ -1494,6 +1717,11 @@ class Controller(QObject):
         # Qt 수신자 문맥에 수명을 결합해 종료된 Python 객체로 예약 신호가 전달되지 않게 합니다.
         super().__init__(_application_gui_root())
         self.settings = settings
+        self.country_estimated = False
+        if settings.values.get('theme_country_mode') == 'auto' and settings.values.get('weather_location'):
+            city = normalize_city(settings.values['weather_location'])
+            settings.values.update(theme_country_mode='selected',theme_country=validated_theme_country(city['country_code']))
+            settings.save()
         from orbit_features import FeatureStore
         self.features = FeatureStore(settings.directory)
         set_language(settings.values.get('language', 'ko'))
@@ -1545,8 +1773,9 @@ class Controller(QObject):
         self.usage = UsageClient(settings.values.get('codex_exe', ''), self.gui_owner)
         self.usage.changed.connect(self.update_usage)
         self.update_usage(self.usage.snapshot)
-        self.weather = WeatherClient(self.gui_owner, language=get_language())
+        self.weather = WeatherClient(self.gui_owner, language=get_language(), location_override=settings.values.get('weather_location'))
         self.weather.changed.connect(self.update_weather)
+        self._apply_theme_country(settings.values.get('theme_country','KR'), estimated=False)
         self.update_weather(self.weather.snapshot)
         self.quit_guard = QuitGuard(self)
         QApplication.instance().installEventFilter(self.quit_guard)
@@ -1624,6 +1853,8 @@ class Controller(QObject):
         if self.window.diagnostics.original_text:
             self.window.diagnostics.setPlainText(self.window.diagnostics.original_text)
         self.weather.set_language(language)
+        if hasattr(self, 'location_dialog') and isValid(self.location_dialog):
+            self.location_dialog.retranslate()
         self.update_weather(self.weather.snapshot)
         self.update_usage(self.usage.snapshot)
         if self.last_monitor_status is not None:
@@ -1636,23 +1867,107 @@ class Controller(QObject):
         mask_details(self.window)
         self.orbit.update()
 
+    def show_weather_location(self):
+        dialog = getattr(self, 'location_dialog', None)
+        if dialog is not None and isValid(dialog) and dialog.isVisible():
+            dialog.raise_()
+            return
+        self.location_dialog = WeatherLocationDialog(self)
+        self.orbit29.apply_text_size()
+        self.location_dialog.show()
+
+    def set_theme_country(self, country):
+        """국가만 고르면 행사 기준만 바꾸며 날씨 좌표는 유지합니다."""
+        if self.closing:return
+        code = validated_theme_country(country)
+        previous = dict(self.settings.values)
+        self.settings.values.update(theme_country_mode='selected',theme_country=code)
+        try:self.settings.save()
+        except Exception:
+            self.settings.values.clear();self.settings.values.update(previous)
+            raise
+        self._apply_theme_country(code, estimated=False)
+
+    def set_weather_location(self, value):
+        """선택 지역의 행사 국가와 실제 날씨 좌표를 한 번에 저장합니다."""
+        if self.closing:return
+        city = normalize_city(value)
+        code = validated_theme_country(city['country_code']) if city else None
+        previous = dict(self.settings.values)
+        self.settings.values['weather_location'] = city
+        self.settings.values['theme_country_mode'] = 'selected' if city else 'auto'
+        if code:self.settings.values['theme_country'] = code
+        try:self.settings.save()
+        except Exception:
+            self.settings.values.clear();self.settings.values.update(previous)
+            raise
+        if code:self._apply_theme_country(code,estimated=False)
+        else:self.country_estimated=False
+        self.weather.set_location_override(city)
+        self.refresh_region_summary()
+
+    def _apply_theme_country(self, country, estimated=False):
+        code = validated_theme_country(country)
+        from calendar_motion import set_calendar_country
+        set_calendar_country(code)
+        self.orbit.theme_country = code
+        self.country_estimated = bool(estimated)
+        self._sync_calendar_timezone()
+        self.orbit._request_motion_size()
+        self.orbit.update()
+        self.refresh_region_summary()
+        self.window.usage_hero.setAccessibleName(t('선택 지역의 날짜별 조형'))
+
+    def _sync_calendar_timezone(self, value=None):
+        from calendar_motion import set_calendar_utc_offset
+        value = self.weather.snapshot if value is None else value
+        offset = value.get('utc_offset_seconds')
+        matched = value.get('country_code') == self.orbit.theme_country
+        valid = type(offset) is int and -43200 <= offset <= 50400
+        set_calendar_utc_offset(offset if matched and valid else None)
+
+    def refresh_region_summary(self):
+        code = self.orbit.theme_country
+        name = next(row['name'] for row in available_countries(get_language()) if row['code']==code)
+        mode = t('직접 선택') if self.settings.values.get('theme_country_mode')=='selected' else t('네트워크 추정') if self.country_estimated else t('자동 추정 대기')
+        self.orbit29.location_label.setText(t('날씨: ')+self.orbit.location_text+'\n'+t('행사: ')+name+' · '+mode)
+        status = country_status(code,regional_calendar_date().year)
+        warning = t('행사는 국가 단위 자료이며 규칙과 법이 바뀔 수 있습니다.')
+        if not status['supported'] or status['warnings']:
+            warning += '\n'+t('일부 행사 자료는 지원되지 않거나 확인이 필요합니다.')
+        from calendar_motion import get_calendar_utc_offset
+        warning += '\n'+(t('날짜·시각: 선택한 지역의 현지 기준') if get_calendar_utc_offset() is not None else t('날짜·시각: 기본 한국 시각 · 도시나 장소를 고르면 현지 기준을 적용합니다.'))
+        self.orbit29.location_label.setToolTip(warning)
+
     @Slot(dict)
     def update_weather(self, value):
         if self.closing:
             return
         temperature = value.get("temperature")
-        self.orbit.location_text = value.get("region") or t("위치 정보 없음")
-        self.orbit.weather_text = (t("이전 {temperature:g}℃", temperature=temperature) if value.get("stale") else f"{temperature:g}℃") if temperature is not None else (t("기온 조회 중") if value.get("busy") else t("기온 미확인"))
+        mode_label = t('지정한 지역') if value.get('location_mode') == 'manual' else t('네트워크 추정')
+        self.orbit.location_text = mode_label + ' · ' + (value.get("region") or t("위치 정보 없음"))
+        if self.settings.values.get('theme_country_mode') == 'auto' and value.get('location_mode') == 'automatic' and value.get('country_code'):
+            code=value['country_code']
+            if any(row['code']==code for row in available_countries()):self._apply_theme_country(code, estimated=True)
+            else:self.country_estimated=False
+        self._sync_calendar_timezone(value)
+        self.refresh_region_summary()
+        self.orbit.weather_text, self.orbit.weather_extras = weather_widget_text(value)
+        if value.get('busy') and temperature is None:self.orbit.weather_text = t('기온 조회 중')
         checked = value.get("checked_at")
         checked_label = datetime.fromtimestamp(checked).astimezone().strftime("%Y-%m-%d %H:%M:%S") if checked is not None else t("미확인")
         observed = value.get("observed_at")
         observed_label = datetime.fromtimestamp(observed).astimezone().strftime("%Y-%m-%d %H:%M:%S") if observed is not None else t("미확인")
-        self.orbit.weather_tooltip = (t("네트워크 추정 지역: ") + (value.get("region") or t("미확인")) +
+        location_heading = t('지정한 지역: ') if value.get('location_mode') == 'manual' else t("네트워크 추정 지역: ")
+        location_source = t('지정한 도시 좌표') if value.get('location_mode') == 'manual' else 'ipwho.is'
+        self.orbit.weather_tooltip = (location_heading + (value.get("region") or t("미확인")) +
                                      t("\n지역 원문: ") + (value.get("region_original") or t("미확인")) +
-                                     t("\n기온 출처: Open-Meteo · 위치: ipwho.is") +
+                                     t('\n기온 출처: Open-Meteo · 위치: ') + location_source +
                                      t("\n제공 시각: ") + observed_label +
                                      t("\n조회 시각: ") + checked_label + "\n" + t(value.get("status", "기온 미확인")))
         self.orbit.weather_tooltip += t("\n지명 출처: ") + t(str(value.get("region_source") or "GeoNames / Open-Meteo (CC BY 4.0)"))
+        self.orbit.weather_tooltip += '\n'+self.orbit.weather_text+'\n'+'\n'.join(self.orbit.weather_extras)
+        self.orbit._request_motion_size()
         self.orbit.refresh_tooltip()
         self.orbit.update()
 
@@ -1903,6 +2218,7 @@ class Controller(QObject):
         self.notice = Notice(self.show, self.gui_owner)
         self.notices[event.get('id')] = self.notice
         self.notice.broadcast_mode = bool(self.settings.values.get('broadcast_mode', False))
+        self.notice.apply_text_scale(self.settings.values.get('text_scale',100)/100)
         self.notice.bookmark_callback = lambda key: self.features.set_bookmark(key, key not in self.features.bookmarks)
         self.notice.completed.connect(self.remove_notice)
         self.notice.display(event, self.orbit, self.settings.values.get('notice_timeout_ms', 30000), replay=replay)
@@ -2007,6 +2323,8 @@ class Controller(QObject):
         self.monitor_retry_timer.stop()
         self.usage.close()
         self.weather.close()
+        if hasattr(self, 'location_dialog') and isValid(self.location_dialog):
+            self.location_dialog.reject()
         for notice in list(self.notices.values()):
             notice.dismiss()
         self.orbit.healthy = False
@@ -2040,6 +2358,8 @@ class Controller(QObject):
         self.monitor_retry_timer.stop()
         self.usage.close()
         self.weather.close()
+        if hasattr(self, 'location_dialog') and isValid(self.location_dialog):
+            self.location_dialog.reject()
         worker = self.monitor
         self.stop_monitor()
         for notice in list(self.notices.values()):
@@ -2109,17 +2429,21 @@ def motion_smoke_stage(status, baseline_count, expired):
 
 def main():
     from safe_update import handle_update_cli
-    result = handle_update_cli(sys.argv[1:])
+    result = None if '--ui-smoke-test' in sys.argv[1:] else handle_update_cli(sys.argv[1:])
     if result is not None:return result
     parser = argparse.ArgumentParser(description='Codex Orbit · 로컬 모델 변경 투명 궤도')
     parser.add_argument('--data-dir', type=Path, default=Path(os.environ.get('LOCALAPPDATA', Path.home())) / 'CodexOrbit')
     parser.add_argument('--sessions', type=Path)
+    parser.add_argument('--ui-smoke-test', action='store_true', help='새 격리 폴더에서 합성 화면 조작 검사 후 종료')
     parser.add_argument('--smoke-test', action='store_true')
     parser.add_argument('--usage-smoke-test', action='store_true', help='실제 계정 잔량과 표시를 조회한 뒤 종료')
     parser.add_argument('--smoke-report', type=Path)
     parser.add_argument('--show-details', action='store_true')
     parser.add_argument('--show-event', help='기존 이력의 이벤트 ID 또는 대상 ID를 다시 표시')
     args = parser.parse_args()
+    if args.ui_smoke_test:
+        from ui_smoke32 import run_ui_smoke
+        return run_ui_smoke(args, sys.argv[1:])
     args.data_dir = args.data_dir.absolute()
     app = QApplication(sys.argv[:1])
     app.setApplicationName('Codex Orbit')

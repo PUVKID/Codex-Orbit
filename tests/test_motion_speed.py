@@ -74,7 +74,7 @@ class MotionClockTests(unittest.TestCase):
             def __init__(self, size):
                 self.ctx = type('Context', (), {'info': {}})()
 
-            def render(self, value, elapsed):
+            def render(self, value, elapsed, country='KR'):
                 rendered.append((value, elapsed))
                 worker.stop()
                 return QImage(32, 32, QImage.Format.Format_ARGB32_Premultiplied)

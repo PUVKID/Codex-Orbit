@@ -16,6 +16,8 @@ import moderngl
 from PySide6.QtGui import QImage
 
 from calendar_art import design_for_date
+from fruit_surface import fruit_mesh, petal_mesh, instrument_body, surface_tube, organic_shaders
+from pathlib import Path
 
 VERTEX = '#version 330\nin vec3 in_position;\nin vec3 in_normal;\nuniform mat4 model;\nuniform mat4 view_projection;\nout vec3 position;\nout vec3 normal;\nvoid main() {\n    vec4 world = model * vec4(in_position, 1.0);\n    position = world.xyz;\n    normal = mat3(model) * in_normal;\n    gl_Position = view_projection * world;\n}\n'
 
@@ -142,29 +144,69 @@ def _transformed(mesh, pos=(0,0,0), scale=(1,1,1), angle=0):
     return vertices,indices
 
 
-def _object_geometry(spec, color):
+def _object_geometry(spec, color, material_specs=None):
     """대상 이름에 연결된 주요 구조를 실제 삼각형 부품으로 구성합니다."""
+    if spec.category=='특집':
+        from calendar_special_geometry import special_geometry
+        return special_geometry(spec,color)
+    if spec.category=='악기' and spec.recipe in ('piano','sax','brass','horn','drum','bowl_drum','tambourine'):
+        from calendar_instruments import instrument_geometry
+        return instrument_geometry(spec)
     parts=[]
-    sphere=sphere_mesh(1,20,12)
-    green=(.22,.43,.29); gold=(.68,.48,.16); dark=(.11,.12,.17)
+    sphere=sphere_mesh(1,40,24)
+    green=(.025,.12,.018); gold=(.68,.48,.16); dark=(.11,.12,.17)
     n=spec.count; w=spec.width; h=spec.length; recipe=spec.recipe
-    def add(mesh,pos=(0,0,0),scale=(1,1,1),angle=0,tint=None):
-        parts.append((_transformed(mesh,pos,scale,angle),tint or color,.52,.31))
+    def add(mesh,pos=(0,0,0),scale=(1,1,1),angle=0,tint=None,metal=None,rough=None):
+        base=tint or color
+        natural=spec.category in ('꽃','열매','잎')
+        brass=spec.key in ('saxophone','trumpet','trombone','horn','tuba','handbell','timpani')
+        silver_part=base==(.65,.72,.78)
+        if metal is None:metal=0. if natural else (1. if silver_part or (brass and base!=dark) or spec.key=='flute' else 0.)
+        if not natural and tint is None:
+            if brass:base=(.56,.30,.075)
+            elif spec.key in ('clarinet','oboe','piano'):base=(.012,.014,.018)
+            elif spec.key=='flute':base=(.65,.72,.78)
+            else:base=(.24,.105,.035)
+        if rough is None:
+            rough={'coconut':.88,'kiwi':.85,'peach':.76,'apricot':.67,'orange':.57,'mandarin':.55,'lemon':.56,'lime':.46,
+                   'raspberry':.74,'blackberry':.48,'blueberry':.82,'apple':.34,'plum_fruit':.30,'grape':.31,'muscat':.30}.get(spec.key,.64 if spec.category=='꽃' else .54 if natural else .23 if metal else .34)
+        parts.append((_transformed(mesh,pos,scale,angle),base,metal,rough))
+        if material_specs is not None:
+            points=mesh[0][:,:3];low=points.min(axis=0);span=np.maximum(np.ptp(points,axis=0),.001)
+            local=np.eye(4);local[:3,:3]=rotation((0,0,1),angle)@np.diag(scale);local[:3,3]=pos
+            normalized=np.eye(4);normalized[:3,:3]=np.diag(1/span);normalized[:3,3]=-low/span
+            material_specs.append({'enabled':natural and tint is None,'mapping':normalized@np.linalg.inv(local)})
     def orb(pos,scale,tint=None,angle=0):add(sphere,pos,scale,angle,tint)
-    def rod(points,radius=1.2,tint=None,closed=False):add(tube(points,radius,closed,8),tint=tint)
-    def petal(x,y,z,width,length,angle,tint=None):orb((x,y,z),(width,length,2.5),tint,angle)
+    def rod(points,radius=1.2,tint=None,closed=False):add(surface_tube(points,radius,closed,12),tint=tint)
+    def petal(x,y,z,width,length,angle,tint=None,tilt=0.,twist=0.):
+        vertices,indices=petal_mesh(width,length,leaf=spec.category=='잎' or tint==green)
+        matrix=rotation((1,0,0),tilt)@rotation((0,1,0),twist)
+        vertices=vertices.copy();vertices[:,:3]=vertices[:,:3]@matrix.T;vertices[:,3:]=vertices[:,3:]@matrix.T
+        add((vertices,indices),(x,y,z),angle=angle,tint=tint)
     def stem():
         rod([(0,-7,-3),(1,-26,-3),(3,-37,-2)],1.4,green)
         petal(-7,-25,-3,3,10,.8,green)
-    def radial(count,radius,length,width,z=0,tint=None):
+    def radial(count,radius,length,width,z=0,tint=None,tilt=.20,phase=0.):
         for j in range(count):
-            t=math.tau*j/count
-            petal(radius*math.cos(t),radius*math.sin(t)+5,z,width,length,t-math.pi/2,tint)
+            t=math.tau*j/count+phase
+            petal(radius*math.cos(t),radius*math.sin(t)+5,z+.8*math.sin(j*2.4),width,length,t-math.pi/2,tint,tilt+.06*math.sin(j*1.7),.10*math.sin(j*2.2))
     if spec.category=='꽃':
         if recipe in ('bloom','disc','rosette','star_bloom'):
-            for layer in range(spec.layers):
-                radial(n+layer*2,max(4,14-layer*2),h-layer*1.1,w,layer*3)
-            orb((0,5,spec.layers*3+2),(10 if recipe=='disc' else 4,)*2+(3,),dark if spec.key in ('sunflower','poppy','anemone') else gold)
+            if recipe=='rosette':
+                from botanical_surface import cup_petal
+                for layer in range(spec.layers+1):
+                    count=max(4,n-layer) if spec.key=='rose' else n
+                    radius=(h+14)*((.68 if spec.key=='lotus' else .78 if spec.key=='rose' else .74)**layer)
+                    for j in range(count):
+                        angle=j*math.tau/count+layer*.41+.035*math.sin(j*2.4+layer)
+                        varied_radius=radius*(1+.045*math.sin(j*1.7+layer))
+                        add(cup_petal(varied_radius,math.tau/count,9 if spec.key=='rose' else 5,style=spec.key,phase=j*1.3),
+                            pos=(0,5,layer*4.6),angle=angle)
+                orb((0,5,(spec.layers+1)*4.6),(2,2,1.4),color if spec.key=='rose' else gold)
+            else:
+                for layer in range(spec.layers):
+                    radial(n+layer*2,14-layer*2,h-layer,w,layer*6.,tilt=.25+layer*.16,phase=layer*.43)
+                orb((0,5,spec.layers*5.+2),(10 if recipe=='disc' else 4,)*2+(3,),(.045,.018,.004) if spec.key=='sunflower' else (.012,.009,.018) if spec.key in ('poppy','anemone') else gold)
             if spec.key in ('lily','plum','hibiscus'):
                 for j in range(5):
                     t=j*math.tau/5
@@ -173,17 +215,29 @@ def _object_geometry(spec, color):
         elif recipe=='cup':
             for j in range(n):
                 t=j*math.tau/n
-                orb((9*math.cos(t),9,9*math.sin(t)),(w,h,3),angle=-.18*math.cos(t))
+                petal(9*math.cos(t),9+9*math.sin(t),3+j*.3,w,h,t-math.pi/2,tilt=.95,twist=.08*math.sin(t))
         elif recipe in ('trumpet','funnel'):
             if recipe=='trumpet':radial(n,14,h,w)
-            add(lathe([(0,-12),(3,-11),(5,1),(12 if recipe=='trumpet' else w,16),(11 if recipe=='trumpet' else w-2,18),(4,1),(0,-8)],32),pos=(0,6,7),scale=(1,1,1),angle=-.18,tint=gold if recipe=='trumpet' else color)
+            radius=12 if recipe=='trumpet' else w
+            outer=[(2+(radius-2)*t**2.2,-12+30*t) for t in np.linspace(0,1,32)]
+            inner=[(max(.4,r-.6),y) for r,y in reversed(outer)]
+            vertices,indices=lathe(outer+inner+[outer[0]],64)
+            theta=np.arctan2(vertices[:,2],vertices[:,0]);wave=1+.045*np.cos(n*theta)*np.clip((vertices[:,1]+12)/30,0,1)**3
+            vertices[:,0]*=wave;vertices[:,2]*=wave
+            matrix=rotation((1,0,0),math.pi/2-.18)
+            vertices[:,:3]=vertices[:,:3]@matrix.T;vertices[:,3:]=vertices[:,3:]@matrix.T
+            add((vertices,indices),pos=(0,6,0),tint=gold if recipe=='trumpet' else color)
         elif recipe=='spike':
             rod([(0,-31,0),(0,34,0)],1.5,green)
             for j in range(n):
                 y=-5+j*34/max(1,n-1); side=1 if j%2 else -1
                 if spec.key=='foxglove':
                     add(lathe([(0,5),(4,4),(5,-5),(7,-7),(5,-7),(3,2),(0,3)],20),pos=(side*7,y,1),angle=side*.35)
-                else:orb((side*(5+(n-j)*.3),y,2),(w,h,4))
+                else:
+                    for floret in range(4):
+                        phase=floret*math.tau/4+j*.7
+                        petal(side*6+3*math.cos(phase),y+2*math.sin(phase),3+math.sin(phase),w*.65,h*.55,phase,tilt=.55)
+                    orb((side*6,y,1),(2,2,2),green)
         elif recipe=='umbel':
             for j in range(n):
                 t=j*2.399963; r=math.sqrt(j/n)*23
@@ -192,59 +246,122 @@ def _object_geometry(spec, color):
                     petal(r*math.cos(t)+3*math.cos(angle),r*math.sin(t)+9+3*math.sin(angle),5+6*(1-r/23),3,4,angle)
         stem()
     elif spec.category=='열매':
-        if recipe in ('round_fruit','lobed_fruit','striped_fruit','crowned_fruit'):
-            if recipe=='lobed_fruit':
-                for j in range(n):
-                    t=math.tau*j/n; orb((w*.24*math.cos(t),0,w*.24*math.sin(t)),(w*.78,h,w*.78))
-            else:orb((0,0,0),(w,h,w*.8))
-            if recipe=='striped_fruit':
-                for j in range(n):
-                    t=math.tau*j/n
-                    rod([(w*math.sin(u)*math.cos(t),h*math.cos(u),w*.81*math.sin(u)*math.sin(t)) for u in np.linspace(.15,math.pi-.15,20)],.7,green)
-            if recipe=='crowned_fruit':
-                radial(n,5,5,2,h+1,green)
-        elif recipe=='pear':
-            add(lathe([(0,-h),(w*.6,-h*.8),(w,-h*.2),(w*.7,h*.35),(w*.28,h*.8),(0,h)],32))
-        elif recipe in ('cluster','berry'):
+        if spec.key=='coconut':
+            add(fruit_mesh(spec),tint=(.16,.065,.023))
+            for ex,ey in ((-.24,.32),(.24,.32),(0.,-.12)):
+                ez=math.sqrt(1-ex*ex-ey*ey)
+                orb((ex*w,ey*h,ez*w*.88-.45),(2.15,2.7,.32),(.009,.004,.001),angle=-ex*.6)
+            rng=np.random.default_rng(32010)
+            chunks=[];faces=[];offset=0
+            for j in range(96):
+                y=rng.uniform(-.92,.92);a=rng.uniform(0,math.tau);r=math.sqrt(1-y*y)
+                normal=np.array((r*math.cos(a),y,r*math.sin(a)))
+                start=normal*np.array((w,h,w*.88))
+                tangent=np.cross(normal,(0,1,0));tangent/=max(np.linalg.norm(tangent),.001)
+                length=rng.uniform(1.2,3.8)
+                mesh=tube([start,start+normal*.6+tangent*length*.3,start+normal*.5+tangent*length],.055,False,4)
+                chunks.append(mesh[0]);faces.append(mesh[1]+offset);offset+=len(mesh[0])
+            add((np.concatenate(chunks),np.concatenate(faces)),tint=(.11,.045,.012))
+        elif recipe in ('round_fruit','lobed_fruit','striped_fruit','crowned_fruit','pear'):
+            add(fruit_mesh(spec))
+            if recipe=='crowned_fruit':radial(n,5,5,2,h+1,green)
+        elif recipe=='berry':
+            # 작은 과립을 빈 입구 둘레와 아래쪽에 쌓아 산딸기와 검은딸기를 구분합니다.
+            rows=7 if spec.key=='raspberry' else 8
+            for row in range(rows):
+                u=row/(rows-1)
+                radius=(12.5*(1-.65*u*u) if spec.key=='raspberry' else 12*math.sin(.40+u*2.40))
+                count=max(5,round(math.tau*radius/4.6))
+                for j in range(count):
+                    angle=(j+.5*(row%2))*math.tau/count
+                    orb((radius*math.cos(angle),17-row*4.4,radius*math.sin(angle)),(2.7,2.8,2.7))
+            if spec.key=='blackberry':orb((0,3,0),(7,16,7))
+        elif recipe=='cluster':
             for row in range(spec.layers):
                 count=max(1,n-row)
                 for j in range(count):
                     t=j*math.tau/count
                     orb((w*count*.42*math.cos(t),(spec.layers/2-row)*h*1.35,w*count*.42*math.sin(t)),(w,h,w))
+                    if spec.key=='blueberry':
+                        # 분말층의 무광 과피 위에 오각 꽃받침과 움푹한 중심을 실제 부품으로 붙입니다.
+                        cx=w*count*.42*math.cos(t);cy=(spec.layers/2-row)*h*1.35;cz=w*count*.42*math.sin(t)
+                        orb((cx,cy,cz+w*.97),(2.7,2.7,.45),(.022,.025,.05))
+                        for tip in range(5):
+                            a=tip*math.tau/5
+                            petal(cx+2.4*math.cos(a),cy+2.4*math.sin(a),cz+w*.99,.65,2.1,a-math.pi/2,(.045,.055,.09),tilt=.2)
+
+            if recipe=='cluster':
+                top=spec.layers*h*.675
+                rod([(0,top-4,-2),(1,top+5,-2),(5,top+8,-1)],1.2,(.13,.065,.015))
+                for side in (-1,1):rod([(1,top+2,-2),(side*w*n*.25,top-1,-1)],.6,(.09,.13,.015))
         elif recipe=='paired_fruit':
             for side in (-1,1):
                 orb((side*13,-9,0),(w,h,w));rod([(side*13,1,0),(side*6,22,0),(0,30,0)],1,green)
         elif recipe=='banana':
             for j in range(n):
-                rod([(j*6-6+12*math.cos(t),h*math.sin(t),j*3) for t in np.linspace(-1.2,1.2,24)],w)
+                points=[(j*6-6+12*math.cos(t),h*math.sin(t),j*3) for t in np.linspace(-1.2,1.2,40)]
+                add(surface_tube(points,w,False,20))
+                for point in (points[0],points[-1]):orb(point,(w,)*3)
         elif recipe=='citrus':
-            orb((0,0,-4),(w,h,w*.60))
-            # 정면의 방사 단면은 감귤과 키위의 구조를 보여줍니다.
-            for j in range(n):
-                t=math.tau*j/n
-                rod([(0,0,w*.60),(w*.82*math.cos(t),h*.82*math.sin(t),w*.50)],.65,(.78,.72,.50))
+            add(fruit_mesh(spec))
         elif recipe in ('seeded_fruit','pineapple','dragonfruit'):
-            add(lathe([(0,-h),(w*.6,-h*.55),(w,h*.15),(w*.75,h*.75),(0,h)],32))
-            for j in range(n):
-                t=j*2.399963; y=-h*.55+(j%7)*h*.18
-                r=w*math.sqrt(max(.1,1-(y/h)**2))
-                if recipe=='dragonfruit':petal(r*math.cos(t),y,r*math.sin(t),3,8,t,green)
-                else:orb((r*math.cos(t),y,r*math.sin(t)),(1.2,2,1.2),gold)
+            body=fruit_mesh(spec);add(body)
+            body_vertices=body[0].reshape(49,81,6)
+            for j in range(0 if spec.key in ('papaya','pineapple') else n*spec.layers):
+                t=j*2.399963
+                sample=body_vertices[9+(j%7)*5,int((t%math.tau)/math.tau*80)]
+                point,normal=sample[:3],sample[3:]
+                if recipe=='dragonfruit':
+                    mesh=petal_mesh(3.0,8,leaf=True)
+                    scale_vertices,scale_indices=mesh;scale_vertices=scale_vertices.copy()
+                    scale_vertices[:,2]+=2.5+.30*scale_vertices[:,1]
+                    scale_vertices[:,4]-=.30*scale_vertices[:,5]
+                    scale_vertices[:,3:]/=np.linalg.norm(scale_vertices[:,3:],axis=1)[:,None]
+                    mesh=(scale_vertices,scale_indices)
+                else:
+                    mesh=_transformed(sphere,scale=(.65,1.15,.25))
+                vertices,indices=mesh;vertices=vertices.copy()
+                axis=np.cross((0,0,1),normal);length=np.linalg.norm(axis)
+                matrix=rotation(axis,math.acos(float(np.clip(normal[2],-1,1)))) if length>1e-6 else np.eye(3)
+                vertices[:,:3]=vertices[:,:3]@matrix.T+point+normal*.12
+                vertices[:,3:]=vertices[:,3:]@matrix.T
+                add((vertices,indices),tint=green if recipe=='dragonfruit' else (.42,.24,.055))
             if recipe=='pineapple':
                 for j in range(7):petal((j-3)*3,h+7,0,2,12,(j-3)*.2,green)
         elif recipe=='starfruit':
-            for j in range(5):
-                t=j*math.tau/5
-                orb((w*.55*math.cos(t),0,w*.55*math.sin(t)),(w*.4,h,w*.4))
-        if recipe not in ('paired_fruit','banana'):
+            add(fruit_mesh(spec))
+        if recipe not in ('paired_fruit','banana','cluster','berry','pineapple') and spec.key!='coconut':
             rod([(0,h*.8,0),(2,h+6,0),(5,h+9,1)],1.5,green)
             petal(8,h+4,1,3,9,-.8,green)
     elif spec.category=='잎':
         rod([(0,-32,0),(0,26,0)],1.2,green)
-        if recipe in ('palmate','palm','compound'):
+        if recipe in ('leaf','round_leaf','heart_leaf','lobed_leaf') or spec.key in ('maple','ivy','grape_leaf','fig_leaf','ginkgo','monstera'):
+            from botanical_surface import leaf_surface
+            add(leaf_surface(spec.key,w,h),pos=(0,3,0))
+            if spec.key=='maple':
+                for t in (-1.18,-.60,0.,.60,1.18):
+                    rod([(0,3,3),(h*.62*math.sin(t),3+h*.62*math.cos(t),3.7)],.18,(.12,.18,.025))
+            elif spec.key=='ginkgo':
+                for t in np.linspace(-1.05,1.05,13):
+                    rod([(0,3-h*.35,3),(h*.88*math.sin(t),3+h*(.88*math.cos(t)-.35),3.6)],.10,(.24,.26,.045))
+            else:
+                for y0 in (-16,-5,6,17):
+                    for side in (-1,1):rod([(0,y0,3),(side*w*.25,y0+4,4.8)],.13,(.09,.20,.035))
+        elif recipe in ('palmate','palm','compound'):
             for j in range(n):
                 t=-1.25+2.5*j/max(1,n-1)
-                petal(13*math.sin(t),7+13*math.cos(t),j*.12,w,h*.6,-t)
+                petal(13*math.sin(t),7+13*math.cos(t),j*.65,w,h*.6,-t)
+        elif spec.key=='pine':
+            # count는 마디 수가 아니라 한 묶음의 바늘 수입니다.
+            for cluster in range(spec.layers*3):
+                y=-24+cluster*48/(spec.layers*3-1)
+                phase=cluster*2.399963
+                for needle in range(n):
+                    a=phase+(needle-.5)*.16
+                    tip=np.array((math.cos(a)*h*.70,y+11,math.sin(a)*h*.36))
+                    base=np.array((0.,y,0.))
+                    points=[base+(tip-base)*t+np.array((0,3*math.sin(math.pi*t),0)) for t in np.linspace(0,1,10)]
+                    rod(points,.38)
         elif recipe in ('pinnate','fern','needle'):
             for j in range(n):
                 y=-22+j*46/max(1,n-1)
@@ -255,27 +372,38 @@ def _object_geometry(spec, color):
         elif recipe=='fan':
             for j in range(n):
                 t=-1.1+2.2*j/(n-1)
-                petal(12*math.sin(t),5+12*math.cos(t),0,5,h*.75,-t)
+                petal(12*math.sin(t),5+12*math.cos(t),j*.45,5,h*.75,-t)
         elif recipe in ('split_leaf','lobed_leaf'):
             for j in range(n):
                 y=-15+j*32/(n-1); length=w*(.4+.6*math.sin((j+1)*math.pi/(n+1)))
                 for side in (-1,1):petal(side*length*.5,y,0,4,length,-side*1.0)
         elif recipe=='heart_leaf':
             petal(-w*.32,5,0,w*.65,h*.8,-.35);petal(w*.32,5,0,w*.65,h*.8,.35)
-        else:orb((0,3,0),(w,h,2.4))
-        for j in range(1,min(n,12)):
-            y=-16+j*32/min(n,12)
-            for side in (-1,1):rod([(0,y,3),(side*w*.68,y+8,3)],.45,green)
+        else:petal(0,3,0,w,h,0)
+        if recipe not in ('palmate','palm','compound','pinnate','fern','needle','fan','split_leaf','lobed_leaf','heart_leaf'):
+            def leaf_front(x,y):
+                unit_y=(y-3)/h
+                return h*(.13*(1-unit_y*unit_y)-.055*unit_y)+.20*w*(x/w)**2+.55
+            ys=np.linspace(-h*.90+3,h*.90+3,17)
+            rod([(0,y,leaf_front(0,y)) for y in ys],.20,(.12,.22,.035))
+            for j in range(1,9):
+                y=-h*.65+3+j*h*.15
+                length=w*.72*math.sqrt(max(0,1-((y-3)/h)**2))
+                for side in (-1,1):
+                    points=[(side*length*t,y+h*.13*t,leaf_front(side*length*t,y+h*.13*t)) for t in np.linspace(0,1,7)]
+                    rod(points,.10,(.12,.22,.035))
     else:
         silver=(.65,.72,.78)
         if recipe in ('bowed','guitar','lute'):
-            if recipe=='lute':orb((0,-10,0),(w,h*.8,7))
-            else:
-                orb((0,-17,0),(w,h*.53,7));orb((0,3,0),(w*.72,h*.40,6))
-            add(box((5,34,5),1,3),pos=(0,24,2),tint=dark)
-            add(box((9,9,5),1,3),pos=(0,44,2))
-            orb((0,-6,7),(4,5,1),dark)
-            for j in range(min(n,8)):rod([((j-(n-1)/2)*.5,-23,8),((j-(n-1)/2)*.5,43,5)],.22,silver)
+            add(instrument_body(w,h*.85,bowed=recipe=='bowed',lute=recipe=='lute'),pos=(0,-10,0))
+            neck_bottom=h*.85-13;neck_top=neck_bottom+23
+            add(box((4.5,25,3.5),.65,4),pos=(0,(neck_bottom+neck_top)/2,3),tint=(.025,.012,.007))
+            add(box((7,8,4),.8,4),pos=(0,neck_top+4,2))
+            if recipe=='bowed':
+                for side in (-1,1):rod([(side*7,-4,5),(side*5,-8,5.5),(side*7,-13,5),(side*5,-17,5)],.55,(.012,.006,.003))
+            else:orb((0,-5,5.9),(w*.22,h*.19,.18),(.008,.004,.002))
+            add(box((w*.5,2,2),.3,3),pos=(0,-h*.5-10,6),tint=(.065,.027,.009))
+            for j in range(min(n,8)):rod([((j-(n-1)/2)*.42,-h*.5-10,7),((j-(n-1)/2)*.42,neck_top+4,5)],.12,silver)
             if spec.key in ('cello','bass'):rod([(0,-h-10,0),(0,-h-18,0)],.8,silver)
         elif recipe in ('harp','lyre'):
             if recipe=='harp':points=[(-w,-h,0),(-w*.7,h,0),(w,h*.4,0),(-w,-h,0)]
@@ -290,7 +418,9 @@ def _object_geometry(spec, color):
             for j in range(n):
                 x=-w+(j+.5)*2*w/n
                 length=h*(1.3-.65*j/n) if recipe=='bars' else h*.6
-                add(box((w*1.6/n,length,3),.5,2),pos=(x,-h*.25,7),tint=silver if j%3 else color)
+                add(box((w*1.6/n,length,3),.5,2),pos=(x,-h*.25,7),tint=(.78,.75,.65) if recipe!='bars' else color,metal=0.)
+                if recipe=='piano' and j%7 not in (2,6):
+                    add(box((w*.85/n,length*.55,2),.3,2),pos=(x+w/n,-h*.10,9.4),tint=(.008,.008,.01),metal=0.)
                 if recipe=='accordion':rod([(x,-h,0),(x,h,0)],1.4,color)
         elif recipe in ('flute','reed'):
             rod([(0,-h,0),(0,h,0)],w)
@@ -307,7 +437,8 @@ def _object_geometry(spec, color):
             for j in range(count):
                 x=(j-(count-1)/2)*w*1.7
                 profile=[(0,-h),(w*.7,-h),(w,h),(0,h)] if recipe=='bowl_drum' else [(0,-h),(w,-h),(w,h),(0,h)]
-                add(lathe(profile,32),pos=(x,0,0))
+                add(lathe(profile,64),pos=(x,0,0),metal=1. if spec.key=='snare' else None)
+                add(lathe([(0,0),(w*.94,0),(w*.94,.35),(0,.35)],64),pos=(x,h+.15,0),tint=(.65,.59,.46),metal=0.,rough=.75)
                 for k in range(n if count==1 else 6):
                     t=k*math.tau/(n if count==1 else 6)
                     orb((x+w*math.cos(t),0,w*math.sin(t)),(2,3,2),silver)
@@ -331,32 +462,35 @@ def _ring_geometry():
     return tuple(rings)
 
 
-def build_geometry(design):
-    """날짜별 주연과 서로 다른 두 월 모티프를 명시적 대상 사전에서 렌더합니다."""
-    from calendar_catalog import OBJECTS
-    subject=OBJECTS[design.object_id]
+def build_geometry(design, material_specs=None):
+    """날짜 매핑의 주제 하나만 충분한 크기로 표시하며 보조물과 고리는 만들지 않습니다."""
+    from calendar_specials import subject_for_id
+    subject=subject_for_id(design.object_id)
     if subject.recipe!=design.shape_recipe:raise ValueError('대상과 형상 규칙이 일치하지 않습니다.')
     accent=tuple((int(design.accent[i:i+2],16)/255)**2.2 for i in (1,3,5))
-    slots={
-        'bouquet':((-28,-20,-8),(29,-16,3)), 'diagonal':((-28,-26,-5),(28,27,2)),
-        'shelter':((-29,15,-8),(29,-18,1)), 'stage':((-30,-21,-6),(30,-21,1)),
-        'triangle':((-27,-25,-3),(27,-25,2)), 'fan':((-30,9,-6),(30,9,1)),
-    }
-    left,right=slots[design.composition]
-    variation=design.year_variant
+    if subject.category=='열매':
+        import colorsys
+        hue,saturation,value=colorsys.rgb_to_hsv(*accent)
+        accent=colorsys.hsv_to_rgb(hue,min(.96,saturation*1.35),value*.85)
+    local_materials=[] if material_specs is not None else None
+    parts=(_object_geometry(subject,accent,local_materials) if local_materials is not None and subject.category in ('꽃','잎','열매')
+           else _object_geometry(subject,accent))
+    points=np.concatenate([mesh[0][:,:3] for mesh,*_ in parts])
+    low,high=points.min(axis=0),points.max(axis=0)
+    center=(low+high)/2
+    size=96/max(high-low)*(.96+.04*design.year_variant)
+    angle=(design.date.day-16)*.006
     result=[]
-    objects=((subject,(0,5,6),.73,accent),(OBJECTS[design.anchor_id],left,.34,None),
-             (OBJECTS[design.companion_id],right,.34,None))
-    for index,(spec,pos,size,color) in enumerate(objects):
-        tint=color or tuple((int(spec.color[i:i+2],16)/255)**2.2 for i in (1,3,5))
-        # 연도별 깊이 변화와 함께 날짜별로 세 대상의 기울기를 바꿉니다.
-        angle=(design.date.day-16)*.006*(1 if index==0 else (-1 if index==1 else 1))
-        scale=(size*(.95+.1*variation),size*(.95+.1*variation),size*(.90+.2*variation))
-        for mesh,base,metal,rough in _object_geometry(spec,tint):
-            result.append((_transformed(mesh,pos,scale,angle),base,metal,rough))
-    silver=(.66,.74,.80)
-    for mesh in _ring_geometry():
-        result.append((mesh,silver,1.,.23))
+    if material_specs is not None:
+        global_matrix=np.eye(4);global_matrix[:3,:3]=rotation((0,0,1),angle)*size
+        global_matrix[:3,3]=-global_matrix[:3,:3]@center
+        inverse=np.linalg.inv(global_matrix)
+        material_specs.extend([{'enabled':row['enabled'],'mapping':row['mapping']@inverse} for row in local_materials]
+                              if local_materials else [{'enabled':False,'mapping':np.eye(4)} for _ in parts])
+    for mesh,base,metal,rough in parts:
+        vertices,indices=mesh
+        vertices=vertices.copy();vertices[:,:3]-=center
+        result.append((_transformed((vertices,indices),scale=(size,)*3,angle=angle),base,metal,rough))
     return result
 
 
@@ -476,9 +610,29 @@ class CalendarRenderer:
         width,height=dimensions
         self.thread_id=threading.get_ident(); self.size=size; self.dimensions=dimensions; self.ctx=None; self.resources=[]; self.vaos=[]; self.buffers=[]; self.parts=[]; self.design=None
         self.output_resources=[]; self.output_size=0; self.output=None; self.observatory_key=None
+        self.species_texture=None;self.species_key=None;self.material_specs=[];self.atlas_path=None;self.atlas_image=None
         try:
             self.ctx=moderngl.create_standalone_context(require=330)
-            self.program=self.ctx.program(vertex_shader=VERTEX,fragment_shader=FRAGMENT); self.resources.append(self.program)
+            vertex_shader,fragment_shader=organic_shaders(VERTEX,FRAGMENT)
+            self.program=self.ctx.program(vertex_shader=vertex_shader,fragment_shader=fragment_shader); self.resources.append(self.program)
+            import sys
+            asset_root=Path(getattr(sys,'_MEIPASS',Path(__file__).resolve().parents[1]))/'assets'
+            from material_catalog32 import load_catalog
+            self.material_catalog=load_catalog(asset_root/'materials')
+            material=QImage(str(asset_root/'materials/코코넛_껍질_섬유.png')).convertToFormat(QImage.Format.Format_RGBA8888)
+            if material.isNull():raise RuntimeError('코코넛 표면 재질을 읽을 수 없습니다.')
+            self.shell_texture=self.ctx.texture((material.width(),material.height()),4,bytes(material.constBits()))
+            self.resources.append(self.shell_texture);self.shell_texture.build_mipmaps()
+            self.shell_texture.filter=(moderngl.LINEAR_MIPMAP_LINEAR,moderngl.LINEAR)
+            self.shell_texture.repeat_x=True;self.shell_texture.repeat_y=True
+            self.program['shell_texture'].value=1
+            self.detail_textures=[]
+            for name in ('과피_미세결_높이맵.png','식물_미세결_높이맵.png'):
+                heightmap=QImage(str(asset_root/'materials'/name)).convertToFormat(QImage.Format.Format_RGBA8888)
+                if heightmap.isNull():raise RuntimeError('표면 높이 재질을 읽을 수 없습니다: '+name)
+                texture=self.ctx.texture((heightmap.width(),heightmap.height()),4,bytes(heightmap.constBits()))
+                self.resources.append(texture);self.detail_textures.append(texture);texture.build_mipmaps()
+                texture.filter=(moderngl.LINEAR_MIPMAP_LINEAR,moderngl.LINEAR);texture.repeat_x=True;texture.repeat_y=True
             self.color=self.ctx.renderbuffer(dimensions,components=4,samples=4); self.resources.append(self.color)
             self.depth=self.ctx.depth_renderbuffer(dimensions,samples=4); self.resources.append(self.depth)
             self.target=self.ctx.framebuffer([self.color],self.depth); self.resources.append(self.target)
@@ -523,10 +677,28 @@ class CalendarRenderer:
         self.output=self.ctx.framebuffer([texture]); self.output_resources.append(self.output)
         self.output_size=size
 
-    def set_date(self,value):
-        self._assert_thread(); design=design_for_date(value)
+    def _set_species_texture(self,key):
+        if key==self.species_key:return
+        if self.species_texture is not None:
+            self.species_texture.release();self.resources.remove(self.species_texture);self.species_texture=None
+        entry=self.material_catalog.get(key)
+        if entry is not None and entry['enabled']:
+            from material_catalog32 import extract_tile
+            if self.atlas_path!=entry['path']:
+                self.atlas_image=QImage(str(entry['path'])).convertToFormat(QImage.Format.Format_RGBA8888)
+                self.atlas_path=entry['path']
+            tile=extract_tile(self.atlas_image,entry['index'])
+            self.species_texture=self.ctx.texture((tile.width(),tile.height()),4,bytes(tile.constBits()))
+            self.resources.append(self.species_texture);self.species_texture.build_mipmaps()
+            self.species_texture.filter=(moderngl.LINEAR_MIPMAP_LINEAR,moderngl.LINEAR)
+            self.species_texture.repeat_x=False;self.species_texture.repeat_y=False
+        self.species_key=key
+
+    def set_date(self,value,country='KR'):
+        self._assert_thread(); design=design_for_date(value,country)
         if self.design==design:return
-        self._clear_meshes(); self.parts=build_geometry(design)
+        self._clear_meshes(); self.material_specs=[];self.parts=build_geometry(design,self.material_specs)
+        self._set_species_texture(design.object_id)
         for (vertices,indices),_,_,_ in self.parts:
             vertex=self.ctx.buffer(vertices.tobytes()); self.buffers.append(vertex)
             index=self.ctx.buffer(indices.tobytes()); self.buffers.append(index)
@@ -546,6 +718,11 @@ class CalendarRenderer:
                 index = self.ctx.buffer(indices.tobytes()); self.buffers.append(index)
                 self.vaos.append(self.ctx.vertex_array(self.program, [(vertex, '3f 3f', 'in_position', 'in_normal')], index))
             self.observatory_key = key
+        self.program['species_enabled'].value=0
+        self.program['organic_kind'].value=0
+        self.program['skin_kind'].value=0
+        self.program['detail_strength'].value=0.
+        self.program['translucency'].value=0.
         world = np.asarray(world_matrix(scene), dtype=float)
         agents = agent_world_positions(scene, elapsed)
         transition = scene['transition']; blend = transition * transition * (3 - 2 * transition)
@@ -577,12 +754,28 @@ class CalendarRenderer:
         self.downsample_vao.render(moderngl.TRIANGLES, vertices=3)
         return self._image(self.output, self.output_size, self.output_size)
 
-    def _draw(self,value,elapsed):
-        self._assert_thread(); transforms=matrices(elapsed); self.set_date(value)
+    def _draw(self,value,elapsed,country='KR'):
+        self._assert_thread(); transforms=matrices(elapsed); self.set_date(value,country)
+        from calendar_specials import subject_for_id
+        subject=subject_for_id(self.design.object_id)
+        self.program['organic_kind'].value=2 if subject.key=='coconut' else (1 if subject.category in ('꽃','열매','잎','특집') else 3)
+        self.program['skin_kind'].value={'watermelon':1,'melon':2,'kiwi':3,'pineapple':4}.get(subject.key,0)
+        plant=subject.category in ('꽃','잎')
+        self.detail_textures[1 if plant else 0].use(location=2)
+        self.program['detail_texture'].value=2
+        self.program['detail_strength'].value=.035 if plant else {'orange':.23,'mandarin':.20,'lemon':.18,'lime':.16,'kiwi':.27,'apple':.045,'peach':.085}.get(subject.key,.075)
+        self.program['translucency'].value=.8 if plant else 0.
+        self.shell_texture.use(location=1)
+        self.program['species_texture'].value=3
+        if self.species_texture is not None:self.species_texture.use(location=3)
+        self.program['species_projection'].value=1 if subject.category=='열매' else 0
         self.ctx.enable(moderngl.DEPTH_TEST)
         self.target.use(); self.target.clear(0,0,0,0,depth=1)
         for index,(_,color,metal,rough) in enumerate(self.parts):
-            transform=transforms[0] if index<len(self.parts)-3 else transforms[index-len(self.parts)+4]
+            metadata=self.material_specs[index]
+            self.program['species_enabled'].value=int(self.species_texture is not None and metadata['enabled'])
+            self.program['species_mapping'].write(metadata['mapping'].T.astype('f4').tobytes())
+            transform=transforms[0]
             self.program['model'].write(transform.T.astype('f4').tobytes())
             self.program['metallic'].value=metal; self.program['base_color'].value=color; self.program['roughness'].value=rough
             self.vaos[index].render(moderngl.TRIANGLES)
@@ -594,16 +787,16 @@ class CalendarRenderer:
         image=QImage(raw,width,height,width*4,QImage.Format.Format_RGBA8888_Premultiplied).copy().mirrored(False,True)
         return image
 
-    def render(self,value,elapsed=0):
-        self._draw(value,elapsed)
+    def render(self,value,elapsed=0,country='KR'):
+        self._draw(value,elapsed,country)
         self.ctx.disable(moderngl.DEPTH_TEST)
         self.output.use(); self.texture.use(location=0)
         self.downsample_vao.render(moderngl.TRIANGLES,vertices=3)
         return self._image(self.output,self.output_size,self.output_size)
 
-    def render_original(self,value,elapsed=0):
+    def render_original(self,value,elapsed=0,country='KR'):
         """검증·내보내기 때만 실제 직사각형 원본 전체를 CPU로 읽습니다."""
-        self._draw(value,elapsed)
+        self._draw(value,elapsed,country)
         return self._image(self.resolved,*self.dimensions)
 
     def _clear_meshes(self):
@@ -617,6 +810,7 @@ class CalendarRenderer:
         self.output_resources.clear(); self.output=None; self.output_size=0
         for value in reversed(self.resources):value.release()
         self.resources.clear()
+        self.species_texture=None;self.species_key=None;self.atlas_image=None;self.atlas_path=None;self.material_specs=[]
         if self.ctx is not None:self.ctx.release(); self.ctx=None
 
 

@@ -1,0 +1,1592 @@
+[
+  {
+    "path": "assets/babel-LICENSE.txt",
+    "bytes": 1558,
+    "sha256": "0d8d577ad579df852248499084f642d67563c0667e79043d780129ef3b561249",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/babel-LICENSE.txt"
+  },
+  {
+    "path": "assets/holiday-calendar/AD.json",
+    "bytes": 109055,
+    "sha256": "89b48a4b35ab325f18c2b26b9b817a928fda380df7add74f95a53f6f4df277b4",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/AD.json"
+  },
+  {
+    "path": "assets/holiday-calendar/AE.json",
+    "bytes": 88053,
+    "sha256": "16b3210cf75f0ca7363abe6aaf0d59cdae81528c18577eeef556e7c7a27df5ef",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/AE.json"
+  },
+  {
+    "path": "assets/holiday-calendar/AF.json",
+    "bytes": 107195,
+    "sha256": "19c3dfe3a3ca4e6d9e7bff847d0baf72e84627ad18f3d2453f32c8d64d8b4ea4",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/AF.json"
+  },
+  {
+    "path": "assets/holiday-calendar/AG.json",
+    "bytes": 99617,
+    "sha256": "c735174f08eacb7c5f3aecd339183b3d205834a17db45fb59761e6853ff6e0b4",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/AG.json"
+  },
+  {
+    "path": "assets/holiday-calendar/AI.json",
+    "bytes": 137955,
+    "sha256": "4ae68e69e7ce3e0d68448ef0289b6a2791128959fa221859c0f15c18d316f377",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/AI.json"
+  },
+  {
+    "path": "assets/holiday-calendar/AL.json",
+    "bytes": 173100,
+    "sha256": "254b91fc97daf92d6e28d2902e0a12fac5261e5bf481c04c530d62ae511f372c",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/AL.json"
+  },
+  {
+    "path": "assets/holiday-calendar/AM.json",
+    "bytes": 114605,
+    "sha256": "6beb1edccccfa67d335179dc453d6fd4f1e264175e67c9fb30be2c69032ead41",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/AM.json"
+  },
+  {
+    "path": "assets/holiday-calendar/AO.json",
+    "bytes": 146401,
+    "sha256": "c4d84d123548962ab779ab35cd0b2dc0b8a6a1b8b85cda846aca249127bc7f45",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/AO.json"
+  },
+  {
+    "path": "assets/holiday-calendar/AQ.json",
+    "bytes": 33723,
+    "sha256": "b78ac27d248cf14cd27bc61954a8370e17f3ab0a7fedcc9b622f245ae5b88ccc",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/AQ.json"
+  },
+  {
+    "path": "assets/holiday-calendar/AR.json",
+    "bytes": 166947,
+    "sha256": "62d777f980c937a67ee87ed40fde1b412b08400cd6bef2612f1df9a7dfe6b1ea",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/AR.json"
+  },
+  {
+    "path": "assets/holiday-calendar/AS.json",
+    "bytes": 202706,
+    "sha256": "2aa547700d84a2aede7d01f947238523c8b9fd4b030ea18f968f6c603d33e856",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/AS.json"
+  },
+  {
+    "path": "assets/holiday-calendar/AT.json",
+    "bytes": 101137,
+    "sha256": "b1927af95ac3de7d6d29b201602b3264c9c334f4f42c8dfbcec9160e16f0519a",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/AT.json"
+  },
+  {
+    "path": "assets/holiday-calendar/AU.json",
+    "bytes": 54154,
+    "sha256": "3600d6cd4e53081117ba6e70e2ffb9635f3c94437608055f485062c2eb28ce4e",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/AU.json"
+  },
+  {
+    "path": "assets/holiday-calendar/AW.json",
+    "bytes": 88853,
+    "sha256": "af67a872de582e358b651135d1a10abb068e3b585469d3b4663e8f7cc86d2b0b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/AW.json"
+  },
+  {
+    "path": "assets/holiday-calendar/AX.json",
+    "bytes": 273874,
+    "sha256": "a31ff99263749306ed24507a0cfe25d8f06fe9b19dd49b1ddfef1248edd8ddfb",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/AX.json"
+  },
+  {
+    "path": "assets/holiday-calendar/AZ.json",
+    "bytes": 206790,
+    "sha256": "45d15b64928575c8f1d73c0d08b5249d4772b586c5826955f37229e93637ce79",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/AZ.json"
+  },
+  {
+    "path": "assets/holiday-calendar/BA.json",
+    "bytes": 83469,
+    "sha256": "a9f40e8257177d3d7bae1886e9c1ad85a171b3b1af8e1afcaba1f803d788b147",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/BA.json"
+  },
+  {
+    "path": "assets/holiday-calendar/BB.json",
+    "bytes": 103268,
+    "sha256": "739783ea358f06429eb52f70e9f61c5bcc032e5f191a6259cf9de614969a1bc8",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/BB.json"
+  },
+  {
+    "path": "assets/holiday-calendar/BD.json",
+    "bytes": 132442,
+    "sha256": "fa6ab8d83e0a4b0f7041a15b1c41b4b0ca8ee186e5205e4d93b768c1c81fdd9e",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/BD.json"
+  },
+  {
+    "path": "assets/holiday-calendar/BE.json",
+    "bytes": 91739,
+    "sha256": "66dfc806e659812ee72049e633a2f99ef95159c4cecd137acb6a39370a170650",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/BE.json"
+  },
+  {
+    "path": "assets/holiday-calendar/BF.json",
+    "bytes": 129449,
+    "sha256": "b7981fc7d0d1b0118460cabcdc45c4620b1d0629a3ee85eb8dcfb82797bf4632",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/BF.json"
+  },
+  {
+    "path": "assets/holiday-calendar/BG.json",
+    "bytes": 153120,
+    "sha256": "6e3f0085741674567f34c2fdeb456be4a64cedc2e7691f3ae890ef99c61a1b1e",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/BG.json"
+  },
+  {
+    "path": "assets/holiday-calendar/BH.json",
+    "bytes": 96281,
+    "sha256": "cfd3e0191238ea9ece844ed7ddec17cc3d1fdf9d7ffe97a2e52786977b25d599",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/BH.json"
+  },
+  {
+    "path": "assets/holiday-calendar/BI.json",
+    "bytes": 163365,
+    "sha256": "7a22f9d1ff666562a60f911cab3246cc37c721789782711cb6d3e3952b8f8b5a",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/BI.json"
+  },
+  {
+    "path": "assets/holiday-calendar/BJ.json",
+    "bytes": 105431,
+    "sha256": "77b6c7bc6abc3ed811500521d28c9869e3d214729a280c7846ad7c52fd49ce93",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/BJ.json"
+  },
+  {
+    "path": "assets/holiday-calendar/BL.json",
+    "bytes": 92803,
+    "sha256": "aa035b0aa23319ee1f8ec27b328eaa9bcfd53945efad98d534cc41bfbf007a5e",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/BL.json"
+  },
+  {
+    "path": "assets/holiday-calendar/BM.json",
+    "bytes": 88106,
+    "sha256": "e0ef8b6be6fad716f69aa198442216ef7be650355efe930809c4469a27e76bb6",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/BM.json"
+  },
+  {
+    "path": "assets/holiday-calendar/BN.json",
+    "bytes": 155168,
+    "sha256": "686f6cb74571d4fdcfe086a702651127fde5b7e40e114242ee0bf2215fbb6e90",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/BN.json"
+  },
+  {
+    "path": "assets/holiday-calendar/BO.json",
+    "bytes": 102706,
+    "sha256": "23ea6b8b61f0ebcc5d6bfc3a0b891bdcb4851f3b518c5d3e5c8de419d9dc7459",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/BO.json"
+  },
+  {
+    "path": "assets/holiday-calendar/BQ.json",
+    "bytes": 77087,
+    "sha256": "d7b88cbbd7599b24969a0a897ad5d01ae59d7d2fdcc40e061241e61c5fb64c1e",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/BQ.json"
+  },
+  {
+    "path": "assets/holiday-calendar/BR.json",
+    "bytes": 87084,
+    "sha256": "bccda86c16f412bc29415f35080efce7f0e9e0149573afe42749c5debb8c599a",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/BR.json"
+  },
+  {
+    "path": "assets/holiday-calendar/BS.json",
+    "bytes": 98292,
+    "sha256": "2c45f198b140b51fff5e9368deab734574b00171cc77da3ec9dd11903517ffef",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/BS.json"
+  },
+  {
+    "path": "assets/holiday-calendar/BT.json",
+    "bytes": 166570,
+    "sha256": "3eb5fe0e278b13f43aad78857903cbf61b18dc5f8aef7ef745bcb6282416ecfd",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/BT.json"
+  },
+  {
+    "path": "assets/holiday-calendar/BV.json",
+    "bytes": 4197,
+    "sha256": "855d97e8000a06538666e880c5d5be5fa4c159ac6b953cdb8637873cd7583ff5",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/BV.json"
+  },
+  {
+    "path": "assets/holiday-calendar/BW.json",
+    "bytes": 123880,
+    "sha256": "d5d9b49ca410d3204457d6caaf376c10efe917fc7f58f987c33cfbc9ade84fc3",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/BW.json"
+  },
+  {
+    "path": "assets/holiday-calendar/BY.json",
+    "bytes": 103855,
+    "sha256": "dfa0ba5b64e964f837d6821a637f0a6d91c22bccee9feddbf6ccfcb87b058fe8",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/BY.json"
+  },
+  {
+    "path": "assets/holiday-calendar/BZ.json",
+    "bytes": 121389,
+    "sha256": "b3b65bfa4fef94563c0da02c327587d1b68433db431db90d3da5589f647667cb",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/BZ.json"
+  },
+  {
+    "path": "assets/holiday-calendar/CA.json",
+    "bytes": 44693,
+    "sha256": "2a0f13f2c807257818677f2a77f282f43aa096b6097777539f05b3e78717e1e5",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/CA.json"
+  },
+  {
+    "path": "assets/holiday-calendar/CC.json",
+    "bytes": 113430,
+    "sha256": "01bfa455c2194672f2295fd4974e9d372efab61ef2571cd8fd76d39337d3290e",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/CC.json"
+  },
+  {
+    "path": "assets/holiday-calendar/CD.json",
+    "bytes": 120865,
+    "sha256": "928df6bc33e589abef204d41f62813c87d0de351ca2ebe17afede0fff2b6f8d2",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/CD.json"
+  },
+  {
+    "path": "assets/holiday-calendar/CF.json",
+    "bytes": 107646,
+    "sha256": "36590879dcd27e73ddddcf510491b3d07011244687983898c73345ba38f98aed",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/CF.json"
+  },
+  {
+    "path": "assets/holiday-calendar/CG.json",
+    "bytes": 77922,
+    "sha256": "4a6698ca90fe3d871963b69485bdcc4f62ea2a9e1de8921529d13b60bc1031cc",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/CG.json"
+  },
+  {
+    "path": "assets/holiday-calendar/CH.json",
+    "bytes": 33427,
+    "sha256": "c444910fdeec2cba162e1a1353a0474c218f2443d7ae6a69a4c895c721bb77dc",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/CH.json"
+  },
+  {
+    "path": "assets/holiday-calendar/CI.json",
+    "bytes": 107573,
+    "sha256": "91e8e7f6f28ce18fd9da0121282aac8dd81f365912b807414110c822ab2b6d32",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/CI.json"
+  },
+  {
+    "path": "assets/holiday-calendar/CK.json",
+    "bytes": 106107,
+    "sha256": "0f5107885ed244b8acaffc1f5dba52493b1d4bcf1d89096ef86673a78040cdde",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/CK.json"
+  },
+  {
+    "path": "assets/holiday-calendar/CL.json",
+    "bytes": 134925,
+    "sha256": "92462fedf2c001ef9f948d7b3c2ae74e183491f4ed0fb8a0cd0637409e954f50",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/CL.json"
+  },
+  {
+    "path": "assets/holiday-calendar/CM.json",
+    "bytes": 89856,
+    "sha256": "6f416308254172f080202ee95077df6ca5a5cbae0218ff526e82b95957819cf3",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/CM.json"
+  },
+  {
+    "path": "assets/holiday-calendar/CN.json",
+    "bytes": 147739,
+    "sha256": "f1e13b0dc0fd9fbb25b38ad433fb87c59a424032feeadfd3f688b8229682beac",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/CN.json"
+  },
+  {
+    "path": "assets/holiday-calendar/CO.json",
+    "bytes": 170028,
+    "sha256": "9229334abbfc0b7716240070e1f42d4077339aee287608ae9e5002e44e98465d",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/CO.json"
+  },
+  {
+    "path": "assets/holiday-calendar/CR.json",
+    "bytes": 77714,
+    "sha256": "0c09eaf543aee9766787ed64db4fb49bc09a70b8eb8c6abd272775babead16d9",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/CR.json"
+  },
+  {
+    "path": "assets/holiday-calendar/CU.json",
+    "bytes": 96234,
+    "sha256": "4fcbb679dc56990421a6e9a62df9da8c2b17fc8a56416cc2581282dd4ccc13a0",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/CU.json"
+  },
+  {
+    "path": "assets/holiday-calendar/CV.json",
+    "bytes": 98843,
+    "sha256": "90a9b27b21be3237022bc418abc58a7687f84ce3998196068b7225e022cdd18e",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/CV.json"
+  },
+  {
+    "path": "assets/holiday-calendar/CW.json",
+    "bytes": 94699,
+    "sha256": "3ff7697d7517bf518a9d93fda977ecf97c6e12848664b186a06b423e24002005",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/CW.json"
+  },
+  {
+    "path": "assets/holiday-calendar/CX.json",
+    "bytes": 110557,
+    "sha256": "a79a90a82aa43359493c7f5003842f73622e7cc4e534f67e293ea820b5cf4986",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/CX.json"
+  },
+  {
+    "path": "assets/holiday-calendar/CY.json",
+    "bytes": 118643,
+    "sha256": "334a54d9b329f5b600cbfbbb11ba993f7bb4f7710e74f0a09f82ae8bea666aec",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/CY.json"
+  },
+  {
+    "path": "assets/holiday-calendar/CZ.json",
+    "bytes": 119785,
+    "sha256": "1cc45cd5a465d0f14e6e1411c92379a07ef6de3e295aef964215cec96d3aca77",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/CZ.json"
+  },
+  {
+    "path": "assets/holiday-calendar/DE.json",
+    "bytes": 71685,
+    "sha256": "26cf0023ddfdba8a29098ff67457e69ad39e5c2c3e480c06ede9d96452d52960",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/DE.json"
+  },
+  {
+    "path": "assets/holiday-calendar/DJ.json",
+    "bytes": 97859,
+    "sha256": "69274b4f151b020b0c55120f0c2af78b146b1b70869f8d5ca3d409a80f8c61ed",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/DJ.json"
+  },
+  {
+    "path": "assets/holiday-calendar/DK.json",
+    "bytes": 78863,
+    "sha256": "06cc3bb77d1fe0a8332b5a0a9ae7f8b5851c8576ff80e579012a8a8630975aba",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/DK.json"
+  },
+  {
+    "path": "assets/holiday-calendar/DM.json",
+    "bytes": 102037,
+    "sha256": "32653daff471ec97c40b91d83dad22f575cb33858be614a86dc24e37d65704c4",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/DM.json"
+  },
+  {
+    "path": "assets/holiday-calendar/DO.json",
+    "bytes": 96771,
+    "sha256": "7564d5b320d114caff943a247d25d9225c5e7f2e9dee858c77fe7c24980206a7",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/DO.json"
+  },
+  {
+    "path": "assets/holiday-calendar/DZ.json",
+    "bytes": 99229,
+    "sha256": "1d40ddd3e9032515fbf9865c4bd5654bd1c4a81ef05caf13a1b803b76034dd4f",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/DZ.json"
+  },
+  {
+    "path": "assets/holiday-calendar/EC.json",
+    "bytes": 132140,
+    "sha256": "72e866fe5fe57b8942af93f64413a90765b6460c1fc7c8150c1b0d5f00f036ea",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/EC.json"
+  },
+  {
+    "path": "assets/holiday-calendar/EE.json",
+    "bytes": 94255,
+    "sha256": "211b1f35e98194dd2387af205323138b6566af7b6b875dbe5d5d2557a0a070b5",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/EE.json"
+  },
+  {
+    "path": "assets/holiday-calendar/EG.json",
+    "bytes": 130767,
+    "sha256": "6dafe8867a6d86feb0880877116ece722ca37809fc3f843bc0f8fbfbb26f247b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/EG.json"
+  },
+  {
+    "path": "assets/holiday-calendar/EH.json",
+    "bytes": 89437,
+    "sha256": "3210638ae970dd3a2aedb5e719fe3a8c44036377c413542d4fc5092203c44a33",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/EH.json"
+  },
+  {
+    "path": "assets/holiday-calendar/ER.json",
+    "bytes": 116136,
+    "sha256": "adbd163e57e7b602453ca0a23c2b16bcf71d6d8b87a8b099bfe3c75199eb9c50",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/ER.json"
+  },
+  {
+    "path": "assets/holiday-calendar/ES.json",
+    "bytes": 68322,
+    "sha256": "ceee0d9901a4eac8a9d6845cf1b0b5ec67854a76e354fcefd4fd0483d171b047",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/ES.json"
+  },
+  {
+    "path": "assets/holiday-calendar/ET.json",
+    "bytes": 95275,
+    "sha256": "24dc19e7f871da0e0565cf51230984bfefbd018f892f4abc85cc92e42369e4be",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/ET.json"
+  },
+  {
+    "path": "assets/holiday-calendar/FI.json",
+    "bytes": 265565,
+    "sha256": "ebb4b2ad021c64692582cbecb9a4ab79fe20251bfdb48ce18a9b8b3f5d1db188",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/FI.json"
+  },
+  {
+    "path": "assets/holiday-calendar/FJ.json",
+    "bytes": 90008,
+    "sha256": "35a7234553c6e06b26a60aca572f02c5d7cff315b8ed3b50d3a368122fbdedd5",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/FJ.json"
+  },
+  {
+    "path": "assets/holiday-calendar/FK.json",
+    "bytes": 79567,
+    "sha256": "be83eaa47deac3b7c0c4be314adf2ded9a1a391c0d0eeda29d45301157018a93",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/FK.json"
+  },
+  {
+    "path": "assets/holiday-calendar/FM.json",
+    "bytes": 97413,
+    "sha256": "06d942be6aabe160518935523503fd675640313c09aa5ab66598b4f0e9a963f6",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/FM.json"
+  },
+  {
+    "path": "assets/holiday-calendar/FO.json",
+    "bytes": 109203,
+    "sha256": "b04555c3a8eddd14db96ceed620690706ed706ec516d1cfac5043319c2ec037f",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/FO.json"
+  },
+  {
+    "path": "assets/holiday-calendar/FR.json",
+    "bytes": 84441,
+    "sha256": "017dad01df4bdc04f142f85c1256b096b2d3bbb6faf1c86b92b2a74b013e34b7",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/FR.json"
+  },
+  {
+    "path": "assets/holiday-calendar/GA.json",
+    "bytes": 121882,
+    "sha256": "0e92e27a6d61100e6386d6cc01b2828766ce19a5699e430003755b7e3e7116e5",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/GA.json"
+  },
+  {
+    "path": "assets/holiday-calendar/GB.json",
+    "bytes": 55141,
+    "sha256": "b9794ea6b036cb284ff6936e9e6d92146cab9659cb3802ed283ffe96c979ffcb",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/GB.json"
+  },
+  {
+    "path": "assets/holiday-calendar/GD.json",
+    "bytes": 118917,
+    "sha256": "f993d6d85a120cfe492dc2f2f71695f24098834e93f6db0ba1b5b8c4f2bfeed4",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/GD.json"
+  },
+  {
+    "path": "assets/holiday-calendar/GE.json",
+    "bytes": 152422,
+    "sha256": "3678f9ddb65f3cf5280b17d0ab994721ebab9c7985bb7b750244be5702028a89",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/GE.json"
+  },
+  {
+    "path": "assets/holiday-calendar/GF.json",
+    "bytes": 92602,
+    "sha256": "317fb91895b12b49ab1060136ed5cc1d2d4dc765db591041bf67532120b85412",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/GF.json"
+  },
+  {
+    "path": "assets/holiday-calendar/GG.json",
+    "bytes": 80847,
+    "sha256": "602a882c43072a959fb70ca3b9fa9567c62ab798e838129fa4375332884de85e",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/GG.json"
+  },
+  {
+    "path": "assets/holiday-calendar/GH.json",
+    "bytes": 103256,
+    "sha256": "6e41f65c616f1ae53f41395d60a7c5ff81f630983045d823527452d3cd76ef15",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/GH.json"
+  },
+  {
+    "path": "assets/holiday-calendar/GI.json",
+    "bytes": 113555,
+    "sha256": "ac9b9d958ca21353fa015368252ffcdffbc63809859e2c20474d69b679aa3c18",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/GI.json"
+  },
+  {
+    "path": "assets/holiday-calendar/GL.json",
+    "bytes": 86633,
+    "sha256": "4207a3cbc5c5dfaac4951aca0d0edb430709a47918742d9c08a314db27aa720d",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/GL.json"
+  },
+  {
+    "path": "assets/holiday-calendar/GM.json",
+    "bytes": 153060,
+    "sha256": "ad3c178429fbd5be2e1f5d24272306d542ce286674fd36f4582fffc27218ca49",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/GM.json"
+  },
+  {
+    "path": "assets/holiday-calendar/GN.json",
+    "bytes": 94720,
+    "sha256": "b4591665bc60db9df90ad3e997d655e8c3096f601990d00a25225a0cb55adcd7",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/GN.json"
+  },
+  {
+    "path": "assets/holiday-calendar/GP.json",
+    "bytes": 114742,
+    "sha256": "3010b52253570e497e6762cfed594fafe9d095df2f8a33ea995cc5af090cc7ee",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/GP.json"
+  },
+  {
+    "path": "assets/holiday-calendar/GQ.json",
+    "bytes": 130080,
+    "sha256": "429f92c60d1c1b2b16d7a9eb541d231dec9c23b38016297efb9ece72f4587d3c",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/GQ.json"
+  },
+  {
+    "path": "assets/holiday-calendar/GR.json",
+    "bytes": 97090,
+    "sha256": "7f9307991f81f3ad8207c10953906d9d932110ced47e46b5c746703219d9c24c",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/GR.json"
+  },
+  {
+    "path": "assets/holiday-calendar/GS.json",
+    "bytes": 91813,
+    "sha256": "a3088d626071b9860f8c9b1739efe96d159123df14fb20bab0c321e2ebf96df0",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/GS.json"
+  },
+  {
+    "path": "assets/holiday-calendar/GT.json",
+    "bytes": 84561,
+    "sha256": "4177fcd8527495b74646896eba9c23e14d650fc47a76c91b6a5b2544b32d7498",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/GT.json"
+  },
+  {
+    "path": "assets/holiday-calendar/GU.json",
+    "bytes": 197787,
+    "sha256": "e09a8bba5d6e75ffcd0bc15394017fa2122dc2a0344988c8e809f853aedfe3fe",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/GU.json"
+  },
+  {
+    "path": "assets/holiday-calendar/GW.json",
+    "bytes": 90471,
+    "sha256": "874443399c2678ec59f36d7c45fdecfe318fc41eaf5118b3b0530e400a4d9030",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/GW.json"
+  },
+  {
+    "path": "assets/holiday-calendar/GY.json",
+    "bytes": 114551,
+    "sha256": "addc929659e97397fb98d0f12583f3feced6c1fd2d63f2dcfb6139d7e9a9fd0b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/GY.json"
+  },
+  {
+    "path": "assets/holiday-calendar/HK.json",
+    "bytes": 164886,
+    "sha256": "e59cf7dc54aa1e392bbbc72a46f3e4cfd5846d3e3928ee2948863ca55c7477c3",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/HK.json"
+  },
+  {
+    "path": "assets/holiday-calendar/HM.json",
+    "bytes": 4197,
+    "sha256": "855f052b96097bd1908a7209e9ddae9af517dc94e6d6ecbb0e63d3b54a6ea96c",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/HM.json"
+  },
+  {
+    "path": "assets/holiday-calendar/HN.json",
+    "bytes": 85357,
+    "sha256": "7fa61e3e7f20206d448fb293b827e10d29aaa3a4562bd03e8f6abcfacdc6acc0",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/HN.json"
+  },
+  {
+    "path": "assets/holiday-calendar/HR.json",
+    "bytes": 116254,
+    "sha256": "a8b49c54c960394d96587e4cbb54e14d3abade3c3a7d0a5a116adce6b12d4739",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/HR.json"
+  },
+  {
+    "path": "assets/holiday-calendar/HT.json",
+    "bytes": 136583,
+    "sha256": "f1eaf112bf7dc87d70d2b273e6d7c7b29a662c63ba612117f734ae3572a534b3",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/HT.json"
+  },
+  {
+    "path": "assets/holiday-calendar/HU.json",
+    "bytes": 100394,
+    "sha256": "d1bb2d7b1e2a2d0adc386e365e4aaf7732ead88f4ea68883bc0aa94cb89f7247",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/HU.json"
+  },
+  {
+    "path": "assets/holiday-calendar/ID.json",
+    "bytes": 125037,
+    "sha256": "21fc9bb78d70913f1be3cbd6d871c0b3806e1cac94b467cfcc6abbe7b87d87c2",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/ID.json"
+  },
+  {
+    "path": "assets/holiday-calendar/IE.json",
+    "bytes": 83007,
+    "sha256": "c9c47a07bf03dea0f28611b1dc33ec8aff748e3e281fe6d85dbc530d53c2a4e9",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/IE.json"
+  },
+  {
+    "path": "assets/holiday-calendar/IL.json",
+    "bytes": 72089,
+    "sha256": "09bbca123ad406844ca671d08656903928fefa23e0fb961f4cf0aee754654c22",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/IL.json"
+  },
+  {
+    "path": "assets/holiday-calendar/IM.json",
+    "bytes": 86073,
+    "sha256": "2a9ecde7eea99f5285d88a7ecbbd06659896912131b536b0d7ec31dad38ea92b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/IM.json"
+  },
+  {
+    "path": "assets/holiday-calendar/IN.json",
+    "bytes": 89166,
+    "sha256": "496df285e66d006b3334674f555dabfbcf39b32234e26c33b81e3d3b65cb320c",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/IN.json"
+  },
+  {
+    "path": "assets/holiday-calendar/index.json",
+    "bytes": 59655,
+    "sha256": "a5098a5026c6f3500cd393e226d26c14d386cf850144d9f26b9289d7dc48a6b3",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/index.json"
+  },
+  {
+    "path": "assets/holiday-calendar/IO.json",
+    "bytes": 4197,
+    "sha256": "62f0fd9e39d6664ee6347784bc6b3e39a8a21f4ad4d46c4497f04d4669925c8c",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/IO.json"
+  },
+  {
+    "path": "assets/holiday-calendar/IQ.json",
+    "bytes": 117062,
+    "sha256": "5d58ea462b81bc59a2f749b2799f7016fd806f77706642c6ba7589a26def234e",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/IQ.json"
+  },
+  {
+    "path": "assets/holiday-calendar/IR.json",
+    "bytes": 211276,
+    "sha256": "4cabe73cbef8054488c225a5f729d5a8b32387da5abad4c9e207ad0adfe4bdaa",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/IR.json"
+  },
+  {
+    "path": "assets/holiday-calendar/IS.json",
+    "bytes": 107832,
+    "sha256": "7218338622014546934b740ae594039a4dca01c225ae646f733f39d0fc691dac",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/IS.json"
+  },
+  {
+    "path": "assets/holiday-calendar/IT.json",
+    "bytes": 113956,
+    "sha256": "2c831ac5f19c7cafb637e2bc0ea1a25b80d906f52145535be9e35b81b3ad8fa6",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/IT.json"
+  },
+  {
+    "path": "assets/holiday-calendar/JE.json",
+    "bytes": 80032,
+    "sha256": "c3d8429c6b7bcfcbb466f47e41c9e8e07d6994196df7a78b1f9502d87e7734e8",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/JE.json"
+  },
+  {
+    "path": "assets/holiday-calendar/JM.json",
+    "bytes": 88753,
+    "sha256": "899f63569831991c0fe788711db7fc459b84a98b5ecae957c953cf781600fcad",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/JM.json"
+  },
+  {
+    "path": "assets/holiday-calendar/JO.json",
+    "bytes": 102397,
+    "sha256": "3bcf4ae494e052ef3a6a57f324af902a0ffac30aef5dfc6c4b2e8cdbda5381b1",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/JO.json"
+  },
+  {
+    "path": "assets/holiday-calendar/JP.json",
+    "bytes": 141217,
+    "sha256": "552dfa6dc09f949cbcae1ad382251479c19acc609507684ba8a7cee54107662f",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/JP.json"
+  },
+  {
+    "path": "assets/holiday-calendar/KE.json",
+    "bytes": 92867,
+    "sha256": "9676f2afd8c3539104720c4563113d44aff08c5b317fbb9e34760fc8f7516ecf",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/KE.json"
+  },
+  {
+    "path": "assets/holiday-calendar/KG.json",
+    "bytes": 159997,
+    "sha256": "fd0dbc87859190aec1c3c0dcf90f418bdb8be973eed5e2881e299ee9fa26ab1d",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/KG.json"
+  },
+  {
+    "path": "assets/holiday-calendar/KH.json",
+    "bytes": 200824,
+    "sha256": "9cc7de4f23a6e4c280d5f929e839a2ae4f716d3c39a97d88a3ece4f1c9b7c821",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/KH.json"
+  },
+  {
+    "path": "assets/holiday-calendar/KI.json",
+    "bytes": 137904,
+    "sha256": "6ade77d6147c609f8582e1ee2aac27c5ffe3f61c4eaa7ff6a2971308c9ddf9be",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/KI.json"
+  },
+  {
+    "path": "assets/holiday-calendar/KM.json",
+    "bytes": 100539,
+    "sha256": "faf541031391b447a006a7652b208369f60604e38bf1e8770a8cafc2041aafca",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/KM.json"
+  },
+  {
+    "path": "assets/holiday-calendar/KN.json",
+    "bytes": 103367,
+    "sha256": "013d86a778c7043112c9a364881ee68d0ff596d3d86c5d27e0aa719eb417caa7",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/KN.json"
+  },
+  {
+    "path": "assets/holiday-calendar/KP.json",
+    "bytes": 199810,
+    "sha256": "6d26adeae92dd79fefa65e9fc1a8a03b4b426cc6ca01f00a1f3767452576f0f5",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/KP.json"
+  },
+  {
+    "path": "assets/holiday-calendar/KR.json",
+    "bytes": 172937,
+    "sha256": "a720b3175fa30aad863b5fd94ab887318fa749a1213dfa530f2ec708e9787780",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/KR.json"
+  },
+  {
+    "path": "assets/holiday-calendar/KW.json",
+    "bytes": 95420,
+    "sha256": "b590e6c2c0d74e3b5f43e20c6eab9d9648e2463af9c42ad0f1aa335f0b208b4c",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/KW.json"
+  },
+  {
+    "path": "assets/holiday-calendar/KY.json",
+    "bytes": 101465,
+    "sha256": "395f796aad1ee5bbfbd7dfadee8a56d0d9847f90a6f5aab6c8638f7a63a31acd",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/KY.json"
+  },
+  {
+    "path": "assets/holiday-calendar/KZ.json",
+    "bytes": 158519,
+    "sha256": "a2b73e063a80b5174e62571356481cc0d7cedae525ff0bc6e72528d15d7855e9",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/KZ.json"
+  },
+  {
+    "path": "assets/holiday-calendar/LA.json",
+    "bytes": 82046,
+    "sha256": "56f4289df720f229988623b2fc5737149a000c79cfd72f8ec2f381d2708b4eec",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/LA.json"
+  },
+  {
+    "path": "assets/holiday-calendar/LB.json",
+    "bytes": 148104,
+    "sha256": "503bb18b8f27cab6ed5da74a8e2f1d946726634a470a213ac76b9c33889dd6b1",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/LB.json"
+  },
+  {
+    "path": "assets/holiday-calendar/LC.json",
+    "bytes": 111199,
+    "sha256": "f282156b4a3db52fbd158e4c0722580c9ffd8249cf0957040437b46017925a40",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/LC.json"
+  },
+  {
+    "path": "assets/holiday-calendar/LI.json",
+    "bytes": 130293,
+    "sha256": "6a5679a8d80e7b7d962a8ea4c1b12175d7dd14d5470dc62d55a1f30cab14688c",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/LI.json"
+  },
+  {
+    "path": "assets/holiday-calendar/LK.json",
+    "bytes": 7165,
+    "sha256": "8b0ced42341ffac396fecac5d013b88f5a9a2dcc28592cd1fc1a08a87b9cc448",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/LK.json"
+  },
+  {
+    "path": "assets/holiday-calendar/LR.json",
+    "bytes": 98029,
+    "sha256": "e69eb15478b688c2470b12d09ab46abee1b587a5fe181872237d56410654560b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/LR.json"
+  },
+  {
+    "path": "assets/holiday-calendar/LS.json",
+    "bytes": 85611,
+    "sha256": "09788c6783525a849fbad8a6c5eb6678165c543bb5606f434442f8b3e50b515b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/LS.json"
+  },
+  {
+    "path": "assets/holiday-calendar/LT.json",
+    "bytes": 135913,
+    "sha256": "2add08010ac77b5718187fc9bdba52ee1c0f35e71b864c73bd03fbe052ebedf4",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/LT.json"
+  },
+  {
+    "path": "assets/holiday-calendar/LU.json",
+    "bytes": 85315,
+    "sha256": "7fe5e4d45d2781d0aaf842537a2717386cc22d6d92e9aec52a9444efa145207e",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/LU.json"
+  },
+  {
+    "path": "assets/holiday-calendar/LV.json",
+    "bytes": 133018,
+    "sha256": "4263c778bb11293ff2cae37f8ca06d3b4d204ae1f8adac516370fbd4d3999889",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/LV.json"
+  },
+  {
+    "path": "assets/holiday-calendar/LY.json",
+    "bytes": 114532,
+    "sha256": "6cceae1d3d23b6ac2957bed85c9c9d3d951863c949895356ed856391be922f8e",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/LY.json"
+  },
+  {
+    "path": "assets/holiday-calendar/MA.json",
+    "bytes": 132549,
+    "sha256": "4501a1cc642c5bfb3a6b0592245cf81f126e9e3c50da96f0be41f5f0a90a3e0e",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/MA.json"
+  },
+  {
+    "path": "assets/holiday-calendar/MC.json",
+    "bytes": 103261,
+    "sha256": "3567640f585ad7bb2d42059a495880f4600170e3265cf166c610aab6f9e23c02",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/MC.json"
+  },
+  {
+    "path": "assets/holiday-calendar/MD.json",
+    "bytes": 128129,
+    "sha256": "6b7c85a106b14db24fc3de512f7e08127c9be740c953732bf04f99404f56e6ee",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/MD.json"
+  },
+  {
+    "path": "assets/holiday-calendar/ME.json",
+    "bytes": 80800,
+    "sha256": "6c2fc915389f9873328784116f61105d14b78bd816e3dd2997bbcc7d8481e939",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/ME.json"
+  },
+  {
+    "path": "assets/holiday-calendar/MF.json",
+    "bytes": 101045,
+    "sha256": "b14cd989df9d75f4013db6bd45998392077f4945218e4ba41d2561e095ed01b3",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/MF.json"
+  },
+  {
+    "path": "assets/holiday-calendar/MG.json",
+    "bytes": 120412,
+    "sha256": "727d709f3ebd4b03716f28ecdd9793be034eaf165bf7400880cd932abb93fa2c",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/MG.json"
+  },
+  {
+    "path": "assets/holiday-calendar/MH.json",
+    "bytes": 95093,
+    "sha256": "06acf5e002bc93a9bcb250b3cc3dc0b9fb5e21d03b81e3999bbe05fc7fe3b992",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/MH.json"
+  },
+  {
+    "path": "assets/holiday-calendar/MK.json",
+    "bytes": 105996,
+    "sha256": "041e0270999f7a0fed1768c672a292d3b53fa9f2079bc239d188f28e560f1bca",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/MK.json"
+  },
+  {
+    "path": "assets/holiday-calendar/ML.json",
+    "bytes": 91851,
+    "sha256": "375ad6f96120f8a6714635c61a4ce6b412731621e1695f41d3838dd7b326977a",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/ML.json"
+  },
+  {
+    "path": "assets/holiday-calendar/MM.json",
+    "bytes": 225325,
+    "sha256": "bc6deb3bc92c6ba1dbd0f11d0d8b6674e9125d723f79675667eca7161d2a1874",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/MM.json"
+  },
+  {
+    "path": "assets/holiday-calendar/MN.json",
+    "bytes": 165108,
+    "sha256": "e18d86bc387b5494a3b0cfa175ae399cd6cc8ebc665243bb560f4a15fa672cc8",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/MN.json"
+  },
+  {
+    "path": "assets/holiday-calendar/MO.json",
+    "bytes": 96866,
+    "sha256": "abb764d023ee267feb7cb1b04e6e15689e8e86532aac5573f2e6ec55f9a71c6f",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/MO.json"
+  },
+  {
+    "path": "assets/holiday-calendar/MP.json",
+    "bytes": 210308,
+    "sha256": "08fff46962c8b354439045ed4527fb1d34dc427e258873f483cf13f5dee7761b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/MP.json"
+  },
+  {
+    "path": "assets/holiday-calendar/MQ.json",
+    "bytes": 108075,
+    "sha256": "f0af0f81ec6ce36e2a430550bf20919eb714d084d01020168be6d2caee8e52e3",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/MQ.json"
+  },
+  {
+    "path": "assets/holiday-calendar/MR.json",
+    "bytes": 72305,
+    "sha256": "37978383dc54418e49c0fd9239ca706948846bd4449a1fad3b88b76fe56fff20",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/MR.json"
+  },
+  {
+    "path": "assets/holiday-calendar/MS.json",
+    "bytes": 108638,
+    "sha256": "1ec184fa215b809b393b6693678e696eb390e4ccad25016dcb519773056ff668",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/MS.json"
+  },
+  {
+    "path": "assets/holiday-calendar/MT.json",
+    "bytes": 120317,
+    "sha256": "3d402b1da7d00bbbb71ec3d5abc972b157f5798b76e917a8f5fc7e7708451266",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/MT.json"
+  },
+  {
+    "path": "assets/holiday-calendar/MU.json",
+    "bytes": 95314,
+    "sha256": "b0bb6f417e70e32abaa4599ae93fccde0a106db672d8159d62c0c58d16676d30",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/MU.json"
+  },
+  {
+    "path": "assets/holiday-calendar/MV.json",
+    "bytes": 134223,
+    "sha256": "a50d24ee6dbbe921a7677cf32db7ea44781d61b78238aff62cdc94ca215dfbde",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/MV.json"
+  },
+  {
+    "path": "assets/holiday-calendar/MW.json",
+    "bytes": 106593,
+    "sha256": "f06c11f740d5a6524c85392252d82ab8825aaf9ad1a9e770d9e36db01f240c8c",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/MW.json"
+  },
+  {
+    "path": "assets/holiday-calendar/MX.json",
+    "bytes": 59321,
+    "sha256": "0bc5b9300a2df168d089e77435d950bdae1adaef34a0f6d0df2b719cb65db3e0",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/MX.json"
+  },
+  {
+    "path": "assets/holiday-calendar/MY.json",
+    "bytes": 122821,
+    "sha256": "1b2b21ddab368b1ce256bea0667448ca359cefa184baf7c5d12135bf267fc0a0",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/MY.json"
+  },
+  {
+    "path": "assets/holiday-calendar/MZ.json",
+    "bytes": 89900,
+    "sha256": "f0060d94a208b19ef624d36b4b328b0afb37245eff5c1e292000b6a2641f7ea8",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/MZ.json"
+  },
+  {
+    "path": "assets/holiday-calendar/NA.json",
+    "bytes": 117318,
+    "sha256": "3f630d0c50f19fd7cbcc7db20d0f347f0fa32c0b729f2a8ac2d2862c812393a0",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/NA.json"
+  },
+  {
+    "path": "assets/holiday-calendar/NC.json",
+    "bytes": 92063,
+    "sha256": "c5fb4265d891403fa308494e58a564b8974bd3bb4a81903c897fe2e761226fdb",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/NC.json"
+  },
+  {
+    "path": "assets/holiday-calendar/NE.json",
+    "bytes": 128994,
+    "sha256": "cc60f908b8077fd8c5cfcd88a774f7c3b7d2299e3462f28c097116276fc87467",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/NE.json"
+  },
+  {
+    "path": "assets/holiday-calendar/NF.json",
+    "bytes": 104328,
+    "sha256": "2e95d9ceba7fb17fa6ec57d0ec7ff64be9c495a304638230b2b9419ae71beab5",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/NF.json"
+  },
+  {
+    "path": "assets/holiday-calendar/NG.json",
+    "bytes": 124620,
+    "sha256": "cdb42aa0306c02d3820179a0a1f69bf4c4adc252d0bcaeff8e38a8d7f892fe90",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/NG.json"
+  },
+  {
+    "path": "assets/holiday-calendar/NI.json",
+    "bytes": 80343,
+    "sha256": "4cd305cdebdf1811dd9db1804a2a3f2bd268ed3fb2ed66f8f38c82e90f6e401c",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/NI.json"
+  },
+  {
+    "path": "assets/holiday-calendar/NL.json",
+    "bytes": 79537,
+    "sha256": "cbb1e487a8cf1f2b392920420d10577aa2e13efe4b94ef0f4f2d0eece70af108",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/NL.json"
+  },
+  {
+    "path": "assets/holiday-calendar/NO.json",
+    "bytes": 92965,
+    "sha256": "be4f7fe75ff755866ea9d355aa026d794dccc7cfdb1d4ca6dbd5754f21d13f9a",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/NO.json"
+  },
+  {
+    "path": "assets/holiday-calendar/NP.json",
+    "bytes": 75519,
+    "sha256": "1abc72e1c14bd6fa5f1c3069baaf1d009969f8654a69895861f857e7e4664c12",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/NP.json"
+  },
+  {
+    "path": "assets/holiday-calendar/NR.json",
+    "bytes": 146585,
+    "sha256": "e360733aae90e599463df6f8271a6887cb47f549c3237f078464eea02a2b9902",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/NR.json"
+  },
+  {
+    "path": "assets/holiday-calendar/NU.json",
+    "bytes": 106499,
+    "sha256": "97e98d14b738320c2f157b04c6000633235e6041b8b8cc04c536b5b8d2fc9e6d",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/NU.json"
+  },
+  {
+    "path": "assets/holiday-calendar/NZ.json",
+    "bytes": 95442,
+    "sha256": "63a432bd7b87d1e1108258ef801fddc3fbac4f2cb5f639c9ad4a893c73e34829",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/NZ.json"
+  },
+  {
+    "path": "assets/holiday-calendar/OM.json",
+    "bytes": 102156,
+    "sha256": "f2f67b14b94bee0916c1b887e1132e06e79d7026f244b53a9c5528504290f6b4",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/OM.json"
+  },
+  {
+    "path": "assets/holiday-calendar/PA.json",
+    "bytes": 106850,
+    "sha256": "f3b5d3ee8d6553b27fe899e5ff00b571fe859056c3c046e344cd617956493304",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/PA.json"
+  },
+  {
+    "path": "assets/holiday-calendar/PE.json",
+    "bytes": 142281,
+    "sha256": "3ea9d0325886112200f49def1a18af3ce88d7ea43a16c3892045df86fe3fde31",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/PE.json"
+  },
+  {
+    "path": "assets/holiday-calendar/PF.json",
+    "bytes": 105679,
+    "sha256": "b9ceda0d1344dbb55220e6494831999a205ab44ae0b47db82ce450e1f4032cb6",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/PF.json"
+  },
+  {
+    "path": "assets/holiday-calendar/PG.json",
+    "bytes": 102276,
+    "sha256": "044152f3d2d4a1d6552892be6362b8aa7902b9f5c7154df1925ecf6bcdc0eeff",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/PG.json"
+  },
+  {
+    "path": "assets/holiday-calendar/PH.json",
+    "bytes": 136484,
+    "sha256": "92d0c333ef12d3bd574698c2ecdb03ae83e7e271bb05df3199f6dfbee761faae",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/PH.json"
+  },
+  {
+    "path": "assets/holiday-calendar/PK.json",
+    "bytes": 112485,
+    "sha256": "c151a7712617b47f80d59dca7d63883a4a7affc7c1ee770f61a03d45450403c3",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/PK.json"
+  },
+  {
+    "path": "assets/holiday-calendar/PL.json",
+    "bytes": 112015,
+    "sha256": "544af041e7ffbe23f23c8f73ba23ed8b125939fecc5f462d43d98b8722a052ef",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/PL.json"
+  },
+  {
+    "path": "assets/holiday-calendar/PM.json",
+    "bytes": 84441,
+    "sha256": "0e7f3cd23d3ab91924c54295d166c8803ae371556a9750f6ecf4a06757a950ef",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/PM.json"
+  },
+  {
+    "path": "assets/holiday-calendar/PN.json",
+    "bytes": 61843,
+    "sha256": "a64c67d30b93e01011fee90625f0db4f48a8560797c5c0fad794470897fde5bf",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/PN.json"
+  },
+  {
+    "path": "assets/holiday-calendar/PR.json",
+    "bytes": 219827,
+    "sha256": "09d9e6e19ed77632554c3f3e30e64f6e0527c3522ff4ffe4a97e0540b661cb5a",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/PR.json"
+  },
+  {
+    "path": "assets/holiday-calendar/PS.json",
+    "bytes": 115396,
+    "sha256": "6806e99c4a65433c40c3eab73da617dd4b5435eba83c27b7cd6ac3d740ae6213",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/PS.json"
+  },
+  {
+    "path": "assets/holiday-calendar/PT.json",
+    "bytes": 108713,
+    "sha256": "d2dee190e6ac9ed2d82334f30cf2fbb22862272b244abb37b48ec3613b92b1d8",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/PT.json"
+  },
+  {
+    "path": "assets/holiday-calendar/PW.json",
+    "bytes": 107475,
+    "sha256": "1bc902637e2d5401d790b5fd081a69ec456b2f751e8a2b70626eeb270ef51c80",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/PW.json"
+  },
+  {
+    "path": "assets/holiday-calendar/PY.json",
+    "bytes": 114235,
+    "sha256": "5634791b6804c68d28dabb1382bd3e384df5dfca0562c76c110e06387bf0a98a",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/PY.json"
+  },
+  {
+    "path": "assets/holiday-calendar/QA.json",
+    "bytes": 58825,
+    "sha256": "4427ceb4828daf49df1ad352884c5d9cc7f34b64ace0691d119c851fd9c4e97b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/QA.json"
+  },
+  {
+    "path": "assets/holiday-calendar/RE.json",
+    "bytes": 92803,
+    "sha256": "b87f47cf9e8cf6ec34ee78c20599ecb768ddab39b0bcd67c2a8ba87a32277d68",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/RE.json"
+  },
+  {
+    "path": "assets/holiday-calendar/RO.json",
+    "bytes": 132745,
+    "sha256": "edb78606fea2dc58e61445b97b514dea90258c89f629354e58dc10bb4ef249d7",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/RO.json"
+  },
+  {
+    "path": "assets/holiday-calendar/RS.json",
+    "bytes": 100060,
+    "sha256": "bfbee201806a8685006c5f8032bc31dfd35ef85adc885d8052f1a2e190f185df",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/RS.json"
+  },
+  {
+    "path": "assets/holiday-calendar/RU.json",
+    "bytes": 117241,
+    "sha256": "20efa1da829106f8980ba51ffdadbc6adb4434d5aa4a6d372ddd440f97934f1a",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/RU.json"
+  },
+  {
+    "path": "assets/holiday-calendar/RW.json",
+    "bytes": 146632,
+    "sha256": "e605a4638d041a51b12b77e07d82691ce4135dd249d7b41ddef487f9e1505797",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/RW.json"
+  },
+  {
+    "path": "assets/holiday-calendar/SA.json",
+    "bytes": 90243,
+    "sha256": "077d29cbaac203006bd30c61d1cdceeb8b4ec5a2440c5ae65fe7b0ecec784956",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/SA.json"
+  },
+  {
+    "path": "assets/holiday-calendar/SB.json",
+    "bytes": 83686,
+    "sha256": "dd0d1ec167a2816e7db69e6be281aa62505bb0d1f99130da43851f7b385e0517",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/SB.json"
+  },
+  {
+    "path": "assets/holiday-calendar/SC.json",
+    "bytes": 114196,
+    "sha256": "093cb5f4ebbb59a3ca5c167e9617ac4e52b4371c67edb8d58280920225f0332a",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/SC.json"
+  },
+  {
+    "path": "assets/holiday-calendar/SD.json",
+    "bytes": 106359,
+    "sha256": "bbbc442b6d74bdc6460576585eb24f6083c39d68a8c1121f32f8f9618ce763c4",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/SD.json"
+  },
+  {
+    "path": "assets/holiday-calendar/SE.json",
+    "bytes": 98420,
+    "sha256": "270111078f620bf05a36401c72e66bf95fc5f675b928772eb5f179e4e174a9a1",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/SE.json"
+  },
+  {
+    "path": "assets/holiday-calendar/SG.json",
+    "bytes": 99060,
+    "sha256": "aff09fea7fed67a0c8e0e0b95074adcf0704fd5c9bc062a552d25bca8fe81292",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/SG.json"
+  },
+  {
+    "path": "assets/holiday-calendar/SH.json",
+    "bytes": 45380,
+    "sha256": "55cf6c2455ba0a7379e65e5d6d82671f2c1533af049014683ddd4ac66cac8ffb",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/SH.json"
+  },
+  {
+    "path": "assets/holiday-calendar/SI.json",
+    "bytes": 125705,
+    "sha256": "573d08d72bb7c25c5a67ecff0d4a3afdd9bcc0cdfa7d2b0d44aede4aa9bcbc5c",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/SI.json"
+  },
+  {
+    "path": "assets/holiday-calendar/SJ.json",
+    "bytes": 92965,
+    "sha256": "00d84569a74f45669c71a55d2554b159333d4872e312b9bb556f85e3e71f44ea",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/SJ.json"
+  },
+  {
+    "path": "assets/holiday-calendar/SK.json",
+    "bytes": 121881,
+    "sha256": "0cb841a23cfa2104487086b844670dd967d21d777052927fff00ff573e1b0324",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/SK.json"
+  },
+  {
+    "path": "assets/holiday-calendar/SL.json",
+    "bytes": 119648,
+    "sha256": "2d6ebb47aa6def4927a190fc3a9b9c6621b2e8bd0471a3f6bbbe3563da46e7d2",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/SL.json"
+  },
+  {
+    "path": "assets/holiday-calendar/SM.json",
+    "bytes": 167557,
+    "sha256": "d179824a116ae4c653442890aa1cb5c05bfee9ceb83fbbc70226a50039b15cea",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/SM.json"
+  },
+  {
+    "path": "assets/holiday-calendar/SN.json",
+    "bytes": 105150,
+    "sha256": "9e008ca1a528a8999609b26563805a71f9ff649d6bfff6baf83916ce9b3d780a",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/SN.json"
+  },
+  {
+    "path": "assets/holiday-calendar/SO.json",
+    "bytes": 72559,
+    "sha256": "deb5b69550065c97238decad6327b6976cd83dc163726c81470bbe4e5c32a6c8",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/SO.json"
+  },
+  {
+    "path": "assets/holiday-calendar/SR.json",
+    "bytes": 108308,
+    "sha256": "4ff2ff9fcd55003f8c4c664930205a361a0ef212ca910683e935440827bbdebd",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/SR.json"
+  },
+  {
+    "path": "assets/holiday-calendar/SS.json",
+    "bytes": 115483,
+    "sha256": "82fe82a84235e0d4f44202f64b314bcf600ca2e7f5ea60524520de153cbb9e61",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/SS.json"
+  },
+  {
+    "path": "assets/holiday-calendar/ST.json",
+    "bytes": 97301,
+    "sha256": "4997b361d3904e904e035b8acbae6355206e8cccd5557f54b042bdaaa0a485cb",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/ST.json"
+  },
+  {
+    "path": "assets/holiday-calendar/SV.json",
+    "bytes": 86781,
+    "sha256": "781f4add145bfa54406ac1f76c6376fdec3119496590d2af359fd08cccb0036c",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/SV.json"
+  },
+  {
+    "path": "assets/holiday-calendar/SX.json",
+    "bytes": 107575,
+    "sha256": "450397ca223e6028ba40929544650f7e22be4a78e58fe5949394e81f0578440b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/SX.json"
+  },
+  {
+    "path": "assets/holiday-calendar/SY.json",
+    "bytes": 152099,
+    "sha256": "5af76190282ad74e88acf428df2baeee779e909a7c7c269d7b1b4725a658593d",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/SY.json"
+  },
+  {
+    "path": "assets/holiday-calendar/SZ.json",
+    "bytes": 97969,
+    "sha256": "fe8ac2fb9be65b6caeacd0c8f1813adc4ebcc553e11d8fb8e0cded41f696228d",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/SZ.json"
+  },
+  {
+    "path": "assets/holiday-calendar/TC.json",
+    "bytes": 115729,
+    "sha256": "0175be6b16dbcf9aec4d5dca02c55971d675a3f46b0c4af4cfc8379d186d3e20",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/TC.json"
+  },
+  {
+    "path": "assets/holiday-calendar/TD.json",
+    "bytes": 101575,
+    "sha256": "399cb5b999fb4933bb1a4075121a8fd2d721056c6f56c80acef3070fd134a36f",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/TD.json"
+  },
+  {
+    "path": "assets/holiday-calendar/TF.json",
+    "bytes": 84441,
+    "sha256": "aa5802832af56ec8911635ccebfdfac3684bee78155541ede81b73decce66155",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/TF.json"
+  },
+  {
+    "path": "assets/holiday-calendar/TG.json",
+    "bytes": 98172,
+    "sha256": "d3d1784402693131ba09c82c7272d8158a2f85da700a7e9dd05f953a89b603c0",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/TG.json"
+  },
+  {
+    "path": "assets/holiday-calendar/TH.json",
+    "bytes": 243598,
+    "sha256": "19728385a0a74e55af5f40602be51a0c31b7a0855b99449850caf577401ee58d",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/TH.json"
+  },
+  {
+    "path": "assets/holiday-calendar/TJ.json",
+    "bytes": 97945,
+    "sha256": "1793132aeb85394e3c8ab215be9a1bfa4bbbfabe30512b123ee5b3ea14453139",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/TJ.json"
+  },
+  {
+    "path": "assets/holiday-calendar/TK.json",
+    "bytes": 47339,
+    "sha256": "afcdefe915fd8edd02350e112360b1f597fa2f2a8a17afcf6f1d6a2fb8e0b5d8",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/TK.json"
+  },
+  {
+    "path": "assets/holiday-calendar/TL.json",
+    "bytes": 153755,
+    "sha256": "dcc32a7f0779391e5b1d25932e9d59abac2def57289a8a96dc8bedcc50143677",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/TL.json"
+  },
+  {
+    "path": "assets/holiday-calendar/TM.json",
+    "bytes": 96466,
+    "sha256": "cc45b9b441be4e6d98ded74c3848fe13f7f8adc066955441ea0f9d9c5b51877a",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/TM.json"
+  },
+  {
+    "path": "assets/holiday-calendar/TN.json",
+    "bytes": 125852,
+    "sha256": "72b41bbf97445870773c6074ee1c15aadbc7d618c0f9a3ed89158c475d9f1dc6",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/TN.json"
+  },
+  {
+    "path": "assets/holiday-calendar/TO.json",
+    "bytes": 107277,
+    "sha256": "e26b71a3eaf5b880215c64fe94e91dfc06c058a6c7f32b683e20a613c897e497",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/TO.json"
+  },
+  {
+    "path": "assets/holiday-calendar/TR.json",
+    "bytes": 111565,
+    "sha256": "84d17af9210c61b92e9d3e0a5c5d6a363cbc2ae1f5a3fed7586832b367d005b9",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/TR.json"
+  },
+  {
+    "path": "assets/holiday-calendar/TT.json",
+    "bytes": 124799,
+    "sha256": "35a9ea8c37aaa4b6085a540305d74cfb8a9c65754c65e9c8313f4cf3de226622",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/TT.json"
+  },
+  {
+    "path": "assets/holiday-calendar/TV.json",
+    "bytes": 97670,
+    "sha256": "2d520cc0868509afe43676a383f327790faf405713401594cc71a70750651eb8",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/TV.json"
+  },
+  {
+    "path": "assets/holiday-calendar/TW.json",
+    "bytes": 185949,
+    "sha256": "a1874f3fab800a671efd33eb63a7aefcabcaad116da37502519dca45345507d0",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/TW.json"
+  },
+  {
+    "path": "assets/holiday-calendar/TZ.json",
+    "bytes": 141851,
+    "sha256": "972cebc56558dcf676b55d0818fa5914b0085992f597cb2ddcc10e0b087c2302",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/TZ.json"
+  },
+  {
+    "path": "assets/holiday-calendar/UA.json",
+    "bytes": 4197,
+    "sha256": "e06ccc35ebc3c8d1e8e84f2a84d398271ddc938bcbe7c632cd103dc170fa78c5",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/UA.json"
+  },
+  {
+    "path": "assets/holiday-calendar/UG.json",
+    "bytes": 108815,
+    "sha256": "5fc3a684f136755ebf8841fc49fd96f15043b268c53b8d47a985305a72751790",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/UG.json"
+  },
+  {
+    "path": "assets/holiday-calendar/UM.json",
+    "bytes": 164857,
+    "sha256": "151b4e2bda0c96200b6df2f2cb5089ec77429629c9f9faba42cd9547cb663bb9",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/UM.json"
+  },
+  {
+    "path": "assets/holiday-calendar/US.json",
+    "bytes": 181475,
+    "sha256": "780e3966af8a2e59aadfa954a10d1f71b06defbc5d40dfd8b7ca710da3e03f74",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/US.json"
+  },
+  {
+    "path": "assets/holiday-calendar/UY.json",
+    "bytes": 42973,
+    "sha256": "31be733b7d55aba62b28c1d995f412645ccde9e137af561491ce0fd3a3abb4b8",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/UY.json"
+  },
+  {
+    "path": "assets/holiday-calendar/UZ.json",
+    "bytes": 95503,
+    "sha256": "81d42c852cd120ce23c2f1df069ef41c9ebfc492a624d5a2ae2524e48cae9a31",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/UZ.json"
+  },
+  {
+    "path": "assets/holiday-calendar/VA.json",
+    "bytes": 250645,
+    "sha256": "6a7076a960ea529392c2ada4079685796e1593a51630ed1690029c3ae21470f9",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/VA.json"
+  },
+  {
+    "path": "assets/holiday-calendar/VC.json",
+    "bytes": 114670,
+    "sha256": "ac1e8823855a2c28c87c4e9f7b45a6bbc28383419310bddd7a5061bfb06eb85c",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/VC.json"
+  },
+  {
+    "path": "assets/holiday-calendar/VE.json",
+    "bytes": 123446,
+    "sha256": "e3c01a9a032af5d51c09d3d08cd6ba43591a84c9b67c8c575160c5848a1f401b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/VE.json"
+  },
+  {
+    "path": "assets/holiday-calendar/VG.json",
+    "bytes": 127217,
+    "sha256": "a8443c34c334da46edf31b827a65a3f4aff83071331ee6dd81b9b0f3f3c3d570",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/VG.json"
+  },
+  {
+    "path": "assets/holiday-calendar/VI.json",
+    "bytes": 226889,
+    "sha256": "fc1507280f61b3a1453771273e850b47797e4fee838efc5a0181f267efc3e78a",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/VI.json"
+  },
+  {
+    "path": "assets/holiday-calendar/VN.json",
+    "bytes": 137304,
+    "sha256": "91b4557a9cec2281e95062632f33528f00822f0ce04c260314a01c99c22d6b55",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/VN.json"
+  },
+  {
+    "path": "assets/holiday-calendar/VU.json",
+    "bytes": 121127,
+    "sha256": "deb69e0e33b5f5aad874db116399dfa81a16aabd870a0acb77780661e1b58d6d",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/VU.json"
+  },
+  {
+    "path": "assets/holiday-calendar/WF.json",
+    "bytes": 110267,
+    "sha256": "e89ff0b8ab564692aefe55d20bd4eef81e92d8dbf64232b30a0cf1db2bfc3dd0",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/WF.json"
+  },
+  {
+    "path": "assets/holiday-calendar/WS.json",
+    "bytes": 90037,
+    "sha256": "3ddf05543b1953d8ddbe4eccf4d0c941e6ba3d7c8e41d1e29545ef3f04e71e28",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/WS.json"
+  },
+  {
+    "path": "assets/holiday-calendar/XK.json",
+    "bytes": 136130,
+    "sha256": "94b181f04fc5a459e3055ca06dee97c2d6731920a59b0a890bd789fb865d595b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/XK.json"
+  },
+  {
+    "path": "assets/holiday-calendar/YE.json",
+    "bytes": 126173,
+    "sha256": "3cdbb7789b80ff5aea541db1dd66b090e19455b112ab607391db299536008455",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/YE.json"
+  },
+  {
+    "path": "assets/holiday-calendar/YT.json",
+    "bytes": 92803,
+    "sha256": "2f5a41b24c6a2df0bd4f76318122e747a969ee72214d8a5b4fb778f1b5b7ecce",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/YT.json"
+  },
+  {
+    "path": "assets/holiday-calendar/ZA.json",
+    "bytes": 105135,
+    "sha256": "0f28cc31ea1a08ff60c70b2677f39b83cdc7226aca907b5ddca5a3d2d9d95cb7",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/ZA.json"
+  },
+  {
+    "path": "assets/holiday-calendar/ZM.json",
+    "bytes": 141563,
+    "sha256": "655ec9d0b85376b45c814b958a94b173ba1742f77f0bf468d4f5b53935578b8d",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/ZM.json"
+  },
+  {
+    "path": "assets/holiday-calendar/ZW.json",
+    "bytes": 114065,
+    "sha256": "cd161e69e83d96d36de853e82b284de6bea95a1c4819b30a920ad418187dd66b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holiday-calendar/ZW.json"
+  },
+  {
+    "path": "assets/holidays-LICENSE.txt",
+    "bytes": 1269,
+    "sha256": "6c2225dc3bbb3bb261a61d83f93c64123635d23a9862e1e8ce3a5604f3b6d38e",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/holidays-LICENSE.txt"
+  },
+  {
+    "path": "assets/materials/과피_미세결_높이맵.png",
+    "bytes": 2793320,
+    "sha256": "01b12d11f1ded88158e5f12ff59884ac5c9758b440b1b5e95f16475cd9979701",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/materials/%EA%B3%BC%ED%94%BC_%EB%AF%B8%EC%84%B8%EA%B2%B0_%EB%86%92%EC%9D%B4%EB%A7%B5.png"
+  },
+  {
+    "path": "assets/materials/꽃31종_꽃잎_색상지도.png",
+    "bytes": 2499757,
+    "sha256": "32ebacd62570e6c89e82c2470244969827e9b0aad19a6732e48ade20c8e9147d",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/materials/%EA%BD%8331%EC%A2%85_%EA%BD%83%EC%9E%8E_%EC%83%89%EC%83%81%EC%A7%80%EB%8F%84.png"
+  },
+  {
+    "path": "assets/materials/식물_미세결_높이맵.png",
+    "bytes": 2548040,
+    "sha256": "22720cba1371be521336c073949f27b9f135ee4f27a4f26c316c824b87fc4690",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/materials/%EC%8B%9D%EB%AC%BC_%EB%AF%B8%EC%84%B8%EA%B2%B0_%EB%86%92%EC%9D%B4%EB%A7%B5.png"
+  },
+  {
+    "path": "assets/materials/열매31종_과피_색상지도.png",
+    "bytes": 3077854,
+    "sha256": "369ed6e71d472b1f981d0d1ede7438e181cdb28d15361bd93b068200f36c8f3b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/materials/%EC%97%B4%EB%A7%A431%EC%A2%85_%EA%B3%BC%ED%94%BC_%EC%83%89%EC%83%81%EC%A7%80%EB%8F%84.png"
+  },
+  {
+    "path": "assets/materials/열매_베리3종_과피_보강지도.png",
+    "bytes": 2747512,
+    "sha256": "945c78ec1a99e353c015413690b27dd7de79141a851df871c9e1e4ecd2ba1ae1",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/materials/%EC%97%B4%EB%A7%A4_%EB%B2%A0%EB%A6%AC3%EC%A2%85_%EA%B3%BC%ED%94%BC_%EB%B3%B4%EA%B0%95%EC%A7%80%EB%8F%84.png"
+  },
+  {
+    "path": "assets/materials/잎31종_표면_색상지도.png",
+    "bytes": 3161423,
+    "sha256": "7dba81f9ab9d06b3e1f838e559bb5572b40a959369b6236d548796c610948488",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/materials/%EC%9E%8E31%EC%A2%85_%ED%91%9C%EB%A9%B4_%EC%83%89%EC%83%81%EC%A7%80%EB%8F%84.png"
+  },
+  {
+    "path": "assets/materials/재질_안내.md",
+    "bytes": 1308,
+    "sha256": "ec4b5ed88045e9cbd028bcbfb2047d59d6154298cb89970b70faba651ebb5556",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/materials/%EC%9E%AC%EC%A7%88_%EC%95%88%EB%82%B4.md"
+  },
+  {
+    "path": "assets/materials/종별재질_매핑.json",
+    "bytes": 21467,
+    "sha256": "08a974ab52f50ae2ef9b8c354085893acba5f0607ce978a5752ddff6bdfac277",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/materials/%EC%A2%85%EB%B3%84%EC%9E%AC%EC%A7%88_%EB%A7%A4%ED%95%91.json"
+  },
+  {
+    "path": "assets/materials/코코넛_껍질_섬유.png",
+    "bytes": 4302462,
+    "sha256": "d1474f389e491f9e5cdbd21380aebaae1cd207b50b03ec91845c52b3ce4e8898",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/materials/%EC%BD%94%EC%BD%94%EB%84%9B_%EA%BB%8D%EC%A7%88_%EC%84%AC%EC%9C%A0.png"
+  },
+  {
+    "path": "assets/OpenStreetMap-NOTICE.txt",
+    "bytes": 563,
+    "sha256": "30f41add220de3391e637a74638a816f2fbd22c1f72c4ac0431b991bfb92e1ae",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/OpenStreetMap-NOTICE.txt"
+  },
+  {
+    "path": "assets/Unicode-CLDR-LICENSE.txt",
+    "bytes": 2033,
+    "sha256": "b4c0ae8ef04f7059f96ce5bbe0467f9fe6f6d81bbe13517701dfeb961fb4d0b6",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/Unicode-CLDR-LICENSE.txt"
+  },
+  {
+    "path": "assets/사용법.md",
+    "bytes": 8950,
+    "sha256": "c9b93580f8f095008a7d5a1739eb2b2a0a5464d17dc60ca4f00d6d404dc6c33b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.2.0/assets/%EC%82%AC%EC%9A%A9%EB%B2%95.md"
+  }
+]

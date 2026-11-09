@@ -1,10 +1,18 @@
 """앱 소유 조작부의 폭 대응과 명확한 콤보 펼침 표시입니다."""
 from PySide6.QtCore import QPointF,Qt
 from PySide6.QtGui import QPainter,QPen,QPolygonF
-from PySide6.QtWidgets import QWidget,QComboBox,QGridLayout,QSizePolicy,QLayout,QStackedWidget
+from PySide6.QtWidgets import QWidget,QComboBox,QGridLayout,QSizePolicy,QLayout,QStackedWidget,QListView
 
 
 class OrbitComboBox(QComboBox):
+    def __init__(self,parent=None):
+        super().__init__(parent)
+        # 메뉴스타일의 위아래 스크롤 장식 대신 실제 항목 목록을 사용합니다.
+        view=QListView(self);view.setUniformItemSizes(True)
+        view.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        view.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.setView(view);self.setMaxVisibleItems(8)
+
     def paintEvent(self,event):
         super().paintEvent(event)
         painter=QPainter(self)

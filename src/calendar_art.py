@@ -6,6 +6,7 @@ import colorsys
 import calendar
 from functools import lru_cache
 from calendar_catalog import OBJECTS, collection_for_month, all_collections
+from calendar_specials import special_for_date, normalize_country
 
 FIRST_DATE = date(2026,1,1)
 LAST_DATE = date(2099,12,31)
@@ -30,9 +31,12 @@ class Design:
     composition: str
 
 
-def current_date():
-    """호스트의 현지 시간대와 무관하게 한국 날짜를 사용합니다."""
-    return datetime.now(KST).date()
+def current_date(utc_offset=None):
+    """기본은 한국 날짜이며 검증된 도시 시차가 있으면 그 도시 날짜를 사용합니다."""
+    if utc_offset is not None and (type(utc_offset) is not int or not -43200<=utc_offset<=50400):
+        raise ValueError('도시 시차는 UTC-12시간부터 UTC+14시간 사이의 정수 초여야 합니다.')
+    zone=KST if utc_offset is None else timezone(timedelta(seconds=utc_offset))
+    return datetime.now(zone).date()
 
 
 def _seed_for_date(value):
@@ -75,18 +79,24 @@ for _year in range(2026,2100):
 
 
 @lru_cache(maxsize=4)
-def design_for_date(value):
+def design_for_date(value, country='KR'):
     """유효한 날짜만 허용하며 지원 범위 밖을 다른 날짜로 몰래 대체하지 않습니다."""
     if type(value) is not date:
         raise TypeError('조형 날짜는 datetime.date여야 합니다.')
     if not FIRST_DATE <= value <= LAST_DATE:
         raise ValueError('날짜별 조형 지원 범위는 2026-01-01부터 2099-12-31까지입니다.')
+    country=normalize_country(country)
     key=value.isoformat()
     seed=_seed_for_date(value)
     collection=collection_for_month(value.year,value.month)
     subject=OBJECTS[collection.subjects[value.day-1]]
     # 기본색에 가까운 범위에서 날짜별 색을 정하며 형상 차이의 대용으로 쓰지 않습니다.
     accent=_month_palette(value.year,value.month)[value.day-1]
+    special=special_for_date(value,country)
+    if special is not None:
+        return Design(value,special.name,special.name if '특집' in special.name else special.name+' 특집',key,special.color,seed,
+                      value.day-1,((value.year-2026)+(seed%1000003)/1000003)/74,
+                      special.key,special.recipe,'','','특집 대상 하나')
     return Design(value,subject.name,collection.title,key,accent,seed,
                   value.day-1,((value.year-2026)+(seed%1000003)/1000003)/74,
                   subject.key,subject.recipe,collection.anchor_id,collection.companion_id,collection.composition)

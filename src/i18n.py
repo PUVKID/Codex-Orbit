@@ -93,3 +93,24 @@ def retranslate_widgets(root):
 
 # 29차 알림 조작의 번역입니다.
 _EN.update({'📌 고정':'📌 Pin','☆ 기록 보관':'☆ Bookmark','기록 보관':'Bookmark','화면 설정':'Display settings','진단 ZIP 저장':'Save diagnostics ZIP','프라이버시 모드':'Privacy mode','모션 축소':'Reduce motion','가장자리 도킹':'Edge docking','업데이트 확인':'Check for updates','입체 관측소':'3D observatory','날짜별 조형':'Daily sculpture'})
+
+# 32차 짧은 알림과 원문 접근 문구입니다.
+_EN.update({'공개된 선택 이유를 확인할 수 없습니다.':'The public reason for this choice is unavailable.', '이유 원문 펼치기':'Show original explanation', '이유 원문 접기':'Hide original explanation', '이유: ':'Reason: '})
+
+_EN.update({'기온을 표시할 지역':'Weather location', '도시를 검색해 선택하거나 네트워크 추정으로 돌아갈 수 있습니다.':'Choose a city or return to the network estimate.', '도시 이름 · 예: 수원, Paris':'City name · e.g. Suwon, Paris', '도시 이름':'City name', '검색':'Search', '검색어는 검색 버튼을 누를 때 Open-Meteo로 전송됩니다.':'Your search is sent to Open-Meteo only when you press Search.', '네트워크 추정으로 복귀':'Use network estimate', '선택한 지역 적용':'Use selected city', '도시를 찾는 중입니다.':'Searching for cities…', '도시와 나라를 확인한 뒤 선택해 주세요.':'Check the city and country before choosing.', '검색 결과가 없습니다. 도시 이름을 바꿔 보세요.':'No cities found. Try another city name.', '지역을 저장하지 못했습니다. 다시 시도해 주세요.':'Could not save the location. Please try again.', '지정한 지역':'Selected city', '지정한 지역: ':'Selected city: ', '네트워크 추정':'Network estimate', '지정한 도시 좌표':'Selected city coordinates', '\n기온 출처: Open-Meteo · 위치: ':'\nWeather source: Open-Meteo · Location: '})
+
+_EN.update({'설명이 길어 원문에서 전체 내용을 확인해 주세요.':'The explanation is long. Open the original to read it in full.', '작업 설명: ':'Task description: '})
+
+_EN.update({'날씨 미확인':'Weather unavailable', '이전 정보: ':'Earlier: ', '습도 ':'Humidity ', '이전 습도 ':'Earlier humidity ', '현지 시각':'Local time', '일출 ':'Sunrise ', '일몰 ':'Sunset '})
+
+_EN.update({'도시 이름을 두 글자 이상 입력해 주세요.':'Enter at least two characters for the city.', '도시 검색 응답이 너무 큽니다.':'The city search response is too large.', '도시를 찾지 못했습니다. 인터넷 연결과 이름을 확인해 주세요.':'Could not find cities. Check the connection and city name.', '도시 검색 시간이 초과됐습니다.':'City search timed out.'})
+
+# 통합 지역 선택은 실제 검색 서비스와 행사 기준을 구분합니다.
+_EN.update({'지역 선택':'Choose region', '도시·장소를 고르면 행사와 날씨를 함께 바꿉니다. 네트워크 추정은 실제 주소가 아닙니다.':'Choose a city or place to update events and weather together. A network estimate is not your actual address.', '도시·지역':'City / region', '주소·장소':'Address / place', '국가':'Country', '국가 이름 · 예: 대한민국, Japan':'Country name · e.g. Korea, Japan', '주소나 장소 이름':'Address or place name', '국가만 고르면 행사 기준만 바뀌고 날씨 지역은 유지됩니다.':'Choosing a country changes events only. Your weather location stays unchanged.', '검색할 때만 Photon / OpenStreetMap으로 장소 이름을 보냅니다.':'Place names are sent to Photon / OpenStreetMap only when you search.', '검색할 때만 Open-Meteo로 도시 이름을 보냅니다.':'City names are sent to Open-Meteo only when you search.', '나라를 고르면 그 나라의 행사 기준을 적용합니다. 날씨는 도시·장소를 따로 골라 주세요.':'Choose a country for its events. Choose a city or place separately for weather.', '지역을 찾는 중입니다.':'Searching for locations…', '국가 목록에서 선택해 주세요.':'Choose a country from the list.', '선택 지역의 날짜별 조형':'Daily sculpture for the selected region', '직접 선택':'Selected', '자동 추정 대기':'Waiting for network estimate', '날씨: ':'Weather: ', '행사: ':'Events: ', '행사는 국가 단위 자료이며 규칙과 법이 바뀔 수 있습니다.':'Events use country-level records. Rules and laws may change.', '일부 행사 자료는 지원되지 않거나 확인이 필요합니다.':'Some event records are unavailable or need confirmation.', '날짜·시각: 선택한 지역의 현지 기준':'Date and time: local to the selected location', '날짜·시각: 기본 한국 시각 · 도시나 장소를 고르면 현지 기준을 적용합니다.':'Date and time: default Korea time. Choose a city or place to use its local time.'})
+
+_EN.update({'도시 검색이 늦어지고 있습니다. 다시 검색해 주세요.':'City search is taking longer than expected. Please search again.', '검색은 1초 뒤에 다시 해 주세요.':'Please wait one second before searching again.'})
+
+_EN.update({'동명 지역이 있으니 도시·행정구역·나라를 확인한 뒤 골라 주세요.':'Places can share a name. Check the city, administrative region and country before choosing.', '검색 결과가 없습니다. 영문 도시 이름이나 주소·장소 검색을 이용해 보세요.':'No results found. Try the city name in English, or use address / place search.'})
+
+# 날씨 시간 초과와 선택 지역의 고정 출처 안내만 번역합니다.
+_EN.update({'위치 또는 기온 조회 시간 초과':'Location or temperature lookup timed out', '사용자 선택 지점 · Photon / OpenStreetMap':'Selected place · Photon / OpenStreetMap', '사용자 지정 도시 · Open-Meteo / GeoNames':'Selected city · Open-Meteo / GeoNames'})

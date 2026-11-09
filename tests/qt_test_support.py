@@ -63,6 +63,11 @@ def cleanup_qt_widgets(testcase):
             timer.stop()
         widget.close()
         widget.deleteLater()
+    # unittest는 앱의 aboutToQuit를 발생시키지 않으므로 인터프리터 종료 전에 GPU 작업자도 닫습니다.
+    import calendar_motion
+    calendar_motion.close_calendar_motion()
+    testcase.assertIsNone(calendar_motion._service, '시험의 전역 GPU 서비스가 정리돼야 합니다.')
+    testcase.assertIsNone(calendar_motion._retiring, '미종료 GPU 작업자를 다음 시험이나 atexit에 넘기지 않습니다.')
     QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)
     testcase.assertFalse(any(isinstance(widget, OrbitWidget) for widget in application.topLevelWidgets()),
                          '다음 시험에 궤도 위젯이나 회전 타이머를 남기지 않습니다.')

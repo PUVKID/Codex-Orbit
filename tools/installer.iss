@@ -1,7 +1,7 @@
 ﻿[Setup]
 AppId=CodexOrbit.Desktop
 AppName=Codex Orbit
-AppVersion=3.1.0
+AppVersion=3.2.0
 AppPublisher=Codex Orbit
 DefaultDirName={localappdata}\Programs\CodexOrbit
 DefaultGroupName=Codex Orbit

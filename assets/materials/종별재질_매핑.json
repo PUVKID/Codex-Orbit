@@ -1,0 +1,1019 @@
+{
+  "schema_version": 1,
+  "grid": [
+    8,
+    4
+  ],
+  "ordering": "왼쪽 위부터 가로 순서, 마지막 칸은 사용하지 않는 중립 예비",
+  "source_type": "ImageGen 생성 표면 지도; 원본 파일을 수정하지 않고 QImage 메모리에서만 타일 추출",
+  "atlases": {
+    "열매": {
+      "file": "열매31종_과피_색상지도.png",
+      "sha256": "369ed6e71d472b1f981d0d1ede7438e181cdb28d15361bd93b068200f36c8f3b",
+      "dimensions": [
+        1774,
+        887
+      ],
+      "object_ids": [
+        "apple",
+        "pear",
+        "quince",
+        "peach",
+        "apricot",
+        "plum_fruit",
+        "cherry_fruit",
+        "grape",
+        "muscat",
+        "orange",
+        "mandarin",
+        "lemon",
+        "lime",
+        "grapefruit",
+        "strawberry",
+        "raspberry",
+        "blackberry",
+        "blueberry",
+        "banana",
+        "pineapple",
+        "mango",
+        "papaya",
+        "kiwi",
+        "watermelon",
+        "melon",
+        "persimmon",
+        "pomegranate",
+        "fig",
+        "starfruit",
+        "dragonfruit",
+        "coconut"
+      ],
+      "reviewed": true,
+      "review_scope": "전체 지도를 직접 열람해 칸별 표면 성격과 카탈로그 순서를 대조; 식물학적 표본 인증이나 사진 수준 재현을 뜻하지 않음",
+      "excluded": {
+        "raspberry": "큰 돌기·형상 또는 방향성 명암이 포함되어 무광 알베도 사용 보류; 기존 절차 재질 유지",
+        "blackberry": "큰 돌기·형상 또는 방향성 명암이 포함되어 무광 알베도 사용 보류; 기존 절차 재질 유지",
+        "blueberry": "큰 돌기·형상 또는 방향성 명암이 포함되어 무광 알베도 사용 보류; 기존 절차 재질 유지",
+        "pineapple": "큰 돌기·형상 또는 방향성 명암이 포함되어 무광 알베도 사용 보류; 기존 절차 재질 유지",
+        "melon": "큰 돌기·형상 또는 방향성 명암이 포함되어 무광 알베도 사용 보류; 기존 절차 재질 유지",
+        "dragonfruit": "큰 돌기·형상 또는 방향성 명암이 포함되어 무광 알베도 사용 보류; 기존 절차 재질 유지",
+        "coconut": "기존 검토된 코코넛 섬유 표면 재질을 유지"
+      },
+      "tiles": [
+        {
+          "object_id": "apple",
+          "rectangle": [
+            0,
+            0,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "pear",
+          "rectangle": [
+            222,
+            0,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "quince",
+          "rectangle": [
+            444,
+            0,
+            221,
+            222
+          ]
+        },
+        {
+          "object_id": "peach",
+          "rectangle": [
+            665,
+            0,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "apricot",
+          "rectangle": [
+            887,
+            0,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "plum_fruit",
+          "rectangle": [
+            1109,
+            0,
+            221,
+            222
+          ]
+        },
+        {
+          "object_id": "cherry_fruit",
+          "rectangle": [
+            1330,
+            0,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "grape",
+          "rectangle": [
+            1552,
+            0,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "muscat",
+          "rectangle": [
+            0,
+            222,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "orange",
+          "rectangle": [
+            222,
+            222,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "mandarin",
+          "rectangle": [
+            444,
+            222,
+            221,
+            222
+          ]
+        },
+        {
+          "object_id": "lemon",
+          "rectangle": [
+            665,
+            222,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "lime",
+          "rectangle": [
+            887,
+            222,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "grapefruit",
+          "rectangle": [
+            1109,
+            222,
+            221,
+            222
+          ]
+        },
+        {
+          "object_id": "strawberry",
+          "rectangle": [
+            1330,
+            222,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "raspberry",
+          "rectangle": [
+            1552,
+            222,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "blackberry",
+          "rectangle": [
+            0,
+            444,
+            222,
+            221
+          ]
+        },
+        {
+          "object_id": "blueberry",
+          "rectangle": [
+            222,
+            444,
+            222,
+            221
+          ]
+        },
+        {
+          "object_id": "banana",
+          "rectangle": [
+            444,
+            444,
+            221,
+            221
+          ]
+        },
+        {
+          "object_id": "pineapple",
+          "rectangle": [
+            665,
+            444,
+            222,
+            221
+          ]
+        },
+        {
+          "object_id": "mango",
+          "rectangle": [
+            887,
+            444,
+            222,
+            221
+          ]
+        },
+        {
+          "object_id": "papaya",
+          "rectangle": [
+            1109,
+            444,
+            221,
+            221
+          ]
+        },
+        {
+          "object_id": "kiwi",
+          "rectangle": [
+            1330,
+            444,
+            222,
+            221
+          ]
+        },
+        {
+          "object_id": "watermelon",
+          "rectangle": [
+            1552,
+            444,
+            222,
+            221
+          ]
+        },
+        {
+          "object_id": "melon",
+          "rectangle": [
+            0,
+            665,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "persimmon",
+          "rectangle": [
+            222,
+            665,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "pomegranate",
+          "rectangle": [
+            444,
+            665,
+            221,
+            222
+          ]
+        },
+        {
+          "object_id": "fig",
+          "rectangle": [
+            665,
+            665,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "starfruit",
+          "rectangle": [
+            887,
+            665,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "dragonfruit",
+          "rectangle": [
+            1109,
+            665,
+            221,
+            222
+          ]
+        },
+        {
+          "object_id": "coconut",
+          "rectangle": [
+            1330,
+            665,
+            222,
+            222
+          ]
+        }
+      ]
+    },
+    "잎": {
+      "file": "잎31종_표면_색상지도.png",
+      "sha256": "7dba81f9ab9d06b3e1f838e559bb5572b40a959369b6236d548796c610948488",
+      "dimensions": [
+        1774,
+        887
+      ],
+      "object_ids": [
+        "maple",
+        "ginkgo",
+        "oak",
+        "birch",
+        "beech",
+        "elm",
+        "willow",
+        "olive",
+        "eucalyptus",
+        "poplar",
+        "linden",
+        "ivy",
+        "grape_leaf",
+        "fig_leaf",
+        "monstera",
+        "philodendron",
+        "lotus_leaf",
+        "nasturtium",
+        "clover",
+        "oxalis",
+        "horse_chestnut",
+        "ash",
+        "rowan",
+        "fern",
+        "palm",
+        "bamboo",
+        "pine",
+        "fir",
+        "rosemary",
+        "mint",
+        "sage"
+      ],
+      "reviewed": true,
+      "review_scope": "전체 지도를 직접 열람해 칸별 표면 성격과 카탈로그 순서를 대조; 식물학적 표본 인증이나 사진 수준 재현을 뜻하지 않음",
+      "excluded": {
+        "fern": "작은 잎의 전체 형상이 포함되어 단일 잎 표면 알베도 사용 보류; 기존 절차 재질 유지"
+      },
+      "tiles": [
+        {
+          "object_id": "maple",
+          "rectangle": [
+            0,
+            0,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "ginkgo",
+          "rectangle": [
+            222,
+            0,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "oak",
+          "rectangle": [
+            444,
+            0,
+            221,
+            222
+          ]
+        },
+        {
+          "object_id": "birch",
+          "rectangle": [
+            665,
+            0,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "beech",
+          "rectangle": [
+            887,
+            0,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "elm",
+          "rectangle": [
+            1109,
+            0,
+            221,
+            222
+          ]
+        },
+        {
+          "object_id": "willow",
+          "rectangle": [
+            1330,
+            0,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "olive",
+          "rectangle": [
+            1552,
+            0,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "eucalyptus",
+          "rectangle": [
+            0,
+            222,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "poplar",
+          "rectangle": [
+            222,
+            222,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "linden",
+          "rectangle": [
+            444,
+            222,
+            221,
+            222
+          ]
+        },
+        {
+          "object_id": "ivy",
+          "rectangle": [
+            665,
+            222,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "grape_leaf",
+          "rectangle": [
+            887,
+            222,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "fig_leaf",
+          "rectangle": [
+            1109,
+            222,
+            221,
+            222
+          ]
+        },
+        {
+          "object_id": "monstera",
+          "rectangle": [
+            1330,
+            222,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "philodendron",
+          "rectangle": [
+            1552,
+            222,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "lotus_leaf",
+          "rectangle": [
+            0,
+            444,
+            222,
+            221
+          ]
+        },
+        {
+          "object_id": "nasturtium",
+          "rectangle": [
+            222,
+            444,
+            222,
+            221
+          ]
+        },
+        {
+          "object_id": "clover",
+          "rectangle": [
+            444,
+            444,
+            221,
+            221
+          ]
+        },
+        {
+          "object_id": "oxalis",
+          "rectangle": [
+            665,
+            444,
+            222,
+            221
+          ]
+        },
+        {
+          "object_id": "horse_chestnut",
+          "rectangle": [
+            887,
+            444,
+            222,
+            221
+          ]
+        },
+        {
+          "object_id": "ash",
+          "rectangle": [
+            1109,
+            444,
+            221,
+            221
+          ]
+        },
+        {
+          "object_id": "rowan",
+          "rectangle": [
+            1330,
+            444,
+            222,
+            221
+          ]
+        },
+        {
+          "object_id": "fern",
+          "rectangle": [
+            1552,
+            444,
+            222,
+            221
+          ]
+        },
+        {
+          "object_id": "palm",
+          "rectangle": [
+            0,
+            665,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "bamboo",
+          "rectangle": [
+            222,
+            665,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "pine",
+          "rectangle": [
+            444,
+            665,
+            221,
+            222
+          ]
+        },
+        {
+          "object_id": "fir",
+          "rectangle": [
+            665,
+            665,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "rosemary",
+          "rectangle": [
+            887,
+            665,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "mint",
+          "rectangle": [
+            1109,
+            665,
+            221,
+            222
+          ]
+        },
+        {
+          "object_id": "sage",
+          "rectangle": [
+            1330,
+            665,
+            222,
+            222
+          ]
+        }
+      ]
+    },
+    "꽃": {
+      "file": "꽃31종_꽃잎_색상지도.png",
+      "sha256": "32ebacd62570e6c89e82c2470244969827e9b0aad19a6732e48ade20c8e9147d",
+      "dimensions": [
+        1774,
+        887
+      ],
+      "object_ids": [
+        "rose",
+        "tulip",
+        "daffodil",
+        "lily",
+        "lotus",
+        "cherry",
+        "plum",
+        "camellia",
+        "magnolia",
+        "hibiscus",
+        "sunflower",
+        "daisy",
+        "cosmos",
+        "chrysanthemum",
+        "gerbera",
+        "dahlia",
+        "zinnia",
+        "marigold",
+        "carnation",
+        "peony",
+        "poppy",
+        "anemone",
+        "ranunculus",
+        "bellflower",
+        "morning_glory",
+        "petunia",
+        "foxglove",
+        "lavender",
+        "hydrangea",
+        "lilac",
+        "gujeolcho"
+      ],
+      "reviewed": true,
+      "review_scope": "전체 지도를 직접 열람해 칸별 표면 성격과 카탈로그 순서를 대조; 식물학적 표본 인증이나 사진 수준 재현을 뜻하지 않음",
+      "excluded": {},
+      "tiles": [
+        {
+          "object_id": "rose",
+          "rectangle": [
+            0,
+            0,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "tulip",
+          "rectangle": [
+            222,
+            0,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "daffodil",
+          "rectangle": [
+            444,
+            0,
+            221,
+            222
+          ]
+        },
+        {
+          "object_id": "lily",
+          "rectangle": [
+            665,
+            0,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "lotus",
+          "rectangle": [
+            887,
+            0,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "cherry",
+          "rectangle": [
+            1109,
+            0,
+            221,
+            222
+          ]
+        },
+        {
+          "object_id": "plum",
+          "rectangle": [
+            1330,
+            0,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "camellia",
+          "rectangle": [
+            1552,
+            0,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "magnolia",
+          "rectangle": [
+            0,
+            222,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "hibiscus",
+          "rectangle": [
+            222,
+            222,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "sunflower",
+          "rectangle": [
+            444,
+            222,
+            221,
+            222
+          ]
+        },
+        {
+          "object_id": "daisy",
+          "rectangle": [
+            665,
+            222,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "cosmos",
+          "rectangle": [
+            887,
+            222,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "chrysanthemum",
+          "rectangle": [
+            1109,
+            222,
+            221,
+            222
+          ]
+        },
+        {
+          "object_id": "gerbera",
+          "rectangle": [
+            1330,
+            222,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "dahlia",
+          "rectangle": [
+            1552,
+            222,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "zinnia",
+          "rectangle": [
+            0,
+            444,
+            222,
+            221
+          ]
+        },
+        {
+          "object_id": "marigold",
+          "rectangle": [
+            222,
+            444,
+            222,
+            221
+          ]
+        },
+        {
+          "object_id": "carnation",
+          "rectangle": [
+            444,
+            444,
+            221,
+            221
+          ]
+        },
+        {
+          "object_id": "peony",
+          "rectangle": [
+            665,
+            444,
+            222,
+            221
+          ]
+        },
+        {
+          "object_id": "poppy",
+          "rectangle": [
+            887,
+            444,
+            222,
+            221
+          ]
+        },
+        {
+          "object_id": "anemone",
+          "rectangle": [
+            1109,
+            444,
+            221,
+            221
+          ]
+        },
+        {
+          "object_id": "ranunculus",
+          "rectangle": [
+            1330,
+            444,
+            222,
+            221
+          ]
+        },
+        {
+          "object_id": "bellflower",
+          "rectangle": [
+            1552,
+            444,
+            222,
+            221
+          ]
+        },
+        {
+          "object_id": "morning_glory",
+          "rectangle": [
+            0,
+            665,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "petunia",
+          "rectangle": [
+            222,
+            665,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "foxglove",
+          "rectangle": [
+            444,
+            665,
+            221,
+            222
+          ]
+        },
+        {
+          "object_id": "lavender",
+          "rectangle": [
+            665,
+            665,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "hydrangea",
+          "rectangle": [
+            887,
+            665,
+            222,
+            222
+          ]
+        },
+        {
+          "object_id": "lilac",
+          "rectangle": [
+            1109,
+            665,
+            221,
+            222
+          ]
+        },
+        {
+          "object_id": "gujeolcho",
+          "rectangle": [
+            1330,
+            665,
+            222,
+            222
+          ]
+        }
+      ]
+    }
+  },
+  "overrides": {
+    "raspberry": {
+      "file": "열매_베리3종_과피_보강지도.png",
+      "sha256": "945c78ec1a99e353c015413690b27dd7de79141a851df871c9e1e4ecd2ba1ae1",
+      "index": 15,
+      "reviewed": true,
+      "review_scope": "세 칸의 큰 구체와 중심 명암을 제외한 무광 미세결 직접 확인; 다른 칸 사용 안 함"
+    },
+    "blackberry": {
+      "file": "열매_베리3종_과피_보강지도.png",
+      "sha256": "945c78ec1a99e353c015413690b27dd7de79141a851df871c9e1e4ecd2ba1ae1",
+      "index": 16,
+      "reviewed": true,
+      "review_scope": "세 칸의 큰 구체와 중심 명암을 제외한 무광 미세결 직접 확인; 다른 칸 사용 안 함"
+    },
+    "blueberry": {
+      "file": "열매_베리3종_과피_보강지도.png",
+      "sha256": "945c78ec1a99e353c015413690b27dd7de79141a851df871c9e1e4ecd2ba1ae1",
+      "index": 17,
+      "reviewed": true,
+      "review_scope": "세 칸의 큰 구체와 중심 명암을 제외한 무광 미세결 직접 확인; 다른 칸 사용 안 함"
+    }
+  }
+}

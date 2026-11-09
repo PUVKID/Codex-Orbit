@@ -11,7 +11,7 @@ from qt_test_support import cleanup_qt_widgets
 
 class FakeWeather(QObject):
     changed=Signal(dict)
-    def __init__(self,parent=None,language='ko'):
+    def __init__(self,parent=None,language='ko',location_override=None):
         super().__init__(parent);self.started=0;self.closed=False
         self.language=language if language in ('ko','en') else 'ko'
         self.snapshot={'temperature':None,'region':'','checked_at':None,'observed_at':None,'status':'기온 조회 준비','stale':True,'busy':False,
@@ -41,7 +41,7 @@ class WeatherIntegrationTests(unittest.TestCase):
     def test_fresh_stale_failed_and_tooltip_survive_usage_refresh(self):
         c=self.create();self.assertEqual(c.weather.started,0)
         value=dict(temperature=5.2,region='추정 지역',checked_at=1793199840,observed_at=1793199600,status='기온 최신',stale=False,busy=False)
-        c.weather.changed.emit(value);self.assertEqual(c.orbit.weather_text,'5.2℃')
+        c.weather.changed.emit(value);self.assertEqual(c.orbit.weather_text,'5.2℃ · 날씨 미확인')
         self.assertIn('제공 시각: '+datetime.fromtimestamp(1793199600).astimezone().strftime('%Y-%m-%d %H:%M:%S'),c.orbit.toolTip())
         self.assertIn('조회 시각: '+datetime.fromtimestamp(1793199840).astimezone().strftime('%Y-%m-%d %H:%M:%S'),c.orbit.toolTip())
         c.update_usage(c.usage.snapshot)
@@ -58,7 +58,7 @@ class WeatherIntegrationTests(unittest.TestCase):
         self.assertEqual(c.orbit.weather_text,before)
         c.close()
     def test_clock_seconds_default_size_and_saved_size(self):
-        c=self.create();self.assertEqual((c.orbit.width(),c.orbit.height()),(220,332))
+        c=self.create();self.assertEqual((c.orbit.width(),c.orbit.height()),(220,432))
         with patch('app.datetime') as clock:
             clock.now.return_value=datetime(2026,10,29,1,2,3)
             self.assertEqual(c.orbit.clock_text(),'01:02:03')

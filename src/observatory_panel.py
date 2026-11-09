@@ -278,6 +278,14 @@ class OrbitExperience:
         action,button=menu_row(self.menu,'새 버전 확인','Check for update','공식 저장소에서 새 버전을 확인합니다.','Check the official repository for a newer version.');button.clicked.connect(lambda:(self.menu.hide(),self.check_update()))
         for combo in (self.theme_combo,self.text_size,c.window.language_combo,self.view):combo.setMinimumHeight(38)
         motion=c.window.layout().takeAt(2).layout();c.window.motion_speed_slider.setMaximumWidth(340);motion.addStretch();rows.addLayout(motion)
+        location_row=QHBoxLayout()
+        self.location_label=QLabel(tr('네트워크 추정 · 위치 정보 없음','Network estimate · Location unavailable'))
+        self.location_label.setWordWrap(True)
+        self.location_label.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Preferred)
+        set_ui_style(self.location_label,'font-size:12px;color:#55736b;')
+        self.location_button=QPushButton(tr('지역 변경','Change location'))
+        self.location_button.clicked.connect(c.show_weather_location)
+        location_row.addWidget(self.location_label,1);location_row.addWidget(self.location_button);rows.addLayout(location_row)
         self.update_labels()
     def update_labels(self):
         c=self.controller
@@ -296,6 +304,7 @@ class OrbitExperience:
                 action.setText(translations.get(action.text(),action.text()))
                 if action.menu():menu_labels(action.menu())
         menu_labels(self.menu)
+        self.location_button.setText(tr('지역 변경','Change location'))
         self.text_size.setAccessibleName(tr('글자 크기','Text size'));self.panel.live.setText(tr('실시간 복귀','Return to live'))
         for label,ko,en in self.ui_labels:label.setText(tr(ko,en))
         for button,label,ko,en,dk,de in self.menu_rows:button.setText(tr(ko,en));label.setText(tr(dk,de))
@@ -345,6 +354,8 @@ class OrbitExperience:
             source=child.property('orbit_style_source')
             if source is None:source=child.styleSheet()
             set_ui_style(child,source)
+        for notice in c.notices.values():notice.apply_text_scale(scale)
+        if c.notices:c.layout_notices()
         self.panel.agents.fit_rows();c.window.history_layout_timer.start(0)
     def ingest(self,event):
         c=self.controller

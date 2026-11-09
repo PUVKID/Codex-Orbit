@@ -24,9 +24,9 @@ def next_frame_deadline(previous, now):
     return max(previous+1/FPS,now)
 
 
-def fallback_image(value):
+def fallback_image(value,country='KR'):
     """GPU 준비·실패 때만 쓰는 월 주제의 정적 평면 표식입니다. 3D 성공으로 가장하지 않습니다."""
-    design=design_for_date(value); month=value.month
+    design=design_for_date(value,country); month=value.month
     image=QImage(SIZE,SIZE,QImage.Format.Format_ARGB32_Premultiplied); image.fill(Qt.GlobalColor.transparent)
     painter=QPainter(image); painter.setRenderHint(QPainter.RenderHint.Antialiasing)
     painter.translate(SIZE/2,SIZE/2); painter.scale(3,3)
@@ -65,6 +65,7 @@ class _Worker(QThread):
     def __init__(self):
         super().__init__(); self.condition=threading.Condition(); self.stopping=False; self.visible=False
         self.requested_date=None; self.requested_elapsed=0.; self.requested_at=time.perf_counter()
+        self.country='KR'; self.latest_country=None;self.utc_offset=None;self.latest_utc_offset=None
         self.started_at=time.perf_counter()
         self.motion_clock=MotionClock(self.started_at)
         self.latest=None; self.latest_date=None; self.error=''; self.render_count=0; self.renderer_name=''
@@ -82,8 +83,16 @@ class _Worker(QThread):
         if self.options is not None:fps=min(fps,scene_fps(self.options))
         return paused,reduced,fps
 
-    def configure(self,visible=None,value=None,elapsed=None,output_size=None,motion_speed=None,scene=_UNCHANGED,options=_UNCHANGED):
+    def configure(self,visible=None,value=None,elapsed=None,output_size=None,motion_speed=None,scene=_UNCHANGED,options=_UNCHANGED,country=None,utc_offset=_UNCHANGED):
         with self.condition:
+            if utc_offset is not _UNCHANGED and utc_offset!=self.utc_offset:
+                current_date(utc_offset)
+                self.utc_offset=utc_offset;self.scene_version+=1
+            if country is not None:
+                from calendar_specials import normalize_country
+                country=normalize_country(country)
+                if country!=self.country:
+                    self.country=country; self.scene_version+=1
             previous_flags=self._render_options()
             previous_controlled=self.scene is not None or self.options is not None
             if visible is not None:self.visible=visible
@@ -122,7 +131,8 @@ class _Worker(QThread):
                     while not self.stopping:
                         paused,reduced,_=self._render_options()
                         static_done=((paused or reduced) and self.rendered_scene_version==self.scene_version
-                                     and self.latest_date==(self.requested_date or current_date()))
+                                     and self.latest_date==(self.requested_date or (current_date() if self.utc_offset is None else current_date(self.utc_offset)))
+                                     and self.latest_country==self.country and self.latest_utc_offset==self.utc_offset)
                         if self.visible and not static_done:break
                         # 정적 달력도 날짜가 바뀌면 한 프레임만 갱신하며 보이지 않으면 쉬어 둡니다.
                         self.condition.wait(1.0 if self.visible else None)
@@ -134,7 +144,9 @@ class _Worker(QThread):
                 with self.condition:
                     if self.stopping:break
                     if not self.visible:continue
-                    value=self.requested_date or current_date()
+                    value=self.requested_date or (current_date() if self.utc_offset is None else current_date(self.utc_offset))
+                    country=self.country
+                    utc_offset=self.utc_offset
                     # 각 호출자의 서로 다른 타이머 원점 대신 서비스의 한 시계를 공유합니다.
                     elapsed=self.motion_clock.sample(time.perf_counter())
                     output_size=self.output_size
@@ -148,13 +160,20 @@ class _Worker(QThread):
                 start=time.perf_counter()
                 if renderer is None:
                     from calendar_renderer import CalendarRenderer
-                    renderer=CalendarRenderer(RENDER_SIZE); self.renderer_name=renderer.ctx.info.get('GL_RENDERER','확인 불가')
+                    with self.condition:
+                        if self.stopping:break
+                    renderer=CalendarRenderer(RENDER_SIZE)
+                    with self.condition:
+                        if self.stopping:break
+                    self.renderer_name=renderer.ctx.info.get('GL_RENDERER','확인 불가')
                 if hasattr(renderer,'set_output_size'):renderer.set_output_size(output_size)
-                image=renderer.render(value,elapsed) if scene is None else renderer.render_observatory(scene,elapsed)
+                with self.condition:
+                    if self.stopping:break
+                image=renderer.render(value,elapsed,country=country) if scene is None else renderer.render_observatory(scene,elapsed)
                 finished=time.perf_counter()
                 with self.condition:
                     self.render_count+=1; image.setText('calendar_frame_id',str(self.render_count))
-                    self.latest=image; self.latest_date=value
+                    self.latest=image; self.latest_date=value; self.latest_country=country;self.latest_utc_offset=utc_offset
                     self.rendered_scene_version=scene_version; self.scene_elapsed=elapsed; self.scene_sample_at=sample_at
                     if self.first_render_at is None:self.first_render_at=finished
                     self.last_render_at=finished; self.render_seconds+=finished-start
@@ -223,18 +242,20 @@ class CalendarMotion(QObject):
         try:valid=math.isfinite(elapsed)
         except OverflowError:valid=False
         if not valid:raise ValueError('재생 시각은 유한한 숫자여야 합니다.')
-        actual=current_date() if value is None else value; design_for_date(actual)
+        with self.worker.condition:country=self.worker.country;utc_offset=self.worker.utc_offset
+        actual=(current_date() if utc_offset is None else current_date(utc_offset)) if value is None else value
+        design_for_date(actual,country)
         self.worker.configure(value=value,elapsed=elapsed)
         with self.worker.condition:
-            image=self.worker.latest if self.worker.latest_date==actual else None
+            image=self.worker.latest if self.worker.latest_date==actual and self.worker.latest_country==country and self.worker.latest_utc_offset==utc_offset else None
         if image is not None:return QImage(image)
-        if self.fallback_date!=actual:
-            self.fallback=fallback_image(actual); self.fallback_date=actual
+        if self.fallback_date!=(actual,country):
+            self.fallback=fallback_image(actual,country); self.fallback_date=(actual,country)
         return QImage(self.fallback)
 
-    def close(self):
+    def close(self,timeout_ms=2000):
         self.closed=True; self.owners.clear(); self.sizes.clear(); self.presented.clear(); self.worker.stop()
-        finished=self.worker.wait(2000)
+        finished=self.worker.wait(timeout_ms)
         if finished:
             with self.worker.condition:self.worker.latest=None
             self.fallback=None
@@ -260,6 +281,7 @@ def _get_service():
         _quit_connected=True
     if _retiring is not None:
         if _retiring.worker.isRunning():raise RuntimeError('이전 GPU 작업 스레드가 종료 중입니다.')
+        if not _retiring.close(timeout_ms=0):raise RuntimeError('이전 GPU 작업 스레드의 종료 확인에 실패했습니다.')
         _retiring=None
     if _service is None:
         _service=CalendarMotion()
@@ -274,7 +296,7 @@ def prepare_calendar_motion(timeout_seconds=5.0):
     """창 표시 전에 같은 작업자의 첫 실제 프레임을 최대 5초 준비합니다."""
     if type(timeout_seconds) not in (int,float) or not 0 < timeout_seconds <= 5:
         raise ValueError('3D 준비 제한은 0초 초과 5초 이하여야 합니다.')
-    service=_get_service();worker=service.worker;value=current_date()
+    service=_get_service();worker=service.worker;value=get_calendar_date()
     deadline=time.monotonic()+timeout_seconds
     with worker.condition:
         previous_date=worker.requested_date
@@ -304,6 +326,29 @@ def set_calendar_motion_speed(value: float):
     """현재 위상을 유지하고 이후 모션의 배율만 바꿉니다. 실제 시계와 날짜는 바꾸지 않습니다."""
     speed=validate_motion_speed(value)
     _get_service().worker.configure(motion_speed=speed)
+
+
+def set_calendar_country(country='KR'):
+    """같은 날짜의 국가 변경도 정지 여부와 관계없이 새 프레임으로 갱신합니다."""
+    from calendar_specials import normalize_country
+    country=normalize_country(country)
+    _get_service().worker.configure(country=country)
+
+
+def set_calendar_utc_offset(offset_seconds=None):
+    """검증된 도시 시차만 반영하며 None은 기존 한국 시간 기준으로 돌아갑니다."""
+    current_date(offset_seconds)
+    _get_service().worker.configure(utc_offset=offset_seconds)
+
+
+def get_calendar_utc_offset():
+    if _service is None:return None
+    with _service.worker.condition:return _service.worker.utc_offset
+
+
+def get_calendar_date():
+    offset=get_calendar_utc_offset()
+    return current_date() if offset is None else current_date(offset)
 
 
 def set_calendar_observatory_scene(scene):
@@ -358,6 +403,8 @@ def calendar_motion_status():
         return {'running':_service.worker.isRunning(),'owners':len(_service.owners),
                 'images':int(_service.worker.latest is not None)+int(_service.fallback is not None),
                 'render_count':_service.worker.render_count,'date':str(_service.worker.latest_date),
+                'country':_service.worker.country,'rendered_country':_service.worker.latest_country,
+                'utc_offset_seconds':_service.worker.utc_offset,'rendered_utc_offset_seconds':_service.worker.latest_utc_offset,
                 'motion_speed':_service.worker.motion_clock.speed,
                 'target_fps':fps,'source_dimensions':list(RENDER_SIZE),
                 'paused':paused,'reduced_motion':reduced,
@@ -377,10 +424,16 @@ def calendar_motion_status():
 
 def close_calendar_motion():
     global _service,_retiring
-    if _service is not None:
-        value,_service=_service,None
-        if not value.close():
-            _retiring=value
+    deadline=time.monotonic()+2.
+    value=_service if _service is not None else _retiring
+    if value is not None:
+        _service=None
+        # 미완료 작업자의 참조는 다음 종료 호출까지 보존합니다.
+        _retiring=value
+        remaining=max(0,int((deadline-time.monotonic())*1000))
+        if value.close(timeout_ms=remaining):
+            _retiring=None
+        else:
             _logger.error('GPU 스레드가 2초 이내 종료되지 않아 참조를 보존합니다. 새 컨텍스트는 시작하지 않습니다.')
 
 

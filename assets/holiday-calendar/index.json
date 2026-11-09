@@ -1,0 +1,2017 @@
+{
+  "schema_version": 1,
+  "first_year": 2026,
+  "last_year": 2099,
+  "source_version": "0.108",
+  "country_name_source": "Babel 2.18.0 / Unicode CLDR",
+  "generated_at": "2026-11-09T18:56:24.092898+00:00",
+  "sources": [
+    "https://github.com/vacanza/holidays",
+    "https://holidays.readthedocs.io/en/latest/",
+    "https://cldr.unicode.org/"
+  ],
+  "scope": "국가 단위 공휴일과 자료가 지원하는 비공식 기념일. 모든 도시 축제·미래 법적 확정 일정 보장이 아님.",
+  "countries": [
+    {
+      "code": "AD",
+      "name_ko": "안도라",
+      "name_en": "Andorra",
+      "file": "AD.json",
+      "bytes": 109055,
+      "sha256": "89b48a4b35ab325f18c2b26b9b817a928fda380df7add74f95a53f6f4df277b4"
+    },
+    {
+      "code": "AE",
+      "name_ko": "아랍에미리트",
+      "name_en": "United Arab Emirates",
+      "file": "AE.json",
+      "bytes": 88053,
+      "sha256": "16b3210cf75f0ca7363abe6aaf0d59cdae81528c18577eeef556e7c7a27df5ef"
+    },
+    {
+      "code": "AF",
+      "name_ko": "아프가니스탄",
+      "name_en": "Afghanistan",
+      "file": "AF.json",
+      "bytes": 107195,
+      "sha256": "19c3dfe3a3ca4e6d9e7bff847d0baf72e84627ad18f3d2453f32c8d64d8b4ea4"
+    },
+    {
+      "code": "AG",
+      "name_ko": "앤티가 바부다",
+      "name_en": "Antigua & Barbuda",
+      "file": "AG.json",
+      "bytes": 99617,
+      "sha256": "c735174f08eacb7c5f3aecd339183b3d205834a17db45fb59761e6853ff6e0b4"
+    },
+    {
+      "code": "AI",
+      "name_ko": "앵귈라",
+      "name_en": "Anguilla",
+      "file": "AI.json",
+      "bytes": 137955,
+      "sha256": "4ae68e69e7ce3e0d68448ef0289b6a2791128959fa221859c0f15c18d316f377"
+    },
+    {
+      "code": "AL",
+      "name_ko": "알바니아",
+      "name_en": "Albania",
+      "file": "AL.json",
+      "bytes": 173100,
+      "sha256": "254b91fc97daf92d6e28d2902e0a12fac5261e5bf481c04c530d62ae511f372c"
+    },
+    {
+      "code": "AM",
+      "name_ko": "아르메니아",
+      "name_en": "Armenia",
+      "file": "AM.json",
+      "bytes": 114605,
+      "sha256": "6beb1edccccfa67d335179dc453d6fd4f1e264175e67c9fb30be2c69032ead41"
+    },
+    {
+      "code": "AO",
+      "name_ko": "앙골라",
+      "name_en": "Angola",
+      "file": "AO.json",
+      "bytes": 146401,
+      "sha256": "c4d84d123548962ab779ab35cd0b2dc0b8a6a1b8b85cda846aca249127bc7f45"
+    },
+    {
+      "code": "AQ",
+      "name_ko": "남극 대륙",
+      "name_en": "Antarctica",
+      "file": "AQ.json",
+      "bytes": 33723,
+      "sha256": "b78ac27d248cf14cd27bc61954a8370e17f3ab0a7fedcc9b622f245ae5b88ccc"
+    },
+    {
+      "code": "AR",
+      "name_ko": "아르헨티나",
+      "name_en": "Argentina",
+      "file": "AR.json",
+      "bytes": 166947,
+      "sha256": "62d777f980c937a67ee87ed40fde1b412b08400cd6bef2612f1df9a7dfe6b1ea"
+    },
+    {
+      "code": "AS",
+      "name_ko": "아메리칸 사모아",
+      "name_en": "American Samoa",
+      "file": "AS.json",
+      "bytes": 202706,
+      "sha256": "2aa547700d84a2aede7d01f947238523c8b9fd4b030ea18f968f6c603d33e856"
+    },
+    {
+      "code": "AT",
+      "name_ko": "오스트리아",
+      "name_en": "Austria",
+      "file": "AT.json",
+      "bytes": 101137,
+      "sha256": "b1927af95ac3de7d6d29b201602b3264c9c334f4f42c8dfbcec9160e16f0519a"
+    },
+    {
+      "code": "AU",
+      "name_ko": "오스트레일리아",
+      "name_en": "Australia",
+      "file": "AU.json",
+      "bytes": 54154,
+      "sha256": "3600d6cd4e53081117ba6e70e2ffb9635f3c94437608055f485062c2eb28ce4e"
+    },
+    {
+      "code": "AW",
+      "name_ko": "아루바",
+      "name_en": "Aruba",
+      "file": "AW.json",
+      "bytes": 88853,
+      "sha256": "af67a872de582e358b651135d1a10abb068e3b585469d3b4663e8f7cc86d2b0b"
+    },
+    {
+      "code": "AX",
+      "name_ko": "올란드 제도",
+      "name_en": "Åland Islands",
+      "file": "AX.json",
+      "bytes": 273874,
+      "sha256": "a31ff99263749306ed24507a0cfe25d8f06fe9b19dd49b1ddfef1248edd8ddfb"
+    },
+    {
+      "code": "AZ",
+      "name_ko": "아제르바이잔",
+      "name_en": "Azerbaijan",
+      "file": "AZ.json",
+      "bytes": 206790,
+      "sha256": "45d15b64928575c8f1d73c0d08b5249d4772b586c5826955f37229e93637ce79"
+    },
+    {
+      "code": "BA",
+      "name_ko": "보스니아 헤르체고비나",
+      "name_en": "Bosnia & Herzegovina",
+      "file": "BA.json",
+      "bytes": 83469,
+      "sha256": "a9f40e8257177d3d7bae1886e9c1ad85a171b3b1af8e1afcaba1f803d788b147"
+    },
+    {
+      "code": "BB",
+      "name_ko": "바베이도스",
+      "name_en": "Barbados",
+      "file": "BB.json",
+      "bytes": 103268,
+      "sha256": "739783ea358f06429eb52f70e9f61c5bcc032e5f191a6259cf9de614969a1bc8"
+    },
+    {
+      "code": "BD",
+      "name_ko": "방글라데시",
+      "name_en": "Bangladesh",
+      "file": "BD.json",
+      "bytes": 132442,
+      "sha256": "fa6ab8d83e0a4b0f7041a15b1c41b4b0ca8ee186e5205e4d93b768c1c81fdd9e"
+    },
+    {
+      "code": "BE",
+      "name_ko": "벨기에",
+      "name_en": "Belgium",
+      "file": "BE.json",
+      "bytes": 91739,
+      "sha256": "66dfc806e659812ee72049e633a2f99ef95159c4cecd137acb6a39370a170650"
+    },
+    {
+      "code": "BF",
+      "name_ko": "부르키나파소",
+      "name_en": "Burkina Faso",
+      "file": "BF.json",
+      "bytes": 129449,
+      "sha256": "b7981fc7d0d1b0118460cabcdc45c4620b1d0629a3ee85eb8dcfb82797bf4632"
+    },
+    {
+      "code": "BG",
+      "name_ko": "불가리아",
+      "name_en": "Bulgaria",
+      "file": "BG.json",
+      "bytes": 153120,
+      "sha256": "6e3f0085741674567f34c2fdeb456be4a64cedc2e7691f3ae890ef99c61a1b1e"
+    },
+    {
+      "code": "BH",
+      "name_ko": "바레인",
+      "name_en": "Bahrain",
+      "file": "BH.json",
+      "bytes": 96281,
+      "sha256": "cfd3e0191238ea9ece844ed7ddec17cc3d1fdf9d7ffe97a2e52786977b25d599"
+    },
+    {
+      "code": "BI",
+      "name_ko": "부룬디",
+      "name_en": "Burundi",
+      "file": "BI.json",
+      "bytes": 163365,
+      "sha256": "7a22f9d1ff666562a60f911cab3246cc37c721789782711cb6d3e3952b8f8b5a"
+    },
+    {
+      "code": "BJ",
+      "name_ko": "베냉",
+      "name_en": "Benin",
+      "file": "BJ.json",
+      "bytes": 105431,
+      "sha256": "77b6c7bc6abc3ed811500521d28c9869e3d214729a280c7846ad7c52fd49ce93"
+    },
+    {
+      "code": "BL",
+      "name_ko": "생바르텔레미",
+      "name_en": "St. Barthélemy",
+      "file": "BL.json",
+      "bytes": 92803,
+      "sha256": "aa035b0aa23319ee1f8ec27b328eaa9bcfd53945efad98d534cc41bfbf007a5e"
+    },
+    {
+      "code": "BM",
+      "name_ko": "버뮤다",
+      "name_en": "Bermuda",
+      "file": "BM.json",
+      "bytes": 88106,
+      "sha256": "e0ef8b6be6fad716f69aa198442216ef7be650355efe930809c4469a27e76bb6"
+    },
+    {
+      "code": "BN",
+      "name_ko": "브루나이",
+      "name_en": "Brunei",
+      "file": "BN.json",
+      "bytes": 155168,
+      "sha256": "686f6cb74571d4fdcfe086a702651127fde5b7e40e114242ee0bf2215fbb6e90"
+    },
+    {
+      "code": "BO",
+      "name_ko": "볼리비아",
+      "name_en": "Bolivia",
+      "file": "BO.json",
+      "bytes": 102706,
+      "sha256": "23ea6b8b61f0ebcc5d6bfc3a0b891bdcb4851f3b518c5d3e5c8de419d9dc7459"
+    },
+    {
+      "code": "BQ",
+      "name_ko": "네덜란드령 카리브",
+      "name_en": "Caribbean Netherlands",
+      "file": "BQ.json",
+      "bytes": 77087,
+      "sha256": "d7b88cbbd7599b24969a0a897ad5d01ae59d7d2fdcc40e061241e61c5fb64c1e"
+    },
+    {
+      "code": "BR",
+      "name_ko": "브라질",
+      "name_en": "Brazil",
+      "file": "BR.json",
+      "bytes": 87084,
+      "sha256": "bccda86c16f412bc29415f35080efce7f0e9e0149573afe42749c5debb8c599a"
+    },
+    {
+      "code": "BS",
+      "name_ko": "바하마",
+      "name_en": "Bahamas",
+      "file": "BS.json",
+      "bytes": 98292,
+      "sha256": "2c45f198b140b51fff5e9368deab734574b00171cc77da3ec9dd11903517ffef"
+    },
+    {
+      "code": "BT",
+      "name_ko": "부탄",
+      "name_en": "Bhutan",
+      "file": "BT.json",
+      "bytes": 166570,
+      "sha256": "3eb5fe0e278b13f43aad78857903cbf61b18dc5f8aef7ef745bcb6282416ecfd"
+    },
+    {
+      "code": "BV",
+      "name_ko": "부베섬",
+      "name_en": "Bouvet Island",
+      "file": "BV.json",
+      "bytes": 4197,
+      "sha256": "855d97e8000a06538666e880c5d5be5fa4c159ac6b953cdb8637873cd7583ff5"
+    },
+    {
+      "code": "BW",
+      "name_ko": "보츠와나",
+      "name_en": "Botswana",
+      "file": "BW.json",
+      "bytes": 123880,
+      "sha256": "d5d9b49ca410d3204457d6caaf376c10efe917fc7f58f987c33cfbc9ade84fc3"
+    },
+    {
+      "code": "BY",
+      "name_ko": "벨라루스",
+      "name_en": "Belarus",
+      "file": "BY.json",
+      "bytes": 103855,
+      "sha256": "dfa0ba5b64e964f837d6821a637f0a6d91c22bccee9feddbf6ccfcb87b058fe8"
+    },
+    {
+      "code": "BZ",
+      "name_ko": "벨리즈",
+      "name_en": "Belize",
+      "file": "BZ.json",
+      "bytes": 121389,
+      "sha256": "b3b65bfa4fef94563c0da02c327587d1b68433db431db90d3da5589f647667cb"
+    },
+    {
+      "code": "CA",
+      "name_ko": "캐나다",
+      "name_en": "Canada",
+      "file": "CA.json",
+      "bytes": 44693,
+      "sha256": "2a0f13f2c807257818677f2a77f282f43aa096b6097777539f05b3e78717e1e5"
+    },
+    {
+      "code": "CC",
+      "name_ko": "코코스 제도",
+      "name_en": "Cocos (Keeling) Islands",
+      "file": "CC.json",
+      "bytes": 113430,
+      "sha256": "01bfa455c2194672f2295fd4974e9d372efab61ef2571cd8fd76d39337d3290e"
+    },
+    {
+      "code": "CD",
+      "name_ko": "콩고-킨샤사",
+      "name_en": "Congo - Kinshasa",
+      "file": "CD.json",
+      "bytes": 120865,
+      "sha256": "928df6bc33e589abef204d41f62813c87d0de351ca2ebe17afede0fff2b6f8d2"
+    },
+    {
+      "code": "CF",
+      "name_ko": "중앙 아프리카 공화국",
+      "name_en": "Central African Republic",
+      "file": "CF.json",
+      "bytes": 107646,
+      "sha256": "36590879dcd27e73ddddcf510491b3d07011244687983898c73345ba38f98aed"
+    },
+    {
+      "code": "CG",
+      "name_ko": "콩고-브라자빌",
+      "name_en": "Congo - Brazzaville",
+      "file": "CG.json",
+      "bytes": 77922,
+      "sha256": "4a6698ca90fe3d871963b69485bdcc4f62ea2a9e1de8921529d13b60bc1031cc"
+    },
+    {
+      "code": "CH",
+      "name_ko": "스위스",
+      "name_en": "Switzerland",
+      "file": "CH.json",
+      "bytes": 33427,
+      "sha256": "c444910fdeec2cba162e1a1353a0474c218f2443d7ae6a69a4c895c721bb77dc"
+    },
+    {
+      "code": "CI",
+      "name_ko": "코트디부아르",
+      "name_en": "Côte d’Ivoire",
+      "file": "CI.json",
+      "bytes": 107573,
+      "sha256": "91e8e7f6f28ce18fd9da0121282aac8dd81f365912b807414110c822ab2b6d32"
+    },
+    {
+      "code": "CK",
+      "name_ko": "쿡 제도",
+      "name_en": "Cook Islands",
+      "file": "CK.json",
+      "bytes": 106107,
+      "sha256": "0f5107885ed244b8acaffc1f5dba52493b1d4bcf1d89096ef86673a78040cdde"
+    },
+    {
+      "code": "CL",
+      "name_ko": "칠레",
+      "name_en": "Chile",
+      "file": "CL.json",
+      "bytes": 134925,
+      "sha256": "92462fedf2c001ef9f948d7b3c2ae74e183491f4ed0fb8a0cd0637409e954f50"
+    },
+    {
+      "code": "CM",
+      "name_ko": "카메룬",
+      "name_en": "Cameroon",
+      "file": "CM.json",
+      "bytes": 89856,
+      "sha256": "6f416308254172f080202ee95077df6ca5a5cbae0218ff526e82b95957819cf3"
+    },
+    {
+      "code": "CN",
+      "name_ko": "중국",
+      "name_en": "China",
+      "file": "CN.json",
+      "bytes": 147739,
+      "sha256": "f1e13b0dc0fd9fbb25b38ad433fb87c59a424032feeadfd3f688b8229682beac"
+    },
+    {
+      "code": "CO",
+      "name_ko": "콜롬비아",
+      "name_en": "Colombia",
+      "file": "CO.json",
+      "bytes": 170028,
+      "sha256": "9229334abbfc0b7716240070e1f42d4077339aee287608ae9e5002e44e98465d"
+    },
+    {
+      "code": "CR",
+      "name_ko": "코스타리카",
+      "name_en": "Costa Rica",
+      "file": "CR.json",
+      "bytes": 77714,
+      "sha256": "0c09eaf543aee9766787ed64db4fb49bc09a70b8eb8c6abd272775babead16d9"
+    },
+    {
+      "code": "CU",
+      "name_ko": "쿠바",
+      "name_en": "Cuba",
+      "file": "CU.json",
+      "bytes": 96234,
+      "sha256": "4fcbb679dc56990421a6e9a62df9da8c2b17fc8a56416cc2581282dd4ccc13a0"
+    },
+    {
+      "code": "CV",
+      "name_ko": "카보베르데",
+      "name_en": "Cape Verde",
+      "file": "CV.json",
+      "bytes": 98843,
+      "sha256": "90a9b27b21be3237022bc418abc58a7687f84ce3998196068b7225e022cdd18e"
+    },
+    {
+      "code": "CW",
+      "name_ko": "퀴라소",
+      "name_en": "Curaçao",
+      "file": "CW.json",
+      "bytes": 94699,
+      "sha256": "3ff7697d7517bf518a9d93fda977ecf97c6e12848664b186a06b423e24002005"
+    },
+    {
+      "code": "CX",
+      "name_ko": "크리스마스섬",
+      "name_en": "Christmas Island",
+      "file": "CX.json",
+      "bytes": 110557,
+      "sha256": "a79a90a82aa43359493c7f5003842f73622e7cc4e534f67e293ea820b5cf4986"
+    },
+    {
+      "code": "CY",
+      "name_ko": "키프로스",
+      "name_en": "Cyprus",
+      "file": "CY.json",
+      "bytes": 118643,
+      "sha256": "334a54d9b329f5b600cbfbbb11ba993f7bb4f7710e74f0a09f82ae8bea666aec"
+    },
+    {
+      "code": "CZ",
+      "name_ko": "체코",
+      "name_en": "Czechia",
+      "file": "CZ.json",
+      "bytes": 119785,
+      "sha256": "1cc45cd5a465d0f14e6e1411c92379a07ef6de3e295aef964215cec96d3aca77"
+    },
+    {
+      "code": "DE",
+      "name_ko": "독일",
+      "name_en": "Germany",
+      "file": "DE.json",
+      "bytes": 71685,
+      "sha256": "26cf0023ddfdba8a29098ff67457e69ad39e5c2c3e480c06ede9d96452d52960"
+    },
+    {
+      "code": "DJ",
+      "name_ko": "지부티",
+      "name_en": "Djibouti",
+      "file": "DJ.json",
+      "bytes": 97859,
+      "sha256": "69274b4f151b020b0c55120f0c2af78b146b1b70869f8d5ca3d409a80f8c61ed"
+    },
+    {
+      "code": "DK",
+      "name_ko": "덴마크",
+      "name_en": "Denmark",
+      "file": "DK.json",
+      "bytes": 78863,
+      "sha256": "06cc3bb77d1fe0a8332b5a0a9ae7f8b5851c8576ff80e579012a8a8630975aba"
+    },
+    {
+      "code": "DM",
+      "name_ko": "도미니카",
+      "name_en": "Dominica",
+      "file": "DM.json",
+      "bytes": 102037,
+      "sha256": "32653daff471ec97c40b91d83dad22f575cb33858be614a86dc24e37d65704c4"
+    },
+    {
+      "code": "DO",
+      "name_ko": "도미니카 공화국",
+      "name_en": "Dominican Republic",
+      "file": "DO.json",
+      "bytes": 96771,
+      "sha256": "7564d5b320d114caff943a247d25d9225c5e7f2e9dee858c77fe7c24980206a7"
+    },
+    {
+      "code": "DZ",
+      "name_ko": "알제리",
+      "name_en": "Algeria",
+      "file": "DZ.json",
+      "bytes": 99229,
+      "sha256": "1d40ddd3e9032515fbf9865c4bd5654bd1c4a81ef05caf13a1b803b76034dd4f"
+    },
+    {
+      "code": "EC",
+      "name_ko": "에콰도르",
+      "name_en": "Ecuador",
+      "file": "EC.json",
+      "bytes": 132140,
+      "sha256": "72e866fe5fe57b8942af93f64413a90765b6460c1fc7c8150c1b0d5f00f036ea"
+    },
+    {
+      "code": "EE",
+      "name_ko": "에스토니아",
+      "name_en": "Estonia",
+      "file": "EE.json",
+      "bytes": 94255,
+      "sha256": "211b1f35e98194dd2387af205323138b6566af7b6b875dbe5d5d2557a0a070b5"
+    },
+    {
+      "code": "EG",
+      "name_ko": "이집트",
+      "name_en": "Egypt",
+      "file": "EG.json",
+      "bytes": 130767,
+      "sha256": "6dafe8867a6d86feb0880877116ece722ca37809fc3f843bc0f8fbfbb26f247b"
+    },
+    {
+      "code": "EH",
+      "name_ko": "서사하라",
+      "name_en": "Western Sahara",
+      "file": "EH.json",
+      "bytes": 89437,
+      "sha256": "3210638ae970dd3a2aedb5e719fe3a8c44036377c413542d4fc5092203c44a33"
+    },
+    {
+      "code": "ER",
+      "name_ko": "에리트리아",
+      "name_en": "Eritrea",
+      "file": "ER.json",
+      "bytes": 116136,
+      "sha256": "adbd163e57e7b602453ca0a23c2b16bcf71d6d8b87a8b099bfe3c75199eb9c50"
+    },
+    {
+      "code": "ES",
+      "name_ko": "스페인",
+      "name_en": "Spain",
+      "file": "ES.json",
+      "bytes": 68322,
+      "sha256": "ceee0d9901a4eac8a9d6845cf1b0b5ec67854a76e354fcefd4fd0483d171b047"
+    },
+    {
+      "code": "ET",
+      "name_ko": "에티오피아",
+      "name_en": "Ethiopia",
+      "file": "ET.json",
+      "bytes": 95275,
+      "sha256": "24dc19e7f871da0e0565cf51230984bfefbd018f892f4abc85cc92e42369e4be"
+    },
+    {
+      "code": "FI",
+      "name_ko": "핀란드",
+      "name_en": "Finland",
+      "file": "FI.json",
+      "bytes": 265565,
+      "sha256": "ebb4b2ad021c64692582cbecb9a4ab79fe20251bfdb48ce18a9b8b3f5d1db188"
+    },
+    {
+      "code": "FJ",
+      "name_ko": "피지",
+      "name_en": "Fiji",
+      "file": "FJ.json",
+      "bytes": 90008,
+      "sha256": "35a7234553c6e06b26a60aca572f02c5d7cff315b8ed3b50d3a368122fbdedd5"
+    },
+    {
+      "code": "FK",
+      "name_ko": "포클랜드 제도",
+      "name_en": "Falkland Islands",
+      "file": "FK.json",
+      "bytes": 79567,
+      "sha256": "be83eaa47deac3b7c0c4be314adf2ded9a1a391c0d0eeda29d45301157018a93"
+    },
+    {
+      "code": "FM",
+      "name_ko": "미크로네시아",
+      "name_en": "Micronesia",
+      "file": "FM.json",
+      "bytes": 97413,
+      "sha256": "06d942be6aabe160518935523503fd675640313c09aa5ab66598b4f0e9a963f6"
+    },
+    {
+      "code": "FO",
+      "name_ko": "페로 제도",
+      "name_en": "Faroe Islands",
+      "file": "FO.json",
+      "bytes": 109203,
+      "sha256": "b04555c3a8eddd14db96ceed620690706ed706ec516d1cfac5043319c2ec037f"
+    },
+    {
+      "code": "FR",
+      "name_ko": "프랑스",
+      "name_en": "France",
+      "file": "FR.json",
+      "bytes": 84441,
+      "sha256": "017dad01df4bdc04f142f85c1256b096b2d3bbb6faf1c86b92b2a74b013e34b7"
+    },
+    {
+      "code": "GA",
+      "name_ko": "가봉",
+      "name_en": "Gabon",
+      "file": "GA.json",
+      "bytes": 121882,
+      "sha256": "0e92e27a6d61100e6386d6cc01b2828766ce19a5699e430003755b7e3e7116e5"
+    },
+    {
+      "code": "GB",
+      "name_ko": "영국",
+      "name_en": "United Kingdom",
+      "file": "GB.json",
+      "bytes": 55141,
+      "sha256": "b9794ea6b036cb284ff6936e9e6d92146cab9659cb3802ed283ffe96c979ffcb"
+    },
+    {
+      "code": "GD",
+      "name_ko": "그레나다",
+      "name_en": "Grenada",
+      "file": "GD.json",
+      "bytes": 118917,
+      "sha256": "f993d6d85a120cfe492dc2f2f71695f24098834e93f6db0ba1b5b8c4f2bfeed4"
+    },
+    {
+      "code": "GE",
+      "name_ko": "조지아",
+      "name_en": "Georgia",
+      "file": "GE.json",
+      "bytes": 152422,
+      "sha256": "3678f9ddb65f3cf5280b17d0ab994721ebab9c7985bb7b750244be5702028a89"
+    },
+    {
+      "code": "GF",
+      "name_ko": "프랑스령 기아나",
+      "name_en": "French Guiana",
+      "file": "GF.json",
+      "bytes": 92602,
+      "sha256": "317fb91895b12b49ab1060136ed5cc1d2d4dc765db591041bf67532120b85412"
+    },
+    {
+      "code": "GG",
+      "name_ko": "건지",
+      "name_en": "Guernsey",
+      "file": "GG.json",
+      "bytes": 80847,
+      "sha256": "602a882c43072a959fb70ca3b9fa9567c62ab798e838129fa4375332884de85e"
+    },
+    {
+      "code": "GH",
+      "name_ko": "가나",
+      "name_en": "Ghana",
+      "file": "GH.json",
+      "bytes": 103256,
+      "sha256": "6e41f65c616f1ae53f41395d60a7c5ff81f630983045d823527452d3cd76ef15"
+    },
+    {
+      "code": "GI",
+      "name_ko": "지브롤터",
+      "name_en": "Gibraltar",
+      "file": "GI.json",
+      "bytes": 113555,
+      "sha256": "ac9b9d958ca21353fa015368252ffcdffbc63809859e2c20474d69b679aa3c18"
+    },
+    {
+      "code": "GL",
+      "name_ko": "그린란드",
+      "name_en": "Greenland",
+      "file": "GL.json",
+      "bytes": 86633,
+      "sha256": "4207a3cbc5c5dfaac4951aca0d0edb430709a47918742d9c08a314db27aa720d"
+    },
+    {
+      "code": "GM",
+      "name_ko": "감비아",
+      "name_en": "Gambia",
+      "file": "GM.json",
+      "bytes": 153060,
+      "sha256": "ad3c178429fbd5be2e1f5d24272306d542ce286674fd36f4582fffc27218ca49"
+    },
+    {
+      "code": "GN",
+      "name_ko": "기니",
+      "name_en": "Guinea",
+      "file": "GN.json",
+      "bytes": 94720,
+      "sha256": "b4591665bc60db9df90ad3e997d655e8c3096f601990d00a25225a0cb55adcd7"
+    },
+    {
+      "code": "GP",
+      "name_ko": "과들루프",
+      "name_en": "Guadeloupe",
+      "file": "GP.json",
+      "bytes": 114742,
+      "sha256": "3010b52253570e497e6762cfed594fafe9d095df2f8a33ea995cc5af090cc7ee"
+    },
+    {
+      "code": "GQ",
+      "name_ko": "적도 기니",
+      "name_en": "Equatorial Guinea",
+      "file": "GQ.json",
+      "bytes": 130080,
+      "sha256": "429f92c60d1c1b2b16d7a9eb541d231dec9c23b38016297efb9ece72f4587d3c"
+    },
+    {
+      "code": "GR",
+      "name_ko": "그리스",
+      "name_en": "Greece",
+      "file": "GR.json",
+      "bytes": 97090,
+      "sha256": "7f9307991f81f3ad8207c10953906d9d932110ced47e46b5c746703219d9c24c"
+    },
+    {
+      "code": "GS",
+      "name_ko": "사우스조지아 사우스샌드위치 제도",
+      "name_en": "South Georgia & South Sandwich Islands",
+      "file": "GS.json",
+      "bytes": 91813,
+      "sha256": "a3088d626071b9860f8c9b1739efe96d159123df14fb20bab0c321e2ebf96df0"
+    },
+    {
+      "code": "GT",
+      "name_ko": "과테말라",
+      "name_en": "Guatemala",
+      "file": "GT.json",
+      "bytes": 84561,
+      "sha256": "4177fcd8527495b74646896eba9c23e14d650fc47a76c91b6a5b2544b32d7498"
+    },
+    {
+      "code": "GU",
+      "name_ko": "괌",
+      "name_en": "Guam",
+      "file": "GU.json",
+      "bytes": 197787,
+      "sha256": "e09a8bba5d6e75ffcd0bc15394017fa2122dc2a0344988c8e809f853aedfe3fe"
+    },
+    {
+      "code": "GW",
+      "name_ko": "기니비사우",
+      "name_en": "Guinea-Bissau",
+      "file": "GW.json",
+      "bytes": 90471,
+      "sha256": "874443399c2678ec59f36d7c45fdecfe318fc41eaf5118b3b0530e400a4d9030"
+    },
+    {
+      "code": "GY",
+      "name_ko": "가이아나",
+      "name_en": "Guyana",
+      "file": "GY.json",
+      "bytes": 114551,
+      "sha256": "addc929659e97397fb98d0f12583f3feced6c1fd2d63f2dcfb6139d7e9a9fd0b"
+    },
+    {
+      "code": "HK",
+      "name_ko": "홍콩(중국 특별행정구)",
+      "name_en": "Hong Kong SAR China",
+      "file": "HK.json",
+      "bytes": 164886,
+      "sha256": "e59cf7dc54aa1e392bbbc72a46f3e4cfd5846d3e3928ee2948863ca55c7477c3"
+    },
+    {
+      "code": "HM",
+      "name_ko": "허드 맥도널드 제도",
+      "name_en": "Heard & McDonald Islands",
+      "file": "HM.json",
+      "bytes": 4197,
+      "sha256": "855f052b96097bd1908a7209e9ddae9af517dc94e6d6ecbb0e63d3b54a6ea96c"
+    },
+    {
+      "code": "HN",
+      "name_ko": "온두라스",
+      "name_en": "Honduras",
+      "file": "HN.json",
+      "bytes": 85357,
+      "sha256": "7fa61e3e7f20206d448fb293b827e10d29aaa3a4562bd03e8f6abcfacdc6acc0"
+    },
+    {
+      "code": "HR",
+      "name_ko": "크로아티아",
+      "name_en": "Croatia",
+      "file": "HR.json",
+      "bytes": 116254,
+      "sha256": "a8b49c54c960394d96587e4cbb54e14d3abade3c3a7d0a5a116adce6b12d4739"
+    },
+    {
+      "code": "HT",
+      "name_ko": "아이티",
+      "name_en": "Haiti",
+      "file": "HT.json",
+      "bytes": 136583,
+      "sha256": "f1eaf112bf7dc87d70d2b273e6d7c7b29a662c63ba612117f734ae3572a534b3"
+    },
+    {
+      "code": "HU",
+      "name_ko": "헝가리",
+      "name_en": "Hungary",
+      "file": "HU.json",
+      "bytes": 100394,
+      "sha256": "d1bb2d7b1e2a2d0adc386e365e4aaf7732ead88f4ea68883bc0aa94cb89f7247"
+    },
+    {
+      "code": "ID",
+      "name_ko": "인도네시아",
+      "name_en": "Indonesia",
+      "file": "ID.json",
+      "bytes": 125037,
+      "sha256": "21fc9bb78d70913f1be3cbd6d871c0b3806e1cac94b467cfcc6abbe7b87d87c2"
+    },
+    {
+      "code": "IE",
+      "name_ko": "아일랜드",
+      "name_en": "Ireland",
+      "file": "IE.json",
+      "bytes": 83007,
+      "sha256": "c9c47a07bf03dea0f28611b1dc33ec8aff748e3e281fe6d85dbc530d53c2a4e9"
+    },
+    {
+      "code": "IL",
+      "name_ko": "이스라엘",
+      "name_en": "Israel",
+      "file": "IL.json",
+      "bytes": 72089,
+      "sha256": "09bbca123ad406844ca671d08656903928fefa23e0fb961f4cf0aee754654c22"
+    },
+    {
+      "code": "IM",
+      "name_ko": "맨섬",
+      "name_en": "Isle of Man",
+      "file": "IM.json",
+      "bytes": 86073,
+      "sha256": "2a9ecde7eea99f5285d88a7ecbbd06659896912131b536b0d7ec31dad38ea92b"
+    },
+    {
+      "code": "IN",
+      "name_ko": "인도",
+      "name_en": "India",
+      "file": "IN.json",
+      "bytes": 89166,
+      "sha256": "496df285e66d006b3334674f555dabfbcf39b32234e26c33b81e3d3b65cb320c"
+    },
+    {
+      "code": "IO",
+      "name_ko": "영국령 인도양 지역",
+      "name_en": "British Indian Ocean Territory",
+      "file": "IO.json",
+      "bytes": 4197,
+      "sha256": "62f0fd9e39d6664ee6347784bc6b3e39a8a21f4ad4d46c4497f04d4669925c8c"
+    },
+    {
+      "code": "IQ",
+      "name_ko": "이라크",
+      "name_en": "Iraq",
+      "file": "IQ.json",
+      "bytes": 117062,
+      "sha256": "5d58ea462b81bc59a2f749b2799f7016fd806f77706642c6ba7589a26def234e"
+    },
+    {
+      "code": "IR",
+      "name_ko": "이란",
+      "name_en": "Iran",
+      "file": "IR.json",
+      "bytes": 211276,
+      "sha256": "4cabe73cbef8054488c225a5f729d5a8b32387da5abad4c9e207ad0adfe4bdaa"
+    },
+    {
+      "code": "IS",
+      "name_ko": "아이슬란드",
+      "name_en": "Iceland",
+      "file": "IS.json",
+      "bytes": 107832,
+      "sha256": "7218338622014546934b740ae594039a4dca01c225ae646f733f39d0fc691dac"
+    },
+    {
+      "code": "IT",
+      "name_ko": "이탈리아",
+      "name_en": "Italy",
+      "file": "IT.json",
+      "bytes": 113956,
+      "sha256": "2c831ac5f19c7cafb637e2bc0ea1a25b80d906f52145535be9e35b81b3ad8fa6"
+    },
+    {
+      "code": "JE",
+      "name_ko": "저지",
+      "name_en": "Jersey",
+      "file": "JE.json",
+      "bytes": 80032,
+      "sha256": "c3d8429c6b7bcfcbb466f47e41c9e8e07d6994196df7a78b1f9502d87e7734e8"
+    },
+    {
+      "code": "JM",
+      "name_ko": "자메이카",
+      "name_en": "Jamaica",
+      "file": "JM.json",
+      "bytes": 88753,
+      "sha256": "899f63569831991c0fe788711db7fc459b84a98b5ecae957c953cf781600fcad"
+    },
+    {
+      "code": "JO",
+      "name_ko": "요르단",
+      "name_en": "Jordan",
+      "file": "JO.json",
+      "bytes": 102397,
+      "sha256": "3bcf4ae494e052ef3a6a57f324af902a0ffac30aef5dfc6c4b2e8cdbda5381b1"
+    },
+    {
+      "code": "JP",
+      "name_ko": "일본",
+      "name_en": "Japan",
+      "file": "JP.json",
+      "bytes": 141217,
+      "sha256": "552dfa6dc09f949cbcae1ad382251479c19acc609507684ba8a7cee54107662f"
+    },
+    {
+      "code": "KE",
+      "name_ko": "케냐",
+      "name_en": "Kenya",
+      "file": "KE.json",
+      "bytes": 92867,
+      "sha256": "9676f2afd8c3539104720c4563113d44aff08c5b317fbb9e34760fc8f7516ecf"
+    },
+    {
+      "code": "KG",
+      "name_ko": "키르기스스탄",
+      "name_en": "Kyrgyzstan",
+      "file": "KG.json",
+      "bytes": 159997,
+      "sha256": "fd0dbc87859190aec1c3c0dcf90f418bdb8be973eed5e2881e299ee9fa26ab1d"
+    },
+    {
+      "code": "KH",
+      "name_ko": "캄보디아",
+      "name_en": "Cambodia",
+      "file": "KH.json",
+      "bytes": 200824,
+      "sha256": "9cc7de4f23a6e4c280d5f929e839a2ae4f716d3c39a97d88a3ece4f1c9b7c821"
+    },
+    {
+      "code": "KI",
+      "name_ko": "키리바시",
+      "name_en": "Kiribati",
+      "file": "KI.json",
+      "bytes": 137904,
+      "sha256": "6ade77d6147c609f8582e1ee2aac27c5ffe3f61c4eaa7ff6a2971308c9ddf9be"
+    },
+    {
+      "code": "KM",
+      "name_ko": "코모로",
+      "name_en": "Comoros",
+      "file": "KM.json",
+      "bytes": 100539,
+      "sha256": "faf541031391b447a006a7652b208369f60604e38bf1e8770a8cafc2041aafca"
+    },
+    {
+      "code": "KN",
+      "name_ko": "세인트키츠 네비스",
+      "name_en": "St. Kitts & Nevis",
+      "file": "KN.json",
+      "bytes": 103367,
+      "sha256": "013d86a778c7043112c9a364881ee68d0ff596d3d86c5d27e0aa719eb417caa7"
+    },
+    {
+      "code": "KP",
+      "name_ko": "북한",
+      "name_en": "North Korea",
+      "file": "KP.json",
+      "bytes": 199810,
+      "sha256": "6d26adeae92dd79fefa65e9fc1a8a03b4b426cc6ca01f00a1f3767452576f0f5"
+    },
+    {
+      "code": "KR",
+      "name_ko": "대한민국",
+      "name_en": "South Korea",
+      "file": "KR.json",
+      "bytes": 172937,
+      "sha256": "a720b3175fa30aad863b5fd94ab887318fa749a1213dfa530f2ec708e9787780"
+    },
+    {
+      "code": "KW",
+      "name_ko": "쿠웨이트",
+      "name_en": "Kuwait",
+      "file": "KW.json",
+      "bytes": 95420,
+      "sha256": "b590e6c2c0d74e3b5f43e20c6eab9d9648e2463af9c42ad0f1aa335f0b208b4c"
+    },
+    {
+      "code": "KY",
+      "name_ko": "케이맨 제도",
+      "name_en": "Cayman Islands",
+      "file": "KY.json",
+      "bytes": 101465,
+      "sha256": "395f796aad1ee5bbfbd7dfadee8a56d0d9847f90a6f5aab6c8638f7a63a31acd"
+    },
+    {
+      "code": "KZ",
+      "name_ko": "카자흐스탄",
+      "name_en": "Kazakhstan",
+      "file": "KZ.json",
+      "bytes": 158519,
+      "sha256": "a2b73e063a80b5174e62571356481cc0d7cedae525ff0bc6e72528d15d7855e9"
+    },
+    {
+      "code": "LA",
+      "name_ko": "라오스",
+      "name_en": "Laos",
+      "file": "LA.json",
+      "bytes": 82046,
+      "sha256": "56f4289df720f229988623b2fc5737149a000c79cfd72f8ec2f381d2708b4eec"
+    },
+    {
+      "code": "LB",
+      "name_ko": "레바논",
+      "name_en": "Lebanon",
+      "file": "LB.json",
+      "bytes": 148104,
+      "sha256": "503bb18b8f27cab6ed5da74a8e2f1d946726634a470a213ac76b9c33889dd6b1"
+    },
+    {
+      "code": "LC",
+      "name_ko": "세인트루시아",
+      "name_en": "St. Lucia",
+      "file": "LC.json",
+      "bytes": 111199,
+      "sha256": "f282156b4a3db52fbd158e4c0722580c9ffd8249cf0957040437b46017925a40"
+    },
+    {
+      "code": "LI",
+      "name_ko": "리히텐슈타인",
+      "name_en": "Liechtenstein",
+      "file": "LI.json",
+      "bytes": 130293,
+      "sha256": "6a5679a8d80e7b7d962a8ea4c1b12175d7dd14d5470dc62d55a1f30cab14688c"
+    },
+    {
+      "code": "LK",
+      "name_ko": "스리랑카",
+      "name_en": "Sri Lanka",
+      "file": "LK.json",
+      "bytes": 7165,
+      "sha256": "8b0ced42341ffac396fecac5d013b88f5a9a2dcc28592cd1fc1a08a87b9cc448"
+    },
+    {
+      "code": "LR",
+      "name_ko": "라이베리아",
+      "name_en": "Liberia",
+      "file": "LR.json",
+      "bytes": 98029,
+      "sha256": "e69eb15478b688c2470b12d09ab46abee1b587a5fe181872237d56410654560b"
+    },
+    {
+      "code": "LS",
+      "name_ko": "레소토",
+      "name_en": "Lesotho",
+      "file": "LS.json",
+      "bytes": 85611,
+      "sha256": "09788c6783525a849fbad8a6c5eb6678165c543bb5606f434442f8b3e50b515b"
+    },
+    {
+      "code": "LT",
+      "name_ko": "리투아니아",
+      "name_en": "Lithuania",
+      "file": "LT.json",
+      "bytes": 135913,
+      "sha256": "2add08010ac77b5718187fc9bdba52ee1c0f35e71b864c73bd03fbe052ebedf4"
+    },
+    {
+      "code": "LU",
+      "name_ko": "룩셈부르크",
+      "name_en": "Luxembourg",
+      "file": "LU.json",
+      "bytes": 85315,
+      "sha256": "7fe5e4d45d2781d0aaf842537a2717386cc22d6d92e9aec52a9444efa145207e"
+    },
+    {
+      "code": "LV",
+      "name_ko": "라트비아",
+      "name_en": "Latvia",
+      "file": "LV.json",
+      "bytes": 133018,
+      "sha256": "4263c778bb11293ff2cae37f8ca06d3b4d204ae1f8adac516370fbd4d3999889"
+    },
+    {
+      "code": "LY",
+      "name_ko": "리비아",
+      "name_en": "Libya",
+      "file": "LY.json",
+      "bytes": 114532,
+      "sha256": "6cceae1d3d23b6ac2957bed85c9c9d3d951863c949895356ed856391be922f8e"
+    },
+    {
+      "code": "MA",
+      "name_ko": "모로코",
+      "name_en": "Morocco",
+      "file": "MA.json",
+      "bytes": 132549,
+      "sha256": "4501a1cc642c5bfb3a6b0592245cf81f126e9e3c50da96f0be41f5f0a90a3e0e"
+    },
+    {
+      "code": "MC",
+      "name_ko": "모나코",
+      "name_en": "Monaco",
+      "file": "MC.json",
+      "bytes": 103261,
+      "sha256": "3567640f585ad7bb2d42059a495880f4600170e3265cf166c610aab6f9e23c02"
+    },
+    {
+      "code": "MD",
+      "name_ko": "몰도바",
+      "name_en": "Moldova",
+      "file": "MD.json",
+      "bytes": 128129,
+      "sha256": "6b7c85a106b14db24fc3de512f7e08127c9be740c953732bf04f99404f56e6ee"
+    },
+    {
+      "code": "ME",
+      "name_ko": "몬테네그로",
+      "name_en": "Montenegro",
+      "file": "ME.json",
+      "bytes": 80800,
+      "sha256": "6c2fc915389f9873328784116f61105d14b78bd816e3dd2997bbcc7d8481e939"
+    },
+    {
+      "code": "MF",
+      "name_ko": "생마르탱",
+      "name_en": "St. Martin",
+      "file": "MF.json",
+      "bytes": 101045,
+      "sha256": "b14cd989df9d75f4013db6bd45998392077f4945218e4ba41d2561e095ed01b3"
+    },
+    {
+      "code": "MG",
+      "name_ko": "마다가스카르",
+      "name_en": "Madagascar",
+      "file": "MG.json",
+      "bytes": 120412,
+      "sha256": "727d709f3ebd4b03716f28ecdd9793be034eaf165bf7400880cd932abb93fa2c"
+    },
+    {
+      "code": "MH",
+      "name_ko": "마셜 제도",
+      "name_en": "Marshall Islands",
+      "file": "MH.json",
+      "bytes": 95093,
+      "sha256": "06acf5e002bc93a9bcb250b3cc3dc0b9fb5e21d03b81e3999bbe05fc7fe3b992"
+    },
+    {
+      "code": "MK",
+      "name_ko": "북마케도니아",
+      "name_en": "North Macedonia",
+      "file": "MK.json",
+      "bytes": 105996,
+      "sha256": "041e0270999f7a0fed1768c672a292d3b53fa9f2079bc239d188f28e560f1bca"
+    },
+    {
+      "code": "ML",
+      "name_ko": "말리",
+      "name_en": "Mali",
+      "file": "ML.json",
+      "bytes": 91851,
+      "sha256": "375ad6f96120f8a6714635c61a4ce6b412731621e1695f41d3838dd7b326977a"
+    },
+    {
+      "code": "MM",
+      "name_ko": "미얀마",
+      "name_en": "Myanmar (Burma)",
+      "file": "MM.json",
+      "bytes": 225325,
+      "sha256": "bc6deb3bc92c6ba1dbd0f11d0d8b6674e9125d723f79675667eca7161d2a1874"
+    },
+    {
+      "code": "MN",
+      "name_ko": "몽골",
+      "name_en": "Mongolia",
+      "file": "MN.json",
+      "bytes": 165108,
+      "sha256": "e18d86bc387b5494a3b0cfa175ae399cd6cc8ebc665243bb560f4a15fa672cc8"
+    },
+    {
+      "code": "MO",
+      "name_ko": "마카오(중국 특별행정구)",
+      "name_en": "Macao SAR China",
+      "file": "MO.json",
+      "bytes": 96866,
+      "sha256": "abb764d023ee267feb7cb1b04e6e15689e8e86532aac5573f2e6ec55f9a71c6f"
+    },
+    {
+      "code": "MP",
+      "name_ko": "북마리아나제도",
+      "name_en": "Northern Mariana Islands",
+      "file": "MP.json",
+      "bytes": 210308,
+      "sha256": "08fff46962c8b354439045ed4527fb1d34dc427e258873f483cf13f5dee7761b"
+    },
+    {
+      "code": "MQ",
+      "name_ko": "마르티니크",
+      "name_en": "Martinique",
+      "file": "MQ.json",
+      "bytes": 108075,
+      "sha256": "f0af0f81ec6ce36e2a430550bf20919eb714d084d01020168be6d2caee8e52e3"
+    },
+    {
+      "code": "MR",
+      "name_ko": "모리타니",
+      "name_en": "Mauritania",
+      "file": "MR.json",
+      "bytes": 72305,
+      "sha256": "37978383dc54418e49c0fd9239ca706948846bd4449a1fad3b88b76fe56fff20"
+    },
+    {
+      "code": "MS",
+      "name_ko": "몬트세라트",
+      "name_en": "Montserrat",
+      "file": "MS.json",
+      "bytes": 108638,
+      "sha256": "1ec184fa215b809b393b6693678e696eb390e4ccad25016dcb519773056ff668"
+    },
+    {
+      "code": "MT",
+      "name_ko": "몰타",
+      "name_en": "Malta",
+      "file": "MT.json",
+      "bytes": 120317,
+      "sha256": "3d402b1da7d00bbbb71ec3d5abc972b157f5798b76e917a8f5fc7e7708451266"
+    },
+    {
+      "code": "MU",
+      "name_ko": "모리셔스",
+      "name_en": "Mauritius",
+      "file": "MU.json",
+      "bytes": 95314,
+      "sha256": "b0bb6f417e70e32abaa4599ae93fccde0a106db672d8159d62c0c58d16676d30"
+    },
+    {
+      "code": "MV",
+      "name_ko": "몰디브",
+      "name_en": "Maldives",
+      "file": "MV.json",
+      "bytes": 134223,
+      "sha256": "a50d24ee6dbbe921a7677cf32db7ea44781d61b78238aff62cdc94ca215dfbde"
+    },
+    {
+      "code": "MW",
+      "name_ko": "말라위",
+      "name_en": "Malawi",
+      "file": "MW.json",
+      "bytes": 106593,
+      "sha256": "f06c11f740d5a6524c85392252d82ab8825aaf9ad1a9e770d9e36db01f240c8c"
+    },
+    {
+      "code": "MX",
+      "name_ko": "멕시코",
+      "name_en": "Mexico",
+      "file": "MX.json",
+      "bytes": 59321,
+      "sha256": "0bc5b9300a2df168d089e77435d950bdae1adaef34a0f6d0df2b719cb65db3e0"
+    },
+    {
+      "code": "MY",
+      "name_ko": "말레이시아",
+      "name_en": "Malaysia",
+      "file": "MY.json",
+      "bytes": 122821,
+      "sha256": "1b2b21ddab368b1ce256bea0667448ca359cefa184baf7c5d12135bf267fc0a0"
+    },
+    {
+      "code": "MZ",
+      "name_ko": "모잠비크",
+      "name_en": "Mozambique",
+      "file": "MZ.json",
+      "bytes": 89900,
+      "sha256": "f0060d94a208b19ef624d36b4b328b0afb37245eff5c1e292000b6a2641f7ea8"
+    },
+    {
+      "code": "NA",
+      "name_ko": "나미비아",
+      "name_en": "Namibia",
+      "file": "NA.json",
+      "bytes": 117318,
+      "sha256": "3f630d0c50f19fd7cbcc7db20d0f347f0fa32c0b729f2a8ac2d2862c812393a0"
+    },
+    {
+      "code": "NC",
+      "name_ko": "뉴칼레도니아",
+      "name_en": "New Caledonia",
+      "file": "NC.json",
+      "bytes": 92063,
+      "sha256": "c5fb4265d891403fa308494e58a564b8974bd3bb4a81903c897fe2e761226fdb"
+    },
+    {
+      "code": "NE",
+      "name_ko": "니제르",
+      "name_en": "Niger",
+      "file": "NE.json",
+      "bytes": 128994,
+      "sha256": "cc60f908b8077fd8c5cfcd88a774f7c3b7d2299e3462f28c097116276fc87467"
+    },
+    {
+      "code": "NF",
+      "name_ko": "노퍽섬",
+      "name_en": "Norfolk Island",
+      "file": "NF.json",
+      "bytes": 104328,
+      "sha256": "2e95d9ceba7fb17fa6ec57d0ec7ff64be9c495a304638230b2b9419ae71beab5"
+    },
+    {
+      "code": "NG",
+      "name_ko": "나이지리아",
+      "name_en": "Nigeria",
+      "file": "NG.json",
+      "bytes": 124620,
+      "sha256": "cdb42aa0306c02d3820179a0a1f69bf4c4adc252d0bcaeff8e38a8d7f892fe90"
+    },
+    {
+      "code": "NI",
+      "name_ko": "니카라과",
+      "name_en": "Nicaragua",
+      "file": "NI.json",
+      "bytes": 80343,
+      "sha256": "4cd305cdebdf1811dd9db1804a2a3f2bd268ed3fb2ed66f8f38c82e90f6e401c"
+    },
+    {
+      "code": "NL",
+      "name_ko": "네덜란드",
+      "name_en": "Netherlands",
+      "file": "NL.json",
+      "bytes": 79537,
+      "sha256": "cbb1e487a8cf1f2b392920420d10577aa2e13efe4b94ef0f4f2d0eece70af108"
+    },
+    {
+      "code": "NO",
+      "name_ko": "노르웨이",
+      "name_en": "Norway",
+      "file": "NO.json",
+      "bytes": 92965,
+      "sha256": "be4f7fe75ff755866ea9d355aa026d794dccc7cfdb1d4ca6dbd5754f21d13f9a"
+    },
+    {
+      "code": "NP",
+      "name_ko": "네팔",
+      "name_en": "Nepal",
+      "file": "NP.json",
+      "bytes": 75519,
+      "sha256": "1abc72e1c14bd6fa5f1c3069baaf1d009969f8654a69895861f857e7e4664c12"
+    },
+    {
+      "code": "NR",
+      "name_ko": "나우루",
+      "name_en": "Nauru",
+      "file": "NR.json",
+      "bytes": 146585,
+      "sha256": "e360733aae90e599463df6f8271a6887cb47f549c3237f078464eea02a2b9902"
+    },
+    {
+      "code": "NU",
+      "name_ko": "니우에",
+      "name_en": "Niue",
+      "file": "NU.json",
+      "bytes": 106499,
+      "sha256": "97e98d14b738320c2f157b04c6000633235e6041b8b8cc04c536b5b8d2fc9e6d"
+    },
+    {
+      "code": "NZ",
+      "name_ko": "뉴질랜드",
+      "name_en": "New Zealand",
+      "file": "NZ.json",
+      "bytes": 95442,
+      "sha256": "63a432bd7b87d1e1108258ef801fddc3fbac4f2cb5f639c9ad4a893c73e34829"
+    },
+    {
+      "code": "OM",
+      "name_ko": "오만",
+      "name_en": "Oman",
+      "file": "OM.json",
+      "bytes": 102156,
+      "sha256": "f2f67b14b94bee0916c1b887e1132e06e79d7026f244b53a9c5528504290f6b4"
+    },
+    {
+      "code": "PA",
+      "name_ko": "파나마",
+      "name_en": "Panama",
+      "file": "PA.json",
+      "bytes": 106850,
+      "sha256": "f3b5d3ee8d6553b27fe899e5ff00b571fe859056c3c046e344cd617956493304"
+    },
+    {
+      "code": "PE",
+      "name_ko": "페루",
+      "name_en": "Peru",
+      "file": "PE.json",
+      "bytes": 142281,
+      "sha256": "3ea9d0325886112200f49def1a18af3ce88d7ea43a16c3892045df86fe3fde31"
+    },
+    {
+      "code": "PF",
+      "name_ko": "프랑스령 폴리네시아",
+      "name_en": "French Polynesia",
+      "file": "PF.json",
+      "bytes": 105679,
+      "sha256": "b9ceda0d1344dbb55220e6494831999a205ab44ae0b47db82ce450e1f4032cb6"
+    },
+    {
+      "code": "PG",
+      "name_ko": "파푸아뉴기니",
+      "name_en": "Papua New Guinea",
+      "file": "PG.json",
+      "bytes": 102276,
+      "sha256": "044152f3d2d4a1d6552892be6362b8aa7902b9f5c7154df1925ecf6bcdc0eeff"
+    },
+    {
+      "code": "PH",
+      "name_ko": "필리핀",
+      "name_en": "Philippines",
+      "file": "PH.json",
+      "bytes": 136484,
+      "sha256": "92d0c333ef12d3bd574698c2ecdb03ae83e7e271bb05df3199f6dfbee761faae"
+    },
+    {
+      "code": "PK",
+      "name_ko": "파키스탄",
+      "name_en": "Pakistan",
+      "file": "PK.json",
+      "bytes": 112485,
+      "sha256": "c151a7712617b47f80d59dca7d63883a4a7affc7c1ee770f61a03d45450403c3"
+    },
+    {
+      "code": "PL",
+      "name_ko": "폴란드",
+      "name_en": "Poland",
+      "file": "PL.json",
+      "bytes": 112015,
+      "sha256": "544af041e7ffbe23f23c8f73ba23ed8b125939fecc5f462d43d98b8722a052ef"
+    },
+    {
+      "code": "PM",
+      "name_ko": "생피에르 미클롱",
+      "name_en": "St. Pierre & Miquelon",
+      "file": "PM.json",
+      "bytes": 84441,
+      "sha256": "0e7f3cd23d3ab91924c54295d166c8803ae371556a9750f6ecf4a06757a950ef"
+    },
+    {
+      "code": "PN",
+      "name_ko": "핏케언 제도",
+      "name_en": "Pitcairn Islands",
+      "file": "PN.json",
+      "bytes": 61843,
+      "sha256": "a64c67d30b93e01011fee90625f0db4f48a8560797c5c0fad794470897fde5bf"
+    },
+    {
+      "code": "PR",
+      "name_ko": "푸에르토리코",
+      "name_en": "Puerto Rico",
+      "file": "PR.json",
+      "bytes": 219827,
+      "sha256": "09d9e6e19ed77632554c3f3e30e64f6e0527c3522ff4ffe4a97e0540b661cb5a"
+    },
+    {
+      "code": "PS",
+      "name_ko": "팔레스타인 지구",
+      "name_en": "Palestinian Territories",
+      "file": "PS.json",
+      "bytes": 115396,
+      "sha256": "6806e99c4a65433c40c3eab73da617dd4b5435eba83c27b7cd6ac3d740ae6213"
+    },
+    {
+      "code": "PT",
+      "name_ko": "포르투갈",
+      "name_en": "Portugal",
+      "file": "PT.json",
+      "bytes": 108713,
+      "sha256": "d2dee190e6ac9ed2d82334f30cf2fbb22862272b244abb37b48ec3613b92b1d8"
+    },
+    {
+      "code": "PW",
+      "name_ko": "팔라우",
+      "name_en": "Palau",
+      "file": "PW.json",
+      "bytes": 107475,
+      "sha256": "1bc902637e2d5401d790b5fd081a69ec456b2f751e8a2b70626eeb270ef51c80"
+    },
+    {
+      "code": "PY",
+      "name_ko": "파라과이",
+      "name_en": "Paraguay",
+      "file": "PY.json",
+      "bytes": 114235,
+      "sha256": "5634791b6804c68d28dabb1382bd3e384df5dfca0562c76c110e06387bf0a98a"
+    },
+    {
+      "code": "QA",
+      "name_ko": "카타르",
+      "name_en": "Qatar",
+      "file": "QA.json",
+      "bytes": 58825,
+      "sha256": "4427ceb4828daf49df1ad352884c5d9cc7f34b64ace0691d119c851fd9c4e97b"
+    },
+    {
+      "code": "RE",
+      "name_ko": "레위니옹",
+      "name_en": "Réunion",
+      "file": "RE.json",
+      "bytes": 92803,
+      "sha256": "b87f47cf9e8cf6ec34ee78c20599ecb768ddab39b0bcd67c2a8ba87a32277d68"
+    },
+    {
+      "code": "RO",
+      "name_ko": "루마니아",
+      "name_en": "Romania",
+      "file": "RO.json",
+      "bytes": 132745,
+      "sha256": "edb78606fea2dc58e61445b97b514dea90258c89f629354e58dc10bb4ef249d7"
+    },
+    {
+      "code": "RS",
+      "name_ko": "세르비아",
+      "name_en": "Serbia",
+      "file": "RS.json",
+      "bytes": 100060,
+      "sha256": "bfbee201806a8685006c5f8032bc31dfd35ef85adc885d8052f1a2e190f185df"
+    },
+    {
+      "code": "RU",
+      "name_ko": "러시아",
+      "name_en": "Russia",
+      "file": "RU.json",
+      "bytes": 117241,
+      "sha256": "20efa1da829106f8980ba51ffdadbc6adb4434d5aa4a6d372ddd440f97934f1a"
+    },
+    {
+      "code": "RW",
+      "name_ko": "르완다",
+      "name_en": "Rwanda",
+      "file": "RW.json",
+      "bytes": 146632,
+      "sha256": "e605a4638d041a51b12b77e07d82691ce4135dd249d7b41ddef487f9e1505797"
+    },
+    {
+      "code": "SA",
+      "name_ko": "사우디아라비아",
+      "name_en": "Saudi Arabia",
+      "file": "SA.json",
+      "bytes": 90243,
+      "sha256": "077d29cbaac203006bd30c61d1cdceeb8b4ec5a2440c5ae65fe7b0ecec784956"
+    },
+    {
+      "code": "SB",
+      "name_ko": "솔로몬 제도",
+      "name_en": "Solomon Islands",
+      "file": "SB.json",
+      "bytes": 83686,
+      "sha256": "dd0d1ec167a2816e7db69e6be281aa62505bb0d1f99130da43851f7b385e0517"
+    },
+    {
+      "code": "SC",
+      "name_ko": "세이셸",
+      "name_en": "Seychelles",
+      "file": "SC.json",
+      "bytes": 114196,
+      "sha256": "093cb5f4ebbb59a3ca5c167e9617ac4e52b4371c67edb8d58280920225f0332a"
+    },
+    {
+      "code": "SD",
+      "name_ko": "수단",
+      "name_en": "Sudan",
+      "file": "SD.json",
+      "bytes": 106359,
+      "sha256": "bbbc442b6d74bdc6460576585eb24f6083c39d68a8c1121f32f8f9618ce763c4"
+    },
+    {
+      "code": "SE",
+      "name_ko": "스웨덴",
+      "name_en": "Sweden",
+      "file": "SE.json",
+      "bytes": 98420,
+      "sha256": "270111078f620bf05a36401c72e66bf95fc5f675b928772eb5f179e4e174a9a1"
+    },
+    {
+      "code": "SG",
+      "name_ko": "싱가포르",
+      "name_en": "Singapore",
+      "file": "SG.json",
+      "bytes": 99060,
+      "sha256": "aff09fea7fed67a0c8e0e0b95074adcf0704fd5c9bc062a552d25bca8fe81292"
+    },
+    {
+      "code": "SH",
+      "name_ko": "세인트헬레나",
+      "name_en": "St. Helena",
+      "file": "SH.json",
+      "bytes": 45380,
+      "sha256": "55cf6c2455ba0a7379e65e5d6d82671f2c1533af049014683ddd4ac66cac8ffb"
+    },
+    {
+      "code": "SI",
+      "name_ko": "슬로베니아",
+      "name_en": "Slovenia",
+      "file": "SI.json",
+      "bytes": 125705,
+      "sha256": "573d08d72bb7c25c5a67ecff0d4a3afdd9bcc0cdfa7d2b0d44aede4aa9bcbc5c"
+    },
+    {
+      "code": "SJ",
+      "name_ko": "스발바르제도-얀마웬섬",
+      "name_en": "Svalbard & Jan Mayen",
+      "file": "SJ.json",
+      "bytes": 92965,
+      "sha256": "00d84569a74f45669c71a55d2554b159333d4872e312b9bb556f85e3e71f44ea"
+    },
+    {
+      "code": "SK",
+      "name_ko": "슬로바키아",
+      "name_en": "Slovakia",
+      "file": "SK.json",
+      "bytes": 121881,
+      "sha256": "0cb841a23cfa2104487086b844670dd967d21d777052927fff00ff573e1b0324"
+    },
+    {
+      "code": "SL",
+      "name_ko": "시에라리온",
+      "name_en": "Sierra Leone",
+      "file": "SL.json",
+      "bytes": 119648,
+      "sha256": "2d6ebb47aa6def4927a190fc3a9b9c6621b2e8bd0471a3f6bbbe3563da46e7d2"
+    },
+    {
+      "code": "SM",
+      "name_ko": "산마리노",
+      "name_en": "San Marino",
+      "file": "SM.json",
+      "bytes": 167557,
+      "sha256": "d179824a116ae4c653442890aa1cb5c05bfee9ceb83fbbc70226a50039b15cea"
+    },
+    {
+      "code": "SN",
+      "name_ko": "세네갈",
+      "name_en": "Senegal",
+      "file": "SN.json",
+      "bytes": 105150,
+      "sha256": "9e008ca1a528a8999609b26563805a71f9ff649d6bfff6baf83916ce9b3d780a"
+    },
+    {
+      "code": "SO",
+      "name_ko": "소말리아",
+      "name_en": "Somalia",
+      "file": "SO.json",
+      "bytes": 72559,
+      "sha256": "deb5b69550065c97238decad6327b6976cd83dc163726c81470bbe4e5c32a6c8"
+    },
+    {
+      "code": "SR",
+      "name_ko": "수리남",
+      "name_en": "Suriname",
+      "file": "SR.json",
+      "bytes": 108308,
+      "sha256": "4ff2ff9fcd55003f8c4c664930205a361a0ef212ca910683e935440827bbdebd"
+    },
+    {
+      "code": "SS",
+      "name_ko": "남수단",
+      "name_en": "South Sudan",
+      "file": "SS.json",
+      "bytes": 115483,
+      "sha256": "82fe82a84235e0d4f44202f64b314bcf600ca2e7f5ea60524520de153cbb9e61"
+    },
+    {
+      "code": "ST",
+      "name_ko": "상투메 프린시페",
+      "name_en": "São Tomé & Príncipe",
+      "file": "ST.json",
+      "bytes": 97301,
+      "sha256": "4997b361d3904e904e035b8acbae6355206e8cccd5557f54b042bdaaa0a485cb"
+    },
+    {
+      "code": "SV",
+      "name_ko": "엘살바도르",
+      "name_en": "El Salvador",
+      "file": "SV.json",
+      "bytes": 86781,
+      "sha256": "781f4add145bfa54406ac1f76c6376fdec3119496590d2af359fd08cccb0036c"
+    },
+    {
+      "code": "SX",
+      "name_ko": "신트마르턴",
+      "name_en": "Sint Maarten",
+      "file": "SX.json",
+      "bytes": 107575,
+      "sha256": "450397ca223e6028ba40929544650f7e22be4a78e58fe5949394e81f0578440b"
+    },
+    {
+      "code": "SY",
+      "name_ko": "시리아",
+      "name_en": "Syria",
+      "file": "SY.json",
+      "bytes": 152099,
+      "sha256": "5af76190282ad74e88acf428df2baeee779e909a7c7c269d7b1b4725a658593d"
+    },
+    {
+      "code": "SZ",
+      "name_ko": "에스와티니",
+      "name_en": "Eswatini",
+      "file": "SZ.json",
+      "bytes": 97969,
+      "sha256": "fe8ac2fb9be65b6caeacd0c8f1813adc4ebcc553e11d8fb8e0cded41f696228d"
+    },
+    {
+      "code": "TC",
+      "name_ko": "터크스 케이커스 제도",
+      "name_en": "Turks & Caicos Islands",
+      "file": "TC.json",
+      "bytes": 115729,
+      "sha256": "0175be6b16dbcf9aec4d5dca02c55971d675a3f46b0c4af4cfc8379d186d3e20"
+    },
+    {
+      "code": "TD",
+      "name_ko": "차드",
+      "name_en": "Chad",
+      "file": "TD.json",
+      "bytes": 101575,
+      "sha256": "399cb5b999fb4933bb1a4075121a8fd2d721056c6f56c80acef3070fd134a36f"
+    },
+    {
+      "code": "TF",
+      "name_ko": "프랑스령 남방 지역",
+      "name_en": "French Southern Territories",
+      "file": "TF.json",
+      "bytes": 84441,
+      "sha256": "aa5802832af56ec8911635ccebfdfac3684bee78155541ede81b73decce66155"
+    },
+    {
+      "code": "TG",
+      "name_ko": "토고",
+      "name_en": "Togo",
+      "file": "TG.json",
+      "bytes": 98172,
+      "sha256": "d3d1784402693131ba09c82c7272d8158a2f85da700a7e9dd05f953a89b603c0"
+    },
+    {
+      "code": "TH",
+      "name_ko": "태국",
+      "name_en": "Thailand",
+      "file": "TH.json",
+      "bytes": 243598,
+      "sha256": "19728385a0a74e55af5f40602be51a0c31b7a0855b99449850caf577401ee58d"
+    },
+    {
+      "code": "TJ",
+      "name_ko": "타지키스탄",
+      "name_en": "Tajikistan",
+      "file": "TJ.json",
+      "bytes": 97945,
+      "sha256": "1793132aeb85394e3c8ab215be9a1bfa4bbbfabe30512b123ee5b3ea14453139"
+    },
+    {
+      "code": "TK",
+      "name_ko": "토켈라우",
+      "name_en": "Tokelau",
+      "file": "TK.json",
+      "bytes": 47339,
+      "sha256": "afcdefe915fd8edd02350e112360b1f597fa2f2a8a17afcf6f1d6a2fb8e0b5d8"
+    },
+    {
+      "code": "TL",
+      "name_ko": "동티모르",
+      "name_en": "Timor-Leste",
+      "file": "TL.json",
+      "bytes": 153755,
+      "sha256": "dcc32a7f0779391e5b1d25932e9d59abac2def57289a8a96dc8bedcc50143677"
+    },
+    {
+      "code": "TM",
+      "name_ko": "투르크메니스탄",
+      "name_en": "Turkmenistan",
+      "file": "TM.json",
+      "bytes": 96466,
+      "sha256": "cc45b9b441be4e6d98ded74c3848fe13f7f8adc066955441ea0f9d9c5b51877a"
+    },
+    {
+      "code": "TN",
+      "name_ko": "튀니지",
+      "name_en": "Tunisia",
+      "file": "TN.json",
+      "bytes": 125852,
+      "sha256": "72b41bbf97445870773c6074ee1c15aadbc7d618c0f9a3ed89158c475d9f1dc6"
+    },
+    {
+      "code": "TO",
+      "name_ko": "통가",
+      "name_en": "Tonga",
+      "file": "TO.json",
+      "bytes": 107277,
+      "sha256": "e26b71a3eaf5b880215c64fe94e91dfc06c058a6c7f32b683e20a613c897e497"
+    },
+    {
+      "code": "TR",
+      "name_ko": "튀르키예",
+      "name_en": "Türkiye",
+      "file": "TR.json",
+      "bytes": 111565,
+      "sha256": "84d17af9210c61b92e9d3e0a5c5d6a363cbc2ae1f5a3fed7586832b367d005b9"
+    },
+    {
+      "code": "TT",
+      "name_ko": "트리니다드 토바고",
+      "name_en": "Trinidad & Tobago",
+      "file": "TT.json",
+      "bytes": 124799,
+      "sha256": "35a9ea8c37aaa4b6085a540305d74cfb8a9c65754c65e9c8313f4cf3de226622"
+    },
+    {
+      "code": "TV",
+      "name_ko": "투발루",
+      "name_en": "Tuvalu",
+      "file": "TV.json",
+      "bytes": 97670,
+      "sha256": "2d520cc0868509afe43676a383f327790faf405713401594cc71a70750651eb8"
+    },
+    {
+      "code": "TW",
+      "name_ko": "대만",
+      "name_en": "Taiwan",
+      "file": "TW.json",
+      "bytes": 185949,
+      "sha256": "a1874f3fab800a671efd33eb63a7aefcabcaad116da37502519dca45345507d0"
+    },
+    {
+      "code": "TZ",
+      "name_ko": "탄자니아",
+      "name_en": "Tanzania",
+      "file": "TZ.json",
+      "bytes": 141851,
+      "sha256": "972cebc56558dcf676b55d0818fa5914b0085992f597cb2ddcc10e0b087c2302"
+    },
+    {
+      "code": "UA",
+      "name_ko": "우크라이나",
+      "name_en": "Ukraine",
+      "file": "UA.json",
+      "bytes": 4197,
+      "sha256": "e06ccc35ebc3c8d1e8e84f2a84d398271ddc938bcbe7c632cd103dc170fa78c5"
+    },
+    {
+      "code": "UG",
+      "name_ko": "우간다",
+      "name_en": "Uganda",
+      "file": "UG.json",
+      "bytes": 108815,
+      "sha256": "5fc3a684f136755ebf8841fc49fd96f15043b268c53b8d47a985305a72751790"
+    },
+    {
+      "code": "UM",
+      "name_ko": "미국령 해외 제도",
+      "name_en": "U.S. Outlying Islands",
+      "file": "UM.json",
+      "bytes": 164857,
+      "sha256": "151b4e2bda0c96200b6df2f2cb5089ec77429629c9f9faba42cd9547cb663bb9"
+    },
+    {
+      "code": "US",
+      "name_ko": "미국",
+      "name_en": "United States",
+      "file": "US.json",
+      "bytes": 181475,
+      "sha256": "780e3966af8a2e59aadfa954a10d1f71b06defbc5d40dfd8b7ca710da3e03f74"
+    },
+    {
+      "code": "UY",
+      "name_ko": "우루과이",
+      "name_en": "Uruguay",
+      "file": "UY.json",
+      "bytes": 42973,
+      "sha256": "31be733b7d55aba62b28c1d995f412645ccde9e137af561491ce0fd3a3abb4b8"
+    },
+    {
+      "code": "UZ",
+      "name_ko": "우즈베키스탄",
+      "name_en": "Uzbekistan",
+      "file": "UZ.json",
+      "bytes": 95503,
+      "sha256": "81d42c852cd120ce23c2f1df069ef41c9ebfc492a624d5a2ae2524e48cae9a31"
+    },
+    {
+      "code": "VA",
+      "name_ko": "바티칸 시국",
+      "name_en": "Vatican City",
+      "file": "VA.json",
+      "bytes": 250645,
+      "sha256": "6a7076a960ea529392c2ada4079685796e1593a51630ed1690029c3ae21470f9"
+    },
+    {
+      "code": "VC",
+      "name_ko": "세인트빈센트그레나딘",
+      "name_en": "St. Vincent & Grenadines",
+      "file": "VC.json",
+      "bytes": 114670,
+      "sha256": "ac1e8823855a2c28c87c4e9f7b45a6bbc28383419310bddd7a5061bfb06eb85c"
+    },
+    {
+      "code": "VE",
+      "name_ko": "베네수엘라",
+      "name_en": "Venezuela",
+      "file": "VE.json",
+      "bytes": 123446,
+      "sha256": "e3c01a9a032af5d51c09d3d08cd6ba43591a84c9b67c8c575160c5848a1f401b"
+    },
+    {
+      "code": "VG",
+      "name_ko": "영국령 버진아일랜드",
+      "name_en": "British Virgin Islands",
+      "file": "VG.json",
+      "bytes": 127217,
+      "sha256": "a8443c34c334da46edf31b827a65a3f4aff83071331ee6dd81b9b0f3f3c3d570"
+    },
+    {
+      "code": "VI",
+      "name_ko": "미국령 버진아일랜드",
+      "name_en": "U.S. Virgin Islands",
+      "file": "VI.json",
+      "bytes": 226889,
+      "sha256": "fc1507280f61b3a1453771273e850b47797e4fee838efc5a0181f267efc3e78a"
+    },
+    {
+      "code": "VN",
+      "name_ko": "베트남",
+      "name_en": "Vietnam",
+      "file": "VN.json",
+      "bytes": 137304,
+      "sha256": "91b4557a9cec2281e95062632f33528f00822f0ce04c260314a01c99c22d6b55"
+    },
+    {
+      "code": "VU",
+      "name_ko": "바누아투",
+      "name_en": "Vanuatu",
+      "file": "VU.json",
+      "bytes": 121127,
+      "sha256": "deb69e0e33b5f5aad874db116399dfa81a16aabd870a0acb77780661e1b58d6d"
+    },
+    {
+      "code": "WF",
+      "name_ko": "왈리스-푸투나 제도",
+      "name_en": "Wallis & Futuna",
+      "file": "WF.json",
+      "bytes": 110267,
+      "sha256": "e89ff0b8ab564692aefe55d20bd4eef81e92d8dbf64232b30a0cf1db2bfc3dd0"
+    },
+    {
+      "code": "WS",
+      "name_ko": "사모아",
+      "name_en": "Samoa",
+      "file": "WS.json",
+      "bytes": 90037,
+      "sha256": "3ddf05543b1953d8ddbe4eccf4d0c941e6ba3d7c8e41d1e29545ef3f04e71e28"
+    },
+    {
+      "code": "XK",
+      "name_ko": "코소보",
+      "name_en": "Kosovo",
+      "file": "XK.json",
+      "bytes": 136130,
+      "sha256": "94b181f04fc5a459e3055ca06dee97c2d6731920a59b0a890bd789fb865d595b"
+    },
+    {
+      "code": "YE",
+      "name_ko": "예멘",
+      "name_en": "Yemen",
+      "file": "YE.json",
+      "bytes": 126173,
+      "sha256": "3cdbb7789b80ff5aea541db1dd66b090e19455b112ab607391db299536008455"
+    },
+    {
+      "code": "YT",
+      "name_ko": "마요트",
+      "name_en": "Mayotte",
+      "file": "YT.json",
+      "bytes": 92803,
+      "sha256": "2f5a41b24c6a2df0bd4f76318122e747a969ee72214d8a5b4fb778f1b5b7ecce"
+    },
+    {
+      "code": "ZA",
+      "name_ko": "남아프리카",
+      "name_en": "South Africa",
+      "file": "ZA.json",
+      "bytes": 105135,
+      "sha256": "0f28cc31ea1a08ff60c70b2677f39b83cdc7226aca907b5ddca5a3d2d9d95cb7"
+    },
+    {
+      "code": "ZM",
+      "name_ko": "잠비아",
+      "name_en": "Zambia",
+      "file": "ZM.json",
+      "bytes": 141563,
+      "sha256": "655ec9d0b85376b45c814b958a94b173ba1742f77f0bf468d4f5b53935578b8d"
+    },
+    {
+      "code": "ZW",
+      "name_ko": "짐바브웨",
+      "name_en": "Zimbabwe",
+      "file": "ZW.json",
+      "bytes": 114065,
+      "sha256": "cd161e69e83d96d36de853e82b284de6bea95a1c4819b30a920ad418187dd66b"
+    }
+  ],
+  "event_dates": 246906
+}

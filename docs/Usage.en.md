@@ -1,4 +1,4 @@
-# 🪐 Codex Orbit 3.1.0 · User guide
+# 🪐 Codex Orbit 3.2.0 · User guide
 
 Appearance, language and text size are grouped at the top. Choose System, Light or Dark; the choice is saved and System follows the operating system. Overview shows recorded activity. Display settings explains reduced motion, edge docking, sound and performance options. Privacy mode hides chat titles and task descriptions on screen; stored records are unchanged.
 
@@ -32,9 +32,9 @@ Privacy mode immediately masks titles and work descriptions in existing notifica
 
 Remaining usage is the actual account-limit percentage provided through the signed-in Codex installation, **not an exact remaining-token count**. Numbers, bars and the 3D container distinguish unavailable data from 0%. Stale data retain an explicit status.
 
-The widget shows the time, current temperature and IP-estimated location worldwide where the services provide data. Windows Location Services are not required. VPNs and network routing may change the estimated region.
+Click the location label to search and explicitly select a city, address/place, or country. A selected city/place supplies coordinates for temperature, weather, humidity, sunrise and sunset. Country-only selection changes the calendar country while keeping the weather location explicit. Automatic IP location is an estimate; VPNs and routing can select another city. Windows Location Services are not required. Detailed addresses are shown only when returned by the search provider. The app does not claim automatic building-level accuracy. Failed or outdated responses retain an explicit status.
 
-Calendar mode retains 888 monthly themes for 2026–2099 and procedural daily subjects. See the monthly-theme Markdown and CSV. This does not mean that every date has a separately hand-built model file.
+Calendar mode retains 888 monthly themes for 2026–2099 and procedural daily subjects. See the monthly-theme Markdown and CSV. The desktop calendar displays one subject without rings or side decorations. Supported country holidays and observances override ordinary daily artwork. Data cover 250 countries/territories for 2026–2099, with source limitations preserved; future legislation and every local festival are not guaranteed. Verified city time offsets apply to the matching calendar country; otherwise the Korean-date basis is explicit. This does not mean that every date has a separately hand-built model file.
 
 ## MD, diagnostics and updates
 
@@ -47,3 +47,5 @@ Check for update uses only official `PUVKID/Codex-Orbit` HTTPS releases. Downloa
 ## Requirements and limits
 
 Windows 10/11 x64 with an OpenGL 3.3 graphics driver. Monitoring uses locally available Codex records and settings, not server identity proof or private reasoning. Unrecorded reasons, previous values and activity states remain unknown. Monitor interruption/recovery notifications are emitted only when the state changes. Personal data stay in the user's AppData/CodexOrbit folder; uninstall does not silently erase them. Bundled license notices cover redistribution.
+
+Place and address results: © OpenStreetMap contributors. [Copyright and ODbL](https://www.openstreetmap.org/copyright). Explicit search queries are sent to the public search service; coverage and building-level accuracy are not guaranteed.

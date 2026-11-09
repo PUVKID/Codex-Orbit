@@ -51,14 +51,16 @@ if importlib.util.find_spec('i18n'):
             self.assertEqual(self.c.window.chat_title.text(), '모델 변경')
             self.assertEqual(self.c.window.task_value.text(), '원문 작업 설명')
             self.assertIn('원문 이유를 유지합니다.', self.c.window.selection_reason.text())
-            self.assertIn('Previous model', notice.model_previous.text())
+            self.assertEqual(notice.model_previous.accessibleName(), 'Previous model')
+            self.assertIn('gpt-6.1-sol', notice.model_previous.text())
             self.assertIn('Medium (medium)', notice.effort_previous.text())
             self.assertLessEqual(notice.timer.remainingTime(), remaining)
             self.assertEqual(event, original)
             self.assertEqual(self.c.window.history.item(0).data(256), original)
             self.c.set_language('ko')
             self.assertEqual(self.c.window.tabs.tabText(0), '변경 기록')
-            self.assertIn('이전 모델', notice.model_previous.text())
+            self.assertEqual(notice.model_previous.accessibleName(), '이전 모델')
+            self.assertIn('gpt-6.1-sol', notice.model_previous.text())
 
         def test_saved_language_and_menu_and_usage_weather(self):
             snapshot = {'rows':[{'bucket':'codex','period':'5시간','remaining':37.5,'resets_at':None}],
@@ -139,7 +141,7 @@ if importlib.util.find_spec('i18n'):
                        'region_source':'ipwho.is · 지역 번역 실패 · 원문 보존'}
             original = copy.deepcopy(weather)
             self.c.update_weather(weather)
-            self.assertEqual(self.c.orbit.weather_text, 'Previous 18.5℃')
+            self.assertEqual(self.c.orbit.weather_text, 'Earlier: 18.5℃ · Weather unavailable')
             self.assertIn('translation unavailable', self.c.orbit.weather_tooltip)
             self.assertIn('Fixture original', self.c.orbit.weather_tooltip)
             self.assertEqual(weather, original)
