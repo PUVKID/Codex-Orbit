@@ -1,7 +1,11 @@
 <a name="-codex-orbit-320--user-guide"></a>
 # Codex Orbit 3.2.0 · User guide
 
-Appearance, language and text size are grouped at the top. Choose System, Light or Dark; the choice is saved and System follows the operating system. Overview shows recorded activity. Display settings explains reduced motion, edge docking, sound and performance options. Privacy mode hides chat titles and task descriptions on screen; stored records are unchanged.
+<!-- user-levels:start -->
+**수준별 전체 안내:** [LEVEL 1 - Beginner](%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A81.md) · [LEVEL 2 - Explorer](%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A82.md) · [LEVEL 3 - Practitioner](%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A83.md) · [LEVEL 4 - Advanced](%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A84.md) · [LEVEL 5 - Expert](%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A85.md)
+<!-- user-levels:end -->
+
+**Appearance**, language and text size are grouped at the top. Choose System, Light or Dark; the choice is saved and System follows the operating system. Overview shows recorded activity. Display settings explains reduced motion, edge docking, sound and performance options. Privacy mode hides chat titles and task descriptions on screen; stored records are unchanged.
 
 The original daily calendar sculpture is the default desktop view. Model notifications keep its date-based title and artwork. The 3D observatory remains available as an explicit display-mode choice.
 
