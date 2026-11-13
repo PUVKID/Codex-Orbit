@@ -1,4 +1,5 @@
-# 🪐 Codex Orbit 3.2.0 · User guide
+<a name="-codex-orbit-320--user-guide"></a>
+# Codex Orbit 3.2.0 · User guide
 
 Appearance, language and text size are grouped at the top. Choose System, Light or Dark; the choice is saved and System follows the operating system. Overview shows recorded activity. Display settings explains reduced motion, edge docking, sound and performance options. Privacy mode hides chat titles and task descriptions on screen; stored records are unchanged.
 
