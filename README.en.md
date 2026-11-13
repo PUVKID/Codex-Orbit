@@ -38,7 +38,7 @@ Missing display-mode settings now select the calendar. Model events preserve the
 
 ## Revision history
 
-| 차수 · 폴더 · 설명 · 직전 차수와 실제 비교 |
+| 내용 |
 | --- |
 | **차수:** 1차<br>**폴더:** [폴더](history/01차/)<br>**설명:** [설명](history/01차/README.md)<br>**직전 차수와 실제 비교:** [비교 대상 없는 근거](history/01차/직전차수.diff) |
 | **차수:** 2차<br>**폴더:** [폴더](history/02차/)<br>**설명:** [설명](history/02차/README.md)<br>**직전 차수와 실제 비교:** 1차 · [전체 차이](history/02차/직전차수.diff) |

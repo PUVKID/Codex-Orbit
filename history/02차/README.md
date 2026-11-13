@@ -94,7 +94,7 @@ PyInstaller==6.22.3
 **코드의 선언:** `action='store_true'`
 
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`not lock.tryLock(100)`](src/app.py#L570)<br>**오류 메시지:** 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
 | **거부 조건:** [`not isinstance(value, dict)`](src/app.py#L62)<br>**오류 메시지:** 앱 설정은 JSON 객체여야 합니다. |
@@ -104,12 +104,12 @@ PyInstaller==6.22.3
 
 #### LEVEL 1 · [src/core.py](src/core.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`read_jsonl_tail`](src/core.py#L18)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
 | **정의:** [`safe_path`](src/core.py#L65)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L9)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
 | **설정·옵션:** [`BEGIN`](src/core.py#L10)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
@@ -171,7 +171,7 @@ PyInstaller==6.22.3
 #### LEVEL 1 · [src/notifier.py](src/notifier.py)
 
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`--sessions`](src/notifier.py#L436)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
 | **설정·옵션:** [`--work`](src/notifier.py#L437)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
@@ -326,7 +326,7 @@ PyInstaller==6.22.3
 **코드의 선언:** `action='store_true'`
 
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`not lock.tryLock(100)`](src/app.py#L570)<br>**오류 메시지:** 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
 | **거부 조건:** [`not isinstance(value, dict)`](src/app.py#L62)<br>**오류 메시지:** 앱 설정은 JSON 객체여야 합니다. |
@@ -336,12 +336,12 @@ PyInstaller==6.22.3
 
 #### LEVEL 2 · [src/core.py](src/core.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`read_jsonl_tail`](src/core.py#L18)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
 | **정의:** [`safe_path`](src/core.py#L65)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L9)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
 | **설정·옵션:** [`BEGIN`](src/core.py#L10)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
@@ -403,7 +403,7 @@ PyInstaller==6.22.3
 #### LEVEL 2 · [src/notifier.py](src/notifier.py)
 
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`--sessions`](src/notifier.py#L436)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
 | **설정·옵션:** [`--work`](src/notifier.py#L437)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
@@ -525,7 +525,7 @@ PyInstaller==6.22.3
 **코드의 선언:** `action='store_true'`
 
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`not lock.tryLock(100)`](src/app.py#L570)<br>**오류 메시지:** 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
 | **거부 조건:** [`not isinstance(value, dict)`](src/app.py#L62)<br>**오류 메시지:** 앱 설정은 JSON 객체여야 합니다. |
@@ -535,12 +535,12 @@ PyInstaller==6.22.3
 
 #### LEVEL 3 · [src/core.py](src/core.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`read_jsonl_tail`](src/core.py#L18)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
 | **정의:** [`safe_path`](src/core.py#L65)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L9)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
 | **설정·옵션:** [`BEGIN`](src/core.py#L10)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
@@ -602,7 +602,7 @@ PyInstaller==6.22.3
 #### LEVEL 3 · [src/notifier.py](src/notifier.py)
 
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`--sessions`](src/notifier.py#L436)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
 | **설정·옵션:** [`--work`](src/notifier.py#L437)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
@@ -700,7 +700,7 @@ PyInstaller==6.22.3
 
 ### LEVEL 4 · 이 차수 구현의 실제 근거
 
-| 파일 · 원문에 정의된 역할·구성 |
+| 내용 |
 | --- |
 | **파일:** [src/app.py](src/app.py)<br>**원문에 정의된 역할·구성:** Codex Orbit: 투명 궤도와 로컬 감시, 명시적 Markdown 지침 적용. |
 | **파일:** [src/notifier.py](src/notifier.py)<br>**원문에 정의된 역할·구성:** 현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다. |
@@ -777,7 +777,7 @@ PyInstaller==6.22.3
 **코드의 선언:** `action='store_true'`
 
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`not lock.tryLock(100)`](src/app.py#L570)<br>**오류 메시지:** 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
 | **거부 조건:** [`not isinstance(value, dict)`](src/app.py#L62)<br>**오류 메시지:** 앱 설정은 JSON 객체여야 합니다. |
@@ -787,12 +787,12 @@ PyInstaller==6.22.3
 
 #### LEVEL 4 · [src/core.py](src/core.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`read_jsonl_tail`](src/core.py#L18)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
 | **정의:** [`safe_path`](src/core.py#L65)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L9)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
 | **설정·옵션:** [`BEGIN`](src/core.py#L10)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
@@ -854,7 +854,7 @@ PyInstaller==6.22.3
 #### LEVEL 4 · [src/notifier.py](src/notifier.py)
 
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`--sessions`](src/notifier.py#L436)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
 | **설정·옵션:** [`--work`](src/notifier.py#L437)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
@@ -979,7 +979,7 @@ PyInstaller==6.22.3
 <a name="-실제-자료-구성"></a>
 ## 실제 자료 구성
 
-| 경로 · 자료 종류 |
+| 내용 |
 | --- |
 | **경로:** [src/](src)<br>**자료 종류:** 하위 자료 폴더 |
 | **경로:** [README.md](README.md)<br>**자료 종류:** MD 파일 |
@@ -992,7 +992,7 @@ PyInstaller==6.22.3
 <a name="-주요-모듈과-코드-읽기"></a>
 ## 주요 모듈과 코드 읽기
 
-| 파일 · 원문에 정의된 역할·구성 |
+| 내용 |
 | --- |
 | **파일:** [src/app.py](src/app.py)<br>**원문에 정의된 역할·구성:** Codex Orbit: 투명 궤도와 로컬 감시, 명시적 Markdown 지침 적용. |
 | **파일:** [src/notifier.py](src/notifier.py)<br>**원문에 정의된 역할·구성:** 현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다. |
@@ -1061,7 +1061,7 @@ PyInstaller==6.22.3
 **코드의 선언:** `action='store_true'`
 
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`not lock.tryLock(100)`](src/app.py#L570)<br>**오류 메시지:** 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
 | **거부 조건:** [`not isinstance(value, dict)`](src/app.py#L62)<br>**오류 메시지:** 앱 설정은 JSON 객체여야 합니다. |
@@ -1071,12 +1071,12 @@ PyInstaller==6.22.3
 
 ### [src/core.py](src/core.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`read_jsonl_tail`](src/core.py#L18)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
 | **정의:** [`safe_path`](src/core.py#L65)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L9)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
 | **설정·옵션:** [`BEGIN`](src/core.py#L10)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
@@ -1138,7 +1138,7 @@ PyInstaller==6.22.3
 ### [src/notifier.py](src/notifier.py)
 
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`--sessions`](src/notifier.py#L436)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
 | **설정·옵션:** [`--work`](src/notifier.py#L437)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |

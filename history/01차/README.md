@@ -44,7 +44,7 @@ Windows에서 Python과 PowerShell을 준비합니다. 1차의 `src/notifier.py`
 
 #### LEVEL 1 · 소스에서 제공하는 CLI 옵션
 
-| 진입 소스 · 정의된 옵션 이름 |
+| 내용 |
 | --- |
 | **진입 소스:** [notifier.py](src/notifier.py)<br>**정의된 옵션 이름:** `--sessions`, `--work` |
 
@@ -59,7 +59,7 @@ Windows에서 Python과 PowerShell을 준비합니다. 1차의 `src/notifier.py`
 #### LEVEL 1 · [src/notifier.py](src/notifier.py)
 
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`--sessions`](src/notifier.py#L436)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
 | **설정·옵션:** [`--work`](src/notifier.py#L437)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
@@ -162,7 +162,7 @@ Windows에서 Python과 PowerShell을 준비합니다. 1차의 `src/notifier.py`
 
 #### LEVEL 2 · 소스에서 제공하는 CLI 옵션
 
-| 진입 소스 · 정의된 옵션 이름 |
+| 내용 |
 | --- |
 | **진입 소스:** [notifier.py](src/notifier.py)<br>**정의된 옵션 이름:** `--sessions`, `--work` |
 
@@ -177,7 +177,7 @@ Windows에서 Python과 PowerShell을 준비합니다. 1차의 `src/notifier.py`
 #### LEVEL 2 · [src/notifier.py](src/notifier.py)
 
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`--sessions`](src/notifier.py#L436)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
 | **설정·옵션:** [`--work`](src/notifier.py#L437)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
@@ -249,7 +249,7 @@ Windows에서 Python과 PowerShell을 준비합니다. 1차의 `src/notifier.py`
 
 #### LEVEL 3 · 소스에서 제공하는 CLI 옵션
 
-| 진입 소스 · 정의된 옵션 이름 |
+| 내용 |
 | --- |
 | **진입 소스:** [notifier.py](src/notifier.py)<br>**정의된 옵션 이름:** `--sessions`, `--work` |
 
@@ -264,7 +264,7 @@ Windows에서 Python과 PowerShell을 준비합니다. 1차의 `src/notifier.py`
 #### LEVEL 3 · [src/notifier.py](src/notifier.py)
 
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`--sessions`](src/notifier.py#L436)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
 | **설정·옵션:** [`--work`](src/notifier.py#L437)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
@@ -361,7 +361,7 @@ Windows에서 Python과 PowerShell을 준비합니다. 1차의 `src/notifier.py`
 
 ### LEVEL 4 · 이 차수 구현의 실제 근거
 
-| 파일 · 원문에 정의된 역할·구성 |
+| 내용 |
 | --- |
 | **파일:** [src/notifier.py](src/notifier.py)<br>**원문에 정의된 역할·구성:** 현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다. |
 
@@ -386,7 +386,7 @@ Windows에서 Python과 PowerShell을 준비합니다. 1차의 `src/notifier.py`
 
 #### LEVEL 4 · 소스에서 제공하는 CLI 옵션
 
-| 진입 소스 · 정의된 옵션 이름 |
+| 내용 |
 | --- |
 | **진입 소스:** [notifier.py](src/notifier.py)<br>**정의된 옵션 이름:** `--sessions`, `--work` |
 
@@ -401,7 +401,7 @@ Windows에서 Python과 PowerShell을 준비합니다. 1차의 `src/notifier.py`
 #### LEVEL 4 · [src/notifier.py](src/notifier.py)
 
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`--sessions`](src/notifier.py#L436)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
 | **설정·옵션:** [`--work`](src/notifier.py#L437)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
@@ -524,7 +524,7 @@ Windows에서 Python과 PowerShell을 준비합니다. 1차의 `src/notifier.py`
 <a name="-실제-자료-구성"></a>
 ## 실제 자료 구성
 
-| 경로 · 자료 종류 |
+| 내용 |
 | --- |
 | **경로:** [src/](src)<br>**자료 종류:** 하위 자료 폴더 |
 | **경로:** [README.md](README.md)<br>**자료 종류:** MD 파일 |
@@ -536,7 +536,7 @@ Windows에서 Python과 PowerShell을 준비합니다. 1차의 `src/notifier.py`
 <a name="-주요-모듈과-코드-읽기"></a>
 ## 주요 모듈과 코드 읽기
 
-| 파일 · 원문에 정의된 역할·구성 |
+| 내용 |
 | --- |
 | **파일:** [src/notifier.py](src/notifier.py)<br>**원문에 정의된 역할·구성:** 현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다. |
 
@@ -552,7 +552,7 @@ Windows에서 Python과 PowerShell을 준비합니다. 1차의 `src/notifier.py`
 <a name="️-소스에서-제공하는-cli-옵션"></a>
 ### 소스에서 제공하는 CLI 옵션
 
-| 진입 소스 · 정의된 옵션 이름 |
+| 내용 |
 | --- |
 | **진입 소스:** [notifier.py](src/notifier.py)<br>**정의된 옵션 이름:** `--sessions`, `--work` |
 
@@ -567,7 +567,7 @@ Windows에서 Python과 PowerShell을 준비합니다. 1차의 `src/notifier.py`
 ### [src/notifier.py](src/notifier.py)
 
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`--sessions`](src/notifier.py#L436)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
 | **설정·옵션:** [`--work`](src/notifier.py#L437)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |

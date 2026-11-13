@@ -104,14 +104,14 @@ Pillow==13.0.0
 
 #### LEVEL 1 · [src/activity.py](src/activity.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`safe_public_text`](src/activity.py#L15)<br>**소스에 적힌 역할:** 보호문·비공개 표식·긴 인코딩 덩어리는 해석하거나 노출하지 않습니다. |
 | **정의:** [`configuration`](src/activity.py#L76)<br>**소스에 적힌 역할:** 원본 시각이 있는 자기 관측만 전역 256개로 제한해 보존합니다. |
 | **정의:** [`defer`](src/activity.py#L160)<br>**소스에 적힌 역할:** 원본 본문 없이 검증에 필요한 native 필드만 전역 32개까지 기다립니다. |
 | **정의:** [`observe`](src/activity.py#L273)<br>**소스에 적힌 역할:** 그 활동의 첫 관측만 보강하며 이후 모델 변경은 별도 감지를 유지합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_ACTIVITY_EVENTS`](src/activity.py#L7)<br>**코드의 선언:** `정의=128` |
 | **설정·옵션:** [`MAX_ACTIVITY_SEEN`](src/activity.py#L8)<br>**코드의 선언:** `정의=8192` |
@@ -131,7 +131,7 @@ Pillow==13.0.0
 
 #### LEVEL 1 · [src/app.py](src/app.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`_application_gui_root`](src/app.py#L37)<br>**소스에 적힌 역할:** Python 순환 수집과 무관하게 살아 있는 GUI 소유자를 앱에 보관합니다. |
 | **정의:** [`operation_record`](src/app.py#L55)<br>**소스에 적힌 역할:** 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다. |
@@ -201,14 +201,14 @@ Pillow==13.0.0
 
 #### LEVEL 1 · [src/atom_frames.py](src/atom_frames.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`AtomAssetError`](src/atom_frames.py#L27)<br>**소스에 적힌 역할:** 필수 시각 자산 오류를 시작 실패 경로에 전달합니다. |
 | **정의:** [`AtomFrames`](src/atom_frames.py#L50)<br>**소스에 적힌 역할:** 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대24장만 보존합니다. |
 | **정의:** [`close_runtime_frames`](src/atom_frames.py#L172)<br>**소스에 적힌 역할:** 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
 | **정의:** [`get_atom_frames`](src/atom_frames.py#L183)<br>**소스에 적힌 역할:** 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`FRAME_COUNT`](src/atom_frames.py#L16)<br>**코드의 선언:** `정의=540` |
 | **설정·옵션:** [`FRAME_SIZE`](src/atom_frames.py#L17)<br>**코드의 선언:** `정의=296` |
@@ -267,7 +267,7 @@ Pillow==13.0.0
 
 #### LEVEL 1 · [src/brand.py](src/brand.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`motion_brand_source`](src/brand.py#L31)<br>**소스에 적힌 역할:** 원소 프레임의 실제 크기에 비례해 여백만 줄이며 영역 밖을 복사하지 않습니다. |
 | **정의:** [`BrandClock`](src/brand.py#L39)<br>**소스에 적힌 역할:** 보이는 로고만 단일 시계에서 같은 프레임으로 갱신합니다. |
@@ -316,28 +316,28 @@ Pillow==13.0.0
 
 #### LEVEL 1 · [src/calendar_art.py](src/calendar_art.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`current_date`](src/calendar_art.py#L33)<br>**소스에 적힌 역할:** 호스트의 현지 시간대와 무관하게 한국 날짜를 사용합니다. |
 | **정의:** [`_month_palette`](src/calendar_art.py#L50)<br>**소스에 적힌 역할:** 반올림 충돌만 가장 가까운 미사용 RGB로 옮기고 월별 결과를 불변 보관합니다. |
 | **정의:** [`design_for_date`](src/calendar_art.py#L78)<br>**소스에 적힌 역할:** 유효한 날짜만 허용하며 지원 범위 밖을 다른 날짜로 몰래 대체하지 않습니다. |
 | **정의:** [`all_designs`](src/calendar_art.py#L95)<br>**소스에 적힌 역할:** 현재 모델만 렌더하며 이 반복자는 작은 카탈로그를 작성할 때만 사용합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`FIRST_DATE`](src/calendar_art.py#L10)<br>**코드의 선언:** `정의=date(2026,1,1)` |
 | **설정·옵션:** [`LAST_DATE`](src/calendar_art.py#L11)<br>**코드의 선언:** `정의=date(2099,12,31)` |
 | **설정·옵션:** [`KST`](src/calendar_art.py#L12)<br>**코드의 선언:** `정의=timezone(timedelta(hours=9))` |
 | **설정·옵션:** [`THEMES`](src/calendar_art.py#L13)<br>**코드의 선언:** `정의=tuple(row.title for row in all_collections())` |
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`type(value) is not date`](src/calendar_art.py#L80)<br>**오류 메시지:** 조형 날짜는 datetime.date여야 합니다. |
 | **거부 조건:** [`not FIRST_DATE &lt;= value &lt;= LAST_DATE`](src/calendar_art.py#L82)<br>**오류 메시지:** 날짜별 조형 지원 범위는 2026-01-01부터 2099-12-31까지입니다. |
 
 #### LEVEL 1 · [src/calendar_catalog.py](src/calendar_catalog.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`joining_particle`](src/calendar_catalog.py#L208)<br>**소스에 적힌 역할:** 마지막 한글 음절의 받침에 맞춰 대상 이름을 연결합니다. |
 
@@ -354,20 +354,20 @@ Pillow==13.0.0
 **코드의 선언:** `정의={'bouquet':'꽃다발형','diagonal':'대각선형','shelter':'감싸는 형태',                      'stage':'연주대형','triangle':'삼각형 정물','fan':'부채형'}`
 
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`not 0 &lt;= index &lt; 888 or not 1 &lt;= month &lt;= 12`](src/calendar_catalog.py#L217)<br>**오류 메시지:** 연월 컬렉션은 2026년 1월부터 2099년 12월까지입니다. |
 
 #### LEVEL 1 · [src/calendar_motion.py](src/calendar_motion.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`fallback_image`](src/calendar_motion.py#L18)<br>**소스에 적힌 역할:** GPU 준비·실패 때만 쓰는 월 주제의 정적 평면 표식입니다. 3D 성공으로 가장하지 않습니다. |
 | **정의:** [`_Worker`](src/calendar_motion.py#L52)<br>**소스에 적힌 역할:** Qt 객체나 UI를 조작하지 않고 복사된 최신 이미지 하나만 전달합니다. |
 | **정의:** [`prepare_calendar_motion`](src/calendar_motion.py#L173)<br>**소스에 적힌 역할:** 창 표시 전에 같은 작업자의 첫 실제 프레임을 최대 5초 준비합니다. |
 | **정의:** [`get_calendar_error`](src/calendar_motion.py#L203)<br>**소스에 적힌 역할:** 제품은 이 문자열을 상태나 툴팁에 표시해 대체 표식과 실제 3D를 구분할 수 있습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`FPS`](src/calendar_motion.py#L13)<br>**코드의 선언:** `정의=30` |
 | **설정·옵션:** [`SIZE`](src/calendar_motion.py#L14)<br>**코드의 선언:** `정의=384` |
@@ -407,7 +407,7 @@ Pillow==13.0.0
 
 #### LEVEL 1 · [src/calendar_renderer.py](src/calendar_renderer.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`rotation`](src/calendar_renderer.py#L24)<br>**소스에 적힌 역할:** 정규화된 실제 3D축을 중심으로 로드리게스 회전행렬을 만듭니다. |
 | **정의:** [`finish`](src/calendar_renderer.py#L48)<br>**소스에 적힌 역할:** 표면 법선과 삼각형 winding을 일치시킵니다. |
@@ -420,12 +420,12 @@ Pillow==13.0.0
 | **정의:** [`CalendarRenderer`](src/calendar_renderer.py#L378)<br>**소스에 적힌 역할:** 컨텍스트를 만든 스레드에서만 사용하고 현재 날짜의 버퍼만 보유합니다. |
 | **정의:** [`render_date`](src/calendar_renderer.py#L437)<br>**소스에 적힌 역할:** 미리보기와 직접 검증용 동기 렌더입니다. 앱은 공유 작업 스레드를 사용합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`PERIOD`](src/calendar_renderer.py#L132)<br>**코드의 선언:** `정의=12.0` |
 | **설정·옵션:** [`SIZE`](src/calendar_renderer.py#L133)<br>**코드의 선언:** `정의=384` |
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`subject.recipe!=design.shape_recipe`](src/calendar_renderer.py#L338)<br>**오류 메시지:** 대상과 형상 규칙이 일치하지 않습니다. |
 | **거부 조건:** [`type(elapsed) not in (int,float)`](src/calendar_renderer.py#L364)<br>**오류 메시지:** 모션 시각은 유한한 숫자여야 합니다. |
@@ -435,14 +435,14 @@ Pillow==13.0.0
 
 #### LEVEL 1 · [src/core.py](src/core.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`read_jsonl_tail`](src/core.py#L19)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
 | **정의:** [`title_catalog`](src/core.py#L56)<br>**소스에 적힌 역할:** 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
 | **정의:** [`resolve_title`](src/core.py#L86)<br>**소스에 적힌 역할:** 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
 | **정의:** [`safe_path`](src/core.py#L110)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L10)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
 | **설정·옵션:** [`BEGIN`](src/core.py#L11)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
@@ -507,12 +507,12 @@ Pillow==13.0.0
 
 #### LEVEL 1 · [src/element_frames.py](src/element_frames.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`ElementAssetError`](src/element_frames.py#L24)<br>**소스에 적힌 역할:** 필수 원소 자산 실패를 숨기지 않고 앱의 시작·표시 오류로 전달합니다. |
 | **정의:** [`preflight_element_frames`](src/element_frames.py#L132)<br>**소스에 적힌 역할:** 활성 원소의 해시·목록·첫 프레임을 확인합니다.31개를 적재하지 않습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`CACHE_LIMIT`](src/element_frames.py#L15)<br>**코드의 선언:** `정의=24` |
 | **설정·옵션:** [`FRAME_SIZE`](src/element_frames.py#L16)<br>**코드의 선언:** `정의=192` |
@@ -585,13 +585,13 @@ Pillow==13.0.0
 
 #### LEVEL 1 · [src/element_visuals.py](src/element_visuals.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`colorize_atom`](src/element_visuals.py#L5)<br>**소스에 적힌 역할:** SourceAtop은 원본 알파를 유지하며 명암에 부드러운 영감색을 더합니다. |
 
 #### LEVEL 1 · [src/elements.py](src/elements.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`daily_element`](src/elements.py#L43)<br>**소스에 적힌 역할:** 매 호출 실제 날짜를 다시 읽어 자정·절전 복귀·시계 되돌림을 반영합니다. |
 
@@ -608,13 +608,13 @@ Pillow==13.0.0
 **코드의 선언:** `정의=tuple(Element(index,symbol,name,color,accent)                  for index,(symbol,name,color,accent) in enumerate(_ROWS,1))`
 
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`value.tzinfo is None or value.utcoffset() is None`](src/elements.py#L46)<br>**오류 메시지:** 원소 날짜에는 시간대가 있는 datetime이 필요합니다. |
 
 #### LEVEL 1 · [src/notifier.py](src/notifier.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`atomic_json`](src/notifier.py#L33)<br>**소스에 적힌 역할:** 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도합니다. |
 | **정의:** [`source_datetime`](src/notifier.py#L63)<br>**소스에 적힌 역할:** 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. |
@@ -624,7 +624,7 @@ Pillow==13.0.0
 | **정의:** [`enrich_event`](src/notifier.py#L423)<br>**소스에 적힌 역할:** 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
 | **정의:** [`replay_activity_prefix`](src/notifier.py#L445)<br>**소스에 적힌 역할:** 고정된 과거 소비 구간의 활동 메타만 파일별 기존 예산 안에서 복원합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`--sessions`](src/notifier.py#L739)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
 | **설정·옵션:** [`--work`](src/notifier.py#L740)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
@@ -689,7 +689,7 @@ Pillow==13.0.0
 
 #### LEVEL 1 · [src/theme.py](src/theme.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`MonochromeStyle`](src/theme.py#L52)<br>**소스에 적힌 역할:** 파일·메시지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. |
 | **정의:** [`KoreanDialogs`](src/theme.py#L77)<br>**소스에 적힌 역할:** 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역합니다. |
@@ -697,30 +697,30 @@ Pillow==13.0.0
 
 #### LEVEL 1 · [src/typography.py](src/typography.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`register_fonts`](src/typography.py#L8)<br>**소스에 적힌 역할:** 필수 파일이나 Qt 등록 실패를 숨기지 않고 시작 오류로 전달합니다. |
 
 #### LEVEL 1 · [src/usage.py](src/usage.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`number`](src/usage.py#L16)<br>**소스에 적힌 역할:** 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
 | **정의:** [`normalize_limits`](src/usage.py#L35)<br>**소스에 적힌 역할:** 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
 | **정의:** [`discover_codex`](src/usage.py#L69)<br>**소스에 적힌 역할:** 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_BYTES`](src/usage.py#L12)<br>**코드의 선언:** `정의=1024 * 1024` |
 | **설정·옵션:** [`KST`](src/usage.py#L13)<br>**코드의 선언:** `정의=timezone(timedelta(hours=9))` |
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`not isinstance(message, dict)`](src/usage.py#L226)<br>**오류 메시지:** 객체가 아닌 응답 |
 
 #### LEVEL 1 · [src/usage_frames.py](src/usage_frames.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`UsageAssetError`](src/usage_frames.py#L27)<br>**소스에 적힌 역할:** 조형 표시 오류를 호출자에게 전달하며 계정 조회 흐름과 분리합니다. |
 | **정의:** [`UsageFrames`](src/usage_frames.py#L50)<br>**소스에 적힌 역할:** 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대16장만 보존합니다. |
@@ -728,7 +728,7 @@ Pillow==13.0.0
 | **정의:** [`preflight_usage_frames`](src/usage_frames.py#L194)<br>**소스에 적힌 역할:** 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
 | **정의:** [`get_usage_frame`](src/usage_frames.py#L207)<br>**소스에 적힌 역할:** 공유 팩의 한 프레임을 반환하며 계정 조회 상태에는 관여하지 않습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`FRAME_COUNT`](src/usage_frames.py#L16)<br>**코드의 선언:** `정의=360` |
 | **설정·옵션:** [`FRAME_SIZE`](src/usage_frames.py#L17)<br>**코드의 선언:** `정의=384` |
@@ -795,13 +795,13 @@ Pillow==13.0.0
 
 #### LEVEL 1 · [src/usage_widgets.py](src/usage_widgets.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`CalendarHero`](src/usage_widgets.py#L7)<br>**소스에 적힌 역할:** 사용 한도 화면에서만 날짜별 입체 이미지를 갱신합니다. |
 
 #### LEVEL 1 · [src/visuals.py](src/visuals.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`rotate_point`](src/visuals.py#L11)<br>**소스에 적힌 역할:** X·Y·Z 순서로 회전하며 깊이 좌표를 보존합니다. |
 | **정의:** [`axis_rotate`](src/visuals.py#L39)<br>**소스에 적힌 역할:** 로드리게스 식으로 고유 축 주위를 회전하며 공통 Z 변환을 쓰지 않습니다. |
@@ -1006,14 +1006,14 @@ Pillow==13.0.0
 
 #### LEVEL 2 · [src/activity.py](src/activity.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`safe_public_text`](src/activity.py#L15)<br>**소스에 적힌 역할:** 보호문·비공개 표식·긴 인코딩 덩어리는 해석하거나 노출하지 않습니다. |
 | **정의:** [`configuration`](src/activity.py#L76)<br>**소스에 적힌 역할:** 원본 시각이 있는 자기 관측만 전역 256개로 제한해 보존합니다. |
 | **정의:** [`defer`](src/activity.py#L160)<br>**소스에 적힌 역할:** 원본 본문 없이 검증에 필요한 native 필드만 전역 32개까지 기다립니다. |
 | **정의:** [`observe`](src/activity.py#L273)<br>**소스에 적힌 역할:** 그 활동의 첫 관측만 보강하며 이후 모델 변경은 별도 감지를 유지합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_ACTIVITY_EVENTS`](src/activity.py#L7)<br>**코드의 선언:** `정의=128` |
 | **설정·옵션:** [`MAX_ACTIVITY_SEEN`](src/activity.py#L8)<br>**코드의 선언:** `정의=8192` |
@@ -1033,7 +1033,7 @@ Pillow==13.0.0
 
 #### LEVEL 2 · [src/app.py](src/app.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`_application_gui_root`](src/app.py#L37)<br>**소스에 적힌 역할:** Python 순환 수집과 무관하게 살아 있는 GUI 소유자를 앱에 보관합니다. |
 | **정의:** [`operation_record`](src/app.py#L55)<br>**소스에 적힌 역할:** 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다. |
@@ -1103,14 +1103,14 @@ Pillow==13.0.0
 
 #### LEVEL 2 · [src/atom_frames.py](src/atom_frames.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`AtomAssetError`](src/atom_frames.py#L27)<br>**소스에 적힌 역할:** 필수 시각 자산 오류를 시작 실패 경로에 전달합니다. |
 | **정의:** [`AtomFrames`](src/atom_frames.py#L50)<br>**소스에 적힌 역할:** 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대24장만 보존합니다. |
 | **정의:** [`close_runtime_frames`](src/atom_frames.py#L172)<br>**소스에 적힌 역할:** 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
 | **정의:** [`get_atom_frames`](src/atom_frames.py#L183)<br>**소스에 적힌 역할:** 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`FRAME_COUNT`](src/atom_frames.py#L16)<br>**코드의 선언:** `정의=540` |
 | **설정·옵션:** [`FRAME_SIZE`](src/atom_frames.py#L17)<br>**코드의 선언:** `정의=296` |
@@ -1169,7 +1169,7 @@ Pillow==13.0.0
 
 #### LEVEL 2 · [src/brand.py](src/brand.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`motion_brand_source`](src/brand.py#L31)<br>**소스에 적힌 역할:** 원소 프레임의 실제 크기에 비례해 여백만 줄이며 영역 밖을 복사하지 않습니다. |
 | **정의:** [`BrandClock`](src/brand.py#L39)<br>**소스에 적힌 역할:** 보이는 로고만 단일 시계에서 같은 프레임으로 갱신합니다. |
@@ -1218,28 +1218,28 @@ Pillow==13.0.0
 
 #### LEVEL 2 · [src/calendar_art.py](src/calendar_art.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`current_date`](src/calendar_art.py#L33)<br>**소스에 적힌 역할:** 호스트의 현지 시간대와 무관하게 한국 날짜를 사용합니다. |
 | **정의:** [`_month_palette`](src/calendar_art.py#L50)<br>**소스에 적힌 역할:** 반올림 충돌만 가장 가까운 미사용 RGB로 옮기고 월별 결과를 불변 보관합니다. |
 | **정의:** [`design_for_date`](src/calendar_art.py#L78)<br>**소스에 적힌 역할:** 유효한 날짜만 허용하며 지원 범위 밖을 다른 날짜로 몰래 대체하지 않습니다. |
 | **정의:** [`all_designs`](src/calendar_art.py#L95)<br>**소스에 적힌 역할:** 현재 모델만 렌더하며 이 반복자는 작은 카탈로그를 작성할 때만 사용합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`FIRST_DATE`](src/calendar_art.py#L10)<br>**코드의 선언:** `정의=date(2026,1,1)` |
 | **설정·옵션:** [`LAST_DATE`](src/calendar_art.py#L11)<br>**코드의 선언:** `정의=date(2099,12,31)` |
 | **설정·옵션:** [`KST`](src/calendar_art.py#L12)<br>**코드의 선언:** `정의=timezone(timedelta(hours=9))` |
 | **설정·옵션:** [`THEMES`](src/calendar_art.py#L13)<br>**코드의 선언:** `정의=tuple(row.title for row in all_collections())` |
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`type(value) is not date`](src/calendar_art.py#L80)<br>**오류 메시지:** 조형 날짜는 datetime.date여야 합니다. |
 | **거부 조건:** [`not FIRST_DATE &lt;= value &lt;= LAST_DATE`](src/calendar_art.py#L82)<br>**오류 메시지:** 날짜별 조형 지원 범위는 2026-01-01부터 2099-12-31까지입니다. |
 
 #### LEVEL 2 · [src/calendar_catalog.py](src/calendar_catalog.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`joining_particle`](src/calendar_catalog.py#L208)<br>**소스에 적힌 역할:** 마지막 한글 음절의 받침에 맞춰 대상 이름을 연결합니다. |
 
@@ -1256,20 +1256,20 @@ Pillow==13.0.0
 **코드의 선언:** `정의={'bouquet':'꽃다발형','diagonal':'대각선형','shelter':'감싸는 형태',                      'stage':'연주대형','triangle':'삼각형 정물','fan':'부채형'}`
 
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`not 0 &lt;= index &lt; 888 or not 1 &lt;= month &lt;= 12`](src/calendar_catalog.py#L217)<br>**오류 메시지:** 연월 컬렉션은 2026년 1월부터 2099년 12월까지입니다. |
 
 #### LEVEL 2 · [src/calendar_motion.py](src/calendar_motion.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`fallback_image`](src/calendar_motion.py#L18)<br>**소스에 적힌 역할:** GPU 준비·실패 때만 쓰는 월 주제의 정적 평면 표식입니다. 3D 성공으로 가장하지 않습니다. |
 | **정의:** [`_Worker`](src/calendar_motion.py#L52)<br>**소스에 적힌 역할:** Qt 객체나 UI를 조작하지 않고 복사된 최신 이미지 하나만 전달합니다. |
 | **정의:** [`prepare_calendar_motion`](src/calendar_motion.py#L173)<br>**소스에 적힌 역할:** 창 표시 전에 같은 작업자의 첫 실제 프레임을 최대 5초 준비합니다. |
 | **정의:** [`get_calendar_error`](src/calendar_motion.py#L203)<br>**소스에 적힌 역할:** 제품은 이 문자열을 상태나 툴팁에 표시해 대체 표식과 실제 3D를 구분할 수 있습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`FPS`](src/calendar_motion.py#L13)<br>**코드의 선언:** `정의=30` |
 | **설정·옵션:** [`SIZE`](src/calendar_motion.py#L14)<br>**코드의 선언:** `정의=384` |
@@ -1309,7 +1309,7 @@ Pillow==13.0.0
 
 #### LEVEL 2 · [src/calendar_renderer.py](src/calendar_renderer.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`rotation`](src/calendar_renderer.py#L24)<br>**소스에 적힌 역할:** 정규화된 실제 3D축을 중심으로 로드리게스 회전행렬을 만듭니다. |
 | **정의:** [`finish`](src/calendar_renderer.py#L48)<br>**소스에 적힌 역할:** 표면 법선과 삼각형 winding을 일치시킵니다. |
@@ -1322,12 +1322,12 @@ Pillow==13.0.0
 | **정의:** [`CalendarRenderer`](src/calendar_renderer.py#L378)<br>**소스에 적힌 역할:** 컨텍스트를 만든 스레드에서만 사용하고 현재 날짜의 버퍼만 보유합니다. |
 | **정의:** [`render_date`](src/calendar_renderer.py#L437)<br>**소스에 적힌 역할:** 미리보기와 직접 검증용 동기 렌더입니다. 앱은 공유 작업 스레드를 사용합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`PERIOD`](src/calendar_renderer.py#L132)<br>**코드의 선언:** `정의=12.0` |
 | **설정·옵션:** [`SIZE`](src/calendar_renderer.py#L133)<br>**코드의 선언:** `정의=384` |
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`subject.recipe!=design.shape_recipe`](src/calendar_renderer.py#L338)<br>**오류 메시지:** 대상과 형상 규칙이 일치하지 않습니다. |
 | **거부 조건:** [`type(elapsed) not in (int,float)`](src/calendar_renderer.py#L364)<br>**오류 메시지:** 모션 시각은 유한한 숫자여야 합니다. |
@@ -1337,14 +1337,14 @@ Pillow==13.0.0
 
 #### LEVEL 2 · [src/core.py](src/core.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`read_jsonl_tail`](src/core.py#L19)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
 | **정의:** [`title_catalog`](src/core.py#L56)<br>**소스에 적힌 역할:** 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
 | **정의:** [`resolve_title`](src/core.py#L86)<br>**소스에 적힌 역할:** 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
 | **정의:** [`safe_path`](src/core.py#L110)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L10)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
 | **설정·옵션:** [`BEGIN`](src/core.py#L11)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
@@ -1409,12 +1409,12 @@ Pillow==13.0.0
 
 #### LEVEL 2 · [src/element_frames.py](src/element_frames.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`ElementAssetError`](src/element_frames.py#L24)<br>**소스에 적힌 역할:** 필수 원소 자산 실패를 숨기지 않고 앱의 시작·표시 오류로 전달합니다. |
 | **정의:** [`preflight_element_frames`](src/element_frames.py#L132)<br>**소스에 적힌 역할:** 활성 원소의 해시·목록·첫 프레임을 확인합니다.31개를 적재하지 않습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`CACHE_LIMIT`](src/element_frames.py#L15)<br>**코드의 선언:** `정의=24` |
 | **설정·옵션:** [`FRAME_SIZE`](src/element_frames.py#L16)<br>**코드의 선언:** `정의=192` |
@@ -1487,13 +1487,13 @@ Pillow==13.0.0
 
 #### LEVEL 2 · [src/element_visuals.py](src/element_visuals.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`colorize_atom`](src/element_visuals.py#L5)<br>**소스에 적힌 역할:** SourceAtop은 원본 알파를 유지하며 명암에 부드러운 영감색을 더합니다. |
 
 #### LEVEL 2 · [src/elements.py](src/elements.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`daily_element`](src/elements.py#L43)<br>**소스에 적힌 역할:** 매 호출 실제 날짜를 다시 읽어 자정·절전 복귀·시계 되돌림을 반영합니다. |
 
@@ -1510,13 +1510,13 @@ Pillow==13.0.0
 **코드의 선언:** `정의=tuple(Element(index,symbol,name,color,accent)                  for index,(symbol,name,color,accent) in enumerate(_ROWS,1))`
 
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`value.tzinfo is None or value.utcoffset() is None`](src/elements.py#L46)<br>**오류 메시지:** 원소 날짜에는 시간대가 있는 datetime이 필요합니다. |
 
 #### LEVEL 2 · [src/notifier.py](src/notifier.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`atomic_json`](src/notifier.py#L33)<br>**소스에 적힌 역할:** 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도합니다. |
 | **정의:** [`source_datetime`](src/notifier.py#L63)<br>**소스에 적힌 역할:** 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. |
@@ -1526,7 +1526,7 @@ Pillow==13.0.0
 | **정의:** [`enrich_event`](src/notifier.py#L423)<br>**소스에 적힌 역할:** 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
 | **정의:** [`replay_activity_prefix`](src/notifier.py#L445)<br>**소스에 적힌 역할:** 고정된 과거 소비 구간의 활동 메타만 파일별 기존 예산 안에서 복원합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`--sessions`](src/notifier.py#L739)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
 | **설정·옵션:** [`--work`](src/notifier.py#L740)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
@@ -1591,7 +1591,7 @@ Pillow==13.0.0
 
 #### LEVEL 2 · [src/theme.py](src/theme.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`MonochromeStyle`](src/theme.py#L52)<br>**소스에 적힌 역할:** 파일·메시지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. |
 | **정의:** [`KoreanDialogs`](src/theme.py#L77)<br>**소스에 적힌 역할:** 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역합니다. |
@@ -1599,30 +1599,30 @@ Pillow==13.0.0
 
 #### LEVEL 2 · [src/typography.py](src/typography.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`register_fonts`](src/typography.py#L8)<br>**소스에 적힌 역할:** 필수 파일이나 Qt 등록 실패를 숨기지 않고 시작 오류로 전달합니다. |
 
 #### LEVEL 2 · [src/usage.py](src/usage.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`number`](src/usage.py#L16)<br>**소스에 적힌 역할:** 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
 | **정의:** [`normalize_limits`](src/usage.py#L35)<br>**소스에 적힌 역할:** 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
 | **정의:** [`discover_codex`](src/usage.py#L69)<br>**소스에 적힌 역할:** 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_BYTES`](src/usage.py#L12)<br>**코드의 선언:** `정의=1024 * 1024` |
 | **설정·옵션:** [`KST`](src/usage.py#L13)<br>**코드의 선언:** `정의=timezone(timedelta(hours=9))` |
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`not isinstance(message, dict)`](src/usage.py#L226)<br>**오류 메시지:** 객체가 아닌 응답 |
 
 #### LEVEL 2 · [src/usage_frames.py](src/usage_frames.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`UsageAssetError`](src/usage_frames.py#L27)<br>**소스에 적힌 역할:** 조형 표시 오류를 호출자에게 전달하며 계정 조회 흐름과 분리합니다. |
 | **정의:** [`UsageFrames`](src/usage_frames.py#L50)<br>**소스에 적힌 역할:** 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대16장만 보존합니다. |
@@ -1630,7 +1630,7 @@ Pillow==13.0.0
 | **정의:** [`preflight_usage_frames`](src/usage_frames.py#L194)<br>**소스에 적힌 역할:** 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
 | **정의:** [`get_usage_frame`](src/usage_frames.py#L207)<br>**소스에 적힌 역할:** 공유 팩의 한 프레임을 반환하며 계정 조회 상태에는 관여하지 않습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`FRAME_COUNT`](src/usage_frames.py#L16)<br>**코드의 선언:** `정의=360` |
 | **설정·옵션:** [`FRAME_SIZE`](src/usage_frames.py#L17)<br>**코드의 선언:** `정의=384` |
@@ -1697,13 +1697,13 @@ Pillow==13.0.0
 
 #### LEVEL 2 · [src/usage_widgets.py](src/usage_widgets.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`CalendarHero`](src/usage_widgets.py#L7)<br>**소스에 적힌 역할:** 사용 한도 화면에서만 날짜별 입체 이미지를 갱신합니다. |
 
 #### LEVEL 2 · [src/visuals.py](src/visuals.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`rotate_point`](src/visuals.py#L11)<br>**소스에 적힌 역할:** X·Y·Z 순서로 회전하며 깊이 좌표를 보존합니다. |
 | **정의:** [`axis_rotate`](src/visuals.py#L39)<br>**소스에 적힌 역할:** 로드리게스 식으로 고유 축 주위를 회전하며 공통 Z 변환을 쓰지 않습니다. |
@@ -1847,14 +1847,14 @@ Pillow==13.0.0
 
 #### LEVEL 3 · [src/activity.py](src/activity.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`safe_public_text`](src/activity.py#L15)<br>**소스에 적힌 역할:** 보호문·비공개 표식·긴 인코딩 덩어리는 해석하거나 노출하지 않습니다. |
 | **정의:** [`configuration`](src/activity.py#L76)<br>**소스에 적힌 역할:** 원본 시각이 있는 자기 관측만 전역 256개로 제한해 보존합니다. |
 | **정의:** [`defer`](src/activity.py#L160)<br>**소스에 적힌 역할:** 원본 본문 없이 검증에 필요한 native 필드만 전역 32개까지 기다립니다. |
 | **정의:** [`observe`](src/activity.py#L273)<br>**소스에 적힌 역할:** 그 활동의 첫 관측만 보강하며 이후 모델 변경은 별도 감지를 유지합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_ACTIVITY_EVENTS`](src/activity.py#L7)<br>**코드의 선언:** `정의=128` |
 | **설정·옵션:** [`MAX_ACTIVITY_SEEN`](src/activity.py#L8)<br>**코드의 선언:** `정의=8192` |
@@ -1874,7 +1874,7 @@ Pillow==13.0.0
 
 #### LEVEL 3 · [src/app.py](src/app.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`_application_gui_root`](src/app.py#L37)<br>**소스에 적힌 역할:** Python 순환 수집과 무관하게 살아 있는 GUI 소유자를 앱에 보관합니다. |
 | **정의:** [`operation_record`](src/app.py#L55)<br>**소스에 적힌 역할:** 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다. |
@@ -1944,14 +1944,14 @@ Pillow==13.0.0
 
 #### LEVEL 3 · [src/atom_frames.py](src/atom_frames.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`AtomAssetError`](src/atom_frames.py#L27)<br>**소스에 적힌 역할:** 필수 시각 자산 오류를 시작 실패 경로에 전달합니다. |
 | **정의:** [`AtomFrames`](src/atom_frames.py#L50)<br>**소스에 적힌 역할:** 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대24장만 보존합니다. |
 | **정의:** [`close_runtime_frames`](src/atom_frames.py#L172)<br>**소스에 적힌 역할:** 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
 | **정의:** [`get_atom_frames`](src/atom_frames.py#L183)<br>**소스에 적힌 역할:** 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`FRAME_COUNT`](src/atom_frames.py#L16)<br>**코드의 선언:** `정의=540` |
 | **설정·옵션:** [`FRAME_SIZE`](src/atom_frames.py#L17)<br>**코드의 선언:** `정의=296` |
@@ -2010,7 +2010,7 @@ Pillow==13.0.0
 
 #### LEVEL 3 · [src/brand.py](src/brand.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`motion_brand_source`](src/brand.py#L31)<br>**소스에 적힌 역할:** 원소 프레임의 실제 크기에 비례해 여백만 줄이며 영역 밖을 복사하지 않습니다. |
 | **정의:** [`BrandClock`](src/brand.py#L39)<br>**소스에 적힌 역할:** 보이는 로고만 단일 시계에서 같은 프레임으로 갱신합니다. |
@@ -2059,28 +2059,28 @@ Pillow==13.0.0
 
 #### LEVEL 3 · [src/calendar_art.py](src/calendar_art.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`current_date`](src/calendar_art.py#L33)<br>**소스에 적힌 역할:** 호스트의 현지 시간대와 무관하게 한국 날짜를 사용합니다. |
 | **정의:** [`_month_palette`](src/calendar_art.py#L50)<br>**소스에 적힌 역할:** 반올림 충돌만 가장 가까운 미사용 RGB로 옮기고 월별 결과를 불변 보관합니다. |
 | **정의:** [`design_for_date`](src/calendar_art.py#L78)<br>**소스에 적힌 역할:** 유효한 날짜만 허용하며 지원 범위 밖을 다른 날짜로 몰래 대체하지 않습니다. |
 | **정의:** [`all_designs`](src/calendar_art.py#L95)<br>**소스에 적힌 역할:** 현재 모델만 렌더하며 이 반복자는 작은 카탈로그를 작성할 때만 사용합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`FIRST_DATE`](src/calendar_art.py#L10)<br>**코드의 선언:** `정의=date(2026,1,1)` |
 | **설정·옵션:** [`LAST_DATE`](src/calendar_art.py#L11)<br>**코드의 선언:** `정의=date(2099,12,31)` |
 | **설정·옵션:** [`KST`](src/calendar_art.py#L12)<br>**코드의 선언:** `정의=timezone(timedelta(hours=9))` |
 | **설정·옵션:** [`THEMES`](src/calendar_art.py#L13)<br>**코드의 선언:** `정의=tuple(row.title for row in all_collections())` |
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`type(value) is not date`](src/calendar_art.py#L80)<br>**오류 메시지:** 조형 날짜는 datetime.date여야 합니다. |
 | **거부 조건:** [`not FIRST_DATE &lt;= value &lt;= LAST_DATE`](src/calendar_art.py#L82)<br>**오류 메시지:** 날짜별 조형 지원 범위는 2026-01-01부터 2099-12-31까지입니다. |
 
 #### LEVEL 3 · [src/calendar_catalog.py](src/calendar_catalog.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`joining_particle`](src/calendar_catalog.py#L208)<br>**소스에 적힌 역할:** 마지막 한글 음절의 받침에 맞춰 대상 이름을 연결합니다. |
 
@@ -2097,20 +2097,20 @@ Pillow==13.0.0
 **코드의 선언:** `정의={'bouquet':'꽃다발형','diagonal':'대각선형','shelter':'감싸는 형태',                      'stage':'연주대형','triangle':'삼각형 정물','fan':'부채형'}`
 
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`not 0 &lt;= index &lt; 888 or not 1 &lt;= month &lt;= 12`](src/calendar_catalog.py#L217)<br>**오류 메시지:** 연월 컬렉션은 2026년 1월부터 2099년 12월까지입니다. |
 
 #### LEVEL 3 · [src/calendar_motion.py](src/calendar_motion.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`fallback_image`](src/calendar_motion.py#L18)<br>**소스에 적힌 역할:** GPU 준비·실패 때만 쓰는 월 주제의 정적 평면 표식입니다. 3D 성공으로 가장하지 않습니다. |
 | **정의:** [`_Worker`](src/calendar_motion.py#L52)<br>**소스에 적힌 역할:** Qt 객체나 UI를 조작하지 않고 복사된 최신 이미지 하나만 전달합니다. |
 | **정의:** [`prepare_calendar_motion`](src/calendar_motion.py#L173)<br>**소스에 적힌 역할:** 창 표시 전에 같은 작업자의 첫 실제 프레임을 최대 5초 준비합니다. |
 | **정의:** [`get_calendar_error`](src/calendar_motion.py#L203)<br>**소스에 적힌 역할:** 제품은 이 문자열을 상태나 툴팁에 표시해 대체 표식과 실제 3D를 구분할 수 있습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`FPS`](src/calendar_motion.py#L13)<br>**코드의 선언:** `정의=30` |
 | **설정·옵션:** [`SIZE`](src/calendar_motion.py#L14)<br>**코드의 선언:** `정의=384` |
@@ -2150,7 +2150,7 @@ Pillow==13.0.0
 
 #### LEVEL 3 · [src/calendar_renderer.py](src/calendar_renderer.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`rotation`](src/calendar_renderer.py#L24)<br>**소스에 적힌 역할:** 정규화된 실제 3D축을 중심으로 로드리게스 회전행렬을 만듭니다. |
 | **정의:** [`finish`](src/calendar_renderer.py#L48)<br>**소스에 적힌 역할:** 표면 법선과 삼각형 winding을 일치시킵니다. |
@@ -2163,12 +2163,12 @@ Pillow==13.0.0
 | **정의:** [`CalendarRenderer`](src/calendar_renderer.py#L378)<br>**소스에 적힌 역할:** 컨텍스트를 만든 스레드에서만 사용하고 현재 날짜의 버퍼만 보유합니다. |
 | **정의:** [`render_date`](src/calendar_renderer.py#L437)<br>**소스에 적힌 역할:** 미리보기와 직접 검증용 동기 렌더입니다. 앱은 공유 작업 스레드를 사용합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`PERIOD`](src/calendar_renderer.py#L132)<br>**코드의 선언:** `정의=12.0` |
 | **설정·옵션:** [`SIZE`](src/calendar_renderer.py#L133)<br>**코드의 선언:** `정의=384` |
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`subject.recipe!=design.shape_recipe`](src/calendar_renderer.py#L338)<br>**오류 메시지:** 대상과 형상 규칙이 일치하지 않습니다. |
 | **거부 조건:** [`type(elapsed) not in (int,float)`](src/calendar_renderer.py#L364)<br>**오류 메시지:** 모션 시각은 유한한 숫자여야 합니다. |
@@ -2178,14 +2178,14 @@ Pillow==13.0.0
 
 #### LEVEL 3 · [src/core.py](src/core.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`read_jsonl_tail`](src/core.py#L19)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
 | **정의:** [`title_catalog`](src/core.py#L56)<br>**소스에 적힌 역할:** 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
 | **정의:** [`resolve_title`](src/core.py#L86)<br>**소스에 적힌 역할:** 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
 | **정의:** [`safe_path`](src/core.py#L110)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L10)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
 | **설정·옵션:** [`BEGIN`](src/core.py#L11)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
@@ -2250,12 +2250,12 @@ Pillow==13.0.0
 
 #### LEVEL 3 · [src/element_frames.py](src/element_frames.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`ElementAssetError`](src/element_frames.py#L24)<br>**소스에 적힌 역할:** 필수 원소 자산 실패를 숨기지 않고 앱의 시작·표시 오류로 전달합니다. |
 | **정의:** [`preflight_element_frames`](src/element_frames.py#L132)<br>**소스에 적힌 역할:** 활성 원소의 해시·목록·첫 프레임을 확인합니다.31개를 적재하지 않습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`CACHE_LIMIT`](src/element_frames.py#L15)<br>**코드의 선언:** `정의=24` |
 | **설정·옵션:** [`FRAME_SIZE`](src/element_frames.py#L16)<br>**코드의 선언:** `정의=192` |
@@ -2328,13 +2328,13 @@ Pillow==13.0.0
 
 #### LEVEL 3 · [src/element_visuals.py](src/element_visuals.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`colorize_atom`](src/element_visuals.py#L5)<br>**소스에 적힌 역할:** SourceAtop은 원본 알파를 유지하며 명암에 부드러운 영감색을 더합니다. |
 
 #### LEVEL 3 · [src/elements.py](src/elements.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`daily_element`](src/elements.py#L43)<br>**소스에 적힌 역할:** 매 호출 실제 날짜를 다시 읽어 자정·절전 복귀·시계 되돌림을 반영합니다. |
 
@@ -2351,13 +2351,13 @@ Pillow==13.0.0
 **코드의 선언:** `정의=tuple(Element(index,symbol,name,color,accent)                  for index,(symbol,name,color,accent) in enumerate(_ROWS,1))`
 
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`value.tzinfo is None or value.utcoffset() is None`](src/elements.py#L46)<br>**오류 메시지:** 원소 날짜에는 시간대가 있는 datetime이 필요합니다. |
 
 #### LEVEL 3 · [src/notifier.py](src/notifier.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`atomic_json`](src/notifier.py#L33)<br>**소스에 적힌 역할:** 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도합니다. |
 | **정의:** [`source_datetime`](src/notifier.py#L63)<br>**소스에 적힌 역할:** 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. |
@@ -2367,7 +2367,7 @@ Pillow==13.0.0
 | **정의:** [`enrich_event`](src/notifier.py#L423)<br>**소스에 적힌 역할:** 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
 | **정의:** [`replay_activity_prefix`](src/notifier.py#L445)<br>**소스에 적힌 역할:** 고정된 과거 소비 구간의 활동 메타만 파일별 기존 예산 안에서 복원합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`--sessions`](src/notifier.py#L739)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
 | **설정·옵션:** [`--work`](src/notifier.py#L740)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
@@ -2432,7 +2432,7 @@ Pillow==13.0.0
 
 #### LEVEL 3 · [src/theme.py](src/theme.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`MonochromeStyle`](src/theme.py#L52)<br>**소스에 적힌 역할:** 파일·메시지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. |
 | **정의:** [`KoreanDialogs`](src/theme.py#L77)<br>**소스에 적힌 역할:** 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역합니다. |
@@ -2440,30 +2440,30 @@ Pillow==13.0.0
 
 #### LEVEL 3 · [src/typography.py](src/typography.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`register_fonts`](src/typography.py#L8)<br>**소스에 적힌 역할:** 필수 파일이나 Qt 등록 실패를 숨기지 않고 시작 오류로 전달합니다. |
 
 #### LEVEL 3 · [src/usage.py](src/usage.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`number`](src/usage.py#L16)<br>**소스에 적힌 역할:** 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
 | **정의:** [`normalize_limits`](src/usage.py#L35)<br>**소스에 적힌 역할:** 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
 | **정의:** [`discover_codex`](src/usage.py#L69)<br>**소스에 적힌 역할:** 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_BYTES`](src/usage.py#L12)<br>**코드의 선언:** `정의=1024 * 1024` |
 | **설정·옵션:** [`KST`](src/usage.py#L13)<br>**코드의 선언:** `정의=timezone(timedelta(hours=9))` |
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`not isinstance(message, dict)`](src/usage.py#L226)<br>**오류 메시지:** 객체가 아닌 응답 |
 
 #### LEVEL 3 · [src/usage_frames.py](src/usage_frames.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`UsageAssetError`](src/usage_frames.py#L27)<br>**소스에 적힌 역할:** 조형 표시 오류를 호출자에게 전달하며 계정 조회 흐름과 분리합니다. |
 | **정의:** [`UsageFrames`](src/usage_frames.py#L50)<br>**소스에 적힌 역할:** 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대16장만 보존합니다. |
@@ -2471,7 +2471,7 @@ Pillow==13.0.0
 | **정의:** [`preflight_usage_frames`](src/usage_frames.py#L194)<br>**소스에 적힌 역할:** 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
 | **정의:** [`get_usage_frame`](src/usage_frames.py#L207)<br>**소스에 적힌 역할:** 공유 팩의 한 프레임을 반환하며 계정 조회 상태에는 관여하지 않습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`FRAME_COUNT`](src/usage_frames.py#L16)<br>**코드의 선언:** `정의=360` |
 | **설정·옵션:** [`FRAME_SIZE`](src/usage_frames.py#L17)<br>**코드의 선언:** `정의=384` |
@@ -2538,13 +2538,13 @@ Pillow==13.0.0
 
 #### LEVEL 3 · [src/usage_widgets.py](src/usage_widgets.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`CalendarHero`](src/usage_widgets.py#L7)<br>**소스에 적힌 역할:** 사용 한도 화면에서만 날짜별 입체 이미지를 갱신합니다. |
 
 #### LEVEL 3 · [src/visuals.py](src/visuals.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`rotate_point`](src/visuals.py#L11)<br>**소스에 적힌 역할:** X·Y·Z 순서로 회전하며 깊이 좌표를 보존합니다. |
 | **정의:** [`axis_rotate`](src/visuals.py#L39)<br>**소스에 적힌 역할:** 로드리게스 식으로 고유 축 주위를 회전하며 공통 Z 변환을 쓰지 않습니다. |
@@ -2738,7 +2738,7 @@ Codex App Server의 `account/rateLimits/read`를 읽기 전용으로 조회합�
 
 ### LEVEL 4 · 이 차수 구현의 실제 근거
 
-| 파일 · 원문에 정의된 역할·구성 |
+| 내용 |
 | --- |
 | **파일:** [src/app.py](src/app.py)<br>**원문에 정의된 역할·구성:** Codex Orbit: 독립 회전 위젯과 로컬 변경 기록·사용 한도. |
 | **파일:** [src/notifier.py](src/notifier.py)<br>**원문에 정의된 역할·구성:** 현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다. |
@@ -2803,14 +2803,14 @@ Pillow==13.0.0
 
 #### LEVEL 4 · [src/activity.py](src/activity.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`safe_public_text`](src/activity.py#L15)<br>**소스에 적힌 역할:** 보호문·비공개 표식·긴 인코딩 덩어리는 해석하거나 노출하지 않습니다. |
 | **정의:** [`configuration`](src/activity.py#L76)<br>**소스에 적힌 역할:** 원본 시각이 있는 자기 관측만 전역 256개로 제한해 보존합니다. |
 | **정의:** [`defer`](src/activity.py#L160)<br>**소스에 적힌 역할:** 원본 본문 없이 검증에 필요한 native 필드만 전역 32개까지 기다립니다. |
 | **정의:** [`observe`](src/activity.py#L273)<br>**소스에 적힌 역할:** 그 활동의 첫 관측만 보강하며 이후 모델 변경은 별도 감지를 유지합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_ACTIVITY_EVENTS`](src/activity.py#L7)<br>**코드의 선언:** `정의=128` |
 | **설정·옵션:** [`MAX_ACTIVITY_SEEN`](src/activity.py#L8)<br>**코드의 선언:** `정의=8192` |
@@ -2830,7 +2830,7 @@ Pillow==13.0.0
 
 #### LEVEL 4 · [src/app.py](src/app.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`_application_gui_root`](src/app.py#L37)<br>**소스에 적힌 역할:** Python 순환 수집과 무관하게 살아 있는 GUI 소유자를 앱에 보관합니다. |
 | **정의:** [`operation_record`](src/app.py#L55)<br>**소스에 적힌 역할:** 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다. |
@@ -2900,14 +2900,14 @@ Pillow==13.0.0
 
 #### LEVEL 4 · [src/atom_frames.py](src/atom_frames.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`AtomAssetError`](src/atom_frames.py#L27)<br>**소스에 적힌 역할:** 필수 시각 자산 오류를 시작 실패 경로에 전달합니다. |
 | **정의:** [`AtomFrames`](src/atom_frames.py#L50)<br>**소스에 적힌 역할:** 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대24장만 보존합니다. |
 | **정의:** [`close_runtime_frames`](src/atom_frames.py#L172)<br>**소스에 적힌 역할:** 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
 | **정의:** [`get_atom_frames`](src/atom_frames.py#L183)<br>**소스에 적힌 역할:** 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`FRAME_COUNT`](src/atom_frames.py#L16)<br>**코드의 선언:** `정의=540` |
 | **설정·옵션:** [`FRAME_SIZE`](src/atom_frames.py#L17)<br>**코드의 선언:** `정의=296` |
@@ -2966,7 +2966,7 @@ Pillow==13.0.0
 
 #### LEVEL 4 · [src/brand.py](src/brand.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`motion_brand_source`](src/brand.py#L31)<br>**소스에 적힌 역할:** 원소 프레임의 실제 크기에 비례해 여백만 줄이며 영역 밖을 복사하지 않습니다. |
 | **정의:** [`BrandClock`](src/brand.py#L39)<br>**소스에 적힌 역할:** 보이는 로고만 단일 시계에서 같은 프레임으로 갱신합니다. |
@@ -3015,28 +3015,28 @@ Pillow==13.0.0
 
 #### LEVEL 4 · [src/calendar_art.py](src/calendar_art.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`current_date`](src/calendar_art.py#L33)<br>**소스에 적힌 역할:** 호스트의 현지 시간대와 무관하게 한국 날짜를 사용합니다. |
 | **정의:** [`_month_palette`](src/calendar_art.py#L50)<br>**소스에 적힌 역할:** 반올림 충돌만 가장 가까운 미사용 RGB로 옮기고 월별 결과를 불변 보관합니다. |
 | **정의:** [`design_for_date`](src/calendar_art.py#L78)<br>**소스에 적힌 역할:** 유효한 날짜만 허용하며 지원 범위 밖을 다른 날짜로 몰래 대체하지 않습니다. |
 | **정의:** [`all_designs`](src/calendar_art.py#L95)<br>**소스에 적힌 역할:** 현재 모델만 렌더하며 이 반복자는 작은 카탈로그를 작성할 때만 사용합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`FIRST_DATE`](src/calendar_art.py#L10)<br>**코드의 선언:** `정의=date(2026,1,1)` |
 | **설정·옵션:** [`LAST_DATE`](src/calendar_art.py#L11)<br>**코드의 선언:** `정의=date(2099,12,31)` |
 | **설정·옵션:** [`KST`](src/calendar_art.py#L12)<br>**코드의 선언:** `정의=timezone(timedelta(hours=9))` |
 | **설정·옵션:** [`THEMES`](src/calendar_art.py#L13)<br>**코드의 선언:** `정의=tuple(row.title for row in all_collections())` |
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`type(value) is not date`](src/calendar_art.py#L80)<br>**오류 메시지:** 조형 날짜는 datetime.date여야 합니다. |
 | **거부 조건:** [`not FIRST_DATE &lt;= value &lt;= LAST_DATE`](src/calendar_art.py#L82)<br>**오류 메시지:** 날짜별 조형 지원 범위는 2026-01-01부터 2099-12-31까지입니다. |
 
 #### LEVEL 4 · [src/calendar_catalog.py](src/calendar_catalog.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`joining_particle`](src/calendar_catalog.py#L208)<br>**소스에 적힌 역할:** 마지막 한글 음절의 받침에 맞춰 대상 이름을 연결합니다. |
 
@@ -3053,20 +3053,20 @@ Pillow==13.0.0
 **코드의 선언:** `정의={'bouquet':'꽃다발형','diagonal':'대각선형','shelter':'감싸는 형태',                      'stage':'연주대형','triangle':'삼각형 정물','fan':'부채형'}`
 
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`not 0 &lt;= index &lt; 888 or not 1 &lt;= month &lt;= 12`](src/calendar_catalog.py#L217)<br>**오류 메시지:** 연월 컬렉션은 2026년 1월부터 2099년 12월까지입니다. |
 
 #### LEVEL 4 · [src/calendar_motion.py](src/calendar_motion.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`fallback_image`](src/calendar_motion.py#L18)<br>**소스에 적힌 역할:** GPU 준비·실패 때만 쓰는 월 주제의 정적 평면 표식입니다. 3D 성공으로 가장하지 않습니다. |
 | **정의:** [`_Worker`](src/calendar_motion.py#L52)<br>**소스에 적힌 역할:** Qt 객체나 UI를 조작하지 않고 복사된 최신 이미지 하나만 전달합니다. |
 | **정의:** [`prepare_calendar_motion`](src/calendar_motion.py#L173)<br>**소스에 적힌 역할:** 창 표시 전에 같은 작업자의 첫 실제 프레임을 최대 5초 준비합니다. |
 | **정의:** [`get_calendar_error`](src/calendar_motion.py#L203)<br>**소스에 적힌 역할:** 제품은 이 문자열을 상태나 툴팁에 표시해 대체 표식과 실제 3D를 구분할 수 있습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`FPS`](src/calendar_motion.py#L13)<br>**코드의 선언:** `정의=30` |
 | **설정·옵션:** [`SIZE`](src/calendar_motion.py#L14)<br>**코드의 선언:** `정의=384` |
@@ -3106,7 +3106,7 @@ Pillow==13.0.0
 
 #### LEVEL 4 · [src/calendar_renderer.py](src/calendar_renderer.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`rotation`](src/calendar_renderer.py#L24)<br>**소스에 적힌 역할:** 정규화된 실제 3D축을 중심으로 로드리게스 회전행렬을 만듭니다. |
 | **정의:** [`finish`](src/calendar_renderer.py#L48)<br>**소스에 적힌 역할:** 표면 법선과 삼각형 winding을 일치시킵니다. |
@@ -3119,12 +3119,12 @@ Pillow==13.0.0
 | **정의:** [`CalendarRenderer`](src/calendar_renderer.py#L378)<br>**소스에 적힌 역할:** 컨텍스트를 만든 스레드에서만 사용하고 현재 날짜의 버퍼만 보유합니다. |
 | **정의:** [`render_date`](src/calendar_renderer.py#L437)<br>**소스에 적힌 역할:** 미리보기와 직접 검증용 동기 렌더입니다. 앱은 공유 작업 스레드를 사용합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`PERIOD`](src/calendar_renderer.py#L132)<br>**코드의 선언:** `정의=12.0` |
 | **설정·옵션:** [`SIZE`](src/calendar_renderer.py#L133)<br>**코드의 선언:** `정의=384` |
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`subject.recipe!=design.shape_recipe`](src/calendar_renderer.py#L338)<br>**오류 메시지:** 대상과 형상 규칙이 일치하지 않습니다. |
 | **거부 조건:** [`type(elapsed) not in (int,float)`](src/calendar_renderer.py#L364)<br>**오류 메시지:** 모션 시각은 유한한 숫자여야 합니다. |
@@ -3134,14 +3134,14 @@ Pillow==13.0.0
 
 #### LEVEL 4 · [src/core.py](src/core.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`read_jsonl_tail`](src/core.py#L19)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
 | **정의:** [`title_catalog`](src/core.py#L56)<br>**소스에 적힌 역할:** 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
 | **정의:** [`resolve_title`](src/core.py#L86)<br>**소스에 적힌 역할:** 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
 | **정의:** [`safe_path`](src/core.py#L110)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L10)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
 | **설정·옵션:** [`BEGIN`](src/core.py#L11)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
@@ -3206,12 +3206,12 @@ Pillow==13.0.0
 
 #### LEVEL 4 · [src/element_frames.py](src/element_frames.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`ElementAssetError`](src/element_frames.py#L24)<br>**소스에 적힌 역할:** 필수 원소 자산 실패를 숨기지 않고 앱의 시작·표시 오류로 전달합니다. |
 | **정의:** [`preflight_element_frames`](src/element_frames.py#L132)<br>**소스에 적힌 역할:** 활성 원소의 해시·목록·첫 프레임을 확인합니다.31개를 적재하지 않습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`CACHE_LIMIT`](src/element_frames.py#L15)<br>**코드의 선언:** `정의=24` |
 | **설정·옵션:** [`FRAME_SIZE`](src/element_frames.py#L16)<br>**코드의 선언:** `정의=192` |
@@ -3284,13 +3284,13 @@ Pillow==13.0.0
 
 #### LEVEL 4 · [src/element_visuals.py](src/element_visuals.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`colorize_atom`](src/element_visuals.py#L5)<br>**소스에 적힌 역할:** SourceAtop은 원본 알파를 유지하며 명암에 부드러운 영감색을 더합니다. |
 
 #### LEVEL 4 · [src/elements.py](src/elements.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`daily_element`](src/elements.py#L43)<br>**소스에 적힌 역할:** 매 호출 실제 날짜를 다시 읽어 자정·절전 복귀·시계 되돌림을 반영합니다. |
 
@@ -3307,13 +3307,13 @@ Pillow==13.0.0
 **코드의 선언:** `정의=tuple(Element(index,symbol,name,color,accent)                  for index,(symbol,name,color,accent) in enumerate(_ROWS,1))`
 
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`value.tzinfo is None or value.utcoffset() is None`](src/elements.py#L46)<br>**오류 메시지:** 원소 날짜에는 시간대가 있는 datetime이 필요합니다. |
 
 #### LEVEL 4 · [src/notifier.py](src/notifier.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`atomic_json`](src/notifier.py#L33)<br>**소스에 적힌 역할:** 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도합니다. |
 | **정의:** [`source_datetime`](src/notifier.py#L63)<br>**소스에 적힌 역할:** 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. |
@@ -3323,7 +3323,7 @@ Pillow==13.0.0
 | **정의:** [`enrich_event`](src/notifier.py#L423)<br>**소스에 적힌 역할:** 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
 | **정의:** [`replay_activity_prefix`](src/notifier.py#L445)<br>**소스에 적힌 역할:** 고정된 과거 소비 구간의 활동 메타만 파일별 기존 예산 안에서 복원합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`--sessions`](src/notifier.py#L739)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
 | **설정·옵션:** [`--work`](src/notifier.py#L740)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
@@ -3388,7 +3388,7 @@ Pillow==13.0.0
 
 #### LEVEL 4 · [src/theme.py](src/theme.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`MonochromeStyle`](src/theme.py#L52)<br>**소스에 적힌 역할:** 파일·메시지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. |
 | **정의:** [`KoreanDialogs`](src/theme.py#L77)<br>**소스에 적힌 역할:** 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역합니다. |
@@ -3396,30 +3396,30 @@ Pillow==13.0.0
 
 #### LEVEL 4 · [src/typography.py](src/typography.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`register_fonts`](src/typography.py#L8)<br>**소스에 적힌 역할:** 필수 파일이나 Qt 등록 실패를 숨기지 않고 시작 오류로 전달합니다. |
 
 #### LEVEL 4 · [src/usage.py](src/usage.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`number`](src/usage.py#L16)<br>**소스에 적힌 역할:** 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
 | **정의:** [`normalize_limits`](src/usage.py#L35)<br>**소스에 적힌 역할:** 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
 | **정의:** [`discover_codex`](src/usage.py#L69)<br>**소스에 적힌 역할:** 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_BYTES`](src/usage.py#L12)<br>**코드의 선언:** `정의=1024 * 1024` |
 | **설정·옵션:** [`KST`](src/usage.py#L13)<br>**코드의 선언:** `정의=timezone(timedelta(hours=9))` |
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`not isinstance(message, dict)`](src/usage.py#L226)<br>**오류 메시지:** 객체가 아닌 응답 |
 
 #### LEVEL 4 · [src/usage_frames.py](src/usage_frames.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`UsageAssetError`](src/usage_frames.py#L27)<br>**소스에 적힌 역할:** 조형 표시 오류를 호출자에게 전달하며 계정 조회 흐름과 분리합니다. |
 | **정의:** [`UsageFrames`](src/usage_frames.py#L50)<br>**소스에 적힌 역할:** 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대16장만 보존합니다. |
@@ -3427,7 +3427,7 @@ Pillow==13.0.0
 | **정의:** [`preflight_usage_frames`](src/usage_frames.py#L194)<br>**소스에 적힌 역할:** 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
 | **정의:** [`get_usage_frame`](src/usage_frames.py#L207)<br>**소스에 적힌 역할:** 공유 팩의 한 프레임을 반환하며 계정 조회 상태에는 관여하지 않습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`FRAME_COUNT`](src/usage_frames.py#L16)<br>**코드의 선언:** `정의=360` |
 | **설정·옵션:** [`FRAME_SIZE`](src/usage_frames.py#L17)<br>**코드의 선언:** `정의=384` |
@@ -3494,13 +3494,13 @@ Pillow==13.0.0
 
 #### LEVEL 4 · [src/usage_widgets.py](src/usage_widgets.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`CalendarHero`](src/usage_widgets.py#L7)<br>**소스에 적힌 역할:** 사용 한도 화면에서만 날짜별 입체 이미지를 갱신합니다. |
 
 #### LEVEL 4 · [src/visuals.py](src/visuals.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`rotate_point`](src/visuals.py#L11)<br>**소스에 적힌 역할:** X·Y·Z 순서로 회전하며 깊이 좌표를 보존합니다. |
 | **정의:** [`axis_rotate`](src/visuals.py#L39)<br>**소스에 적힌 역할:** 로드리게스 식으로 고유 축 주위를 회전하며 공통 Z 변환을 쓰지 않습니다. |
@@ -3721,7 +3721,7 @@ Pillow==13.0.0
 <a name="-실제-자료-구성"></a>
 ## 실제 자료 구성
 
-| 경로 · 자료 종류 |
+| 내용 |
 | --- |
 | **경로:** [src/](src)<br>**자료 종류:** 하위 자료 폴더 |
 | **경로:** [README.md](README.md)<br>**자료 종류:** MD 파일 |
@@ -3734,7 +3734,7 @@ Pillow==13.0.0
 <a name="-주요-모듈과-코드-읽기"></a>
 ## 주요 모듈과 코드 읽기
 
-| 파일 · 원문에 정의된 역할·구성 |
+| 내용 |
 | --- |
 | **파일:** [src/app.py](src/app.py)<br>**원문에 정의된 역할·구성:** Codex Orbit: 독립 회전 위젯과 로컬 변경 기록·사용 한도. |
 | **파일:** [src/notifier.py](src/notifier.py)<br>**원문에 정의된 역할·구성:** 현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다. |
@@ -3791,14 +3791,14 @@ Pillow==13.0.0
 
 ### [src/activity.py](src/activity.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`safe_public_text`](src/activity.py#L15)<br>**소스에 적힌 역할:** 보호문·비공개 표식·긴 인코딩 덩어리는 해석하거나 노출하지 않습니다. |
 | **정의:** [`configuration`](src/activity.py#L76)<br>**소스에 적힌 역할:** 원본 시각이 있는 자기 관측만 전역 256개로 제한해 보존합니다. |
 | **정의:** [`defer`](src/activity.py#L160)<br>**소스에 적힌 역할:** 원본 본문 없이 검증에 필요한 native 필드만 전역 32개까지 기다립니다. |
 | **정의:** [`observe`](src/activity.py#L273)<br>**소스에 적힌 역할:** 그 활동의 첫 관측만 보강하며 이후 모델 변경은 별도 감지를 유지합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_ACTIVITY_EVENTS`](src/activity.py#L7)<br>**코드의 선언:** `정의=128` |
 | **설정·옵션:** [`MAX_ACTIVITY_SEEN`](src/activity.py#L8)<br>**코드의 선언:** `정의=8192` |
@@ -3818,7 +3818,7 @@ Pillow==13.0.0
 
 ### [src/app.py](src/app.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`_application_gui_root`](src/app.py#L37)<br>**소스에 적힌 역할:** Python 순환 수집과 무관하게 살아 있는 GUI 소유자를 앱에 보관합니다. |
 | **정의:** [`operation_record`](src/app.py#L55)<br>**소스에 적힌 역할:** 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다. |
@@ -3888,14 +3888,14 @@ Pillow==13.0.0
 
 ### [src/atom_frames.py](src/atom_frames.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`AtomAssetError`](src/atom_frames.py#L27)<br>**소스에 적힌 역할:** 필수 시각 자산 오류를 시작 실패 경로에 전달합니다. |
 | **정의:** [`AtomFrames`](src/atom_frames.py#L50)<br>**소스에 적힌 역할:** 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대24장만 보존합니다. |
 | **정의:** [`close_runtime_frames`](src/atom_frames.py#L172)<br>**소스에 적힌 역할:** 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
 | **정의:** [`get_atom_frames`](src/atom_frames.py#L183)<br>**소스에 적힌 역할:** 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`FRAME_COUNT`](src/atom_frames.py#L16)<br>**코드의 선언:** `정의=540` |
 | **설정·옵션:** [`FRAME_SIZE`](src/atom_frames.py#L17)<br>**코드의 선언:** `정의=296` |
@@ -3954,7 +3954,7 @@ Pillow==13.0.0
 
 ### [src/brand.py](src/brand.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`motion_brand_source`](src/brand.py#L31)<br>**소스에 적힌 역할:** 원소 프레임의 실제 크기에 비례해 여백만 줄이며 영역 밖을 복사하지 않습니다. |
 | **정의:** [`BrandClock`](src/brand.py#L39)<br>**소스에 적힌 역할:** 보이는 로고만 단일 시계에서 같은 프레임으로 갱신합니다. |
@@ -4003,28 +4003,28 @@ Pillow==13.0.0
 
 ### [src/calendar_art.py](src/calendar_art.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`current_date`](src/calendar_art.py#L33)<br>**소스에 적힌 역할:** 호스트의 현지 시간대와 무관하게 한국 날짜를 사용합니다. |
 | **정의:** [`_month_palette`](src/calendar_art.py#L50)<br>**소스에 적힌 역할:** 반올림 충돌만 가장 가까운 미사용 RGB로 옮기고 월별 결과를 불변 보관합니다. |
 | **정의:** [`design_for_date`](src/calendar_art.py#L78)<br>**소스에 적힌 역할:** 유효한 날짜만 허용하며 지원 범위 밖을 다른 날짜로 몰래 대체하지 않습니다. |
 | **정의:** [`all_designs`](src/calendar_art.py#L95)<br>**소스에 적힌 역할:** 현재 모델만 렌더하며 이 반복자는 작은 카탈로그를 작성할 때만 사용합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`FIRST_DATE`](src/calendar_art.py#L10)<br>**코드의 선언:** `정의=date(2026,1,1)` |
 | **설정·옵션:** [`LAST_DATE`](src/calendar_art.py#L11)<br>**코드의 선언:** `정의=date(2099,12,31)` |
 | **설정·옵션:** [`KST`](src/calendar_art.py#L12)<br>**코드의 선언:** `정의=timezone(timedelta(hours=9))` |
 | **설정·옵션:** [`THEMES`](src/calendar_art.py#L13)<br>**코드의 선언:** `정의=tuple(row.title for row in all_collections())` |
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`type(value) is not date`](src/calendar_art.py#L80)<br>**오류 메시지:** 조형 날짜는 datetime.date여야 합니다. |
 | **거부 조건:** [`not FIRST_DATE &lt;= value &lt;= LAST_DATE`](src/calendar_art.py#L82)<br>**오류 메시지:** 날짜별 조형 지원 범위는 2026-01-01부터 2099-12-31까지입니다. |
 
 ### [src/calendar_catalog.py](src/calendar_catalog.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`joining_particle`](src/calendar_catalog.py#L208)<br>**소스에 적힌 역할:** 마지막 한글 음절의 받침에 맞춰 대상 이름을 연결합니다. |
 
@@ -4041,20 +4041,20 @@ Pillow==13.0.0
 **코드의 선언:** `정의={'bouquet':'꽃다발형','diagonal':'대각선형','shelter':'감싸는 형태',                      'stage':'연주대형','triangle':'삼각형 정물','fan':'부채형'}`
 
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`not 0 &lt;= index &lt; 888 or not 1 &lt;= month &lt;= 12`](src/calendar_catalog.py#L217)<br>**오류 메시지:** 연월 컬렉션은 2026년 1월부터 2099년 12월까지입니다. |
 
 ### [src/calendar_motion.py](src/calendar_motion.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`fallback_image`](src/calendar_motion.py#L18)<br>**소스에 적힌 역할:** GPU 준비·실패 때만 쓰는 월 주제의 정적 평면 표식입니다. 3D 성공으로 가장하지 않습니다. |
 | **정의:** [`_Worker`](src/calendar_motion.py#L52)<br>**소스에 적힌 역할:** Qt 객체나 UI를 조작하지 않고 복사된 최신 이미지 하나만 전달합니다. |
 | **정의:** [`prepare_calendar_motion`](src/calendar_motion.py#L173)<br>**소스에 적힌 역할:** 창 표시 전에 같은 작업자의 첫 실제 프레임을 최대 5초 준비합니다. |
 | **정의:** [`get_calendar_error`](src/calendar_motion.py#L203)<br>**소스에 적힌 역할:** 제품은 이 문자열을 상태나 툴팁에 표시해 대체 표식과 실제 3D를 구분할 수 있습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`FPS`](src/calendar_motion.py#L13)<br>**코드의 선언:** `정의=30` |
 | **설정·옵션:** [`SIZE`](src/calendar_motion.py#L14)<br>**코드의 선언:** `정의=384` |
@@ -4094,7 +4094,7 @@ Pillow==13.0.0
 
 ### [src/calendar_renderer.py](src/calendar_renderer.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`rotation`](src/calendar_renderer.py#L24)<br>**소스에 적힌 역할:** 정규화된 실제 3D축을 중심으로 로드리게스 회전행렬을 만듭니다. |
 | **정의:** [`finish`](src/calendar_renderer.py#L48)<br>**소스에 적힌 역할:** 표면 법선과 삼각형 winding을 일치시킵니다. |
@@ -4107,12 +4107,12 @@ Pillow==13.0.0
 | **정의:** [`CalendarRenderer`](src/calendar_renderer.py#L378)<br>**소스에 적힌 역할:** 컨텍스트를 만든 스레드에서만 사용하고 현재 날짜의 버퍼만 보유합니다. |
 | **정의:** [`render_date`](src/calendar_renderer.py#L437)<br>**소스에 적힌 역할:** 미리보기와 직접 검증용 동기 렌더입니다. 앱은 공유 작업 스레드를 사용합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`PERIOD`](src/calendar_renderer.py#L132)<br>**코드의 선언:** `정의=12.0` |
 | **설정·옵션:** [`SIZE`](src/calendar_renderer.py#L133)<br>**코드의 선언:** `정의=384` |
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`subject.recipe!=design.shape_recipe`](src/calendar_renderer.py#L338)<br>**오류 메시지:** 대상과 형상 규칙이 일치하지 않습니다. |
 | **거부 조건:** [`type(elapsed) not in (int,float)`](src/calendar_renderer.py#L364)<br>**오류 메시지:** 모션 시각은 유한한 숫자여야 합니다. |
@@ -4122,14 +4122,14 @@ Pillow==13.0.0
 
 ### [src/core.py](src/core.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`read_jsonl_tail`](src/core.py#L19)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
 | **정의:** [`title_catalog`](src/core.py#L56)<br>**소스에 적힌 역할:** 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
 | **정의:** [`resolve_title`](src/core.py#L86)<br>**소스에 적힌 역할:** 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
 | **정의:** [`safe_path`](src/core.py#L110)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L10)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
 | **설정·옵션:** [`BEGIN`](src/core.py#L11)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
@@ -4194,12 +4194,12 @@ Pillow==13.0.0
 
 ### [src/element_frames.py](src/element_frames.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`ElementAssetError`](src/element_frames.py#L24)<br>**소스에 적힌 역할:** 필수 원소 자산 실패를 숨기지 않고 앱의 시작·표시 오류로 전달합니다. |
 | **정의:** [`preflight_element_frames`](src/element_frames.py#L132)<br>**소스에 적힌 역할:** 활성 원소의 해시·목록·첫 프레임을 확인합니다.31개를 적재하지 않습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`CACHE_LIMIT`](src/element_frames.py#L15)<br>**코드의 선언:** `정의=24` |
 | **설정·옵션:** [`FRAME_SIZE`](src/element_frames.py#L16)<br>**코드의 선언:** `정의=192` |
@@ -4272,13 +4272,13 @@ Pillow==13.0.0
 
 ### [src/element_visuals.py](src/element_visuals.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`colorize_atom`](src/element_visuals.py#L5)<br>**소스에 적힌 역할:** SourceAtop은 원본 알파를 유지하며 명암에 부드러운 영감색을 더합니다. |
 
 ### [src/elements.py](src/elements.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`daily_element`](src/elements.py#L43)<br>**소스에 적힌 역할:** 매 호출 실제 날짜를 다시 읽어 자정·절전 복귀·시계 되돌림을 반영합니다. |
 
@@ -4295,13 +4295,13 @@ Pillow==13.0.0
 **코드의 선언:** `정의=tuple(Element(index,symbol,name,color,accent)                  for index,(symbol,name,color,accent) in enumerate(_ROWS,1))`
 
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`value.tzinfo is None or value.utcoffset() is None`](src/elements.py#L46)<br>**오류 메시지:** 원소 날짜에는 시간대가 있는 datetime이 필요합니다. |
 
 ### [src/notifier.py](src/notifier.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`atomic_json`](src/notifier.py#L33)<br>**소스에 적힌 역할:** 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도합니다. |
 | **정의:** [`source_datetime`](src/notifier.py#L63)<br>**소스에 적힌 역할:** 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. |
@@ -4311,7 +4311,7 @@ Pillow==13.0.0
 | **정의:** [`enrich_event`](src/notifier.py#L423)<br>**소스에 적힌 역할:** 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
 | **정의:** [`replay_activity_prefix`](src/notifier.py#L445)<br>**소스에 적힌 역할:** 고정된 과거 소비 구간의 활동 메타만 파일별 기존 예산 안에서 복원합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`--sessions`](src/notifier.py#L739)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
 | **설정·옵션:** [`--work`](src/notifier.py#L740)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
@@ -4376,7 +4376,7 @@ Pillow==13.0.0
 
 ### [src/theme.py](src/theme.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`MonochromeStyle`](src/theme.py#L52)<br>**소스에 적힌 역할:** 파일·메시지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. |
 | **정의:** [`KoreanDialogs`](src/theme.py#L77)<br>**소스에 적힌 역할:** 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역합니다. |
@@ -4384,30 +4384,30 @@ Pillow==13.0.0
 
 ### [src/typography.py](src/typography.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`register_fonts`](src/typography.py#L8)<br>**소스에 적힌 역할:** 필수 파일이나 Qt 등록 실패를 숨기지 않고 시작 오류로 전달합니다. |
 
 ### [src/usage.py](src/usage.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`number`](src/usage.py#L16)<br>**소스에 적힌 역할:** 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
 | **정의:** [`normalize_limits`](src/usage.py#L35)<br>**소스에 적힌 역할:** 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
 | **정의:** [`discover_codex`](src/usage.py#L69)<br>**소스에 적힌 역할:** 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_BYTES`](src/usage.py#L12)<br>**코드의 선언:** `정의=1024 * 1024` |
 | **설정·옵션:** [`KST`](src/usage.py#L13)<br>**코드의 선언:** `정의=timezone(timedelta(hours=9))` |
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`not isinstance(message, dict)`](src/usage.py#L226)<br>**오류 메시지:** 객체가 아닌 응답 |
 
 ### [src/usage_frames.py](src/usage_frames.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`UsageAssetError`](src/usage_frames.py#L27)<br>**소스에 적힌 역할:** 조형 표시 오류를 호출자에게 전달하며 계정 조회 흐름과 분리합니다. |
 | **정의:** [`UsageFrames`](src/usage_frames.py#L50)<br>**소스에 적힌 역할:** 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대16장만 보존합니다. |
@@ -4415,7 +4415,7 @@ Pillow==13.0.0
 | **정의:** [`preflight_usage_frames`](src/usage_frames.py#L194)<br>**소스에 적힌 역할:** 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
 | **정의:** [`get_usage_frame`](src/usage_frames.py#L207)<br>**소스에 적힌 역할:** 공유 팩의 한 프레임을 반환하며 계정 조회 상태에는 관여하지 않습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`FRAME_COUNT`](src/usage_frames.py#L16)<br>**코드의 선언:** `정의=360` |
 | **설정·옵션:** [`FRAME_SIZE`](src/usage_frames.py#L17)<br>**코드의 선언:** `정의=384` |
@@ -4482,13 +4482,13 @@ Pillow==13.0.0
 
 ### [src/usage_widgets.py](src/usage_widgets.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`CalendarHero`](src/usage_widgets.py#L7)<br>**소스에 적힌 역할:** 사용 한도 화면에서만 날짜별 입체 이미지를 갱신합니다. |
 
 ### [src/visuals.py](src/visuals.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`rotate_point`](src/visuals.py#L11)<br>**소스에 적힌 역할:** X·Y·Z 순서로 회전하며 깊이 좌표를 보존합니다. |
 | **정의:** [`axis_rotate`](src/visuals.py#L39)<br>**소스에 적힌 역할:** 로드리게스 식으로 고유 축 주위를 회전하며 공통 Z 변환을 쓰지 않습니다. |

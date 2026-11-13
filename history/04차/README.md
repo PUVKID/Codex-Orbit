@@ -76,7 +76,7 @@ PyInstaller==6.22.3
 
 #### LEVEL 1 · [src/app.py](src/app.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`short_reason`](src/app.py#L58)<br>**소스에 적힌 역할:** 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. |
 | **정의:** [`QuitGuard`](src/app.py#L735)<br>**소스에 적힌 역할:** 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다. |
@@ -141,14 +141,14 @@ PyInstaller==6.22.3
 
 #### LEVEL 1 · [src/core.py](src/core.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`read_jsonl_tail`](src/core.py#L18)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
 | **정의:** [`title_catalog`](src/core.py#L55)<br>**소스에 적힌 역할:** 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
 | **정의:** [`resolve_title`](src/core.py#L73)<br>**소스에 적힌 역할:** 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
 | **정의:** [`safe_path`](src/core.py#L97)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L9)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
 | **설정·옵션:** [`BEGIN`](src/core.py#L10)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
@@ -213,12 +213,12 @@ PyInstaller==6.22.3
 
 #### LEVEL 1 · [src/notifier.py](src/notifier.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`lookup_parent_reason`](src/notifier.py#L219)<br>**소스에 적힌 역할:** 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. |
 | **정의:** [`enrich_event`](src/notifier.py#L266)<br>**소스에 적힌 역할:** 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`--sessions`](src/notifier.py#L506)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
 | **설정·옵션:** [`--work`](src/notifier.py#L507)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
@@ -258,18 +258,18 @@ PyInstaller==6.22.3
 
 #### LEVEL 1 · [src/usage.py](src/usage.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`number`](src/usage.py#L16)<br>**소스에 적힌 역할:** 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
 | **정의:** [`normalize_limits`](src/usage.py#L35)<br>**소스에 적힌 역할:** 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
 | **정의:** [`discover_codex`](src/usage.py#L69)<br>**소스에 적힌 역할:** 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_BYTES`](src/usage.py#L12)<br>**코드의 선언:** `정의=1024 * 1024` |
 | **설정·옵션:** [`KST`](src/usage.py#L13)<br>**코드의 선언:** `정의=timezone(timedelta(hours=9))` |
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`not isinstance(message, dict)`](src/usage.py#L226)<br>**오류 메시지:** 객체가 아닌 응답 |
 
@@ -372,7 +372,7 @@ PyInstaller==6.22.3
 
 #### LEVEL 2 · [src/app.py](src/app.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`short_reason`](src/app.py#L58)<br>**소스에 적힌 역할:** 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. |
 | **정의:** [`QuitGuard`](src/app.py#L735)<br>**소스에 적힌 역할:** 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다. |
@@ -437,14 +437,14 @@ PyInstaller==6.22.3
 
 #### LEVEL 2 · [src/core.py](src/core.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`read_jsonl_tail`](src/core.py#L18)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
 | **정의:** [`title_catalog`](src/core.py#L55)<br>**소스에 적힌 역할:** 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
 | **정의:** [`resolve_title`](src/core.py#L73)<br>**소스에 적힌 역할:** 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
 | **정의:** [`safe_path`](src/core.py#L97)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L9)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
 | **설정·옵션:** [`BEGIN`](src/core.py#L10)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
@@ -509,12 +509,12 @@ PyInstaller==6.22.3
 
 #### LEVEL 2 · [src/notifier.py](src/notifier.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`lookup_parent_reason`](src/notifier.py#L219)<br>**소스에 적힌 역할:** 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. |
 | **정의:** [`enrich_event`](src/notifier.py#L266)<br>**소스에 적힌 역할:** 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`--sessions`](src/notifier.py#L506)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
 | **설정·옵션:** [`--work`](src/notifier.py#L507)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
@@ -554,18 +554,18 @@ PyInstaller==6.22.3
 
 #### LEVEL 2 · [src/usage.py](src/usage.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`number`](src/usage.py#L16)<br>**소스에 적힌 역할:** 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
 | **정의:** [`normalize_limits`](src/usage.py#L35)<br>**소스에 적힌 역할:** 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
 | **정의:** [`discover_codex`](src/usage.py#L69)<br>**소스에 적힌 역할:** 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_BYTES`](src/usage.py#L12)<br>**코드의 선언:** `정의=1024 * 1024` |
 | **설정·옵션:** [`KST`](src/usage.py#L13)<br>**코드의 선언:** `정의=timezone(timedelta(hours=9))` |
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`not isinstance(message, dict)`](src/usage.py#L226)<br>**오류 메시지:** 객체가 아닌 응답 |
 
@@ -631,7 +631,7 @@ PyInstaller==6.22.3
 
 #### LEVEL 3 · [src/app.py](src/app.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`short_reason`](src/app.py#L58)<br>**소스에 적힌 역할:** 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. |
 | **정의:** [`QuitGuard`](src/app.py#L735)<br>**소스에 적힌 역할:** 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다. |
@@ -696,14 +696,14 @@ PyInstaller==6.22.3
 
 #### LEVEL 3 · [src/core.py](src/core.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`read_jsonl_tail`](src/core.py#L18)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
 | **정의:** [`title_catalog`](src/core.py#L55)<br>**소스에 적힌 역할:** 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
 | **정의:** [`resolve_title`](src/core.py#L73)<br>**소스에 적힌 역할:** 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
 | **정의:** [`safe_path`](src/core.py#L97)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L9)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
 | **설정·옵션:** [`BEGIN`](src/core.py#L10)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
@@ -768,12 +768,12 @@ PyInstaller==6.22.3
 
 #### LEVEL 3 · [src/notifier.py](src/notifier.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`lookup_parent_reason`](src/notifier.py#L219)<br>**소스에 적힌 역할:** 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. |
 | **정의:** [`enrich_event`](src/notifier.py#L266)<br>**소스에 적힌 역할:** 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`--sessions`](src/notifier.py#L506)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
 | **설정·옵션:** [`--work`](src/notifier.py#L507)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
@@ -813,18 +813,18 @@ PyInstaller==6.22.3
 
 #### LEVEL 3 · [src/usage.py](src/usage.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`number`](src/usage.py#L16)<br>**소스에 적힌 역할:** 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
 | **정의:** [`normalize_limits`](src/usage.py#L35)<br>**소스에 적힌 역할:** 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
 | **정의:** [`discover_codex`](src/usage.py#L69)<br>**소스에 적힌 역할:** 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_BYTES`](src/usage.py#L12)<br>**코드의 선언:** `정의=1024 * 1024` |
 | **설정·옵션:** [`KST`](src/usage.py#L13)<br>**코드의 선언:** `정의=timezone(timedelta(hours=9))` |
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`not isinstance(message, dict)`](src/usage.py#L226)<br>**오류 메시지:** 객체가 아닌 응답 |
 
@@ -896,7 +896,7 @@ Codex App Server의 `account/rateLimits/read`를 읽기 전용으로 조회합�
 
 ### LEVEL 4 · 이 차수 구현의 실제 근거
 
-| 파일 · 원문에 정의된 역할·구성 |
+| 내용 |
 | --- |
 | **파일:** [src/app.py](src/app.py)<br>**원문에 정의된 역할·구성:** Codex Orbit: 투명 궤도와 로컬 감시, 명시적 Markdown 지침 적용. |
 | **파일:** [src/notifier.py](src/notifier.py)<br>**원문에 정의된 역할·구성:** 현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다. |
@@ -952,7 +952,7 @@ PyInstaller==6.22.3
 
 #### LEVEL 4 · [src/app.py](src/app.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`short_reason`](src/app.py#L58)<br>**소스에 적힌 역할:** 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. |
 | **정의:** [`QuitGuard`](src/app.py#L735)<br>**소스에 적힌 역할:** 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다. |
@@ -1017,14 +1017,14 @@ PyInstaller==6.22.3
 
 #### LEVEL 4 · [src/core.py](src/core.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`read_jsonl_tail`](src/core.py#L18)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
 | **정의:** [`title_catalog`](src/core.py#L55)<br>**소스에 적힌 역할:** 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
 | **정의:** [`resolve_title`](src/core.py#L73)<br>**소스에 적힌 역할:** 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
 | **정의:** [`safe_path`](src/core.py#L97)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L9)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
 | **설정·옵션:** [`BEGIN`](src/core.py#L10)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
@@ -1089,12 +1089,12 @@ PyInstaller==6.22.3
 
 #### LEVEL 4 · [src/notifier.py](src/notifier.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`lookup_parent_reason`](src/notifier.py#L219)<br>**소스에 적힌 역할:** 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. |
 | **정의:** [`enrich_event`](src/notifier.py#L266)<br>**소스에 적힌 역할:** 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`--sessions`](src/notifier.py#L506)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
 | **설정·옵션:** [`--work`](src/notifier.py#L507)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
@@ -1134,18 +1134,18 @@ PyInstaller==6.22.3
 
 #### LEVEL 4 · [src/usage.py](src/usage.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`number`](src/usage.py#L16)<br>**소스에 적힌 역할:** 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
 | **정의:** [`normalize_limits`](src/usage.py#L35)<br>**소스에 적힌 역할:** 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
 | **정의:** [`discover_codex`](src/usage.py#L69)<br>**소스에 적힌 역할:** 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_BYTES`](src/usage.py#L12)<br>**코드의 선언:** `정의=1024 * 1024` |
 | **설정·옵션:** [`KST`](src/usage.py#L13)<br>**코드의 선언:** `정의=timezone(timedelta(hours=9))` |
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`not isinstance(message, dict)`](src/usage.py#L226)<br>**오류 메시지:** 객체가 아닌 응답 |
 
@@ -1244,7 +1244,7 @@ PyInstaller==6.22.3
 <a name="-실제-자료-구성"></a>
 ## 실제 자료 구성
 
-| 경로 · 자료 종류 |
+| 내용 |
 | --- |
 | **경로:** [src/](src)<br>**자료 종류:** 하위 자료 폴더 |
 | **경로:** [README.md](README.md)<br>**자료 종류:** MD 파일 |
@@ -1257,7 +1257,7 @@ PyInstaller==6.22.3
 <a name="-주요-모듈과-코드-읽기"></a>
 ## 주요 모듈과 코드 읽기
 
-| 파일 · 원문에 정의된 역할·구성 |
+| 내용 |
 | --- |
 | **파일:** [src/app.py](src/app.py)<br>**원문에 정의된 역할·구성:** Codex Orbit: 투명 궤도와 로컬 감시, 명시적 Markdown 지침 적용. |
 | **파일:** [src/notifier.py](src/notifier.py)<br>**원문에 정의된 역할·구성:** 현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다. |
@@ -1305,7 +1305,7 @@ PyInstaller==6.22.3
 
 ### [src/app.py](src/app.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`short_reason`](src/app.py#L58)<br>**소스에 적힌 역할:** 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. |
 | **정의:** [`QuitGuard`](src/app.py#L735)<br>**소스에 적힌 역할:** 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다. |
@@ -1370,14 +1370,14 @@ PyInstaller==6.22.3
 
 ### [src/core.py](src/core.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`read_jsonl_tail`](src/core.py#L18)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
 | **정의:** [`title_catalog`](src/core.py#L55)<br>**소스에 적힌 역할:** 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
 | **정의:** [`resolve_title`](src/core.py#L73)<br>**소스에 적힌 역할:** 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
 | **정의:** [`safe_path`](src/core.py#L97)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L9)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
 | **설정·옵션:** [`BEGIN`](src/core.py#L10)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
@@ -1442,12 +1442,12 @@ PyInstaller==6.22.3
 
 ### [src/notifier.py](src/notifier.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`lookup_parent_reason`](src/notifier.py#L219)<br>**소스에 적힌 역할:** 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. |
 | **정의:** [`enrich_event`](src/notifier.py#L266)<br>**소스에 적힌 역할:** 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`--sessions`](src/notifier.py#L506)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
 | **설정·옵션:** [`--work`](src/notifier.py#L507)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
@@ -1487,18 +1487,18 @@ PyInstaller==6.22.3
 
 ### [src/usage.py](src/usage.py)
 
-| 정의 · 소스에 적힌 역할 |
+| 내용 |
 | --- |
 | **정의:** [`number`](src/usage.py#L16)<br>**소스에 적힌 역할:** 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
 | **정의:** [`normalize_limits`](src/usage.py#L35)<br>**소스에 적힌 역할:** 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
 | **정의:** [`discover_codex`](src/usage.py#L69)<br>**소스에 적힌 역할:** 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
 
-| 설정·옵션 · 코드의 선언 |
+| 내용 |
 | --- |
 | **설정·옵션:** [`MAX_BYTES`](src/usage.py#L12)<br>**코드의 선언:** `정의=1024 * 1024` |
 | **설정·옵션:** [`KST`](src/usage.py#L13)<br>**코드의 선언:** `정의=timezone(timedelta(hours=9))` |
 
-| 거부 조건 · 오류 메시지 |
+| 내용 |
 | --- |
 | **거부 조건:** [`not isinstance(message, dict)`](src/usage.py#L226)<br>**오류 메시지:** 객체가 아닌 응답 |
 
