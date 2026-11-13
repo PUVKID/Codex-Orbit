@@ -94,26 +94,26 @@ PyInstaller==6.22.3
 **코드의 선언:** `action='store_true'`
 
 
-| 거부 조건 | 오류 메시지 |
-|---|---|
-| [`not lock.tryLock(100)`](src/app.py#L570) | 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
-| [`not isinstance(value, dict)`](src/app.py#L62) | 앱 설정은 JSON 객체여야 합니다. |
-| [`not path.is_dir()`](src/app.py#L348) | 존재하는 sessions 폴더를 선택하세요. |
-| [`self.plan is None`](src/app.py#L451) | 새 미리보기가 필요합니다. |
-| [`not receipts`](src/app.py#L463) | 앱이 만든 적용 백업이 없습니다. |
+| 거부 조건 · 오류 메시지 |
+| --- |
+| **거부 조건:** [`not lock.tryLock(100)`](src/app.py#L570)<br>**오류 메시지:** 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
+| **거부 조건:** [`not isinstance(value, dict)`](src/app.py#L62)<br>**오류 메시지:** 앱 설정은 JSON 객체여야 합니다. |
+| **거부 조건:** [`not path.is_dir()`](src/app.py#L348)<br>**오류 메시지:** 존재하는 sessions 폴더를 선택하세요. |
+| **거부 조건:** [`self.plan is None`](src/app.py#L451)<br>**오류 메시지:** 새 미리보기가 필요합니다. |
+| **거부 조건:** [`not receipts`](src/app.py#L463)<br>**오류 메시지:** 앱이 만든 적용 백업이 없습니다. |
 
 #### LEVEL 1 · [src/core.py](src/core.py)
 
-| 정의 | 소스에 적힌 역할 |
-|---|---|
-| [`read_jsonl_tail`](src/core.py#L18) | 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
-| [`safe_path`](src/core.py#L65) | 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
+| 정의 · 소스에 적힌 역할 |
+| --- |
+| **정의:** [`read_jsonl_tail`](src/core.py#L18)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
+| **정의:** [`safe_path`](src/core.py#L65)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 설정·옵션 | 코드의 선언 |
-|---|---|
-| [`MAX_TEXT_BYTES`](src/core.py#L9) | `정의=2 * 1024 * 1024` |
-| [`BEGIN`](src/core.py#L10) | `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
-| [`END`](src/core.py#L11) | `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
+| 설정·옵션 · 코드의 선언 |
+| --- |
+| **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L9)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
+| **설정·옵션:** [`BEGIN`](src/core.py#L10)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
+| **설정·옵션:** [`END`](src/core.py#L11)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
 
 **거부 조건:** [`path.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L80)
 
@@ -171,18 +171,18 @@ PyInstaller==6.22.3
 #### LEVEL 1 · [src/notifier.py](src/notifier.py)
 
 
-| 설정·옵션 | 코드의 선언 |
-|---|---|
-| [`--sessions`](src/notifier.py#L436) | `type=Path; default=Path.home() / '.codex/sessions'` |
-| [`--work`](src/notifier.py#L437) | `type=Path; default=ROOT / 'work'` |
-| [`ROOT`](src/notifier.py#L16) | `정의=Path(__file__).resolve().parents[1]` |
-| [`APP_ID`](src/notifier.py#L17) | `정의='Yunseok.Codex.ModelChangeNotifier'` |
-| [`READ_BYTES`](src/notifier.py#L18) | `정의=512 * 1024` |
-| [`MAX_RECORD`](src/notifier.py#L19) | `정의=2 * 1024 * 1024` |
-| [`MAX_FILES`](src/notifier.py#L20) | `정의=4096` |
-| [`LOG_BYTES`](src/notifier.py#L21) | `정의=2 * 1024 * 1024` |
-| [`POLL_READ_BYTES`](src/notifier.py#L22) | `정의=8 * 1024 * 1024` |
-| [`MAX_PENDING`](src/notifier.py#L23) | `정의=256` |
+| 설정·옵션 · 코드의 선언 |
+| --- |
+| **설정·옵션:** [`--sessions`](src/notifier.py#L436)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
+| **설정·옵션:** [`--work`](src/notifier.py#L437)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
+| **설정·옵션:** [`ROOT`](src/notifier.py#L16)<br>**코드의 선언:** `정의=Path(__file__).resolve().parents[1]` |
+| **설정·옵션:** [`APP_ID`](src/notifier.py#L17)<br>**코드의 선언:** `정의='Yunseok.Codex.ModelChangeNotifier'` |
+| **설정·옵션:** [`READ_BYTES`](src/notifier.py#L18)<br>**코드의 선언:** `정의=512 * 1024` |
+| **설정·옵션:** [`MAX_RECORD`](src/notifier.py#L19)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
+| **설정·옵션:** [`MAX_FILES`](src/notifier.py#L20)<br>**코드의 선언:** `정의=4096` |
+| **설정·옵션:** [`LOG_BYTES`](src/notifier.py#L21)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
+| **설정·옵션:** [`POLL_READ_BYTES`](src/notifier.py#L22)<br>**코드의 선언:** `정의=8 * 1024 * 1024` |
+| **설정·옵션:** [`MAX_PENDING`](src/notifier.py#L23)<br>**코드의 선언:** `정의=256` |
 
 **거부 조건:** [`self.state_path.stat().st_size &gt; 16 * 1024 * 1024`](src/notifier.py#L53)
 
@@ -248,11 +248,18 @@ PyInstaller==6.22.3
 
 ### LEVEL 2 · 입력에서 출력으로
 
-| 단계 | 내용 |
-|---|---|
-| 입력 | 현재 사용자 Codex의 로컬 JSONL과 이 차수의 앱 설정 |
-| 처리 | 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시 |
-| 출력 | 알림·변경 이력·로컬 진단 기록 |
+**단계:** 입력
+
+**내용:** 현재 사용자 Codex의 로컬 JSONL과 이 차수의 앱 설정
+
+**단계:** 처리
+
+**내용:** 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시
+
+**단계:** 출력
+
+**내용:** 알림·변경 이력·로컬 진단 기록
+
 
 입력·처리·출력은 위의 같은 자료 흐름을 다른 단계에서 읽는 기준입니다. 처리 조건과 출력의 의미를 함께 확인합니다.
 
@@ -319,26 +326,26 @@ PyInstaller==6.22.3
 **코드의 선언:** `action='store_true'`
 
 
-| 거부 조건 | 오류 메시지 |
-|---|---|
-| [`not lock.tryLock(100)`](src/app.py#L570) | 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
-| [`not isinstance(value, dict)`](src/app.py#L62) | 앱 설정은 JSON 객체여야 합니다. |
-| [`not path.is_dir()`](src/app.py#L348) | 존재하는 sessions 폴더를 선택하세요. |
-| [`self.plan is None`](src/app.py#L451) | 새 미리보기가 필요합니다. |
-| [`not receipts`](src/app.py#L463) | 앱이 만든 적용 백업이 없습니다. |
+| 거부 조건 · 오류 메시지 |
+| --- |
+| **거부 조건:** [`not lock.tryLock(100)`](src/app.py#L570)<br>**오류 메시지:** 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
+| **거부 조건:** [`not isinstance(value, dict)`](src/app.py#L62)<br>**오류 메시지:** 앱 설정은 JSON 객체여야 합니다. |
+| **거부 조건:** [`not path.is_dir()`](src/app.py#L348)<br>**오류 메시지:** 존재하는 sessions 폴더를 선택하세요. |
+| **거부 조건:** [`self.plan is None`](src/app.py#L451)<br>**오류 메시지:** 새 미리보기가 필요합니다. |
+| **거부 조건:** [`not receipts`](src/app.py#L463)<br>**오류 메시지:** 앱이 만든 적용 백업이 없습니다. |
 
 #### LEVEL 2 · [src/core.py](src/core.py)
 
-| 정의 | 소스에 적힌 역할 |
-|---|---|
-| [`read_jsonl_tail`](src/core.py#L18) | 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
-| [`safe_path`](src/core.py#L65) | 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
+| 정의 · 소스에 적힌 역할 |
+| --- |
+| **정의:** [`read_jsonl_tail`](src/core.py#L18)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
+| **정의:** [`safe_path`](src/core.py#L65)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 설정·옵션 | 코드의 선언 |
-|---|---|
-| [`MAX_TEXT_BYTES`](src/core.py#L9) | `정의=2 * 1024 * 1024` |
-| [`BEGIN`](src/core.py#L10) | `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
-| [`END`](src/core.py#L11) | `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
+| 설정·옵션 · 코드의 선언 |
+| --- |
+| **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L9)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
+| **설정·옵션:** [`BEGIN`](src/core.py#L10)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
+| **설정·옵션:** [`END`](src/core.py#L11)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
 
 **거부 조건:** [`path.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L80)
 
@@ -396,18 +403,18 @@ PyInstaller==6.22.3
 #### LEVEL 2 · [src/notifier.py](src/notifier.py)
 
 
-| 설정·옵션 | 코드의 선언 |
-|---|---|
-| [`--sessions`](src/notifier.py#L436) | `type=Path; default=Path.home() / '.codex/sessions'` |
-| [`--work`](src/notifier.py#L437) | `type=Path; default=ROOT / 'work'` |
-| [`ROOT`](src/notifier.py#L16) | `정의=Path(__file__).resolve().parents[1]` |
-| [`APP_ID`](src/notifier.py#L17) | `정의='Yunseok.Codex.ModelChangeNotifier'` |
-| [`READ_BYTES`](src/notifier.py#L18) | `정의=512 * 1024` |
-| [`MAX_RECORD`](src/notifier.py#L19) | `정의=2 * 1024 * 1024` |
-| [`MAX_FILES`](src/notifier.py#L20) | `정의=4096` |
-| [`LOG_BYTES`](src/notifier.py#L21) | `정의=2 * 1024 * 1024` |
-| [`POLL_READ_BYTES`](src/notifier.py#L22) | `정의=8 * 1024 * 1024` |
-| [`MAX_PENDING`](src/notifier.py#L23) | `정의=256` |
+| 설정·옵션 · 코드의 선언 |
+| --- |
+| **설정·옵션:** [`--sessions`](src/notifier.py#L436)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
+| **설정·옵션:** [`--work`](src/notifier.py#L437)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
+| **설정·옵션:** [`ROOT`](src/notifier.py#L16)<br>**코드의 선언:** `정의=Path(__file__).resolve().parents[1]` |
+| **설정·옵션:** [`APP_ID`](src/notifier.py#L17)<br>**코드의 선언:** `정의='Yunseok.Codex.ModelChangeNotifier'` |
+| **설정·옵션:** [`READ_BYTES`](src/notifier.py#L18)<br>**코드의 선언:** `정의=512 * 1024` |
+| **설정·옵션:** [`MAX_RECORD`](src/notifier.py#L19)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
+| **설정·옵션:** [`MAX_FILES`](src/notifier.py#L20)<br>**코드의 선언:** `정의=4096` |
+| **설정·옵션:** [`LOG_BYTES`](src/notifier.py#L21)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
+| **설정·옵션:** [`POLL_READ_BYTES`](src/notifier.py#L22)<br>**코드의 선언:** `정의=8 * 1024 * 1024` |
+| **설정·옵션:** [`MAX_PENDING`](src/notifier.py#L23)<br>**코드의 선언:** `정의=256` |
 
 **거부 조건:** [`self.state_path.stat().st_size &gt; 16 * 1024 * 1024`](src/notifier.py#L53)
 
@@ -518,26 +525,26 @@ PyInstaller==6.22.3
 **코드의 선언:** `action='store_true'`
 
 
-| 거부 조건 | 오류 메시지 |
-|---|---|
-| [`not lock.tryLock(100)`](src/app.py#L570) | 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
-| [`not isinstance(value, dict)`](src/app.py#L62) | 앱 설정은 JSON 객체여야 합니다. |
-| [`not path.is_dir()`](src/app.py#L348) | 존재하는 sessions 폴더를 선택하세요. |
-| [`self.plan is None`](src/app.py#L451) | 새 미리보기가 필요합니다. |
-| [`not receipts`](src/app.py#L463) | 앱이 만든 적용 백업이 없습니다. |
+| 거부 조건 · 오류 메시지 |
+| --- |
+| **거부 조건:** [`not lock.tryLock(100)`](src/app.py#L570)<br>**오류 메시지:** 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
+| **거부 조건:** [`not isinstance(value, dict)`](src/app.py#L62)<br>**오류 메시지:** 앱 설정은 JSON 객체여야 합니다. |
+| **거부 조건:** [`not path.is_dir()`](src/app.py#L348)<br>**오류 메시지:** 존재하는 sessions 폴더를 선택하세요. |
+| **거부 조건:** [`self.plan is None`](src/app.py#L451)<br>**오류 메시지:** 새 미리보기가 필요합니다. |
+| **거부 조건:** [`not receipts`](src/app.py#L463)<br>**오류 메시지:** 앱이 만든 적용 백업이 없습니다. |
 
 #### LEVEL 3 · [src/core.py](src/core.py)
 
-| 정의 | 소스에 적힌 역할 |
-|---|---|
-| [`read_jsonl_tail`](src/core.py#L18) | 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
-| [`safe_path`](src/core.py#L65) | 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
+| 정의 · 소스에 적힌 역할 |
+| --- |
+| **정의:** [`read_jsonl_tail`](src/core.py#L18)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
+| **정의:** [`safe_path`](src/core.py#L65)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 설정·옵션 | 코드의 선언 |
-|---|---|
-| [`MAX_TEXT_BYTES`](src/core.py#L9) | `정의=2 * 1024 * 1024` |
-| [`BEGIN`](src/core.py#L10) | `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
-| [`END`](src/core.py#L11) | `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
+| 설정·옵션 · 코드의 선언 |
+| --- |
+| **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L9)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
+| **설정·옵션:** [`BEGIN`](src/core.py#L10)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
+| **설정·옵션:** [`END`](src/core.py#L11)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
 
 **거부 조건:** [`path.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L80)
 
@@ -595,18 +602,18 @@ PyInstaller==6.22.3
 #### LEVEL 3 · [src/notifier.py](src/notifier.py)
 
 
-| 설정·옵션 | 코드의 선언 |
-|---|---|
-| [`--sessions`](src/notifier.py#L436) | `type=Path; default=Path.home() / '.codex/sessions'` |
-| [`--work`](src/notifier.py#L437) | `type=Path; default=ROOT / 'work'` |
-| [`ROOT`](src/notifier.py#L16) | `정의=Path(__file__).resolve().parents[1]` |
-| [`APP_ID`](src/notifier.py#L17) | `정의='Yunseok.Codex.ModelChangeNotifier'` |
-| [`READ_BYTES`](src/notifier.py#L18) | `정의=512 * 1024` |
-| [`MAX_RECORD`](src/notifier.py#L19) | `정의=2 * 1024 * 1024` |
-| [`MAX_FILES`](src/notifier.py#L20) | `정의=4096` |
-| [`LOG_BYTES`](src/notifier.py#L21) | `정의=2 * 1024 * 1024` |
-| [`POLL_READ_BYTES`](src/notifier.py#L22) | `정의=8 * 1024 * 1024` |
-| [`MAX_PENDING`](src/notifier.py#L23) | `정의=256` |
+| 설정·옵션 · 코드의 선언 |
+| --- |
+| **설정·옵션:** [`--sessions`](src/notifier.py#L436)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
+| **설정·옵션:** [`--work`](src/notifier.py#L437)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
+| **설정·옵션:** [`ROOT`](src/notifier.py#L16)<br>**코드의 선언:** `정의=Path(__file__).resolve().parents[1]` |
+| **설정·옵션:** [`APP_ID`](src/notifier.py#L17)<br>**코드의 선언:** `정의='Yunseok.Codex.ModelChangeNotifier'` |
+| **설정·옵션:** [`READ_BYTES`](src/notifier.py#L18)<br>**코드의 선언:** `정의=512 * 1024` |
+| **설정·옵션:** [`MAX_RECORD`](src/notifier.py#L19)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
+| **설정·옵션:** [`MAX_FILES`](src/notifier.py#L20)<br>**코드의 선언:** `정의=4096` |
+| **설정·옵션:** [`LOG_BYTES`](src/notifier.py#L21)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
+| **설정·옵션:** [`POLL_READ_BYTES`](src/notifier.py#L22)<br>**코드의 선언:** `정의=8 * 1024 * 1024` |
+| **설정·옵션:** [`MAX_PENDING`](src/notifier.py#L23)<br>**코드의 선언:** `정의=256` |
 
 **거부 조건:** [`self.state_path.stat().st_size &gt; 16 * 1024 * 1024`](src/notifier.py#L53)
 
@@ -642,11 +649,18 @@ PyInstaller==6.22.3
 3. 새 변경이 기록되면 이전·이후 값과 이유를 비교하고, 기록 종류와 근거 수준을 함께 읽습니다.
 4. 설정·이력은 개인 운영자료로 관리하고 다른 사용자에게 공유하기 전에 내용을 확인합니다.
 
-| 단계 | 내용 |
-|---|---|
-| 입력 | 현재 사용자 Codex의 로컬 JSONL과 이 차수의 앱 설정 |
-| 처리 | 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시 |
-| 출력 | 알림·변경 이력·로컬 진단 기록 |
+**단계:** 입력
+
+**내용:** 현재 사용자 Codex의 로컬 JSONL과 이 차수의 앱 설정
+
+**단계:** 처리
+
+**내용:** 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시
+
+**단계:** 출력
+
+**내용:** 알림·변경 이력·로컬 진단 기록
+
 
 ### LEVEL 3 · 결과와 실패를 확인하기
 
@@ -686,17 +700,24 @@ PyInstaller==6.22.3
 
 ### LEVEL 4 · 이 차수 구현의 실제 근거
 
-| 파일 | 원문에 정의된 역할·구성 |
-|---|---|
-| [src/app.py](src/app.py) | Codex Orbit: 투명 궤도와 로컬 감시, 명시적 Markdown 지침 적용. |
-| [src/notifier.py](src/notifier.py) | 현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다. |
-| [src/core.py](src/core.py) | 외부 통신 없는 로컬 자료 읽기와 명시적 지침 적용. |
+| 파일 · 원문에 정의된 역할·구성 |
+| --- |
+| **파일:** [src/app.py](src/app.py)<br>**원문에 정의된 역할·구성:** Codex Orbit: 투명 궤도와 로컬 감시, 명시적 Markdown 지침 적용. |
+| **파일:** [src/notifier.py](src/notifier.py)<br>**원문에 정의된 역할·구성:** 현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다. |
+| **파일:** [src/core.py](src/core.py)<br>**원문에 정의된 역할·구성:** 외부 통신 없는 로컬 자료 읽기와 명시적 지침 적용. |
 
-| 단계 | 내용 |
-|---|---|
-| 입력 | 현재 사용자 Codex의 로컬 JSONL과 이 차수의 앱 설정 |
-| 처리 | 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시 |
-| 출력 | 알림·변경 이력·로컬 진단 기록 |
+**단계:** 입력
+
+**내용:** 현재 사용자 Codex의 로컬 JSONL과 이 차수의 앱 설정
+
+**단계:** 처리
+
+**내용:** 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시
+
+**단계:** 출력
+
+**내용:** 알림·변경 이력·로컬 진단 기록
+
 
 ### LEVEL 4 · 조건·변경·결과를 함께 검토하기
 
@@ -756,26 +777,26 @@ PyInstaller==6.22.3
 **코드의 선언:** `action='store_true'`
 
 
-| 거부 조건 | 오류 메시지 |
-|---|---|
-| [`not lock.tryLock(100)`](src/app.py#L570) | 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
-| [`not isinstance(value, dict)`](src/app.py#L62) | 앱 설정은 JSON 객체여야 합니다. |
-| [`not path.is_dir()`](src/app.py#L348) | 존재하는 sessions 폴더를 선택하세요. |
-| [`self.plan is None`](src/app.py#L451) | 새 미리보기가 필요합니다. |
-| [`not receipts`](src/app.py#L463) | 앱이 만든 적용 백업이 없습니다. |
+| 거부 조건 · 오류 메시지 |
+| --- |
+| **거부 조건:** [`not lock.tryLock(100)`](src/app.py#L570)<br>**오류 메시지:** 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
+| **거부 조건:** [`not isinstance(value, dict)`](src/app.py#L62)<br>**오류 메시지:** 앱 설정은 JSON 객체여야 합니다. |
+| **거부 조건:** [`not path.is_dir()`](src/app.py#L348)<br>**오류 메시지:** 존재하는 sessions 폴더를 선택하세요. |
+| **거부 조건:** [`self.plan is None`](src/app.py#L451)<br>**오류 메시지:** 새 미리보기가 필요합니다. |
+| **거부 조건:** [`not receipts`](src/app.py#L463)<br>**오류 메시지:** 앱이 만든 적용 백업이 없습니다. |
 
 #### LEVEL 4 · [src/core.py](src/core.py)
 
-| 정의 | 소스에 적힌 역할 |
-|---|---|
-| [`read_jsonl_tail`](src/core.py#L18) | 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
-| [`safe_path`](src/core.py#L65) | 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
+| 정의 · 소스에 적힌 역할 |
+| --- |
+| **정의:** [`read_jsonl_tail`](src/core.py#L18)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
+| **정의:** [`safe_path`](src/core.py#L65)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 설정·옵션 | 코드의 선언 |
-|---|---|
-| [`MAX_TEXT_BYTES`](src/core.py#L9) | `정의=2 * 1024 * 1024` |
-| [`BEGIN`](src/core.py#L10) | `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
-| [`END`](src/core.py#L11) | `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
+| 설정·옵션 · 코드의 선언 |
+| --- |
+| **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L9)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
+| **설정·옵션:** [`BEGIN`](src/core.py#L10)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
+| **설정·옵션:** [`END`](src/core.py#L11)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
 
 **거부 조건:** [`path.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L80)
 
@@ -833,18 +854,18 @@ PyInstaller==6.22.3
 #### LEVEL 4 · [src/notifier.py](src/notifier.py)
 
 
-| 설정·옵션 | 코드의 선언 |
-|---|---|
-| [`--sessions`](src/notifier.py#L436) | `type=Path; default=Path.home() / '.codex/sessions'` |
-| [`--work`](src/notifier.py#L437) | `type=Path; default=ROOT / 'work'` |
-| [`ROOT`](src/notifier.py#L16) | `정의=Path(__file__).resolve().parents[1]` |
-| [`APP_ID`](src/notifier.py#L17) | `정의='Yunseok.Codex.ModelChangeNotifier'` |
-| [`READ_BYTES`](src/notifier.py#L18) | `정의=512 * 1024` |
-| [`MAX_RECORD`](src/notifier.py#L19) | `정의=2 * 1024 * 1024` |
-| [`MAX_FILES`](src/notifier.py#L20) | `정의=4096` |
-| [`LOG_BYTES`](src/notifier.py#L21) | `정의=2 * 1024 * 1024` |
-| [`POLL_READ_BYTES`](src/notifier.py#L22) | `정의=8 * 1024 * 1024` |
-| [`MAX_PENDING`](src/notifier.py#L23) | `정의=256` |
+| 설정·옵션 · 코드의 선언 |
+| --- |
+| **설정·옵션:** [`--sessions`](src/notifier.py#L436)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
+| **설정·옵션:** [`--work`](src/notifier.py#L437)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
+| **설정·옵션:** [`ROOT`](src/notifier.py#L16)<br>**코드의 선언:** `정의=Path(__file__).resolve().parents[1]` |
+| **설정·옵션:** [`APP_ID`](src/notifier.py#L17)<br>**코드의 선언:** `정의='Yunseok.Codex.ModelChangeNotifier'` |
+| **설정·옵션:** [`READ_BYTES`](src/notifier.py#L18)<br>**코드의 선언:** `정의=512 * 1024` |
+| **설정·옵션:** [`MAX_RECORD`](src/notifier.py#L19)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
+| **설정·옵션:** [`MAX_FILES`](src/notifier.py#L20)<br>**코드의 선언:** `정의=4096` |
+| **설정·옵션:** [`LOG_BYTES`](src/notifier.py#L21)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
+| **설정·옵션:** [`POLL_READ_BYTES`](src/notifier.py#L22)<br>**코드의 선언:** `정의=8 * 1024 * 1024` |
+| **설정·옵션:** [`MAX_PENDING`](src/notifier.py#L23)<br>**코드의 선언:** `정의=256` |
 
 **거부 조건:** [`self.state_path.stat().st_size &gt; 16 * 1024 * 1024`](src/notifier.py#L53)
 
@@ -930,11 +951,18 @@ PyInstaller==6.22.3
 <a name="-입력처리출력"></a>
 ## 입력·처리·출력
 
-| 단계 | 내용 |
-|---|---|
-| 입력 | 현재 사용자 Codex의 로컬 JSONL과 이 차수의 앱 설정 |
-| 처리 | 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시 |
-| 출력 | 알림·변경 이력·로컬 진단 기록 |
+**단계:** 입력
+
+**내용:** 현재 사용자 Codex의 로컬 JSONL과 이 차수의 앱 설정
+
+**단계:** 처리
+
+**내용:** 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시
+
+**단계:** 출력
+
+**내용:** 알림·변경 이력·로컬 진단 기록
+
 
 <a name="usage"></a>
 
@@ -951,24 +979,24 @@ PyInstaller==6.22.3
 <a name="-실제-자료-구성"></a>
 ## 실제 자료 구성
 
-| 경로 | 자료 종류 |
-|---|---|
-| [src/](src) | 하위 자료 폴더 |
-| [README.md](README.md) | MD 파일 |
-| [requirements.txt](requirements.txt) | TXT 파일 |
-| [공개파일_비교.json](%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) | JSON 파일 |
-| [보존자료.md](%EB%B3%B4%EC%A1%B4%EC%9E%90%EB%A3%8C.md) | MD 파일 |
-| [부가자료_보존.json](%EB%B6%80%EA%B0%80%EC%9E%90%EB%A3%8C_%EB%B3%B4%EC%A1%B4.json) | JSON 파일 |
-| [직전차수.diff](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) | DIFF 파일 |
+| 경로 · 자료 종류 |
+| --- |
+| **경로:** [src/](src)<br>**자료 종류:** 하위 자료 폴더 |
+| **경로:** [README.md](README.md)<br>**자료 종류:** MD 파일 |
+| **경로:** [requirements.txt](requirements.txt)<br>**자료 종류:** TXT 파일 |
+| **경로:** [공개파일_비교.json](%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json)<br>**자료 종류:** JSON 파일 |
+| **경로:** [보존자료.md](%EB%B3%B4%EC%A1%B4%EC%9E%90%EB%A3%8C.md)<br>**자료 종류:** MD 파일 |
+| **경로:** [부가자료_보존.json](%EB%B6%80%EA%B0%80%EC%9E%90%EB%A3%8C_%EB%B3%B4%EC%A1%B4.json)<br>**자료 종류:** JSON 파일 |
+| **경로:** [직전차수.diff](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff)<br>**자료 종류:** DIFF 파일 |
 
 <a name="-주요-모듈과-코드-읽기"></a>
 ## 주요 모듈과 코드 읽기
 
-| 파일 | 원문에 정의된 역할·구성 |
-|---|---|
-| [src/app.py](src/app.py) | Codex Orbit: 투명 궤도와 로컬 감시, 명시적 Markdown 지침 적용. |
-| [src/notifier.py](src/notifier.py) | 현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다. |
-| [src/core.py](src/core.py) | 외부 통신 없는 로컬 자료 읽기와 명시적 지침 적용. |
+| 파일 · 원문에 정의된 역할·구성 |
+| --- |
+| **파일:** [src/app.py](src/app.py)<br>**원문에 정의된 역할·구성:** Codex Orbit: 투명 궤도와 로컬 감시, 명시적 Markdown 지침 적용. |
+| **파일:** [src/notifier.py](src/notifier.py)<br>**원문에 정의된 역할·구성:** 현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다. |
+| **파일:** [src/core.py](src/core.py)<br>**원문에 정의된 역할·구성:** 외부 통신 없는 로컬 자료 읽기와 명시적 지침 적용. |
 
 <a name="setup"></a>
 
@@ -1033,26 +1061,26 @@ PyInstaller==6.22.3
 **코드의 선언:** `action='store_true'`
 
 
-| 거부 조건 | 오류 메시지 |
-|---|---|
-| [`not lock.tryLock(100)`](src/app.py#L570) | 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
-| [`not isinstance(value, dict)`](src/app.py#L62) | 앱 설정은 JSON 객체여야 합니다. |
-| [`not path.is_dir()`](src/app.py#L348) | 존재하는 sessions 폴더를 선택하세요. |
-| [`self.plan is None`](src/app.py#L451) | 새 미리보기가 필요합니다. |
-| [`not receipts`](src/app.py#L463) | 앱이 만든 적용 백업이 없습니다. |
+| 거부 조건 · 오류 메시지 |
+| --- |
+| **거부 조건:** [`not lock.tryLock(100)`](src/app.py#L570)<br>**오류 메시지:** 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
+| **거부 조건:** [`not isinstance(value, dict)`](src/app.py#L62)<br>**오류 메시지:** 앱 설정은 JSON 객체여야 합니다. |
+| **거부 조건:** [`not path.is_dir()`](src/app.py#L348)<br>**오류 메시지:** 존재하는 sessions 폴더를 선택하세요. |
+| **거부 조건:** [`self.plan is None`](src/app.py#L451)<br>**오류 메시지:** 새 미리보기가 필요합니다. |
+| **거부 조건:** [`not receipts`](src/app.py#L463)<br>**오류 메시지:** 앱이 만든 적용 백업이 없습니다. |
 
 ### [src/core.py](src/core.py)
 
-| 정의 | 소스에 적힌 역할 |
-|---|---|
-| [`read_jsonl_tail`](src/core.py#L18) | 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
-| [`safe_path`](src/core.py#L65) | 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
+| 정의 · 소스에 적힌 역할 |
+| --- |
+| **정의:** [`read_jsonl_tail`](src/core.py#L18)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
+| **정의:** [`safe_path`](src/core.py#L65)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 설정·옵션 | 코드의 선언 |
-|---|---|
-| [`MAX_TEXT_BYTES`](src/core.py#L9) | `정의=2 * 1024 * 1024` |
-| [`BEGIN`](src/core.py#L10) | `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
-| [`END`](src/core.py#L11) | `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
+| 설정·옵션 · 코드의 선언 |
+| --- |
+| **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L9)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
+| **설정·옵션:** [`BEGIN`](src/core.py#L10)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
+| **설정·옵션:** [`END`](src/core.py#L11)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
 
 **거부 조건:** [`path.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L80)
 
@@ -1110,18 +1138,18 @@ PyInstaller==6.22.3
 ### [src/notifier.py](src/notifier.py)
 
 
-| 설정·옵션 | 코드의 선언 |
-|---|---|
-| [`--sessions`](src/notifier.py#L436) | `type=Path; default=Path.home() / '.codex/sessions'` |
-| [`--work`](src/notifier.py#L437) | `type=Path; default=ROOT / 'work'` |
-| [`ROOT`](src/notifier.py#L16) | `정의=Path(__file__).resolve().parents[1]` |
-| [`APP_ID`](src/notifier.py#L17) | `정의='Yunseok.Codex.ModelChangeNotifier'` |
-| [`READ_BYTES`](src/notifier.py#L18) | `정의=512 * 1024` |
-| [`MAX_RECORD`](src/notifier.py#L19) | `정의=2 * 1024 * 1024` |
-| [`MAX_FILES`](src/notifier.py#L20) | `정의=4096` |
-| [`LOG_BYTES`](src/notifier.py#L21) | `정의=2 * 1024 * 1024` |
-| [`POLL_READ_BYTES`](src/notifier.py#L22) | `정의=8 * 1024 * 1024` |
-| [`MAX_PENDING`](src/notifier.py#L23) | `정의=256` |
+| 설정·옵션 · 코드의 선언 |
+| --- |
+| **설정·옵션:** [`--sessions`](src/notifier.py#L436)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
+| **설정·옵션:** [`--work`](src/notifier.py#L437)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
+| **설정·옵션:** [`ROOT`](src/notifier.py#L16)<br>**코드의 선언:** `정의=Path(__file__).resolve().parents[1]` |
+| **설정·옵션:** [`APP_ID`](src/notifier.py#L17)<br>**코드의 선언:** `정의='Yunseok.Codex.ModelChangeNotifier'` |
+| **설정·옵션:** [`READ_BYTES`](src/notifier.py#L18)<br>**코드의 선언:** `정의=512 * 1024` |
+| **설정·옵션:** [`MAX_RECORD`](src/notifier.py#L19)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
+| **설정·옵션:** [`MAX_FILES`](src/notifier.py#L20)<br>**코드의 선언:** `정의=4096` |
+| **설정·옵션:** [`LOG_BYTES`](src/notifier.py#L21)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
+| **설정·옵션:** [`POLL_READ_BYTES`](src/notifier.py#L22)<br>**코드의 선언:** `정의=8 * 1024 * 1024` |
+| **설정·옵션:** [`MAX_PENDING`](src/notifier.py#L23)<br>**코드의 선언:** `정의=256` |
 
 **거부 조건:** [`self.state_path.stat().st_size &gt; 16 * 1024 * 1024`](src/notifier.py#L53)
 
