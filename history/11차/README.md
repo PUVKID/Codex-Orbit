@@ -1,7 +1,7 @@
 <div align="center">
 
 <a name="-codex-orbit--11차"></a>
-# Codex Orbit · 11차
+# Codex Orbit·11차
 
 모델과 추론 강도의 이전·현재를 각각 두 칸으로 보여 주고 쉬운 추론 강도 이름을 사용합니다. 사용 한도 요약과 큰 변경 제목의 화면 구성을 정리합니다.
 
@@ -46,7 +46,7 @@ JSONL은 한 줄마다 하나의 JSON 기록을 담은 파일입니다. CLI는 �
 
 ### LEVEL 1 · 준비하고 확인할 것
 
-Windows와 해당 폴더의 requirements.txt를 기준으로 Python 의존성을 준비합니다. history는 공개 소스 보존본이며 현재 루트 assets가 과거 모든 차수의 자산과 호환된다는 뜻은 아닙니다.
+Windows와 해당 폴더의 requirements.txt를 기준으로 Python 의존성을 준비합니다. history는 공개 소스 보존 본이며 현재 루트 assets가 과거 모든 차수의 자산과 호환된다는 뜻은 아닙니다.
 
 자산과 의존성을 준비한 이 차수 폴더에서 `python src/app.py`를 실행합니다. history 소스만으로 과거 배포 EXE와 동일한 화면·자산이 모두 복원되지는 않습니다.
 
@@ -70,7 +70,7 @@ PyInstaller==6.22.3
 **정의된 옵션 이름:** `--sessions`, `--work`
 
 
-각 옵션의 기본값·필수값·부작용은 해당 main과 인자 정의를 함께 확인합니다.
+각 옵션의 기본 값·필수값·부작용은 해당 main과 인자 정의를 함께 확인합니다.
 
 
 <details>
@@ -148,7 +148,7 @@ PyInstaller==6.22.3
 
 | 정의 | 역할 |
 | --- | --- |
-| [`read_jsonl_tail`](src/core.py#L18) | 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
+| [`read_jsonl_tail`](src/core.py#L18) | 물리적 LF만 나누며 잘 린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
 | [`title_catalog`](src/core.py#L55) | 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
 | [`resolve_title`](src/core.py#L73) | 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
 | [`safe_path`](src/core.py#L97) | 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
@@ -292,7 +292,7 @@ PyInstaller==6.22.3
 | --- | --- |
 | [`number`](src/usage.py#L16) | 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
 | [`normalize_limits`](src/usage.py#L35) | 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
-| [`discover_codex`](src/usage.py#L69) | 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
+| [`discover_codex`](src/usage.py#L69) | 사용자 선택, PATH, 공식 데스크 톱 번들 위치 순으로 EXE만 찾습니다. |
 
 | 설정·옵션 | 선언 |
 | --- | --- |
@@ -338,18 +338,25 @@ PyInstaller==6.22.3
 [자료 폴더](.) · [직전 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [이 차수의 원래 전체 상세](#reading-level-5)
 
 
-
-### LEVEL 1 · 11차의 구체적인 기능과 확인
+### LEVEL 1·11차의 구체적인 기능과 확인
 
 어떤 모델에서 어떤 모델로 바뀌었는지, 생각하는 강도가 어떻게 달라졌는지 이전·현재 두 칸으로 나눠 보여 줍니다. 추론 강도는 모델이 문제를 생각하는 정도를 나타내는 설정 이름입니다. 사용 한도 요약과 큰 변경 제목도 함께 정리해 현재 변화를 읽기 쉽게 구성한 단계입니다.
 
-**입력은 기록 파일, 출력은 알림과 이력입니다.** Codex의 sessions 폴더에는 이 사용자의 작업 기록이 쌓입니다. 앱이 새 기록을 읽으면 이전·이후 모델과 추론 강도, 적혀 있는 이유를 정리해 보여 줍니다. JSON은 항목 이름과 값을 짝으로 저장하는 자료 형식입니다. 처음 읽은 기록을 출발점으로 삼는 것과 그 뒤 새로 생긴 변경을 알리는 것은 다릅니다.
+**입력은 기록 파일, 출력은 알림과 이력입니다.** Codex의 sessions 폴더에는 이 사용자의 작업 기록이 쌓입니다.
 
-Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Python 의존성과 해당 자산을 준비한 뒤 **이 차수 폴더에서** `python src/app.py`를 실행합니다. 현재 루트의 assets가 과거 모든 차수와 호환되는 것은 아니며, history 소스만으로 과거 EXE의 화면·자산 전체가 복원되는 것도 아닙니다.
+앱이 새 기록을 읽으면 이전·이후 모델과 추론 강도, 적혀 있는 이유를 정리해 보여 줍니다.
+
+JSON은 항목 이름과 값을 짝으로 저장하는 자료 형식입니다.
+
+처음 읽은 기록을 출발점으로 삼는 것과 그 뒤 새로 생긴 변경을 알리는 것은 다릅니다.
+
+Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Python 의존성과 해당 자산을 준비한 뒤 **이 차수 폴더에서** `python src/app.py`를 실행합니다.
+
+현재 루트의 assets가 과거 모든 차수와 호환되는 것은 아니며, history 소스만으로 과거 EXE의 화면·자산 전체가 복원되는 것도 아닙니다.
 
 확인 순서는 **같은 차수 자료 준비 → 감시 경로 확인 → 새 기록과 알림·상세 대조 → 누락값과 오류 확인**입니다. 예를 들어 기록에 모델 변경이 남았다면 알림의 이전·현재 값과 상세 이력을 비교합니다. 원문에 이유나 이전값이 없다면 모르는 상태로 읽고 채워 넣지 않습니다.
 
-**함께 준비할 도구 버전**: PySide6-Essentials==6.12.0 · PyInstaller==6.22.3. PySide6는 창을 만드는 도구이고 PyInstaller는 실행 파일을 묶는 도구입니다. 외부 실행 도구·GPU 드라이버는 별도 조건입니다.
+**함께 준비할 도구 버전**: PySide6-Essentials ==6.12.0·PyInstaller ==6.22.3. PySide6는 창을 만드는 도구이고 PyInstaller는 실행 파일을 묶는 도구입니다. 외부 실행 도구·GPU 드라이버는 별도 조건입니다.
 
 **자료를 찾는 순서**
 
@@ -381,11 +388,23 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 **실제 입력·설정과 기본값**
 
-아래 이름은 설정을 소스에서 찾기 위한 표지입니다. 각 항목의 역할·단위·적용 상황을 먼저 읽고 뒤의 원문 선언으로 정확한 숫자를 확인합니다. 식에 1024가 쓰이면 바이트 단위 크기 계산이며 1 KiB=1,024바이트, 1 MiB=1,048,576바이트입니다. 이 설명은 설정을 임의로 바꾸라는 실행 지시가 아닙니다.
+아래 이름은 설정을 소스에서 찾기 위한 표지입니다.
+
+각 항목의 역할·단위·적용 상황을 먼저 읽고 뒤의 원문 선언으로 정확한 숫자를 확인합니다.
+
+식에 1024가 쓰이면 바이트 단위 크기 계산이며 1 KiB =1,024 바이트, 1 MiB =1,048,576 바이트입니다.
+
+이 설명은 설정을 임의로 바꾸라는 실행 지시가 아닙니다.
 
 - [`--data-dir`](src/app.py#L1363) (src/app.py)
 
-  앱 설정·이력을 저장할 폴더를 고릅니다. 기본은 LOCALAPPDATA 아래 CodexOrbit이며 그 환경값이 없으면 사용자 홈을 기준으로 합니다. 같은 폴더 중복 실행 잠금과 연결됩니다. 원문 선언: `type=Path; default=Path(os.environ.get('LOCALAPPDATA', Path.home())) / 'CodexOrbit'`.
+  앱 설정·이력을 저장할 폴더를 고릅니다.
+
+기본은 LOCALAPPDATA 아래 CodexOrbit이며 그 환경 값이 없으면 사용자 홈을 기준으로 합니다.
+
+같은 폴더 중복 실행 잠금과 연결됩니다.
+
+원문 선언: `type=Path; default=Path(os.environ.get('LOCALAPPDATA', Path.home())) / 'CodexOrbit'`.
 
 - [`--sessions`](src/app.py#L1364) (src/app.py)
 
@@ -413,7 +432,13 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`ROLE_LABELS`](src/app.py#L72) (src/app.py)
 
-  역할 코드와 사용자용 한글 이름의 대응표입니다. 예를 들어 build는 구현, verifier는 독립 검증으로 읽습니다. 화면 설명을 바꾸는 표이며 서버 모델을 바꾸는 설정은 아닙니다. 원문 선언: `정의={'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}`.
+  역할 코드와 사용자용 한글 이름의 대응 표입니다.
+
+예를 들어 build는 구현, verifier는 독립 검증으로 읽습니다.
+
+화면 설명을 바꾸는 표이며 서버 모델을 바꾸는 설정은 아닙니다.
+
+원문 선언: `정의={'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}`.
 
 - [`MAX_TEXT_BYTES`](src/core.py#L9) (src/core.py)
 
@@ -445,15 +470,15 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`READ_BYTES`](src/notifier.py#L19) (src/notifier.py)
 
-  한 번에 한 파일에서 읽는 양을 제한합니다. 단위는 바이트로, 큰 기록 파일 전체를 한 번에 들이지 않게 하는 경계입니다. 계산한 값은 524,288이며 바이트 제한에서는 512 KiB입니다. 원문 선언: `정의=512 * 1024`.
+  한 번에 한 파일에서 읽는 양을 제한합니다. 단위는 바이트로, 큰 기록 파일 전체를 한 번에 들이지 않게하는 경계입니다. 계산한 값은 524,288이며 바이트 제한에서는 512 KiB입니다. 원문 선언: `정의=512 * 1024`.
 
 - [`MAX_RECORD`](src/notifier.py#L20) (src/notifier.py)
 
-  기록 한 건이 가질 수 있는 최대 크기입니다. 커다란 한 줄을 무제한으로 해석하지 않도록 하는 제한이며 단위는 바이트입니다. 계산한 값은 2,097,152이며 바이트 제한에서는 2,048 KiB입니다. 원문 선언: `정의=2 * 1024 * 1024`.
+  기록 한 건이 가질 수 있는 최대 크기입니다. 커다란 한 줄을 무제한으로 해석하지 않도록하는 제한이며 단위는 바이트입니다. 계산한 값은 2,097,152이며 바이트 제한에서는 2,048 KiB입니다. 원문 선언: `정의=2 * 1024 * 1024`.
 
 - [`MAX_FILES`](src/notifier.py#L21) (src/notifier.py)
 
-  감시에서 다룰 파일 개수의 최대값입니다. 폴더가 커져도 파일 목록을 제한 없이 늘리지 않게 합니다. 계산한 값은 4,096입니다. 원문 선언: `정의=4096`.
+  감시에서 다룰 파일 개수의 최대 값입니다. 폴더가 커져도 파일 목록을 제한 없이 늘리지 않게합니다. 계산한 값은 4,096입니다. 원문 선언: `정의=4096`.
 
 - [`LOG_BYTES`](src/notifier.py#L22) (src/notifier.py)
 
@@ -461,11 +486,11 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`POLL_READ_BYTES`](src/notifier.py#L23) (src/notifier.py)
 
-  감시 한 차례에서 읽을 전체 자료량을 제한합니다. 파일 하나의 상한과 별개인 바이트 단위 총량이므로 여러 파일을 합친 부담을 구분합니다. 계산한 값은 8,388,608이며 바이트 제한에서는 8,192 KiB입니다. 원문 선언: `정의=8 * 1024 * 1024`.
+  감시 한 차례에서 읽을 전체 자료 량을 제한합니다. 파일 하나의 상한과 별개 인 바이트 단위 총량이므로 여러 파일을 합친 부담을 구분합니다. 계산한 값은 8,388,608이며 바이트 제한에서는 8,192 KiB입니다. 원문 선언: `정의=8 * 1024 * 1024`.
 
 - [`MAX_PENDING`](src/notifier.py#L24) (src/notifier.py)
 
-  처리가 끝나기를 기다리는 기록 개수의 상한입니다. 숫자는 프레임 수나 토큰 수가 아니라 대기 항목 수입니다. 선언 숫자는 256입니다. 원문 선언: `정의=256`.
+  처리가 끝나기를 기다리는 기록 개 수의 상한입니다. 숫자는 프레임 수나 토큰 수가 아니라 대기 항목 수입니다. 선언 숫자는 256입니다. 원문 선언: `정의=256`.
 
 - [`POLL_INTERVAL_SECONDS`](src/notifier.py#L25) (src/notifier.py)
 
@@ -473,7 +498,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`MAX_BYTES`](src/usage.py#L12) (src/usage.py)
 
-  계정 응답에서 읽을 최대 자료량입니다. 단위는 바이트이며 응답이 너무 클 때 무제한으로 받아들이지 않게 하는 경계입니다. 계산한 값은 1,048,576이며 바이트 제한에서는 1,024 KiB입니다. 원문 선언: `정의=1024 * 1024`.
+  계정 응답에서 읽을 최대 자료 량입니다. 단위는 바이트이며 응답이 너무 클 때 무제한으로 받아들이지 않게하는 경계입니다. 계산한 값은 1,048,576이며 바이트 제한에서는 1,024 KiB입니다. 원문 선언: `정의=1024 * 1024`.
 
 - [`KST`](src/usage.py#L13) (src/usage.py)
 
@@ -495,7 +520,15 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`read_jsonl_tail`](src/core.py#L18) (src/core.py)
 
-  기록 파일의 끝부분만 읽어 첫 줄이나 마지막 줄이 중간에 잘려 들어온 경우, 파일에서 실제 줄바꿈을 뜻하는 LF 바이트로만 한 건씩 나누고 완성되지 않은 양끝 조각은 해석하지 않습니다. 온전한 줄만 기록 한 건으로 읽습니다. 예를 들어 읽어 온 끝에 {"model": 뒤까지만 있고 닫는 부분이 없다면 그 조각을 새 변경 한 건으로 해석하지 않습니다. 이 문자열은 잘린 자료를 설명하는 예시이며 실제 세션을 수정하라는 지시가 아닙니다. 문장 안의 다른 줄바꿈 모양 문자나 반쪽 기록을 새 사건으로 잘못 세지 않기 위해서입니다
+  기록 파일의 끝부분만 읽어 첫 줄이나 마지막 줄이 중간에 잘려 들어온 경우, 파일에서 실제 줄바꿈을 뜻하는 LF 바이트로만 한 건씩 나누고 완성되지 않은 양끝 조각은 해석하지 않습니다.
+
+온전한 줄만 기록 한 건으로 읽습니다.
+
+예를 들어 읽어 온 끝에 {"model": 뒤까지만 있고 닫는 부분이 없다면 그 조각을 새 변경 한 건으로 해석하지 않습니다.
+
+이 문자열은 잘린 자료를 설명하는 예시이며 실제 세션을 수정하라는 지시가 아닙니다.
+
+문장 안의 다른 줄바꿈 모양 문자나 반쪽 기록을 새 사건으로 잘못 세지 않기 위해서입니다
 
 - [`title_catalog`](src/core.py#L55) (src/core.py)
 
@@ -507,11 +540,21 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`safe_path`](src/core.py#L97) (src/core.py)
 
-  지침을 적용할 파일이나 그 파일에 이르는 상위 폴더가 다른 곳으로 연결된 경우, 파일 자체뿐 아니라 이미 존재하는 상위 폴더까지 확인해 바로가기처럼 다른 위치로 보내는 링크·재분석 지점을 거부합니다. 연결을 통해 의도 밖의 위치를 수정하는 경로는 허용되지 않습니다. 예를 들어 선택한 작업 폴더가 실은 다른 폴더로 보내는 연결이라면, 그 안의 AGENTS.md를 선택해도 그 연결을 따라 쓰기를 진행하지 않습니다. 겉으로 고른 폴더와 실제 쓰는 위치가 달라지는 일을 막기 위해서입니다
+  지침을 적용할 파일이나 그 파일에 이르는 상위 폴더가 다른 곳으로 연결된 경우, 파일 자체뿐 아니라 이미 존재하는 상위 폴더까지 확인해 바로 가기처럼 다른 위치로 보내는 링크·재분석 지점을 거부합니다.
+
+연결을 통해 의도 밖의 위치를 수정하는 경로는 허용되지 않습니다.
+
+예를 들어 선택한 작업 폴더가 실은 다른 폴더로 보내는 연결이라면, 그 안의 AGENTS.md를 선택해도 그 연결을 따라 쓰기를 진행하지 않습니다.
+
+겉으로 고른 폴더와 실제 쓰는 위치가 달라지는 일을 막기 위해서입니다
 
 - [`atomic_json`](src/notifier.py#L32) (src/notifier.py)
 
-  앱 상태를 저장하는 도중 다른 프로그램이 파일을 잠깐 사용하는 경우, 같은 폴더에 따로 임시 파일을 완성한 뒤 교체하고 Windows의 짧은 파일 공유 충돌만 다시 시도합니다. 반쯤 쓴 상태를 원래 파일처럼 노출하지 않도록 저장 경로를 구성합니다. 파일 저장 전체를 무제한 재시도하거나 모든 오류를 정상으로 감추지 않기 위해서입니다
+  앱 상태를 저장하는 도중 다른 프로그램이 파일을 잠깐 사용하는 경우, 같은 폴더에 따로 임시 파일을 완성한 뒤 교체하고 Windows의 짧은 파일 공유 충돌만 다시 시도합니다.
+
+반쯤 쓴 상태를 원래 파일처럼 노출하지 않도록 저장 경로를 구성합니다.
+
+파일 저장 전체를 무제한 재시도하거나 모든 오류를 정상으로 감추지 않기 위해서입니다
 
 - [`source_datetime`](src/notifier.py#L62) (src/notifier.py)
 
@@ -539,7 +582,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`KoreanDialogs`](src/theme.py#L76) (src/theme.py)
 
-  배포 앱에 Qt의 별도 번역 파일이 없는 경우, 기본 파일 선택창의 정해진 문구를 한국어로 제공합니다. 번역 묶음이 없어도 기본 파일 선택 안내를 읽을 수 있습니다. 앱 안내 문구와 사용자가 고르는 파일 이름을 구분하기 위해서입니다
+  배포 앱에 Qt의 별도 번역 파일이 없는 경우, 기본 파일 선택 창의 정해진 문구를 한국어로 제공합니다. 번역 묶음이 없어도 기본 파일 선택 안내를 읽을 수 있습니다. 앱 안내 문구와 사용자가 고르는 파일 이름을 구분하기 위해서입니다
 
 - [`DialogLayout`](src/theme.py#L92) (src/theme.py)
 
@@ -547,7 +590,15 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`number`](src/usage.py#L16) (src/usage.py)
 
-  한도 응답에 숫자 대신 참·거짓, 문자열 또는 무한대 같은 값이 들어온 경우, 그 값을 올바른 한도 숫자로 받아들이지 않습니다. 잘못된 입력이 사용 가능한 비율로 표시되지 않습니다. 예를 들어 숫자 1과 참 값 true, 숫자 모양 문자열 "1", 무한대는 종류가 다릅니다. 불리언은 참·거짓 값이고 비유한은 무한대나 숫자 아님 같은 값이므로 한도 숫자로 바꿔 채우지 않습니다. 예를 들어 참을 숫자 1처럼 읽어 정상 비율로 오해하지 않기 위해서입니다
+  한 도 응답에 숫자 대신 참·거짓, 문자열 또는 무한대 같은 값이 들어온 경우, 그 값을 올바른 한도 숫자로 받아들이지 않습니다.
+
+잘못된 입력이 사용 가능한 비율로 표시되지 않습니다.
+
+예를 들어 숫자 1 과 참 값 true, 숫자 모양 문자열 "1", 무한대는 종류가 다릅니다.
+
+불 리 언은 참·거짓 값이고 비유한은 무한대나 숫자 아님 같은 값이므로 한도 숫자로 바꿔 채우지 않습니다.
+
+예를 들어 참을 숫자 1처럼 읽어 정상 비율로 오해하지 않기 위해서입니다
 
 - [`normalize_limits`](src/usage.py#L35) (src/usage.py)
 
@@ -555,11 +606,11 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`discover_codex`](src/usage.py#L69) (src/usage.py)
 
-  계정 한도를 읽을 Codex 실행 프로그램을 찾는 경우, 사용자가 고른 위치, 명령 검색 경로 PATH, 공식 데스크톱 앱 묶음 위치 순서로 실행 파일 EXE만 찾습니다 선택 순서에 맞는 실제 실행 파일이 연결 후보가 됩니다. 동명이름의 문서·폴더를 실행 프로그램으로 잘못 사용하지 않기 위해서입니다
+  계정 한도를 읽을 Codex 실행 프로그램을 찾는 경우, 사용자가 고른 위치, 명령 검색 경로 PATH, 공식 데스크 톱 앱 묶음 위치 순서로 실행 파일 EXE만 찾습니다 선택 순서에 맞는 실제 실행 파일이 연결 후보가 됩니다. 동명 이름의 문서·폴더를 실행 프로그램으로 잘못 사용하지 않기 위해서입니다
 
 - [`rotate_point`](src/visuals.py#L8) (src/visuals.py)
 
-  입체 점의 방향을 바꾸는 경우, 가로 X축·세로 Y축·깊이 Z축 순서로 회전시키고 깊이값도 남깁니다. 평면 위치뿐 아니라 앞뒤를 나타내는 좌표가 유지됩니다. 회전 순서를 바꾸면 같은 각도여도 물체 방향이 달라질 수 있기 때문입니다
+  입체 점의 방향을 바꾸는 경우, 가로 X 축·세로 Y 축·깊이 Z 축 순서로 회전시키고 깊이 값도 남깁니다. 평면 위치뿐 아니라 앞뒤를 나타내는 좌표가 유지됩니다. 회전 순서를 바꾸면 같은 각도여도 물체 방향이 달라질 수 있기 때문입니다
 
 - [`orbit_segments`](src/visuals.py#L23) (src/visuals.py)
 
@@ -573,7 +624,11 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - 오류 “같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다.”
 
-  같은 저장 폴더를 이미 다른 Codex Orbit가 쓰거나 잠금 파일에 접근할 수 없으면 시작을 거부합니다. 한 설정·상태 파일을 두 실행이 동시에 바꾸지 않도록 하며, 이 메시지만으로 어느 쪽 원인인지 확정하지 않습니다. 정확한 조건은 [`not lock.tryLock(100)`](src/app.py#L1394) (src/app.py)에서 확인할 수 있습니다.
+  같은 저장 폴더를 이미 다른 Codex Orbit가 쓰거나 잠금 파일에 접근할 수 없으면 시작을 거부합니다.
+
+한 설정·상태 파일을 두 실행이 동시에 바꾸지 않도록하며, 이 메시지만으로 어느 쪽 원인인지 확정하지 않습니다.
+
+정확한 조건은 [`not lock.tryLock(100)`](src/app.py#L1394) (src/app.py)에서 확인할 수 있습니다.
 
 - 오류 “앱 설정은 JSON 객체여야 합니다.”
 
@@ -585,7 +640,11 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - 오류 “존재하는 Codex EXE를 선택하거나 비워 자동 탐색하세요.”
 
-  수동으로 지정한 경로가 실제 .exe 실행 파일이 아니면 거부합니다. 실제 Codex 실행 파일을 고르거나 값을 비워 정해진 자동 탐색을 사용해야 합니다. 정확한 조건은 [`chosen_exe and (not Path(chosen_exe).is_file() or Path(chosen_exe).suffix.lower() != '.exe')`](src/app.py#L825) (src/app.py)에서 확인할 수 있습니다.
+  수동으로 지정한 경로가 실제 .exe 실행 파일이 아니면 거부합니다.
+
+실제 Codex 실행 파일을 고르거나 값을 비워 정해진 자동 탐색을 사용해야 합니다.
+
+정확한 조건은 [`chosen_exe and (not Path(chosen_exe).is_file() or Path(chosen_exe).suffix.lower() != '.exe')`](src/app.py#L825) (src/app.py)에서 확인할 수 있습니다.
 
 - 오류 “새 미리보기가 필요합니다.”
 
@@ -601,7 +660,11 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - 오류 “제목 캐시 구조가 올바르지 않습니다.”
 
-  보관한 제목 목록이 기대한 이름별 저장 형식이 아니면 거부합니다. 제목의 출처와 연결을 알 수 없는데도 빈 목록으로 자동 덮어쓰지 않습니다. 정확한 조건은 [`not isinstance(cache, dict) or not isinstance(cache.get('titles'), dict)`](src/core.py#L64) (src/core.py)에서 확인할 수 있습니다.
+  보관한 제목 목록이 기대한 이름별 저장 형식이 아니면 거부합니다.
+
+제목의 출처와 연결을 알 수 없는데도 빈 목록으로 자동 덮어쓰지 않습니다.
+
+정확한 조건은 [`not isinstance(cache, dict) or not isinstance(cache.get('titles'), dict)`](src/core.py#L64) (src/core.py)에서 확인할 수 있습니다.
 
 - 오류 “적용 대상은 AGENTS.md 파일이어야 합니다.”
 
@@ -613,11 +676,19 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - 오류 “대상은 2 MiB 이하의 일반 파일이어야 합니다.”
 
-  기존 대상이 일반 파일이 아니거나 2 MiB보다 크면 적용하지 않습니다. 폴더·특수 파일을 문서처럼 취급하거나 대용량 원본을 바꾸지 않게 합니다. 정확한 조건은 [`target.exists() and (not target.is_file() or target.stat().st_size &gt; MAX_TEXT_BYTES)`](src/core.py#L127) (src/core.py)에서 확인할 수 있습니다.
+  기존 대상이 일반 파일이 아니거나 2 MiB보다 크면 적용하지 않습니다.
+
+폴더·특수 파일을 문서처럼 취급하거나 대용량 원본을 바꾸지 않게합니다.
+
+정확한 조건은 [`target.exists() and (not target.is_file() or target.stat().st_size &gt; MAX_TEXT_BYTES)`](src/core.py#L127) (src/core.py)에서 확인할 수 있습니다.
 
 - 오류 “빈 지침 또는 2 MiB 초과 지침은 적용할 수 없습니다.”
 
-  내용이 공백뿐이거나 새로 붙일 지침이 2 MiB보다 크면 거부합니다. 아무 내용 없는 적용이나 과도한 추가 입력을 정상 변경으로 보지 않습니다. 정확한 조건은 [`not content.strip() or len(added) &gt; MAX_TEXT_BYTES`](src/core.py#L134) (src/core.py)에서 확인할 수 있습니다.
+  내용이 공백뿐이거나 새로 붙일 지침이 2 MiB보다 크면 거부합니다.
+
+아무 내용 없는 적용이나 과도한 추가 입력을 정상 변경으로 보지 않습니다.
+
+정확한 조건은 [`not content.strip() or len(added) &gt; MAX_TEXT_BYTES`](src/core.py#L134) (src/core.py)에서 확인할 수 있습니다.
 
 - 오류 “지침 내용에 앱 관리구역 표식을 넣을 수 없습니다.”
 
@@ -629,19 +700,35 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - 오류 “대상 파일이 미리보기/적용 이후 변경되었습니다. 새 미리보기가 필요합니다.”
 
-  아직 적용 계획을 만들지 않았다면 지침을 쓸 수 없습니다. 대상과 바뀔 내용을 먼저 미리 본 뒤 적용하게 해 원문을 보지 않고 쓰는 일을 막습니다. 정확한 조건은 [`target.exists() != existed or digest(target.read_bytes() if existed else b'') != expected`](src/core.py#L157) (src/core.py)에서 확인할 수 있습니다.
+  아직 적용 계획을 만들지 않았다면 지침을 쓸 수 없습니다.
+
+대상과 바뀔 내용을 먼저 미리 본 뒤 적용하게 해 원문을 보지 않고 쓰는 일을 막습니다.
+
+정확한 조건은 [`target.exists() != existed or digest(target.read_bytes() if existed else b'') != expected`](src/core.py#L157) (src/core.py)에서 확인할 수 있습니다.
 
 - 오류 “미리보기 데이터가 변경되었습니다.”
 
-  미리보기 계획 안의 원문·결과 바이트가 저장된 지문과 다르면 거부합니다. 사용자가 확인했던 변경 계획과 실제 쓸 내용이 같은지 확인하는 경계입니다. 정확한 조건은 [`digest(plan['original']) != plan['before_hash'] or digest(plan['applied_bytes']) != plan['after_hash']`](src/core.py#L177) (src/core.py)에서 확인할 수 있습니다.
+  미리보기 계획 안의 원문·결과 바이트가 저장된 지문과 다르면 거부합니다.
+
+사용자가 확인했던 변경 계획과 실제 쓸 내용이 같은지 확인하는 경계입니다.
+
+정확한 조건은 [`digest(plan['original']) != plan['before_hash'] or digest(plan['applied_bytes']) != plan['after_hash']`](src/core.py#L177) (src/core.py)에서 확인할 수 있습니다.
 
 - 오류 “유효한 앱 원문 백업이 아닙니다.”
 
-  백업이 앱이 정한 백업 폴더 안의 정상 파일이 아니거나 크기 제한을 넘으면 복원에 쓰지 않습니다. 아무 파일이나 원래 문서라고 덮어쓰지 않기 위한 확인입니다. 정확한 조건은 [`backup.parent != safe_path(self.data_dir / 'backups') or not backup.is_file() or backup.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L197) (src/core.py)에서 확인할 수 있습니다.
+  백업이 앱이 정한 백업 폴더 안의 정상 파일이 아니거나 크기 제한을 넘으면 복원에 쓰지 않습니다.
+
+아무 파일이나 원래 문서라고 덮어쓰지 않기 위한 확인입니다.
+
+정확한 조건은 [`backup.parent != safe_path(self.data_dir / 'backups') or not backup.is_file() or backup.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L197) (src/core.py)에서 확인할 수 있습니다.
 
 - 오류 “백업 해시가 일치하지 않습니다.”
 
-  백업 내용의 지문이 적용 때 기록한 원본 지문과 다르면 되돌리기를 거부합니다. 파일 이름이 같더라도 내용이 달라졌다면 안전한 원본으로 보지 않습니다. 정확한 조건은 [`digest(raw) != receipt['before_hash']`](src/core.py#L200) (src/core.py)에서 확인할 수 있습니다.
+  백업 내용의 지문이 적용 때 기록한 원본 지문과 다르면 되돌리기를 거부합니다.
+
+파일 이름이 같더라도 내용이 달라졌다면 안전한 원본으로 보지 않습니다.
+
+정확한 조건은 [`digest(raw) != receipt['before_hash']`](src/core.py#L200) (src/core.py)에서 확인할 수 있습니다.
 
 - 오류 “JSON 객체가 아닙니다.”
 
@@ -649,49 +736,95 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - 오류 “기존 관리구역 표식이 손상되었거나 중복되었습니다.”
 
-  시작·끝 표시가 정확히 한 쌍이 아니거나 순서가 뒤집혔다면 적용할 구간이 불명확해 거부합니다. 여러 구간 중 임의의 하나를 골라 원문을 바꾸지 않습니다. 정확한 조건은 [`original.count(BEGIN) != 1 or original.count(END) != 1 or original.index(BEGIN) &gt;= original.index(END)`](src/core.py#L143) (src/core.py)에서 확인할 수 있습니다.
+  시작·끝 표시가 정확히 한 쌍이 아니거나 순서가 뒤집혔다면 적용할 구간이 불명확해 거부합니다.
+
+여러 구간 중 임의의 하나를 골라 원문을 바꾸지 않습니다.
+
+정확한 조건은 [`original.count(BEGIN) != 1 or original.count(END) != 1 or original.index(BEGIN) &gt;= original.index(END)`](src/core.py#L143) (src/core.py)에서 확인할 수 있습니다.
 
 - 오류 “상태 파일이 16 MiB 상한을 초과했습니다. 원본 보존 후 점검이 필요합니다.”
 
-  이어 읽기 위치와 관측값을 저장한 파일이 16 MiB를 넘으면 읽기를 정상으로 계속하지 않습니다. 큰 파일을 무제한으로 처리하지 않기 위한 제한이며 원본을 남기고 왜 커졌는지 확인해야 합니다. 정확한 조건은 [`self.state_path.stat().st_size &gt; 16 * 1024 * 1024`](src/notifier.py#L89) (src/notifier.py)에서 확인할 수 있습니다.
+  이어 읽기 위치와 관측값을 저장한 파일이 16 MiB를 넘으면 읽기를 정상으로 계속하지 않습니다.
+
+큰 파일을 무제한으로 처리하지 않기 위한 제한이며 원본을 남기고 왜 커졌는지 확인해야 합니다.
+
+정확한 조건은 [`self.state_path.stat().st_size &gt; 16 * 1024 * 1024`](src/notifier.py#L89) (src/notifier.py)에서 확인할 수 있습니다.
 
 - 오류 “구형 상태는 요청과 관측이 혼합되어 있습니다. 원본 보존 후 명시적 재기준선이 필요합니다.”
 
-  옛 저장 형식에는 모델을 쓰겠다는 요청과 실제로 관측한 값이 섞여 있습니다. 이를 새 관측 이력으로 자동 해석하지 않습니다. 명시적 재기준선은 원본을 보존한 상태에서 어느 기록부터 현재 관측의 출발점으로 삼을지 따로 정하는 절차이며 오류를 없애려고 상태를 삭제하는 뜻이 아닙니다. 정확한 조건은 [`self.state.get('schema_version') not in (2, 3)`](src/notifier.py#L93) (src/notifier.py)에서 확인할 수 있습니다.
+  옛 저장 형식에는 모델을 쓰겠다는 요청과 실제로 관측한 값이 섞여 있습니다.
+
+이를 새 관측 이력으로 자동 해석하지 않습니다.
+
+명시적 재기준선은 원본을 보존한 상태에서 어느 기록부터 현재 관측의 출발점으로 삼을지 따로 정하는 절차이며 오류를 없애려고 상태를 삭제하는 뜻이 아닙니다.
+
+정확한 조건은 [`self.state.get('schema_version') not in (2, 3)`](src/notifier.py#L93) (src/notifier.py)에서 확인할 수 있습니다.
 
 - 오류 “상태 파일 구조 오류입니다. 자동 초기화하지 않습니다.”
 
-  저장 자료의 files·models 같은 이름별 항목이 기대한 사전 형태가 아니면 다음 읽기 위치나 관측값을 안전하게 복원할 수 없어 거부합니다. 자료 구조는 이름과 값이 대응하는 저장 형식이며 빈 파일로 자동 바꾸지 않습니다. 정확한 조건은 [`not isinstance(self.state.get('files'), dict) or not isinstance(self.state.get('models'), dict)`](src/notifier.py#L95) (src/notifier.py)에서 확인할 수 있습니다.
+  저장 자료의 files·models 같은 이름별 항목이 기대한 사전 형태가 아니면 다음 읽기 위치나 관측값을 안전하게 복원할 수 없어 거부합니다.
+
+자료 구조는 이름과 값이 대응하는 저장 형식이며 빈 파일로 자동 바꾸지 않습니다.
+
+정확한 조건은 [`not isinstance(self.state.get('files'), dict) or not isinstance(self.state.get('models'), dict)`](src/notifier.py#L95) (src/notifier.py)에서 확인할 수 있습니다.
 
 - 오류 “명시 배정 상태 구조 오류입니다. 자동 초기화하지 않습니다.”
 
-  어떤 모델을 맡기겠다고 알린 배정 자료가 기대한 이름별 사전이 아니면 거부합니다. 이 자료를 지우고 새 실제 관측처럼 처리하지 않아 요청과 관측의 구분을 보존합니다. 정확한 조건은 [`not isinstance(self.state.get('declarations'), dict)`](src/notifier.py#L97) (src/notifier.py)에서 확인할 수 있습니다.
+  어떤 모델을 맡기겠다고 알린 배정 자료가 기대한 이름별 사전이 아니면 거부합니다.
+
+이 자료를 지우고 새 실제 관측처럼 처리하지 않아 요청과 관측의 구분을 보존합니다.
+
+정확한 조건은 [`not isinstance(self.state.get('declarations'), dict)`](src/notifier.py#L97) (src/notifier.py)에서 확인할 수 있습니다.
 
 - 오류 “채팅 선택 설정 상태 구조 오류입니다. 자동 초기화하지 않습니다.”
 
-  채팅별 선택 설정 항목이 기대한 사전 형태가 아니면 저장 상태를 거부합니다. 설정 요청을 실제 관측 변경으로 잘못 바꾸는 자동 초기화를 하지 않습니다. 정확한 조건은 [`not isinstance(self.state.get('settings'), dict)`](src/notifier.py#L116) (src/notifier.py)에서 확인할 수 있습니다.
+  채팅별 선택 설정 항목이 기대한 사전 형태가 아니면 저장 상태를 거부합니다.
+
+설정 요청을 실제 관측 변경으로 잘못 바꾸는 자동 초기화를 하지 않습니다.
+
+정확한 조건은 [`not isinstance(self.state.get('settings'), dict)`](src/notifier.py#L116) (src/notifier.py)에서 확인할 수 있습니다.
 
 - 오류 “이전 상태 백업이 원본과 다릅니다. 자동 덮어쓰기하지 않습니다.”
 
-  활동 상태 형식을 옮기기 전의 백업 내용이 원본과 다르면 덮어쓰지 않습니다. 이행은 저장 형식을 바꾸는 과정이며 다른 원본을 같은 자료처럼 취급하지 않습니다. 정확한 조건은 [`backup.read_bytes() != original`](src/notifier.py#L104) (src/notifier.py)에서 확인할 수 있습니다.
+  활동 상태 형식을 옮기기 전의 백업 내용이 원본과 다르면 덮어쓰지 않습니다.
+
+이행은 저장 형식을 바꾸는 과정이며 다른 원본을 같은 자료처럼 취급하지 않습니다.
+
+정확한 조건은 [`backup.read_bytes() != original`](src/notifier.py#L104) (src/notifier.py)에서 확인할 수 있습니다.
 
 - 오류 “이전 상태의 파일 위치가 올바르지 않습니다. 자동 초기화하지 않습니다.”
 
-  이전 기록에서 읽어 둔 시작·끝 위치가 참·거짓, 정수가 아닌 값 또는 음수라면 거부합니다. 파일의 몇 번째 바이트부터 읽을지를 알 수 없으므로 0으로 임의 초기화하지 않습니다. 정확한 조건은 [`any(isinstance(v, bool) or not isinstance(v, int) or v &lt; 0 for v in (offset, end))`](src/notifier.py#L111) (src/notifier.py)에서 확인할 수 있습니다.
+  이전 기록에서 읽어 둔 시작·끝 위치가 참·거짓, 정수가 아닌 값 또는 음수라면 거부합니다.
+
+파일의 몇 번째 바이트부터 읽을지를 알 수 없으므로 0으로 임의 초기화하지 않습니다.
+
+정확한 조건은 [`any(isinstance(v, bool) or not isinstance(v, int) or v &lt; 0 for v in (offset, end))`](src/notifier.py#L111) (src/notifier.py)에서 확인할 수 있습니다.
 
 - 오류 “JSON 객체가 아닙니다.”
 
-  한 건의 기록은 항목 이름과 값이 짝지어진 객체여야 합니다. 예를 들어 숫자 하나나 문자열만 온 경우 이름별 필드를 읽을 수 없어 정상 기록으로 받지 않습니다. 정확한 조건은 [`not isinstance(record, dict)`](src/notifier.py#L435) (src/notifier.py)에서 확인할 수 있습니다.
+  한 건의 기록은 항목 이름과 값이 짝지어진 객체여야 합니다.
+
+예를 들어 숫자 하나나 문자열만 온 경우 이름별 필드를 읽을 수 없어 정상 기록으로 받지 않습니다.
+
+정확한 조건은 [`not isinstance(record, dict)`](src/notifier.py#L435) (src/notifier.py)에서 확인할 수 있습니다.
 
 - 오류 “명시 알림 파일 상한 초과”
 
-  명시 배정 알림 파일이 20,000바이트를 넘으면 거부합니다. 짧은 알림 전달 파일을 큰 본문 저장소처럼 읽지 않게 하기 위한 크기 제한입니다. 정확한 조건은 [`path.stat().st_size &gt; 20000`](src/notifier.py#L500) (src/notifier.py)에서 확인할 수 있습니다.
+  명시 배정 알림 파일이 20,000바이트를 넘으면 거부합니다. 짧은 알림 전달 파일을 큰 본문 저장소처럼 읽지 않게하기 위한 크기 제한입니다. 정확한 조건은 [`path.stat().st_size &gt; 20000`](src/notifier.py#L500) (src/notifier.py)에서 확인할 수 있습니다.
 
 - 오류 “객체가 아닌 응답”
 
   계정 서버의 응답이 이름별 값을 가진 객체가 아니면 한도 자료로 읽지 않습니다. 숫자·문자열만 온 응답에서 비율을 임의로 만들지 않습니다. 정확한 조건은 [`not isinstance(message, dict)`](src/usage.py#L226) (src/usage.py)에서 확인할 수 있습니다.
 
-**알림이 없거나 값이 비어 있을 때**: 감시 sessions 경로·새 JSONL 기록·중복 실행 잠금·알림 설정을 순서대로 확인합니다. 최초 기준선 읽기와 새 변경은 다릅니다. 자산·글꼴 오류라면 이 차수 assets와 라이선스를 대조합니다. 과거 대용량 프레임 자산이 소스 이력에 없을 수 있습니다. 이유·이전값이 없으면 원문 필드를 확인하며 동기를 추정하지 않습니다.
+**알림이 없거나 값이 비어 있을 때**: 감시 sessions 경로·새 JSONL 기록·중복 실행 잠금·알림 설정을 순서대로 확인합니다.
+
+최초 기준 선 읽기와 새 변경은 다릅니다.
+
+자산·글 꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
+
+과거 대용량 프레임 자산이 소스 이력에 없을 수 있습니다.
+
+이유·이전 값이 없으면 원 문 필드를 확인하며 동기를 추정하지 않습니다.
 
 설정·이력·로컬 진단은 개인 운영자료입니다. 다른 사람에게 공유하기 전에 포함된 내용을 확인합니다. **로컬 기록은 서버 모델 신원 증명이 아닙니다.**
 
@@ -707,7 +840,13 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - **수정** [src/visuals.py](src/visuals.py): 이름 옆의 변화 종류를 기준으로 원래 파일과 달라진 내용을 읽습니다.
 
-**당시 실행 결과는 이 공개 이력에 보존되지 않아 실행 여부를 확인할 수 없습니다.** 여기서 확인된 것은 공개 소스 바이트 비교입니다. 원문에는 현재 소스 사본에 `git -c core.autocrlf=false apply --reverse --binary -p1`을 적용해 직전 소스의 부재·추가·삭제까지 복원하여 바이트 대조했다고 적혀 있습니다. 이는 과거 앱 실행 성공이나 성능 측정을 뜻하지 않습니다. Python 외에 존재하는 보조 PowerShell·의존성 목록도 비교에 포함하며 부가 자료는 별도 명세로 구분합니다.
+**당시 실행 결과는 이 공개 이력에 보존되지 않아 실행 여부를 확인할 수 없습니다.** 여기서 확인된 것은 공개 소스 바이트 비교입니다.
+
+원문에는 현재 소스 사본에 `git -c core.autocrlf=false apply --reverse --binary -p1`을 적용해 직전 소스의 부재·추가·삭제까지 복원하여 바이트 대조했다고 적혀 있습니다.
+
+이는 과거 앱 실행 성공이나 성능 측정을 뜻하지 않습니다.
+
+Python 외에 존재하는 보조 PowerShell·의존성 목록도 비교에 포함하며 부가 자료는 별도 명세로 구분합니다.
 
 [부가자료 원문 안내](보존자료.md)와 [부가자료 보존 명세](부가자료_보존.json)는 실행 소스 비교와 역할을 나눠 읽습니다.
 
@@ -748,7 +887,7 @@ Codex App Server의 `account/rateLimits/read`를 읽기 전용으로 조회합�
 3. 새 변경이 기록되면 이전·이후 값과 이유를 비교하고, 기록 종류와 근거 수준을 함께 읽습니다.
 4. 설정·이력은 개인 운영자료로 관리하고 다른 사용자에게 공유하기 전에 내용을 확인합니다.
 
-Windows와 해당 폴더의 requirements.txt를 기준으로 Python 의존성을 준비합니다. history는 공개 소스 보존본이며 현재 루트 assets가 과거 모든 차수의 자산과 호환된다는 뜻은 아닙니다.
+Windows와 해당 폴더의 requirements.txt를 기준으로 Python 의존성을 준비합니다. history는 공개 소스 보존 본이며 현재 루트 assets가 과거 모든 차수의 자산과 호환된다는 뜻은 아닙니다.
 
 자산과 의존성을 준비한 이 차수 폴더에서 `python src/app.py`를 실행합니다. history 소스만으로 과거 배포 EXE와 동일한 화면·자산이 모두 복원되지는 않습니다.
 
@@ -772,7 +911,7 @@ PyInstaller==6.22.3
 **정의된 옵션 이름:** `--sessions`, `--work`
 
 
-각 옵션의 기본값·필수값·부작용은 해당 main과 인자 정의를 함께 확인합니다.
+각 옵션의 기본 값·필수값·부작용은 해당 main과 인자 정의를 함께 확인합니다.
 
 
 <details>
@@ -850,7 +989,7 @@ PyInstaller==6.22.3
 
 | 정의 | 역할 |
 | --- | --- |
-| [`read_jsonl_tail`](src/core.py#L18) | 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
+| [`read_jsonl_tail`](src/core.py#L18) | 물리적 LF만 나누며 잘 린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
 | [`title_catalog`](src/core.py#L55) | 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
 | [`resolve_title`](src/core.py#L73) | 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
 | [`safe_path`](src/core.py#L97) | 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
@@ -994,7 +1133,7 @@ PyInstaller==6.22.3
 | --- | --- |
 | [`number`](src/usage.py#L16) | 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
 | [`normalize_limits`](src/usage.py#L35) | 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
-| [`discover_codex`](src/usage.py#L69) | 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
+| [`discover_codex`](src/usage.py#L69) | 사용자 선택, PATH, 공식 데스크 톱 번들 위치 순으로 EXE만 찾습니다. |
 
 | 설정·옵션 | 선언 |
 | --- | --- |
@@ -1035,18 +1174,19 @@ PyInstaller==6.22.3
 [자료 폴더](.) · [직전 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [이 차수의 원래 전체 상세](#reading-level-5)
 
 
-
-### LEVEL 2 · 11차의 구체적인 기능과 확인
+### LEVEL 2·11차의 구체적인 기능과 확인
 
 모델과 추론 강도는 두 개의 값이므로 변화도 따로 읽어야 합니다. 이전·현재 칸과 쉬운 강도 이름이 그 차이를 표현하고, 사용 한도 요약은 별도의 계정 비율 정보입니다. 큰 제목은 사건의 종류를 안내하지만 세부 근거를 대신하지 않습니다.
 
 **수집·해석·표시·보존**을 연결해 읽습니다. 로컬 JSONL의 관측 변경과 명시된 배정은 다른 종류의 근거입니다. 감시기는 외부 통신 없이 로컬 자료를 읽습니다. 별도 usage 모듈의 계정 한도 조회는 App Server 읽기 전용 경로이므로 이 로컬 감시와 구별합니다.
 
-Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Python 의존성과 해당 자산을 준비한 뒤 **이 차수 폴더에서** `python src/app.py`를 실행합니다. 현재 루트의 assets가 과거 모든 차수와 호환되는 것은 아니며, history 소스만으로 과거 EXE의 화면·자산 전체가 복원되는 것도 아닙니다.
+Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Python 의존성과 해당 자산을 준비한 뒤 **이 차수 폴더에서** `python src/app.py`를 실행합니다.
+
+현재 루트의 assets가 과거 모든 차수와 호환되는 것은 아니며, history 소스만으로 과거 EXE의 화면·자산 전체가 복원되는 것도 아닙니다.
 
 아래 구성·설정·거부 조건은 이 연결이 성립하는 실제 조건입니다. 자료가 처음 기준선으로 읽힌 것인지 새 변경인지, 표시에 필요한 이전값이 존재하는지를 함께 판단합니다.
 
-**이 보관본 의존성 선언**: PySide6-Essentials==6.12.0 · PyInstaller==6.22.3. PySide6는 창을 만드는 도구이고 PyInstaller는 실행 파일을 묶는 도구입니다. 외부 실행 도구·GPU 드라이버는 별도 조건입니다.
+**이 보관본 의존성 선언**: PySide6-Essentials ==6.12.0·PyInstaller ==6.22.3. PySide6는 창을 만드는 도구이고 PyInstaller는 실행 파일을 묶는 도구입니다. 외부 실행 도구·GPU 드라이버는 별도 조건입니다.
 
 **자료 경계와 모듈 연결**
 
@@ -1080,7 +1220,13 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`--data-dir`](src/app.py#L1363) (src/app.py)
 
-  앱 설정·이력을 저장할 폴더를 고릅니다. 기본은 LOCALAPPDATA 아래 CodexOrbit이며 그 환경값이 없으면 사용자 홈을 기준으로 합니다. 같은 폴더 중복 실행 잠금과 연결됩니다. 원문 선언: `type=Path; default=Path(os.environ.get('LOCALAPPDATA', Path.home())) / 'CodexOrbit'`.
+  앱 설정·이력을 저장할 폴더를 고릅니다.
+
+기본은 LOCALAPPDATA 아래 CodexOrbit이며 그 환경 값이 없으면 사용자 홈을 기준으로 합니다.
+
+같은 폴더 중복 실행 잠금과 연결됩니다.
+
+원문 선언: `type=Path; default=Path(os.environ.get('LOCALAPPDATA', Path.home())) / 'CodexOrbit'`.
 
 - [`--sessions`](src/app.py#L1364) (src/app.py)
 
@@ -1108,7 +1254,13 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`ROLE_LABELS`](src/app.py#L72) (src/app.py)
 
-  역할 코드와 사용자용 한글 이름의 대응표입니다. 예를 들어 build는 구현, verifier는 독립 검증으로 읽습니다. 화면 설명을 바꾸는 표이며 서버 모델을 바꾸는 설정은 아닙니다. 원문 선언: `정의={'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}`.
+  역할 코드와 사용자용 한글 이름의 대응 표입니다.
+
+예를 들어 build는 구현, verifier는 독립 검증으로 읽습니다.
+
+화면 설명을 바꾸는 표이며 서버 모델을 바꾸는 설정은 아닙니다.
+
+원문 선언: `정의={'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}`.
 
 - [`MAX_TEXT_BYTES`](src/core.py#L9) (src/core.py)
 
@@ -1140,15 +1292,15 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`READ_BYTES`](src/notifier.py#L19) (src/notifier.py)
 
-  한 번에 한 파일에서 읽는 양을 제한합니다. 단위는 바이트로, 큰 기록 파일 전체를 한 번에 들이지 않게 하는 경계입니다. 계산한 값은 524,288이며 바이트 제한에서는 512 KiB입니다. 원문 선언: `정의=512 * 1024`.
+  한 번에 한 파일에서 읽는 양을 제한합니다. 단위는 바이트로, 큰 기록 파일 전체를 한 번에 들이지 않게하는 경계입니다. 계산한 값은 524,288이며 바이트 제한에서는 512 KiB입니다. 원문 선언: `정의=512 * 1024`.
 
 - [`MAX_RECORD`](src/notifier.py#L20) (src/notifier.py)
 
-  기록 한 건이 가질 수 있는 최대 크기입니다. 커다란 한 줄을 무제한으로 해석하지 않도록 하는 제한이며 단위는 바이트입니다. 계산한 값은 2,097,152이며 바이트 제한에서는 2,048 KiB입니다. 원문 선언: `정의=2 * 1024 * 1024`.
+  기록 한 건이 가질 수 있는 최대 크기입니다. 커다란 한 줄을 무제한으로 해석하지 않도록하는 제한이며 단위는 바이트입니다. 계산한 값은 2,097,152이며 바이트 제한에서는 2,048 KiB입니다. 원문 선언: `정의=2 * 1024 * 1024`.
 
 - [`MAX_FILES`](src/notifier.py#L21) (src/notifier.py)
 
-  감시에서 다룰 파일 개수의 최대값입니다. 폴더가 커져도 파일 목록을 제한 없이 늘리지 않게 합니다. 계산한 값은 4,096입니다. 원문 선언: `정의=4096`.
+  감시에서 다룰 파일 개수의 최대 값입니다. 폴더가 커져도 파일 목록을 제한 없이 늘리지 않게합니다. 계산한 값은 4,096입니다. 원문 선언: `정의=4096`.
 
 - [`LOG_BYTES`](src/notifier.py#L22) (src/notifier.py)
 
@@ -1156,11 +1308,11 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`POLL_READ_BYTES`](src/notifier.py#L23) (src/notifier.py)
 
-  감시 한 차례에서 읽을 전체 자료량을 제한합니다. 파일 하나의 상한과 별개인 바이트 단위 총량이므로 여러 파일을 합친 부담을 구분합니다. 계산한 값은 8,388,608이며 바이트 제한에서는 8,192 KiB입니다. 원문 선언: `정의=8 * 1024 * 1024`.
+  감시 한 차례에서 읽을 전체 자료 량을 제한합니다. 파일 하나의 상한과 별개 인 바이트 단위 총량이므로 여러 파일을 합친 부담을 구분합니다. 계산한 값은 8,388,608이며 바이트 제한에서는 8,192 KiB입니다. 원문 선언: `정의=8 * 1024 * 1024`.
 
 - [`MAX_PENDING`](src/notifier.py#L24) (src/notifier.py)
 
-  처리가 끝나기를 기다리는 기록 개수의 상한입니다. 숫자는 프레임 수나 토큰 수가 아니라 대기 항목 수입니다. 선언 숫자는 256입니다. 원문 선언: `정의=256`.
+  처리가 끝나기를 기다리는 기록 개 수의 상한입니다. 숫자는 프레임 수나 토큰 수가 아니라 대기 항목 수입니다. 선언 숫자는 256입니다. 원문 선언: `정의=256`.
 
 - [`POLL_INTERVAL_SECONDS`](src/notifier.py#L25) (src/notifier.py)
 
@@ -1168,7 +1320,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`MAX_BYTES`](src/usage.py#L12) (src/usage.py)
 
-  계정 응답에서 읽을 최대 자료량입니다. 단위는 바이트이며 응답이 너무 클 때 무제한으로 받아들이지 않게 하는 경계입니다. 계산한 값은 1,048,576이며 바이트 제한에서는 1,024 KiB입니다. 원문 선언: `정의=1024 * 1024`.
+  계정 응답에서 읽을 최대 자료 량입니다. 단위는 바이트이며 응답이 너무 클 때 무제한으로 받아들이지 않게하는 경계입니다. 계산한 값은 1,048,576이며 바이트 제한에서는 1,024 KiB입니다. 원문 선언: `정의=1024 * 1024`.
 
 - [`KST`](src/usage.py#L13) (src/usage.py)
 
@@ -1242,7 +1394,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`number`](src/usage.py#L16) (src/usage.py)
 
-  한도 응답에 숫자 대신 참·거짓, 문자열 또는 무한대 같은 값이 들어온 경우에는 결과가 다음처럼 제한됩니다. 잘못된 입력이 사용 가능한 비율로 표시되지 않습니다. 예를 들어 참을 숫자 1처럼 읽어 정상 비율로 오해하지 않기 위해서입니다
+  한 도 응답에 숫자 대신 참·거짓, 문자열 또는 무한대 같은 값이 들어온 경우에는 결과가 다음처럼 제한됩니다. 잘못된 입력이 사용 가능한 비율로 표시되지 않습니다. 예를 들어 참을 숫자 1처럼 읽어 정상 비율로 오해하지 않기 위해서입니다
 
 - [`normalize_limits`](src/usage.py#L35) (src/usage.py)
 
@@ -1268,7 +1420,11 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`not lock.tryLock(100)`](src/app.py#L1394) (src/app.py)
 
-  같은 저장 폴더를 이미 다른 Codex Orbit가 쓰거나 잠금 파일에 접근할 수 없으면 시작을 거부합니다. 한 설정·상태 파일을 두 실행이 동시에 바꾸지 않도록 하며, 이 메시지만으로 어느 쪽 원인인지 확정하지 않습니다. 원문 오류: “같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다.”입니다.
+  같은 저장 폴더를 이미 다른 Codex Orbit가 쓰거나 잠금 파일에 접근할 수 없으면 시작을 거부합니다.
+
+한 설정·상태 파일을 두 실행이 동시에 바꾸지 않도록하며, 이 메시지만으로 어느 쪽 원인인지 확정하지 않습니다.
+
+원문 오류: “같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다.”입니다.
 
 - [`not isinstance(value, dict)`](src/app.py#L157) (src/app.py)
 
@@ -1300,7 +1456,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`target.name.lower() != 'agents.md'`](src/core.py#L123) (src/core.py)
 
-  선택한 파일 이름이 AGENTS.md가 아니면 적용하지 않습니다. 다른 문서나 데이터 파일을 지침 대상이라고 잘못 수정하지 않기 위한 이름 확인입니다. 원문 오류: “적용 대상은 AGENTS.md 파일이어야 합니다.”입니다.
+  선택한 파일 이름이 AGENTS.md가 아니면 적용하지 않습니다. 다른 문서나 데이터 파일을 지침 대상이라고 잘못 수정하지 않기 위한 이름 확인입니다. 원문 오류: “적용 대상은 AGENTS.md 파일이어야합니다.”입니다.
 
 - [`not target.parent.is_dir()`](src/core.py#L125) (src/core.py)
 
@@ -1308,7 +1464,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`target.exists() and (not target.is_file() or target.stat().st_size &gt; MAX_TEXT_BYTES)`](src/core.py#L127) (src/core.py)
 
-  기존 대상이 일반 파일이 아니거나 2 MiB보다 크면 적용하지 않습니다. 폴더·특수 파일을 문서처럼 취급하거나 대용량 원본을 바꾸지 않게 합니다. 원문 오류: “대상은 2 MiB 이하의 일반 파일이어야 합니다.”입니다.
+  기존 대상이 일반 파일이 아니거나 2 MiB보다 크면 적용하지 않습니다. 폴더·특수 파일을 문서처럼 취급하거나 대용량 원본을 바꾸지 않게합니다. 원문 오류: “대상은 2 MiB 이하의 일반 파일이어야합니다.”입니다.
 
 - [`not content.strip() or len(added) &gt; MAX_TEXT_BYTES`](src/core.py#L134) (src/core.py)
 
@@ -1352,7 +1508,15 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`self.state.get('schema_version') not in (2, 3)`](src/notifier.py#L93) (src/notifier.py)
 
-  옛 저장 형식에는 모델을 쓰겠다는 요청과 실제로 관측한 값이 섞여 있습니다. 이를 새 관측 이력으로 자동 해석하지 않습니다. 명시적 재기준선은 원본을 보존한 상태에서 어느 기록부터 현재 관측의 출발점으로 삼을지 따로 정하는 절차이며 오류를 없애려고 상태를 삭제하는 뜻이 아닙니다. 원문 오류: “구형 상태는 요청과 관측이 혼합되어 있습니다. 원본 보존 후 명시적 재기준선이 필요합니다.”입니다.
+  옛 저장 형식에는 모델을 쓰겠다는 요청과 실제로 관측한 값이 섞여 있습니다.
+
+이를 새 관측 이력으로 자동 해석하지 않습니다.
+
+명시적 재기준선은 원본을 보존한 상태에서 어느 기록부터 현재 관측의 출발점으로 삼을지 따로 정하는 절차이며 오류를 없애려고 상태를 삭제하는 뜻이 아닙니다.
+
+원문 오류: “구형 상태는 요청과 관측이 혼합되어 있습니다.
+
+원본 보존 후 명시적 재기준선이 필요합니다.”입니다.
 
 - [`not isinstance(self.state.get('files'), dict) or not isinstance(self.state.get('models'), dict)`](src/notifier.py#L95) (src/notifier.py)
 
@@ -1380,13 +1544,21 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`path.stat().st_size &gt; 20000`](src/notifier.py#L500) (src/notifier.py)
 
-  명시 배정 알림 파일이 20,000바이트를 넘으면 거부합니다. 짧은 알림 전달 파일을 큰 본문 저장소처럼 읽지 않게 하기 위한 크기 제한입니다. 원문 오류: “명시 알림 파일 상한 초과”입니다.
+  명시 배정 알림 파일이 20,000바이트를 넘으면 거부합니다. 짧은 알림 전달 파일을 큰 본문 저장소처럼 읽지 않게하기 위한 크기 제한입니다. 원문 오류: “명 시 알림 파일 상한 초과”입니다.
 
 - [`not isinstance(message, dict)`](src/usage.py#L226) (src/usage.py)
 
   계정 서버의 응답이 이름별 값을 가진 객체가 아니면 한도 자료로 읽지 않습니다. 숫자·문자열만 온 응답에서 비율을 임의로 만들지 않습니다. 원문 오류: “객체가 아닌 응답”입니다.
 
-**알림이 없거나 값이 비어 있을 때**: 감시 sessions 경로·새 JSONL 기록·중복 실행 잠금·알림 설정을 순서대로 확인합니다. 최초 기준선 읽기와 새 변경은 다릅니다. 자산·글꼴 오류라면 이 차수 assets와 라이선스를 대조합니다. 과거 대용량 프레임 자산이 소스 이력에 없을 수 있습니다. 이유·이전값이 없으면 원문 필드를 확인하며 동기를 추정하지 않습니다.
+**알림이 없거나 값이 비어 있을 때**: 감시 sessions 경로·새 JSONL 기록·중복 실행 잠금·알림 설정을 순서대로 확인합니다.
+
+최초 기준 선 읽기와 새 변경은 다릅니다.
+
+자산·글 꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
+
+과거 대용량 프레임 자산이 소스 이력에 없을 수 있습니다.
+
+이유·이전 값이 없으면 원 문 필드를 확인하며 동기를 추정하지 않습니다.
 
 설정·이력·로컬 진단은 개인 운영자료입니다. 다른 사람에게 공유하기 전에 포함된 내용을 확인합니다. **로컬 기록은 서버 모델 신원 증명이 아닙니다.**
 
@@ -1402,7 +1574,13 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - **수정** [src/visuals.py](src/visuals.py): 전체 비교에서 기능 연결의 실제 변경을 확인합니다.
 
-**당시 실행 결과는 이 공개 이력에 보존되지 않아 실행 여부를 확인할 수 없습니다.** 여기서 확인된 것은 공개 소스 바이트 비교입니다. 원문에는 현재 소스 사본에 `git -c core.autocrlf=false apply --reverse --binary -p1`을 적용해 직전 소스의 부재·추가·삭제까지 복원하여 바이트 대조했다고 적혀 있습니다. 이는 과거 앱 실행 성공이나 성능 측정을 뜻하지 않습니다. Python 외에 존재하는 보조 PowerShell·의존성 목록도 비교에 포함하며 부가 자료는 별도 명세로 구분합니다.
+**당시 실행 결과는 이 공개 이력에 보존되지 않아 실행 여부를 확인할 수 없습니다.** 여기서 확인된 것은 공개 소스 바이트 비교입니다.
+
+원문에는 현재 소스 사본에 `git -c core.autocrlf=false apply --reverse --binary -p1`을 적용해 직전 소스의 부재·추가·삭제까지 복원하여 바이트 대조했다고 적혀 있습니다.
+
+이는 과거 앱 실행 성공이나 성능 측정을 뜻하지 않습니다.
+
+Python 외에 존재하는 보조 PowerShell·의존성 목록도 비교에 포함하며 부가 자료는 별도 명세로 구분합니다.
 
 [부가자료 원문 안내](보존자료.md)와 [부가자료 보존 명세](부가자료_보존.json)는 실행 소스 비교와 역할을 나눠 읽습니다.
 
@@ -1411,7 +1589,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 선언의 정확한 코드와 전체 역할 원문은 LEVEL 5 및 연결된 소스에 보존합니다. 입력 사례는 검토 방법을 설명하며 실제 실행 결과가 아닙니다. 옵션 지정·기본값과 정상·거부 사례를 구분하고, 변경 시 호출자·공유 상태·표시 조건에 미치는 영향을 대조합니다.
 
-- [src/app.py](src/app.py): 사용자 동작과 감시 상태가 UI에서 만납니다. 이전·현재 표시, 알림 수명, 원문 접근, 감시 종료의 순서가 서로 연결되지만 같은 상태값은 아닙니다.
+- [src/app.py](src/app.py): 사용자 동작과 감시 상태가 UI에서 만납니다. 이전·현재 표시, 알림 수명, 원문 접근, 감시 종료의 순서가 서로 연결되지만 같은 상태 값은 아닙니다.
 
 - [src/core.py](src/core.py): 로컬 기록·제목 입력은 이력과 알림의 근거가 되고, 문서 적용 입력은 미리보기·원본 대조를 거쳐 쓰기로 연결됩니다. 읽기와 쓰기의 경계를 구분해야 합니다.
 
@@ -1430,7 +1608,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 모델과 추론 강도의 이전·현재를 각각 두 칸으로 보여 주고 쉬운 추론 강도 이름을 사용합니다. 사용 한도 요약과 큰 변경 제목의 화면 구성을 정리합니다.
 
-Windows와 해당 폴더의 requirements.txt를 기준으로 Python 의존성을 준비합니다. history는 공개 소스 보존본이며 현재 루트 assets가 과거 모든 차수의 자산과 호환된다는 뜻은 아닙니다.
+Windows와 해당 폴더의 requirements.txt를 기준으로 Python 의존성을 준비합니다. history는 공개 소스 보존 본이며 현재 루트 assets가 과거 모든 차수의 자산과 호환된다는 뜻은 아닙니다.
 
 자산과 의존성을 준비한 이 차수 폴더에서 `python src/app.py`를 실행합니다. history 소스만으로 과거 배포 EXE와 동일한 화면·자산이 모두 복원되지는 않습니다.
 
@@ -1454,7 +1632,7 @@ PyInstaller==6.22.3
 **정의된 옵션 이름:** `--sessions`, `--work`
 
 
-각 옵션의 기본값·필수값·부작용은 해당 main과 인자 정의를 함께 확인합니다.
+각 옵션의 기본 값·필수값·부작용은 해당 main과 인자 정의를 함께 확인합니다.
 
 
 <details>
@@ -1532,7 +1710,7 @@ PyInstaller==6.22.3
 
 | 정의 | 역할 |
 | --- | --- |
-| [`read_jsonl_tail`](src/core.py#L18) | 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
+| [`read_jsonl_tail`](src/core.py#L18) | 물리적 LF만 나누며 잘 린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
 | [`title_catalog`](src/core.py#L55) | 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
 | [`resolve_title`](src/core.py#L73) | 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
 | [`safe_path`](src/core.py#L97) | 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
@@ -1676,7 +1854,7 @@ PyInstaller==6.22.3
 | --- | --- |
 | [`number`](src/usage.py#L16) | 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
 | [`normalize_limits`](src/usage.py#L35) | 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
-| [`discover_codex`](src/usage.py#L69) | 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
+| [`discover_codex`](src/usage.py#L69) | 사용자 선택, PATH, 공식 데스크 톱 번들 위치 순으로 EXE만 찾습니다. |
 
 | 설정·옵션 | 선언 |
 | --- | --- |
@@ -1745,18 +1923,19 @@ Codex App Server의 `account/rateLimits/read`를 읽기 전용으로 조회합�
 [자료 폴더](.) · [직전 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [이 차수의 원래 전체 상세](#reading-level-5)
 
 
-
-### LEVEL 3 · 11차의 구체적인 기능과 확인
+### LEVEL 3·11차의 구체적인 기능과 확인
 
 상세창에서 모델 이전·현재와 추론 강도 이전·현재를 각각 비교합니다. 쉬운 이름과 실제 원문 강도 값을 함께 확인하고, 사용 한도 요약은 토큰 개수로 읽지 않습니다. 화면 배치가 바뀐 부분은 app.py·theme.py·visuals.py의 전체 diff로 확인합니다.
 
-Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Python 의존성과 해당 자산을 준비한 뒤 **이 차수 폴더에서** `python src/app.py`를 실행합니다. 현재 루트의 assets가 과거 모든 차수와 호환되는 것은 아니며, history 소스만으로 과거 EXE의 화면·자산 전체가 복원되는 것도 아닙니다.
+Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Python 의존성과 해당 자산을 준비한 뒤 **이 차수 폴더에서** `python src/app.py`를 실행합니다.
+
+현재 루트의 assets가 과거 모든 차수와 호환되는 것은 아니며, history 소스만으로 과거 EXE의 화면·자산 전체가 복원되는 것도 아닙니다.
 
 입력은 현재 사용자의 sessions JSONL과 앱 설정입니다. **경로·자산·설정 먼저 확인한 뒤 실행**하고, 알림·변경 이력·로컬 진단을 원본 사건과 대조합니다. 동작 확인에서 모델 전후·추론 전후·이유·시각·근거 수준을 함께 읽고 미기록은 미확인으로 남깁니다.
 
 아래 옵션은 실제 소스에 선언된 이름입니다. CLI는 명령 뒤에 옵션을 붙이는 방식이며 각 기본값·부작용은 해당 선언과 함께 확인합니다. smoke라는 이름은 점검용 실행을 뜻하며 이 문서가 그 실행을 대신 수행했다는 뜻은 아닙니다.
 
-**이 보관본 의존성 선언**: PySide6-Essentials==6.12.0 · PyInstaller==6.22.3. PySide6는 창을 만드는 도구이고 PyInstaller는 실행 파일을 묶는 도구입니다. 외부 실행 도구·GPU 드라이버는 별도 조건입니다.
+**이 보관본 의존성 선언**: PySide6-Essentials ==6.12.0·PyInstaller ==6.22.3. PySide6는 창을 만드는 도구이고 PyInstaller는 실행 파일을 묶는 도구입니다. 외부 실행 도구·GPU 드라이버는 별도 조건입니다.
 
 **자료를 찾는 순서**
 
@@ -1790,7 +1969,13 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`--data-dir`](src/app.py#L1363) (src/app.py)
 
-  앱 설정·이력을 저장할 폴더를 고릅니다. 기본은 LOCALAPPDATA 아래 CodexOrbit이며 그 환경값이 없으면 사용자 홈을 기준으로 합니다. 같은 폴더 중복 실행 잠금과 연결됩니다. 원문 선언: `type=Path; default=Path(os.environ.get('LOCALAPPDATA', Path.home())) / 'CodexOrbit'`.
+  앱 설정·이력을 저장할 폴더를 고릅니다.
+
+기본은 LOCALAPPDATA 아래 CodexOrbit이며 그 환경 값이 없으면 사용자 홈을 기준으로 합니다.
+
+같은 폴더 중복 실행 잠금과 연결됩니다.
+
+원문 선언: `type=Path; default=Path(os.environ.get('LOCALAPPDATA', Path.home())) / 'CodexOrbit'`.
 
 - [`--sessions`](src/app.py#L1364) (src/app.py)
 
@@ -1818,7 +2003,13 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`ROLE_LABELS`](src/app.py#L72) (src/app.py)
 
-  역할 코드와 사용자용 한글 이름의 대응표입니다. 예를 들어 build는 구현, verifier는 독립 검증으로 읽습니다. 화면 설명을 바꾸는 표이며 서버 모델을 바꾸는 설정은 아닙니다. 원문 선언: `정의={'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}`.
+  역할 코드와 사용자용 한글 이름의 대응 표입니다.
+
+예를 들어 build는 구현, verifier는 독립 검증으로 읽습니다.
+
+화면 설명을 바꾸는 표이며 서버 모델을 바꾸는 설정은 아닙니다.
+
+원문 선언: `정의={'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}`.
 
 - [`MAX_TEXT_BYTES`](src/core.py#L9) (src/core.py)
 
@@ -1850,15 +2041,15 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`READ_BYTES`](src/notifier.py#L19) (src/notifier.py)
 
-  한 번에 한 파일에서 읽는 양을 제한합니다. 단위는 바이트로, 큰 기록 파일 전체를 한 번에 들이지 않게 하는 경계입니다. 계산한 값은 524,288이며 바이트 제한에서는 512 KiB입니다. 원문 선언: `정의=512 * 1024`.
+  한 번에 한 파일에서 읽는 양을 제한합니다. 단위는 바이트로, 큰 기록 파일 전체를 한 번에 들이지 않게하는 경계입니다. 계산한 값은 524,288이며 바이트 제한에서는 512 KiB입니다. 원문 선언: `정의=512 * 1024`.
 
 - [`MAX_RECORD`](src/notifier.py#L20) (src/notifier.py)
 
-  기록 한 건이 가질 수 있는 최대 크기입니다. 커다란 한 줄을 무제한으로 해석하지 않도록 하는 제한이며 단위는 바이트입니다. 계산한 값은 2,097,152이며 바이트 제한에서는 2,048 KiB입니다. 원문 선언: `정의=2 * 1024 * 1024`.
+  기록 한 건이 가질 수 있는 최대 크기입니다. 커다란 한 줄을 무제한으로 해석하지 않도록하는 제한이며 단위는 바이트입니다. 계산한 값은 2,097,152이며 바이트 제한에서는 2,048 KiB입니다. 원문 선언: `정의=2 * 1024 * 1024`.
 
 - [`MAX_FILES`](src/notifier.py#L21) (src/notifier.py)
 
-  감시에서 다룰 파일 개수의 최대값입니다. 폴더가 커져도 파일 목록을 제한 없이 늘리지 않게 합니다. 계산한 값은 4,096입니다. 원문 선언: `정의=4096`.
+  감시에서 다룰 파일 개수의 최대 값입니다. 폴더가 커져도 파일 목록을 제한 없이 늘리지 않게합니다. 계산한 값은 4,096입니다. 원문 선언: `정의=4096`.
 
 - [`LOG_BYTES`](src/notifier.py#L22) (src/notifier.py)
 
@@ -1866,11 +2057,11 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`POLL_READ_BYTES`](src/notifier.py#L23) (src/notifier.py)
 
-  감시 한 차례에서 읽을 전체 자료량을 제한합니다. 파일 하나의 상한과 별개인 바이트 단위 총량이므로 여러 파일을 합친 부담을 구분합니다. 계산한 값은 8,388,608이며 바이트 제한에서는 8,192 KiB입니다. 원문 선언: `정의=8 * 1024 * 1024`.
+  감시 한 차례에서 읽을 전체 자료 량을 제한합니다. 파일 하나의 상한과 별개 인 바이트 단위 총량이므로 여러 파일을 합친 부담을 구분합니다. 계산한 값은 8,388,608이며 바이트 제한에서는 8,192 KiB입니다. 원문 선언: `정의=8 * 1024 * 1024`.
 
 - [`MAX_PENDING`](src/notifier.py#L24) (src/notifier.py)
 
-  처리가 끝나기를 기다리는 기록 개수의 상한입니다. 숫자는 프레임 수나 토큰 수가 아니라 대기 항목 수입니다. 선언 숫자는 256입니다. 원문 선언: `정의=256`.
+  처리가 끝나기를 기다리는 기록 개 수의 상한입니다. 숫자는 프레임 수나 토큰 수가 아니라 대기 항목 수입니다. 선언 숫자는 256입니다. 원문 선언: `정의=256`.
 
 - [`POLL_INTERVAL_SECONDS`](src/notifier.py#L25) (src/notifier.py)
 
@@ -1878,7 +2069,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`MAX_BYTES`](src/usage.py#L12) (src/usage.py)
 
-  계정 응답에서 읽을 최대 자료량입니다. 단위는 바이트이며 응답이 너무 클 때 무제한으로 받아들이지 않게 하는 경계입니다. 계산한 값은 1,048,576이며 바이트 제한에서는 1,024 KiB입니다. 원문 선언: `정의=1024 * 1024`.
+  계정 응답에서 읽을 최대 자료 량입니다. 단위는 바이트이며 응답이 너무 클 때 무제한으로 받아들이지 않게하는 경계입니다. 계산한 값은 1,048,576이며 바이트 제한에서는 1,024 KiB입니다. 원문 선언: `정의=1024 * 1024`.
 
 - [`KST`](src/usage.py#L13) (src/usage.py)
 
@@ -1912,7 +2103,11 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`safe_path`](src/core.py#L97) (src/core.py)
 
-  확인할 입력 사례: 지침을 적용할 파일이나 그 파일에 이르는 상위 폴더가 다른 곳으로 연결된 경우. 원문에서 확인할 처리: 파일 자체뿐 아니라 이미 존재하는 상위 폴더까지 확인해 바로가기처럼 다른 위치로 보내는 링크·재분석 지점을 거부합니다. 결과 판독 기준: 연결을 통해 의도 밖의 위치를 수정하는 경로는 허용되지 않습니다
+  확인할 입력 사례: 지침을 적용할 파일이나 그 파일에 이르는 상위 폴더가 다른 곳으로 연결된 경우.
+
+원문에서 확인할 처리: 파일 자체뿐 아니라 이미 존재하는 상위 폴더까지 확인해 바로가기처럼 다른 위치로 보내는 링크·재분석 지점을 거부합니다.
+
+결과 판독 기준: 연결을 통해 의도 밖의 위치를 수정하는 경로는 허용되지 않습니다
 
 - [`atomic_json`](src/notifier.py#L32) (src/notifier.py)
 
@@ -1944,7 +2139,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`KoreanDialogs`](src/theme.py#L76) (src/theme.py)
 
-  확인할 입력 사례: 배포 앱에 Qt의 별도 번역 파일이 없는 경우. 원문에서 확인할 처리: 기본 파일 선택창의 정해진 문구를 한국어로 제공합니다. 결과 판독 기준: 번역 묶음이 없어도 기본 파일 선택 안내를 읽을 수 있습니다
+  확인할 입력 사례: 배포 앱에 Qt의 별도 번역 파일이 없는 경우. 원문에서 확인할 처리: 기본 파일 선택 창의 정해진 문구를 한국어로 제공합니다. 결과 판독 기준: 번역 묶음이 없어도 기본 파일 선택 안내를 읽을 수 있습니다
 
 - [`DialogLayout`](src/theme.py#L92) (src/theme.py)
 
@@ -1960,11 +2155,11 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`discover_codex`](src/usage.py#L69) (src/usage.py)
 
-  확인할 입력 사례: 계정 한도를 읽을 Codex 실행 프로그램을 찾는 경우. 원문에서 확인할 처리: 사용자가 고른 위치, 명령 검색 경로 PATH, 공식 데스크톱 앱 묶음 위치 순서로 실행 파일 EXE만 찾습니다 결과 판독 기준: 선택 순서에 맞는 실제 실행 파일이 연결 후보가 됩니다
+  확인할 입력 사례: 계정 한도를 읽을 Codex 실행 프로그램을 찾는 경우. 원문에서 확인할 처리: 사용자가 고른 위치, 명령 검색 경로 PATH, 공식 데스크 톱 앱 묶음 위치 순서로 실행 파일 EXE만 찾습니다 결과 판독 기준: 선택 순서에 맞는 실제 실행 파일이 연결 후보가 됩니다
 
 - [`rotate_point`](src/visuals.py#L8) (src/visuals.py)
 
-  확인할 입력 사례: 입체 점의 방향을 바꾸는 경우. 원문에서 확인할 처리: 가로 X축·세로 Y축·깊이 Z축 순서로 회전시키고 깊이값도 남깁니다. 결과 판독 기준: 평면 위치뿐 아니라 앞뒤를 나타내는 좌표가 유지됩니다
+  확인할 입력 사례: 입체 점의 방향을 바꾸는 경우. 원문에서 확인할 처리: 가로 X 축·세로 Y 축·깊이 Z 축 순서로 회전시키고 깊이 값도 남깁니다. 결과 판독 기준: 평면 위치뿐 아니라 앞뒤를 나타내는 좌표가 유지됩니다
 
 - [`orbit_segments`](src/visuals.py#L23) (src/visuals.py)
 
@@ -1978,125 +2173,255 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - 오류 “같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다.”
 
-  입력 사례와 확인 순서: 같은 저장 폴더를 이미 다른 Codex Orbit가 쓰거나 잠금 파일에 접근할 수 없으면 시작을 거부합니다. 한 설정·상태 파일을 두 실행이 동시에 바꾸지 않도록 하며, 이 메시지만으로 어느 쪽 원인인지 확정하지 않습니다. 원문 조건 [`not lock.tryLock(100)`](src/app.py#L1394) (src/app.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 같은 저장 폴더를 이미 다른 Codex Orbit가 쓰거나 잠금 파일에 접근할 수 없으면 시작을 거부합니다.
+
+한 설정·상태 파일을 두 실행이 동시에 바꾸지 않도록하며, 이 메시지만으로 어느 쪽 원인인지 확정하지 않습니다.
+
+원문 조건 [`not lock.tryLock(100)`](src/app.py#L1394) (src/app.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “앱 설정은 JSON 객체여야 합니다.”
 
-  입력 사례와 확인 순서: 앱 설정이 항목 이름과 값을 가진 사전이어야 합니다. 예를 들어 목록만 저장돼 있으면 설정 이름으로 값을 찾을 수 없어 거부합니다. 원문 조건 [`not isinstance(value, dict)`](src/app.py#L157) (src/app.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 앱 설정이 항목 이름과 값을 가진 사전이어야 합니다.
+
+예를 들어 목록만 저장돼 있으면 설정 이름으로 값을 찾을 수 없어 거부합니다.
+
+원문 조건 [`not isinstance(value, dict)`](src/app.py#L157) (src/app.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “존재하는 sessions 폴더를 선택하세요.”
 
-  입력 사례와 확인 순서: 선택한 기록 경로가 실제 폴더가 아니면 거부합니다. 오타가 있는 위치나 파일 하나를 감시 폴더로 잘못 지정했는지 먼저 확인합니다. 원문 조건 [`not path.is_dir()`](src/app.py#L820) (src/app.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 선택한 기록 경로가 실제 폴더가 아니면 거부합니다.
+
+오타가 있는 위치나 파일 하나를 감시 폴더로 잘못 지정했는지 먼저 확인합니다.
+
+원문 조건 [`not path.is_dir()`](src/app.py#L820) (src/app.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “존재하는 Codex EXE를 선택하거나 비워 자동 탐색하세요.”
 
-  입력 사례와 확인 순서: 수동으로 지정한 경로가 실제 .exe 실행 파일이 아니면 거부합니다. 실제 Codex 실행 파일을 고르거나 값을 비워 정해진 자동 탐색을 사용해야 합니다. 원문 조건 [`chosen_exe and (not Path(chosen_exe).is_file() or Path(chosen_exe).suffix.lower() != '.exe')`](src/app.py#L825) (src/app.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 수동으로 지정한 경로가 실제 .exe 실행 파일이 아니면 거부합니다.
+
+실제 Codex 실행 파일을 고르거나 값을 비워 정해진 자동 탐색을 사용해야 합니다.
+
+원문 조건 [`chosen_exe and (not Path(chosen_exe).is_file() or Path(chosen_exe).suffix.lower() != '.exe')`](src/app.py#L825) (src/app.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “새 미리보기가 필요합니다.”
 
-  입력 사례와 확인 순서: 아직 적용 계획을 만들지 않았다면 지침을 쓸 수 없습니다. 대상과 바뀔 내용을 먼저 미리 본 뒤 적용하게 해 원문을 보지 않고 쓰는 일을 막습니다. 원문 조건 [`self.plan is None`](src/app.py#L968) (src/app.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 아직 적용 계획을 만들지 않았다면 지침을 쓸 수 없습니다.
+
+대상과 바뀔 내용을 먼저 미리 본 뒤 적용하게 해 원문을 보지 않고 쓰는 일을 막습니다.
+
+원문 조건 [`self.plan is None`](src/app.py#L968) (src/app.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “앱이 만든 적용 백업이 없습니다.”
 
-  입력 사례와 확인 순서: 앱이 지침 적용 전에 만든 백업이 없으면 그 백업을 이용한 되돌리기를 할 수 없습니다. 임의의 다른 문서를 원래 내용이라고 추정하지 않습니다. 원문 조건 [`not receipts`](src/app.py#L980) (src/app.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 앱이 지침 적용 전에 만든 백업이 없으면 그 백업을 이용한 되돌리기를 할 수 없습니다.
+
+임의의 다른 문서를 원래 내용이라고 추정하지 않습니다.
+
+원문 조건 [`not receipts`](src/app.py#L980) (src/app.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “문서가 2 MiB 상한을 초과했습니다.”
 
-  입력 사례와 확인 순서: 지침 원본 문서가 2 MiB보다 크면 읽기 범위를 벗어나 거부합니다. 작은 설명으로 예상한 입력을 대용량 파일 읽기로 확대하지 않는 제한입니다. 원문 조건 [`path.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L112) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 지침 원본 문서가 2 MiB보다 크면 읽기 범위를 벗어나 거부합니다.
+
+작은 설명으로 예상한 입력을 대용량 파일 읽기로 확대하지 않는 제한입니다.
+
+원문 조건 [`path.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L112) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “제목 캐시 구조가 올바르지 않습니다.”
 
-  입력 사례와 확인 순서: 보관한 제목 목록이 기대한 이름별 저장 형식이 아니면 거부합니다. 제목의 출처와 연결을 알 수 없는데도 빈 목록으로 자동 덮어쓰지 않습니다. 원문 조건 [`not isinstance(cache, dict) or not isinstance(cache.get('titles'), dict)`](src/core.py#L64) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 보관한 제목 목록이 기대한 이름별 저장 형식이 아니면 거부합니다.
+
+제목의 출처와 연결을 알 수 없는데도 빈 목록으로 자동 덮어쓰지 않습니다.
+
+원문 조건 [`not isinstance(cache, dict) or not isinstance(cache.get('titles'), dict)`](src/core.py#L64) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “적용 대상은 AGENTS.md 파일이어야 합니다.”
 
-  입력 사례와 확인 순서: 선택한 파일 이름이 AGENTS.md가 아니면 적용하지 않습니다. 다른 문서나 데이터 파일을 지침 대상이라고 잘못 수정하지 않기 위한 이름 확인입니다. 원문 조건 [`target.name.lower() != 'agents.md'`](src/core.py#L123) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 선택한 파일 이름이 AGENTS.md가 아니면 적용하지 않습니다.
+
+다른 문서나 데이터 파일을 지침 대상이라고 잘못 수정하지 않기 위한 이름 확인입니다.
+
+원문 조건 [`target.name.lower() != 'agents.md'`](src/core.py#L123) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “대상 폴더가 존재하지 않습니다.”
 
-  입력 사례와 확인 순서: 대상 파일을 둘 상위 폴더가 없으면 적용하지 않습니다. 앱이 의도하지 않은 위치의 폴더를 새로 만들어 결과를 숨기는 대신 선택 경로부터 확인하게 합니다. 원문 조건 [`not target.parent.is_dir()`](src/core.py#L125) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 대상 파일을 둘 상위 폴더가 없으면 적용하지 않습니다.
+
+앱이 의도하지 않은 위치의 폴더를 새로 만들어 결과를 숨기는 대신 선택 경로부터 확인하게 합니다.
+
+원문 조건 [`not target.parent.is_dir()`](src/core.py#L125) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “대상은 2 MiB 이하의 일반 파일이어야 합니다.”
 
-  입력 사례와 확인 순서: 기존 대상이 일반 파일이 아니거나 2 MiB보다 크면 적용하지 않습니다. 폴더·특수 파일을 문서처럼 취급하거나 대용량 원본을 바꾸지 않게 합니다. 원문 조건 [`target.exists() and (not target.is_file() or target.stat().st_size &gt; MAX_TEXT_BYTES)`](src/core.py#L127) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 기존 대상이 일반 파일이 아니거나 2 MiB보다 크면 적용하지 않습니다.
+
+폴더·특수 파일을 문서처럼 취급하거나 대용량 원본을 바꾸지 않게합니다.
+
+원문 조건 [`target.exists() and (not target.is_file() or target.stat().st_size &gt; MAX_TEXT_BYTES)`](src/core.py#L127) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “빈 지침 또는 2 MiB 초과 지침은 적용할 수 없습니다.”
 
-  입력 사례와 확인 순서: 내용이 공백뿐이거나 새로 붙일 지침이 2 MiB보다 크면 거부합니다. 아무 내용 없는 적용이나 과도한 추가 입력을 정상 변경으로 보지 않습니다. 원문 조건 [`not content.strip() or len(added) &gt; MAX_TEXT_BYTES`](src/core.py#L134) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 내용이 공백뿐이거나 새로 붙일 지침이 2 MiB보다 크면 거부합니다.
+
+아무 내용 없는 적용이나 과도한 추가 입력을 정상 변경으로 보지 않습니다.
+
+원문 조건 [`not content.strip() or len(added) &gt; MAX_TEXT_BYTES`](src/core.py#L134) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “지침 내용에 앱 관리구역 표식을 넣을 수 없습니다.”
 
-  입력 사례와 확인 순서: 추가 지침 안에 앱의 시작·끝 관리 표시가 들어 있으면 거부합니다. 내용 속 표시를 실제 관리 경계로 잘못 읽어 원문 구간을 혼동하지 않도록 합니다. 원문 조건 [`BEGIN in added or END in added`](src/core.py#L136) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 추가 지침 안에 앱의 시작·끝 관리 표시가 들어 있으면 거부합니다.
+
+내용 속 표시를 실제 관리 경계로 잘못 읽어 원문 구간을 혼동하지 않도록 합니다.
+
+원문 조건 [`BEGIN in added or END in added`](src/core.py#L136) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “적용 결과가 2 MiB 상한을 초과합니다.”
 
-  입력 사례와 확인 순서: 원본과 새 지침을 합친 최종 문서가 2 MiB보다 크면 쓰지 않습니다. 원본과 추가분이 각각 작더라도 합쳐진 결과는 별도 크기 제한을 만족해야 합니다. 원문 조건 [`len(result) &gt; MAX_TEXT_BYTES`](src/core.py#L150) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 원본과 새 지침을 합친 최종 문서가 2 MiB보다 크면 쓰지 않습니다.
+
+원본과 추가분이 각각 작더라도 합쳐진 결과는 별도 크기 제한을 만족해야 합니다.
+
+원문 조건 [`len(result) &gt; MAX_TEXT_BYTES`](src/core.py#L150) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “대상 파일이 미리보기/적용 이후 변경되었습니다. 새 미리보기가 필요합니다.”
 
-  입력 사례와 확인 순서: 아직 적용 계획을 만들지 않았다면 지침을 쓸 수 없습니다. 대상과 바뀔 내용을 먼저 미리 본 뒤 적용하게 해 원문을 보지 않고 쓰는 일을 막습니다. 원문 조건 [`target.exists() != existed or digest(target.read_bytes() if existed else b'') != expected`](src/core.py#L157) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 아직 적용 계획을 만들지 않았다면 지침을 쓸 수 없습니다.
+
+대상과 바뀔 내용을 먼저 미리 본 뒤 적용하게 해 원문을 보지 않고 쓰는 일을 막습니다.
+
+원문 조건 [`target.exists() != existed or digest(target.read_bytes() if existed else b'') != expected`](src/core.py#L157) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “미리보기 데이터가 변경되었습니다.”
 
-  입력 사례와 확인 순서: 미리보기 계획 안의 원문·결과 바이트가 저장된 지문과 다르면 거부합니다. 사용자가 확인했던 변경 계획과 실제 쓸 내용이 같은지 확인하는 경계입니다. 원문 조건 [`digest(plan['original']) != plan['before_hash'] or digest(plan['applied_bytes']) != plan['after_hash']`](src/core.py#L177) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 미리보기 계획 안의 원문·결과 바이트가 저장된 지문과 다르면 거부합니다.
+
+사용자가 확인했던 변경 계획과 실제 쓸 내용이 같은지 확인하는 경계입니다.
+
+원문 조건 [`digest(plan['original']) != plan['before_hash'] or digest(plan['applied_bytes']) != plan['after_hash']`](src/core.py#L177) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “유효한 앱 원문 백업이 아닙니다.”
 
-  입력 사례와 확인 순서: 백업이 앱이 정한 백업 폴더 안의 정상 파일이 아니거나 크기 제한을 넘으면 복원에 쓰지 않습니다. 아무 파일이나 원래 문서라고 덮어쓰지 않기 위한 확인입니다. 원문 조건 [`backup.parent != safe_path(self.data_dir / 'backups') or not backup.is_file() or backup.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L197) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 백업이 앱이 정한 백업 폴더 안의 정상 파일이 아니거나 크기 제한을 넘으면 복원에 쓰지 않습니다.
+
+아무 파일이나 원래 문서라고 덮어쓰지 않기 위한 확인입니다.
+
+원문 조건 [`backup.parent != safe_path(self.data_dir / 'backups') or not backup.is_file() or backup.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L197) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “백업 해시가 일치하지 않습니다.”
 
-  입력 사례와 확인 순서: 백업 내용의 지문이 적용 때 기록한 원본 지문과 다르면 되돌리기를 거부합니다. 파일 이름이 같더라도 내용이 달라졌다면 안전한 원본으로 보지 않습니다. 원문 조건 [`digest(raw) != receipt['before_hash']`](src/core.py#L200) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 백업 내용의 지문이 적용 때 기록한 원본 지문과 다르면 되돌리기를 거부합니다.
+
+파일 이름이 같더라도 내용이 달라졌다면 안전한 원본으로 보지 않습니다.
+
+원문 조건 [`digest(raw) != receipt['before_hash']`](src/core.py#L200) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “JSON 객체가 아닙니다.”
 
-  입력 사례와 확인 순서: 한 건의 기록은 항목 이름과 값이 짝지어진 객체여야 합니다. 예를 들어 숫자 하나나 문자열만 온 경우 이름별 필드를 읽을 수 없어 정상 기록으로 받지 않습니다. 원문 조건 [`not isinstance(row, dict)`](src/core.py#L40) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 한 건의 기록은 항목 이름과 값이 짝지어진 객체여야 합니다.
+
+예를 들어 숫자 하나나 문자열만 온 경우 이름별 필드를 읽을 수 없어 정상 기록으로 받지 않습니다.
+
+원문 조건 [`not isinstance(row, dict)`](src/core.py#L40) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “기존 관리구역 표식이 손상되었거나 중복되었습니다.”
 
-  입력 사례와 확인 순서: 시작·끝 표시가 정확히 한 쌍이 아니거나 순서가 뒤집혔다면 적용할 구간이 불명확해 거부합니다. 여러 구간 중 임의의 하나를 골라 원문을 바꾸지 않습니다. 원문 조건 [`original.count(BEGIN) != 1 or original.count(END) != 1 or original.index(BEGIN) &gt;= original.index(END)`](src/core.py#L143) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 시작·끝 표시가 정확히 한 쌍이 아니거나 순서가 뒤집혔다면 적용할 구간이 불명확해 거부합니다.
+
+여러 구간 중 임의의 하나를 골라 원문을 바꾸지 않습니다.
+
+원문 조건 [`original.count(BEGIN) != 1 or original.count(END) != 1 or original.index(BEGIN) &gt;= original.index(END)`](src/core.py#L143) (src/core.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “상태 파일이 16 MiB 상한을 초과했습니다. 원본 보존 후 점검이 필요합니다.”
 
-  입력 사례와 확인 순서: 이어 읽기 위치와 관측값을 저장한 파일이 16 MiB를 넘으면 읽기를 정상으로 계속하지 않습니다. 큰 파일을 무제한으로 처리하지 않기 위한 제한이며 원본을 남기고 왜 커졌는지 확인해야 합니다. 원문 조건 [`self.state_path.stat().st_size &gt; 16 * 1024 * 1024`](src/notifier.py#L89) (src/notifier.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 이어 읽기 위치와 관측값을 저장한 파일이 16 MiB를 넘으면 읽기를 정상으로 계속하지 않습니다.
+
+큰 파일을 무제한으로 처리하지 않기 위한 제한이며 원본을 남기고 왜 커졌는지 확인해야 합니다.
+
+원문 조건 [`self.state_path.stat().st_size &gt; 16 * 1024 * 1024`](src/notifier.py#L89) (src/notifier.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “구형 상태는 요청과 관측이 혼합되어 있습니다. 원본 보존 후 명시적 재기준선이 필요합니다.”
 
-  입력 사례와 확인 순서: 옛 저장 형식에는 모델을 쓰겠다는 요청과 실제로 관측한 값이 섞여 있습니다. 이를 새 관측 이력으로 자동 해석하지 않습니다. 명시적 재기준선은 원본을 보존한 상태에서 어느 기록부터 현재 관측의 출발점으로 삼을지 따로 정하는 절차이며 오류를 없애려고 상태를 삭제하는 뜻이 아닙니다. 원문 조건 [`self.state.get('schema_version') not in (2, 3)`](src/notifier.py#L93) (src/notifier.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 옛 저장 형식에는 모델을 쓰겠다는 요청과 실제로 관측한 값이 섞여 있습니다.
+
+이를 새 관측 이력으로 자동 해석하지 않습니다.
+
+명시적 재기준선은 원본을 보존한 상태에서 어느 기록부터 현재 관측의 출발점으로 삼을지 따로 정하는 절차이며 오류를 없애려고 상태를 삭제하는 뜻이 아닙니다.
+
+원문 조건 [`self.state.get('schema_version') not in (2, 3)`](src/notifier.py#L93) (src/notifier.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “상태 파일 구조 오류입니다. 자동 초기화하지 않습니다.”
 
-  입력 사례와 확인 순서: 저장 자료의 files·models 같은 이름별 항목이 기대한 사전 형태가 아니면 다음 읽기 위치나 관측값을 안전하게 복원할 수 없어 거부합니다. 자료 구조는 이름과 값이 대응하는 저장 형식이며 빈 파일로 자동 바꾸지 않습니다. 원문 조건 [`not isinstance(self.state.get('files'), dict) or not isinstance(self.state.get('models'), dict)`](src/notifier.py#L95) (src/notifier.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 저장 자료의 files·models 같은 이름별 항목이 기대한 사전 형태가 아니면 다음 읽기 위치나 관측값을 안전하게 복원할 수 없어 거부합니다.
+
+자료 구조는 이름과 값이 대응하는 저장 형식이며 빈 파일로 자동 바꾸지 않습니다.
+
+원문 조건 [`not isinstance(self.state.get('files'), dict) or not isinstance(self.state.get('models'), dict)`](src/notifier.py#L95) (src/notifier.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “명시 배정 상태 구조 오류입니다. 자동 초기화하지 않습니다.”
 
-  입력 사례와 확인 순서: 어떤 모델을 맡기겠다고 알린 배정 자료가 기대한 이름별 사전이 아니면 거부합니다. 이 자료를 지우고 새 실제 관측처럼 처리하지 않아 요청과 관측의 구분을 보존합니다. 원문 조건 [`not isinstance(self.state.get('declarations'), dict)`](src/notifier.py#L97) (src/notifier.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 어떤 모델을 맡기겠다고 알린 배정 자료가 기대한 이름별 사전이 아니면 거부합니다.
+
+이 자료를 지우고 새 실제 관측처럼 처리하지 않아 요청과 관측의 구분을 보존합니다.
+
+원문 조건 [`not isinstance(self.state.get('declarations'), dict)`](src/notifier.py#L97) (src/notifier.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “채팅 선택 설정 상태 구조 오류입니다. 자동 초기화하지 않습니다.”
 
-  입력 사례와 확인 순서: 채팅별 선택 설정 항목이 기대한 사전 형태가 아니면 저장 상태를 거부합니다. 설정 요청을 실제 관측 변경으로 잘못 바꾸는 자동 초기화를 하지 않습니다. 원문 조건 [`not isinstance(self.state.get('settings'), dict)`](src/notifier.py#L116) (src/notifier.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 채팅별 선택 설정 항목이 기대한 사전 형태가 아니면 저장 상태를 거부합니다.
+
+설정 요청을 실제 관측 변경으로 잘못 바꾸는 자동 초기화를 하지 않습니다.
+
+원문 조건 [`not isinstance(self.state.get('settings'), dict)`](src/notifier.py#L116) (src/notifier.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “이전 상태 백업이 원본과 다릅니다. 자동 덮어쓰기하지 않습니다.”
 
-  입력 사례와 확인 순서: 활동 상태 형식을 옮기기 전의 백업 내용이 원본과 다르면 덮어쓰지 않습니다. 이행은 저장 형식을 바꾸는 과정이며 다른 원본을 같은 자료처럼 취급하지 않습니다. 원문 조건 [`backup.read_bytes() != original`](src/notifier.py#L104) (src/notifier.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 활동 상태 형식을 옮기기 전의 백업 내용이 원본과 다르면 덮어쓰지 않습니다.
+
+이행은 저장 형식을 바꾸는 과정이며 다른 원본을 같은 자료처럼 취급하지 않습니다.
+
+원문 조건 [`backup.read_bytes() != original`](src/notifier.py#L104) (src/notifier.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “이전 상태의 파일 위치가 올바르지 않습니다. 자동 초기화하지 않습니다.”
 
-  입력 사례와 확인 순서: 이전 기록에서 읽어 둔 시작·끝 위치가 참·거짓, 정수가 아닌 값 또는 음수라면 거부합니다. 파일의 몇 번째 바이트부터 읽을지를 알 수 없으므로 0으로 임의 초기화하지 않습니다. 원문 조건 [`any(isinstance(v, bool) or not isinstance(v, int) or v &lt; 0 for v in (offset, end))`](src/notifier.py#L111) (src/notifier.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 이전 기록에서 읽어 둔 시작·끝 위치가 참·거짓, 정수가 아닌 값 또는 음수라면 거부합니다.
+
+파일의 몇 번째 바이트부터 읽을지를 알 수 없으므로 0으로 임의 초기화하지 않습니다.
+
+원문 조건 [`any(isinstance(v, bool) or not isinstance(v, int) or v &lt; 0 for v in (offset, end))`](src/notifier.py#L111) (src/notifier.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “JSON 객체가 아닙니다.”
 
-  입력 사례와 확인 순서: 한 건의 기록은 항목 이름과 값이 짝지어진 객체여야 합니다. 예를 들어 숫자 하나나 문자열만 온 경우 이름별 필드를 읽을 수 없어 정상 기록으로 받지 않습니다. 원문 조건 [`not isinstance(record, dict)`](src/notifier.py#L435) (src/notifier.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 한 건의 기록은 항목 이름과 값이 짝지어진 객체여야 합니다.
+
+예를 들어 숫자 하나나 문자열만 온 경우 이름별 필드를 읽을 수 없어 정상 기록으로 받지 않습니다.
+
+원문 조건 [`not isinstance(record, dict)`](src/notifier.py#L435) (src/notifier.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “명시 알림 파일 상한 초과”
 
-  입력 사례와 확인 순서: 명시 배정 알림 파일이 20,000바이트를 넘으면 거부합니다. 짧은 알림 전달 파일을 큰 본문 저장소처럼 읽지 않게 하기 위한 크기 제한입니다. 원문 조건 [`path.stat().st_size &gt; 20000`](src/notifier.py#L500) (src/notifier.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 명시 배정 알림 파일이 20,000바이트를 넘으면 거부합니다.
+
+짧은 알림 전달 파일을 큰 본문 저장소처럼 읽지 않게하기 위한 크기 제한입니다.
+
+원문 조건 [`path.stat().st_size &gt; 20000`](src/notifier.py#L500) (src/notifier.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
 
 - 오류 “객체가 아닌 응답”
 
-  입력 사례와 확인 순서: 계정 서버의 응답이 이름별 값을 가진 객체가 아니면 한도 자료로 읽지 않습니다. 숫자·문자열만 온 응답에서 비율을 임의로 만들지 않습니다. 원문 조건 [`not isinstance(message, dict)`](src/usage.py#L226) (src/usage.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+  입력 사례와 확인 순서: 계정 서버의 응답이 이름별 값을 가진 객체가 아니면 한도 자료로 읽지 않습니다.
 
-**알림이 없거나 값이 비어 있을 때**: 감시 sessions 경로·새 JSONL 기록·중복 실행 잠금·알림 설정을 순서대로 확인합니다. 최초 기준선 읽기와 새 변경은 다릅니다. 자산·글꼴 오류라면 이 차수 assets와 라이선스를 대조합니다. 과거 대용량 프레임 자산이 소스 이력에 없을 수 있습니다. 이유·이전값이 없으면 원문 필드를 확인하며 동기를 추정하지 않습니다.
+숫자·문자열만 온 응답에서 비율을 임의로 만들지 않습니다.
+
+원문 조건 [`not isinstance(message, dict)`](src/usage.py#L226) (src/usage.py)와 준비한 입력을 대조해, 어느 조건이 거부됐는지를 기록합니다.
+
+**알림이 없거나 값이 비어 있을 때**: 감시 sessions 경로·새 JSONL 기록·중복 실행 잠금·알림 설정을 순서대로 확인합니다.
+
+최초 기준 선 읽기와 새 변경은 다릅니다.
+
+자산·글 꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
+
+과거 대용량 프레임 자산이 소스 이력에 없을 수 있습니다.
+
+이유·이전 값이 없으면 원 문 필드를 확인하며 동기를 추정하지 않습니다.
 
 설정·이력·로컬 진단은 개인 운영자료입니다. 다른 사람에게 공유하기 전에 포함된 내용을 확인합니다. **로컬 기록은 서버 모델 신원 증명이 아닙니다.**
 
@@ -2112,7 +2437,13 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - **수정** [src/visuals.py](src/visuals.py): 실행 자료에 이 변경이 반영되어 있는지 대조합니다.
 
-**당시 실행 결과는 이 공개 이력에 보존되지 않아 실행 여부를 확인할 수 없습니다.** 여기서 확인된 것은 공개 소스 바이트 비교입니다. 원문에는 현재 소스 사본에 `git -c core.autocrlf=false apply --reverse --binary -p1`을 적용해 직전 소스의 부재·추가·삭제까지 복원하여 바이트 대조했다고 적혀 있습니다. 이는 과거 앱 실행 성공이나 성능 측정을 뜻하지 않습니다. Python 외에 존재하는 보조 PowerShell·의존성 목록도 비교에 포함하며 부가 자료는 별도 명세로 구분합니다.
+**당시 실행 결과는 이 공개 이력에 보존되지 않아 실행 여부를 확인할 수 없습니다.** 여기서 확인된 것은 공개 소스 바이트 비교입니다.
+
+원문에는 현재 소스 사본에 `git -c core.autocrlf=false apply --reverse --binary -p1`을 적용해 직전 소스의 부재·추가·삭제까지 복원하여 바이트 대조했다고 적혀 있습니다.
+
+이는 과거 앱 실행 성공이나 성능 측정을 뜻하지 않습니다.
+
+Python 외에 존재하는 보조 PowerShell·의존성 목록도 비교에 포함하며 부가 자료는 별도 명세로 구분합니다.
 
 [부가자료 원문 안내](보존자료.md)와 [부가자료 보존 명세](부가자료_보존.json)는 실행 소스 비교와 역할을 나눠 읽습니다.
 
@@ -2129,7 +2460,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [src/theme.py](src/theme.py): 한글 파일 선택창의 이름 열·버튼·기본 문구를 각 조건으로 대조합니다. 앱 바깥 시스템 설정이 바뀌는 것으로 읽지 않습니다.
 
-- [src/usage.py](src/usage.py): 선택한 EXE·실제 계정 연결·원본 한도 응답을 준비합니다. 숫자 1과 참 값, 비어 있는 기간과 실제 0 비율을 구분해 표시와 대조합니다.
+- [src/usage.py](src/usage.py): 선택한 EXE·실제 계정 연결·원본 한도 응답을 준비합니다. 숫자 1 과 참 값, 비어 있는 기간과 실제 0 비율을 구분해 표시와 대조합니다.
 
 - [src/visuals.py](src/visuals.py): 그림에 합성되는 수치·상태가 원문 값과 맞는지 대조하고, 회전하는 그림과 고정 문구의 표시를 별도로 확인할 사례를 준비합니다. 형상 좌표와 실제 계정 비율은 다른 단위입니다.
 
@@ -2157,7 +2488,7 @@ Codex App Server의 `account/rateLimits/read`를 읽기 전용으로 조회합�
 | 파일 | 역할·구성 |
 | --- | --- |
 | [src/app.py](src/app.py) | Codex Orbit: 투명 궤도와 로컬 감시, 명시적 Markdown 지침 적용. |
-| [src/notifier.py](src/notifier.py) | 현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다. |
+| [src/notifier.py](src/notifier.py) | 현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기.<br>외부 통신은 하지 않습니다. |
 | [src/core.py](src/core.py) | 외부 통신 없는 로컬 자료 읽기와 명시적 지침 적용. |
 | [src/theme.py](src/theme.py) | 앱이 소유하는 모든 화면과 대화상자의 공통 무채색 테마입니다. |
 | [src/usage.py](src/usage.py) | Codex App Server의 계정 사용 한도를 읽기 전용으로 조회합니다. |
@@ -2172,7 +2503,7 @@ Codex App Server의 `account/rateLimits/read`를 읽기 전용으로 조회합�
 
 ### LEVEL 4 · 조건·변경·결과를 함께 검토하기
 
-Windows와 해당 폴더의 requirements.txt를 기준으로 Python 의존성을 준비합니다. history는 공개 소스 보존본이며 현재 루트 assets가 과거 모든 차수의 자산과 호환된다는 뜻은 아닙니다.
+Windows와 해당 폴더의 requirements.txt를 기준으로 Python 의존성을 준비합니다. history는 공개 소스 보존 본이며 현재 루트 assets가 과거 모든 차수의 자산과 호환된다는 뜻은 아닙니다.
 
 자산과 의존성을 준비한 이 차수 폴더에서 `python src/app.py`를 실행합니다. history 소스만으로 과거 배포 EXE와 동일한 화면·자산이 모두 복원되지는 않습니다.
 
@@ -2196,7 +2527,7 @@ PyInstaller==6.22.3
 **정의된 옵션 이름:** `--sessions`, `--work`
 
 
-각 옵션의 기본값·필수값·부작용은 해당 main과 인자 정의를 함께 확인합니다.
+각 옵션의 기본 값·필수값·부작용은 해당 main과 인자 정의를 함께 확인합니다.
 
 
 <details>
@@ -2274,7 +2605,7 @@ PyInstaller==6.22.3
 
 | 정의 | 역할 |
 | --- | --- |
-| [`read_jsonl_tail`](src/core.py#L18) | 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
+| [`read_jsonl_tail`](src/core.py#L18) | 물리적 LF만 나누며 잘 린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
 | [`title_catalog`](src/core.py#L55) | 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
 | [`resolve_title`](src/core.py#L73) | 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
 | [`safe_path`](src/core.py#L97) | 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
@@ -2418,7 +2749,7 @@ PyInstaller==6.22.3
 | --- | --- |
 | [`number`](src/usage.py#L16) | 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
 | [`normalize_limits`](src/usage.py#L35) | 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
-| [`discover_codex`](src/usage.py#L69) | 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
+| [`discover_codex`](src/usage.py#L69) | 사용자 선택, PATH, 공식 데스크 톱 번들 위치 순으로 EXE만 찾습니다. |
 
 | 설정·옵션 | 선언 |
 | --- | --- |
@@ -2466,17 +2797,19 @@ PyInstaller==6.22.3
 [자료 폴더](.) · [직전 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [이 차수의 원래 전체 상세](#reading-level-5)
 
 
-### LEVEL 4 · 11차의 구체적인 기능과 확인
+### LEVEL 4·11차의 구체적인 기능과 확인
 
-10차→11차는 app.py·theme.py·visuals.py 수정입니다. 두 종류 전후 값의 데이터 대응과 사용자용 이름 변환을 분리하고, 큰 제목·한도 요약·테마의 표시 영향을 검토합니다. 사람에게 쉬운 이름으로 바꿔도 원본 모델·강도의 의미를 바꾸지 않는 것이 경계입니다.
+10차 →11차는 app.py·theme.py·visuals.py 수정입니다. 두 종류 전후 값의 데이터 대응과 사용자용 이름 변환을 분리하고, 큰 제목·한도 요약·테마의 표시 영향을 검토합니다. 사람에게 쉬운 이름으로 바꿔도 원본 모델·강도의 의미를 바꾸지 않는 것이 경계입니다.
 
 **로컬 수집 경계와 UI·명시적 파일 작업의 경계**를 분리합니다. JSONL 입력에서 변경 감지·공개 이유 정리·알림·상세 표시로 이어지고, 설정·이력·진단은 로컬 운영 자료입니다. 관측된 변경과 명시 배정의 근거를 혼합하지 않습니다.
 
-Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Python 의존성과 해당 자산을 준비한 뒤 **이 차수 폴더에서** `python src/app.py`를 실행합니다. 현재 루트의 assets가 과거 모든 차수와 호환되는 것은 아니며, history 소스만으로 과거 EXE의 화면·자산 전체가 복원되는 것도 아닙니다.
+Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Python 의존성과 해당 자산을 준비한 뒤 **이 차수 폴더에서** `python src/app.py`를 실행합니다.
+
+현재 루트의 assets가 과거 모든 차수와 호환되는 것은 아니며, history 소스만으로 과거 EXE의 화면·자산 전체가 복원되는 것도 아닙니다.
 
 아래 모듈·선언·거부 조건은 변경 영향 검토의 출발점입니다. 이름·상수만으로 전체 호출 순서나 예외 전파를 추정하지 말고 연결된 코드에서 분기와 호출자를 대조합니다.
 
-**이 보관본 의존성 선언**: PySide6-Essentials==6.12.0 · PyInstaller==6.22.3. PySide6는 창을 만드는 도구이고 PyInstaller는 실행 파일을 묶는 도구입니다. 외부 실행 도구·GPU 드라이버는 별도 조건입니다.
+**이 보관본 의존성 선언**: PySide6-Essentials ==6.12.0·PyInstaller ==6.22.3. PySide6는 창을 만드는 도구이고 PyInstaller는 실행 파일을 묶는 도구입니다. 외부 실행 도구·GPU 드라이버는 별도 조건입니다.
 
 **자료 경계와 모듈 연결**
 
@@ -2510,7 +2843,13 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`--data-dir`](src/app.py#L1363) (src/app.py)
 
-  앱 설정·이력을 저장할 폴더를 고릅니다. 기본은 LOCALAPPDATA 아래 CodexOrbit이며 그 환경값이 없으면 사용자 홈을 기준으로 합니다. 같은 폴더 중복 실행 잠금과 연결됩니다. 원문 선언: `type=Path; default=Path(os.environ.get('LOCALAPPDATA', Path.home())) / 'CodexOrbit'`.
+  앱 설정·이력을 저장할 폴더를 고릅니다.
+
+기본은 LOCALAPPDATA 아래 CodexOrbit이며 그 환경 값이 없으면 사용자 홈을 기준으로 합니다.
+
+같은 폴더 중복 실행 잠금과 연결됩니다.
+
+원문 선언: `type=Path; default=Path(os.environ.get('LOCALAPPDATA', Path.home())) / 'CodexOrbit'`.
 
 - [`--sessions`](src/app.py#L1364) (src/app.py)
 
@@ -2538,7 +2877,13 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`ROLE_LABELS`](src/app.py#L72) (src/app.py)
 
-  역할 코드와 사용자용 한글 이름의 대응표입니다. 예를 들어 build는 구현, verifier는 독립 검증으로 읽습니다. 화면 설명을 바꾸는 표이며 서버 모델을 바꾸는 설정은 아닙니다. 원문 선언: `정의={'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}`.
+  역할 코드와 사용자용 한글 이름의 대응 표입니다.
+
+예를 들어 build는 구현, verifier는 독립 검증으로 읽습니다.
+
+화면 설명을 바꾸는 표이며 서버 모델을 바꾸는 설정은 아닙니다.
+
+원문 선언: `정의={'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}`.
 
 - [`MAX_TEXT_BYTES`](src/core.py#L9) (src/core.py)
 
@@ -2570,15 +2915,15 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`READ_BYTES`](src/notifier.py#L19) (src/notifier.py)
 
-  한 번에 한 파일에서 읽는 양을 제한합니다. 단위는 바이트로, 큰 기록 파일 전체를 한 번에 들이지 않게 하는 경계입니다. 계산한 값은 524,288이며 바이트 제한에서는 512 KiB입니다. 원문 선언: `정의=512 * 1024`.
+  한 번에 한 파일에서 읽는 양을 제한합니다. 단위는 바이트로, 큰 기록 파일 전체를 한 번에 들이지 않게하는 경계입니다. 계산한 값은 524,288이며 바이트 제한에서는 512 KiB입니다. 원문 선언: `정의=512 * 1024`.
 
 - [`MAX_RECORD`](src/notifier.py#L20) (src/notifier.py)
 
-  기록 한 건이 가질 수 있는 최대 크기입니다. 커다란 한 줄을 무제한으로 해석하지 않도록 하는 제한이며 단위는 바이트입니다. 계산한 값은 2,097,152이며 바이트 제한에서는 2,048 KiB입니다. 원문 선언: `정의=2 * 1024 * 1024`.
+  기록 한 건이 가질 수 있는 최대 크기입니다. 커다란 한 줄을 무제한으로 해석하지 않도록하는 제한이며 단위는 바이트입니다. 계산한 값은 2,097,152이며 바이트 제한에서는 2,048 KiB입니다. 원문 선언: `정의=2 * 1024 * 1024`.
 
 - [`MAX_FILES`](src/notifier.py#L21) (src/notifier.py)
 
-  감시에서 다룰 파일 개수의 최대값입니다. 폴더가 커져도 파일 목록을 제한 없이 늘리지 않게 합니다. 계산한 값은 4,096입니다. 원문 선언: `정의=4096`.
+  감시에서 다룰 파일 개수의 최대 값입니다. 폴더가 커져도 파일 목록을 제한 없이 늘리지 않게합니다. 계산한 값은 4,096입니다. 원문 선언: `정의=4096`.
 
 - [`LOG_BYTES`](src/notifier.py#L22) (src/notifier.py)
 
@@ -2586,11 +2931,11 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`POLL_READ_BYTES`](src/notifier.py#L23) (src/notifier.py)
 
-  감시 한 차례에서 읽을 전체 자료량을 제한합니다. 파일 하나의 상한과 별개인 바이트 단위 총량이므로 여러 파일을 합친 부담을 구분합니다. 계산한 값은 8,388,608이며 바이트 제한에서는 8,192 KiB입니다. 원문 선언: `정의=8 * 1024 * 1024`.
+  감시 한 차례에서 읽을 전체 자료 량을 제한합니다. 파일 하나의 상한과 별개 인 바이트 단위 총량이므로 여러 파일을 합친 부담을 구분합니다. 계산한 값은 8,388,608이며 바이트 제한에서는 8,192 KiB입니다. 원문 선언: `정의=8 * 1024 * 1024`.
 
 - [`MAX_PENDING`](src/notifier.py#L24) (src/notifier.py)
 
-  처리가 끝나기를 기다리는 기록 개수의 상한입니다. 숫자는 프레임 수나 토큰 수가 아니라 대기 항목 수입니다. 선언 숫자는 256입니다. 원문 선언: `정의=256`.
+  처리가 끝나기를 기다리는 기록 개 수의 상한입니다. 숫자는 프레임 수나 토큰 수가 아니라 대기 항목 수입니다. 선언 숫자는 256입니다. 원문 선언: `정의=256`.
 
 - [`POLL_INTERVAL_SECONDS`](src/notifier.py#L25) (src/notifier.py)
 
@@ -2598,7 +2943,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`MAX_BYTES`](src/usage.py#L12) (src/usage.py)
 
-  계정 응답에서 읽을 최대 자료량입니다. 단위는 바이트이며 응답이 너무 클 때 무제한으로 받아들이지 않게 하는 경계입니다. 계산한 값은 1,048,576이며 바이트 제한에서는 1,024 KiB입니다. 원문 선언: `정의=1024 * 1024`.
+  계정 응답에서 읽을 최대 자료 량입니다. 단위는 바이트이며 응답이 너무 클 때 무제한으로 받아들이지 않게하는 경계입니다. 계산한 값은 1,048,576이며 바이트 제한에서는 1,024 KiB입니다. 원문 선언: `정의=1024 * 1024`.
 
 - [`KST`](src/usage.py#L13) (src/usage.py)
 
@@ -2636,7 +2981,11 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`atomic_json`](src/notifier.py#L32) (src/notifier.py)
 
-  이 분기의 설계 책임은 같은 폴더에 따로 임시 파일을 완성한 뒤 교체하고 Windows의 짧은 파일 공유 충돌만 다시 시도합니다. 이를 바꾸면 보존해야 할 결과는 “반쯤 쓴 상태를 원래 파일처럼 노출하지 않도록 저장 경로를 구성합니다”입니다. 파일 저장 전체를 무제한 재시도하거나 모든 오류를 정상으로 감추지 않기 위해서입니다
+  이 분기의 설계 책임은 같은 폴더에 따로 임시 파일을 완성한 뒤 교체하고 Windows의 짧은 파일 공유 충돌만 다시 시도합니다.
+
+이를 바꾸면 보존해야할 결과는 “반쯤 쓴 상태를 원래 파일처럼 노출하지 않도록 저장 경로를 구성합니다”입니다.
+
+파일 저장 전체를 무제한 재시도하거나 모든 오류를 정상으로 감추지 않기 위해서입니다
 
 - [`source_datetime`](src/notifier.py#L62) (src/notifier.py)
 
@@ -2672,7 +3021,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`number`](src/usage.py#L16) (src/usage.py)
 
-  이 분기의 설계 책임은 그 값을 올바른 한도 숫자로 받아들이지 않습니다. 이를 바꾸면 보존해야 할 결과는 “잘못된 입력이 사용 가능한 비율로 표시되지 않습니다”입니다. 예를 들어 참을 숫자 1처럼 읽어 정상 비율로 오해하지 않기 위해서입니다
+  이 분기의 설계 책임은 그 값을 올바른 한도 숫자로 받아들이지 않습니다. 이를 바꾸면 보존해야할 결과는 “잘못된 입력이 사용 가능한 비율로 표시되지 않습니다”입니다. 예를 들어 참을 숫자 1처럼 읽어 정상 비율로 오해하지 않기 위해서입니다
 
 - [`normalize_limits`](src/usage.py#L35) (src/usage.py)
 
@@ -2680,11 +3029,11 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`discover_codex`](src/usage.py#L69) (src/usage.py)
 
-  이 분기의 설계 책임은 사용자가 고른 위치, 명령 검색 경로 PATH, 공식 데스크톱 앱 묶음 위치 순서로 실행 파일 EXE만 찾습니다 이를 바꾸면 보존해야 할 결과는 “선택 순서에 맞는 실제 실행 파일이 연결 후보가 됩니다”입니다. 동명이름의 문서·폴더를 실행 프로그램으로 잘못 사용하지 않기 위해서입니다
+  이 분기의 설계 책임은 사용자가 고른 위치, 명령 검색 경로 PATH, 공식 데스크 톱 앱 묶음 위치 순서로 실행 파일 EXE만 찾습니다 이를 바꾸면 보존해야할 결과는 “선택 순서에 맞는 실제 실행 파일이 연결 후보가 됩니다”입니다. 동명 이름의 문서·폴더를 실행 프로그램으로 잘못 사용하지 않기 위해서입니다
 
 - [`rotate_point`](src/visuals.py#L8) (src/visuals.py)
 
-  이 분기의 설계 책임은 가로 X축·세로 Y축·깊이 Z축 순서로 회전시키고 깊이값도 남깁니다. 이를 바꾸면 보존해야 할 결과는 “평면 위치뿐 아니라 앞뒤를 나타내는 좌표가 유지됩니다”입니다. 회전 순서를 바꾸면 같은 각도여도 물체 방향이 달라질 수 있기 때문입니다
+  이 분기의 설계 책임은 가로 X 축·세로 Y 축·깊이 Z 축 순서로 회전시키고 깊이 값도 남깁니다. 이를 바꾸면 보존해야할 결과는 “평면 위치뿐 아니라 앞뒤를 나타내는 좌표가 유지됩니다”입니다. 회전 순서를 바꾸면 같은 각도여도 물체 방향이 달라질 수 있기 때문입니다
 
 - [`orbit_segments`](src/visuals.py#L23) (src/visuals.py)
 
@@ -2698,7 +3047,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - 거부 분기 [`not lock.tryLock(100)`](src/app.py#L1394) (src/app.py) → 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다.
 
-  같은 저장 폴더를 이미 다른 Codex Orbit가 쓰거나 잠금 파일에 접근할 수 없으면 시작을 거부합니다. 한 설정·상태 파일을 두 실행이 동시에 바꾸지 않도록 하며, 이 메시지만으로 어느 쪽 원인인지 확정하지 않습니다.
+  같은 저장 폴더를 이미 다른 Codex Orbit가 쓰거나 잠금 파일에 접근할 수 없으면 시작을 거부합니다. 한 설정·상태 파일을 두 실행이 동시에 바꾸지 않도록하며, 이 메시지만으로 어느 쪽 원인인지 확정하지 않습니다.
 
 - 거부 분기 [`not isinstance(value, dict)`](src/app.py#L157) (src/app.py) → 앱 설정은 JSON 객체여야 합니다.
 
@@ -2738,7 +3087,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - 거부 분기 [`target.exists() and (not target.is_file() or target.stat().st_size &gt; MAX_TEXT_BYTES)`](src/core.py#L127) (src/core.py) → 대상은 2 MiB 이하의 일반 파일이어야 합니다.
 
-  기존 대상이 일반 파일이 아니거나 2 MiB보다 크면 적용하지 않습니다. 폴더·특수 파일을 문서처럼 취급하거나 대용량 원본을 바꾸지 않게 합니다.
+  기존 대상이 일반 파일이 아니거나 2 MiB보다 크면 적용하지 않습니다. 폴더·특수 파일을 문서처럼 취급하거나 대용량 원본을 바꾸지 않게합니다.
 
 - 거부 분기 [`not content.strip() or len(added) &gt; MAX_TEXT_BYTES`](src/core.py#L134) (src/core.py) → 빈 지침 또는 2 MiB 초과 지침은 적용할 수 없습니다.
 
@@ -2810,13 +3159,21 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - 거부 분기 [`path.stat().st_size &gt; 20000`](src/notifier.py#L500) (src/notifier.py) → 명시 알림 파일 상한 초과
 
-  명시 배정 알림 파일이 20,000바이트를 넘으면 거부합니다. 짧은 알림 전달 파일을 큰 본문 저장소처럼 읽지 않게 하기 위한 크기 제한입니다.
+  명시 배정 알림 파일이 20,000바이트를 넘으면 거부합니다. 짧은 알림 전달 파일을 큰 본문 저장소처럼 읽지 않게하기 위한 크기 제한입니다.
 
 - 거부 분기 [`not isinstance(message, dict)`](src/usage.py#L226) (src/usage.py) → 객체가 아닌 응답
 
   계정 서버의 응답이 이름별 값을 가진 객체가 아니면 한도 자료로 읽지 않습니다. 숫자·문자열만 온 응답에서 비율을 임의로 만들지 않습니다.
 
-**알림이 없거나 값이 비어 있을 때**: 감시 sessions 경로·새 JSONL 기록·중복 실행 잠금·알림 설정을 순서대로 확인합니다. 최초 기준선 읽기와 새 변경은 다릅니다. 자산·글꼴 오류라면 이 차수 assets와 라이선스를 대조합니다. 과거 대용량 프레임 자산이 소스 이력에 없을 수 있습니다. 이유·이전값이 없으면 원문 필드를 확인하며 동기를 추정하지 않습니다.
+**알림이 없거나 값이 비어 있을 때**: 감시 sessions 경로·새 JSONL 기록·중복 실행 잠금·알림 설정을 순서대로 확인합니다.
+
+최초 기준 선 읽기와 새 변경은 다릅니다.
+
+자산·글 꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
+
+과거 대용량 프레임 자산이 소스 이력에 없을 수 있습니다.
+
+이유·이전 값이 없으면 원 문 필드를 확인하며 동기를 추정하지 않습니다.
 
 설정·이력·로컬 진단은 개인 운영자료입니다. 다른 사람에게 공유하기 전에 포함된 내용을 확인합니다. **로컬 기록은 서버 모델 신원 증명이 아닙니다.**
 
@@ -2832,7 +3189,13 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - **수정** [src/visuals.py](src/visuals.py): 변경 영향은 연결된 전체 diff의 실제 분기로 한정합니다.
 
-**당시 실행 결과는 이 공개 이력에 보존되지 않아 실행 여부를 확인할 수 없습니다.** 여기서 확인된 것은 공개 소스 바이트 비교입니다. 원문에는 현재 소스 사본에 `git -c core.autocrlf=false apply --reverse --binary -p1`을 적용해 직전 소스의 부재·추가·삭제까지 복원하여 바이트 대조했다고 적혀 있습니다. 이는 과거 앱 실행 성공이나 성능 측정을 뜻하지 않습니다. Python 외에 존재하는 보조 PowerShell·의존성 목록도 비교에 포함하며 부가 자료는 별도 명세로 구분합니다.
+**당시 실행 결과는 이 공개 이력에 보존되지 않아 실행 여부를 확인할 수 없습니다.** 여기서 확인된 것은 공개 소스 바이트 비교입니다.
+
+원문에는 현재 소스 사본에 `git -c core.autocrlf=false apply --reverse --binary -p1`을 적용해 직전 소스의 부재·추가·삭제까지 복원하여 바이트 대조했다고 적혀 있습니다.
+
+이는 과거 앱 실행 성공이나 성능 측정을 뜻하지 않습니다.
+
+Python 외에 존재하는 보조 PowerShell·의존성 목록도 비교에 포함하며 부가 자료는 별도 명세로 구분합니다.
 
 [부가자료 원문 안내](보존자료.md)와 [부가자료 보존 명세](부가자료_보존.json)는 실행 소스 비교와 역할을 나눠 읽습니다.
 
@@ -2857,17 +3220,19 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 ## LEVEL 5 - Expert
 
 
-### LEVEL 5 · 11차의 구체적인 기능과 확인
+### LEVEL 5·11차의 구체적인 기능과 확인
 
-전후 필드 대응과 강도 이름 표시는 데이터 해석 검토 대상이고 배치는 시각 검토 대상입니다. 당시 실행 결과가 공개 이력에 없으므로 가독성 개선의 사용자 평가나 오독률은 미측정입니다. 실제 diff와 원문 필드가 근거이며 한도 비율을 추론 능력이나 성능 수치로 연결하지 않습니다.
+전후 필드 대응과 강도 이름 표시는 데이터 해석 검토 대상이고 배 치는 시각 검토 대상입니다. 당시 실행 결과가 공개 이력에 없으므로 가독성 개선의 사용자 평가나 오독률은 미측정입니다. 실제 diff와 원문 필드가 근거이며 한도 비율을 추론 능력이나 성능 수치로 연결하지 않습니다.
 
-**증거의 범위는 이 차수 공개 원문과 보존 소스입니다.** 로컬 기록의 모델·추론 값은 서버가 보증한 모델 신원 인증이 아닙니다. 원문에 없는 이유·이전값·실행 성과는 보간하지 않습니다. 입력은 현재 사용자 JSONL과 설정, 출력은 알림·이력·로컬 진단이며 관측 변경과 명시 배정은 다른 증거 종류입니다.
+**증거의 범위는 이 차수 공개 원문과 보존 소스입니다.** 로컬 기록의 모델·추론 값은 서버가 보증한 모델 신원 인증이 아닙니다. 원문에 없는 이유·이전 값·실행 성과는 보 간하지 않습니다. 입력은 현재 사용자 JSONL과 설정, 출력은 알림·이력·로컬 진단이며 관측 변경과 명시 배정은 다른 증거 종류입니다.
 
-Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Python 의존성과 해당 자산을 준비한 뒤 **이 차수 폴더에서** `python src/app.py`를 실행합니다. 현재 루트의 assets가 과거 모든 차수와 호환되는 것은 아니며, history 소스만으로 과거 EXE의 화면·자산 전체가 복원되는 것도 아닙니다.
+Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Python 의존성과 해당 자산을 준비한 뒤 **이 차수 폴더에서** `python src/app.py`를 실행합니다.
+
+현재 루트의 assets가 과거 모든 차수와 호환되는 것은 아니며, history 소스만으로 과거 EXE의 화면·자산 전체가 복원되는 것도 아닙니다.
 
 재현에는 동일 차수 의존성·자산·입력·설정·실행 표면이 필요합니다. 아래 선언의 상한·스키마·거부 분기는 검토 가능한 소스 조건이며, 실제 부하·종료·화면 동작의 성공 증거와 구분합니다.
 
-**이 보관본 의존성 선언**: PySide6-Essentials==6.12.0 · PyInstaller==6.22.3. PySide6는 창을 만드는 도구이고 PyInstaller는 실행 파일을 묶는 도구입니다. 외부 실행 도구·GPU 드라이버는 별도 조건입니다.
+**이 보관본 의존성 선언**: PySide6-Essentials ==6.12.0·PyInstaller ==6.22.3. PySide6는 창을 만드는 도구이고 PyInstaller는 실행 파일을 묶는 도구입니다. 외부 실행 도구·GPU 드라이버는 별도 조건입니다.
 
 **자료 경계와 모듈 연결**
 
@@ -2959,7 +3324,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`QuitGuard`](src/app.py#L1005) (src/app.py): 원문이 명시한 동작 계약은 다음과 같습니다. 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다.
 
-- [`read_jsonl_tail`](src/core.py#L18) (src/core.py): 원문이 명시한 동작 계약은 다음과 같습니다. 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다.
+- [`read_jsonl_tail`](src/core.py#L18) (src/core.py): 원문이 명시한 동작 계약은 다음과 같습니다. 물리적 LF만 나누며 잘 린 앞/뒤 조각은 레코드로 해석하지 않습니다.
 
 - [`title_catalog`](src/core.py#L55) (src/core.py): 원문이 명시한 동작 계약은 다음과 같습니다. 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다.
 
@@ -2989,7 +3354,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [`normalize_limits`](src/usage.py#L35) (src/usage.py): 원문이 명시한 동작 계약은 다음과 같습니다. 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다.
 
-- [`discover_codex`](src/usage.py#L69) (src/usage.py): 원문이 명시한 동작 계약은 다음과 같습니다. 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다.
+- [`discover_codex`](src/usage.py#L69) (src/usage.py): 원문이 명시한 동작 계약은 다음과 같습니다. 사용자 선택, PATH, 공식 데스크 톱 번들 위치 순으로 EXE만 찾습니다.
 
 - [`rotate_point`](src/visuals.py#L8) (src/visuals.py): 원문이 명시한 동작 계약은 다음과 같습니다. X·Y·Z 순서로 회전하며 깊이 좌표를 보존합니다.
 
@@ -3059,7 +3424,15 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - 경계 사례 [`not isinstance(message, dict)`](src/usage.py#L226) (src/usage.py): 원문 오류는 “객체가 아닌 응답”. 허용 입력과 구분해 재현할 조건입니다.
 
-**알림이 없거나 값이 비어 있을 때**: 감시 sessions 경로·새 JSONL 기록·중복 실행 잠금·알림 설정을 순서대로 확인합니다. 최초 기준선 읽기와 새 변경은 다릅니다. 자산·글꼴 오류라면 이 차수 assets와 라이선스를 대조합니다. 과거 대용량 프레임 자산이 소스 이력에 없을 수 있습니다. 이유·이전값이 없으면 원문 필드를 확인하며 동기를 추정하지 않습니다.
+**알림이 없거나 값이 비어 있을 때**: 감시 sessions 경로·새 JSONL 기록·중복 실행 잠금·알림 설정을 순서대로 확인합니다.
+
+최초 기준 선 읽기와 새 변경은 다릅니다.
+
+자산·글 꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
+
+과거 대용량 프레임 자산이 소스 이력에 없을 수 있습니다.
+
+이유·이전 값이 없으면 원 문 필드를 확인하며 동기를 추정하지 않습니다.
 
 설정·이력·로컬 진단은 개인 운영자료입니다. 다른 사람에게 공유하기 전에 포함된 내용을 확인합니다. **로컬 기록은 서버 모델 신원 증명이 아닙니다.**
 
@@ -3075,14 +3448,19 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - **수정** [src/visuals.py](src/visuals.py): 공개 바이트 비교에서 분류된 변경이며 의도·성능을 추정하지 않습니다.
 
-**당시 실행 결과는 이 공개 이력에 보존되지 않아 실행 여부를 확인할 수 없습니다.** 여기서 확인된 것은 공개 소스 바이트 비교입니다. 원문에는 현재 소스 사본에 `git -c core.autocrlf=false apply --reverse --binary -p1`을 적용해 직전 소스의 부재·추가·삭제까지 복원하여 바이트 대조했다고 적혀 있습니다. 이는 과거 앱 실행 성공이나 성능 측정을 뜻하지 않습니다. Python 외에 존재하는 보조 PowerShell·의존성 목록도 비교에 포함하며 부가 자료는 별도 명세로 구분합니다.
+**당시 실행 결과는 이 공개 이력에 보존되지 않아 실행 여부를 확인할 수 없습니다.** 여기서 확인된 것은 공개 소스 바이트 비교입니다.
+
+원문에는 현재 소스 사본에 `git -c core.autocrlf=false apply --reverse --binary -p1`을 적용해 직전 소스의 부재·추가·삭제까지 복원하여 바이트 대조했다고 적혀 있습니다.
+
+이는 과거 앱 실행 성공이나 성능 측정을 뜻하지 않습니다.
+
+Python 외에 존재하는 보조 PowerShell·의존성 목록도 비교에 포함하며 부가 자료는 별도 명세로 구분합니다.
 
 [부가자료 원문 안내](보존자료.md)와 [부가자료 보존 명세](부가자료_보존.json)는 실행 소스 비교와 역할을 나눠 읽습니다.
 
 
 기존의 전체 설명·표·코드·함수 참조·파일별 비교는 아래에 그대로 이어집니다. [자료 폴더](.) · [직전 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [이 차수의 원래 전체 상세](#reading-level-5)
 <!-- reading-levels:end -->
-
 
 
 [프로젝트](../../README.md) · [전체 차수](../../docs/REVISION_INDEX.md) · [원본 자료](.) · [← 이전: 10차](../10%EC%B0%A8/README.md) · [다음: 12차 →](../12%EC%B0%A8/README.md)
@@ -3163,7 +3541,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 | 파일 | 역할·구성 |
 | --- | --- |
 | [src/app.py](src/app.py) | Codex Orbit: 투명 궤도와 로컬 감시, 명시적 Markdown 지침 적용. |
-| [src/notifier.py](src/notifier.py) | 현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다. |
+| [src/notifier.py](src/notifier.py) | 현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기.<br>외부 통신은 하지 않습니다. |
 | [src/core.py](src/core.py) | 외부 통신 없는 로컬 자료 읽기와 명시적 지침 적용. |
 | [src/theme.py](src/theme.py) | 앱이 소유하는 모든 화면과 대화상자의 공통 무채색 테마입니다. |
 | [src/usage.py](src/usage.py) | Codex App Server의 계정 사용 한도를 읽기 전용으로 조회합니다. |
@@ -3174,7 +3552,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 <a name="-설치-환경과-실행사용법"></a>
 ## 설치 환경과 실행·사용법
 
-Windows와 해당 폴더의 requirements.txt를 기준으로 Python 의존성을 준비합니다. history는 공개 소스 보존본이며 현재 루트 assets가 과거 모든 차수의 자산과 호환된다는 뜻은 아닙니다.
+Windows와 해당 폴더의 requirements.txt를 기준으로 Python 의존성을 준비합니다. history는 공개 소스 보존 본이며 현재 루트 assets가 과거 모든 차수의 자산과 호환된다는 뜻은 아닙니다.
 
 자산과 의존성을 준비한 이 차수 폴더에서 `python src/app.py`를 실행합니다. history 소스만으로 과거 배포 EXE와 동일한 화면·자산이 모두 복원되지는 않습니다.
 
@@ -3200,7 +3578,7 @@ PyInstaller==6.22.3
 **정의된 옵션 이름:** `--sessions`, `--work`
 
 
-각 옵션의 기본값·필수값·부작용은 해당 main과 인자 정의를 함께 확인합니다.
+각 옵션의 기본 값·필수값·부작용은 해당 main과 인자 정의를 함께 확인합니다.
 
 
 <details>
@@ -3278,7 +3656,7 @@ PyInstaller==6.22.3
 
 | 정의 | 역할 |
 | --- | --- |
-| [`read_jsonl_tail`](src/core.py#L18) | 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
+| [`read_jsonl_tail`](src/core.py#L18) | 물리적 LF만 나누며 잘 린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
 | [`title_catalog`](src/core.py#L55) | 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
 | [`resolve_title`](src/core.py#L73) | 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
 | [`safe_path`](src/core.py#L97) | 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
@@ -3422,7 +3800,7 @@ PyInstaller==6.22.3
 | --- | --- |
 | [`number`](src/usage.py#L16) | 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
 | [`normalize_limits`](src/usage.py#L35) | 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
-| [`discover_codex`](src/usage.py#L69) | 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
+| [`discover_codex`](src/usage.py#L69) | 사용자 선택, PATH, 공식 데스크 톱 번들 위치 순으로 EXE만 찾습니다. |
 
 | 설정·옵션 | 선언 |
 | --- | --- |
@@ -3484,13 +3862,15 @@ PyInstaller==6.22.3
 
 - **검증:** 당시 실행 결과는 이 공개 이력에 보존되지 않아 실행 여부를 확인할 수 없습니다. 여기서는 공개 소스 바이트만 비교했습니다.
 
-- **수정** `src/app.py`: 이전 70594바이트, SHA-256 `b6eb55394e32a9270f44b0d717f9a69b851f93a09782821386d7eb2e351b58e0`; 현재 77206바이트, SHA-256 `aa9ab7a95f5b34f136ad7633b540290a6e1b3583e6bdebcccd9f71252e53204a`.
+- **수정** `src/app.py`: 이 전 70594바이트, SHA-256 `b6eb55394e32a9270f44b0d717f9a69b851f93a09782821386d7eb2e351b58e0`; 현재 77206바이트, SHA-256 `aa9ab7a95f5b34f136ad7633b540290a6e1b3583e6bdebcccd9f71252e53204a`.
 
-- **수정** `src/theme.py`: 이전 8014바이트, SHA-256 `6ac4f4457b8a7f2cbaddeb15e8a6858bc6e506eb962175099565d5af970e74d0`; 현재 8578바이트, SHA-256 `e3b834f71c3af854ef23aa411ddeec07c959a6547c219d318b60b627445d3243`.
+- **수정** `src/theme.py`: 이 전 8014바이트, SHA-256 `6ac4f4457b8a7f2cbaddeb15e8a6858bc6e506eb962175099565d5af970e74d0`; 현재 8578바이트, SHA-256 `e3b834f71c3af854ef23aa411ddeec07c959a6547c219d318b60b627445d3243`.
 
-- **수정** `src/visuals.py`: 이전 6995바이트, SHA-256 `60af8348b66e84a9c37c11f3c700579db137fd6b5b5ef2ad25f748253071e05e`; 현재 7287바이트, SHA-256 `6c1102f74fb8b1c9cd551ac05931465852e5815a088421aec11ec60e8fb88132`.
+- **수정** `src/visuals.py`: 이 전 6995바이트, SHA-256 `60af8348b66e84a9c37c11f3c700579db137fd6b5b5ef2ad25f748253071e05e`; 현재 7287바이트, SHA-256 `6c1102f74fb8b1c9cd551ac05931465852e5815a088421aec11ec60e8fb88132`.
 
-[실행 소스 전체 Git 비교](직전차수.diff)와 [실제 바이트 명세](공개파일_비교.json)는 Python뿐 아니라 존재하는 보조 PowerShell과 의존성 목록을 포함합니다. `git -c core.autocrlf=false apply --reverse --binary -p1`로 현재 소스 사본에서 직전 소스의 파일 부재·신규·삭제 상태까지 복원해 원문 바이트를 대조했습니다. 부가 자료는 이 소스 비교에 섞지 않고 위 명세로 구분합니다.
+[실행 소스 전체 Git 비교](직전차수.diff)와 [실제 바이트 명세](공개파일_비교.json)는 Python뿐 아니라 존재하는 보조 PowerShell과 의존성 목록을 포함합니다. `git -c core.autocrlf=false apply --reverse --binary -p1`로 현재 소스 사본에서 직전 소스의 파일 부재·신규·삭제 상태까지 복원해 원문 바이트를 대조했습니다.
+
+부가 자료는 이 소스 비교에 섞지 않고 위 명세로 구분합니다.
 
 </details>
 
