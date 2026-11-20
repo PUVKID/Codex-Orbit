@@ -95,6 +95,8 @@ def _run_ui_scenario(args, argv):
                     controller.set_language(language)
                     controller.orbit29.option('text_scale', scale)
                     controller.window.resize(800, 600)
+                    from ui_appearance_smoke35 import check_appearance
+                    appearance_checks=check_appearance(controller,directory,number)
                     rain, interval, stale = ((0.,900,False),(.4,900,False),(None,None,False),(2.,3600,True))[number]
                     humidity=(100.,99.99,55.55,None)[number]
                     remaining=(100.,99.99,0.,98.765)[number]
@@ -260,7 +262,7 @@ def _run_ui_scenario(args, argv):
                     notice.model_current.ensurePolished()
                     pixels = QFontInfo(notice.model_current.font()).pixelSize()
                     assert pixels == round(16 * scale / 100), (pixels, scale)
-                    report['cases'].append({'theme': theme, 'language': language, 'scale': scale,
+                    report['cases'].append({'theme': theme, 'language': language, 'scale': scale, 'appearance':appearance_checks,
                                             'size': list(controller.window.size().toTuple()), 'notice_model_pixels': pixels,
                                             'hover': True, 'keyboard': True, 'popup': True, 'popup_ready_ms':popup_ready_ms, 'disabled': True,
                                             'region_results': 'synthetic', 'privacy': True,

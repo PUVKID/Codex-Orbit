@@ -1,9 +1,21 @@
 <a name="-codex-orbit-320--user-guide"></a>
-# Codex Orbit 3.4.0 · User guide
+<a id="codex-orbit-340--user-guide"></a>
+# Codex Orbit 3.5.0 · User guide
 
 <!-- user-levels:start -->
 **수준별 전체 안내:** [LEVEL 1 - Beginner](%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A81.md) · [LEVEL 2 - Explorer](%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A82.md) · [LEVEL 3 - Practitioner](%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A83.md) · [LEVEL 4 - Advanced](%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A84.md) · [LEVEL 5 - Expert](%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A85.md)
 <!-- user-levels:end -->
+
+## Revision 35 · Colors and ambient light
+
+Choose System, Light or Dark in **Appearance**, then open **Customize colors** beside it. Select one of six palettes, enter the accent and dark/light background hex values, or use the color picker.
+
+Ambient light ranges from 0 to 100; **0 turns it off**. The preview theme affects the preview only. **Apply** saves the selection, while **Cancel** keeps your previous settings. Restore defaults also requires Apply. Invalid colors show an explanation and disable Apply. A save failure restores the previous settings and colors.
+
+Your original color values are retained while readable foreground colors are adjusted. Daily fruit, flowers, holidays, city events and pixel 3D rotation remain available. Usage values, automatic/manual location and model, reasoning and task-resume notifications keep their existing meaning. Ambient lighting adds no full-window blur or separate animation timer.
+
+현재 3.5.0의 실행 파일·설치본 해시와 최소 실행 검사는 [검사 범위와 배포 상태](35차_최소검사.md)에서 구분합니다. 아직 받지 않은 결과는 대기 상태입니다.
+
 
 ## Revision 34 · Pixel 3D sculptures
 

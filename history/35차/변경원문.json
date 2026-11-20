@@ -1,0 +1,202 @@
+{
+  "source_changes": [
+    {
+      "path": "src/theme.py",
+      "source": {
+        "bytes": 19555,
+        "sha256": "c2720878720d134754bf36fa6495f0d2cb1dcef5b9f535c9e266cedc5d422af9"
+      },
+      "public_path": "src/theme.py"
+    },
+    {
+      "path": "src/visuals.py",
+      "source": {
+        "bytes": 20037,
+        "sha256": "3f158742b026c73ae6c49c5617cccc265fdd7a6d40a9e7d07991d14dbba502cf"
+      },
+      "public_path": "src/visuals.py"
+    },
+    {
+      "path": "src/app.py",
+      "source": {
+        "bytes": 149114,
+        "sha256": "adeef321d3acf5a41c3888c5c3567ddcc2d4d218b9f433fbfac1e83ef24c5402"
+      },
+      "public_path": "src/app.py"
+    },
+    {
+      "path": "src/observatory_panel.py",
+      "source": {
+        "bytes": 40318,
+        "sha256": "02a2ddc4632cf5e3271412c60c94aea16379598a587181440ad5f54229999328"
+      },
+      "public_path": "src/observatory_panel.py"
+    },
+    {
+      "path": "src/ui_smoke32.py",
+      "source": {
+        "bytes": 22273,
+        "sha256": "34a19a6543ea343f9aee086981569897b85ee63142765864c56a2f43b8d3a8e8"
+      },
+      "public_path": "src/ui_smoke32.py"
+    },
+    {
+      "path": "tests/test_notice_polish32.py",
+      "source": {
+        "bytes": 12561,
+        "sha256": "c16967d97e2a149e53c29ac0cc6ad0e48eed4f700c2a2f5916a6c52545d94120"
+      },
+      "public_path": "tests/test_notice_polish32.py"
+    },
+    {
+      "path": "src/update_widgets.py",
+      "source": {
+        "bytes": 6420,
+        "sha256": "eeb9e01a65107c6fac4dd6cdd385c28e7fdbf6689fe7e3b0464c23ddf5b9e4bb"
+      },
+      "public_path": "src/update_widgets.py"
+    },
+    {
+      "path": "tools/installer.iss",
+      "source": {
+        "bytes": 3887,
+        "sha256": "6bba02dff1a97e401f9d1a89966b34d39c3666a6086663f70337d72102fee52c"
+      },
+      "public_path": "tools/installer.iss"
+    },
+    {
+      "path": "README.md",
+      "source": {
+        "bytes": 13789,
+        "sha256": "4d00ecfb517c902672d1761f24d25db28bf1843a20e828a1943e2c7dbec9d856"
+      },
+      "public_path": "README.md"
+    },
+    {
+      "path": "README.en.md",
+      "source": {
+        "bytes": 10325,
+        "sha256": "ed5978fde657fe2910df5672abd2c3aed8f8d6ecb938106ad1ebd1ba16f560bb"
+      },
+      "public_path": "README.en.md"
+    },
+    {
+      "path": "assets/사용법.md",
+      "source": {
+        "bytes": 13115,
+        "sha256": "e0a63ccc9173c9286615fe74e3b24a4165d97298ebe12ac93ac61346b05098f3"
+      },
+      "public_path": "assets/사용법.md"
+    },
+    {
+      "path": "docs/사용법.md",
+      "source": {
+        "bytes": 13115,
+        "sha256": "e0a63ccc9173c9286615fe74e3b24a4165d97298ebe12ac93ac61346b05098f3"
+      },
+      "public_path": "docs/사용법.md"
+    },
+    {
+      "path": "docs/Usage.en.md",
+      "source": {
+        "bytes": 10325,
+        "sha256": "ed5978fde657fe2910df5672abd2c3aed8f8d6ecb938106ad1ebd1ba16f560bb"
+      },
+      "public_path": "docs/Usage.en.md"
+    },
+    {
+      "path": "src/appearance35.py",
+      "source": {
+        "bytes": 17552,
+        "sha256": "7a8e35e235e8cbaae656191802223cb573f63b876bfb887a48d6eb221fbcf077"
+      },
+      "public_path": "src/appearance35.py"
+    },
+    {
+      "path": "src/ui_appearance_smoke35.py",
+      "source": {
+        "bytes": 5207,
+        "sha256": "6fbb503d6b8b1d8b1a34d03608289f3c5dba699f18bb84ce67d5f25420cffef1"
+      },
+      "public_path": "src/ui_appearance_smoke35.py"
+    },
+    {
+      "path": "tests/test_appearance35.py",
+      "source": {
+        "bytes": 9403,
+        "sha256": "4116d7bfe373ed5457956588ce09c7b8a41d9965790b322ebb2e66eb9a8902b4"
+      },
+      "public_path": "tests/test_appearance35.py"
+    },
+    {
+      "path": "docs/35차_색상과조명_명세.md",
+      "source": {
+        "bytes": 3314,
+        "sha256": "9e461a570f8d036909fd350958f1b3c018a0accc7de751d8aba06b0cc8f629fc"
+      },
+      "public_path": "docs/35차_색상과조명_명세.md"
+    },
+    {
+      "path": "docs/35차_최소배포_범위.md",
+      "source": {
+        "bytes": 996,
+        "sha256": "a1a304054ebc97f9acc62ffa83a3d51b5d0e4f5f568adc1f1bd918aef68675b2"
+      },
+      "public_path": "docs/35차_최소배포_범위.md"
+    }
+  ],
+  "guides": [
+    {
+      "source_path": "README.md",
+      "source_meta": {
+        "bytes": 13789,
+        "sha256": "4d00ecfb517c902672d1761f24d25db28bf1843a20e828a1943e2c7dbec9d856"
+      },
+      "exact_original_path": "history/35차/개발가이드원문/4d00ecfb517c902672d1761f24d25db28bf1843a20e828a1943e2c7dbec9d856.md.txt",
+      "edited_public_path": "README.md",
+      "relative_links_context": "개발 원문 경로 기준; 공개 안내는 edited_public_path"
+    },
+    {
+      "source_path": "README.en.md",
+      "source_meta": {
+        "bytes": 10325,
+        "sha256": "ed5978fde657fe2910df5672abd2c3aed8f8d6ecb938106ad1ebd1ba16f560bb"
+      },
+      "exact_original_path": "history/35차/개발가이드원문/ed5978fde657fe2910df5672abd2c3aed8f8d6ecb938106ad1ebd1ba16f560bb.md.txt",
+      "edited_public_path": "README.en.md",
+      "relative_links_context": "개발 원문 경로 기준; 공개 안내는 edited_public_path"
+    },
+    {
+      "source_path": "assets/사용법.md",
+      "source_meta": {
+        "bytes": 13115,
+        "sha256": "e0a63ccc9173c9286615fe74e3b24a4165d97298ebe12ac93ac61346b05098f3"
+      },
+      "exact_original_path": "history/35차/개발가이드원문/e0a63ccc9173c9286615fe74e3b24a4165d97298ebe12ac93ac61346b05098f3.md.txt",
+      "edited_public_path": "assets/사용법.md",
+      "relative_links_context": "개발 원문 경로 기준; 공개 안내는 edited_public_path"
+    },
+    {
+      "source_path": "docs/사용법.md",
+      "source_meta": {
+        "bytes": 13115,
+        "sha256": "e0a63ccc9173c9286615fe74e3b24a4165d97298ebe12ac93ac61346b05098f3"
+      },
+      "exact_original_path": "history/35차/개발가이드원문/e0a63ccc9173c9286615fe74e3b24a4165d97298ebe12ac93ac61346b05098f3.md.txt",
+      "edited_public_path": "docs/사용법.md",
+      "relative_links_context": "개발 원문 경로 기준; 공개 안내는 edited_public_path"
+    },
+    {
+      "source_path": "docs/Usage.en.md",
+      "source_meta": {
+        "bytes": 10325,
+        "sha256": "ed5978fde657fe2910df5672abd2c3aed8f8d6ecb938106ad1ebd1ba16f560bb"
+      },
+      "exact_original_path": "history/35차/개발가이드원문/ed5978fde657fe2910df5672abd2c3aed8f8d6ecb938106ad1ebd1ba16f560bb.md.txt",
+      "edited_public_path": "docs/Usage.en.md",
+      "relative_links_context": "개발 원문 경로 기준; 공개 안내는 edited_public_path"
+    }
+  ],
+  "excluded": "개인 지침·기억·대화·계정·위치·인증·운영 로그 및 빌드 캐시",
+  "source_archive": "선택한 작은 가이드 원문3개와 실제 Git 전체 비교; 전체 source ZIP 재생성 없음"
+}

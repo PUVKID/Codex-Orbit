@@ -1,4 +1,21 @@
-# 3.4.0 다운로드
+# 3.5.0 다운로드
+
+[35차 상세](../history/35차/README.md#reading-level-1) · [최소 검사 상태](35차_최소검사.md) · [사용법](사용법.md)
+
+| 파일 | 상태 |
+| --- | --- |
+| 단일 EXE | 제작·실제 해시 수신 대기 |
+| Setup 설치 파일 | 제작·실제 해시 수신 대기 |
+
+새 배포의 실제 크기·SHA-256을 받은 뒤 이 표를 갱신합니다. 아래3.4.0 기록의 해시는 이전 버전의 값입니다.
+
+<!-- 최소35-다운로드-시작 -->
+실제3.5.0 첨부 메타: 수신 대기.
+<!-- 최소35-다운로드-끝 -->
+
+## 이전3.4.0 배포 기록
+
+## 3.4.0 다운로드
 
 <!-- user-levels:start -->
 **수준별 전체 안내:** [LEVEL 1 - Beginner](%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A81.md) · [LEVEL 2 - Explorer](%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A82.md) · [LEVEL 3 - Practitioner](%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A83.md) · [LEVEL 4 - Advanced](%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A84.md) · [LEVEL 5 - Expert](%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A85.md)

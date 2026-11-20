@@ -1,5 +1,6 @@
-"""앱이 소유하는 화면과 대화상자의 차분한 회청색 테마입니다."""
+"""앱 화면과 대화상자의 사용자 지정 검정·초록 테마입니다."""
 from i18n import translate as t, get_language
+from appearance35 import DEFAULTS, normalize_config, palette_for, contrast_ratio
 from PySide6.QtCore import QEvent, QObject, QTimer, QTranslator, Qt
 from PySide6.QtGui import QColor, QIcon, QPalette, QPixmap
 from PySide6.QtWidgets import QApplication, QFileDialog, QHeaderView, QProxyStyle, QStyleFactory, QTreeView
@@ -8,13 +9,13 @@ from PySide6.QtWidgets import QApplication, QFileDialog, QHeaderView, QProxyStyl
 STYLE = '''
 QWidget {background:#f3faf7;color:#193c36;font-family:"NanumGothic";font-weight:700;font-size:13px;}
 QDialog {background:#f3faf7;}
-QFrame#usagePanel {background:qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 #e4f5ed,stop:0.55 #f6fffb,stop:1 #ffffff);border:1px solid #c2dbd0;border-radius:20px;}
+QFrame#usagePanel {background:qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 #e4f5ed,stop:0.55 #f6fffb,stop:1 #ffffff);border:1px solid #c2dbd0;border-radius:8px;}
 QLabel {background:transparent;border:none;}
-QFrame#observatoryHero {background:qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 #dbf6e9,stop:1 #fbfffd);border:1px solid #c8e5d7;border-radius:22px;}
+QFrame#observatoryHero {background:qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 #dbf6e9,stop:1 #fbfffd);border:1px solid #c8e5d7;border-radius:8px;}
 QLabel#currentTask {font-size:23px;color:#143e30;}
 QPushButton:checked {background:#cbf0dd;border-color:#269b6c;color:#114a32;}
-QFrame#eventCard {background:#ffffff;border:1px solid #d0e5db;border-radius:16px;}
-QLineEdit,QPlainTextEdit,QTreeView,QComboBox {background:#ffffff;border:1px solid #c1d9cf;border-radius:10px;padding:10px;selection-background-color:#caeddc;selection-color:#ffffff;}
+QFrame#eventCard {background:#ffffff;border:1px solid #d0e5db;border-radius:8px;}
+QLineEdit,QPlainTextEdit,QTreeView,QComboBox {background:#ffffff;border:1px solid #c1d9cf;border-radius:8px;padding:10px;selection-background-color:#caeddc;selection-color:#ffffff;}
 QLineEdit,QComboBox {min-height:22px;}
 QLineEdit:focus,QPlainTextEdit:focus,QComboBox:focus {border:1px solid #9bdbc9;}
 QTreeView::item {min-height:24px;padding:3px;}
@@ -44,7 +45,7 @@ QScrollBar::add-line:vertical,QScrollBar::sub-line:vertical {height:0;}
 QScrollBar:horizontal {background:#213b47;height:8px;}
 QScrollBar::handle:horizontal {background:#65818c;min-width:24px;border-radius:4px;}
 QScrollBar::add-line:horizontal,QScrollBar::sub-line:horizontal {width:0;}
-QMenu {background:#ffffff;border:1px solid #bed9cc;padding:7px;}
+QMenu {background:#ffffff;border:1px solid #bed9cc;border-radius:8px;padding:7px;}
 QMenu::item {padding:10px 26px;border-radius:7px;}
 QMenu::item:selected {background:#dcf6e9;color:#355c50;}
 QMenu::separator {height:1px;background:#3b5662;margin:5px;}
@@ -124,10 +125,8 @@ class DialogLayout(QObject):
 
 
 # 의미색은 앱 소유 화면 전체에서 함께 바뀌며 날짜별 투명 조형에는 적용하지 않습니다.
-PALETTES = {
-    'light': dict(bg='#f6f8fb', surface='#ffffff', raised='#edf1f6', text='#202e43', muted='#52647b', border='#c5cfdd', accent='#40659a', selected='#dde7f4', focus='#446ea7', track='#e4eaf2'),
-    'dark': dict(bg='#141c29', surface='#1d2839', raised='#273449', text='#edf2fa', muted='#b6c3d6', border='#435570', accent='#a9c6ee', selected='#344d70', focus='#a9c6ee', track='#2c3b52'),
-}
+PALETTES = {mode: palette_for(mode, DEFAULTS) for mode in ('light', 'dark')}
+_palette_cache = {}
 
 
 def normalize_theme_mode(value):
@@ -141,7 +140,27 @@ def effective_theme():
 
 
 def colors():
-    return PALETTES[effective_theme()]
+    app = QApplication.instance()
+    config = (app.property('orbit_appearance35') if app else None) or DEFAULTS
+    normalized = normalize_config(config)
+    key = (effective_theme(), tuple(sorted(normalized.items())))
+    if key not in _palette_cache:
+        _palette_cache.clear()
+        _palette_cache[key] = palette_for(key[0], normalized)
+    return _palette_cache[key]
+
+
+def configure_appearance(config, refresh=True):
+    """검증된 설정을 저장하고 현재 모드의 화면을 다시 칠합니다."""
+    normalized = normalize_config(config)
+    app = QApplication.instance()
+    if app is None:
+        raise RuntimeError('화면 설정에는 QApplication이 필요합니다.')
+    app.setProperty('orbit_appearance35', normalized)
+    app.setProperty('orbit_appearance_revision35', int(app.property('orbit_appearance_revision35') or 0) + 1)
+    if refresh:
+        _apply_colors()
+    return normalized
 
 
 def theme_style(css):
@@ -197,6 +216,20 @@ def set_ui_style(widget, css):
         widget.setStyleSheet(rendered)
 
 
+def ambient_surface(c):
+    """각 의미색과 4.5 이상인 조명 배경 중 요청 강도에 가장 가까운 값을 반환합니다."""
+    base = QColor(c['surface'])
+    accent = QColor(c['accent_raw'])
+    strength = max(0, min(100, int(c['glow']))) / 100 * .13
+    roles = ('text', 'muted', 'disabled', 'accent', 'error', 'warning', 'focus')
+    for step in range(100, 0, -1):
+        amount = strength * step / 100
+        tint = QColor(*(round(base.getRgb()[i] * (1 - amount) + accent.getRgb()[i] * amount) for i in range(3))).name()
+        if all(contrast_ratio(c[role], tint) >= 4.5 for role in roles):
+            return tint
+    return c['surface']
+
+
 def themed_stylesheet():
     c = colors()
     style = theme_style(STYLE)
@@ -204,31 +237,45 @@ def themed_stylesheet():
     QWidget {font-weight:700;}
     QComboBox {combobox-popup:0;padding:5px 32px 5px 10px;min-height:26px;border:1px solid BORDER;border-radius:8px;background:SURFACE;color:TEXT;}
     QComboBox:hover {border-color:FOCUS;}
-    QComboBox:focus {border:2px solid FOCUS;padding:4px 31px 4px 9px;}
+    QComboBox:focus {border:1px solid FOCUS;}
     QComboBox::drop-down {subcontrol-origin:padding;subcontrol-position:top right;width:28px;border:0;background:transparent;}
     QComboBox::down-arrow {image:none;width:0;height:0;}
     QComboBox QAbstractItemView {background:SURFACE;color:TEXT;border:1px solid BORDER;outline:0;selection-background-color:SELECTED;selection-color:TEXT;padding:4px;}
     QComboBox QAbstractItemView::item {min-height:28px;padding:5px 10px;}
-    QFrame#controlsBar,QFrame#observationCard,QFrame#replayBar {background:SURFACE;border:1px solid BORDER;border-radius:12px;}
-    QFrame#observatoryHero {background:BG;border:1px solid BORDER;border-radius:16px;}
+    QFrame#controlsBar,QFrame#observationCard,QFrame#replayBar {background:SURFACE;border:1px solid BORDER;border-radius:8px;}
+    QFrame#observatoryHero {background:BG;border:1px solid BORDER;border-radius:8px;}
     QLabel#currentTask {color:TEXT;font-size:22px;}
     QLabel#sectionCaption {color:MUTED;font-size:12px;}
-    QPushButton:focus,QToolButton:focus {border:2px solid FOCUS;}
+    QPushButton:focus,QToolButton:focus {border:1px solid FOCUS;}
     QListWidget::item:selected {background:SELECTED;color:TEXT;}
     QMenu::section {color:MUTED;padding:8px 12px;}
-    QFrame#navigationSurface {background:SURFACE;border:1px solid BORDER;border-radius:12px;}
-    QFrame#navigationSurface QPushButton {background:transparent;border:0;text-align:left;padding:10px 12px;border-radius:8px;}
+    QFrame#navigationSurface {background:SURFACE;border:1px solid BORDER;border-radius:8px;}
+    QFrame#navigationSurface QPushButton {background:transparent;border:0;border-left:3px solid transparent;text-align:left;padding:10px 12px;border-radius:8px;}
     QFrame#navigationSurface QPushButton:checked {background:SELECTED;color:TEXT;border-left:3px solid FOCUS;}
     QFrame#navigationSurface QPushButton:hover {background:RAISED;}
 
     QAbstractItemView::item:selected {background:SELECTED;color:TEXT;}
     QCheckBox::indicator {background:SURFACE;border:1px solid MUTED;}
-    QCheckBox::indicator:checked {background:SELECTED;border:3px solid FOCUS;}
+    QCheckBox::indicator:checked {background:SELECTED;border:1px solid FOCUS;}
     QSlider::groove:horizontal {height:4px;background:BORDER;border-radius:2px;}
     QSlider::handle:horizontal {background:FOCUS;border:1px solid BORDER;width:12px;margin:-5px 0;border-radius:6px;}
     QTabBar::tab:selected {font-weight:700;}
     QScrollBar:vertical,QScrollBar:horizontal {background:BG;}
     QScrollBar::handle:vertical,QScrollBar::handle:horizontal {background:BORDER;}
+    """
+    # 발광은 핵심 패널에만 정적인 색 혼합으로 적용합니다.
+    glow = max(0, min(100, int(c['glow'])))
+    if glow:
+        tint = ambient_surface(c)
+        style += 'QFrame#observatoryHero,QFrame#usagePanel {background:qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 '+tint+',stop:1 '+c['surface']+');border:1px solid '+c['focus']+';}'
+    style += """
+    QWidget:disabled {color:MUTED;}
+    QPushButton:disabled,QToolButton:disabled {background:RAISED;color:MUTED;border:1px solid BORDER;}
+    QMenu::item:disabled {color:MUTED;}
+    QLineEdit:disabled,QPlainTextEdit:disabled,QComboBox:disabled {background:RAISED;color:MUTED;}
+    QPushButton:pressed,QToolButton:pressed {background:SELECTED;color:TEXT;}
+    QPushButton:checked,QToolButton:checked {background:SELECTED;color:TEXT;border:1px solid FOCUS;}
+    QToolTip {background:SURFACE;color:TEXT;border:1px solid BORDER;}
     """
     for token,key in [('RAISED','raised'),('BORDER','border'),('SURFACE','surface'),('SELECTED','selected'),('MUTED','muted'),('FOCUS','focus'),('TEXT','text'),('BG','bg')]:style=style.replace(token,c[key])
     return style
@@ -245,6 +292,7 @@ def _apply_colors(scheme=None):
     roles={'Window':'bg','WindowText':'text','Base':'surface','AlternateBase':'raised','Text':'text','Button':'raised','ButtonText':'text','Highlight':'selected','HighlightedText':'text','ToolTipBase':'surface','ToolTipText':'text','Link':'accent','PlaceholderText':'muted'}
     for role,key in roles.items():palette.setColor(getattr(QPalette.ColorRole,role),QColor(c[key]))
     app.setPalette(palette);app.setStyleSheet(themed_stylesheet())
+    app.setProperty('orbit_applied_appearance_revision35', int(app.property('orbit_appearance_revision35') or 0))
     # 위젯별 원본 스타일은 누적 변환하지 않고 매번 원문에서 다시 계산합니다.
     for widget in app.allWidgets():
         original=widget.property('orbit_style_source')
@@ -260,7 +308,7 @@ def apply_theme(mode=None):
     app=QApplication.instance()
     selected=normalize_theme_mode(mode if mode is not None else app.property('orbit_theme_mode'))
     resolved=selected if selected!='system' else ('dark' if app.styleHints().colorScheme()==Qt.ColorScheme.Dark else 'light')
-    if app.property('orbit_monochrome') and app.property('orbit_theme_mode')==selected and effective_theme()==resolved:return
+    if app.property('orbit_monochrome') and app.property('orbit_theme_mode')==selected and effective_theme()==resolved and int(app.property('orbit_applied_appearance_revision35') or 0)==int(app.property('orbit_appearance_revision35') or 0):return
     if not app.property('orbit_monochrome'):
         app.setStyle(MonochromeStyle())
         translator=KoreanDialogs(app);app.installTranslator(translator);app.orbit_translator=translator

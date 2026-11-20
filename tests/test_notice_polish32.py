@@ -89,10 +89,13 @@ class NoticePolish32Tests(unittest.TestCase):
       self.assertGreaterEqual(rect.height(),button.fontMetrics().height())
       self.assertGreaterEqual(rect.width(),button.fontMetrics().horizontalAdvance(button.text()))
 
- def test_light_and_dark_use_slate_colors_not_green(self):
+ def test_light_and_dark_use_requested_laser_palette(self):
+  # 35차 사용자 지정에 따라 기본 조합은 초록 포인트와 밝은 중성 배경입니다.
+  from appearance35 import DEFAULTS
+  self.assertEqual(theme.PALETTES['light']['bg'],DEFAULTS['light_bg'])
+  self.assertEqual(theme.PALETTES['dark']['bg'],DEFAULTS['dark_bg'])
   for mode in ('light','dark'):
-   theme.apply_theme(mode);c=theme.colors();self.assertGreaterEqual(int(c['accent'][5:7],16),int(c['accent'][3:5],16))
-  self.assertEqual(theme.PALETTES['light']['bg'],'#f6f8fb')
+   self.assertEqual(theme.PALETTES[mode]['accent_raw'],DEFAULTS['accent'])
 
  def test_combo_actual_hover_focus_press_select_and_disabled_in_both_themes_and_scales(self):
   from ui_layout import OrbitComboBox

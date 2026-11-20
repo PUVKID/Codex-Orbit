@@ -247,6 +247,10 @@ class OrbitExperience:
         for ko,en,value in [('시스템','System','system'),('라이트','Light','light'),('다크','Dark','dark')]:self.theme_combo.addItem(tr(ko,en),value)
         self.theme_combo.setCurrentIndex(max(0,self.theme_combo.findData(c.settings.values.get('ui_theme','system'))));self.theme_combo.setAccessibleName(tr('화면 테마','Appearance'))
         self.theme_combo.currentIndexChanged.connect(lambda _:self.option('ui_theme',self.theme_combo.currentData()));group('화면 테마','Appearance',self.theme_combo)
+        self.appearance_button=QPushButton(tr('색상 꾸미기','Customize colors'))
+        self.appearance_button.setAccessibleName(tr('색상과 조명 설정','Colors and ambient light'))
+        self.appearance_button.clicked.connect(self.show_appearance)
+        preference_groups[-1].layout().addWidget(self.appearance_button)
         self.text_size=QComboBox()
         for value in (90,100,115,130,150):self.text_size.addItem(str(value)+'%',value)
         self.text_size.setCurrentIndex(max(0,self.text_size.findData(c.settings.values.get('text_scale',100))));self.text_size.setAccessibleName(tr('글자 크기','Text size'))
@@ -314,7 +318,40 @@ class OrbitExperience:
         self.theme_combo.blockSignals(True)
         for i,(ko,en) in enumerate([('시스템','System'),('라이트','Light'),('다크','Dark')]):self.theme_combo.setItemText(i,tr(ko,en))
         self.theme_combo.blockSignals(False)
+        self.appearance_button.setText(tr('색상 꾸미기','Customize colors'))
+        self.appearance_button.setAccessibleName(tr('색상과 조명 설정','Colors and ambient light'))
         self.update_labels();self.panel.refresh()
+
+    def show_appearance(self):
+        from appearance35 import AppearanceDialog
+        from i18n import get_language
+        dialog=AppearanceDialog(self.controller.settings.values.get('appearance35'),self.apply_appearance,self.controller.window,language=get_language())
+        self.apply_text_size()
+        try:dialog.exec()
+        finally:dialog.deleteLater()
+
+    def apply_appearance(self,candidate):
+        """화면과 저장값을 함께 복원하고 저장 실패를 숨기지 않습니다."""
+        from appearance35 import normalize_config
+        from theme import configure_appearance
+        c=self.controller
+        value=normalize_config(candidate)
+        existed='appearance35' in c.settings.values
+        previous=c.settings.values.get('appearance35')
+        old=normalize_config(previous)
+        try:
+            configure_appearance(value)
+            c.settings.values['appearance35']=value
+            c.settings.save()
+        except Exception:
+            if existed:c.settings.values['appearance35']=previous
+            else:c.settings.values.pop('appearance35',None)
+            configure_appearance(old)
+            c.orbit.update()
+            raise
+        self.apply_text_size()
+        c.orbit.update()
+        for notice in c.notices.values():notice.update()
 
     def option(self,key,value):
         if key=='ui_theme':

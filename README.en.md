@@ -1,5 +1,6 @@
 <a name="-codex-orbit-320"></a>
-# Codex Orbit 3.4.0
+<a id="codex-orbit-340"></a>
+# Codex Orbit 3.5.0
 
 <!-- user-levels:start -->
 **수준별 전체 안내:** [LEVEL 1 - Beginner](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A81.md) · [LEVEL 2 - Explorer](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A82.md) · [LEVEL 3 - Practitioner](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A83.md) · [LEVEL 4 - Advanced](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A84.md) · [LEVEL 5 - Expert](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A85.md)
@@ -19,6 +20,17 @@ Daily subjects use pixel rendering of actual 3D meshes with a full vertical-axis
 
 
 <!-- user-levels:end -->
+
+## Revision 35 · Colors and ambient light
+
+Choose System, Light or Dark in **Appearance**, then open **Customize colors** beside it. Select one of six palettes, enter the accent and dark/light background hex values, or use the color picker.
+
+Ambient light ranges from 0 to 100; **0 turns it off**. The preview theme affects the preview only. **Apply** saves the selection, while **Cancel** keeps your previous settings. Restore defaults also requires Apply. Invalid colors show an explanation and disable Apply. A save failure restores the previous settings and colors.
+
+Your original color values are retained while readable foreground colors are adjusted. Daily fruit, flowers, holidays, city events and pixel 3D rotation remain available. Usage values, automatic/manual location and model, reasoning and task-resume notifications keep their existing meaning. Ambient lighting adds no full-window blur or separate animation timer.
+
+현재 3.5.0의 실행 파일·설치본 해시와 최소 실행 검사는 [검사 범위와 배포 상태](docs/35차_최소검사.md)에서 구분합니다. 아직 받지 않은 결과는 대기 상태입니다.
+
 
 ## Revision 32
 
@@ -89,6 +101,7 @@ Missing display-mode settings now select the calendar. Model events preserve the
 | 32차 | 지역 검색과 날짜별 입체 조형 | **폴더:** [자료 폴더](history/32차) · **설명:** [상세 설명](history/32차/README.md) · **직전 차수와 실제 비교:** [전체 비교·범위](docs/32차_전체변경.diff) |
 | 33차 | 자동 위치·강수량·도시 행사 진행 자료 | **자료 폴더:** [자료 폴더](history/33차) · **상세 설명:** [상세 설명](history/33차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/33차/직전차수.diff) |
 | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](history/34차) · **상세 설명:** [상세 설명](history/34차/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/34차_전체변경.diff) |
+| 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](history/35차) · **상세 설명:** [상세 설명](history/35차/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/35차_전체변경.diff) |
 | 최종 | Codex Orbit · 최종 | **폴더:** [폴더](docs/최종/) · **설명:** [설명](docs/최종/README.md) · **직전 차수와 실제 비교:** [비교 대상 없는 근거](docs/최종/README.md) |
 
 Historical sources and supporting documents/assets are preserved with full comparisons, byte counts and SHA-256. [Archive manifests](docs/ARCHIVE_FILES.md) distinguish original copies, privacy edits and exclusions. Design images use synthetic examples. No private full-source ZIP, personal conversations, operating memories or credentials are published. Existing legal notices are preserved; no new license is assigned. This software work has no manuscript requiring a paper PDF.

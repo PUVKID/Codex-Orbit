@@ -8,6 +8,7 @@ from atom_frames import get_atom_frames
 from elements import daily_element
 from typography import app_font
 from percentage_display import percentage_text
+from theme import colors
 
 
 def rotate_point(point, angles):
@@ -252,30 +253,37 @@ def draw_desktop_orbit(painter, width, height, source, design, fraction, state, 
 
 def _draw_desktop_information(painter, layout, design, fraction, state, clock_text, weather_text, location_text):
     """움직이는 GPU 이미지와 분리한 도크·시계·지역·기온·잔량을 그립니다."""
+    palette = colors()
     def surface(rect, radius):
         gradient = QLinearGradient(rect.topLeft(), rect.bottomLeft())
-        gradient.setColorAt(0, QColor('#34414f'))
-        gradient.setColorAt(.48, QColor('#202b37'))
-        gradient.setColorAt(1, QColor('#101923'))
-        painter.setPen(QColor('#778b9f'))
+        gradient.setColorAt(0, QColor(palette['raised']))
+        gradient.setColorAt(.48, QColor(palette['surface']))
+        gradient.setColorAt(1, QColor(palette['bg']))
+        border = QColor(palette['border'])
+        glow = max(0, min(100, int(palette['glow'])))
+        if glow:
+            accent = QColor(palette['accent_raw'])
+            amount = glow / 100 * .35
+            border = QColor(*(round(border.getRgb()[i] * (1 - amount) + accent.getRgb()[i] * amount) for i in range(3)))
+        painter.setPen(border)
         painter.setBrush(gradient)
         painter.drawRoundedRect(rect, radius, radius)
     dock, usage = layout['dock'], layout['usage']
     scale=layout.get('text_scale',1.0)
     surface(dock, 8)
     painter.setFont(layout['date_font'])
-    painter.setPen(QColor(design.accent))
+    painter.setPen(QColor(palette['accent']))
     for index,line in enumerate(layout['clock_lines']):
         painter.drawText(QRectF(dock.left()+8,dock.top()+3+index*layout['info_line_height'],dock.width()-16,layout['info_line_height']),Qt.AlignmentFlag.AlignCenter,line)
     painter.setFont(layout['name_font'])
-    painter.setPen(gray(248))
+    painter.setPen(QColor(palette['text']))
     for index, line in enumerate(layout['lines']):
         painter.drawText(QRectF(dock.left()+8, dock.top()+3+len(layout['clock_lines'])*layout['info_line_height']+index*layout['line_height'],
                                dock.width()-16, layout['line_height']), Qt.AlignmentFlag.AlignCenter, line)
     if location_text is not None:
         surface(layout['location'], 6)
         painter.setFont(layout['date_font'])
-        painter.setPen(gray(248))
+        painter.setPen(QColor(palette['text']))
         # 전체 지역명은 위젯 툴팁에 보존하고 화면에는 한 줄만 배치합니다.
         layout['location_text'] = QFontMetricsF(layout['date_font']).elidedText(
             location_text, Qt.TextElideMode.ElideRight, max(0, layout['location'].width()-16))
@@ -283,7 +291,7 @@ def _draw_desktop_information(painter, layout, design, fraction, state, clock_te
     if weather_text is not None:
         surface(layout['weather'], 6)
         painter.setFont(layout['date_font'])
-        painter.setPen(gray(248))
+        painter.setPen(QColor(palette['text']))
         for index,line in enumerate(layout['primary_weather_lines']):
             painter.drawText(QRectF(16,layout['weather'].top()+index*layout['info_line_height'],layout['weather'].width()-16,layout['info_line_height']),Qt.AlignmentFlag.AlignCenter,line)
         painter.setFont(layout['weather_font'])
@@ -293,14 +301,14 @@ def _draw_desktop_information(painter, layout, design, fraction, state, clock_te
     fill, label = usage_bar('', fraction, state)
     track = QRectF(usage.left()+8, usage.bottom()-7, max(0, usage.width()-16), 3)
     painter.setPen(Qt.PenStyle.NoPen)
-    painter.setBrush(QColor('#445364'))
+    painter.setBrush(QColor(palette['track']))
     painter.drawRect(track)
-    painter.setBrush(QColor(design.accent))
+    painter.setBrush(QColor(palette['accent']))
     fill_rect = QRectF(track.left(), track.top(), track.width()*fill.width()/USAGE_TRACK_RECT.width(), track.height())
     painter.drawRect(fill_rect)
     layout['track'], layout['fill'] = track, fill_rect
     painter.setFont(layout['date_font'])
-    painter.setPen(gray(248))
+    painter.setPen(QColor(palette['text']))
     for index,line in enumerate(layout['usage_lines']):
         painter.drawText(QRectF(usage.left()+8,usage.top()+1+index*layout['info_line_height'],usage.width()-16,layout['info_line_height']),Qt.AlignmentFlag.AlignCenter,line)
 
@@ -320,7 +328,8 @@ class DesktopOverlayCache:
         font_key = app_font(weight=QFont.Weight.Bold).key()
         key = (width, height, dpr, design.date, title, design.accent,
                fraction, state, clock_text, weather_text, location_text,
-               get_language(), font_key, text_scale, tuple(weather_extras))
+               get_language(), font_key, text_scale, tuple(weather_extras),
+               tuple(sorted(colors().items())))
         if self.key != key:
             layout = desktop_widget_layout(width, height, title,
                                            weather_text is not None, location_text is not None,text_scale=text_scale,weather_extras=weather_extras,clock_text=clock_text,weather_text=weather_text,fraction=fraction,state=state,calendar_date=f'{design.date.month}/{design.date.day}')

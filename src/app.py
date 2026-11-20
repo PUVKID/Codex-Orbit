@@ -616,7 +616,8 @@ class OrbitWidget(QWidget):
                                self.usage_fraction, self.usage_state, self.clock_text(), self.weather_text, self.location_text,
                                cache=self._desktop_overlay_cache,text_scale=self.settings.values.get('text_scale',100)/100,weather_extras=self.weather_extras)
             record_calendar_presentation(self,source)
-            painter.setPen(QColor('#B5C8D4'))
+            from theme import colors
+            painter.setPen(QColor(colors()['muted']))
             painter.drawLine(self.width()-4, self.height()//2-12, self.width()-4, self.height()//2+12)
             painter.drawLine(self.width()//2-12, self.height()-4, self.width()//2+12, self.height()-4)
             for offset in (5, 9, 13):
@@ -1805,6 +1806,8 @@ class Controller(QObject):
         mode=normalize_theme_mode(settings.values.get('ui_theme',settings.values.get('defaultTheme','system')))
         if settings.values.get('ui_theme')!=mode:
             settings.values['ui_theme']=mode;settings.save()
+        from theme import configure_appearance
+        configure_appearance(settings.values.get('appearance35'), refresh=False)
         apply_theme(mode)
         # Qt 수신자 문맥에 수명을 결합해 종료된 Python 객체로 예약 신호가 전달되지 않게 합니다.
         super().__init__(_application_gui_root())
