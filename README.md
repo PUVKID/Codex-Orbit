@@ -6,13 +6,13 @@
 <!-- project-levels:start -->
 ## 읽는 수준 선택
 
-| 내용 |
-| --- |
-| **수준:** [LEVEL 1 - Beginner](docs/읽기안내/레벨1.md)<br>**이 안내에서 읽을 내용:** 낯선 용어를 풀어 쓰며 실제 동작·예시·오해하기 쉬운 범위를 읽습니다. |
-| **수준:** [LEVEL 2 - Explorer](docs/읽기안내/레벨2.md)<br>**이 안내에서 읽을 내용:** 입력·처리·출력과 기능 사이의 연결, 차수 변화를 따라갑니다. |
-| **수준:** [LEVEL 3 - Practitioner](docs/읽기안내/레벨3.md)<br>**이 안내에서 읽을 내용:** 준비 조건·사용 순서·설정·결과 및 실패 확인 방법을 읽습니다. |
-| **수준:** [LEVEL 4 - Advanced](docs/읽기안내/레벨4.md)<br>**이 안내에서 읽을 내용:** 모듈 설계·상태 전이·검증 경계와 구현 선택을 검토합니다. |
-| **수준:** [LEVEL 5 - Expert](docs/읽기안내/레벨5.md)<br>**이 안내에서 읽을 내용:** 실제 코드·프로토콜·설정값·전체 비교와 측정 근거를 대조합니다. |
+| 수준 | 이 안내에서 읽을 내용 |
+| --- | --- |
+| [LEVEL 1 - Beginner](docs/읽기안내/레벨1.md) | 낯선 용어를 풀어 쓰며 실제 동작·예시·오해하기 쉬운 범위를 읽습니다. |
+| [LEVEL 2 - Explorer](docs/읽기안내/레벨2.md) | 입력·처리·출력과 기능 사이의 연결, 차수 변화를 따라갑니다. |
+| [LEVEL 3 - Practitioner](docs/읽기안내/레벨3.md) | 준비 조건·사용 순서·설정·결과 및 실패 확인 방법을 읽습니다. |
+| [LEVEL 4 - Advanced](docs/읽기안내/레벨4.md) | 모듈 설계·상태 전이·검증 경계와 구현 선택을 검토합니다. |
+| [LEVEL 5 - Expert](docs/읽기안내/레벨5.md) | 실제 코드·프로토콜·설정값·전체 비교와 측정 근거를 대조합니다. |
 
 모든 안내는 같은 프로젝트와 전체 차수를 다룹니다. 기존 상세 본문은 아래에 계속 보존합니다.
 <!-- project-levels:end -->
@@ -120,41 +120,41 @@
 [전체 목차](docs/REVISION_INDEX.md) · [차수별 보조 자료·시안·제외 대응](docs/ARCHIVE_FILES.md)
 
 <!-- 차수표 시작 -->
-| 내용 |
-| --- |
-| **차수·자료:** 1차<br>**자료 폴더·원본:** [자료 폴더](history/01%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/01%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/01%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 2차<br>**자료 폴더·원본:** [자료 폴더](history/02%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/02%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/02%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 3차<br>**자료 폴더·원본:** [자료 폴더](history/03%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/03%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/03%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 4차<br>**자료 폴더·원본:** [자료 폴더](history/04%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/04%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/04%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 5차<br>**자료 폴더·원본:** [자료 폴더](history/05%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/05%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/05%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 6차<br>**자료 폴더·원본:** [자료 폴더](history/06%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/06%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/06%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 7차<br>**자료 폴더·원본:** [자료 폴더](history/07%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/07%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/07%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 8차<br>**자료 폴더·원본:** [자료 폴더](history/08%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/08%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/08%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 9차<br>**자료 폴더·원본:** [자료 폴더](history/09%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/09%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/09%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 10차<br>**자료 폴더·원본:** [자료 폴더](history/10%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/10%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/10%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 11차<br>**자료 폴더·원본:** [자료 폴더](history/11%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/11%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/11%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 12차<br>**자료 폴더·원본:** [자료 폴더](history/12%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/12%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/12%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 13차<br>**자료 폴더·원본:** [자료 폴더](history/13%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/13%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/13%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 14차<br>**자료 폴더·원본:** [자료 폴더](history/14%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/14%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/14%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 15차<br>**자료 폴더·원본:** [자료 폴더](history/15%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/15%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/15%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 16차<br>**자료 폴더·원본:** [자료 폴더](history/16%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/16%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/16%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 17차<br>**자료 폴더·원본:** [자료 폴더](history/17%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/17%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/17%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 18차<br>**자료 폴더·원본:** [자료 폴더](history/18%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/18%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/18%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 19차<br>**자료 폴더·원본:** [자료 폴더](history/19%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/19%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/19%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 20차<br>**자료 폴더·원본:** [자료 폴더](docs/20%EC%B0%A8)<br>**상세 설명:** [상세 설명](docs/20%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](docs/20%EC%B0%A8/README.md) |
-| **차수·자료:** 21차<br>**자료 폴더·원본:** [자료 폴더](history/21%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/21%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/21%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 22차<br>**자료 폴더·원본:** [자료 폴더](history/22%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/22%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/22%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 23차<br>**자료 폴더·원본:** [자료 폴더](history/23%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/23%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/23%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 24차<br>**자료 폴더·원본:** [자료 폴더](history/24%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/24%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/24%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 25차<br>**자료 폴더·원본:** [자료 폴더](history/25)<br>**상세 설명:** [상세 설명](history/25/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/25/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 26차<br>**자료 폴더·원본:** [자료 폴더](history/26)<br>**상세 설명:** [상세 설명](history/26/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/26/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 27차<br>**자료 폴더·원본:** [자료 폴더](history/27)<br>**상세 설명:** [상세 설명](history/27/README.md)<br>**직전 비교·범위:** [전체 비교·범위](docs/27%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD.diff) |
-| **차수·자료:** 28차<br>**자료 폴더·원본:** [자료 폴더](history/28)<br>**상세 설명:** [상세 설명](history/28/README.md)<br>**직전 비교·범위:** [전체 비교·범위](docs/28%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD.diff) |
-| **차수·자료:** 최종<br>**자료 폴더·원본:** [자료 폴더](docs/%EC%B5%9C%EC%A2%85)<br>**상세 설명:** [상세 설명](docs/%EC%B5%9C%EC%A2%85/README.md)<br>**직전 비교·범위:** [전체 비교·범위](docs/%EC%B5%9C%EC%A2%85/README.md) |
-| **차수·자료:** 29차<br>**자료 폴더·원본:** [자료 폴더](history/29%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/29%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](docs/29%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD.diff) · [소스 비교](history/29%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 30차<br>**자료 폴더·원본:** [자료 폴더](history/30%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/30%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/30%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 31차<br>**자료 폴더·원본:** [자료 폴더](history/31%EC%B0%A8)<br>**상세 설명:** [상세 설명](history/31%EC%B0%A8/README.md)<br>**직전 비교·범위:** [전체 비교·범위](history/31%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
-| **차수·자료:** 32차<br>**자료 폴더·원본:** [자료 폴더](history/32차)<br>**상세 설명:** [상세 설명](history/32차/README.md)<br>**직전 비교·범위:** [전체 비교·범위](docs/32차_전체변경.diff) |
+| 차수·자료 | 자료 |
+| --- | --- |
+| 1차 | **자료 폴더·원본** [자료 폴더](history/01%EC%B0%A8)<br>**상세 설명** [상세 설명](history/01%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/01%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 2차 | **자료 폴더·원본** [자료 폴더](history/02%EC%B0%A8)<br>**상세 설명** [상세 설명](history/02%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/02%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 3차 | **자료 폴더·원본** [자료 폴더](history/03%EC%B0%A8)<br>**상세 설명** [상세 설명](history/03%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/03%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 4차 | **자료 폴더·원본** [자료 폴더](history/04%EC%B0%A8)<br>**상세 설명** [상세 설명](history/04%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/04%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 5차 | **자료 폴더·원본** [자료 폴더](history/05%EC%B0%A8)<br>**상세 설명** [상세 설명](history/05%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/05%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 6차 | **자료 폴더·원본** [자료 폴더](history/06%EC%B0%A8)<br>**상세 설명** [상세 설명](history/06%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/06%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 7차 | **자료 폴더·원본** [자료 폴더](history/07%EC%B0%A8)<br>**상세 설명** [상세 설명](history/07%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/07%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 8차 | **자료 폴더·원본** [자료 폴더](history/08%EC%B0%A8)<br>**상세 설명** [상세 설명](history/08%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/08%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 9차 | **자료 폴더·원본** [자료 폴더](history/09%EC%B0%A8)<br>**상세 설명** [상세 설명](history/09%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/09%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 10차 | **자료 폴더·원본** [자료 폴더](history/10%EC%B0%A8)<br>**상세 설명** [상세 설명](history/10%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/10%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 11차 | **자료 폴더·원본** [자료 폴더](history/11%EC%B0%A8)<br>**상세 설명** [상세 설명](history/11%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/11%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 12차 | **자료 폴더·원본** [자료 폴더](history/12%EC%B0%A8)<br>**상세 설명** [상세 설명](history/12%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/12%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 13차 | **자료 폴더·원본** [자료 폴더](history/13%EC%B0%A8)<br>**상세 설명** [상세 설명](history/13%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/13%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 14차 | **자료 폴더·원본** [자료 폴더](history/14%EC%B0%A8)<br>**상세 설명** [상세 설명](history/14%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/14%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 15차 | **자료 폴더·원본** [자료 폴더](history/15%EC%B0%A8)<br>**상세 설명** [상세 설명](history/15%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/15%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 16차 | **자료 폴더·원본** [자료 폴더](history/16%EC%B0%A8)<br>**상세 설명** [상세 설명](history/16%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/16%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 17차 | **자료 폴더·원본** [자료 폴더](history/17%EC%B0%A8)<br>**상세 설명** [상세 설명](history/17%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/17%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 18차 | **자료 폴더·원본** [자료 폴더](history/18%EC%B0%A8)<br>**상세 설명** [상세 설명](history/18%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/18%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 19차 | **자료 폴더·원본** [자료 폴더](history/19%EC%B0%A8)<br>**상세 설명** [상세 설명](history/19%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/19%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 20차 | **자료 폴더·원본** [자료 폴더](docs/20%EC%B0%A8)<br>**상세 설명** [상세 설명](docs/20%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](docs/20%EC%B0%A8/README.md) |
+| 21차 | **자료 폴더·원본** [자료 폴더](history/21%EC%B0%A8)<br>**상세 설명** [상세 설명](history/21%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/21%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 22차 | **자료 폴더·원본** [자료 폴더](history/22%EC%B0%A8)<br>**상세 설명** [상세 설명](history/22%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/22%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 23차 | **자료 폴더·원본** [자료 폴더](history/23%EC%B0%A8)<br>**상세 설명** [상세 설명](history/23%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/23%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 24차 | **자료 폴더·원본** [자료 폴더](history/24%EC%B0%A8)<br>**상세 설명** [상세 설명](history/24%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/24%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 25차 | **자료 폴더·원본** [자료 폴더](history/25)<br>**상세 설명** [상세 설명](history/25/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/25/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 26차 | **자료 폴더·원본** [자료 폴더](history/26)<br>**상세 설명** [상세 설명](history/26/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/26/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 27차 | **자료 폴더·원본** [자료 폴더](history/27)<br>**상세 설명** [상세 설명](history/27/README.md)<br>**직전 비교·범위** [전체 비교·범위](docs/27%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD.diff) |
+| 28차 | **자료 폴더·원본** [자료 폴더](history/28)<br>**상세 설명** [상세 설명](history/28/README.md)<br>**직전 비교·범위** [전체 비교·범위](docs/28%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD.diff) |
+| 최종 | **자료 폴더·원본** [자료 폴더](docs/%EC%B5%9C%EC%A2%85)<br>**상세 설명** [상세 설명](docs/%EC%B5%9C%EC%A2%85/README.md)<br>**직전 비교·범위** [전체 비교·범위](docs/%EC%B5%9C%EC%A2%85/README.md) |
+| 29차 | **자료 폴더·원본** [자료 폴더](history/29%EC%B0%A8)<br>**상세 설명** [상세 설명](history/29%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](docs/29%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD.diff) · [소스 비교](history/29%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 30차 | **자료 폴더·원본** [자료 폴더](history/30%EC%B0%A8)<br>**상세 설명** [상세 설명](history/30%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/30%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 31차 | **자료 폴더·원본** [자료 폴더](history/31%EC%B0%A8)<br>**상세 설명** [상세 설명](history/31%EC%B0%A8/README.md)<br>**직전 비교·범위** [전체 비교·범위](history/31%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+| 32차 | **자료 폴더·원본** [자료 폴더](history/32차)<br>**상세 설명** [상세 설명](history/32차/README.md)<br>**직전 비교·범위** [전체 비교·범위](docs/32차_전체변경.diff) |
 <!-- 차수표 끝 -->
 
 원본 소스 비교에는 주석·공백·개행과 신규·삭제 상태를 포함합니다. 20차는 실행 소스 없이 38개 시안, 21차는 110개 시안을 보존합니다. 최종 폴더의 개인 운영 검증 원문은 공개하지 않습니다. 역사 자료 2,281개 항목의 보존·정제·제외 사유와 원본/공개 SHA를 차수별로 연결했습니다.

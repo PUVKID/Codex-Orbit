@@ -84,12 +84,12 @@ PyInstaller==6.22.3
 
 #### LEVEL 1 · [src/app.py](src/app.py)
 
-| 내용 |
-| --- |
-| **정의:** [`operation_record`](src/app.py#L35)<br>**소스에 적힌 역할:** 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다. |
-| **정의:** [`short_reason`](src/app.py#L88)<br>**소스에 적힌 역할:** 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. |
-| **정의:** [`DiagnosticLabel`](src/app.py#L532)<br>**소스에 적힌 역할:** 오류가 있을 때 변경 기록 안에 원문을 보여 주는 읽기 전용 라벨입니다. |
-| **정의:** [`QuitGuard`](src/app.py#L806)<br>**소스에 적힌 역할:** 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`operation_record`](src/app.py#L35) | 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다. |
+| [`short_reason`](src/app.py#L88) | 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. |
+| [`DiagnosticLabel`](src/app.py#L532) | 오류가 있을 때 변경 기록 안에 원문을 보여 주는 읽기 전용 라벨입니다. |
+| [`QuitGuard`](src/app.py#L806) | 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다. |
 
 **설정·옵션:** [`--data-dir`](src/app.py#L1162)
 
@@ -124,31 +124,31 @@ PyInstaller==6.22.3
 **코드의 선언:** `정의={'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}`
 
 
-| 내용 |
-| --- |
-| **거부 조건:** [`not lock.tryLock(100)`](src/app.py#L1193)<br>**오류 메시지:** 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
-| **거부 조건:** [`not isinstance(value, dict)`](src/app.py#L159)<br>**오류 메시지:** 앱 설정은 JSON 객체여야 합니다. |
+| 거부 조건 | 오류 메시지 |
+| --- | --- |
+| [`not lock.tryLock(100)`](src/app.py#L1193) | 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
+| [`not isinstance(value, dict)`](src/app.py#L159) | 앱 설정은 JSON 객체여야 합니다. |
 
 #### LEVEL 1 · [src/atom_frames.py](src/atom_frames.py)
 
-| 내용 |
-| --- |
-| **정의:** [`AtomAssetError`](src/atom_frames.py#L27)<br>**소스에 적힌 역할:** 필수 시각 자산 오류를 시작 실패 경로에 전달합니다. |
-| **정의:** [`AtomFrames`](src/atom_frames.py#L50)<br>**소스에 적힌 역할:** 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대24장만 보존합니다. |
-| **정의:** [`close_runtime_frames`](src/atom_frames.py#L172)<br>**소스에 적힌 역할:** 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
-| **정의:** [`get_atom_frames`](src/atom_frames.py#L183)<br>**소스에 적힌 역할:** 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`AtomAssetError`](src/atom_frames.py#L27) | 필수 시각 자산 오류를 시작 실패 경로에 전달합니다. |
+| [`AtomFrames`](src/atom_frames.py#L50) | 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대24장만 보존합니다. |
+| [`close_runtime_frames`](src/atom_frames.py#L172) | 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
+| [`get_atom_frames`](src/atom_frames.py#L183) | 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
 
-| 내용 |
-| --- |
-| **설정·옵션:** [`FRAME_COUNT`](src/atom_frames.py#L16)<br>**코드의 선언:** `정의=540` |
-| **설정·옵션:** [`FRAME_SIZE`](src/atom_frames.py#L17)<br>**코드의 선언:** `정의=296` |
-| **설정·옵션:** [`FPS`](src/atom_frames.py#L18)<br>**코드의 선언:** `정의=30` |
-| **설정·옵션:** [`PERIOD_SECONDS`](src/atom_frames.py#L19)<br>**코드의 선언:** `정의=18` |
-| **설정·옵션:** [`CACHE_LIMIT`](src/atom_frames.py#L20)<br>**코드의 선언:** `정의=24` |
-| **설정·옵션:** [`MAX_ARCHIVE_BYTES`](src/atom_frames.py#L21)<br>**코드의 선언:** `정의=128 * 1024 * 1024` |
-| **설정·옵션:** [`MAX_FRAME_BYTES`](src/atom_frames.py#L22)<br>**코드의 선언:** `정의=1024 * 1024` |
-| **설정·옵션:** [`MAX_TOTAL_BYTES`](src/atom_frames.py#L23)<br>**코드의 선언:** `정의=256 * 1024 * 1024` |
-| **설정·옵션:** [`MAX_MANIFEST_BYTES`](src/atom_frames.py#L24)<br>**코드의 선언:** `정의=64 * 1024` |
+| 설정·옵션 | 코드의 선언 |
+| --- | --- |
+| [`FRAME_COUNT`](src/atom_frames.py#L16) | `정의=540` |
+| [`FRAME_SIZE`](src/atom_frames.py#L17) | `정의=296` |
+| [`FPS`](src/atom_frames.py#L18) | `정의=30` |
+| [`PERIOD_SECONDS`](src/atom_frames.py#L19) | `정의=18` |
+| [`CACHE_LIMIT`](src/atom_frames.py#L20) | `정의=24` |
+| [`MAX_ARCHIVE_BYTES`](src/atom_frames.py#L21) | `정의=128 * 1024 * 1024` |
+| [`MAX_FRAME_BYTES`](src/atom_frames.py#L22) | `정의=1024 * 1024` |
+| [`MAX_TOTAL_BYTES`](src/atom_frames.py#L23) | `정의=256 * 1024 * 1024` |
+| [`MAX_MANIFEST_BYTES`](src/atom_frames.py#L24) | `정의=64 * 1024` |
 
 **거부 조건:** [`key in value`](src/atom_frames.py#L44)
 
@@ -198,24 +198,24 @@ PyInstaller==6.22.3
 #### LEVEL 1 · [src/brand.py](src/brand.py)
 
 
-| 내용 |
-| --- |
-| **거부 조건:** [`not 1 &lt;= size &lt;= 512`](src/brand.py#L10)<br>**오류 메시지:** 브랜드 이미지 크기는1~512px여야 합니다. |
+| 거부 조건 | 오류 메시지 |
+| --- | --- |
+| [`not 1 &lt;= size &lt;= 512`](src/brand.py#L10) | 브랜드 이미지 크기는1~512px여야 합니다. |
 
 #### LEVEL 1 · [src/core.py](src/core.py)
 
-| 내용 |
-| --- |
-| **정의:** [`read_jsonl_tail`](src/core.py#L18)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
-| **정의:** [`title_catalog`](src/core.py#L55)<br>**소스에 적힌 역할:** 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
-| **정의:** [`resolve_title`](src/core.py#L73)<br>**소스에 적힌 역할:** 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
-| **정의:** [`safe_path`](src/core.py#L97)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`read_jsonl_tail`](src/core.py#L18) | 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
+| [`title_catalog`](src/core.py#L55) | 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
+| [`resolve_title`](src/core.py#L73) | 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
+| [`safe_path`](src/core.py#L97) | 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 내용 |
-| --- |
-| **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L9)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
-| **설정·옵션:** [`BEGIN`](src/core.py#L10)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
-| **설정·옵션:** [`END`](src/core.py#L11)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
+| 설정·옵션 | 코드의 선언 |
+| --- | --- |
+| [`MAX_TEXT_BYTES`](src/core.py#L9) | `정의=2 * 1024 * 1024` |
+| [`BEGIN`](src/core.py#L10) | `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
+| [`END`](src/core.py#L11) | `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
 
 **거부 조건:** [`path.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L112)
 
@@ -276,28 +276,28 @@ PyInstaller==6.22.3
 
 #### LEVEL 1 · [src/notifier.py](src/notifier.py)
 
-| 내용 |
-| --- |
-| **정의:** [`atomic_json`](src/notifier.py#L32)<br>**소스에 적힌 역할:** 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도합니다. |
-| **정의:** [`source_datetime`](src/notifier.py#L62)<br>**소스에 적힌 역할:** 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. |
-| **정의:** [`duplicate_record`](src/notifier.py#L184)<br>**소스에 적힌 역할:** 원본 시각이 있는 복제 기록만 제외하며 기준선 재생의 순서는 복원합니다. |
-| **정의:** [`settings_record`](src/notifier.py#L195)<br>**소스에 적힌 역할:** 자기 채팅의 native 설정 필드만 관측하며 변경 주체와 실행 모델은 추정하지 않습니다. |
-| **정의:** [`lookup_parent_reason`](src/notifier.py#L335)<br>**소스에 적힌 역할:** 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. |
-| **정의:** [`enrich_event`](src/notifier.py#L382)<br>**소스에 적힌 역할:** 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`atomic_json`](src/notifier.py#L32) | 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도합니다. |
+| [`source_datetime`](src/notifier.py#L62) | 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. |
+| [`duplicate_record`](src/notifier.py#L184) | 원본 시각이 있는 복제 기록만 제외하며 기준선 재생의 순서는 복원합니다. |
+| [`settings_record`](src/notifier.py#L195) | 자기 채팅의 native 설정 필드만 관측하며 변경 주체와 실행 모델은 추정하지 않습니다. |
+| [`lookup_parent_reason`](src/notifier.py#L335) | 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. |
+| [`enrich_event`](src/notifier.py#L382) | 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
 
-| 내용 |
-| --- |
-| **설정·옵션:** [`--sessions`](src/notifier.py#L636)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
-| **설정·옵션:** [`--work`](src/notifier.py#L637)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
-| **설정·옵션:** [`ROOT`](src/notifier.py#L17)<br>**코드의 선언:** `정의=Path(__file__).resolve().parents[1]` |
-| **설정·옵션:** [`APP_ID`](src/notifier.py#L18)<br>**코드의 선언:** `정의='Yunseok.Codex.ModelChangeNotifier'` |
-| **설정·옵션:** [`READ_BYTES`](src/notifier.py#L19)<br>**코드의 선언:** `정의=512 * 1024` |
-| **설정·옵션:** [`MAX_RECORD`](src/notifier.py#L20)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
-| **설정·옵션:** [`MAX_FILES`](src/notifier.py#L21)<br>**코드의 선언:** `정의=4096` |
-| **설정·옵션:** [`LOG_BYTES`](src/notifier.py#L22)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
-| **설정·옵션:** [`POLL_READ_BYTES`](src/notifier.py#L23)<br>**코드의 선언:** `정의=8 * 1024 * 1024` |
-| **설정·옵션:** [`MAX_PENDING`](src/notifier.py#L24)<br>**코드의 선언:** `정의=256` |
-| **설정·옵션:** [`POLL_INTERVAL_SECONDS`](src/notifier.py#L25)<br>**코드의 선언:** `정의=0.2` |
+| 설정·옵션 | 코드의 선언 |
+| --- | --- |
+| [`--sessions`](src/notifier.py#L636) | `type=Path; default=Path.home() / '.codex/sessions'` |
+| [`--work`](src/notifier.py#L637) | `type=Path; default=ROOT / 'work'` |
+| [`ROOT`](src/notifier.py#L17) | `정의=Path(__file__).resolve().parents[1]` |
+| [`APP_ID`](src/notifier.py#L18) | `정의='Yunseok.Codex.ModelChangeNotifier'` |
+| [`READ_BYTES`](src/notifier.py#L19) | `정의=512 * 1024` |
+| [`MAX_RECORD`](src/notifier.py#L20) | `정의=2 * 1024 * 1024` |
+| [`MAX_FILES`](src/notifier.py#L21) | `정의=4096` |
+| [`LOG_BYTES`](src/notifier.py#L22) | `정의=2 * 1024 * 1024` |
+| [`POLL_READ_BYTES`](src/notifier.py#L23) | `정의=8 * 1024 * 1024` |
+| [`MAX_PENDING`](src/notifier.py#L24) | `정의=256` |
+| [`POLL_INTERVAL_SECONDS`](src/notifier.py#L25) | `정의=0.2` |
 
 **거부 조건:** [`self.state_path.stat().st_size &gt; 16 * 1024 * 1024`](src/notifier.py#L89)
 
@@ -338,38 +338,38 @@ PyInstaller==6.22.3
 
 #### LEVEL 1 · [src/theme.py](src/theme.py)
 
-| 내용 |
-| --- |
-| **정의:** [`MonochromeStyle`](src/theme.py#L51)<br>**소스에 적힌 역할:** 파일·메시지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. |
-| **정의:** [`KoreanDialogs`](src/theme.py#L76)<br>**소스에 적힌 역할:** 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역합니다. |
-| **정의:** [`DialogLayout`](src/theme.py#L92)<br>**소스에 적힌 역할:** 앱 파일 선택창의 이름 열과 한글 버튼에 충분한 공간을 확보합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`MonochromeStyle`](src/theme.py#L51) | 파일·메시지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. |
+| [`KoreanDialogs`](src/theme.py#L76) | 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역합니다. |
+| [`DialogLayout`](src/theme.py#L92) | 앱 파일 선택창의 이름 열과 한글 버튼에 충분한 공간을 확보합니다. |
 
 #### LEVEL 1 · [src/usage.py](src/usage.py)
 
-| 내용 |
-| --- |
-| **정의:** [`number`](src/usage.py#L16)<br>**소스에 적힌 역할:** 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
-| **정의:** [`normalize_limits`](src/usage.py#L35)<br>**소스에 적힌 역할:** 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
-| **정의:** [`discover_codex`](src/usage.py#L69)<br>**소스에 적힌 역할:** 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`number`](src/usage.py#L16) | 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
+| [`normalize_limits`](src/usage.py#L35) | 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
+| [`discover_codex`](src/usage.py#L69) | 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
 
-| 내용 |
-| --- |
-| **설정·옵션:** [`MAX_BYTES`](src/usage.py#L12)<br>**코드의 선언:** `정의=1024 * 1024` |
-| **설정·옵션:** [`KST`](src/usage.py#L13)<br>**코드의 선언:** `정의=timezone(timedelta(hours=9))` |
+| 설정·옵션 | 코드의 선언 |
+| --- | --- |
+| [`MAX_BYTES`](src/usage.py#L12) | `정의=1024 * 1024` |
+| [`KST`](src/usage.py#L13) | `정의=timezone(timedelta(hours=9))` |
 
-| 내용 |
-| --- |
-| **거부 조건:** [`not isinstance(message, dict)`](src/usage.py#L226)<br>**오류 메시지:** 객체가 아닌 응답 |
+| 거부 조건 | 오류 메시지 |
+| --- | --- |
+| [`not isinstance(message, dict)`](src/usage.py#L226) | 객체가 아닌 응답 |
 
 #### LEVEL 1 · [src/visuals.py](src/visuals.py)
 
-| 내용 |
-| --- |
-| **정의:** [`rotate_point`](src/visuals.py#L9)<br>**소스에 적힌 역할:** X·Y·Z 순서로 회전하며 깊이 좌표를 보존합니다. |
-| **정의:** [`axis_rotate`](src/visuals.py#L32)<br>**소스에 적힌 역할:** 로드리게스 식으로 고유 축 주위를 회전하며 공통 Z 변환을 쓰지 않습니다. |
-| **정의:** [`orbit_segments`](src/visuals.py#L55)<br>**소스에 적힌 역할:** 제작 매니페스트와 일치하는 기하 검증용 메타입니다. GUI 드로잉에는 쓰지 않습니다. |
-| **정의:** [`status_label`](src/visuals.py#L72)<br>**소스에 적힌 역할:** 읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다. |
-| **정의:** [`draw_orbit`](src/visuals.py#L77)<br>**소스에 적힌 역할:** 숫자가 없는 실제3D 프레임 위에 현재 계정 값과 상태만 고정 합성합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`rotate_point`](src/visuals.py#L9) | X·Y·Z 순서로 회전하며 깊이 좌표를 보존합니다. |
+| [`axis_rotate`](src/visuals.py#L32) | 로드리게스 식으로 고유 축 주위를 회전하며 공통 Z 변환을 쓰지 않습니다. |
+| [`orbit_segments`](src/visuals.py#L55) | 제작 매니페스트와 일치하는 기하 검증용 메타입니다. GUI 드로잉에는 쓰지 않습니다. |
+| [`status_label`](src/visuals.py#L72) | 읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다. |
+| [`draw_orbit`](src/visuals.py#L77) | 숫자가 없는 실제3D 프레임 위에 현재 계정 값과 상태만 고정 합성합니다. |
 
 **설정·옵션:** [`MOTION_PERIOD`](src/visuals.py#L24)
 
@@ -443,18 +443,11 @@ Codex App Server의 `account/rateLimits/read`를 읽기 전용으로 조회합�
 
 ### LEVEL 2 · 입력에서 출력으로
 
-**단계:** 입력
-
-**내용:** 현재 사용자 Codex의 로컬 JSONL과 이 차수의 앱 설정
-
-**단계:** 처리
-
-**내용:** 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시
-
-**단계:** 출력
-
-**내용:** 알림·변경 이력·로컬 진단 기록
-
+| 단계 | 내용 |
+| --- | --- |
+| 입력 | 현재 사용자 Codex의 로컬 JSONL과 이 차수의 앱 설정 |
+| 처리 | 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시 |
+| 출력 | 알림·변경 이력·로컬 진단 기록 |
 
 입력·처리·출력은 위의 같은 자료 흐름을 다른 단계에서 읽는 기준입니다. 처리 조건과 출력의 의미를 함께 확인합니다.
 
@@ -499,12 +492,12 @@ PyInstaller==6.22.3
 
 #### LEVEL 2 · [src/app.py](src/app.py)
 
-| 내용 |
-| --- |
-| **정의:** [`operation_record`](src/app.py#L35)<br>**소스에 적힌 역할:** 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다. |
-| **정의:** [`short_reason`](src/app.py#L88)<br>**소스에 적힌 역할:** 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. |
-| **정의:** [`DiagnosticLabel`](src/app.py#L532)<br>**소스에 적힌 역할:** 오류가 있을 때 변경 기록 안에 원문을 보여 주는 읽기 전용 라벨입니다. |
-| **정의:** [`QuitGuard`](src/app.py#L806)<br>**소스에 적힌 역할:** 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`operation_record`](src/app.py#L35) | 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다. |
+| [`short_reason`](src/app.py#L88) | 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. |
+| [`DiagnosticLabel`](src/app.py#L532) | 오류가 있을 때 변경 기록 안에 원문을 보여 주는 읽기 전용 라벨입니다. |
+| [`QuitGuard`](src/app.py#L806) | 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다. |
 
 **설정·옵션:** [`--data-dir`](src/app.py#L1162)
 
@@ -539,31 +532,31 @@ PyInstaller==6.22.3
 **코드의 선언:** `정의={'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}`
 
 
-| 내용 |
-| --- |
-| **거부 조건:** [`not lock.tryLock(100)`](src/app.py#L1193)<br>**오류 메시지:** 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
-| **거부 조건:** [`not isinstance(value, dict)`](src/app.py#L159)<br>**오류 메시지:** 앱 설정은 JSON 객체여야 합니다. |
+| 거부 조건 | 오류 메시지 |
+| --- | --- |
+| [`not lock.tryLock(100)`](src/app.py#L1193) | 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
+| [`not isinstance(value, dict)`](src/app.py#L159) | 앱 설정은 JSON 객체여야 합니다. |
 
 #### LEVEL 2 · [src/atom_frames.py](src/atom_frames.py)
 
-| 내용 |
-| --- |
-| **정의:** [`AtomAssetError`](src/atom_frames.py#L27)<br>**소스에 적힌 역할:** 필수 시각 자산 오류를 시작 실패 경로에 전달합니다. |
-| **정의:** [`AtomFrames`](src/atom_frames.py#L50)<br>**소스에 적힌 역할:** 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대24장만 보존합니다. |
-| **정의:** [`close_runtime_frames`](src/atom_frames.py#L172)<br>**소스에 적힌 역할:** 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
-| **정의:** [`get_atom_frames`](src/atom_frames.py#L183)<br>**소스에 적힌 역할:** 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`AtomAssetError`](src/atom_frames.py#L27) | 필수 시각 자산 오류를 시작 실패 경로에 전달합니다. |
+| [`AtomFrames`](src/atom_frames.py#L50) | 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대24장만 보존합니다. |
+| [`close_runtime_frames`](src/atom_frames.py#L172) | 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
+| [`get_atom_frames`](src/atom_frames.py#L183) | 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
 
-| 내용 |
-| --- |
-| **설정·옵션:** [`FRAME_COUNT`](src/atom_frames.py#L16)<br>**코드의 선언:** `정의=540` |
-| **설정·옵션:** [`FRAME_SIZE`](src/atom_frames.py#L17)<br>**코드의 선언:** `정의=296` |
-| **설정·옵션:** [`FPS`](src/atom_frames.py#L18)<br>**코드의 선언:** `정의=30` |
-| **설정·옵션:** [`PERIOD_SECONDS`](src/atom_frames.py#L19)<br>**코드의 선언:** `정의=18` |
-| **설정·옵션:** [`CACHE_LIMIT`](src/atom_frames.py#L20)<br>**코드의 선언:** `정의=24` |
-| **설정·옵션:** [`MAX_ARCHIVE_BYTES`](src/atom_frames.py#L21)<br>**코드의 선언:** `정의=128 * 1024 * 1024` |
-| **설정·옵션:** [`MAX_FRAME_BYTES`](src/atom_frames.py#L22)<br>**코드의 선언:** `정의=1024 * 1024` |
-| **설정·옵션:** [`MAX_TOTAL_BYTES`](src/atom_frames.py#L23)<br>**코드의 선언:** `정의=256 * 1024 * 1024` |
-| **설정·옵션:** [`MAX_MANIFEST_BYTES`](src/atom_frames.py#L24)<br>**코드의 선언:** `정의=64 * 1024` |
+| 설정·옵션 | 코드의 선언 |
+| --- | --- |
+| [`FRAME_COUNT`](src/atom_frames.py#L16) | `정의=540` |
+| [`FRAME_SIZE`](src/atom_frames.py#L17) | `정의=296` |
+| [`FPS`](src/atom_frames.py#L18) | `정의=30` |
+| [`PERIOD_SECONDS`](src/atom_frames.py#L19) | `정의=18` |
+| [`CACHE_LIMIT`](src/atom_frames.py#L20) | `정의=24` |
+| [`MAX_ARCHIVE_BYTES`](src/atom_frames.py#L21) | `정의=128 * 1024 * 1024` |
+| [`MAX_FRAME_BYTES`](src/atom_frames.py#L22) | `정의=1024 * 1024` |
+| [`MAX_TOTAL_BYTES`](src/atom_frames.py#L23) | `정의=256 * 1024 * 1024` |
+| [`MAX_MANIFEST_BYTES`](src/atom_frames.py#L24) | `정의=64 * 1024` |
 
 **거부 조건:** [`key in value`](src/atom_frames.py#L44)
 
@@ -613,24 +606,24 @@ PyInstaller==6.22.3
 #### LEVEL 2 · [src/brand.py](src/brand.py)
 
 
-| 내용 |
-| --- |
-| **거부 조건:** [`not 1 &lt;= size &lt;= 512`](src/brand.py#L10)<br>**오류 메시지:** 브랜드 이미지 크기는1~512px여야 합니다. |
+| 거부 조건 | 오류 메시지 |
+| --- | --- |
+| [`not 1 &lt;= size &lt;= 512`](src/brand.py#L10) | 브랜드 이미지 크기는1~512px여야 합니다. |
 
 #### LEVEL 2 · [src/core.py](src/core.py)
 
-| 내용 |
-| --- |
-| **정의:** [`read_jsonl_tail`](src/core.py#L18)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
-| **정의:** [`title_catalog`](src/core.py#L55)<br>**소스에 적힌 역할:** 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
-| **정의:** [`resolve_title`](src/core.py#L73)<br>**소스에 적힌 역할:** 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
-| **정의:** [`safe_path`](src/core.py#L97)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`read_jsonl_tail`](src/core.py#L18) | 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
+| [`title_catalog`](src/core.py#L55) | 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
+| [`resolve_title`](src/core.py#L73) | 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
+| [`safe_path`](src/core.py#L97) | 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 내용 |
-| --- |
-| **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L9)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
-| **설정·옵션:** [`BEGIN`](src/core.py#L10)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
-| **설정·옵션:** [`END`](src/core.py#L11)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
+| 설정·옵션 | 코드의 선언 |
+| --- | --- |
+| [`MAX_TEXT_BYTES`](src/core.py#L9) | `정의=2 * 1024 * 1024` |
+| [`BEGIN`](src/core.py#L10) | `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
+| [`END`](src/core.py#L11) | `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
 
 **거부 조건:** [`path.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L112)
 
@@ -691,28 +684,28 @@ PyInstaller==6.22.3
 
 #### LEVEL 2 · [src/notifier.py](src/notifier.py)
 
-| 내용 |
-| --- |
-| **정의:** [`atomic_json`](src/notifier.py#L32)<br>**소스에 적힌 역할:** 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도합니다. |
-| **정의:** [`source_datetime`](src/notifier.py#L62)<br>**소스에 적힌 역할:** 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. |
-| **정의:** [`duplicate_record`](src/notifier.py#L184)<br>**소스에 적힌 역할:** 원본 시각이 있는 복제 기록만 제외하며 기준선 재생의 순서는 복원합니다. |
-| **정의:** [`settings_record`](src/notifier.py#L195)<br>**소스에 적힌 역할:** 자기 채팅의 native 설정 필드만 관측하며 변경 주체와 실행 모델은 추정하지 않습니다. |
-| **정의:** [`lookup_parent_reason`](src/notifier.py#L335)<br>**소스에 적힌 역할:** 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. |
-| **정의:** [`enrich_event`](src/notifier.py#L382)<br>**소스에 적힌 역할:** 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`atomic_json`](src/notifier.py#L32) | 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도합니다. |
+| [`source_datetime`](src/notifier.py#L62) | 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. |
+| [`duplicate_record`](src/notifier.py#L184) | 원본 시각이 있는 복제 기록만 제외하며 기준선 재생의 순서는 복원합니다. |
+| [`settings_record`](src/notifier.py#L195) | 자기 채팅의 native 설정 필드만 관측하며 변경 주체와 실행 모델은 추정하지 않습니다. |
+| [`lookup_parent_reason`](src/notifier.py#L335) | 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. |
+| [`enrich_event`](src/notifier.py#L382) | 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
 
-| 내용 |
-| --- |
-| **설정·옵션:** [`--sessions`](src/notifier.py#L636)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
-| **설정·옵션:** [`--work`](src/notifier.py#L637)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
-| **설정·옵션:** [`ROOT`](src/notifier.py#L17)<br>**코드의 선언:** `정의=Path(__file__).resolve().parents[1]` |
-| **설정·옵션:** [`APP_ID`](src/notifier.py#L18)<br>**코드의 선언:** `정의='Yunseok.Codex.ModelChangeNotifier'` |
-| **설정·옵션:** [`READ_BYTES`](src/notifier.py#L19)<br>**코드의 선언:** `정의=512 * 1024` |
-| **설정·옵션:** [`MAX_RECORD`](src/notifier.py#L20)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
-| **설정·옵션:** [`MAX_FILES`](src/notifier.py#L21)<br>**코드의 선언:** `정의=4096` |
-| **설정·옵션:** [`LOG_BYTES`](src/notifier.py#L22)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
-| **설정·옵션:** [`POLL_READ_BYTES`](src/notifier.py#L23)<br>**코드의 선언:** `정의=8 * 1024 * 1024` |
-| **설정·옵션:** [`MAX_PENDING`](src/notifier.py#L24)<br>**코드의 선언:** `정의=256` |
-| **설정·옵션:** [`POLL_INTERVAL_SECONDS`](src/notifier.py#L25)<br>**코드의 선언:** `정의=0.2` |
+| 설정·옵션 | 코드의 선언 |
+| --- | --- |
+| [`--sessions`](src/notifier.py#L636) | `type=Path; default=Path.home() / '.codex/sessions'` |
+| [`--work`](src/notifier.py#L637) | `type=Path; default=ROOT / 'work'` |
+| [`ROOT`](src/notifier.py#L17) | `정의=Path(__file__).resolve().parents[1]` |
+| [`APP_ID`](src/notifier.py#L18) | `정의='Yunseok.Codex.ModelChangeNotifier'` |
+| [`READ_BYTES`](src/notifier.py#L19) | `정의=512 * 1024` |
+| [`MAX_RECORD`](src/notifier.py#L20) | `정의=2 * 1024 * 1024` |
+| [`MAX_FILES`](src/notifier.py#L21) | `정의=4096` |
+| [`LOG_BYTES`](src/notifier.py#L22) | `정의=2 * 1024 * 1024` |
+| [`POLL_READ_BYTES`](src/notifier.py#L23) | `정의=8 * 1024 * 1024` |
+| [`MAX_PENDING`](src/notifier.py#L24) | `정의=256` |
+| [`POLL_INTERVAL_SECONDS`](src/notifier.py#L25) | `정의=0.2` |
 
 **거부 조건:** [`self.state_path.stat().st_size &gt; 16 * 1024 * 1024`](src/notifier.py#L89)
 
@@ -753,38 +746,38 @@ PyInstaller==6.22.3
 
 #### LEVEL 2 · [src/theme.py](src/theme.py)
 
-| 내용 |
-| --- |
-| **정의:** [`MonochromeStyle`](src/theme.py#L51)<br>**소스에 적힌 역할:** 파일·메시지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. |
-| **정의:** [`KoreanDialogs`](src/theme.py#L76)<br>**소스에 적힌 역할:** 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역합니다. |
-| **정의:** [`DialogLayout`](src/theme.py#L92)<br>**소스에 적힌 역할:** 앱 파일 선택창의 이름 열과 한글 버튼에 충분한 공간을 확보합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`MonochromeStyle`](src/theme.py#L51) | 파일·메시지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. |
+| [`KoreanDialogs`](src/theme.py#L76) | 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역합니다. |
+| [`DialogLayout`](src/theme.py#L92) | 앱 파일 선택창의 이름 열과 한글 버튼에 충분한 공간을 확보합니다. |
 
 #### LEVEL 2 · [src/usage.py](src/usage.py)
 
-| 내용 |
-| --- |
-| **정의:** [`number`](src/usage.py#L16)<br>**소스에 적힌 역할:** 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
-| **정의:** [`normalize_limits`](src/usage.py#L35)<br>**소스에 적힌 역할:** 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
-| **정의:** [`discover_codex`](src/usage.py#L69)<br>**소스에 적힌 역할:** 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`number`](src/usage.py#L16) | 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
+| [`normalize_limits`](src/usage.py#L35) | 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
+| [`discover_codex`](src/usage.py#L69) | 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
 
-| 내용 |
-| --- |
-| **설정·옵션:** [`MAX_BYTES`](src/usage.py#L12)<br>**코드의 선언:** `정의=1024 * 1024` |
-| **설정·옵션:** [`KST`](src/usage.py#L13)<br>**코드의 선언:** `정의=timezone(timedelta(hours=9))` |
+| 설정·옵션 | 코드의 선언 |
+| --- | --- |
+| [`MAX_BYTES`](src/usage.py#L12) | `정의=1024 * 1024` |
+| [`KST`](src/usage.py#L13) | `정의=timezone(timedelta(hours=9))` |
 
-| 내용 |
-| --- |
-| **거부 조건:** [`not isinstance(message, dict)`](src/usage.py#L226)<br>**오류 메시지:** 객체가 아닌 응답 |
+| 거부 조건 | 오류 메시지 |
+| --- | --- |
+| [`not isinstance(message, dict)`](src/usage.py#L226) | 객체가 아닌 응답 |
 
 #### LEVEL 2 · [src/visuals.py](src/visuals.py)
 
-| 내용 |
-| --- |
-| **정의:** [`rotate_point`](src/visuals.py#L9)<br>**소스에 적힌 역할:** X·Y·Z 순서로 회전하며 깊이 좌표를 보존합니다. |
-| **정의:** [`axis_rotate`](src/visuals.py#L32)<br>**소스에 적힌 역할:** 로드리게스 식으로 고유 축 주위를 회전하며 공통 Z 변환을 쓰지 않습니다. |
-| **정의:** [`orbit_segments`](src/visuals.py#L55)<br>**소스에 적힌 역할:** 제작 매니페스트와 일치하는 기하 검증용 메타입니다. GUI 드로잉에는 쓰지 않습니다. |
-| **정의:** [`status_label`](src/visuals.py#L72)<br>**소스에 적힌 역할:** 읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다. |
-| **정의:** [`draw_orbit`](src/visuals.py#L77)<br>**소스에 적힌 역할:** 숫자가 없는 실제3D 프레임 위에 현재 계정 값과 상태만 고정 합성합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`rotate_point`](src/visuals.py#L9) | X·Y·Z 순서로 회전하며 깊이 좌표를 보존합니다. |
+| [`axis_rotate`](src/visuals.py#L32) | 로드리게스 식으로 고유 축 주위를 회전하며 공통 Z 변환을 쓰지 않습니다. |
+| [`orbit_segments`](src/visuals.py#L55) | 제작 매니페스트와 일치하는 기하 검증용 메타입니다. GUI 드로잉에는 쓰지 않습니다. |
+| [`status_label`](src/visuals.py#L72) | 읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다. |
+| [`draw_orbit`](src/visuals.py#L77) | 숫자가 없는 실제3D 프레임 위에 현재 계정 값과 상태만 고정 합성합니다. |
 
 **설정·옵션:** [`MOTION_PERIOD`](src/visuals.py#L24)
 
@@ -869,12 +862,12 @@ PyInstaller==6.22.3
 
 #### LEVEL 3 · [src/app.py](src/app.py)
 
-| 내용 |
-| --- |
-| **정의:** [`operation_record`](src/app.py#L35)<br>**소스에 적힌 역할:** 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다. |
-| **정의:** [`short_reason`](src/app.py#L88)<br>**소스에 적힌 역할:** 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. |
-| **정의:** [`DiagnosticLabel`](src/app.py#L532)<br>**소스에 적힌 역할:** 오류가 있을 때 변경 기록 안에 원문을 보여 주는 읽기 전용 라벨입니다. |
-| **정의:** [`QuitGuard`](src/app.py#L806)<br>**소스에 적힌 역할:** 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`operation_record`](src/app.py#L35) | 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다. |
+| [`short_reason`](src/app.py#L88) | 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. |
+| [`DiagnosticLabel`](src/app.py#L532) | 오류가 있을 때 변경 기록 안에 원문을 보여 주는 읽기 전용 라벨입니다. |
+| [`QuitGuard`](src/app.py#L806) | 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다. |
 
 **설정·옵션:** [`--data-dir`](src/app.py#L1162)
 
@@ -909,31 +902,31 @@ PyInstaller==6.22.3
 **코드의 선언:** `정의={'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}`
 
 
-| 내용 |
-| --- |
-| **거부 조건:** [`not lock.tryLock(100)`](src/app.py#L1193)<br>**오류 메시지:** 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
-| **거부 조건:** [`not isinstance(value, dict)`](src/app.py#L159)<br>**오류 메시지:** 앱 설정은 JSON 객체여야 합니다. |
+| 거부 조건 | 오류 메시지 |
+| --- | --- |
+| [`not lock.tryLock(100)`](src/app.py#L1193) | 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
+| [`not isinstance(value, dict)`](src/app.py#L159) | 앱 설정은 JSON 객체여야 합니다. |
 
 #### LEVEL 3 · [src/atom_frames.py](src/atom_frames.py)
 
-| 내용 |
-| --- |
-| **정의:** [`AtomAssetError`](src/atom_frames.py#L27)<br>**소스에 적힌 역할:** 필수 시각 자산 오류를 시작 실패 경로에 전달합니다. |
-| **정의:** [`AtomFrames`](src/atom_frames.py#L50)<br>**소스에 적힌 역할:** 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대24장만 보존합니다. |
-| **정의:** [`close_runtime_frames`](src/atom_frames.py#L172)<br>**소스에 적힌 역할:** 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
-| **정의:** [`get_atom_frames`](src/atom_frames.py#L183)<br>**소스에 적힌 역할:** 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`AtomAssetError`](src/atom_frames.py#L27) | 필수 시각 자산 오류를 시작 실패 경로에 전달합니다. |
+| [`AtomFrames`](src/atom_frames.py#L50) | 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대24장만 보존합니다. |
+| [`close_runtime_frames`](src/atom_frames.py#L172) | 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
+| [`get_atom_frames`](src/atom_frames.py#L183) | 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
 
-| 내용 |
-| --- |
-| **설정·옵션:** [`FRAME_COUNT`](src/atom_frames.py#L16)<br>**코드의 선언:** `정의=540` |
-| **설정·옵션:** [`FRAME_SIZE`](src/atom_frames.py#L17)<br>**코드의 선언:** `정의=296` |
-| **설정·옵션:** [`FPS`](src/atom_frames.py#L18)<br>**코드의 선언:** `정의=30` |
-| **설정·옵션:** [`PERIOD_SECONDS`](src/atom_frames.py#L19)<br>**코드의 선언:** `정의=18` |
-| **설정·옵션:** [`CACHE_LIMIT`](src/atom_frames.py#L20)<br>**코드의 선언:** `정의=24` |
-| **설정·옵션:** [`MAX_ARCHIVE_BYTES`](src/atom_frames.py#L21)<br>**코드의 선언:** `정의=128 * 1024 * 1024` |
-| **설정·옵션:** [`MAX_FRAME_BYTES`](src/atom_frames.py#L22)<br>**코드의 선언:** `정의=1024 * 1024` |
-| **설정·옵션:** [`MAX_TOTAL_BYTES`](src/atom_frames.py#L23)<br>**코드의 선언:** `정의=256 * 1024 * 1024` |
-| **설정·옵션:** [`MAX_MANIFEST_BYTES`](src/atom_frames.py#L24)<br>**코드의 선언:** `정의=64 * 1024` |
+| 설정·옵션 | 코드의 선언 |
+| --- | --- |
+| [`FRAME_COUNT`](src/atom_frames.py#L16) | `정의=540` |
+| [`FRAME_SIZE`](src/atom_frames.py#L17) | `정의=296` |
+| [`FPS`](src/atom_frames.py#L18) | `정의=30` |
+| [`PERIOD_SECONDS`](src/atom_frames.py#L19) | `정의=18` |
+| [`CACHE_LIMIT`](src/atom_frames.py#L20) | `정의=24` |
+| [`MAX_ARCHIVE_BYTES`](src/atom_frames.py#L21) | `정의=128 * 1024 * 1024` |
+| [`MAX_FRAME_BYTES`](src/atom_frames.py#L22) | `정의=1024 * 1024` |
+| [`MAX_TOTAL_BYTES`](src/atom_frames.py#L23) | `정의=256 * 1024 * 1024` |
+| [`MAX_MANIFEST_BYTES`](src/atom_frames.py#L24) | `정의=64 * 1024` |
 
 **거부 조건:** [`key in value`](src/atom_frames.py#L44)
 
@@ -983,24 +976,24 @@ PyInstaller==6.22.3
 #### LEVEL 3 · [src/brand.py](src/brand.py)
 
 
-| 내용 |
-| --- |
-| **거부 조건:** [`not 1 &lt;= size &lt;= 512`](src/brand.py#L10)<br>**오류 메시지:** 브랜드 이미지 크기는1~512px여야 합니다. |
+| 거부 조건 | 오류 메시지 |
+| --- | --- |
+| [`not 1 &lt;= size &lt;= 512`](src/brand.py#L10) | 브랜드 이미지 크기는1~512px여야 합니다. |
 
 #### LEVEL 3 · [src/core.py](src/core.py)
 
-| 내용 |
-| --- |
-| **정의:** [`read_jsonl_tail`](src/core.py#L18)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
-| **정의:** [`title_catalog`](src/core.py#L55)<br>**소스에 적힌 역할:** 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
-| **정의:** [`resolve_title`](src/core.py#L73)<br>**소스에 적힌 역할:** 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
-| **정의:** [`safe_path`](src/core.py#L97)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`read_jsonl_tail`](src/core.py#L18) | 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
+| [`title_catalog`](src/core.py#L55) | 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
+| [`resolve_title`](src/core.py#L73) | 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
+| [`safe_path`](src/core.py#L97) | 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 내용 |
-| --- |
-| **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L9)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
-| **설정·옵션:** [`BEGIN`](src/core.py#L10)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
-| **설정·옵션:** [`END`](src/core.py#L11)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
+| 설정·옵션 | 코드의 선언 |
+| --- | --- |
+| [`MAX_TEXT_BYTES`](src/core.py#L9) | `정의=2 * 1024 * 1024` |
+| [`BEGIN`](src/core.py#L10) | `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
+| [`END`](src/core.py#L11) | `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
 
 **거부 조건:** [`path.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L112)
 
@@ -1061,28 +1054,28 @@ PyInstaller==6.22.3
 
 #### LEVEL 3 · [src/notifier.py](src/notifier.py)
 
-| 내용 |
-| --- |
-| **정의:** [`atomic_json`](src/notifier.py#L32)<br>**소스에 적힌 역할:** 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도합니다. |
-| **정의:** [`source_datetime`](src/notifier.py#L62)<br>**소스에 적힌 역할:** 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. |
-| **정의:** [`duplicate_record`](src/notifier.py#L184)<br>**소스에 적힌 역할:** 원본 시각이 있는 복제 기록만 제외하며 기준선 재생의 순서는 복원합니다. |
-| **정의:** [`settings_record`](src/notifier.py#L195)<br>**소스에 적힌 역할:** 자기 채팅의 native 설정 필드만 관측하며 변경 주체와 실행 모델은 추정하지 않습니다. |
-| **정의:** [`lookup_parent_reason`](src/notifier.py#L335)<br>**소스에 적힌 역할:** 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. |
-| **정의:** [`enrich_event`](src/notifier.py#L382)<br>**소스에 적힌 역할:** 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`atomic_json`](src/notifier.py#L32) | 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도합니다. |
+| [`source_datetime`](src/notifier.py#L62) | 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. |
+| [`duplicate_record`](src/notifier.py#L184) | 원본 시각이 있는 복제 기록만 제외하며 기준선 재생의 순서는 복원합니다. |
+| [`settings_record`](src/notifier.py#L195) | 자기 채팅의 native 설정 필드만 관측하며 변경 주체와 실행 모델은 추정하지 않습니다. |
+| [`lookup_parent_reason`](src/notifier.py#L335) | 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. |
+| [`enrich_event`](src/notifier.py#L382) | 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
 
-| 내용 |
-| --- |
-| **설정·옵션:** [`--sessions`](src/notifier.py#L636)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
-| **설정·옵션:** [`--work`](src/notifier.py#L637)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
-| **설정·옵션:** [`ROOT`](src/notifier.py#L17)<br>**코드의 선언:** `정의=Path(__file__).resolve().parents[1]` |
-| **설정·옵션:** [`APP_ID`](src/notifier.py#L18)<br>**코드의 선언:** `정의='Yunseok.Codex.ModelChangeNotifier'` |
-| **설정·옵션:** [`READ_BYTES`](src/notifier.py#L19)<br>**코드의 선언:** `정의=512 * 1024` |
-| **설정·옵션:** [`MAX_RECORD`](src/notifier.py#L20)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
-| **설정·옵션:** [`MAX_FILES`](src/notifier.py#L21)<br>**코드의 선언:** `정의=4096` |
-| **설정·옵션:** [`LOG_BYTES`](src/notifier.py#L22)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
-| **설정·옵션:** [`POLL_READ_BYTES`](src/notifier.py#L23)<br>**코드의 선언:** `정의=8 * 1024 * 1024` |
-| **설정·옵션:** [`MAX_PENDING`](src/notifier.py#L24)<br>**코드의 선언:** `정의=256` |
-| **설정·옵션:** [`POLL_INTERVAL_SECONDS`](src/notifier.py#L25)<br>**코드의 선언:** `정의=0.2` |
+| 설정·옵션 | 코드의 선언 |
+| --- | --- |
+| [`--sessions`](src/notifier.py#L636) | `type=Path; default=Path.home() / '.codex/sessions'` |
+| [`--work`](src/notifier.py#L637) | `type=Path; default=ROOT / 'work'` |
+| [`ROOT`](src/notifier.py#L17) | `정의=Path(__file__).resolve().parents[1]` |
+| [`APP_ID`](src/notifier.py#L18) | `정의='Yunseok.Codex.ModelChangeNotifier'` |
+| [`READ_BYTES`](src/notifier.py#L19) | `정의=512 * 1024` |
+| [`MAX_RECORD`](src/notifier.py#L20) | `정의=2 * 1024 * 1024` |
+| [`MAX_FILES`](src/notifier.py#L21) | `정의=4096` |
+| [`LOG_BYTES`](src/notifier.py#L22) | `정의=2 * 1024 * 1024` |
+| [`POLL_READ_BYTES`](src/notifier.py#L23) | `정의=8 * 1024 * 1024` |
+| [`MAX_PENDING`](src/notifier.py#L24) | `정의=256` |
+| [`POLL_INTERVAL_SECONDS`](src/notifier.py#L25) | `정의=0.2` |
 
 **거부 조건:** [`self.state_path.stat().st_size &gt; 16 * 1024 * 1024`](src/notifier.py#L89)
 
@@ -1123,38 +1116,38 @@ PyInstaller==6.22.3
 
 #### LEVEL 3 · [src/theme.py](src/theme.py)
 
-| 내용 |
-| --- |
-| **정의:** [`MonochromeStyle`](src/theme.py#L51)<br>**소스에 적힌 역할:** 파일·메시지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. |
-| **정의:** [`KoreanDialogs`](src/theme.py#L76)<br>**소스에 적힌 역할:** 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역합니다. |
-| **정의:** [`DialogLayout`](src/theme.py#L92)<br>**소스에 적힌 역할:** 앱 파일 선택창의 이름 열과 한글 버튼에 충분한 공간을 확보합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`MonochromeStyle`](src/theme.py#L51) | 파일·메시지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. |
+| [`KoreanDialogs`](src/theme.py#L76) | 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역합니다. |
+| [`DialogLayout`](src/theme.py#L92) | 앱 파일 선택창의 이름 열과 한글 버튼에 충분한 공간을 확보합니다. |
 
 #### LEVEL 3 · [src/usage.py](src/usage.py)
 
-| 내용 |
-| --- |
-| **정의:** [`number`](src/usage.py#L16)<br>**소스에 적힌 역할:** 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
-| **정의:** [`normalize_limits`](src/usage.py#L35)<br>**소스에 적힌 역할:** 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
-| **정의:** [`discover_codex`](src/usage.py#L69)<br>**소스에 적힌 역할:** 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`number`](src/usage.py#L16) | 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
+| [`normalize_limits`](src/usage.py#L35) | 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
+| [`discover_codex`](src/usage.py#L69) | 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
 
-| 내용 |
-| --- |
-| **설정·옵션:** [`MAX_BYTES`](src/usage.py#L12)<br>**코드의 선언:** `정의=1024 * 1024` |
-| **설정·옵션:** [`KST`](src/usage.py#L13)<br>**코드의 선언:** `정의=timezone(timedelta(hours=9))` |
+| 설정·옵션 | 코드의 선언 |
+| --- | --- |
+| [`MAX_BYTES`](src/usage.py#L12) | `정의=1024 * 1024` |
+| [`KST`](src/usage.py#L13) | `정의=timezone(timedelta(hours=9))` |
 
-| 내용 |
-| --- |
-| **거부 조건:** [`not isinstance(message, dict)`](src/usage.py#L226)<br>**오류 메시지:** 객체가 아닌 응답 |
+| 거부 조건 | 오류 메시지 |
+| --- | --- |
+| [`not isinstance(message, dict)`](src/usage.py#L226) | 객체가 아닌 응답 |
 
 #### LEVEL 3 · [src/visuals.py](src/visuals.py)
 
-| 내용 |
-| --- |
-| **정의:** [`rotate_point`](src/visuals.py#L9)<br>**소스에 적힌 역할:** X·Y·Z 순서로 회전하며 깊이 좌표를 보존합니다. |
-| **정의:** [`axis_rotate`](src/visuals.py#L32)<br>**소스에 적힌 역할:** 로드리게스 식으로 고유 축 주위를 회전하며 공통 Z 변환을 쓰지 않습니다. |
-| **정의:** [`orbit_segments`](src/visuals.py#L55)<br>**소스에 적힌 역할:** 제작 매니페스트와 일치하는 기하 검증용 메타입니다. GUI 드로잉에는 쓰지 않습니다. |
-| **정의:** [`status_label`](src/visuals.py#L72)<br>**소스에 적힌 역할:** 읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다. |
-| **정의:** [`draw_orbit`](src/visuals.py#L77)<br>**소스에 적힌 역할:** 숫자가 없는 실제3D 프레임 위에 현재 계정 값과 상태만 고정 합성합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`rotate_point`](src/visuals.py#L9) | X·Y·Z 순서로 회전하며 깊이 좌표를 보존합니다. |
+| [`axis_rotate`](src/visuals.py#L32) | 로드리게스 식으로 고유 축 주위를 회전하며 공통 Z 변환을 쓰지 않습니다. |
+| [`orbit_segments`](src/visuals.py#L55) | 제작 매니페스트와 일치하는 기하 검증용 메타입니다. GUI 드로잉에는 쓰지 않습니다. |
+| [`status_label`](src/visuals.py#L72) | 읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다. |
+| [`draw_orbit`](src/visuals.py#L77) | 숫자가 없는 실제3D 프레임 위에 현재 계정 값과 상태만 고정 합성합니다. |
 
 **설정·옵션:** [`MOTION_PERIOD`](src/visuals.py#L24)
 
@@ -1186,18 +1179,11 @@ PyInstaller==6.22.3
 3. 새 변경이 기록되면 이전·이후 값과 이유를 비교하고, 기록 종류와 근거 수준을 함께 읽습니다.
 4. 설정·이력은 개인 운영자료로 관리하고 다른 사용자에게 공유하기 전에 내용을 확인합니다.
 
-**단계:** 입력
-
-**내용:** 현재 사용자 Codex의 로컬 JSONL과 이 차수의 앱 설정
-
-**단계:** 처리
-
-**내용:** 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시
-
-**단계:** 출력
-
-**내용:** 알림·변경 이력·로컬 진단 기록
-
+| 단계 | 내용 |
+| --- | --- |
+| 입력 | 현재 사용자 Codex의 로컬 JSONL과 이 차수의 앱 설정 |
+| 처리 | 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시 |
+| 출력 | 알림·변경 이력·로컬 진단 기록 |
 
 ### LEVEL 3 · 결과와 실패를 확인하기
 
@@ -1261,29 +1247,22 @@ Codex App Server의 `account/rateLimits/read`를 읽기 전용으로 조회합�
 
 ### LEVEL 4 · 이 차수 구현의 실제 근거
 
-| 내용 |
-| --- |
-| **파일:** [src/app.py](src/app.py)<br>**원문에 정의된 역할·구성:** Codex Orbit: 독립 회전 위젯과 로컬 변경 기록·사용 한도. |
-| **파일:** [src/notifier.py](src/notifier.py)<br>**원문에 정의된 역할·구성:** 현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다. |
-| **파일:** [src/atom_frames.py](src/atom_frames.py)<br>**원문에 정의된 역할·구성:** 검증된 금속 원자 프레임을 추출 없이 읽는 제한 메모리 재생기입니다. |
-| **파일:** [src/brand.py](src/brand.py)<br>**원문에 정의된 역할·구성:** 같은 금속 원자 제작 프레임을 사용하는 정적 앱 마크입니다. |
-| **파일:** [src/core.py](src/core.py)<br>**원문에 정의된 역할·구성:** 외부 통신 없는 로컬 자료 읽기와 명시적 지침 적용. |
-| **파일:** [src/theme.py](src/theme.py)<br>**원문에 정의된 역할·구성:** 앱이 소유하는 모든 화면과 대화상자의 공통 무채색 테마입니다. |
-| **파일:** [src/usage.py](src/usage.py)<br>**원문에 정의된 역할·구성:** Codex App Server의 계정 사용 한도를 읽기 전용으로 조회합니다. |
-| **파일:** [src/visuals.py](src/visuals.py)<br>**원문에 정의된 역할·구성:** 제작된 실제3D 금속 프레임과 고정된 실제 잔량·상태를 합성합니다. |
+| 파일 | 원문에 정의된 역할·구성 |
+| --- | --- |
+| [src/app.py](src/app.py) | Codex Orbit: 독립 회전 위젯과 로컬 변경 기록·사용 한도. |
+| [src/notifier.py](src/notifier.py) | 현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다. |
+| [src/atom_frames.py](src/atom_frames.py) | 검증된 금속 원자 프레임을 추출 없이 읽는 제한 메모리 재생기입니다. |
+| [src/brand.py](src/brand.py) | 같은 금속 원자 제작 프레임을 사용하는 정적 앱 마크입니다. |
+| [src/core.py](src/core.py) | 외부 통신 없는 로컬 자료 읽기와 명시적 지침 적용. |
+| [src/theme.py](src/theme.py) | 앱이 소유하는 모든 화면과 대화상자의 공통 무채색 테마입니다. |
+| [src/usage.py](src/usage.py) | Codex App Server의 계정 사용 한도를 읽기 전용으로 조회합니다. |
+| [src/visuals.py](src/visuals.py) | 제작된 실제3D 금속 프레임과 고정된 실제 잔량·상태를 합성합니다. |
 
-**단계:** 입력
-
-**내용:** 현재 사용자 Codex의 로컬 JSONL과 이 차수의 앱 설정
-
-**단계:** 처리
-
-**내용:** 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시
-
-**단계:** 출력
-
-**내용:** 알림·변경 이력·로컬 진단 기록
-
+| 단계 | 내용 |
+| --- | --- |
+| 입력 | 현재 사용자 Codex의 로컬 JSONL과 이 차수의 앱 설정 |
+| 처리 | 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시 |
+| 출력 | 알림·변경 이력·로컬 진단 기록 |
 
 ### LEVEL 4 · 조건·변경·결과를 함께 검토하기
 
@@ -1321,12 +1300,12 @@ PyInstaller==6.22.3
 
 #### LEVEL 4 · [src/app.py](src/app.py)
 
-| 내용 |
-| --- |
-| **정의:** [`operation_record`](src/app.py#L35)<br>**소스에 적힌 역할:** 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다. |
-| **정의:** [`short_reason`](src/app.py#L88)<br>**소스에 적힌 역할:** 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. |
-| **정의:** [`DiagnosticLabel`](src/app.py#L532)<br>**소스에 적힌 역할:** 오류가 있을 때 변경 기록 안에 원문을 보여 주는 읽기 전용 라벨입니다. |
-| **정의:** [`QuitGuard`](src/app.py#L806)<br>**소스에 적힌 역할:** 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`operation_record`](src/app.py#L35) | 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다. |
+| [`short_reason`](src/app.py#L88) | 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. |
+| [`DiagnosticLabel`](src/app.py#L532) | 오류가 있을 때 변경 기록 안에 원문을 보여 주는 읽기 전용 라벨입니다. |
+| [`QuitGuard`](src/app.py#L806) | 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다. |
 
 **설정·옵션:** [`--data-dir`](src/app.py#L1162)
 
@@ -1361,31 +1340,31 @@ PyInstaller==6.22.3
 **코드의 선언:** `정의={'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}`
 
 
-| 내용 |
-| --- |
-| **거부 조건:** [`not lock.tryLock(100)`](src/app.py#L1193)<br>**오류 메시지:** 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
-| **거부 조건:** [`not isinstance(value, dict)`](src/app.py#L159)<br>**오류 메시지:** 앱 설정은 JSON 객체여야 합니다. |
+| 거부 조건 | 오류 메시지 |
+| --- | --- |
+| [`not lock.tryLock(100)`](src/app.py#L1193) | 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
+| [`not isinstance(value, dict)`](src/app.py#L159) | 앱 설정은 JSON 객체여야 합니다. |
 
 #### LEVEL 4 · [src/atom_frames.py](src/atom_frames.py)
 
-| 내용 |
-| --- |
-| **정의:** [`AtomAssetError`](src/atom_frames.py#L27)<br>**소스에 적힌 역할:** 필수 시각 자산 오류를 시작 실패 경로에 전달합니다. |
-| **정의:** [`AtomFrames`](src/atom_frames.py#L50)<br>**소스에 적힌 역할:** 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대24장만 보존합니다. |
-| **정의:** [`close_runtime_frames`](src/atom_frames.py#L172)<br>**소스에 적힌 역할:** 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
-| **정의:** [`get_atom_frames`](src/atom_frames.py#L183)<br>**소스에 적힌 역할:** 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`AtomAssetError`](src/atom_frames.py#L27) | 필수 시각 자산 오류를 시작 실패 경로에 전달합니다. |
+| [`AtomFrames`](src/atom_frames.py#L50) | 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대24장만 보존합니다. |
+| [`close_runtime_frames`](src/atom_frames.py#L172) | 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
+| [`get_atom_frames`](src/atom_frames.py#L183) | 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
 
-| 내용 |
-| --- |
-| **설정·옵션:** [`FRAME_COUNT`](src/atom_frames.py#L16)<br>**코드의 선언:** `정의=540` |
-| **설정·옵션:** [`FRAME_SIZE`](src/atom_frames.py#L17)<br>**코드의 선언:** `정의=296` |
-| **설정·옵션:** [`FPS`](src/atom_frames.py#L18)<br>**코드의 선언:** `정의=30` |
-| **설정·옵션:** [`PERIOD_SECONDS`](src/atom_frames.py#L19)<br>**코드의 선언:** `정의=18` |
-| **설정·옵션:** [`CACHE_LIMIT`](src/atom_frames.py#L20)<br>**코드의 선언:** `정의=24` |
-| **설정·옵션:** [`MAX_ARCHIVE_BYTES`](src/atom_frames.py#L21)<br>**코드의 선언:** `정의=128 * 1024 * 1024` |
-| **설정·옵션:** [`MAX_FRAME_BYTES`](src/atom_frames.py#L22)<br>**코드의 선언:** `정의=1024 * 1024` |
-| **설정·옵션:** [`MAX_TOTAL_BYTES`](src/atom_frames.py#L23)<br>**코드의 선언:** `정의=256 * 1024 * 1024` |
-| **설정·옵션:** [`MAX_MANIFEST_BYTES`](src/atom_frames.py#L24)<br>**코드의 선언:** `정의=64 * 1024` |
+| 설정·옵션 | 코드의 선언 |
+| --- | --- |
+| [`FRAME_COUNT`](src/atom_frames.py#L16) | `정의=540` |
+| [`FRAME_SIZE`](src/atom_frames.py#L17) | `정의=296` |
+| [`FPS`](src/atom_frames.py#L18) | `정의=30` |
+| [`PERIOD_SECONDS`](src/atom_frames.py#L19) | `정의=18` |
+| [`CACHE_LIMIT`](src/atom_frames.py#L20) | `정의=24` |
+| [`MAX_ARCHIVE_BYTES`](src/atom_frames.py#L21) | `정의=128 * 1024 * 1024` |
+| [`MAX_FRAME_BYTES`](src/atom_frames.py#L22) | `정의=1024 * 1024` |
+| [`MAX_TOTAL_BYTES`](src/atom_frames.py#L23) | `정의=256 * 1024 * 1024` |
+| [`MAX_MANIFEST_BYTES`](src/atom_frames.py#L24) | `정의=64 * 1024` |
 
 **거부 조건:** [`key in value`](src/atom_frames.py#L44)
 
@@ -1435,24 +1414,24 @@ PyInstaller==6.22.3
 #### LEVEL 4 · [src/brand.py](src/brand.py)
 
 
-| 내용 |
-| --- |
-| **거부 조건:** [`not 1 &lt;= size &lt;= 512`](src/brand.py#L10)<br>**오류 메시지:** 브랜드 이미지 크기는1~512px여야 합니다. |
+| 거부 조건 | 오류 메시지 |
+| --- | --- |
+| [`not 1 &lt;= size &lt;= 512`](src/brand.py#L10) | 브랜드 이미지 크기는1~512px여야 합니다. |
 
 #### LEVEL 4 · [src/core.py](src/core.py)
 
-| 내용 |
-| --- |
-| **정의:** [`read_jsonl_tail`](src/core.py#L18)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
-| **정의:** [`title_catalog`](src/core.py#L55)<br>**소스에 적힌 역할:** 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
-| **정의:** [`resolve_title`](src/core.py#L73)<br>**소스에 적힌 역할:** 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
-| **정의:** [`safe_path`](src/core.py#L97)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`read_jsonl_tail`](src/core.py#L18) | 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
+| [`title_catalog`](src/core.py#L55) | 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
+| [`resolve_title`](src/core.py#L73) | 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
+| [`safe_path`](src/core.py#L97) | 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 내용 |
-| --- |
-| **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L9)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
-| **설정·옵션:** [`BEGIN`](src/core.py#L10)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
-| **설정·옵션:** [`END`](src/core.py#L11)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
+| 설정·옵션 | 코드의 선언 |
+| --- | --- |
+| [`MAX_TEXT_BYTES`](src/core.py#L9) | `정의=2 * 1024 * 1024` |
+| [`BEGIN`](src/core.py#L10) | `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
+| [`END`](src/core.py#L11) | `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
 
 **거부 조건:** [`path.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L112)
 
@@ -1513,28 +1492,28 @@ PyInstaller==6.22.3
 
 #### LEVEL 4 · [src/notifier.py](src/notifier.py)
 
-| 내용 |
-| --- |
-| **정의:** [`atomic_json`](src/notifier.py#L32)<br>**소스에 적힌 역할:** 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도합니다. |
-| **정의:** [`source_datetime`](src/notifier.py#L62)<br>**소스에 적힌 역할:** 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. |
-| **정의:** [`duplicate_record`](src/notifier.py#L184)<br>**소스에 적힌 역할:** 원본 시각이 있는 복제 기록만 제외하며 기준선 재생의 순서는 복원합니다. |
-| **정의:** [`settings_record`](src/notifier.py#L195)<br>**소스에 적힌 역할:** 자기 채팅의 native 설정 필드만 관측하며 변경 주체와 실행 모델은 추정하지 않습니다. |
-| **정의:** [`lookup_parent_reason`](src/notifier.py#L335)<br>**소스에 적힌 역할:** 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. |
-| **정의:** [`enrich_event`](src/notifier.py#L382)<br>**소스에 적힌 역할:** 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`atomic_json`](src/notifier.py#L32) | 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도합니다. |
+| [`source_datetime`](src/notifier.py#L62) | 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. |
+| [`duplicate_record`](src/notifier.py#L184) | 원본 시각이 있는 복제 기록만 제외하며 기준선 재생의 순서는 복원합니다. |
+| [`settings_record`](src/notifier.py#L195) | 자기 채팅의 native 설정 필드만 관측하며 변경 주체와 실행 모델은 추정하지 않습니다. |
+| [`lookup_parent_reason`](src/notifier.py#L335) | 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. |
+| [`enrich_event`](src/notifier.py#L382) | 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
 
-| 내용 |
-| --- |
-| **설정·옵션:** [`--sessions`](src/notifier.py#L636)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
-| **설정·옵션:** [`--work`](src/notifier.py#L637)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
-| **설정·옵션:** [`ROOT`](src/notifier.py#L17)<br>**코드의 선언:** `정의=Path(__file__).resolve().parents[1]` |
-| **설정·옵션:** [`APP_ID`](src/notifier.py#L18)<br>**코드의 선언:** `정의='Yunseok.Codex.ModelChangeNotifier'` |
-| **설정·옵션:** [`READ_BYTES`](src/notifier.py#L19)<br>**코드의 선언:** `정의=512 * 1024` |
-| **설정·옵션:** [`MAX_RECORD`](src/notifier.py#L20)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
-| **설정·옵션:** [`MAX_FILES`](src/notifier.py#L21)<br>**코드의 선언:** `정의=4096` |
-| **설정·옵션:** [`LOG_BYTES`](src/notifier.py#L22)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
-| **설정·옵션:** [`POLL_READ_BYTES`](src/notifier.py#L23)<br>**코드의 선언:** `정의=8 * 1024 * 1024` |
-| **설정·옵션:** [`MAX_PENDING`](src/notifier.py#L24)<br>**코드의 선언:** `정의=256` |
-| **설정·옵션:** [`POLL_INTERVAL_SECONDS`](src/notifier.py#L25)<br>**코드의 선언:** `정의=0.2` |
+| 설정·옵션 | 코드의 선언 |
+| --- | --- |
+| [`--sessions`](src/notifier.py#L636) | `type=Path; default=Path.home() / '.codex/sessions'` |
+| [`--work`](src/notifier.py#L637) | `type=Path; default=ROOT / 'work'` |
+| [`ROOT`](src/notifier.py#L17) | `정의=Path(__file__).resolve().parents[1]` |
+| [`APP_ID`](src/notifier.py#L18) | `정의='Yunseok.Codex.ModelChangeNotifier'` |
+| [`READ_BYTES`](src/notifier.py#L19) | `정의=512 * 1024` |
+| [`MAX_RECORD`](src/notifier.py#L20) | `정의=2 * 1024 * 1024` |
+| [`MAX_FILES`](src/notifier.py#L21) | `정의=4096` |
+| [`LOG_BYTES`](src/notifier.py#L22) | `정의=2 * 1024 * 1024` |
+| [`POLL_READ_BYTES`](src/notifier.py#L23) | `정의=8 * 1024 * 1024` |
+| [`MAX_PENDING`](src/notifier.py#L24) | `정의=256` |
+| [`POLL_INTERVAL_SECONDS`](src/notifier.py#L25) | `정의=0.2` |
 
 **거부 조건:** [`self.state_path.stat().st_size &gt; 16 * 1024 * 1024`](src/notifier.py#L89)
 
@@ -1575,38 +1554,38 @@ PyInstaller==6.22.3
 
 #### LEVEL 4 · [src/theme.py](src/theme.py)
 
-| 내용 |
-| --- |
-| **정의:** [`MonochromeStyle`](src/theme.py#L51)<br>**소스에 적힌 역할:** 파일·메시지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. |
-| **정의:** [`KoreanDialogs`](src/theme.py#L76)<br>**소스에 적힌 역할:** 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역합니다. |
-| **정의:** [`DialogLayout`](src/theme.py#L92)<br>**소스에 적힌 역할:** 앱 파일 선택창의 이름 열과 한글 버튼에 충분한 공간을 확보합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`MonochromeStyle`](src/theme.py#L51) | 파일·메시지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. |
+| [`KoreanDialogs`](src/theme.py#L76) | 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역합니다. |
+| [`DialogLayout`](src/theme.py#L92) | 앱 파일 선택창의 이름 열과 한글 버튼에 충분한 공간을 확보합니다. |
 
 #### LEVEL 4 · [src/usage.py](src/usage.py)
 
-| 내용 |
-| --- |
-| **정의:** [`number`](src/usage.py#L16)<br>**소스에 적힌 역할:** 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
-| **정의:** [`normalize_limits`](src/usage.py#L35)<br>**소스에 적힌 역할:** 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
-| **정의:** [`discover_codex`](src/usage.py#L69)<br>**소스에 적힌 역할:** 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`number`](src/usage.py#L16) | 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
+| [`normalize_limits`](src/usage.py#L35) | 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
+| [`discover_codex`](src/usage.py#L69) | 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
 
-| 내용 |
-| --- |
-| **설정·옵션:** [`MAX_BYTES`](src/usage.py#L12)<br>**코드의 선언:** `정의=1024 * 1024` |
-| **설정·옵션:** [`KST`](src/usage.py#L13)<br>**코드의 선언:** `정의=timezone(timedelta(hours=9))` |
+| 설정·옵션 | 코드의 선언 |
+| --- | --- |
+| [`MAX_BYTES`](src/usage.py#L12) | `정의=1024 * 1024` |
+| [`KST`](src/usage.py#L13) | `정의=timezone(timedelta(hours=9))` |
 
-| 내용 |
-| --- |
-| **거부 조건:** [`not isinstance(message, dict)`](src/usage.py#L226)<br>**오류 메시지:** 객체가 아닌 응답 |
+| 거부 조건 | 오류 메시지 |
+| --- | --- |
+| [`not isinstance(message, dict)`](src/usage.py#L226) | 객체가 아닌 응답 |
 
 #### LEVEL 4 · [src/visuals.py](src/visuals.py)
 
-| 내용 |
-| --- |
-| **정의:** [`rotate_point`](src/visuals.py#L9)<br>**소스에 적힌 역할:** X·Y·Z 순서로 회전하며 깊이 좌표를 보존합니다. |
-| **정의:** [`axis_rotate`](src/visuals.py#L32)<br>**소스에 적힌 역할:** 로드리게스 식으로 고유 축 주위를 회전하며 공통 Z 변환을 쓰지 않습니다. |
-| **정의:** [`orbit_segments`](src/visuals.py#L55)<br>**소스에 적힌 역할:** 제작 매니페스트와 일치하는 기하 검증용 메타입니다. GUI 드로잉에는 쓰지 않습니다. |
-| **정의:** [`status_label`](src/visuals.py#L72)<br>**소스에 적힌 역할:** 읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다. |
-| **정의:** [`draw_orbit`](src/visuals.py#L77)<br>**소스에 적힌 역할:** 숫자가 없는 실제3D 프레임 위에 현재 계정 값과 상태만 고정 합성합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`rotate_point`](src/visuals.py#L9) | X·Y·Z 순서로 회전하며 깊이 좌표를 보존합니다. |
+| [`axis_rotate`](src/visuals.py#L32) | 로드리게스 식으로 고유 축 주위를 회전하며 공통 Z 변환을 쓰지 않습니다. |
+| [`orbit_segments`](src/visuals.py#L55) | 제작 매니페스트와 일치하는 기하 검증용 메타입니다. GUI 드로잉에는 쓰지 않습니다. |
+| [`status_label`](src/visuals.py#L72) | 읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다. |
+| [`draw_orbit`](src/visuals.py#L77) | 숫자가 없는 실제3D 프레임 위에 현재 계정 값과 상태만 고정 합성합니다. |
 
 **설정·옵션:** [`MOTION_PERIOD`](src/visuals.py#L24)
 
@@ -1712,18 +1691,11 @@ PyInstaller==6.22.3
 <a name="-입력처리출력"></a>
 ## 입력·처리·출력
 
-**단계:** 입력
-
-**내용:** 현재 사용자 Codex의 로컬 JSONL과 이 차수의 앱 설정
-
-**단계:** 처리
-
-**내용:** 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시
-
-**단계:** 출력
-
-**내용:** 알림·변경 이력·로컬 진단 기록
-
+| 단계 | 내용 |
+| --- | --- |
+| 입력 | 현재 사용자 Codex의 로컬 JSONL과 이 차수의 앱 설정 |
+| 처리 | 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시 |
+| 출력 | 알림·변경 이력·로컬 진단 기록 |
 
 <a name="usage"></a>
 
@@ -1740,29 +1712,29 @@ PyInstaller==6.22.3
 <a name="-실제-자료-구성"></a>
 ## 실제 자료 구성
 
-| 내용 |
-| --- |
-| **경로:** [src/](src)<br>**자료 종류:** 하위 자료 폴더 |
-| **경로:** [README.md](README.md)<br>**자료 종류:** MD 파일 |
-| **경로:** [requirements.txt](requirements.txt)<br>**자료 종류:** TXT 파일 |
-| **경로:** [공개파일_비교.json](%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json)<br>**자료 종류:** JSON 파일 |
-| **경로:** [보존자료.md](%EB%B3%B4%EC%A1%B4%EC%9E%90%EB%A3%8C.md)<br>**자료 종류:** MD 파일 |
-| **경로:** [부가자료_보존.json](%EB%B6%80%EA%B0%80%EC%9E%90%EB%A3%8C_%EB%B3%B4%EC%A1%B4.json)<br>**자료 종류:** JSON 파일 |
-| **경로:** [직전차수.diff](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff)<br>**자료 종류:** DIFF 파일 |
+| 경로 | 자료 종류 |
+| --- | --- |
+| [src/](src) | 하위 자료 폴더 |
+| [README.md](README.md) | MD 파일 |
+| [requirements.txt](requirements.txt) | TXT 파일 |
+| [공개파일_비교.json](%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) | JSON 파일 |
+| [보존자료.md](%EB%B3%B4%EC%A1%B4%EC%9E%90%EB%A3%8C.md) | MD 파일 |
+| [부가자료_보존.json](%EB%B6%80%EA%B0%80%EC%9E%90%EB%A3%8C_%EB%B3%B4%EC%A1%B4.json) | JSON 파일 |
+| [직전차수.diff](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) | DIFF 파일 |
 
 <a name="-주요-모듈과-코드-읽기"></a>
 ## 주요 모듈과 코드 읽기
 
-| 내용 |
-| --- |
-| **파일:** [src/app.py](src/app.py)<br>**원문에 정의된 역할·구성:** Codex Orbit: 독립 회전 위젯과 로컬 변경 기록·사용 한도. |
-| **파일:** [src/notifier.py](src/notifier.py)<br>**원문에 정의된 역할·구성:** 현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다. |
-| **파일:** [src/atom_frames.py](src/atom_frames.py)<br>**원문에 정의된 역할·구성:** 검증된 금속 원자 프레임을 추출 없이 읽는 제한 메모리 재생기입니다. |
-| **파일:** [src/brand.py](src/brand.py)<br>**원문에 정의된 역할·구성:** 같은 금속 원자 제작 프레임을 사용하는 정적 앱 마크입니다. |
-| **파일:** [src/core.py](src/core.py)<br>**원문에 정의된 역할·구성:** 외부 통신 없는 로컬 자료 읽기와 명시적 지침 적용. |
-| **파일:** [src/theme.py](src/theme.py)<br>**원문에 정의된 역할·구성:** 앱이 소유하는 모든 화면과 대화상자의 공통 무채색 테마입니다. |
-| **파일:** [src/usage.py](src/usage.py)<br>**원문에 정의된 역할·구성:** Codex App Server의 계정 사용 한도를 읽기 전용으로 조회합니다. |
-| **파일:** [src/visuals.py](src/visuals.py)<br>**원문에 정의된 역할·구성:** 제작된 실제3D 금속 프레임과 고정된 실제 잔량·상태를 합성합니다. |
+| 파일 | 원문에 정의된 역할·구성 |
+| --- | --- |
+| [src/app.py](src/app.py) | Codex Orbit: 독립 회전 위젯과 로컬 변경 기록·사용 한도. |
+| [src/notifier.py](src/notifier.py) | 현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다. |
+| [src/atom_frames.py](src/atom_frames.py) | 검증된 금속 원자 프레임을 추출 없이 읽는 제한 메모리 재생기입니다. |
+| [src/brand.py](src/brand.py) | 같은 금속 원자 제작 프레임을 사용하는 정적 앱 마크입니다. |
+| [src/core.py](src/core.py) | 외부 통신 없는 로컬 자료 읽기와 명시적 지침 적용. |
+| [src/theme.py](src/theme.py) | 앱이 소유하는 모든 화면과 대화상자의 공통 무채색 테마입니다. |
+| [src/usage.py](src/usage.py) | Codex App Server의 계정 사용 한도를 읽기 전용으로 조회합니다. |
+| [src/visuals.py](src/visuals.py) | 제작된 실제3D 금속 프레임과 고정된 실제 잔량·상태를 합성합니다. |
 
 <a name="setup"></a>
 
@@ -1805,12 +1777,12 @@ PyInstaller==6.22.3
 
 ### [src/app.py](src/app.py)
 
-| 내용 |
-| --- |
-| **정의:** [`operation_record`](src/app.py#L35)<br>**소스에 적힌 역할:** 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다. |
-| **정의:** [`short_reason`](src/app.py#L88)<br>**소스에 적힌 역할:** 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. |
-| **정의:** [`DiagnosticLabel`](src/app.py#L532)<br>**소스에 적힌 역할:** 오류가 있을 때 변경 기록 안에 원문을 보여 주는 읽기 전용 라벨입니다. |
-| **정의:** [`QuitGuard`](src/app.py#L806)<br>**소스에 적힌 역할:** 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`operation_record`](src/app.py#L35) | 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다. |
+| [`short_reason`](src/app.py#L88) | 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. |
+| [`DiagnosticLabel`](src/app.py#L532) | 오류가 있을 때 변경 기록 안에 원문을 보여 주는 읽기 전용 라벨입니다. |
+| [`QuitGuard`](src/app.py#L806) | 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다. |
 
 **설정·옵션:** [`--data-dir`](src/app.py#L1162)
 
@@ -1845,31 +1817,31 @@ PyInstaller==6.22.3
 **코드의 선언:** `정의={'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}`
 
 
-| 내용 |
-| --- |
-| **거부 조건:** [`not lock.tryLock(100)`](src/app.py#L1193)<br>**오류 메시지:** 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
-| **거부 조건:** [`not isinstance(value, dict)`](src/app.py#L159)<br>**오류 메시지:** 앱 설정은 JSON 객체여야 합니다. |
+| 거부 조건 | 오류 메시지 |
+| --- | --- |
+| [`not lock.tryLock(100)`](src/app.py#L1193) | 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
+| [`not isinstance(value, dict)`](src/app.py#L159) | 앱 설정은 JSON 객체여야 합니다. |
 
 ### [src/atom_frames.py](src/atom_frames.py)
 
-| 내용 |
-| --- |
-| **정의:** [`AtomAssetError`](src/atom_frames.py#L27)<br>**소스에 적힌 역할:** 필수 시각 자산 오류를 시작 실패 경로에 전달합니다. |
-| **정의:** [`AtomFrames`](src/atom_frames.py#L50)<br>**소스에 적힌 역할:** 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대24장만 보존합니다. |
-| **정의:** [`close_runtime_frames`](src/atom_frames.py#L172)<br>**소스에 적힌 역할:** 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
-| **정의:** [`get_atom_frames`](src/atom_frames.py#L183)<br>**소스에 적힌 역할:** 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`AtomAssetError`](src/atom_frames.py#L27) | 필수 시각 자산 오류를 시작 실패 경로에 전달합니다. |
+| [`AtomFrames`](src/atom_frames.py#L50) | 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대24장만 보존합니다. |
+| [`close_runtime_frames`](src/atom_frames.py#L172) | 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
+| [`get_atom_frames`](src/atom_frames.py#L183) | 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
 
-| 내용 |
-| --- |
-| **설정·옵션:** [`FRAME_COUNT`](src/atom_frames.py#L16)<br>**코드의 선언:** `정의=540` |
-| **설정·옵션:** [`FRAME_SIZE`](src/atom_frames.py#L17)<br>**코드의 선언:** `정의=296` |
-| **설정·옵션:** [`FPS`](src/atom_frames.py#L18)<br>**코드의 선언:** `정의=30` |
-| **설정·옵션:** [`PERIOD_SECONDS`](src/atom_frames.py#L19)<br>**코드의 선언:** `정의=18` |
-| **설정·옵션:** [`CACHE_LIMIT`](src/atom_frames.py#L20)<br>**코드의 선언:** `정의=24` |
-| **설정·옵션:** [`MAX_ARCHIVE_BYTES`](src/atom_frames.py#L21)<br>**코드의 선언:** `정의=128 * 1024 * 1024` |
-| **설정·옵션:** [`MAX_FRAME_BYTES`](src/atom_frames.py#L22)<br>**코드의 선언:** `정의=1024 * 1024` |
-| **설정·옵션:** [`MAX_TOTAL_BYTES`](src/atom_frames.py#L23)<br>**코드의 선언:** `정의=256 * 1024 * 1024` |
-| **설정·옵션:** [`MAX_MANIFEST_BYTES`](src/atom_frames.py#L24)<br>**코드의 선언:** `정의=64 * 1024` |
+| 설정·옵션 | 코드의 선언 |
+| --- | --- |
+| [`FRAME_COUNT`](src/atom_frames.py#L16) | `정의=540` |
+| [`FRAME_SIZE`](src/atom_frames.py#L17) | `정의=296` |
+| [`FPS`](src/atom_frames.py#L18) | `정의=30` |
+| [`PERIOD_SECONDS`](src/atom_frames.py#L19) | `정의=18` |
+| [`CACHE_LIMIT`](src/atom_frames.py#L20) | `정의=24` |
+| [`MAX_ARCHIVE_BYTES`](src/atom_frames.py#L21) | `정의=128 * 1024 * 1024` |
+| [`MAX_FRAME_BYTES`](src/atom_frames.py#L22) | `정의=1024 * 1024` |
+| [`MAX_TOTAL_BYTES`](src/atom_frames.py#L23) | `정의=256 * 1024 * 1024` |
+| [`MAX_MANIFEST_BYTES`](src/atom_frames.py#L24) | `정의=64 * 1024` |
 
 **거부 조건:** [`key in value`](src/atom_frames.py#L44)
 
@@ -1919,24 +1891,24 @@ PyInstaller==6.22.3
 ### [src/brand.py](src/brand.py)
 
 
-| 내용 |
-| --- |
-| **거부 조건:** [`not 1 &lt;= size &lt;= 512`](src/brand.py#L10)<br>**오류 메시지:** 브랜드 이미지 크기는1~512px여야 합니다. |
+| 거부 조건 | 오류 메시지 |
+| --- | --- |
+| [`not 1 &lt;= size &lt;= 512`](src/brand.py#L10) | 브랜드 이미지 크기는1~512px여야 합니다. |
 
 ### [src/core.py](src/core.py)
 
-| 내용 |
-| --- |
-| **정의:** [`read_jsonl_tail`](src/core.py#L18)<br>**소스에 적힌 역할:** 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
-| **정의:** [`title_catalog`](src/core.py#L55)<br>**소스에 적힌 역할:** 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
-| **정의:** [`resolve_title`](src/core.py#L73)<br>**소스에 적힌 역할:** 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
-| **정의:** [`safe_path`](src/core.py#L97)<br>**소스에 적힌 역할:** 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`read_jsonl_tail`](src/core.py#L18) | 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
+| [`title_catalog`](src/core.py#L55) | 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
+| [`resolve_title`](src/core.py#L73) | 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
+| [`safe_path`](src/core.py#L97) | 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
 
-| 내용 |
-| --- |
-| **설정·옵션:** [`MAX_TEXT_BYTES`](src/core.py#L9)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
-| **설정·옵션:** [`BEGIN`](src/core.py#L10)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
-| **설정·옵션:** [`END`](src/core.py#L11)<br>**코드의 선언:** `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
+| 설정·옵션 | 코드의 선언 |
+| --- | --- |
+| [`MAX_TEXT_BYTES`](src/core.py#L9) | `정의=2 * 1024 * 1024` |
+| [`BEGIN`](src/core.py#L10) | `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
+| [`END`](src/core.py#L11) | `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
 
 **거부 조건:** [`path.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L112)
 
@@ -1997,28 +1969,28 @@ PyInstaller==6.22.3
 
 ### [src/notifier.py](src/notifier.py)
 
-| 내용 |
-| --- |
-| **정의:** [`atomic_json`](src/notifier.py#L32)<br>**소스에 적힌 역할:** 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도합니다. |
-| **정의:** [`source_datetime`](src/notifier.py#L62)<br>**소스에 적힌 역할:** 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. |
-| **정의:** [`duplicate_record`](src/notifier.py#L184)<br>**소스에 적힌 역할:** 원본 시각이 있는 복제 기록만 제외하며 기준선 재생의 순서는 복원합니다. |
-| **정의:** [`settings_record`](src/notifier.py#L195)<br>**소스에 적힌 역할:** 자기 채팅의 native 설정 필드만 관측하며 변경 주체와 실행 모델은 추정하지 않습니다. |
-| **정의:** [`lookup_parent_reason`](src/notifier.py#L335)<br>**소스에 적힌 역할:** 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. |
-| **정의:** [`enrich_event`](src/notifier.py#L382)<br>**소스에 적힌 역할:** 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`atomic_json`](src/notifier.py#L32) | 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도합니다. |
+| [`source_datetime`](src/notifier.py#L62) | 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. |
+| [`duplicate_record`](src/notifier.py#L184) | 원본 시각이 있는 복제 기록만 제외하며 기준선 재생의 순서는 복원합니다. |
+| [`settings_record`](src/notifier.py#L195) | 자기 채팅의 native 설정 필드만 관측하며 변경 주체와 실행 모델은 추정하지 않습니다. |
+| [`lookup_parent_reason`](src/notifier.py#L335) | 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. |
+| [`enrich_event`](src/notifier.py#L382) | 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
 
-| 내용 |
-| --- |
-| **설정·옵션:** [`--sessions`](src/notifier.py#L636)<br>**코드의 선언:** `type=Path; default=Path.home() / '.codex/sessions'` |
-| **설정·옵션:** [`--work`](src/notifier.py#L637)<br>**코드의 선언:** `type=Path; default=ROOT / 'work'` |
-| **설정·옵션:** [`ROOT`](src/notifier.py#L17)<br>**코드의 선언:** `정의=Path(__file__).resolve().parents[1]` |
-| **설정·옵션:** [`APP_ID`](src/notifier.py#L18)<br>**코드의 선언:** `정의='Yunseok.Codex.ModelChangeNotifier'` |
-| **설정·옵션:** [`READ_BYTES`](src/notifier.py#L19)<br>**코드의 선언:** `정의=512 * 1024` |
-| **설정·옵션:** [`MAX_RECORD`](src/notifier.py#L20)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
-| **설정·옵션:** [`MAX_FILES`](src/notifier.py#L21)<br>**코드의 선언:** `정의=4096` |
-| **설정·옵션:** [`LOG_BYTES`](src/notifier.py#L22)<br>**코드의 선언:** `정의=2 * 1024 * 1024` |
-| **설정·옵션:** [`POLL_READ_BYTES`](src/notifier.py#L23)<br>**코드의 선언:** `정의=8 * 1024 * 1024` |
-| **설정·옵션:** [`MAX_PENDING`](src/notifier.py#L24)<br>**코드의 선언:** `정의=256` |
-| **설정·옵션:** [`POLL_INTERVAL_SECONDS`](src/notifier.py#L25)<br>**코드의 선언:** `정의=0.2` |
+| 설정·옵션 | 코드의 선언 |
+| --- | --- |
+| [`--sessions`](src/notifier.py#L636) | `type=Path; default=Path.home() / '.codex/sessions'` |
+| [`--work`](src/notifier.py#L637) | `type=Path; default=ROOT / 'work'` |
+| [`ROOT`](src/notifier.py#L17) | `정의=Path(__file__).resolve().parents[1]` |
+| [`APP_ID`](src/notifier.py#L18) | `정의='Yunseok.Codex.ModelChangeNotifier'` |
+| [`READ_BYTES`](src/notifier.py#L19) | `정의=512 * 1024` |
+| [`MAX_RECORD`](src/notifier.py#L20) | `정의=2 * 1024 * 1024` |
+| [`MAX_FILES`](src/notifier.py#L21) | `정의=4096` |
+| [`LOG_BYTES`](src/notifier.py#L22) | `정의=2 * 1024 * 1024` |
+| [`POLL_READ_BYTES`](src/notifier.py#L23) | `정의=8 * 1024 * 1024` |
+| [`MAX_PENDING`](src/notifier.py#L24) | `정의=256` |
+| [`POLL_INTERVAL_SECONDS`](src/notifier.py#L25) | `정의=0.2` |
 
 **거부 조건:** [`self.state_path.stat().st_size &gt; 16 * 1024 * 1024`](src/notifier.py#L89)
 
@@ -2059,38 +2031,38 @@ PyInstaller==6.22.3
 
 ### [src/theme.py](src/theme.py)
 
-| 내용 |
-| --- |
-| **정의:** [`MonochromeStyle`](src/theme.py#L51)<br>**소스에 적힌 역할:** 파일·메시지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. |
-| **정의:** [`KoreanDialogs`](src/theme.py#L76)<br>**소스에 적힌 역할:** 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역합니다. |
-| **정의:** [`DialogLayout`](src/theme.py#L92)<br>**소스에 적힌 역할:** 앱 파일 선택창의 이름 열과 한글 버튼에 충분한 공간을 확보합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`MonochromeStyle`](src/theme.py#L51) | 파일·메시지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. |
+| [`KoreanDialogs`](src/theme.py#L76) | 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역합니다. |
+| [`DialogLayout`](src/theme.py#L92) | 앱 파일 선택창의 이름 열과 한글 버튼에 충분한 공간을 확보합니다. |
 
 ### [src/usage.py](src/usage.py)
 
-| 내용 |
-| --- |
-| **정의:** [`number`](src/usage.py#L16)<br>**소스에 적힌 역할:** 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
-| **정의:** [`normalize_limits`](src/usage.py#L35)<br>**소스에 적힌 역할:** 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
-| **정의:** [`discover_codex`](src/usage.py#L69)<br>**소스에 적힌 역할:** 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`number`](src/usage.py#L16) | 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
+| [`normalize_limits`](src/usage.py#L35) | 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
+| [`discover_codex`](src/usage.py#L69) | 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
 
-| 내용 |
-| --- |
-| **설정·옵션:** [`MAX_BYTES`](src/usage.py#L12)<br>**코드의 선언:** `정의=1024 * 1024` |
-| **설정·옵션:** [`KST`](src/usage.py#L13)<br>**코드의 선언:** `정의=timezone(timedelta(hours=9))` |
+| 설정·옵션 | 코드의 선언 |
+| --- | --- |
+| [`MAX_BYTES`](src/usage.py#L12) | `정의=1024 * 1024` |
+| [`KST`](src/usage.py#L13) | `정의=timezone(timedelta(hours=9))` |
 
-| 내용 |
-| --- |
-| **거부 조건:** [`not isinstance(message, dict)`](src/usage.py#L226)<br>**오류 메시지:** 객체가 아닌 응답 |
+| 거부 조건 | 오류 메시지 |
+| --- | --- |
+| [`not isinstance(message, dict)`](src/usage.py#L226) | 객체가 아닌 응답 |
 
 ### [src/visuals.py](src/visuals.py)
 
-| 내용 |
-| --- |
-| **정의:** [`rotate_point`](src/visuals.py#L9)<br>**소스에 적힌 역할:** X·Y·Z 순서로 회전하며 깊이 좌표를 보존합니다. |
-| **정의:** [`axis_rotate`](src/visuals.py#L32)<br>**소스에 적힌 역할:** 로드리게스 식으로 고유 축 주위를 회전하며 공통 Z 변환을 쓰지 않습니다. |
-| **정의:** [`orbit_segments`](src/visuals.py#L55)<br>**소스에 적힌 역할:** 제작 매니페스트와 일치하는 기하 검증용 메타입니다. GUI 드로잉에는 쓰지 않습니다. |
-| **정의:** [`status_label`](src/visuals.py#L72)<br>**소스에 적힌 역할:** 읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다. |
-| **정의:** [`draw_orbit`](src/visuals.py#L77)<br>**소스에 적힌 역할:** 숫자가 없는 실제3D 프레임 위에 현재 계정 값과 상태만 고정 합성합니다. |
+| 정의 | 소스에 적힌 역할 |
+| --- | --- |
+| [`rotate_point`](src/visuals.py#L9) | X·Y·Z 순서로 회전하며 깊이 좌표를 보존합니다. |
+| [`axis_rotate`](src/visuals.py#L32) | 로드리게스 식으로 고유 축 주위를 회전하며 공통 Z 변환을 쓰지 않습니다. |
+| [`orbit_segments`](src/visuals.py#L55) | 제작 매니페스트와 일치하는 기하 검증용 메타입니다. GUI 드로잉에는 쓰지 않습니다. |
+| [`status_label`](src/visuals.py#L72) | 읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다. |
+| [`draw_orbit`](src/visuals.py#L77) | 숫자가 없는 실제3D 프레임 위에 현재 계정 값과 상태만 고정 합성합니다. |
 
 **설정·옵션:** [`MOTION_PERIOD`](src/visuals.py#L24)
 
