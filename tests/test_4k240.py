@@ -13,6 +13,7 @@ import numpy as np
 from PySide6.QtCore import QEventLoop, QTimer
 from PySide6.QtWidgets import QApplication
 import calendar_motion as motion
+from renderer_test_support34 import motion_renderer_factory
 from calendar_renderer import CalendarRenderer
 from weather import WeatherClient
 from test_calendar_motion import FakeRenderer
@@ -155,7 +156,7 @@ class Motion240Tests(unittest.TestCase):
             def calendar_frame_ready(self):
                 self.arrivals += 1
         owner = Owner()
-        with patch('calendar_renderer.CalendarRenderer', FakeRenderer):
+        with motion_renderer_factory(FakeRenderer):
             motion.set_calendar_motion_visible(owner, True)
             motion.set_calendar_motion_size(owner, 512)
             # 비동기 준비를 고정 80ms로 가정하지 않고 동일한 세 조건까지 최대 1초 기다립니다.

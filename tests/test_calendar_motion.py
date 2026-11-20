@@ -13,6 +13,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'src'))
 from PySide6.QtGui import QImage,QColor
 from PySide6.QtWidgets import QApplication
 import calendar_motion as motion
+from renderer_test_support34 import motion_renderer_factory
 
 
 class Owner:pass
@@ -20,7 +21,7 @@ class Owner:pass
 
 class FakeRenderer:
     instances=[]
-    def __init__(self,size):
+    def __init__(self,size,check_cancelled=None):
         self.thread=threading.get_ident(); self.closed=False; self.times=[]
         self.ctx=type('Context',(),{'info':{'GL_RENDERER':'제어검사용'}})(); self.instances.append(self)
     def render(self,value,elapsed,country='KR'):
@@ -38,7 +39,7 @@ class CalendarMotionTests(unittest.TestCase):
 
     def setUp(self):
         motion.close_calendar_motion(); FakeRenderer.instances=[]
-        self.patch=patch('calendar_renderer.CalendarRenderer',FakeRenderer); self.patch.start()
+        self.patch=motion_renderer_factory(FakeRenderer); self.patch.start()
 
     def tearDown(self):motion.close_calendar_motion(); self.patch.stop()
 
@@ -79,7 +80,9 @@ class CalendarMotionTests(unittest.TestCase):
             del owner; gc.collect(); self.assertEqual(motion.calendar_motion_status()['owners'],0)
 
     def test_failure_is_visible_and_static_fallback_is_not_null(self):
-        self.patch.stop(); self.patch=patch('calendar_renderer.CalendarRenderer',side_effect=RuntimeError('제어된 GPU 불가')); self.patch.start()
+        self.patch.stop()
+        def fail_renderer(*args,**kwargs):raise RuntimeError('제어된 GPU 불가')
+        self.patch=motion_renderer_factory(fail_renderer); self.patch.start()
         owner=Owner()
         with self.assertLogs('calendar_motion',level='ERROR') as messages:
             motion.set_calendar_motion_visible(owner,True)

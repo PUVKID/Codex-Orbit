@@ -12,12 +12,14 @@ from PySide6.QtWidgets import QApplication
 from app import Controller, Settings
 from calendar_art import current_date, design_for_date
 from qt_test_support import cleanup_qt_widgets
+from renderer_test_support34 import motion_renderer_factory, LayoutRenderer
 
 APP = QApplication.instance() or QApplication([])
 
 
 class CalendarDefault30Tests(unittest.TestCase):
     def setUp(self):
+        self.enterContext(motion_renderer_factory(LayoutRenderer))
         self.folder = tempfile.TemporaryDirectory()
         self.addCleanup(self.folder.cleanup)
         self.addCleanup(cleanup_qt_widgets, self)

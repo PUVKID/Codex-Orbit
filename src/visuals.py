@@ -7,6 +7,7 @@ from PySide6.QtGui import QColor, QFont, QFontMetricsF, QImage, QPainter, QLinea
 from atom_frames import get_atom_frames
 from elements import daily_element
 from typography import app_font
+from percentage_display import percentage_text
 
 
 def rotate_point(point, angles):
@@ -105,7 +106,7 @@ def usage_bar(badge, fraction, state):
         rect.setWidth(0)
         return rect, t('잔량 지연') if state == 'stale' else t('잔량 미확인')
     rect.setWidth(USAGE_TRACK_RECT.width()*fraction)
-    return rect, t('잔량 ')+format(fraction*100,'g')+'%'
+    return rect, t('잔량 ')+percentage_text(fraction*100)
 
 
 def _frame_for_element(element, elapsed):
@@ -173,19 +174,12 @@ def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', he
     painter.drawImage(QRectF(-74,-74,148,148),layer)
 
 
-def desktop_widget_layout(width, height, title, show_weather=False, show_location=False, text_scale=1.0, weather_extras=()):
-    """이름을 화면 픽셀 크기로 줄 바꿈하고 조형·잔량 영역을 분리합니다."""
-    if type(text_scale) not in (int,float) or not math.isfinite(text_scale) or not .9 <= text_scale <= 1.5:
-        raise ValueError('위젯 글자 배율은 0.9~1.5 범위여야 합니다.')
-    name_font = app_font(weight=QFont.Weight.Bold)
-    name_font.setPixelSize(round(16*text_scale))
-    date_font = app_font(weight=QFont.Weight.Bold)
-    date_font.setPixelSize(round(14*text_scale))
-    metrics = QFontMetricsF(name_font)
-    text_width = max(1, width - 32)
-    layout = QTextLayout(title, name_font)
+def _wrapped_lines(value, font, width):
+    """글꼴 크기를 유지한 채 실제 너비로 한 줄씩 배치합니다."""
+    value = str(value)
+    layout = QTextLayout(value, font)
     option = QTextOption()
-    option.setWrapMode(QTextOption.WrapMode.WrapAnywhere)
+    option.setWrapMode(QTextOption.WrapMode.WrapAtWordBoundaryOrAnywhere)
     layout.setTextOption(option)
     layout.beginLayout()
     lines = []
@@ -193,42 +187,52 @@ def desktop_widget_layout(width, height, title, show_weather=False, show_locatio
         line = layout.createLine()
         if not line.isValid():
             break
-        line.setLineWidth(text_width)
-        lines.append(title[line.textStart():line.textStart()+line.textLength()])
+        line.setLineWidth(max(1, width))
+        lines.append(value[line.textStart():line.textStart()+line.textLength()].strip())
     layout.endLayout()
-    line_height = math.ceil(metrics.height())
-    dock_height = 24*text_scale + line_height * max(1, len(lines)) + 8
-    usage = QRectF(8, height - 26*text_scale - 8, width - 16, 26*text_scale)
+    return lines or ['']
+
+
+def desktop_widget_layout(width, height, title, show_weather=False, show_location=False, text_scale=1.0, weather_extras=(), *, clock_text=None, weather_text=None, fraction=None, state='unknown', calendar_date='12/31'):
+    """실제 글자 폭과 조형 최소 영역으로 안정된 읽기 높이를 계산합니다."""
+    if type(text_scale) not in (int,float) or not math.isfinite(text_scale) or not .9 <= text_scale <= 1.5:
+        raise ValueError('위젯 글자 배율은 0.9~1.5 범위여야 합니다.')
+    name_font = app_font(round(16*text_scale), weight=QFont.Weight.Bold)
+    date_font = app_font(round(14*text_scale), weight=QFont.Weight.Bold)
     weather_font = app_font(round(13*text_scale), weight=QFont.Weight.Bold)
-    weather_metrics = QFontMetricsF(weather_font)
-    weather_lines = []
-    for extra in weather_extras:
-        wrapped = QTextLayout(str(extra), weather_font)
-        weather_option = QTextOption()
-        weather_option.setWrapMode(QTextOption.WrapMode.WrapAtWordBoundaryOrAnywhere)
-        wrapped.setTextOption(weather_option)
-        wrapped.beginLayout()
-        while True:
-            line = wrapped.createLine()
-            if not line.isValid():break
-            line.setLineWidth(max(1,width-32))
-            weather_lines.append(str(extra)[line.textStart():line.textStart()+line.textLength()].rstrip())
-        wrapped.endLayout()
-    extra_height = math.ceil(weather_metrics.height())+2*text_scale
-    weather_height = 26*text_scale + (extra_height*len(weather_lines)+4*text_scale if weather_lines else 0)
-    weather = QRectF(8, usage.top() - weather_height - 6, width - 16, weather_height) if show_weather else QRectF()
-    extra_rects = [QRectF(weather.left()+8,weather.top()+26*text_scale+index*extra_height,weather.width()-16,extra_height) for index in range(len(weather_lines))]
-    info_bottom = weather.top() - 6 if show_weather else usage.top() - 6
-    location = QRectF(8, info_bottom - 26*text_scale, width - 16, 26*text_scale) if show_location else QRectF()
-    dock_bottom = location.top() - 6 if show_location else info_bottom
-    dock = QRectF(8, dock_bottom - dock_height, width - 16, dock_height)
-    art_bottom = max(0, dock.top() - 5)
-    side = max(0, min(width - 20, art_bottom - 6))
-    art = QRectF((width-side)/2, max(0, (art_bottom-side)/2), side, side)
-    return {'art': art, 'dock': dock, 'location': location, 'weather': weather, 'usage': usage, 'lines': lines, 'name_font': name_font,
-            'date_font': date_font, 'line_height': line_height, 'text_scale':text_scale,
+    text_width = max(1, width-32)
+    lines = _wrapped_lines(title, name_font, text_width)
+    line_height = math.ceil(QFontMetricsF(name_font).height())
+    info_line_height = math.ceil(QFontMetricsF(date_font).height())+2*text_scale
+    extra_height = math.ceil(QFontMetricsF(weather_font).height())+2*text_scale
+    # 매초 바뀌는 숫자의 너비로 날짜·시간 행 수가 출렁이지 않게 고정 표본으로 결정합니다.
+    split_clock = clock_text is not None and QFontMetricsF(date_font).horizontalAdvance('88/88  88:88:88') > text_width
+    clock_lines = ([calendar_date, clock_text] if split_clock else [calendar_date+('  '+clock_text if clock_text else '')])
+    dock_height = len(clock_lines)*info_line_height + line_height*len(lines)+8
+    primary_lines = _wrapped_lines(weather_text if weather_text is not None else '—', date_font, text_width) if show_weather else []
+    weather_lines = [line for extra in weather_extras for line in _wrapped_lines(extra,weather_font,text_width)]
+    weather_height = len(primary_lines)*info_line_height + len(weather_lines)*extra_height+4*text_scale
+    _, usage_label = usage_bar('', fraction, state)
+    usage_lines = _wrapped_lines(usage_label, date_font, text_width)
+    usage_height = len(usage_lines)*info_line_height + 10*text_scale
+    location_height = info_line_height+4*text_scale if show_location else 0
+    minimum_art = min(max(0,width-20),96*text_scale)
+    content_height = dock_height+usage_height+6+(weather_height+6 if show_weather else 0)+(location_height+6 if show_location else 0)
+    minimum_height = math.ceil(max(250,6+minimum_art+5+content_height+8))
+    usage = QRectF(8,height-8-usage_height,width-16,usage_height)
+    weather = QRectF(8,usage.top()-6-weather_height,width-16,weather_height) if show_weather else QRectF()
+    bottom = weather.top()-6 if show_weather else usage.top()-6
+    location = QRectF(8,bottom-location_height,width-16,location_height) if show_location else QRectF()
+    dock_bottom = location.top()-6 if show_location else bottom
+    dock = QRectF(8,dock_bottom-dock_height,width-16,dock_height)
+    side = max(0,min(width-20,dock.top()-11))
+    art = QRectF((width-side)/2,max(0,(dock.top()-5-side)/2),side,side)
+    extra_rects = [QRectF(16,weather.top()+len(primary_lines)*info_line_height+i*extra_height,text_width,extra_height) for i in range(len(weather_lines))]
+    return {'art':art,'dock':dock,'location':location,'weather':weather,'usage':usage,'lines':lines,
+            'name_font':name_font,'date_font':date_font,'line_height':line_height,'text_scale':text_scale,
             'weather_font':weather_font,'weather_lines':weather_lines,'weather_extra_rects':extra_rects,
-            'minimum_height':math.ceil(max(250,height+24-dock.top()))}
+            'minimum_height':minimum_height,'clock_lines':clock_lines,'info_line_height':info_line_height,
+            'primary_weather_lines':primary_lines,'usage_lines':usage_lines,'usage_label':usage_label}
 
 
 def draw_desktop_orbit(painter, width, height, source, design, fraction, state, clock_text=None, weather_text=None, location_text=None, cache=None, text_scale=1.0, weather_extras=()):
@@ -236,7 +240,7 @@ def draw_desktop_orbit(painter, width, height, source, design, fraction, state, 
     if cache is not None:
         return cache.draw(painter, width, height, source, design, fraction, state,
                           clock_text, weather_text, location_text, text_scale=text_scale, weather_extras=weather_extras)
-    layout = desktop_widget_layout(width, height, t(design.title), weather_text is not None, location_text is not None,text_scale=text_scale,weather_extras=weather_extras)
+    layout = desktop_widget_layout(width, height, t(design.title), weather_text is not None, location_text is not None,text_scale=text_scale,weather_extras=weather_extras,clock_text=clock_text,weather_text=weather_text,fraction=fraction,state=state,calendar_date=f'{design.date.month}/{design.date.day}')
     painter.save()
     painter.setRenderHint(QPainter.RenderHint.Antialiasing)
     painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
@@ -261,12 +265,12 @@ def _draw_desktop_information(painter, layout, design, fraction, state, clock_te
     surface(dock, 8)
     painter.setFont(layout['date_font'])
     painter.setPen(QColor(design.accent))
-    painter.drawText(QRectF(dock.left()+8, dock.top()+3*scale, dock.width()-16, 20*scale),
-                     Qt.AlignmentFlag.AlignCenter, f'{design.date.month}/{design.date.day}' + ('  ' + clock_text if clock_text else ''))
+    for index,line in enumerate(layout['clock_lines']):
+        painter.drawText(QRectF(dock.left()+8,dock.top()+3+index*layout['info_line_height'],dock.width()-16,layout['info_line_height']),Qt.AlignmentFlag.AlignCenter,line)
     painter.setFont(layout['name_font'])
     painter.setPen(gray(248))
     for index, line in enumerate(layout['lines']):
-        painter.drawText(QRectF(dock.left()+8, dock.top()+24*scale+index*layout['line_height'],
+        painter.drawText(QRectF(dock.left()+8, dock.top()+3+len(layout['clock_lines'])*layout['info_line_height']+index*layout['line_height'],
                                dock.width()-16, layout['line_height']), Qt.AlignmentFlag.AlignCenter, line)
     if location_text is not None:
         surface(layout['location'], 6)
@@ -280,8 +284,8 @@ def _draw_desktop_information(painter, layout, design, fraction, state, clock_te
         surface(layout['weather'], 6)
         painter.setFont(layout['date_font'])
         painter.setPen(gray(248))
-        primary = QFontMetricsF(layout['date_font']).elidedText(weather_text,Qt.TextElideMode.ElideRight,max(0,layout['weather'].width()-16))
-        painter.drawText(QRectF(layout['weather'].left()+8,layout['weather'].top(),layout['weather'].width()-16,26*scale), Qt.AlignmentFlag.AlignCenter, primary)
+        for index,line in enumerate(layout['primary_weather_lines']):
+            painter.drawText(QRectF(16,layout['weather'].top()+index*layout['info_line_height'],layout['weather'].width()-16,layout['info_line_height']),Qt.AlignmentFlag.AlignCenter,line)
         painter.setFont(layout['weather_font'])
         for line,rect in zip(layout['weather_lines'],layout['weather_extra_rects']):
             painter.drawText(rect,Qt.AlignmentFlag.AlignCenter,line)
@@ -295,11 +299,11 @@ def _draw_desktop_information(painter, layout, design, fraction, state, clock_te
     fill_rect = QRectF(track.left(), track.top(), track.width()*fill.width()/USAGE_TRACK_RECT.width(), track.height())
     painter.drawRect(fill_rect)
     layout['track'], layout['fill'] = track, fill_rect
-    font = app_font(weight=QFont.Weight.Bold)
-    font.setPixelSize(round(14*scale))
-    painter.setFont(font)
+    painter.setFont(layout['date_font'])
     painter.setPen(gray(248))
-    painter.drawText(QRectF(usage.left()+5, usage.top()+1, usage.width()-10, 18*scale), Qt.AlignmentFlag.AlignCenter, label)
+    for index,line in enumerate(layout['usage_lines']):
+        painter.drawText(QRectF(usage.left()+8,usage.top()+1+index*layout['info_line_height'],usage.width()-16,layout['info_line_height']),Qt.AlignmentFlag.AlignCenter,line)
+
 
 
 class DesktopOverlayCache:
@@ -319,7 +323,7 @@ class DesktopOverlayCache:
                get_language(), font_key, text_scale, tuple(weather_extras))
         if self.key != key:
             layout = desktop_widget_layout(width, height, title,
-                                           weather_text is not None, location_text is not None,text_scale=text_scale,weather_extras=weather_extras)
+                                           weather_text is not None, location_text is not None,text_scale=text_scale,weather_extras=weather_extras,clock_text=clock_text,weather_text=weather_text,fraction=fraction,state=state,calendar_date=f'{design.date.month}/{design.date.day}')
             image = QImage(math.ceil(width*dpr), math.ceil(height*dpr),
                            QImage.Format.Format_ARGB32_Premultiplied)
             image.setDevicePixelRatio(dpr)

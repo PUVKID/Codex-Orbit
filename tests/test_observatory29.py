@@ -20,6 +20,7 @@ class ObservatoryAvailabilityTests(unittest.TestCase):
 if importlib.util.find_spec('observatory_scene'):
     import observatory_scene as scene_api
     import calendar_motion as motion
+    from renderer_test_support34 import motion_renderer_factory
     from calendar_renderer import CalendarRenderer, build_observatory_geometry
     from PySide6.QtWidgets import QApplication
     from test_calendar_motion import FakeRenderer, Owner
@@ -101,7 +102,7 @@ if importlib.util.find_spec('observatory_scene'):
 
         def test_global_calendar_options_pause_date_refresh_and_restore_legacy(self):
             from datetime import date
-            with patch('calendar_renderer.CalendarRenderer', FakeRenderer):
+            with motion_renderer_factory(FakeRenderer):
                 motion.set_calendar_motion_options(paused=True, quality='eco')
                 owner = Owner(); motion.set_calendar_motion_visible(owner, True)
                 for _ in range(100):
@@ -137,7 +138,7 @@ if importlib.util.find_spec('observatory_scene'):
                 def render_observatory(self, scene, elapsed):
                     from datetime import date
                     return self.render(date(2026, 11, 2), elapsed)
-            with patch('calendar_renderer.CalendarRenderer', SceneRenderer):
+            with motion_renderer_factory(SceneRenderer):
                 motion.set_calendar_observatory_scene(self.scene(paused=True))
                 owner = Owner(); motion.set_calendar_motion_visible(owner, True)
                 for _ in range(100):

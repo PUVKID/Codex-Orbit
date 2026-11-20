@@ -79,7 +79,7 @@ for _year in range(2026,2100):
 
 
 @lru_cache(maxsize=4)
-def design_for_date(value, country='KR'):
+def _design_for_date(value, country, city_identity, catalog_revision):
     """유효한 날짜만 허용하며 지원 범위 밖을 다른 날짜로 몰래 대체하지 않습니다."""
     if type(value) is not date:
         raise TypeError('조형 날짜는 datetime.date여야 합니다.')
@@ -92,7 +92,9 @@ def design_for_date(value, country='KR'):
     subject=OBJECTS[collection.subjects[value.day-1]]
     # 기본색에 가까운 범위에서 날짜별 색을 정하며 형상 차이의 대용으로 쓰지 않습니다.
     accent=_month_palette(value.year,value.month)[value.day-1]
-    special=special_for_date(value,country)
+    import json
+    city_ref=json.loads(city_identity) if city_identity else None
+    special=special_for_date(value,country,city_ref)
     if special is not None:
         return Design(value,special.name,special.name if '특집' in special.name else special.name+' 특집',key,special.color,seed,
                       value.day-1,((value.year-2026)+(seed%1000003)/1000003)/74,
@@ -100,6 +102,20 @@ def design_for_date(value, country='KR'):
     return Design(value,subject.name,collection.title,key,accent,seed,
                   value.day-1,((value.year-2026)+(seed%1000003)/1000003)/74,
                   subject.key,subject.recipe,collection.anchor_id,collection.companion_id,collection.composition)
+
+
+def design_for_date(value, country='KR', city_ref=None):
+    """도시 문맥이 없는 기존 호출은 그대로 유지합니다."""
+    from calendar_city import city_key
+    if city_ref is not None:
+        from city_festivals import get_city_catalog_revision
+        revision=get_city_catalog_revision()
+    else:revision=''
+    return _design_for_date(value,country,city_key(city_ref),revision)
+
+
+design_for_date.cache_clear=_design_for_date.cache_clear
+design_for_date.cache_info=_design_for_date.cache_info
 
 
 def all_designs():

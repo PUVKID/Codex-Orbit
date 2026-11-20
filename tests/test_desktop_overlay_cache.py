@@ -18,6 +18,7 @@ from i18n import translate as t, set_language
 from typography import app_font
 import visuals
 from visuals import gray, usage_bar, USAGE_TRACK_RECT
+DIRECT_LAYOUT = visuals.desktop_widget_layout
 
 # 수리9 제품 변경 전 원본에서 보존한 독립 기준입니다. 현재 제품에서 다시 생성하지 않습니다.
 BASELINE_SOURCE_SHA256 = 'd4bb20ebbfa421b5f05a482aedbb0b2202b7f7ffc2e6f7e22916ace3d0d72e1d'
@@ -160,13 +161,15 @@ class DesktopOverlayCacheTests(unittest.TestCase):
         return bytes(rgba.constBits())
 
     def assert_matches_baseline(self, values, cache):
-        expected, expected_layout = self.paint(values, baseline=True)
+        # r11은 레이아웃 자체를 바꾸므로 과거 원문은 보존하고 캐시 투명성을 확인합니다.
+        with patch.object(visuals, 'desktop_widget_layout', DIRECT_LAYOUT):
+            expected, expected_layout = self.paint(values)
         actual, actual_layout = self.paint(values, cache)
         self.assertEqual(self.pixels(actual), self.pixels(expected))
         for key in ('art', 'dock', 'weather', 'location', 'usage', 'track', 'fill', 'lines', 'line_height'):
             self.assertEqual(actual_layout[key], expected_layout[key])
 
-    def test_pixels_match_preserved_drawing_for_sizes_values_languages_and_dpr(self):
+    def test_cached_pixels_match_direct_drawing_for_sizes_values_languages_and_dpr(self):
         cache = self.cache()
         for language in ('ko', 'en'):
             set_language(language)
@@ -184,7 +187,8 @@ class DesktopOverlayCacheTests(unittest.TestCase):
         with patch.object(visuals, 'desktop_widget_layout', wraps=visuals.desktop_widget_layout) as layout:
             for color in ('#7198C0', '#B8C8D4', '#223344'):
                 image, _ = self.paint(values, cache, source_color=color)
-                expected, _ = self.paint(values, baseline=True, source_color=color)
+                with patch.object(visuals, 'desktop_widget_layout', DIRECT_LAYOUT):
+                    expected, _ = self.paint(values, source_color=color)
                 self.assertEqual(self.pixels(image), self.pixels(expected))
                 images.append(self.pixels(image))
             self.assertEqual(layout.call_count, 1)

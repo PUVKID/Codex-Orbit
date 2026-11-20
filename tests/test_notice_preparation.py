@@ -13,6 +13,7 @@ from app import Notice
 from theme import apply_theme
 from typography import app_font
 import calendar_motion as motion
+from renderer_test_support34 import motion_renderer_factory
 from test_calendar_motion import FakeRenderer, Owner
 
 
@@ -98,7 +99,7 @@ class NoticePreparationTests(unittest.TestCase):
         self.assertTrue(hasattr(motion,'prepare_calendar_motion'))
         motion.close_calendar_motion()
         FakeRenderer.instances=[]
-        with patch('calendar_renderer.CalendarRenderer',FakeRenderer):
+        with motion_renderer_factory(FakeRenderer):
             result=motion.prepare_calendar_motion()
             self.assertTrue(result['ready']);self.assertFalse(result['error'])
             time.sleep(.05);before=motion.calendar_motion_status()['render_count'];time.sleep(.05)

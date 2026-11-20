@@ -40,12 +40,13 @@ class WeatherIntegrationTests(unittest.TestCase):
         return self.controller
     def test_fresh_stale_failed_and_tooltip_survive_usage_refresh(self):
         c=self.create();self.assertEqual(c.weather.started,0)
-        value=dict(temperature=5.2,region='추정 지역',checked_at=1793199840,observed_at=1793199600,status='기온 최신',stale=False,busy=False)
+        value=dict(temperature=5.2,region='합성 도시',checked_at=1793199840,observed_at=1793199600,status='기온 최신',stale=False,busy=False)
         c.weather.changed.emit(value);self.assertEqual(c.orbit.weather_text,'5.2℃ · 날씨 미확인')
         self.assertIn('제공 시각: '+datetime.fromtimestamp(1793199600).astimezone().strftime('%Y-%m-%d %H:%M:%S'),c.orbit.toolTip())
         self.assertIn('조회 시각: '+datetime.fromtimestamp(1793199840).astimezone().strftime('%Y-%m-%d %H:%M:%S'),c.orbit.toolTip())
         c.update_usage(c.usage.snapshot)
-        self.assertIn('네트워크 추정',c.orbit.toolTip());self.assertIn('Open-Meteo',c.orbit.toolTip())
+        self.assertEqual(c.orbit.location_text,'합성 도시')
+        self.assertNotIn('네트워크 추정',c.orbit.toolTip());self.assertIn('ipwho.is',c.orbit.toolTip());self.assertIn('Open-Meteo',c.orbit.toolTip())
         c.weather.changed.emit(dict(value,stale=True));self.assertIn('이전',c.orbit.weather_text)
         c.weather.changed.emit(dict(value,temperature=None,stale=True,status='네트워크 조회 실패'))
         self.assertIn('미확인',c.orbit.weather_text);self.assertIn('실패',c.orbit.toolTip())
@@ -64,7 +65,28 @@ class WeatherIntegrationTests(unittest.TestCase):
             self.assertEqual(c.orbit.clock_text(),'01:02:03')
             clock.now.return_value=datetime(2026,10,29,1,2,4)
             self.assertEqual(c.orbit.clock_text(),'01:02:04')
-        c.close();self.settings.values['size']=[230,270]
-        c=self.create();self.assertEqual((c.orbit.width(),c.orbit.height()),(230,270))
+        c.close();self.settings.values['size']=[230,270];self.settings.save()
+        self.settings=Settings(Path(self.temp.name))
+        self.assertEqual(self.settings.values['size'],[230,270])
+        c=self.create();self.app.processEvents();c.orbit.grab()
+        # 저장한 선호 크기는 보존하고 실제 화면만 글자·조형 최소 높이를 확보합니다.
+        self.assertEqual(c.settings.values['size'],[230,270])
+        self.assertEqual(Settings(Path(self.temp.name)).values['size'],[230,270])
+        self.assertEqual(c.orbit.width(),230)
+        self.assertGreaterEqual(c.orbit.height(),270)
+        self.assertGreaterEqual(c.orbit.height(),c.orbit.minimumHeight())
+        layout=c.orbit._desktop_overlay_cache.layout
+        self.assertGreaterEqual(layout['art'].width(),96)
+        self.assertEqual(layout['date_font'].pixelSize(),14)
+        self.assertEqual(layout['name_font'].pixelSize(),16)
+        self.assertEqual(c.settings.values.get('text_scale',100),100)
+        from PySide6.QtCore import QRectF
+        viewport=QRectF(c.orbit.rect())
+        for field in ('art','dock','location','weather','usage'):
+            self.assertTrue(viewport.contains(layout[field]),field)
+        for first,second in (('art','dock'),('dock','location'),('location','weather'),('weather','usage')):
+            self.assertLess(layout[first].bottom(),layout[second].top(),(first,second))
+        for rect in layout['weather_extra_rects']:
+            self.assertTrue(layout['weather'].contains(rect))
 
 if __name__=='__main__':unittest.main()

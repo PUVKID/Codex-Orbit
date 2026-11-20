@@ -130,8 +130,8 @@ class LocationUi32Tests(unittest.TestCase):
   self.assertTrue(hasattr(self.c,'set_weather_location'))
   with patch.object(self.c.weather,'refresh') as refresh:
    self.c.set_weather_location(city);self.assertEqual(self.c.weather.location_override['latitude'],37.2)
-   self.assertEqual(Settings(self.folder.name).values['weather_location'],city);self.assertIn('지정한 지역',self.c.orbit.location_text)
-   self.c.set_weather_location(None);self.assertIsNone(Settings(self.folder.name).values['weather_location']);self.assertIn('네트워크 추정',self.c.orbit.location_text)
+   self.assertEqual(Settings(self.folder.name).values['weather_location'],city);self.assertEqual(self.c.orbit.location_text,self.c.weather.snapshot['region']);self.assertIn(city['name'],self.c.orbit.location_text)
+   self.c.set_weather_location(None);self.assertIsNone(Settings(self.folder.name).values['weather_location']);self.assertEqual(self.c.orbit.location_text,'위치 정보 없음')
    self.assertEqual(refresh.call_count,2)
  def test_city_search_dialog_only_sends_explicit_search_and_applies_selected_row(self):
   from unittest.mock import patch
@@ -144,6 +144,7 @@ class LocationUi32Tests(unittest.TestCase):
   self.assertTrue(hasattr(self.c,'show_weather_location'))
   with patch('app.CitySearchClient',Search),patch.object(self.c.weather,'refresh'):
    self.c.show_weather_location();dialog=self.c.location_dialog;self.assertEqual(dialog.client.queries,[])
+   dialog.mode_selector.setCurrentIndex(dialog.mode_selector.findData('manual'));self.assertEqual(dialog.client.queries,[])
    dialog.query.setText('Synthetic City');QTest.mouseClick(dialog.search_button,Qt.MouseButton.LeftButton);self.assertEqual(dialog.client.queries,['Synthetic City'])
    city={'name':'Synthetic City','admin1':'Synthetic State','country':'Synthetic Country','country_code':'KR','latitude':37.2,'longitude':127.0,'id':123}
    dialog.client.results.emit([city]);dialog.cities.setCurrentRow(0);QTest.mouseClick(dialog.apply_button,Qt.MouseButton.LeftButton)

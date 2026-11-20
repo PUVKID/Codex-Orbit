@@ -65,7 +65,7 @@ def localized_region(data, language='ko'):
     return label or original, original
 
 
-def select_geocoded_region(location, data):
+def _selected_geocoded_region(location, data):
     """동일 국가이면서 IP 추정 좌표에서30km 이내인 가장 가까운 검색 결과만 수락합니다."""
     rows = data.get('results')
     if not isinstance(rows, list) or len(rows) > 10:
@@ -97,8 +97,30 @@ def select_geocoded_region(location, data):
                 value = ''.join(c for c in value if c.isprintable()).strip()[:80]
                 if value and value.casefold() not in [v.casefold() for v in labels]:
                     labels.append(value)
-        closest = distance, ' · '.join(labels)
-    return closest[1] if closest else None
+        closest = distance, ' · '.join(labels), row
+    return closest
+
+
+def select_geocoded_region(location, data):
+    """기존 지역 표시 선택 정책을 유지합니다."""
+    selected = _selected_geocoded_region(location, data)
+    return selected[1] if selected else None
+
+
+def select_geocoded_city_ref(location, data):
+    """좌표 근접만으로 도시를 확정하지 않고 같은 이름·국가의 식별자만 보존합니다."""
+    selected = _selected_geocoded_region(location, data)
+    if not selected:
+        return None
+    row = selected[2]
+    def identity(value):
+        return ' '.join(value.casefold().split()) if isinstance(value, str) else ''
+    name, expected = identity(row.get('name')), identity(location.get('city'))
+    identifier = row.get('id')
+    if not name or name != expected or type(identifier) is not int or identifier <= 0:
+        return None
+    return dict(provider='geonames',geonames_id=identifier,country_code=location['country_code'],
+                confidence='estimated',provenance='ipwho.is + Open-Meteo / GeoNames')
 
 
 _WEATHER_LABELS = {
@@ -243,7 +265,7 @@ class CitySearchClient(QObject):
         request.setAttribute(QNetworkRequest.Attribute.RedirectPolicyAttribute,
                              QNetworkRequest.RedirectPolicy.ManualRedirectPolicy)
         request.setRawHeader(b'Accept', b'application/json')
-        request.setRawHeader(b'User-Agent', b'CodexOrbit/3.2 (https://github.com/PUVKID/Codex-Orbit)')
+        request.setRawHeader(b'User-Agent', b'CodexOrbit/3.3 (https://github.com/PUVKID/Codex-Orbit)')
         reply = self.manager.get(request)
         self.reply = reply
         reply.setReadBufferSize(self.LIMIT + 1)
@@ -419,15 +441,16 @@ class WeatherClient(QObject):
         self._region_original = ''
         self._region_source = 'ipwho.is · 원문'
         self._location = None
+        self._city_ref = None
         self._region_cache = OrderedDict()
         self._generation = 0
         self._stage = ''
         self.location_override = normalize_city(location_override)
-        self.snapshot.update(humidity=None, weather_code=None, sunrise=None, sunset=None, timezone='', utc_offset_seconds=None, country_code='')
+        self.snapshot.update(humidity=None, precipitation=None, precipitation_interval_seconds=None, weather_code=None, sunrise=None, sunset=None, timezone='', utc_offset_seconds=None, country_code='', city_ref=None)
         self.snapshot['location_mode'] = 'manual' if self.location_override else 'automatic'
         if self.location_override:
             self._configure_override()
-            self.snapshot.update(region=self._region, region_original=self._region_original, region_source=self._region_source, country_code=self.location_override['country_code'])
+            self.snapshot.update(region=self._region, region_original=self._region_original, region_source=self._region_source, country_code=self.location_override['country_code'], city_ref=self._city_ref)
 
     def _configure_override(self):
         city = self.location_override
@@ -437,6 +460,10 @@ class WeatherClient(QObject):
         if city.get('display_name'):
             self._region = self._region_original = city['display_name']
         self._region_source = '사용자 선택 지점 · Photon / OpenStreetMap' if city.get('display_name') or city.get('address') else '사용자 지정 도시 · Open-Meteo / GeoNames'
+        identifier=city.get('id')
+        self._city_ref = (dict(provider='geonames',geonames_id=identifier,country_code=city['country_code'],
+                               confidence='selected',provenance='Open-Meteo / GeoNames')
+                          if type(identifier) is int and identifier > 0 and not city.get('display_name') and not city.get('address') else None)
 
     def set_location_override(self, value):
         city = normalize_city(value)
@@ -446,16 +473,17 @@ class WeatherClient(QObject):
         self._abort_request()
         self.location_override = city
         self._location = None
+        self._city_ref = None
         self._region = self._region_original = ''
         self._region_cache.clear()
         self.last_success = self.source_age_at_success = None
         self._region_source = 'ipwho.is · 원문' if city is None else '사용자 지정 도시 · Open-Meteo / GeoNames'
         if city:
             self._configure_override()
-        self._publish(temperature=None, humidity=None, weather_code=None, sunrise=None, sunset=None, timezone='',
+        self._publish(temperature=None, humidity=None, precipitation=None, precipitation_interval_seconds=None, weather_code=None, sunrise=None, sunset=None, timezone='',
                       utc_offset_seconds=None, checked_at=None, observed_at=None, stale=True, busy=False,
                       region=self._region, region_original=self._region_original, region_source=self._region_source,
-                      location_mode='manual' if city else 'automatic', country_code=city['country_code'] if city else '')
+                      location_mode='manual' if city else 'automatic', country_code=city['country_code'] if city else '', city_ref=self._city_ref)
         self.refresh()
         return True
 
@@ -597,7 +625,8 @@ class WeatherClient(QObject):
         if changed_location:
             # 새 지역 이름 아래에 이전 지역의 기상·시차가 잠깐이라도 남지 않게 한 번에 비웁니다.
             self.last_success = self.source_age_at_success = None
-            cleared = dict(temperature=None, humidity=None, weather_code=None, sunrise=None, sunset=None,
+            self._city_ref = None
+            cleared = dict(city_ref=None, temperature=None, humidity=None, precipitation=None, precipitation_interval_seconds=None, weather_code=None, sunrise=None, sunset=None,
                            timezone='', utc_offset_seconds=None, checked_at=None, observed_at=None, stale=True)
         self._publish(country_code=self._location['country_code'] if re.fullmatch('[A-Z]{2}', self._location['country_code']) else '',
                       region=self._region, region_original=self._region_original, region_source=self._region_source,
@@ -606,9 +635,9 @@ class WeatherClient(QObject):
 
     def _request_weather(self):
         latitude, longitude = self._location['latitude'], self._location['longitude']
-        query = urlencode({'latitude': latitude, 'longitude': longitude, 'current': 'temperature_2m,relative_humidity_2m,weather_code',
+        query = urlencode({'latitude': latitude, 'longitude': longitude, 'current': 'temperature_2m,relative_humidity_2m,weather_code,precipitation',
                            'daily': 'sunrise,sunset', 'forecast_days': 1, 'timezone': 'auto',
-                           'temperature_unit': 'celsius', 'timeformat': 'unixtime'})
+                           'temperature_unit': 'celsius', 'precipitation_unit': 'mm', 'timeformat': 'unixtime'})
         self._stage = 'weather'
         self._publish(busy=True, status='기온 조회 중')
         self._get('https://api.open-meteo.com/v1/forecast?' + query, self._guard(self._weather_done))
@@ -623,8 +652,8 @@ class WeatherClient(QObject):
         key = self._cache_key()
         if key in self._region_cache:
             self._region_cache.move_to_end(key)
-            self._region, self._region_source = self._region_cache[key]
-            self._publish(region=self._region, region_source=self._region_source)
+            self._region, self._region_source, self._city_ref = self._region_cache[key]
+            self._publish(region=self._region, region_source=self._region_source, city_ref=self._city_ref)
             self._stage = ''
             return
         city, code = self._location.get('city'), self._location.get('country_code')
@@ -644,16 +673,39 @@ class WeatherClient(QObject):
             self._region = label
             self._region_source = 'Open-Meteo Geocoding · GeoNames'
             key = self._cache_key()
-            self._region_cache[key] = (label, self._region_source)
+            self._city_ref = select_geocoded_city_ref(self._location,data)
+            self._region_cache[key] = (label, self._region_source, self._city_ref)
             self._region_cache.move_to_end(key)
             while len(self._region_cache) > 16:
                 self._region_cache.popitem(last=False)
-            self._publish(region=label, region_source=self._region_source, busy=False)
+            self._publish(region=label, region_source=self._region_source, city_ref=self._city_ref, busy=False)
+            # 표시 번역과 도시 신원은 분리하고 같은 식별자의 영문명만 추가 확인합니다.
+            selected=_selected_geocoded_region(self._location,data)
+            identifier=selected[2].get('id') if selected else None
+            if (self._city_ref is None and self.language!='en' and self._location.get('city','').isascii()
+                    and type(identifier) is int and identifier>0):
+                query=urlencode({'name':self._location['city'],'count':10,'language':'en','countryCode':self._location['country_code']})
+                self._stage='geocode_identity'
+                self._get('https://geocoding-api.open-meteo.com/v1/search?'+query,
+                          self._guard(lambda rows:self._identity_done(rows,identifier)))
         else:
             self._publish(region=self._region, region_source='ipwho.is · 지명 검색 미일치 · 원문 보존', busy=False)
 
+    def _identity_done(self,data,expected_id):
+        ref=select_geocoded_city_ref(self._location,data)
+        self._stage=''
+        if ref is None or ref['geonames_id']!=expected_id:
+            self._publish(city_ref=None,busy=False)
+            return
+        self._city_ref=ref
+        self._region_cache[self._cache_key()]=(self._region,self._region_source,ref)
+        self._publish(city_ref=ref,busy=False)
+
     def _request_failed(self, message):
-        if self._stage == 'geocode':
+        if self._stage == 'geocode_identity':
+            self._stage=''
+            self._publish(city_ref=None,busy=False)
+        elif self._stage == 'geocode':
             self._stage = ''
             self._publish(busy=False, region_source='ipwho.is · 지역 번역 실패 · 원문 보존')
         else:
@@ -673,6 +725,16 @@ class WeatherClient(QObject):
             raise ValueError('기온 제공 시각')
         humidity = current.get('relative_humidity_2m')
         humidity = float(humidity) if self._valid_number(humidity, 0, 100) else None
+        # 강수량은 제공 응답의 실제 집계 간격과 mm 단위가 함께 확인될 때만 표시합니다.
+        precipitation = current.get('precipitation')
+        interval = current.get('interval')
+        units = data.get('current_units')
+        valid_rain = (isinstance(units, dict) and units.get('precipitation') == 'mm'
+                      and type(interval) is int and interval > 0
+                      and type(precipitation) in (int, float) and math.isfinite(precipitation)
+                      and precipitation >= 0)
+        precipitation = float(precipitation) if valid_rain else None
+        interval = interval if valid_rain else None
         weather_code = current.get('weather_code')
         weather_code = weather_code if type(weather_code) is int and weather_code in _WEATHER_LABELS else None
         zone = data.get('timezone', '')
@@ -690,7 +752,8 @@ class WeatherClient(QObject):
         stale = now - observed > 900
         self.last_success = time.monotonic() if not stale else None
         self.source_age_at_success = max(0, now - observed) if not stale else None
-        self._publish(temperature=float(temperature), humidity=humidity, weather_code=weather_code,
+        self._publish(temperature=float(temperature), humidity=humidity, precipitation=precipitation,
+                      precipitation_interval_seconds=interval, weather_code=weather_code,
                       sunrise=sunrise, sunset=sunset, timezone=zone, utc_offset_seconds=offset, region=self._region, region_original=self._region_original,
                       language=self.language, region_source=self._region_source,
                       checked_at=now, observed_at=observed,

@@ -3,6 +3,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+import time
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
 from PySide6.QtWidgets import QApplication
 from PySide6.QtTest import QTest
@@ -28,7 +29,10 @@ class MotionBrandTests(unittest.TestCase):
         self.assertFalse(mark.playback_clock.timer.isActive())
         from calendar_motion import prepare_calendar_motion
         # 실제 시작 경로처럼 GPU 첫 프레임 준비를 재생 측정 구간과 분리합니다.
-        preparation = prepare_calendar_motion(timeout_seconds=2.0)
+        preparation_started=time.monotonic()
+        preparation = prepare_calendar_motion(timeout_seconds=5.0)
+        preparation_seconds=time.monotonic()-preparation_started
+        print('브랜드 실제 GPU 준비초',preparation_seconds,flush=True)
         self.assertIs(preparation['ready'], True, preparation['error'])
         self.assertEqual(preparation['error'], '')
         self.c.show()

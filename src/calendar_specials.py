@@ -30,20 +30,42 @@ KIND_KEYS = MappingProxyType({
 })
 
 
-def special_for_date(value, country='KR'):
+CITY_FESTIVAL_OBJECTS = MappingProxyType({
+    'city_festival_'+kind: ObjectSpec('city_festival_'+kind,title,'특집','city_'+kind,color,1,1,24,30,title)
+    for kind,title,color in (
+        ('music','도시 음악 행사','#718FC5'),('film','도시 영화 행사','#B9AB88'),
+        ('snow','도시 눈 행사','#A4C9DD'),('lights','도시 빛 행사','#E1A64E'),
+        ('carnival','도시 카니발','#B57A9C'),('flowers','도시 꽃 행사','#D795A6'),
+        ('culture','도시 문화 행사','#B79265'),('balloon','도시 열기구 행사','#CF8D62'))
+})
+
+
+def special_for_date(value, country='KR', city_ref=None):
+    """고정 특집·발표 도시 일정·국가 공휴일 순서로만 특집을 고릅니다."""
     country=normalize_country(country)
     event=event_for_date(value,country)
-    if event is not None:
+    if event is not None and event['kind'] != 'public_holiday':
         key=KIND_KEYS.get(event['kind'],PUBLIC_HOLIDAY.key)
-        template=subject_for_id(key)
-        return replace(template,name=event['title'],feature=event['kind'])
-    row = SPECIAL_DATES.get((value.month, value.day))
-    if country!='KR' and (value.month,value.day) in ((5,5),(10,9)):
-        return None
-    # 제공처에 공휴일이 없는 날의 고정 모티프는 계절 특집이며 법정 공휴일 표식이 아닙니다.
-    return SPECIAL_OBJECTS[row[0]] if row else None
+        return replace(subject_for_id(key),name=event['title'],feature=event['kind'])
+    row=SPECIAL_DATES.get((value.month,value.day))
+    if country!='KR' and (value.month,value.day) in ((5,5),(10,9)):row=None
+    if row:return SPECIAL_OBJECTS[row[0]]
+    if city_ref is not None:
+        from city_festivals import city_events_for_date
+        rows=city_events_for_date(value,city_ref,country)
+        rows=[row for row in rows if row.get('status')=='announced' and row.get('date_precision')=='day'
+              and row.get('date_evidence') in ('official_api_consistent','official_page_crosschecked')
+              and (not row.get('time_conflict') or row.get('date_evidence')=='official_page_crosschecked')]
+        if rows:
+            selected=sorted(rows,key=lambda row:row['id'])[0]
+            key='city_festival_'+selected.get('kind','culture')
+            template=CITY_FESTIVAL_OBJECTS.get(key,CITY_FESTIVAL_OBJECTS['city_festival_culture'])
+            return replace(template,name=selected['title'],feature=selected.get('kind','culture'))
+    if event is not None:return replace(PUBLIC_HOLIDAY,name=event['title'],feature=event['kind'])
+    return None
 
 
 def subject_for_id(key):
     if key==PUBLIC_HOLIDAY.key:return PUBLIC_HOLIDAY
+    if key in CITY_FESTIVAL_OBJECTS:return CITY_FESTIVAL_OBJECTS[key]
     return SPECIAL_OBJECTS[key] if key in SPECIAL_OBJECTS else OBJECTS[key]

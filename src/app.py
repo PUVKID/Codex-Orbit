@@ -249,6 +249,31 @@ def event_description(event):
     ])
 
 
+def weather_number_text(value):
+    """표시만 소수 둘째 자리 아래를 버리고 저장된 관측값은 바꾸지 않습니다."""
+    from decimal import Decimal, ROUND_DOWN, localcontext
+    if type(value) not in (int, float) or not math.isfinite(value):
+        return '—'
+    with localcontext() as context:
+        context.prec = 330
+        text = format(Decimal(str(value)).quantize(Decimal('0.01'), rounding=ROUND_DOWN), 'f')
+    return text.rstrip('0').rstrip('.') if '.' in text else text
+
+
+def percentage_text(value):
+    from percentage_display import percentage_text as display
+    return display(value)
+
+
+def percentage_tooltip(value):
+    from percentage_display import percentage_tooltip as display
+    return display(value)
+
+
+def remaining_text(value):
+    return t('{percent} 남음',percent=percentage_text(value)) if value is not None else t('잔량 미확인')
+
+
 def weather_widget_text(value):
     """기온과 부가정보를 분리하고 일출·일몰은 제공된 지역 시간대로만 표시합니다."""
     temperature = value.get('temperature')
@@ -258,15 +283,24 @@ def weather_widget_text(value):
     else:
         from weather import weather_description
         description = weather_description(code, get_language())
-    primary = (f'{temperature:g}℃' if type(temperature) in (int,float) and math.isfinite(temperature) else t('기온 미확인')) + ' · ' + description
+    primary = (weather_number_text(temperature)+'℃' if type(temperature) in (int,float) and math.isfinite(temperature) else t('기온 미확인')) + ' · ' + description
     stale = bool(value.get('stale')) and temperature is not None
     if stale:primary = t('이전 정보: ') + primary
     humidity = value.get('humidity')
-    humidity_text = f'{humidity:g}%' if type(humidity) in (int,float) and math.isfinite(humidity) and 0 <= humidity <= 100 else '—'
+    humidity_text = percentage_text(humidity)
     offset = value.get('utc_offset_seconds')
     from weather import weather_sun_time
     def local_time(key):return weather_sun_time(value.get(key), offset)
-    extras = ((t('이전 습도 ') if stale else t('습도 '))+humidity_text+' · '+t('현지 시각'),
+    rain = value.get('precipitation')
+    interval = value.get('precipitation_interval_seconds')
+    valid_rain = (type(rain) in (int, float) and math.isfinite(rain) and rain >= 0
+                  and type(interval) is int and interval > 0)
+    rain_text = weather_number_text(rain)+' mm' if valid_rain else '—'
+    interval_text = (t('직전 {minutes:g}분').format(minutes=interval // 60) if interval % 60 == 0
+                     else t('직전 {seconds}초').format(seconds=interval)) if valid_rain else ''
+    rain_label = t('이전 강수 ') if stale else t('강수 ')
+    extras = ((t('이전 습도 ') if stale else t('습도 '))+humidity_text+' · '+rain_label+rain_text+
+              (' ('+interval_text+')' if interval_text else ''),
               t('일출 ')+local_time('sunrise')+' · '+t('일몰 ')+local_time('sunset'))
     return primary, extras
 
@@ -477,6 +511,7 @@ class OrbitWidget(QWidget):
         self.setMinimumSize(180, 250)
         self.settings, self.details = settings, details
         self.theme_country = validated_theme_country(settings.values.get('theme_country', 'KR'))
+        self.city_ref = None
         self.language_changed = lambda language: None
         self.motion_speed_changed = lambda value: None
         size = settings.values.get('size', [220, 432])
@@ -545,8 +580,8 @@ class OrbitWidget(QWidget):
     def _request_motion_size(self):
         if not hasattr(self,'timer') or not self.isVisible():return
         from calendar_motion import set_calendar_motion_size
-        design=design_for_date(regional_calendar_date(),country=self.theme_country)
-        layout=desktop_widget_layout(self.width(),self.height(),t(design.title),True,True,text_scale=self.settings.values.get('text_scale',100)/100,weather_extras=self.weather_extras)
+        design=design_for_date(regional_calendar_date(),country=self.theme_country,city_ref=self.city_ref)
+        layout=desktop_widget_layout(self.width(),self.height(),t(design.title),True,True,text_scale=self.settings.values.get('text_scale',100)/100,weather_extras=self.weather_extras,clock_text=self.clock_text(),weather_text=self.weather_text,fraction=self.usage_fraction,state=self.usage_state,calendar_date=f'{design.date.month}/{design.date.day}')
         if self.weather_extras and self.minimumHeight()!=layout['minimum_height']:
             self.setMinimumHeight(layout['minimum_height'])
         size=max(32,min(2160,round(layout['art'].width()*self.devicePixelRatioF())))
@@ -567,7 +602,7 @@ class OrbitWidget(QWidget):
         try:
             painter.setRenderHint(QPainter.RenderHint.Antialiasing)
             from calendar_motion import get_calendar_frame,record_calendar_presentation
-            design = design_for_date(regional_calendar_date(),country=self.theme_country)
+            design = design_for_date(regional_calendar_date(),country=self.theme_country,city_ref=self.city_ref)
             if hasattr(self,'experience') and self.settings.values.get('scene_mode','calendar')=='observatory':
                 from dataclasses import replace
                 model=self.experience.scene.get('model')
@@ -647,7 +682,7 @@ class OrbitWidget(QWidget):
             elif not any(self.resize_edges):
                 self.unread = False
                 if hasattr(self,'experience') and self.settings.values.get('scene_mode','calendar')=='observatory':
-                    layout=desktop_widget_layout(self.width(),self.height(),'',True,True,text_scale=self.settings.values.get('text_scale',100)/100,weather_extras=self.weather_extras)
+                    layout=desktop_widget_layout(self.width(),self.height(),'',True,True,text_scale=self.settings.values.get('text_scale',100)/100,weather_extras=self.weather_extras,clock_text=self.clock_text(),weather_text=self.weather_text,fraction=self.usage_fraction,state=self.usage_state)
                     art=layout['art'];point=event.position()
                     self.experience.hit((point.x()-art.x())/max(1,art.width()),(point.y()-art.y())/max(1,art.height()))
                 else:self.details()
@@ -1050,9 +1085,31 @@ class WeatherLocationDialog(QDialog):
         self.setWindowTitle(t('지역 선택'))
         self.resize(500, 410)
         layout = QVBoxLayout(self)
-        explanation = QLabel(t('도시·장소를 고르면 행사와 날씨를 함께 바꿉니다. 네트워크 추정은 실제 주소가 아닙니다.'))
+        explanation = QLabel(t('도시·장소를 고르면 행사와 날씨를 함께 바꿉니다.'))
         explanation.setWordWrap(True)
         layout.addWidget(explanation)
+        mode_row = QHBoxLayout()
+        mode_row.addWidget(QLabel(t('위치 모드')))
+        self.mode_selector = QComboBox()
+        self.mode_selector.addItem(t('자동'), 'automatic')
+        self.mode_selector.addItem(t('수동'), 'manual')
+        manual = bool(controller.settings.values.get('weather_location'))
+        self.mode_selector.setCurrentIndex(1 if manual else 0)
+        mode_row.addWidget(self.mode_selector, 1)
+        layout.addLayout(mode_row)
+        self.mode_status = QLabel(t('현재 모드: 수동') if manual else t('현재 모드: 자동'))
+        self.mode_status.setWordWrap(True)
+        layout.addWidget(self.mode_status)
+        event_row=QHBoxLayout()
+        from city_ui33 import city_summary
+        snapshot=getattr(getattr(controller,'weather',None),'snapshot',{})
+        self.city_ref=snapshot.get('city_ref')
+        self.city_country=controller.settings.values.get('theme_country','KR')
+        self.city_summary=QLabel(city_summary(self.city_ref,self.city_country,regional_calendar_date().year))
+        self.city_summary.setWordWrap(True);event_row.addWidget(self.city_summary,1)
+        self.city_button=QPushButton(t('축제 목록·출처'))
+        self.city_button.clicked.connect(self.show_city_events);event_row.addWidget(self.city_button)
+        layout.addLayout(event_row)
         search_row = QHBoxLayout()
         self.search_kind = QComboBox()
         for caption, kind in (('도시·지역','city'), ('주소·장소','place'), ('국가','country')):
@@ -1078,7 +1135,7 @@ class WeatherLocationDialog(QDialog):
         self.cities.setWordWrap(True)
         layout.addWidget(self.cities, 1)
         buttons = QHBoxLayout()
-        self.automatic_button = QPushButton(t('네트워크 추정으로 복귀'))
+        self.automatic_button = QPushButton(t('자동 모드 적용'))
         self.apply_button = QPushButton(t('선택한 지역 적용'))
         self.apply_button.setEnabled(False)
         self.cancel_button = QPushButton(t('취소'))
@@ -1095,11 +1152,43 @@ class WeatherLocationDialog(QDialog):
         self.automatic_button.clicked.connect(lambda: self.apply_city(None))
         self.cancel_button.clicked.connect(self.reject)
         self.finished.connect(lambda result: self.close_search())
+        self.mode_selector.currentIndexChanged.connect(self.change_location_mode)
         self.change_search_kind()
+        self.update_search_enabled()
         remember_translations(self)
+
+    def refresh_city_summary(self):
+        from city_ui33 import city_summary
+        snapshot=getattr(getattr(self.controller,'weather',None),'snapshot',{})
+        self.city_ref=snapshot.get('city_ref')
+        self.city_country=self.controller.settings.values.get('theme_country','KR')
+        self.city_summary.setText(city_summary(self.city_ref,self.city_country,regional_calendar_date().year))
+
+    def show_city_events(self):
+        from city_ui33 import CityEventsDialog
+        self.city_dialog=CityEventsDialog(self,self.city_ref,self.city_country,regional_calendar_date(),
+                                          getattr(self.controller,'city_updater',None))
+        self.city_dialog.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
+        self.city_dialog.show()
+
+    def update_search_enabled(self):
+        manual = self.mode_selector.currentData() == 'manual'
+        for widget in (self.search_kind, self.query, self.search_button, self.cities):
+            widget.setEnabled(manual)
+        self.apply_button.setEnabled(manual and self.cities.currentRow() >= 0)
+
+    def change_location_mode(self):
+        if self.mode_selector.currentData() == 'automatic':
+            self.apply_city(None)
+        else:
+            # 수동 모드는 검색 준비 상태이며 실제 후보 적용 전에는 저장하지 않습니다.
+            self.update_search_enabled()
 
     def retranslate(self):
         retranslate_widgets(self)
+        self.mode_selector.setItemText(0,t('자동'))
+        self.mode_selector.setItemText(1,t('수동'))
+        if hasattr(self,'city_dialog') and isValid(self.city_dialog):self.city_dialog.retranslate()
         for index,caption in enumerate(('도시·지역','주소·장소','국가')):
             self.search_kind.setItemText(index,t(caption))
         self.change_search_kind()
@@ -1416,7 +1505,7 @@ class Details(QDialog):
         texts = []
         for row in rows:
             remaining = row['remaining']
-            label = t("{percent:g}% 남음", percent=remaining) if remaining is not None else t('잔량 미확인')
+            label = remaining_text(remaining)
             text = str(row['bucket']) + " · " + t(row['period']) + "  " + label + "  ·  " + t("초기화: ") + t(reset_label(row['resets_at']))
             if stale:
                 text += t('  ·  이전 조회 값')
@@ -1427,6 +1516,7 @@ class Details(QDialog):
             bar.setFormat(t(row['period']) + (t(' · 이전 조회') if stale else '') + ' · ' + label)
             bar.setTextVisible(False)
             bar.setAccessibleName(text)
+            bar.setToolTip(percentage_tooltip(remaining))
             bar.setEnabled(not stale and remaining is not None)
             bar.setFixedHeight(12)
             set_ui_style(bar,'QProgressBar {border:0;border-radius:6px;background:#dceee4;} QProgressBar::chunk {background:#159e6c;border-radius:6px;}')
@@ -1437,6 +1527,7 @@ class Details(QDialog):
             set_ui_style(info,'color:#355c50;font-size:15px;')
             self.usage_rows_layout.addWidget(info)
             number = QLabel(label)
+            number.setToolTip(percentage_tooltip(remaining))
             number.setTextFormat(Qt.TextFormat.PlainText)
             number.setWordWrap(True)
             set_ui_style(number,'color:#355c50;font-size:42px;font-weight:700;')
@@ -1447,7 +1538,8 @@ class Details(QDialog):
             set_ui_style(reset,'color:#355c50;font-size:13px;padding-bottom:18px;')
             self.usage_rows_layout.addWidget(reset)
         self.usage_rows_layout.addStretch()
-        self.usage_compact.setText((t('이전 조회 · ') if stale and checked else '') + (t("{percent:g}% 남음", percent=rows[0]['remaining']) if rows and rows[0].get('remaining') is not None else t('사용 한도 미확인')))
+        self.usage_compact.setText((t('이전 조회 · ') if stale and checked else '') + (remaining_text(rows[0]['remaining']) if rows and rows[0].get('remaining') is not None else t('사용 한도 미확인')))
+        self.usage_compact.setToolTip(percentage_tooltip(rows[0]['remaining']) if rows else t('미확인'))
         self.usage_values.setText('\n'.join(texts) if texts else t('계정 한도 미확인 · 남은 토큰 개수가 아닌 사용 한도 비율입니다.'))
         self.usage_values.setVisible(not rows)
 
@@ -1748,6 +1840,9 @@ class Controller(QObject):
         # 앱이 보관한 부모 아래에 두어 worker GC가 창과 타이머를 파괴하지 못하게 합니다.
         self.gui_owner = QWidget(_application_gui_root())
         self.gui_owner.setObjectName('codexOrbitControllerOwner')
+        from city_festival_updates import CityFestivalUpdater
+        self.city_updater=CityFestivalUpdater(settings.directory,self.gui_owner)
+        self.city_updater.changed.connect(self.city_catalog_changed)
         self.setParent(self.gui_owner)
         self.notice_delivery_timer = QTimer(self.gui_owner)
         self.notice_delivery_timer.setSingleShot(True)
@@ -1903,7 +1998,9 @@ class Controller(QObject):
             raise
         if code:self._apply_theme_country(code,estimated=False)
         else:self.country_estimated=False
-        self.weather.set_location_override(city)
+        changed = self.weather.set_location_override(city)
+        if city is None and changed is False:
+            self.weather.refresh()
         self.refresh_region_summary()
 
     def _apply_theme_country(self, country, estimated=False):
@@ -1911,12 +2008,35 @@ class Controller(QObject):
         from calendar_motion import set_calendar_country
         set_calendar_country(code)
         self.orbit.theme_country = code
+        if (getattr(self.orbit,'city_ref',None) or {}).get('country_code',code)!=code:
+            self.orbit.city_ref=None
         self.country_estimated = bool(estimated)
         self._sync_calendar_timezone()
         self.orbit._request_motion_size()
         self.orbit.update()
         self.refresh_region_summary()
         self.window.usage_hero.setAccessibleName(t('선택 지역의 날짜별 조형'))
+
+    def city_catalog_changed(self,revision):
+        if self.closing:return
+        design_for_date.cache_clear()
+        self._sync_calendar_city(self.weather.snapshot,catalog_revision=revision)
+        if hasattr(self,'location_dialog') and isValid(self.location_dialog):self.location_dialog.refresh_city_summary()
+        self.orbit.update()
+
+    def _sync_calendar_city(self,value,catalog_revision=None):
+        from calendar_motion import set_calendar_city_ref
+        from calendar_city import normalize_calendar_city
+        from city_festivals import city_coverage
+        ref=value.get('city_ref')
+        if ref is not None and ref.get('country_code')!=self.orbit.theme_country:ref=None
+        try:
+            ref=normalize_calendar_city(ref)
+            if ref is not None:city_coverage(ref,self.orbit.theme_country,regional_calendar_date().year)
+        except (ValueError,OSError):ref=None
+        self.orbit.city_ref=ref
+        if catalog_revision is None:set_calendar_city_ref(ref)
+        else:set_calendar_city_ref(ref,catalog_revision=catalog_revision)
 
     def _sync_calendar_timezone(self, value=None):
         from calendar_motion import set_calendar_utc_offset
@@ -1929,7 +2049,7 @@ class Controller(QObject):
     def refresh_region_summary(self):
         code = self.orbit.theme_country
         name = next(row['name'] for row in available_countries(get_language()) if row['code']==code)
-        mode = t('직접 선택') if self.settings.values.get('theme_country_mode')=='selected' else t('네트워크 추정') if self.country_estimated else t('자동 추정 대기')
+        mode = t('수동') if self.settings.values.get('theme_country_mode')=='selected' else t('자동')
         self.orbit29.location_label.setText(t('날씨: ')+self.orbit.location_text+'\n'+t('행사: ')+name+' · '+mode)
         status = country_status(code,regional_calendar_date().year)
         warning = t('행사는 국가 단위 자료이며 규칙과 법이 바뀔 수 있습니다.')
@@ -1944,13 +2064,13 @@ class Controller(QObject):
         if self.closing:
             return
         temperature = value.get("temperature")
-        mode_label = t('지정한 지역') if value.get('location_mode') == 'manual' else t('네트워크 추정')
-        self.orbit.location_text = mode_label + ' · ' + (value.get("region") or t("위치 정보 없음"))
+        self.orbit.location_text = value.get("region") or t("위치 정보 없음")
         if self.settings.values.get('theme_country_mode') == 'auto' and value.get('location_mode') == 'automatic' and value.get('country_code'):
             code=value['country_code']
             if any(row['code']==code for row in available_countries()):self._apply_theme_country(code, estimated=True)
             else:self.country_estimated=False
         self._sync_calendar_timezone(value)
+        self._sync_calendar_city(value)
         self.refresh_region_summary()
         self.orbit.weather_text, self.orbit.weather_extras = weather_widget_text(value)
         if value.get('busy') and temperature is None:self.orbit.weather_text = t('기온 조회 중')
@@ -1958,7 +2078,7 @@ class Controller(QObject):
         checked_label = datetime.fromtimestamp(checked).astimezone().strftime("%Y-%m-%d %H:%M:%S") if checked is not None else t("미확인")
         observed = value.get("observed_at")
         observed_label = datetime.fromtimestamp(observed).astimezone().strftime("%Y-%m-%d %H:%M:%S") if observed is not None else t("미확인")
-        location_heading = t('지정한 지역: ') if value.get('location_mode') == 'manual' else t("네트워크 추정 지역: ")
+        location_heading = t('지역: ')
         location_source = t('지정한 도시 좌표') if value.get('location_mode') == 'manual' else 'ipwho.is'
         self.orbit.weather_tooltip = (location_heading + (value.get("region") or t("미확인")) +
                                      t("\n지역 원문: ") + (value.get("region_original") or t("미확인")) +
@@ -1967,6 +2087,9 @@ class Controller(QObject):
                                      t("\n조회 시각: ") + checked_label + "\n" + t(value.get("status", "기온 미확인")))
         self.orbit.weather_tooltip += t("\n지명 출처: ") + t(str(value.get("region_source") or "GeoNames / Open-Meteo (CC BY 4.0)"))
         self.orbit.weather_tooltip += '\n'+self.orbit.weather_text+'\n'+'\n'.join(self.orbit.weather_extras)
+        self.orbit.weather_tooltip += '\n'+t('기온·강수량은 소수 둘째 자리 아래 버림 · 백분율은 소수 첫째 자리 반올림 · 원값: ')+json.dumps(
+            {key:value.get(key) for key in ('temperature','humidity','precipitation','precipitation_interval_seconds')},ensure_ascii=False)
+        self.orbit.weather_tooltip += '\n'+percentage_tooltip(value.get('humidity'))
         self.orbit._request_motion_size()
         self.orbit.refresh_tooltip()
         self.orbit.update()
@@ -1991,11 +2114,12 @@ class Controller(QObject):
         if value.get('stale'):
             self.orbit.usage_badge = '?' if value.get('checked_at') else '—'
         elif valid:
-            self.orbit.usage_badge = f"{min(row['remaining'] for row in valid):g}%"
+            self.orbit.usage_badge = percentage_text(min(row['remaining'] for row in valid))
         else:
             self.orbit.usage_badge = '—'
         self.orbit.usage_tooltip = (t('Codex Orbit · 계정 한도 ') + self.orbit.usage_badge +
                                     ' · ' + t(value.get('status', '미확인')) + t('\n클릭: 기간별 잔량과 변경 이력 · 드래그: 이동'))
+        if valid:self.orbit.usage_tooltip+='\n'+percentage_tooltip(min(row['remaining'] for row in valid))
         self.orbit.refresh_tooltip()
         self.orbit.update()
         self.orbit29.feed_scene()
@@ -2323,6 +2447,7 @@ class Controller(QObject):
         self.monitor_retry_timer.stop()
         self.usage.close()
         self.weather.close()
+        self.city_updater.close()
         if hasattr(self, 'location_dialog') and isValid(self.location_dialog):
             self.location_dialog.reject()
         for notice in list(self.notices.values()):
@@ -2358,6 +2483,7 @@ class Controller(QObject):
         self.monitor_retry_timer.stop()
         self.usage.close()
         self.weather.close()
+        self.city_updater.close()
         if hasattr(self, 'location_dialog') and isValid(self.location_dialog):
             self.location_dialog.reject()
         worker = self.monitor
@@ -2400,12 +2526,12 @@ def usage_smoke_state(controller):
     bars = [widget for widget in widgets if isinstance(widget, QProgressBar)]
     labels = [widget.text() for widget in widgets if isinstance(widget, QLabel) and widget.isVisible()]
     expected_values = [round(row['remaining'] * 10000) if row.get('remaining') is not None else 0 for row in rows]
-    expected_labels = [t("{percent:g}% 남음", percent=row['remaining']) if row.get('remaining') is not None else t('잔량 미확인') for row in rows]
+    expected_labels = [remaining_text(row['remaining']) for row in rows]
     presented = {'badge': controller.orbit.usage_badge, 'fraction': controller.orbit.usage_fraction,
                  'state': controller.orbit.usage_state, 'bar_values': [bar.value() for bar in bars],
                  'remaining_labels': [label for label in labels if label in expected_labels]}
     fresh = not value.get('stale', True) and not value.get('busy', False) and value.get('checked_at') is not None
-    matches = (expected is not None and presented['badge'] == f'{expected:g}%'
+    matches = (expected is not None and presented['badge'] == percentage_text(expected)
                and presented['fraction'] == expected / 100 and presented['state'] == 'fresh'
                and presented['bar_values'] == expected_values
                and presented['remaining_labels'] == expected_labels

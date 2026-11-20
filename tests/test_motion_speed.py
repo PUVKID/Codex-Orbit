@@ -63,7 +63,7 @@ class MotionClockTests(unittest.TestCase):
         from PySide6.QtGui import QImage
 
         with patch.object(motion.time, 'perf_counter', return_value=100.0):
-            worker = motion._Worker()
+            worker = motion._Worker(renderer_factory=lambda size,check_cancelled=None: OneFrameRenderer(size,check_cancelled))
         worker.visible = True
         worker.requested_date = date(2028, 2, 29)
         with patch.object(motion.time, 'perf_counter', return_value=102.0):
@@ -71,7 +71,7 @@ class MotionClockTests(unittest.TestCase):
         rendered = []
 
         class OneFrameRenderer:
-            def __init__(self, size):
+            def __init__(self, size, check_cancelled=None):
                 self.ctx = type('Context', (), {'info': {}})()
 
             def render(self, value, elapsed, country='KR'):
@@ -82,9 +82,8 @@ class MotionClockTests(unittest.TestCase):
             def close(self):
                 pass
 
-        with patch('calendar_renderer.CalendarRenderer', OneFrameRenderer):
-            with patch.object(motion.time, 'perf_counter', return_value=104.0):
-                worker.run()
+        with patch.object(motion.time, 'perf_counter', return_value=104.0):
+            worker.run()
         self.assertEqual(rendered, [(date(2028, 2, 29), 8.0)])
 
 

@@ -146,6 +146,9 @@ def _transformed(mesh, pos=(0,0,0), scale=(1,1,1), angle=0):
 
 def _object_geometry(spec, color, material_specs=None):
     """대상 이름에 연결된 주요 구조를 실제 삼각형 부품으로 구성합니다."""
+    if spec.recipe.startswith('city_'):
+        from city_festival_geometry import city_festival_geometry
+        return city_festival_geometry(spec,color)
     if spec.category=='특집':
         from calendar_special_geometry import special_geometry
         return special_geometry(spec,color)
@@ -500,7 +503,7 @@ def matrices(elapsed):
     except OverflowError:valid=False
     if not valid:raise ValueError('모션 시각은 유한한 숫자여야 합니다.')
     phase=math.tau*(elapsed%PERIOD)/PERIOD
-    center=np.eye(4); center[:3,:3]=rotation((0,1,0),.20*math.sin(phase))@rotation((1,0,0),.10*math.sin(phase+.5)); center[1,3]=1.4*math.sin(phase)
+    center=np.eye(4); center[:3,:3]=rotation((0,1,0),phase)
     result=[center]
     # 서로 다른 축과 정수 회전수로 12/6/4초 완전 회전 및 공통 루프를 유지합니다.
     for index,axis in enumerate(((.6,1,.3),(-.3,1,.4),(.4,-.8,1))):
@@ -601,7 +604,7 @@ def build_observatory_geometry(scene):
 
 class CalendarRenderer:
     """컨텍스트를 만든 스레드에서만 사용하고 현재 날짜의 버퍼만 보유합니다."""
-    def __init__(self,size=384):
+    def __init__(self,size=384,check_cancelled=None):
         if type(size) is int and 32<=size<=768:
             dimensions=(size,size)
         elif type(size) is tuple and len(size)==2 and all(type(v) is int for v in size) and size==(3840,2160):
@@ -611,34 +614,69 @@ class CalendarRenderer:
         self.thread_id=threading.get_ident(); self.size=size; self.dimensions=dimensions; self.ctx=None; self.resources=[]; self.vaos=[]; self.buffers=[]; self.parts=[]; self.design=None
         self.output_resources=[]; self.output_size=0; self.output=None; self.observatory_key=None
         self.species_texture=None;self.species_key=None;self.material_specs=[];self.atlas_path=None;self.atlas_image=None
+        # 동기 호출은 기존 경로를 유지하고 작업자는 유한한 생성 단계 사이에서만 취소합니다.
+        check=(lambda:None) if check_cancelled is None else check_cancelled
         try:
+            check()
             self.ctx=moderngl.create_standalone_context(require=330)
+            check()
             vertex_shader,fragment_shader=organic_shaders(VERTEX,FRAGMENT)
+            check()
             self.program=self.ctx.program(vertex_shader=vertex_shader,fragment_shader=fragment_shader); self.resources.append(self.program)
+            check()
             import sys
             asset_root=Path(getattr(sys,'_MEIPASS',Path(__file__).resolve().parents[1]))/'assets'
+            check()
             from material_catalog32 import load_catalog
             self.material_catalog=load_catalog(asset_root/'materials')
-            material=QImage(str(asset_root/'materials/코코넛_껍질_섬유.png')).convertToFormat(QImage.Format.Format_RGBA8888)
+            check()
+            material=QImage(str(asset_root/'materials/코코넛_껍질_섬유.png'))
             if material.isNull():raise RuntimeError('코코넛 표면 재질을 읽을 수 없습니다.')
+            check()
+            material=material.convertToFormat(QImage.Format.Format_RGBA8888)
+            if material.isNull():raise RuntimeError('코코넛 표면 재질을 읽을 수 없습니다.')
+            check()
             self.shell_texture=self.ctx.texture((material.width(),material.height()),4,bytes(material.constBits()))
-            self.resources.append(self.shell_texture);self.shell_texture.build_mipmaps()
+            self.resources.append(self.shell_texture)
+            check()
+            self.shell_texture.build_mipmaps()
+            check()
             self.shell_texture.filter=(moderngl.LINEAR_MIPMAP_LINEAR,moderngl.LINEAR)
             self.shell_texture.repeat_x=True;self.shell_texture.repeat_y=True
             self.program['shell_texture'].value=1
             self.detail_textures=[]
             for name in ('과피_미세결_높이맵.png','식물_미세결_높이맵.png'):
-                heightmap=QImage(str(asset_root/'materials'/name)).convertToFormat(QImage.Format.Format_RGBA8888)
+                heightmap=QImage(str(asset_root/'materials'/name))
                 if heightmap.isNull():raise RuntimeError('표면 높이 재질을 읽을 수 없습니다: '+name)
+                check()
+                heightmap=heightmap.convertToFormat(QImage.Format.Format_RGBA8888)
+                if heightmap.isNull():raise RuntimeError('표면 높이 재질을 읽을 수 없습니다: '+name)
+                check()
                 texture=self.ctx.texture((heightmap.width(),heightmap.height()),4,bytes(heightmap.constBits()))
-                self.resources.append(texture);self.detail_textures.append(texture);texture.build_mipmaps()
+                self.resources.append(texture);self.detail_textures.append(texture)
+                check()
+                texture.build_mipmaps()
+                check()
                 texture.filter=(moderngl.LINEAR_MIPMAP_LINEAR,moderngl.LINEAR);texture.repeat_x=True;texture.repeat_y=True
             self.color=self.ctx.renderbuffer(dimensions,components=4,samples=4); self.resources.append(self.color)
+            check()
             self.depth=self.ctx.depth_renderbuffer(dimensions,samples=4); self.resources.append(self.depth)
+            check()
             self.target=self.ctx.framebuffer([self.color],self.depth); self.resources.append(self.target)
+            check()
             self.texture=self.ctx.texture(dimensions,components=4,dtype='f1'); self.resources.append(self.texture)
+            check()
             self.texture.filter=(moderngl.LINEAR,moderngl.LINEAR)
+            # 날짜 조형은 96픽셀 원본을 생성하고 최근접 방식으로 확대합니다.
+            self.pixel_texture=self.ctx.texture((96,96),4); self.resources.append(self.pixel_texture)
+            check()
+            self.pixel_texture.filter=(moderngl.NEAREST,moderngl.NEAREST)
+            pixel_depth=self.ctx.depth_renderbuffer((96,96)); self.resources.append(pixel_depth)
+            check()
+            self.pixel_target=self.ctx.framebuffer([self.pixel_texture],pixel_depth); self.resources.append(self.pixel_target)
+            check()
             self.resolved=self.ctx.framebuffer([self.texture]); self.resources.append(self.resolved)
+            check()
             self.downsample_program=self.ctx.program(vertex_shader='''#version 330
                 out vec2 uv;
                 uniform vec2 crop_scale;
@@ -652,14 +690,22 @@ class CalendarRenderer:
                 out vec4 color;
                 void main() { color=texture(source_image,uv); }
                 '''); self.resources.append(self.downsample_program)
+            check()
             self.downsample_program['crop_scale'].value=(min(width,height)/width,min(width,height)/height)
             self.downsample_vao=self.ctx.vertex_array(self.downsample_program,[]); self.resources.append(self.downsample_vao)
+            check()
             self.set_output_size(size if type(size) is int else 384)
+            check()
             self.ctx.enable(moderngl.DEPTH_TEST)
+            check()
             near,far,camera,extent=1.,1200.,700.,69.
             projection=np.array([[camera/extent*height/width,0,0,0],[0,camera/extent,0,0],[0,0,(far+near)/(near-far),2*far*near/(near-far)],[0,0,-1,0]],dtype='f4')
             view=np.eye(4,dtype='f4'); view[2,3]=-camera
-            self.program['view_projection'].write((projection@view).T.astype('f4').tobytes()); self.program['camera'].value=(0.,0.,camera)
+            self.full_projection=(projection@view).T.astype('f4').tobytes()
+            projection[0,0]=camera/extent
+            self.pixel_projection=(projection@view).T.astype('f4').tobytes()
+            self.program['view_projection'].write(self.full_projection); self.program['camera'].value=(0.,0.,camera)
+            check()
         except Exception:
             self.close(); raise
 
@@ -694,8 +740,8 @@ class CalendarRenderer:
             self.species_texture.repeat_x=False;self.species_texture.repeat_y=False
         self.species_key=key
 
-    def set_date(self,value,country='KR'):
-        self._assert_thread(); design=design_for_date(value,country)
+    def set_date(self,value,country='KR',city_ref=None):
+        self._assert_thread(); design=design_for_date(value,country,city_ref)
         if self.design==design:return
         self._clear_meshes(); self.material_specs=[];self.parts=build_geometry(design,self.material_specs)
         self._set_species_texture(design.object_id)
@@ -708,6 +754,7 @@ class CalendarRenderer:
     def _draw_observatory(self, scene, elapsed):
         from observatory_scene import normalize_scene, scene_time, world_matrix, agent_world_positions
         self._assert_thread()
+        self.program['view_projection'].write(self.full_projection)
         scene = normalize_scene(scene); elapsed = scene_time(scene, elapsed)
         key = (scene['model'], scene['effort'], scene['usage_fraction'],
                tuple((a['target'], a['status'], a['pinned']) for a in scene['agents']))
@@ -751,11 +798,14 @@ class CalendarRenderer:
         self._draw_observatory(scene, elapsed)
         self.ctx.disable(moderngl.DEPTH_TEST)
         self.output.use(); self.texture.use(location=0)
+        width,height=self.dimensions
+        self.downsample_program['crop_scale'].value=(min(width,height)/width,min(width,height)/height)
         self.downsample_vao.render(moderngl.TRIANGLES, vertices=3)
         return self._image(self.output, self.output_size, self.output_size)
 
-    def _draw(self,value,elapsed,country='KR'):
-        self._assert_thread(); transforms=matrices(elapsed); self.set_date(value,country)
+    def _draw(self,value,elapsed,country='KR',city_ref=None):
+        self._assert_thread(); transforms=matrices(elapsed); self.set_date(value,country,city_ref)
+        self.program['view_projection'].write(self.pixel_projection)
         from calendar_specials import subject_for_id
         subject=subject_for_id(self.design.object_id)
         self.program['organic_kind'].value=2 if subject.key=='coconut' else (1 if subject.category in ('꽃','열매','잎','특집') else 3)
@@ -770,7 +820,7 @@ class CalendarRenderer:
         if self.species_texture is not None:self.species_texture.use(location=3)
         self.program['species_projection'].value=1 if subject.category=='열매' else 0
         self.ctx.enable(moderngl.DEPTH_TEST)
-        self.target.use(); self.target.clear(0,0,0,0,depth=1)
+        self.pixel_target.use(); self.pixel_target.clear(0,0,0,0,depth=1)
         for index,(_,color,metal,rough) in enumerate(self.parts):
             metadata=self.material_specs[index]
             self.program['species_enabled'].value=int(self.species_texture is not None and metadata['enabled'])
@@ -779,7 +829,6 @@ class CalendarRenderer:
             self.program['model'].write(transform.T.astype('f4').tobytes())
             self.program['metallic'].value=metal; self.program['base_color'].value=color; self.program['roughness'].value=rough
             self.vaos[index].render(moderngl.TRIANGLES)
-        self.ctx.copy_framebuffer(self.resolved,self.target)
 
     def _image(self,framebuffer,width,height):
         raw=framebuffer.read(components=4,alignment=1)
@@ -787,17 +836,26 @@ class CalendarRenderer:
         image=QImage(raw,width,height,width*4,QImage.Format.Format_RGBA8888_Premultiplied).copy().mirrored(False,True)
         return image
 
-    def render(self,value,elapsed=0,country='KR'):
-        self._draw(value,elapsed,country)
+    def render(self,value,elapsed=0,country='KR',city_ref=None):
+        self._draw(value,elapsed,country,city_ref)
         self.ctx.disable(moderngl.DEPTH_TEST)
-        self.output.use(); self.texture.use(location=0)
+        self.output.use(); self.pixel_texture.use(location=0)
+        self.downsample_program['crop_scale'].value=(1.,1.)
         self.downsample_vao.render(moderngl.TRIANGLES,vertices=3)
         return self._image(self.output,self.output_size,self.output_size)
 
-    def render_original(self,value,elapsed=0,country='KR'):
-        """검증·내보내기 때만 실제 직사각형 원본 전체를 CPU로 읽습니다."""
-        self._draw(value,elapsed,country)
-        return self._image(self.resolved,*self.dimensions)
+    def render_original(self,value,elapsed=0,country='KR',city_ref=None):
+        """96픽셀 원본을 최근접 확대하여 요청한 크기로 내보냅니다."""
+        from PySide6.QtCore import Qt
+        from PySide6.QtGui import QPainter
+        self._draw(value,elapsed,country,city_ref)
+        image=self._image(self.pixel_target,96,96)
+        width,height=self.dimensions
+        side=min(width,height)
+        enlarged=image.scaled(side,side,Qt.AspectRatioMode.IgnoreAspectRatio,Qt.TransformationMode.FastTransformation)
+        result=QImage(width,height,QImage.Format.Format_RGBA8888_Premultiplied); result.fill(0)
+        painter=QPainter(result); painter.drawImage((width-side)//2,(height-side)//2,enlarged); painter.end()
+        return result
 
     def _clear_meshes(self):
         for value in reversed(self.vaos):value.release()

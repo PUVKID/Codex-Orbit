@@ -38,7 +38,7 @@ def _run_ui_scenario(args, argv):
     try:
         from unittest.mock import patch
         from PySide6.QtCore import Qt, QObject, Signal, QPoint
-        from PySide6.QtWidgets import QApplication
+        from PySide6.QtWidgets import QApplication,QLabel
         from PySide6.QtTest import QTest
         from PySide6.QtGui import QFontInfo
         import app as product
@@ -82,7 +82,7 @@ def _run_ui_scenario(args, argv):
             report['calendar_preparation']=prepare_calendar_motion(timeout_seconds=5.0)
             assert report['calendar_preparation']['ready'], report['calendar_preparation']['error']
             controller = product.Controller(settings, start_worker=False, start_usage=False, start_weather=False)
-            with patch.object(controller.weather, 'refresh', blocked_network), patch.object(controller.weather, '_request_weather', blocked_network), patch.object(controller.weather, '_lookup_region', blocked_network):
+            with patch.object(controller.weather, 'refresh', return_value=True) as synthetic_refresh, patch.object(controller.weather, '_request_weather', blocked_network), patch.object(controller.weather, '_lookup_region', blocked_network):
                 controller.window.show()
                 event = {'id': 'synthetic-ui32', 'target': 'synthetic-target', 'chat_name': '합성 화면 조작 검사',
                          'before': {'model': 'gpt-6.1-sol', 'effort': 'medium'},
@@ -95,12 +95,43 @@ def _run_ui_scenario(args, argv):
                     controller.set_language(language)
                     controller.orbit29.option('text_scale', scale)
                     controller.window.resize(800, 600)
-                    controller.weather.snapshot.update(temperature=22.5, humidity=55.0, weather_code=0,
+                    rain, interval, stale = ((0.,900,False),(.4,900,False),(None,None,False),(2.,3600,True))[number]
+                    humidity=(100.,99.99,55.55,None)[number]
+                    remaining=(100.,99.99,0.,98.765)[number]
+                    region=('합성 긴 도시 이름 · 가독성 확인을 위한 동쪽 지역' if language=='ko'
+                            else 'Synthetic City with a Long District Name for Readability')
+                    controller.usage.snapshot.update(rows=[{'remaining':remaining,'bucket':'synthetic','period':'주간','resets_at':None}],
+                                                     checked_at=time.time(),stale=False,busy=False,status='조회 완료')
+                    controller.update_usage(controller.usage.snapshot)
+                    assert controller.orbit.usage_fraction==remaining/100
+                    controller.weather.snapshot.update(temperature=22.5, humidity=humidity, precipitation=rain, precipitation_interval_seconds=interval, weather_code=0,
                         sunrise=79800, sunset=117000, utc_offset_seconds=32400, timezone='Asia/Seoul',
-                        country_code='KR', region='Synthetic City', location_mode='automatic', stale=False)
+                        country_code='KR', region=region, location_mode='automatic', stale=stale)
                     controller.update_weather(controller.weather.snapshot)
+                    forbidden_location_labels=('네트워크 추정','IP 추정','추정 지역','network estimate','IP estimate','estimated city')
+                    assert controller.orbit.location_text==region
+                    assert not any(label in controller.orbit.weather_tooltip for label in forbidden_location_labels)
                     QTest.qWait(150)
                     assert controller.orbit.grab().save(str(directory / f'{number}-widget.png'))
+                    controller.orbit.resize(180,250)
+                    QTest.qWait(100)
+                    small_widget_size=list(controller.orbit.size().toTuple())
+                    controller.orbit.grab()
+                    visible_layout=controller.orbit._desktop_overlay_cache.layout
+                    from PySide6.QtGui import QFontMetricsF
+                    assert visible_layout['art'].width()>=96*scale/100
+                    assert visible_layout['usage_label']==product.t('잔량 ')+controller.orbit.usage_badge
+                    assert visible_layout['usage'].bottom()<=controller.orbit.height()
+                    for field in ('clock_lines','primary_weather_lines','usage_lines'):
+                        for line in visible_layout[field]:
+                            assert QFontMetricsF(visible_layout['date_font']).horizontalAdvance(line)<=controller.orbit.width()-32+.1
+                    assert visible_layout['art'].bottom()<visible_layout['dock'].top()
+                    assert visible_layout['dock'].bottom()<visible_layout['location'].top()
+                    assert visible_layout['weather'].bottom()<visible_layout['usage'].top()
+                    assert visible_layout['date_font'].pixelSize()==round(14*scale/100)
+
+                    assert controller.orbit.grab().save(str(directory / f'{number}-widget-small.png'))
+                    controller.orbit.resize(220,432)
                     combo = controller.orbit29.text_size
                     before = combo.currentData()
                     QTest.mouseMove(combo, combo.rect().center())
@@ -145,6 +176,27 @@ def _run_ui_scenario(args, argv):
                     QTest.mouseClick(notice.reason_disclosure, Qt.MouseButton.LeftButton)
                     controller.show_weather_location()
                     dialog = controller.location_dialog
+                    assert dialog.mode_selector.currentData() == 'automatic'
+                    assert [dialog.mode_selector.itemText(i) for i in range(2)]==[product.t('자동'),product.t('수동')]
+                    assert not any(label in widget.text() or label in widget.toolTip()
+                                   for widget in dialog.findChildren(QLabel) for label in forbidden_location_labels)
+                    assert dialog.grab().save(str(directory / f'{number}-region-auto.png'))
+                    dialog.mode_selector.setFocus()
+                    QTest.keyClick(dialog.mode_selector, Qt.Key.Key_End)
+                    application.processEvents()
+                    assert dialog.mode_selector.currentData() == 'manual'
+                    assert controller.settings.values['weather_location'] is None
+                    QTest.keyClick(dialog.mode_selector, Qt.Key.Key_Home)
+                    application.processEvents()
+                    assert controller.settings.values['weather_location'] is None
+                    assert controller.settings.values['theme_country_mode'] == 'auto'
+                    assert synthetic_refresh.called
+                    controller.show_weather_location()
+                    dialog = controller.location_dialog
+                    dialog.mode_selector.setFocus()
+                    QTest.keyClick(dialog.mode_selector, Qt.Key.Key_End)
+                    application.processEvents()
+                    assert dialog.mode_selector.currentData() == 'manual'
                     dialog.search_kind.setCurrentIndex(dialog.search_kind.findData('place'))
                     QTest.keyClicks(dialog.query, 'Synthetic Place')
                     QTest.mouseClick(dialog.search_button, Qt.MouseButton.LeftButton)
@@ -154,6 +206,48 @@ def _run_ui_scenario(args, argv):
                     QTest.keyClick(dialog.cities, Qt.Key.Key_Down)
                     assert dialog.apply_button.isEnabled()
                     assert dialog.grab().save(str(directory / f'{number}-region.png'))
+                    # 목록 화면만 합성 자료로 검사하며 실제 도시 수록 범위를 가장하지 않습니다.
+                    synthetic_ref = {'provider':'geonames','geonames_id':123,'country_code':'KR',
+                                     'confidence':'estimated','provenance':'synthetic UI fixture'}
+                    synthetic_coverage = {'catalog_items_count':3,'series_count':1,'edition_count':1,
+                                          'unclassified_count':1,'announced_occurrences_count':1,
+                                          'announced_dates_count':2,'coverage_status':'partial'}
+                    synthetic_event = {'id':'synthetic-announced','title':'합성 음악 행사 · 긴 한글 이름과 발표 날짜의 읽기 확인',
+                                       'title_en':'Synthetic music event with a long title for readability checks','kind':'music','status':'announced',
+                                       'date_precision':'day','date_evidence':'official_page_crosschecked','time_conflict':True,
+                                       'dates':['2027-06-10','2027-06-11'],'license':'CC0-1.0',
+                                       'source_url':'https://example.org/synthetic-event'}
+                    synthetic_catalog = [dict(synthetic_event,id='synthetic-'+role,dates=[],item_role=role,
+                                              display_title='Synthetic '+role) for role in ('series','edition','unclassified')]
+                    with patch('city_festivals.city_coverage',return_value=synthetic_coverage), \
+                         patch('city_festivals.series_for_city',return_value=synthetic_catalog), \
+                         patch('city_festivals.announced_events_for_year',return_value=[synthetic_event]):
+                        dialog.city_ref=synthetic_ref
+                        QTest.mouseMove(dialog.city_button,dialog.city_button.rect().center())
+                        dialog.city_button.setFocus()
+                        QTest.mouseClick(dialog.city_button,Qt.MouseButton.LeftButton)
+                        application.processEvents()
+                        city_dialog=dialog.city_dialog
+                        city_dialog.year.setCurrentIndex(city_dialog.year.findData(2027))
+                        assert city_dialog.isVisible() and city_dialog.rows.count()==4
+                        assert '2027-06-11' in city_dialog.details.toPlainText()
+                        assert 'CC0-1.0' in city_dialog.details.toPlainText()
+                        assert product.t('공식 페이지에서 날짜 확인 · 시간은 미확인') in city_dialog.details.toPlainText()
+                        city_dialog.rows.setFocus()
+                        QTest.keyClick(city_dialog.rows,Qt.Key.Key_End)
+                        assert city_dialog.rows.currentRow()==3
+                        assert product.t('행사 목록입니다. 개별 발표 일정은 위에서 확인합니다.') in city_dialog.details.toPlainText()
+                        QTest.keyClick(city_dialog.rows,Qt.Key.Key_Home)
+                        QTest.mouseMove(city_dialog.refresh_button,city_dialog.refresh_button.rect().center())
+                        city_dialog.refresh_button.setFocus()
+                        with patch.object(controller.city_updater,'refresh',return_value=True) as synthetic_update:
+                            QTest.keyClick(city_dialog.refresh_button,Qt.Key.Key_Space)
+                            assert synthetic_update.call_count==1
+                        assert city_dialog.rows.horizontalScrollBar().maximum()==0
+                        assert city_dialog.details.horizontalScrollBar().maximum()==0
+                        assert city_dialog.grab().save(str(directory / f'{number}-city-events.png'))
+                        QTest.keyClick(city_dialog,Qt.Key.Key_Escape)
+                        application.processEvents()
                     QTest.keyClick(dialog, Qt.Key.Key_Escape)
                     application.processEvents()
                     from shiboken6 import isValid
@@ -169,7 +263,16 @@ def _run_ui_scenario(args, argv):
                     report['cases'].append({'theme': theme, 'language': language, 'scale': scale,
                                             'size': list(controller.window.size().toTuple()), 'notice_model_pixels': pixels,
                                             'hover': True, 'keyboard': True, 'popup': True, 'popup_ready_ms':popup_ready_ms, 'disabled': True,
-                                            'region_results': 'synthetic', 'privacy': True})
+                                            'region_results': 'synthetic', 'privacy': True,
+                                            'rain':rain,'interval_seconds':interval,'stale':stale,
+                                            'humidity':humidity,'remaining':remaining,'usage_badge':controller.orbit.usage_badge,
+                                            'region':region,'small_widget_size':small_widget_size,'usage_drawn':visible_layout['usage_label'],'minimum_art_pixels':visible_layout['art'].width(),
+                                            'weather_extras':list(controller.orbit.weather_extras),
+                                            'automatic_manual_keyboard':True,'city_catalog_synthetic':True,
+                                            'city_catalog_roles':['series','edition','unclassified'],
+                                            'city_hover_focus_keyboard':True,'city_update_synthetic':True,
+                                            'city_time_warning':True,'city_missing_dates_accessible':True,
+                                            'plain_location_labels':True})
         report['ok'] = True
     except Exception as error:
         report['error'] = f'{type(error).__name__}: {error}'
@@ -180,7 +283,10 @@ def _run_ui_scenario(args, argv):
             from calendar_motion import close_calendar_motion, calendar_motion_status
             close_calendar_motion()
             report['cleanup'] = calendar_motion_status()
-            if report['cleanup'].get('running'):
+            import calendar_motion
+            report['cleanup_service_none']=calendar_motion._service is None
+            report['cleanup_retiring_none']=calendar_motion._retiring is None
+            if report['cleanup'].get('running') or not report['cleanup_service_none'] or not report['cleanup_retiring_none']:
                 report['ok'] = False
                 report['cleanup_error'] = '화면'+' 검사 작업자가 종료되지 않았습니다.'
         except Exception as error:

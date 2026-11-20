@@ -1,0 +1,70 @@
+diff --git a/README.en.md b/README.en.md
+index 9ab3e439c4755b251aa681bf887ef29b9d6ee8de..ae73dfe19805069d92bd65a7b409c1b485278c3d 100644
+--- a/README.en.md
++++ b/README.en.md
+@@ -1,5 +1,9 @@
+ # 🪐 Codex Orbit 3.4.0 · User guide
+ 
++**Reading level**
++
++[LEVEL 1 - Beginner](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨1.md) · [LEVEL 2 - Explorer](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨2.md) · [LEVEL 3 - Practitioner](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨3.md) · [LEVEL 4 - Advanced](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨4.md) · [LEVEL 5 - Expert](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨5.md)
++
+ ## Revision 34 · Pixel 3D sculptures
+ 
+ The daily fruit, flower, calendar and announced city-event subjects are preserved in pixel rendering of actual 3D meshes. The sculpture rotates through a full turn around its vertical axis. Labels, weather and account usage remain sharp. Location controls use Automatic and Manual; the widget shows the place name without repeated source warnings. Percentage summaries round to one decimal place while original values remain available in tooltips.
+diff --git a/README.md b/README.md
+index 1f2bb8dbd0da17502a477c238553a30e407be5b4..e1657de050c5cf704afc7e4f1f0b1801230047b1 100644
+--- a/README.md
++++ b/README.md
+@@ -1,5 +1,9 @@
+ # 🪐 Codex Orbit · 34차 / 3.4.0
+ 
++**설명 수준 선택**
++
++[LEVEL 1 - Beginner](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨1.md) · [LEVEL 2 - Explorer](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨2.md) · [LEVEL 3 - Practitioner](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨3.md) · [LEVEL 4 - Advanced](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨4.md) · [LEVEL 5 - Expert](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨5.md)
++
+ ## 34차 · 픽셀 입체 조형
+ 
+ 날짜별 과일·꽃·기념일과 도시 행사 주제를 유지하면서 실제 입체 모형의 픽셀 표현을 표시합니다. 모형은 세로축을 중심으로 한 바퀴 회전하며, 지명·기온·강수량·잔량과 알림 글자는 또렷하게 표시합니다. 위치는 자동·수동을 고르고 기본 화면에는 지명을 간결하게 표시합니다. 백분율 요약은 소수 첫째 자리 반올림이며 원값은 툴팁에서 확인합니다.
+diff --git a/assets/사용법.md b/assets/사용법.md
+index f9e711549db5496abf972f35a7d593daaee9bc7e..aa0b16e12a1901b93568f7063a774ff652abb580 100644
+--- a/assets/사용법.md
++++ b/assets/사용법.md
+@@ -1,5 +1,9 @@
+ # 🪐 Codex Orbit · 3.4.0 사용법
+ 
++**설명 수준 선택**
++
++[LEVEL 1 - Beginner](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨1.md) · [LEVEL 2 - Explorer](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨2.md) · [LEVEL 3 - Practitioner](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨3.md) · [LEVEL 4 - Advanced](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨4.md) · [LEVEL 5 - Expert](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨5.md)
++
+ ## 34차 · 픽셀 입체 조형
+ 
+ 날짜별 과일·꽃·기념일과 도시 행사 주제를 유지하면서 실제 입체 모형의 픽셀 표현을 표시합니다. 모형은 세로축을 중심으로 한 바퀴 회전하며, 지명·기온·강수량·잔량과 알림 글자는 또렷하게 표시합니다. 위치는 자동·수동을 고르고 기본 화면에는 지명을 간결하게 표시합니다. 백분율 요약은 소수 첫째 자리 반올림이며 원값은 툴팁에서 확인합니다.
+diff --git a/docs/Usage.en.md b/docs/Usage.en.md
+index 9ab3e439c4755b251aa681bf887ef29b9d6ee8de..ae73dfe19805069d92bd65a7b409c1b485278c3d 100644
+--- a/docs/Usage.en.md
++++ b/docs/Usage.en.md
+@@ -1,5 +1,9 @@
+ # 🪐 Codex Orbit 3.4.0 · User guide
+ 
++**Reading level**
++
++[LEVEL 1 - Beginner](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨1.md) · [LEVEL 2 - Explorer](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨2.md) · [LEVEL 3 - Practitioner](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨3.md) · [LEVEL 4 - Advanced](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨4.md) · [LEVEL 5 - Expert](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨5.md)
++
+ ## Revision 34 · Pixel 3D sculptures
+ 
+ The daily fruit, flower, calendar and announced city-event subjects are preserved in pixel rendering of actual 3D meshes. The sculpture rotates through a full turn around its vertical axis. Labels, weather and account usage remain sharp. Location controls use Automatic and Manual; the widget shows the place name without repeated source warnings. Percentage summaries round to one decimal place while original values remain available in tooltips.
+diff --git a/docs/사용법.md b/docs/사용법.md
+index f9e711549db5496abf972f35a7d593daaee9bc7e..aa0b16e12a1901b93568f7063a774ff652abb580 100644
+--- a/docs/사용법.md
++++ b/docs/사용법.md
+@@ -1,5 +1,9 @@
+ # 🪐 Codex Orbit · 3.4.0 사용법
+ 
++**설명 수준 선택**
++
++[LEVEL 1 - Beginner](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨1.md) · [LEVEL 2 - Explorer](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨2.md) · [LEVEL 3 - Practitioner](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨3.md) · [LEVEL 4 - Advanced](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨4.md) · [LEVEL 5 - Expert](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨5.md)
++
+ ## 34차 · 픽셀 입체 조형
+ 
+ 날짜별 과일·꽃·기념일과 도시 행사 주제를 유지하면서 실제 입체 모형의 픽셀 표현을 표시합니다. 모형은 세로축을 중심으로 한 바퀴 회전하며, 지명·기온·강수량·잔량과 알림 글자는 또렷하게 표시합니다. 위치는 자동·수동을 고르고 기본 화면에는 지명을 간결하게 표시합니다. 백분율 요약은 소수 첫째 자리 반올림이며 원값은 툴팁에서 확인합니다.

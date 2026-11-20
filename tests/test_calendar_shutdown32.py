@@ -8,6 +8,7 @@ from unittest.mock import patch
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'src'))
 import calendar_motion as motion
+from renderer_test_support34 import direct_renderer_factory
 
 
 class ShutdownTests(unittest.TestCase):
@@ -20,7 +21,7 @@ class ShutdownTests(unittest.TestCase):
     def _stop_at(self,stage):
         entered=threading.Event();release=threading.Event();calls=[]
         class Renderer:
-            def __init__(self,size):
+            def __init__(self,size,check_cancelled=None):
                 calls.append('create')
                 if stage=='creation':entered.set();release.wait(1)
                 self.ctx=type('Context',(),{'info':{}})()
@@ -33,7 +34,7 @@ class ShutdownTests(unittest.TestCase):
                 if stage=='import':entered.set();release.wait(1)
                 return type('Module',(),{'CalendarRenderer':Renderer})
             return original(name,*args,**kwargs)
-        worker=motion._Worker();worker.configure(visible=True)
+        worker=motion._Worker(renderer_factory=direct_renderer_factory);worker.configure(visible=True)
         thread=threading.Thread(target=worker.run)
         with patch('builtins.__import__',side_effect=importing):
             thread.start()

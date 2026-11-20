@@ -1,0 +1,26 @@
+도시 축제·행사 자료의 출처와 이용 조건
+
+1. Wikidata 구조화 카탈로그
+출처: Wikidata, https://www.wikidata.org/
+라이선스: Creative Commons CC0 1.0 Universal
+https://creativecommons.org/publicdomain/zero/1.0/
+정책: https://www.wikidata.org/wiki/Wikidata:Licensing
+catalog/*.json.gz의 항목 이름·국가·장소 식별자·분류·관측월·시리즈 관계는 공개 구조화 데이터의 정규화본입니다. 위키백과 문서 본문이나 Wikimedia Commons 사진을 복제한 자료가 아닙니다. Wikidata 분류에 수록됐다는 사실은 주최자의 공식 일정 보증을 뜻하지 않습니다.
+
+2. 파리 시의 발표 행사·활동
+출처: Direction de la Communication - Ville de Paris, Que Faire à Paris ?
+https://opendata.paris.fr/explore/dataset/que-faire-a-paris-/
+라이선스: Open Data Commons Open Database License (ODbL) 1.0
+https://opendatacommons.org/licenses/odbl/1-0/
+파리 일정이 수록된 경우 odbl/FR.json은 이 데이터베이스에서 날짜·이름·도시·출처만 추린 정규화 데이터베이스이며 ODbL로 제공합니다. 재배포·변경·공개 사용에는 ODbL의 출처 표시와 해당 공유 조건이 적용됩니다. CC0 카탈로그와 합쳐 CC0로 다시 허가하지 않습니다. 생성 도구는 tools/generate_city_festivals.py이며 원천과 변환 정의는 함께 공개됩니다. 이미지·설명 HTML·연락처는 이 자료에 수록하지 않습니다.
+
+이번 오프라인 복구본에는 파리 일정 파일이 포함되지 않았습니다. 보유한 첫 페이지는 전체 일정이 아닙니다.
+
+3. 공식 주최자·도시 관광기관이 발표한 개최 날짜의 사실표
+announced/*.json 및 official-announcements.json은 해당 개최분의 날짜 사실·이름·도시 식별자·원문 출처 URL과 확인 시각만 담습니다. 주최자의 홈페이지 본문·사진·로고·연락처를 복제하거나 그 권리를 새로 허가하지 않습니다. factual-schedule은 이 단순 사실표를 구별하는 분류값이며, 모든 원천 페이지 전체에 CC0나 별도 이용 허가를 부여한다는 뜻이 아닙니다. 각 항목의 source_url에서 최신 공지와 변경·취소 여부를 확인할 수 있습니다.
+
+4. 범위와 정확도
+2026~2099년은 조회·기본 조형의 지원 범위입니다. 미발표된 미래 행사 날짜를 확정한 범위가 아닙니다. 축제 시리즈·연도별 개최분·명시된 개최일을 구별하며 관측월·창설일·매년 개최 정보를 특정 연도의 개최일로 만들지 않습니다. 파리 원천에 시각 오프셋 충돌이 있는 일정은 time_conflict 표식을 보존하고 날짜 단위로만 다룹니다. 반복 일정 첫날과 끝날 사이의 모든 날을 채우지 않습니다. 국가·도시 연결이 없는 항목은 미매핑으로 보존합니다. 집계와 자료 확인 시각은 index.json에 기록됩니다. 이 자료가 전세계 모든 도시의 모든 행사를 포함한다고 보장하지 않습니다.
+
+5. 갱신과 개인정보 경계
+앱은 생성자나 기본 검사에서 전세계 쿼리를 실행하지 않습니다. 사용자가 요청한 국가의 자료만 PUVKID/Codex-Orbit 저장소 main/assets/city-festivals의 HTTPS JSON으로 확인하며 크기·해시·스키마·국가·라이선스를 검증한 캐시를 사용합니다. 제품 소스나 실행 코드를 다운로드·실행하지 않습니다. 사용자 IP·상세 주소·이동 기록·인증값·응답 쿠키는 동봉 데이터에 포함하지 않습니다. 로컬 캐시·해시 검증은 서버 보증 신원 인증이 아닙니다.

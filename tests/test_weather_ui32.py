@@ -16,7 +16,7 @@ class WeatherUi32Tests(unittest.TestCase):
   set_language('ko');self.assertTrue(hasattr(app,'weather_widget_text'))
   value={'temperature':12.5,'humidity':43,'weather_code':0,'sunrise':86400,'sunset':90000,'utc_offset_seconds':9*3600,'stale':False}
   primary,extras=app.weather_widget_text(value)
-  self.assertIn('맑음',primary);self.assertIn('43%',extras[0]);self.assertIn('09:00',extras[1]);self.assertIn('10:00',extras[1]);self.assertIn('현지',extras[0])
+  self.assertIn('맑음',primary);self.assertIn('43.0%',extras[0]);self.assertIn('09:00',extras[1]);self.assertIn('10:00',extras[1]);self.assertIn('강수 —',extras[0])
   primary,extras=app.weather_widget_text({'temperature':None,'humidity':None,'weather_code':None,'sunrise':None,'sunset':None,'utc_offset_seconds':None})
   self.assertIn('—',extras[0]);self.assertNotIn('0%',extras[0]);self.assertEqual(extras[1].count('—'),2)
  def test_extra_layout_keeps_actual_text_lines_inside_view_and_reports_reading_height(self):

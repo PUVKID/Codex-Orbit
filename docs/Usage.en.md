@@ -1,9 +1,35 @@
 <a name="-codex-orbit-320--user-guide"></a>
-# Codex Orbit 3.2.0 · User guide
+# Codex Orbit 3.4.0 · User guide
 
 <!-- user-levels:start -->
 **수준별 전체 안내:** [LEVEL 1 - Beginner](%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A81.md) · [LEVEL 2 - Explorer](%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A82.md) · [LEVEL 3 - Practitioner](%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A83.md) · [LEVEL 4 - Advanced](%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A84.md) · [LEVEL 5 - Expert](%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A85.md)
 <!-- user-levels:end -->
+
+## Revision 34 · Pixel 3D sculptures
+
+The daily fruit, flower, calendar and announced city-event subjects are preserved in pixel rendering of actual 3D meshes. The sculpture rotates through a full turn around its vertical axis. Labels, weather and account usage remain sharp. Location controls use Automatic and Manual; the widget shows the place name without repeated source warnings. Percentage summaries round to one decimal place while original values remain available in tooltips.
+
+Revision 33 remains an unfinished historical working revision; its separate build and publication were not completed. Revision 34 continues these location and weather features with the new pixel sculpture work.
+
+## Revision 33 · Automatic location and precipitation
+
+Automatic network estimation is the default. The location dialog explicitly separates Automatic and Manual. Searching or cancelling does not save a manual selection. Switching to Automatic clears the manual override and requests a new estimate. Choosing only a country changes calendar events while keeping the weather location separate. IP location is neither GPS nor a verified building address.
+
+The humidity row shows precipitation in mm and the response’s actual backward-looking aggregation interval. Zero differs from unavailable (—); stale observations are marked as earlier information. Sunrise and sunset retain the provider’s local offset.
+
+Appearance, language and text size are grouped at the top. Choose System, Light or Dark; the choice is saved and System follows the operating system. Overview shows recorded activity. Display settings explains reduced motion, edge docking, sound and performance options. Privacy mode hides chat titles and task descriptions on screen; stored records are unchanged.
+
+The original daily calendar sculpture is the default desktop view. Model notifications keep its date-based title and artwork. The 3D observatory remains available as an explicit display-mode choice.
+
+Run the portable `CodexOrbit.exe` or install `CodexOrbit-Setup.exe` for the current Windows user. Do not run both against the same data directory. Click the transparent widget for history and account usage; drag to move and use the right/bottom edges to resize.
+
+## City festivals and announced schedules
+
+Open Festivals and sources in location settings to separate catalog items from announced schedules for the selected or estimated city. Items include verified series, editions and unclassified records; the total is not presented as a verified series count. City identity requires supported identifiers and matching country, not merely a name or nearby coordinates. A place without a validated city identifier may have unavailable event coverage.
+
+Only announced exact dates can activate one of eight 3D motifs: music, film, snow, lights, carnival, flowers, culture or balloon. Major fixed specials remain. These are category motifs, not individually handcrafted models for every festival. Dates, source and license remain accessible. Refresh schedules explicitly downloads validated country data and refreshes the same city/date when data changes; a failed update keeps previous verified data. The catalog is not a complete list of every city event worldwide and unannounced future dates are not invented.
+
+
 
 **Appearance**, language and text size are grouped at the top. Choose System, Light or Dark; the choice is saved and System follows the operating system. Overview shows recorded activity. Display settings explains reduced motion, edge docking, sound and performance options. Privacy mode hides chat titles and task descriptions on screen; stored records are unchanged.
 

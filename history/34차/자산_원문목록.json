@@ -1,0 +1,1220 @@
+[
+  {
+    "path": "assets/City-Festivals-NOTICE.txt",
+    "bytes": 3702,
+    "sha256": "9cdcccb8d6d7af963be46c72eb37196208db82e07cbde892e83b6227800801ba",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/City-Festivals-NOTICE.txt"
+  },
+  {
+    "path": "assets/city-festivals/announced/AU.json",
+    "bytes": 1174,
+    "sha256": "0279bb36eac1720a17d7c562c6011f2856aa7dc52be5c14eb71ffd825ebac73e",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/announced/AU.json"
+  },
+  {
+    "path": "assets/city-festivals/announced/CA.json",
+    "bytes": 1140,
+    "sha256": "17bd4936e068e4feb15782c02c736c19ff7b066847d5bff5ac23072302b117c3",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/announced/CA.json"
+  },
+  {
+    "path": "assets/city-festivals/announced/DE.json",
+    "bytes": 1076,
+    "sha256": "5376d1a391555f79466f662287390afdf438e6a486096168cdff66a55c90ba0b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/announced/DE.json"
+  },
+  {
+    "path": "assets/city-festivals/announced/FR.json",
+    "bytes": 1007,
+    "sha256": "8dee6d19333b6b12e27c9f2d783e0b835eecced672d42ec71d6f68ec30279628",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/announced/FR.json"
+  },
+  {
+    "path": "assets/city-festivals/announced/GB.json",
+    "bytes": 1220,
+    "sha256": "e7e97ad246dd1b7bb7e5a4ca9859bd6c22fbfbbf85d454a5950be34420b83755",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/announced/GB.json"
+  },
+  {
+    "path": "assets/city-festivals/announced/IT.json",
+    "bytes": 1115,
+    "sha256": "007512d2a8a470173cc0d3b3124107fd08efc699146148e87791673e03ce0347",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/announced/IT.json"
+  },
+  {
+    "path": "assets/city-festivals/announced/JP.json",
+    "bytes": 1162,
+    "sha256": "2da1c94351f12a662a10e6dac2466a966c0db4a79909752b11b562aa2cee3f93",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/announced/JP.json"
+  },
+  {
+    "path": "assets/city-festivals/announced/US.json",
+    "bytes": 1912,
+    "sha256": "9c93626a3aec8626c5dc58c0db051d3c17e4bba65a58e6a5aa99059ed9694c78",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/announced/US.json"
+  },
+  {
+    "path": "assets/city-festivals/catalog/AD.json.gz",
+    "bytes": 1060,
+    "sha256": "77bc38f04a344c5594d1ec9467245eb040532ad82ae8ef2ecc9aee9c36c8ed97",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/AD.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/AE.json.gz",
+    "bytes": 2049,
+    "sha256": "cdd70035ee9fb4bb070fddf9d8d623120e53bfdddbf179e8e8da90a1b3ae940b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/AE.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/AF.json.gz",
+    "bytes": 526,
+    "sha256": "dd588eedf43dfad72806c9544d175a61d5bc13f591b4d850f97e34484cde15a1",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/AF.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/AG.json.gz",
+    "bytes": 503,
+    "sha256": "dfced46c7aea2bea84d339133261cf3af300603bc1c3ff23073cbb56e604a9fa",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/AG.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/AL.json.gz",
+    "bytes": 1848,
+    "sha256": "9466c18dcb6f62ccdffdb52f5ba2f81e5ab5eac73060766cb4b85fea5b6973c1",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/AL.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/AM.json.gz",
+    "bytes": 1394,
+    "sha256": "c82ea3190e3846c4ee96a5675a10aab6c21065aefa0470f23dc34d00c53785c4",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/AM.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/AO.json.gz",
+    "bytes": 839,
+    "sha256": "ddf6388db8a778065f32f17d38a3b178aa06666115ae5aa9f7f97329b1d93e0b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/AO.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/AR.json.gz",
+    "bytes": 7600,
+    "sha256": "0a3d437dc321ce9b0de96af5266d44bc7ad86adbeed6bedc1bfa267cf78fc5f3",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/AR.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/AT.json.gz",
+    "bytes": 13864,
+    "sha256": "dcad3f651d94740b6f703a48335ef54ac79e40f11a380e5bd30e83c2a2a630e6",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/AT.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/AU.json.gz",
+    "bytes": 23452,
+    "sha256": "8aec48ab788cba2aaa7ed21f054b8d1b256d1e9bec5dbef0121f670e45ce7ac4",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/AU.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/AW.json.gz",
+    "bytes": 771,
+    "sha256": "fcb7839ece7ac308e404817741ead43000607bb5e4583287e9e30376b8d4f3c3",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/AW.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/AZ.json.gz",
+    "bytes": 2315,
+    "sha256": "e79ee61d579be4b235638616f2f4fff40606e2fccadb11274ff49934c53dac18",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/AZ.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/BA.json.gz",
+    "bytes": 2461,
+    "sha256": "dd0197cda89188885425f018ae06e616cd1d5ae3354d561498b69c827c7c636b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/BA.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/BB.json.gz",
+    "bytes": 658,
+    "sha256": "b5774bdbeada3b3b3ee1caf24c7f4a8372c01e4e1eb7daa73eb412c1e70b61da",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/BB.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/BD.json.gz",
+    "bytes": 1789,
+    "sha256": "6a0aca24969f724838c137558380e46a973db6fecb257b02e3f9da60929fd6c9",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/BD.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/BE.json.gz",
+    "bytes": 20154,
+    "sha256": "3e919271edc367f374ed25559981e590b077e006dcd3a2643de544c1b3ff7c26",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/BE.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/BF.json.gz",
+    "bytes": 1964,
+    "sha256": "0c4fc9e568d3ee38c276fc8487d2c88af4659f6d8ee95f0cbb69e82667ebc257",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/BF.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/BG.json.gz",
+    "bytes": 4814,
+    "sha256": "862af753d3672ac6d86cd8b2625187eef2754ee3521568243b791a07d7718062",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/BG.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/BH.json.gz",
+    "bytes": 618,
+    "sha256": "e6ceaf2925b8a8e0983c0f38f1a99c234fd228762be588d092918a8d3b3bca3f",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/BH.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/BI.json.gz",
+    "bytes": 455,
+    "sha256": "e7591c59ca058f7d9e04be56499abde5dd53c86ee47fc3b2cadd8ec301d22c99",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/BI.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/BJ.json.gz",
+    "bytes": 1398,
+    "sha256": "2b5f81ae9660cacf4ce3b26755d90cd1c1f697b233691408e15b237c76106eba",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/BJ.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/BM.json.gz",
+    "bytes": 544,
+    "sha256": "46b2eeb929486d38e422da43c8fbbfc7ac3666be99b39f3236cb1be7b4552808",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/BM.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/BO.json.gz",
+    "bytes": 1449,
+    "sha256": "5a82d5dde25f34a309e6ec72911db597823a3c6d81955537eb82197be9ceacdc",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/BO.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/BR.json.gz",
+    "bytes": 21750,
+    "sha256": "e2b9018c250574f5629edf1fdaf316f34fd3d91d8d0b6e05f1ced87484bb1196",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/BR.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/BS.json.gz",
+    "bytes": 499,
+    "sha256": "854cd54e0b94cf13f781de38d2be393b7f8b2c8ca065221ff4bc2cd70f9db550",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/BS.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/BT.json.gz",
+    "bytes": 448,
+    "sha256": "4e5bb082b3f598241e7b52b80d74f872749d261f4d67c779c17e0e18e34299a0",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/BT.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/BW.json.gz",
+    "bytes": 783,
+    "sha256": "926e43c381f6a70d05e6f0b3588e227588b8970383244e2e07c4b05eee8e4221",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/BW.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/BY.json.gz",
+    "bytes": 3248,
+    "sha256": "7b078f080d296e8875d81c9ae3cff74c73648cb315d772213fe2e4789d39d945",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/BY.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/BZ.json.gz",
+    "bytes": 557,
+    "sha256": "a67023927075f202f2944a4993aba99f82f0120200da3bf9e32294d95bcfe5d1",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/BZ.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/CA.json.gz",
+    "bytes": 50379,
+    "sha256": "6426b5537aa89c1dd7db316b2a1189484ae3b50ec9d5063ac1d3d1bad460b9b9",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/CA.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/CD.json.gz",
+    "bytes": 1112,
+    "sha256": "a3037770d28fe192ac1e5b6bf889fd3b761702024760b4a19e4ae661a2b3eb80",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/CD.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/CF.json.gz",
+    "bytes": 408,
+    "sha256": "d7d0cd40f3b5bfa5d17d25b7f8aedd359f27891d489ed7bb86d435ec39027e9b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/CF.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/CG.json.gz",
+    "bytes": 851,
+    "sha256": "1be1efb8930134686e9d302d49e746f3695247e25b60b5defe9a3e4b98d168ba",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/CG.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/CH.json.gz",
+    "bytes": 18554,
+    "sha256": "5fb4fbb085454ac95ab0fc336be93e205daf67e9814c2e037ff9996c25b520ff",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/CH.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/CI.json.gz",
+    "bytes": 1122,
+    "sha256": "d0006d7c5dc253c9a13b3bd805d404a6e6aa0f788fff4b957152001573250ff7",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/CI.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/CL.json.gz",
+    "bytes": 5936,
+    "sha256": "55d8e9138e6b5f39351390707d6a1beff9979fa7c55538f2d83dfe41ddd84539",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/CL.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/CM.json.gz",
+    "bytes": 3734,
+    "sha256": "5664586d393559358f1db68c21ca0986244077505406e2d35b110dbc64c23786",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/CM.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/CN.json.gz",
+    "bytes": 7579,
+    "sha256": "760fb95ab412078e68a4029e5494a692cfa1f4a216899d9dbc74ec1ee7c3ea07",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/CN.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/CO.json.gz",
+    "bytes": 6130,
+    "sha256": "a04bdc2aefc57ef34a3c39dfe0c17829bfe86f83be4920b2f84257715261d090",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/CO.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/CR.json.gz",
+    "bytes": 1092,
+    "sha256": "b4b32146238e8a8f99fc4c3a89cdbdbb269e02d33cb425c7b872533a605db6ca",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/CR.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/CU.json.gz",
+    "bytes": 913,
+    "sha256": "bf72f639898579ae7216c876ec2a46febc67bb24c58ffe1eda9123a99f0ccb3c",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/CU.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/CV.json.gz",
+    "bytes": 605,
+    "sha256": "ff765ede8071d59c9e4a757936b193be0095e9c245ddfe945592f7c1c5d43787",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/CV.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/CW.json.gz",
+    "bytes": 471,
+    "sha256": "e865fa6f9c001f5e3d558bd57caf0126220e422a638c93d2419fe49f0ace5233",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/CW.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/CY.json.gz",
+    "bytes": 1699,
+    "sha256": "54ed95ee0495a2e06919496bbe49ab86852b5948310177eac737c5afa24666c1",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/CY.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/CZ.json.gz",
+    "bytes": 17940,
+    "sha256": "121ff8ad660e2f80a138f4baab0c88c192f6cb5675498094bcc6e24d6595b2a5",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/CZ.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/DD.json.gz",
+    "bytes": 997,
+    "sha256": "8f8b270547e9725fb515b439c8a24a0974d0e7a88434978e04cf2227462ea4e0",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/DD.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/DE.json.gz",
+    "bytes": 78615,
+    "sha256": "0450684a1655774f0407a857a9229e99670ff05d7b651d0e1cd27f75c2899e87",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/DE.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/DK.json.gz",
+    "bytes": 5909,
+    "sha256": "28ba8bd383d8e89c67d642cd6718318d89359d5fa9af119930959fd66c967549",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/DK.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/DO.json.gz",
+    "bytes": 971,
+    "sha256": "bbb997908ad4424baa1db1fd84b3c0f7dcb5db96fb01e4062c0d680c78f4722e",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/DO.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/DZ.json.gz",
+    "bytes": 1569,
+    "sha256": "6b7d638471f4dc6d5acf837171a0cae3cbf36b4cc7838eb67dc480520ffdf4db",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/DZ.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/EC.json.gz",
+    "bytes": 2208,
+    "sha256": "6fb9c99fbb21ac1587fe0fa8d1139c30a6fe3bc366ab33c65488b77b22632c5b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/EC.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/EE.json.gz",
+    "bytes": 9117,
+    "sha256": "863e585e66b1e9813dd8395bd77658786a26a1ac5be4e08bbccf4150f37e1b25",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/EE.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/EG.json.gz",
+    "bytes": 2329,
+    "sha256": "65e66af63c1250b09695755e142ca286e19d1cae76a0e23ce6c3681d799c20dc",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/EG.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/ES.json.gz",
+    "bytes": 66670,
+    "sha256": "2c8a0819334aa5397b3e7580fc21c6bd18f88abe67048c57570fbde965a21513",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/ES.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/ET.json.gz",
+    "bytes": 705,
+    "sha256": "c7bb0f5aef781db4003e0822e56222aa23926ade11f44271db67e3c0d50be768",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/ET.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/FI.json.gz",
+    "bytes": 16580,
+    "sha256": "41399eaab3ef6a5176d8ae20acbc354e115bf02fabd907ffc6a7ea0507d75356",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/FI.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/FJ.json.gz",
+    "bytes": 602,
+    "sha256": "d00558968828b91f99eaedf0afc9cac515a4826de42378c64c87035bcd886bf3",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/FJ.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/FM.json.gz",
+    "bytes": 439,
+    "sha256": "b021b8d36775c99691b3a5c769b509c2e0b253080946de883d394c65aa82e90b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/FM.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/FO.json.gz",
+    "bytes": 653,
+    "sha256": "9a232a45c1d3451ad0fd014d58cae9281cbbbc5ef90649582269f8fa7ab43071",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/FO.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/FR.json.gz",
+    "bytes": 56956,
+    "sha256": "4af89acdbc32ec812d4ee1a61647fa3ccef585b61e5947542d76467534371d49",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/FR.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/GA.json.gz",
+    "bytes": 568,
+    "sha256": "1b5da55a8ab08fcda23b963bb75ee6441db23a707ea07382f7534fea1557eaae",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/GA.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/GB.json.gz",
+    "bytes": 66077,
+    "sha256": "a79122e110314553d4cb78a3124618ae1d5ef34c97b05b9f258d33eabffec399",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/GB.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/GD.json.gz",
+    "bytes": 435,
+    "sha256": "dfcc05a0745dc9ca97bd090a0c0f663d4bf518cd77b7010b686b2f656c39fd84",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/GD.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/GE.json.gz",
+    "bytes": 1800,
+    "sha256": "e5acb5556788cbb5054a3276002c830e33ab912851ed14de173e8d8e5fe390e6",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/GE.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/GG.json.gz",
+    "bytes": 578,
+    "sha256": "a481c280b091df788bcad3550d85975560d7ba12d53b31d6cc593ceae701b906",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/GG.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/GH.json.gz",
+    "bytes": 8185,
+    "sha256": "26fdc497536ca757f226c833252506359bb3d28b52f26a4125d748ea2ee885ca",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/GH.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/GI.json.gz",
+    "bytes": 487,
+    "sha256": "ddd5004e98180599657b2cd1a570b0f6833e22f60f7459663454a077e8899e85",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/GI.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/GL.json.gz",
+    "bytes": 436,
+    "sha256": "39f31f51fe213fcec5c622ec1cb3511b8ea8aeb79639deafbaa0c5d88ccae580",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/GL.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/GM.json.gz",
+    "bytes": 550,
+    "sha256": "d16d41984636f33322e00310c41dec5008b3a81c05014b76546f2a5dbd4cf78a",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/GM.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/GN.json.gz",
+    "bytes": 604,
+    "sha256": "75ac565988fd7a6a28b39ec00eff0fd5acd1efe5a0393d88e1d14f88607f3336",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/GN.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/GQ.json.gz",
+    "bytes": 445,
+    "sha256": "c582f1909678b0d6bf8c5ce8d2171d2e714af95bb9fb32fd32e6d696a23f7eae",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/GQ.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/GR.json.gz",
+    "bytes": 8733,
+    "sha256": "b974ce71d31b690ba052f0f2a17ef97d8fdfd82c771a270c6a4849dd323eb5b5",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/GR.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/GT.json.gz",
+    "bytes": 1079,
+    "sha256": "6804ae159ac8c85e5a9b9a711ebd0c21ed216fd21c285c34c65c59e0a0d64fdb",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/GT.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/GW.json.gz",
+    "bytes": 429,
+    "sha256": "1073e1526fe3f373582f91e4990e833fb593c6a53debc485425aa6ce8415b426",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/GW.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/GY.json.gz",
+    "bytes": 519,
+    "sha256": "81cf2dcd15c0181c7766c621957d47f1414dd02350901d7faa341e5927f6d830",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/GY.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/HK.json.gz",
+    "bytes": 604,
+    "sha256": "54cf199cf60dcdce1b2ded09090ff6afc6d6ea8a3448a55e2a75c5765c6bbce2",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/HK.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/HN.json.gz",
+    "bytes": 560,
+    "sha256": "4c4d7413e12c03bc72fefaf490c0904f9ec8145557d540a51c2b1249042e444b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/HN.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/HR.json.gz",
+    "bytes": 10491,
+    "sha256": "b188f4a98bd9882d96ee703b6779a5543d45cadb012215450daccdef6ab92d69",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/HR.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/HT.json.gz",
+    "bytes": 1136,
+    "sha256": "6e6b5fb4dac86a5b859b418913f01482669e2f905865bc8e6418496d5848f88e",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/HT.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/HU.json.gz",
+    "bytes": 7189,
+    "sha256": "5e901c1c3d9fa76df288bc35c2f9c1b96a6c5128b62705bb30e9b568e05f3092",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/HU.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/ID.json.gz",
+    "bytes": 4782,
+    "sha256": "746ea8ad15c2693a5c87c32c0f388788beee07bcb7ab786b5f9c1b8e9721ffbe",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/ID.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/IE.json.gz",
+    "bytes": 9994,
+    "sha256": "9d1feb064573a128d0f9f61ea7ecf20acaf03623adebb3a1cede5ca6ad2069a6",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/IE.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/IL.json.gz",
+    "bytes": 5524,
+    "sha256": "1693e9a9314268e03fb8551c6809a08dbd5e12642d2ef34bdf5f3b088f267426",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/IL.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/IM.json.gz",
+    "bytes": 429,
+    "sha256": "12f51b10ecda07720a98fb83510f2250fe52c47f2fc6d86dc1d7e535a6b4037c",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/IM.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/IN.json.gz",
+    "bytes": 23098,
+    "sha256": "95634bc2a1b76c56dd7d25c0e87155949425bd8c6a54031fa733bc5f97470c2c",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/IN.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/IQ.json.gz",
+    "bytes": 1195,
+    "sha256": "739f7266fa70482516e2f0c7003ed6f398a25197a8402a6631042070c2e6c615",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/IQ.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/IR.json.gz",
+    "bytes": 1938,
+    "sha256": "1ea3ba0a76e567503783ba8b95d6b8589b988fdf41a3bfb2f124fd2659af97cb",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/IR.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/IS.json.gz",
+    "bytes": 1672,
+    "sha256": "b09c99aff472014228c7bf6572fa088163ce59cc50618396b86911c86fe0f19a",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/IS.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/IT.json.gz",
+    "bytes": 49612,
+    "sha256": "7c20bead3ff2c46f998e1ffe4020f1a1375de2c3fe208b0996063010ece89f9d",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/IT.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/JE.json.gz",
+    "bytes": 546,
+    "sha256": "c0ac40569bb3d976900316fe9b194f24ca50bf5381a40c1411367876121cfae0",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/JE.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/JM.json.gz",
+    "bytes": 1072,
+    "sha256": "1413be7b04a2bf330590dc430779bcfc15f06581fb599631841564d9ffb52ed5",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/JM.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/JO.json.gz",
+    "bytes": 704,
+    "sha256": "17cc3869c75ba74de7c716a77be572d8ea443781641e35502cfde6581de5432c",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/JO.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/JP.json.gz",
+    "bytes": 67921,
+    "sha256": "0320b00a8b9215305af7e5590f6f63867d885449b6e72ecf454306f2fac740e5",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/JP.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/KE.json.gz",
+    "bytes": 2334,
+    "sha256": "e15850163ce53378bd5b69fdf1c5e9dfd84f83b8b05d9ea5e27a1d8f89ba76e5",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/KE.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/KG.json.gz",
+    "bytes": 673,
+    "sha256": "e67bd91acc6740da395150dc14a6af365d4e091e38457d924e698afacf145d37",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/KG.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/KH.json.gz",
+    "bytes": 591,
+    "sha256": "23430de3b344df95192f6f29a3c472b8d229e11a4d2426b55a4df7eae8d50469",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/KH.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/KN.json.gz",
+    "bytes": 439,
+    "sha256": "f0eb79194d589400106b1b095e5685b041916d6934208c672e46c86fc1271586",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/KN.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/KP.json.gz",
+    "bytes": 736,
+    "sha256": "813e6afb0aeba57ffa7e8891ee1f11c93d8d2afc24b0f9ccfe3345cdae6183e0",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/KP.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/KR.json.gz",
+    "bytes": 9036,
+    "sha256": "5e795935a101472cd8d83279e98435c824d0aad7bfbf1c4882aabab733e1fc12",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/KR.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/KW.json.gz",
+    "bytes": 481,
+    "sha256": "e153829e35e0e8571983a3181f91722c916eedf463cf34e9d68a653802971645",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/KW.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/KZ.json.gz",
+    "bytes": 1260,
+    "sha256": "5fe431e7153e0621e279e65df99addf6d74a09dc19a5aceddd9132a95b4eb2b3",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/KZ.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/LA.json.gz",
+    "bytes": 470,
+    "sha256": "9408e3a998d59260daed12d7438f9e0d5e58ed37136a7af11c78f81af987a32a",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/LA.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/LB.json.gz",
+    "bytes": 1437,
+    "sha256": "16a9a2298de082cc1100eae8c8e2a41293d15f296ed03833ca3b7835032ad5ba",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/LB.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/LK.json.gz",
+    "bytes": 1109,
+    "sha256": "b825a3a3b0eeab7bc9b19efe465e3a44b31faa8d616e1c3bd1da9ab55a5f07df",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/LK.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/LS.json.gz",
+    "bytes": 437,
+    "sha256": "a4200724531375f89c1a20758a9d194605d1488605c0f2ed2cc12d383c1867b5",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/LS.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/LT.json.gz",
+    "bytes": 2488,
+    "sha256": "fa32d75700a7d77e7a6b979172ffc37f765e5b4a913e0ec5a44765d8fcab83cd",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/LT.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/LU.json.gz",
+    "bytes": 1518,
+    "sha256": "3ed22e85c2b9451d71af5d88ebc2a08c0ec76ec4c5fa9568521101d044ef861f",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/LU.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/LV.json.gz",
+    "bytes": 2907,
+    "sha256": "51cdcdae179b9796b5f9103e98f263e1b4575d66ccc967dedc756f9dd6eba736",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/LV.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/LY.json.gz",
+    "bytes": 478,
+    "sha256": "0078c402c1027938edc8b579b0992f88803df46ae7d7a718ee00b203dc1ed17d",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/LY.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/MA.json.gz",
+    "bytes": 3324,
+    "sha256": "4b8d67a265565f38c36c834e1b818f6d0d9bea06a3f20172308349b420c149ee",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/MA.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/MC.json.gz",
+    "bytes": 1127,
+    "sha256": "71e7e82b74a0c89783459ba991ba7a518db91c64b484fcf8eb8f56ca45a23f54",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/MC.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/MD.json.gz",
+    "bytes": 738,
+    "sha256": "0ed432a6a15e2f0d95486718b774844a8d3ae96cdc2eeecd149152759b014f96",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/MD.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/ME.json.gz",
+    "bytes": 1182,
+    "sha256": "f6dc2bbca4d79c95d337f4854a97b364e768cf9e0be40cdc2b4ed2b0210e470e",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/ME.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/MG.json.gz",
+    "bytes": 646,
+    "sha256": "3db39c57e1c350b921f986b07a7f85bb298ee88720c065ed6b31caa8cb66a283",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/MG.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/MK.json.gz",
+    "bytes": 2295,
+    "sha256": "ccdb5fd37002ac4b807804e4ba55181c0c7f2bed92daff2fb585044570aab24c",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/MK.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/ML.json.gz",
+    "bytes": 835,
+    "sha256": "d55b5a4587740974eaad56586b958cabe9fd90adfc822ef040c7ba02427166f6",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/ML.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/MM.json.gz",
+    "bytes": 966,
+    "sha256": "cc775e3cc9720ce00b7148e5da7d49b94e83af244fe1cd172002cac331ef00ff",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/MM.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/MN.json.gz",
+    "bytes": 1381,
+    "sha256": "48fa584d50aeb7b6ed2f1577712dfedc4b8f1628f1c63f9a915f199930ec00ea",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/MN.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/MO.json.gz",
+    "bytes": 514,
+    "sha256": "2e8616f595927d6e22e8e61d40772345710b429332ecba9199826a158613dc76",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/MO.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/MR.json.gz",
+    "bytes": 509,
+    "sha256": "f59982f424357e0e089f23a77beb2ecbfb2b25cd2d1013605e6a8b0a9d900adf",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/MR.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/MT.json.gz",
+    "bytes": 1217,
+    "sha256": "c5db5178a409ce1b090fb95efebcfdea18e9899f2650c81ec9481898e9f6964c",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/MT.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/MU.json.gz",
+    "bytes": 859,
+    "sha256": "b4631db71773f51f3b331c0f4f6454514e767fd3fdff79f5e7a16e29b01430ca",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/MU.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/MW.json.gz",
+    "bytes": 604,
+    "sha256": "e78a154dacb093d6a63aad619bbd51108db40c24d4c112242fd760fa28bc16c1",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/MW.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/MX.json.gz",
+    "bytes": 6939,
+    "sha256": "614d1c0e012e7d6d60ba0a0ff9fb7a54b19f1921431c44066d8325af19ac0fd2",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/MX.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/MY.json.gz",
+    "bytes": 3779,
+    "sha256": "0c2d5389f0f21bfce9e5d16ef863b73e9165cf9f6f52b41b76b48b0ce1a11e18",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/MY.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/MZ.json.gz",
+    "bytes": 560,
+    "sha256": "6f2ce55ba42e5723ba551a93e8ff9cdd15b88421284bfb23ebad8af4c4f217a6",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/MZ.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/NA.json.gz",
+    "bytes": 748,
+    "sha256": "f3e85e7aad673db8bae71b6cac8083c5d9a2bf6c4f0b5548c0ac25844d99f466",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/NA.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/NE.json.gz",
+    "bytes": 891,
+    "sha256": "b27d7156c62b86835aef84a7fd9181758bd6b63ab3c05f746a7adafe43a3ff20",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/NE.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/NG.json.gz",
+    "bytes": 11370,
+    "sha256": "5900a065a4b3c7fd020eab203ddef05b51bffac9cbdcf746d39c7f8326af47cd",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/NG.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/NI.json.gz",
+    "bytes": 712,
+    "sha256": "30e50ddcec7168b4b0a7f6e2c18c5318cbe8edae5b776c007a759a3b3ea02eff",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/NI.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/NL.json.gz",
+    "bytes": 806,
+    "sha256": "143b876422fb3740a9faabf12e3df13e98bbade2011a61dd20c682bd1f06fed0",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/NL.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/NO.json.gz",
+    "bytes": 15959,
+    "sha256": "22dd7d65ede0af7dcd92bcdf8e5a665c29c0a6d5a356f6cf19cde100d803daea",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/NO.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/NP.json.gz",
+    "bytes": 1259,
+    "sha256": "ca7c095612c92509ebd706ca1deafb56cb713a5a884f75c59da84bf5cb11803b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/NP.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/NZ.json.gz",
+    "bytes": 4950,
+    "sha256": "571f206e069850cda1090e09d2d6f384b96fdc627a3dfe067fcc51a7cb70670e",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/NZ.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/OM.json.gz",
+    "bytes": 478,
+    "sha256": "1700ea970df338a350619810c1ee3fe956f75572bd9cb639f267c1207ecea106",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/OM.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/PA.json.gz",
+    "bytes": 733,
+    "sha256": "4ea41901a6d1c0d9f6fed34e38acf0d7951a1bdaa59e8969aaad67c45b365edd",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/PA.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/PE.json.gz",
+    "bytes": 3017,
+    "sha256": "7030f3ad39978c3f71c44254ffc8c524744adafb39e876c40642afea324e2192",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/PE.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/PG.json.gz",
+    "bytes": 494,
+    "sha256": "5793db52f83c3ecc397a65added262d581e3b5fb22a60aa65e5013274c3a45bb",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/PG.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/PH.json.gz",
+    "bytes": 2754,
+    "sha256": "d9891a96627ed5ec0954a89dcd300c9573e2962b188b303f3defa356a7fc86b6",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/PH.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/PK.json.gz",
+    "bytes": 1208,
+    "sha256": "1dd6c643978b5dbf07482f6a820ee5d6d3aff533ad3733798a521dc48e9d596b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/PK.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/PL.json.gz",
+    "bytes": 22487,
+    "sha256": "cce6864ad18778f9fc7f8f1c4c57bb5fefeba5ce8627ab27432b28c6c37c84f4",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/PL.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/PR.json.gz",
+    "bytes": 726,
+    "sha256": "103b8ffc115ddf1ed64cf8fee0779bd6f77e3b8baac4b2b20b9bcfee7d08e610",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/PR.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/PS.json.gz",
+    "bytes": 1340,
+    "sha256": "343e96f9abb50dcd04bd1506405d7a8ba5236122e965a8fee3fe52f5238fed1b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/PS.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/PT.json.gz",
+    "bytes": 5821,
+    "sha256": "b67a7bace96231d13f1738d90644ebd832713628130ff6c4ca0feec194b93f17",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/PT.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/PY.json.gz",
+    "bytes": 812,
+    "sha256": "d3e52f69ccfab295d8e3f4198144a13b1cc1f27ec7a3d9c3ac2fb4eb99495f60",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/PY.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/QA.json.gz",
+    "bytes": 890,
+    "sha256": "02425c9d7eef7782ed182b3ac5ea5634d20920253fd107ce80728a311c04e64d",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/QA.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/RO.json.gz",
+    "bytes": 4831,
+    "sha256": "1db69d4bd3f58809a2d4c94abb3afd557a6b3988aa354b79a70f200bd4af8abe",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/RO.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/RS.json.gz",
+    "bytes": 5357,
+    "sha256": "634378b43539472649b35c3960eeeab26b890ccd5fab7ff79ae204694c28ef91",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/RS.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/RU.json.gz",
+    "bytes": 13224,
+    "sha256": "878c0c11990e9df5730670e5f3ad7b4f325258584be9031d9634eaa313743da0",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/RU.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/RW.json.gz",
+    "bytes": 776,
+    "sha256": "2ccb872973d682052490ff00fc128b0bc2efd5f4c3d95d0dedff21e1856fe9fb",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/RW.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/SA.json.gz",
+    "bytes": 1614,
+    "sha256": "f319b3e09918ba5b30a3d98d4c698247c81e1b3b38957a5ac1f9078bb4bb8c1d",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/SA.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/SC.json.gz",
+    "bytes": 448,
+    "sha256": "1ce6bfa8730e05368c3ff8cad19ec4e05aa57fba388ec7bdce6048beec51998f",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/SC.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/SD.json.gz",
+    "bytes": 435,
+    "sha256": "93ae837140e1fe2e56b3451f3129d493b901ef69acbe92810b05f0a3a5a0d442",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/SD.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/SE.json.gz",
+    "bytes": 14273,
+    "sha256": "8fc7e9ed9e634dc3e0b0c0facc57bb993a04b0e3e7e9f97b25809c978d076e93",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/SE.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/SG.json.gz",
+    "bytes": 1801,
+    "sha256": "f80353802d8dfd6bf170ba8bb94c517a03f92cffb7131d7cf99810647270a62f",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/SG.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/SI.json.gz",
+    "bytes": 4644,
+    "sha256": "2a2f9bd7a3ca81910ba456da179396bbca223b82fa72924f3d2a364c77177cf4",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/SI.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/SK.json.gz",
+    "bytes": 3152,
+    "sha256": "e53f897cc3c899d2d543bfa9cca69c2c2f96af69168c6708ed3cfd2e0a0f6ed9",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/SK.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/SM.json.gz",
+    "bytes": 505,
+    "sha256": "ddb768dd2448ed98ea2f607eed1ba563fd01ed47c15c59f37dd60a8fd9618da0",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/SM.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/SN.json.gz",
+    "bytes": 1383,
+    "sha256": "d66f994418de166eb6cc210233b427b21c006fbf02eafa74597eb4eb0c3efded",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/SN.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/SO.json.gz",
+    "bytes": 415,
+    "sha256": "d255359c9d0a5f3efc4e3f3c96c7f071aeb7d0ddbae547a03309b60bdc40c5b8",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/SO.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/SR.json.gz",
+    "bytes": 1015,
+    "sha256": "9a7f52d7dcf8c996495ca53cf8885c79c12b79687a7ef0be860ce1f4500458e2",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/SR.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/SS.json.gz",
+    "bytes": 544,
+    "sha256": "c37b028d63525165cd296141a14d7ece109c5f1ba2a49907d42108c0cfce9786",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/SS.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/ST.json.gz",
+    "bytes": 416,
+    "sha256": "224974810735d4c766ee96666908033a77ecd1d18ecd665aecec1a46ddf48a94",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/ST.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/SU.json.gz",
+    "bytes": 1688,
+    "sha256": "20e7f74f7ccd56283db0a445feaeef79d6f4b299b2a48cf8c05645b7e5216af3",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/SU.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/SV.json.gz",
+    "bytes": 431,
+    "sha256": "cbe3336ccd574194aa120088f53d572188b6e10221afee0b2e54433020039eda",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/SV.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/SY.json.gz",
+    "bytes": 750,
+    "sha256": "5cca995921ca22450f298b976cb6af20d03d9c0555fa802fd28bad4c92251f31",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/SY.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/TD.json.gz",
+    "bytes": 819,
+    "sha256": "d22fcda577f68011b09bdfa9ea533a053bd1d749e67ab5d1e4e36b14eb243a1a",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/TD.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/TG.json.gz",
+    "bytes": 1366,
+    "sha256": "f2a689db1ee59ab96c705955c52f09829b054a742d712b57ab9a93cce04926c6",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/TG.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/TH.json.gz",
+    "bytes": 2089,
+    "sha256": "33ed08d8aebea6e3fe2e45711db3c800224e609bfa458f402bc36e808cbb3700",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/TH.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/TJ.json.gz",
+    "bytes": 585,
+    "sha256": "79364a070529c4f32998c0c011e5a8fa3cf8bfeadb7eb5f024c6645cd68c4f30",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/TJ.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/TL.json.gz",
+    "bytes": 509,
+    "sha256": "6822594350b3a41aa4b7d88ce4631b046c7db09c11c46bfaf5f8634d5e53ea11",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/TL.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/TN.json.gz",
+    "bytes": 2044,
+    "sha256": "429c920c9fed96f19157e367d4b4e8c6df68b7f452cb986cca43d86ff5538658",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/TN.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/TO.json.gz",
+    "bytes": 476,
+    "sha256": "0d007574f47dca4a8dc105543aa11950e55a8aff7333f4baa1fe7c97e55672ce",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/TO.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/TR.json.gz",
+    "bytes": 8986,
+    "sha256": "1efdb455f51e25e4f5a4cd762361f4cb2d4ba93649ac1ddd70d75e0c7a133c95",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/TR.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/TT.json.gz",
+    "bytes": 1076,
+    "sha256": "437c8f6789527db2aba4e9d38a8660cd72788c03aa678524160662e65ac7dd88",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/TT.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/TW.json.gz",
+    "bytes": 4824,
+    "sha256": "6d192b97050f9002143b09b6b19a10dd0f137031c04ece4e884beefe60567ff3",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/TW.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/TZ.json.gz",
+    "bytes": 986,
+    "sha256": "f86fe9d33881cd5d6ec8f9e3bdddb4fa92ad96a62d5f40540cae1d947c945ab8",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/TZ.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/UA.json.gz",
+    "bytes": 12284,
+    "sha256": "10a64a9b2b01713ba3c8e46ee1f242ecae1988bccd9f15e1829f5090c14bba18",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/UA.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/UG.json.gz",
+    "bytes": 1413,
+    "sha256": "ef2d5d5edc8f34be5ff5b49ad712c27a439b6317b0009406cee04125ea5ef686",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/UG.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/US.json.gz",
+    "bytes": 148446,
+    "sha256": "e071e848608e1ad9b2879e7f6153d103ae9f5d70859fb21c56db7db1d705cf3b",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/US.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/UY.json.gz",
+    "bytes": 1990,
+    "sha256": "0f2f669273706024b9ee9f40ffc02d69206e28be439d19f3a243b800aff11fae",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/UY.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/UZ.json.gz",
+    "bytes": 1191,
+    "sha256": "6b308022844d1908d93d291c2ebd8c9c4a17d1555f5fab36c83d0490711436e7",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/UZ.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/VE.json.gz",
+    "bytes": 1674,
+    "sha256": "2c629da7cb536e81671c36505030a53710b666fe8fc792420e6d5fc61ee1e71e",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/VE.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/VN.json.gz",
+    "bytes": 1761,
+    "sha256": "f0083e687a9751f4efa4d3c7d20038a0dc6eb0588e0af1295d02924c2eca53bb",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/VN.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/XK.json.gz",
+    "bytes": 1510,
+    "sha256": "2d61168cbb6cd0253c1b2f5d16cbf35d0d6e421605366e6f2d0fa584b42786b9",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/XK.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/YE.json.gz",
+    "bytes": 433,
+    "sha256": "8037f00ee6b60bb79243cdddfb3de5e361136ec1623a689630424706e85835f6",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/YE.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/YU.json.gz",
+    "bytes": 649,
+    "sha256": "dd7c33b5dac230dbb2d441e6af3bcf29adb5b9fde6d97e834d6a64198bcd4557",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/YU.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/ZA.json.gz",
+    "bytes": 3242,
+    "sha256": "3c32c7529b8f70c48991e7ecf687a997012b74d82c7a8c205516a03dbd6eddf2",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/ZA.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/ZM.json.gz",
+    "bytes": 638,
+    "sha256": "a5abe3eff5b8e9c55796a36ec52a9e8fd54fdabf4a0a430e45946507df1544b0",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/ZM.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/ZW.json.gz",
+    "bytes": 818,
+    "sha256": "256551c42e828b57e880b4d8e8a1b0d6fbf9f51b812f109dfae28a1b3d267f6d",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/ZW.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/catalog/ZZ.json.gz",
+    "bytes": 314563,
+    "sha256": "a5bc474bf59636ed8aecfb80f4d71d8195e33ff363c98642927fa33fc2ad77e9",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/catalog/ZZ.json.gz"
+  },
+  {
+    "path": "assets/city-festivals/index.json",
+    "bytes": 37862,
+    "sha256": "614040fe9c68d0dd6d017f02fb26f4242ad7c1b435db607f84db55a79c73d79f",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/index.json"
+  },
+  {
+    "path": "assets/city-festivals/official-announcements.json",
+    "bytes": 10727,
+    "sha256": "c1eceb6fa3041399bc2a98257bc2bc3976df0fa0ac073356bbcde1bcede57058",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/city-festivals/official-announcements.json"
+  },
+  {
+    "path": "assets/사용법.md",
+    "bytes": 11449,
+    "sha256": "a3c35c7d92d10aa70dd2530a478b26409bd428378949c2dfb2e5d8a29664cea4",
+    "url": "https://github.com/PUVKID/Codex-Orbit/blob/v3.4.0/assets/%EC%82%AC%EC%9A%A9%EB%B2%95.md"
+  }
+]

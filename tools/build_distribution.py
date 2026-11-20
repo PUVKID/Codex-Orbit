@@ -110,7 +110,7 @@ def main():
             '--workpath', str(ROOT / 'work' / 'pyinstaller'),
             '--specpath', str(ROOT / 'work'), '--add-data', str(runtime_assets) + ';assets',
             '--collect-all', 'moderngl', '--collect-all', 'glcontext',
-            '--paths', str(ROOT / 'src'), str(ROOT / 'src' / 'app.py')]
+            '--paths', str(ROOT / 'src'), str(ROOT / 'src' / 'orbit_entry.py')]
     run(args, 'build-exe', 360)
     for name in ('사용법.md', '기본_지침.md'):
         shutil.copy2(ROOT / 'assets' / name, release / name)

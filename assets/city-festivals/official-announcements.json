@@ -1,0 +1,338 @@
+{
+  "schema_version": 1,
+  "license": "factual-schedule",
+  "checked_at": "2026-11-10T10:01:09.030809+09:00",
+  "scope": "공식 발표 날짜의 사실과 출처 링크. 본문·사진·연락처 복제 없음.",
+  "occurrences": [
+    {
+      "id": "official:sapporo-snow-2027",
+      "series_id": null,
+      "title": "삿포로 눈축제",
+      "title_en": "Sapporo Snow Festival",
+      "kind": "snow",
+      "country_code": "JP",
+      "city_refs": [
+        {
+          "wikidata_qid": "Q37951"
+        }
+      ],
+      "dates": [
+        "2027-02-04",
+        "2027-02-05",
+        "2027-02-06",
+        "2027-02-07",
+        "2027-02-08",
+        "2027-02-09",
+        "2027-02-10",
+        "2027-02-11"
+      ],
+      "date_precision": "day",
+      "status": "announced",
+      "time_conflict": false,
+      "source_url": "https://www.sapporo.travel/en/event/event-list/sapporo_snow_festival/",
+      "publisher": "Sapporo Tourist Association",
+      "license": "factual-schedule",
+      "checked_at": "2026-11-10T10:01:09.030809+09:00",
+      "location_confidence": "city_verified",
+      "date_evidence": "공식 주최자 또는 도시 관광기관이 발표한 해당 개최분의 날짜 사실만 수록. 다른 연도 반복 생성 없음."
+    },
+    {
+      "id": "official:cannes-2027",
+      "series_id": null,
+      "title": "칸 영화제",
+      "title_en": "Cannes Film Festival",
+      "kind": "film",
+      "country_code": "FR",
+      "city_refs": [
+        {
+          "wikidata_qid": "Q39984"
+        }
+      ],
+      "dates": [
+        "2027-05-11",
+        "2027-05-12",
+        "2027-05-13",
+        "2027-05-14",
+        "2027-05-15",
+        "2027-05-16",
+        "2027-05-17",
+        "2027-05-18",
+        "2027-05-19",
+        "2027-05-20",
+        "2027-05-21",
+        "2027-05-22"
+      ],
+      "date_precision": "day",
+      "status": "announced",
+      "time_conflict": false,
+      "source_url": "https://www.festival-cannes.com/en/",
+      "publisher": "Festival de Cannes",
+      "license": "factual-schedule",
+      "checked_at": "2026-11-10T10:01:09.030809+09:00",
+      "location_confidence": "city_verified",
+      "date_evidence": "공식 주최자 또는 도시 관광기관이 발표한 해당 개최분의 날짜 사실만 수록. 다른 연도 반복 생성 없음."
+    },
+    {
+      "id": "official:munich-oktoberfest-2027",
+      "series_id": null,
+      "title": "뮌헨 옥토버페스트",
+      "title_en": "Munich Oktoberfest",
+      "kind": "culture",
+      "country_code": "DE",
+      "city_refs": [
+        {
+          "wikidata_qid": "Q1726"
+        }
+      ],
+      "dates": [
+        "2027-09-18",
+        "2027-09-19",
+        "2027-09-20",
+        "2027-09-21",
+        "2027-09-22",
+        "2027-09-23",
+        "2027-09-24",
+        "2027-09-25",
+        "2027-09-26",
+        "2027-09-27",
+        "2027-09-28",
+        "2027-09-29",
+        "2027-09-30",
+        "2027-10-01",
+        "2027-10-02",
+        "2027-10-03"
+      ],
+      "date_precision": "day",
+      "status": "announced",
+      "time_conflict": false,
+      "source_url": "https://www.oktoberfest.de/en",
+      "publisher": "City of Munich",
+      "license": "factual-schedule",
+      "checked_at": "2026-11-10T10:01:09.030809+09:00",
+      "location_confidence": "city_verified",
+      "date_evidence": "공식 주최자 또는 도시 관광기관이 발표한 해당 개최분의 날짜 사실만 수록. 다른 연도 반복 생성 없음."
+    },
+    {
+      "id": "official:edinburgh-fringe-2027",
+      "series_id": null,
+      "title": "에든버러 프린지",
+      "title_en": "Edinburgh Festival Fringe",
+      "kind": "culture",
+      "country_code": "GB",
+      "city_refs": [
+        {
+          "wikidata_qid": "Q23436"
+        }
+      ],
+      "dates": [
+        "2027-08-06",
+        "2027-08-07",
+        "2027-08-08",
+        "2027-08-09",
+        "2027-08-10",
+        "2027-08-11",
+        "2027-08-12",
+        "2027-08-13",
+        "2027-08-14",
+        "2027-08-15",
+        "2027-08-16",
+        "2027-08-17",
+        "2027-08-18",
+        "2027-08-19",
+        "2027-08-20",
+        "2027-08-21",
+        "2027-08-22",
+        "2027-08-23",
+        "2027-08-24",
+        "2027-08-25",
+        "2027-08-26",
+        "2027-08-27",
+        "2027-08-28",
+        "2027-08-29",
+        "2027-08-30"
+      ],
+      "date_precision": "day",
+      "status": "announced",
+      "time_conflict": false,
+      "source_url": "https://www.edfringe.com/",
+      "publisher": "Edinburgh Festival Fringe Society",
+      "license": "factual-schedule",
+      "checked_at": "2026-11-10T10:01:09.030809+09:00",
+      "location_confidence": "city_verified",
+      "date_evidence": "공식 주최자 또는 도시 관광기관이 발표한 해당 개최분의 날짜 사실만 수록. 다른 연도 반복 생성 없음."
+    },
+    {
+      "id": "official:venice-street-show-2027",
+      "series_id": null,
+      "title": "베네치아 카니발 거리 공연",
+      "title_en": "Venice Carnival Street Show",
+      "kind": "carnival",
+      "country_code": "IT",
+      "city_refs": [
+        {
+          "wikidata_qid": "Q641"
+        }
+      ],
+      "dates": [
+        "2027-01-23",
+        "2027-01-24",
+        "2027-01-30",
+        "2027-01-31",
+        "2027-02-04",
+        "2027-02-05",
+        "2027-02-06",
+        "2027-02-07",
+        "2027-02-08",
+        "2027-02-09"
+      ],
+      "date_precision": "day",
+      "status": "announced",
+      "time_conflict": false,
+      "source_url": "https://carnevale.venezia.it/en/news/2026/carnevale-di-venezia-2027-aperte-le-candidature-per-artisti-e-performer/",
+      "publisher": "Carnevale di Venezia",
+      "license": "factual-schedule",
+      "checked_at": "2026-11-10T10:01:09.030809+09:00",
+      "location_confidence": "city_verified",
+      "date_evidence": "공식 주최자 또는 도시 관광기관이 발표한 해당 개최분의 날짜 사실만 수록. 다른 연도 반복 생성 없음."
+    },
+    {
+      "id": "official:vivid-sydney-2027",
+      "series_id": null,
+      "title": "비비드 시드니",
+      "title_en": "Vivid Sydney",
+      "kind": "lights",
+      "country_code": "AU",
+      "city_refs": [
+        {
+          "wikidata_qid": "Q3130"
+        }
+      ],
+      "dates": [
+        "2027-05-28",
+        "2027-05-29",
+        "2027-05-30",
+        "2027-05-31",
+        "2027-06-01",
+        "2027-06-02",
+        "2027-06-03",
+        "2027-06-04",
+        "2027-06-05",
+        "2027-06-06",
+        "2027-06-07",
+        "2027-06-08",
+        "2027-06-09",
+        "2027-06-10",
+        "2027-06-11",
+        "2027-06-12",
+        "2027-06-13",
+        "2027-06-14",
+        "2027-06-15",
+        "2027-06-16",
+        "2027-06-17",
+        "2027-06-18",
+        "2027-06-19"
+      ],
+      "date_precision": "day",
+      "status": "announced",
+      "time_conflict": false,
+      "source_url": "https://www.vividsydney.com/info/about-vivid-sydney",
+      "publisher": "Destination NSW",
+      "license": "factual-schedule",
+      "checked_at": "2026-11-10T10:01:09.030809+09:00",
+      "location_confidence": "city_verified",
+      "date_evidence": "공식 주최자 또는 도시 관광기관이 발표한 해당 개최분의 날짜 사실만 수록. 다른 연도 반복 생성 없음."
+    },
+    {
+      "id": "official:new-orleans-mardi-gras-2027",
+      "series_id": null,
+      "title": "뉴올리언스 마디그라 당일",
+      "title_en": "New Orleans Mardi Gras Day",
+      "kind": "carnival",
+      "country_code": "US",
+      "city_refs": [
+        {
+          "wikidata_qid": "Q34404"
+        }
+      ],
+      "dates": [
+        "2027-02-09"
+      ],
+      "date_precision": "day",
+      "status": "announced",
+      "time_conflict": false,
+      "source_url": "https://www.neworleans.com/events/holidays-seasonal/mardi-gras/the-ultimate-mardi-gras-guide/",
+      "publisher": "New Orleans & Company",
+      "license": "factual-schedule",
+      "checked_at": "2026-11-10T10:01:09.030809+09:00",
+      "location_confidence": "city_verified",
+      "date_evidence": "공식 주최자 또는 도시 관광기관이 발표한 해당 개최분의 날짜 사실만 수록. 다른 연도 반복 생성 없음."
+    },
+    {
+      "id": "official:albuquerque-balloon-2027",
+      "series_id": null,
+      "title": "앨버커키 국제 열기구 축제",
+      "title_en": "Albuquerque International Balloon Fiesta",
+      "kind": "balloon",
+      "country_code": "US",
+      "city_refs": [
+        {
+          "wikidata_qid": "Q34804"
+        }
+      ],
+      "dates": [
+        "2027-10-02",
+        "2027-10-03",
+        "2027-10-04",
+        "2027-10-05",
+        "2027-10-06",
+        "2027-10-07",
+        "2027-10-08",
+        "2027-10-09",
+        "2027-10-10"
+      ],
+      "date_precision": "day",
+      "status": "announced",
+      "time_conflict": false,
+      "source_url": "https://www.balloonfiesta.com/",
+      "publisher": "Albuquerque International Balloon Fiesta",
+      "license": "factual-schedule",
+      "checked_at": "2026-11-10T10:01:09.030809+09:00",
+      "location_confidence": "city_verified",
+      "date_evidence": "공식 주최자 또는 도시 관광기관이 발표한 해당 개최분의 날짜 사실만 수록. 다른 연도 반복 생성 없음."
+    },
+    {
+      "id": "official:quebec-carnival-2027",
+      "series_id": null,
+      "title": "퀘벡 겨울 카니발",
+      "title_en": "Québec Winter Carnival",
+      "kind": "snow",
+      "country_code": "CA",
+      "city_refs": [
+        {
+          "wikidata_qid": "Q2145"
+        }
+      ],
+      "dates": [
+        "2027-02-05",
+        "2027-02-06",
+        "2027-02-07",
+        "2027-02-08",
+        "2027-02-09",
+        "2027-02-10",
+        "2027-02-11",
+        "2027-02-12",
+        "2027-02-13",
+        "2027-02-14"
+      ],
+      "date_precision": "day",
+      "status": "announced",
+      "time_conflict": false,
+      "source_url": "https://carnaval.qc.ca/en/",
+      "publisher": "Carnaval de Québec",
+      "license": "factual-schedule",
+      "checked_at": "2026-11-10T10:01:09.030809+09:00",
+      "location_confidence": "city_verified",
+      "date_evidence": "공식 주최자 또는 도시 관광기관이 발표한 해당 개최분의 날짜 사실만 수록. 다른 연도 반복 생성 없음."
+    }
+  ]
+}

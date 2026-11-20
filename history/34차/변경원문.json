@@ -1,0 +1,37 @@
+[
+  {
+    "path": "README.md",
+    "stored_path": "archive/objects/79a4adada00840ff8ae311dc4a6928443b5526a6721fa6e6ec7ef7d839888352.bin",
+    "bytes": 12615,
+    "sha256": "79a4adada00840ff8ae311dc4a6928443b5526a6721fa6e6ec7ef7d839888352",
+    "disposition": "public_original"
+  },
+  {
+    "path": "README.en.md",
+    "stored_path": "archive/objects/62c2470837f3fb1e6171ee1d90288d38e0e6e6f3531eafad67ec1b43113fb061.bin",
+    "bytes": 9392,
+    "sha256": "62c2470837f3fb1e6171ee1d90288d38e0e6e6f3531eafad67ec1b43113fb061",
+    "disposition": "public_original"
+  },
+  {
+    "path": "assets/사용법.md",
+    "stored_path": "archive/objects/2c8e3c82871a5ab01b785adff625e4464d1af5093dc6d8d6a25e3b488f9f4eed.bin",
+    "bytes": 11941,
+    "sha256": "2c8e3c82871a5ab01b785adff625e4464d1af5093dc6d8d6a25e3b488f9f4eed",
+    "disposition": "public_original"
+  },
+  {
+    "path": "docs/사용법.md",
+    "stored_path": "archive/objects/2c8e3c82871a5ab01b785adff625e4464d1af5093dc6d8d6a25e3b488f9f4eed.bin",
+    "bytes": 11941,
+    "sha256": "2c8e3c82871a5ab01b785adff625e4464d1af5093dc6d8d6a25e3b488f9f4eed",
+    "disposition": "public_original"
+  },
+  {
+    "path": "docs/Usage.en.md",
+    "stored_path": "archive/objects/62c2470837f3fb1e6171ee1d90288d38e0e6e6f3531eafad67ec1b43113fb061.bin",
+    "bytes": 9392,
+    "sha256": "62c2470837f3fb1e6171ee1d90288d38e0e6e6f3531eafad67ec1b43113fb061",
+    "disposition": "public_original"
+  }
+]

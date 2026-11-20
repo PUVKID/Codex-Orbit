@@ -1,8 +1,23 @@
 <a name="-codex-orbit-320"></a>
-# Codex Orbit 3.2.0
+# Codex Orbit 3.4.0
 
 <!-- user-levels:start -->
 **수준별 전체 안내:** [LEVEL 1 - Beginner](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A81.md) · [LEVEL 2 - Explorer](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A82.md) · [LEVEL 3 - Practitioner](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A83.md) · [LEVEL 4 - Advanced](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A84.md) · [LEVEL 5 - Expert](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A85.md)
+
+## Features and conditions
+
+| Feature | Input or condition | Behavior and limit |
+| --- | --- | --- |
+| Notifications | Observed local model and effort changes | Separates previous values, current values and published explanations. |
+| Calendar sculpture | Date, country and verified announced event dates | Preserves the daily subject while keeping text sharp. |
+| Location and weather | Automatic estimate or explicitly selected search result | Distinguishes precipitation intervals, zero and unavailable data. |
+| Account usage | Signed-in Codex account-limit percentages | Not an exact remaining-token count; original values remain available. |
+
+## Revision 34 · Pixel 3D sculptures and city festivals
+
+Daily subjects use pixel rendering of actual 3D meshes with a full vertical-axis turn. Labels and weather remain sharp. Automatic/Manual location controls, precipitation intervals and rounded percentage summaries retain original values. Catalog items, verified series, editions, unclassified items and announced dates are distinct. Worldwide completeness and unannounced future dates are not promised. Revision33 had no separate release. Its working originals are preserved as history in this publication and its work is integrated into Revision34. GPU work runs in an owned child process with a separate internal entry branch. Preparation within five seconds and the existing two-second displayed-frame check are separate criteria. Cleanup first requests normal shutdown, then limits any required forced cleanup to the owned Job; this is not an absolute guarantee against OS stalls. Final observations are reported separately in the verification document. [Details](history/34차/README.md) · [Revision33 working files](history/33차/README.md) · [Changes](변경기록_34차.md)
+
+
 <!-- user-levels:end -->
 
 ## Revision 32
@@ -38,41 +53,43 @@ Missing display-mode settings now select the calendar. Model events preserve the
 
 ## Revision history
 
-| 차수 | 자료 |
-| --- | --- |
-| 1차 | **폴더** [폴더](history/01차/)<br>**설명** [설명](history/01차/README.md)<br>**직전 차수와 실제 비교** [비교 대상 없는 근거](history/01차/직전차수.diff) |
-| 2차 | **폴더** [폴더](history/02차/)<br>**설명** [설명](history/02차/README.md)<br>**직전 차수와 실제 비교** 1차 · [전체 차이](history/02차/직전차수.diff) |
-| 3차 | **폴더** [폴더](history/03차/)<br>**설명** [설명](history/03차/README.md)<br>**직전 차수와 실제 비교** 2차 · [전체 차이](history/03차/직전차수.diff) |
-| 4차 | **폴더** [폴더](history/04차/)<br>**설명** [설명](history/04차/README.md)<br>**직전 차수와 실제 비교** 3차 · [전체 차이](history/04차/직전차수.diff) |
-| 5차 | **폴더** [폴더](history/05차/)<br>**설명** [설명](history/05차/README.md)<br>**직전 차수와 실제 비교** 4차 · [전체 차이](history/05차/직전차수.diff) |
-| 6차 | **폴더** [폴더](history/06차/)<br>**설명** [설명](history/06차/README.md)<br>**직전 차수와 실제 비교** 5차 · [전체 차이](history/06차/직전차수.diff) |
-| 7차 | **폴더** [폴더](history/07차/)<br>**설명** [설명](history/07차/README.md)<br>**직전 차수와 실제 비교** 6차 · [전체 차이](history/07차/직전차수.diff) |
-| 8차 | **폴더** [폴더](history/08차/)<br>**설명** [설명](history/08차/README.md)<br>**직전 차수와 실제 비교** 7차 · [전체 차이](history/08차/직전차수.diff) |
-| 9차 | **폴더** [폴더](history/09차/)<br>**설명** [설명](history/09차/README.md)<br>**직전 차수와 실제 비교** 8차 · [전체 차이](history/09차/직전차수.diff) |
-| 10차 | **폴더** [폴더](history/10차/)<br>**설명** [설명](history/10차/README.md)<br>**직전 차수와 실제 비교** 9차 · [전체 차이](history/10차/직전차수.diff) |
-| 11차 | **폴더** [폴더](history/11차/)<br>**설명** [설명](history/11차/README.md)<br>**직전 차수와 실제 비교** 10차 · [전체 차이](history/11차/직전차수.diff) |
-| 12차 | **폴더** [폴더](history/12차/)<br>**설명** [설명](history/12차/README.md)<br>**직전 차수와 실제 비교** 11차 · [전체 차이](history/12차/직전차수.diff) |
-| 13차 | **폴더** [폴더](history/13차/)<br>**설명** [설명](history/13차/README.md)<br>**직전 차수와 실제 비교** 12차 · [전체 차이](history/13차/직전차수.diff) |
-| 14차 | **폴더** [폴더](history/14차/)<br>**설명** [설명](history/14차/README.md)<br>**직전 차수와 실제 비교** 13차 · [전체 차이](history/14차/직전차수.diff) |
-| 15차 | **폴더** [폴더](history/15차/)<br>**설명** [설명](history/15차/README.md)<br>**직전 차수와 실제 비교** 14차 · [전체 차이](history/15차/직전차수.diff) |
-| 16차 | **폴더** [폴더](history/16차/)<br>**설명** [설명](history/16차/README.md)<br>**직전 차수와 실제 비교** 15차 · [전체 차이](history/16차/직전차수.diff) |
-| 17차 | **폴더** [폴더](history/17차/)<br>**설명** [설명](history/17차/README.md)<br>**직전 차수와 실제 비교** 16차 · [전체 차이](history/17차/직전차수.diff) |
-| 18차 | **폴더** [폴더](history/18차/)<br>**설명** [설명](history/18차/README.md)<br>**직전 차수와 실제 비교** 17차 · [전체 차이](history/18차/직전차수.diff) |
-| 19차 | **폴더** [폴더](history/19차/)<br>**설명** [설명](history/19차/README.md)<br>**직전 차수와 실제 비교** 18차 · [전체 차이](history/19차/직전차수.diff) |
-| 20차 | **폴더** [폴더](docs/20차/)<br>**설명** [설명](docs/20차/README.md)<br>**직전 차수와 실제 비교** [비교 대상 없는 근거](docs/20차/README.md) |
-| 21차 | **폴더** [폴더](history/21차/)<br>**설명** [설명](history/21차/README.md)<br>**직전 차수와 실제 비교** 19차 · [전체 차이](history/21차/직전차수.diff) |
-| 22차 | **폴더** [폴더](history/22차/)<br>**설명** [설명](history/22차/README.md)<br>**직전 차수와 실제 비교** 21차 · [전체 차이](history/22차/직전차수.diff) |
-| 23차 | **폴더** [폴더](history/23차/)<br>**설명** [설명](history/23차/README.md)<br>**직전 차수와 실제 비교** 22차 · [전체 차이](history/23차/직전차수.diff) |
-| 24차 | **폴더** [폴더](history/24차/)<br>**설명** [설명](history/24차/README.md)<br>**직전 차수와 실제 비교** 23차 · [전체 차이](history/24차/직전차수.diff) |
-| 25차 | **폴더** [폴더](history/25/)<br>**설명** [설명](history/25/README.md)<br>**직전 차수와 실제 비교** 24차 · [전체 차이](history/25/직전차수.diff) |
-| 26차 | **폴더** [폴더](history/26/)<br>**설명** [설명](history/26/README.md)<br>**직전 차수와 실제 비교** 25차 · [전체 차이](history/26/직전차수.diff) |
-| 27차 | **폴더** [폴더](history/27/)<br>**설명** [설명](history/27/README.md)<br>**직전 차수와 실제 비교** 26차 · [전체 차이](docs/27차_전체변경.diff) |
-| 28차 | **폴더** [폴더](history/28/)<br>**설명** [설명](history/28/README.md)<br>**직전 차수와 실제 비교** 27차 · [전체 차이](docs/28차_전체변경.diff) |
-| 29차 | **폴더** [폴더](history/29차/)<br>**설명** [설명](history/29차/README.md)<br>**직전 차수와 실제 비교** 28차 · [전체 차이](history/29차/직전차수.diff) |
-| 30차 | **폴더** [폴더](history/30차/)<br>**설명** [설명](history/30차/README.md)<br>**직전 차수와 실제 비교** 29차 · [전체 차이](history/30차/직전차수.diff) |
-| 31차 | **폴더** [폴더](history/31차/)<br>**설명** [설명](history/31차/README.md)<br>**직전 차수와 실제 비교** 30차 · [전체 차이](history/31차/직전차수.diff) |
-| 32차 | **폴더** [자료 폴더](history/32차)<br>**설명** [상세 설명](history/32차/README.md)<br>**직전 차수와 실제 비교** [전체 비교·범위](docs/32차_전체변경.diff) |
-| 최종 | **폴더** [폴더](docs/최종/)<br>**설명** [설명](docs/최종/README.md)<br>**직전 차수와 실제 비교** [비교 대상 없는 근거](docs/최종/README.md) |
+| 차수 | 핵심 변경 | 자료 |
+| --- | --- | --- |
+| 1차 | Codex Orbit · 1차 | **폴더:** [폴더](history/01차/) · **설명:** [설명](history/01차/README.md) · **직전 차수와 실제 비교:** [비교 대상 없는 근거](history/01차/직전차수.diff) |
+| 2차 | Codex Orbit · 2차 | **폴더:** [폴더](history/02차/) · **설명:** [설명](history/02차/README.md) · **직전 차수와 실제 비교:** 1차 · [전체 차이](history/02차/직전차수.diff) |
+| 3차 | Codex Orbit · 3차 | **폴더:** [폴더](history/03차/) · **설명:** [설명](history/03차/README.md) · **직전 차수와 실제 비교:** 2차 · [전체 차이](history/03차/직전차수.diff) |
+| 4차 | Codex Orbit · 4차 | **폴더:** [폴더](history/04차/) · **설명:** [설명](history/04차/README.md) · **직전 차수와 실제 비교:** 3차 · [전체 차이](history/04차/직전차수.diff) |
+| 5차 | Codex Orbit · 5차 | **폴더:** [폴더](history/05차/) · **설명:** [설명](history/05차/README.md) · **직전 차수와 실제 비교:** 4차 · [전체 차이](history/05차/직전차수.diff) |
+| 6차 | Codex Orbit · 6차 | **폴더:** [폴더](history/06차/) · **설명:** [설명](history/06차/README.md) · **직전 차수와 실제 비교:** 5차 · [전체 차이](history/06차/직전차수.diff) |
+| 7차 | Codex Orbit · 7차 | **폴더:** [폴더](history/07차/) · **설명:** [설명](history/07차/README.md) · **직전 차수와 실제 비교:** 6차 · [전체 차이](history/07차/직전차수.diff) |
+| 8차 | Codex Orbit · 8차 | **폴더:** [폴더](history/08차/) · **설명:** [설명](history/08차/README.md) · **직전 차수와 실제 비교:** 7차 · [전체 차이](history/08차/직전차수.diff) |
+| 9차 | Codex Orbit · 9차 | **폴더:** [폴더](history/09차/) · **설명:** [설명](history/09차/README.md) · **직전 차수와 실제 비교:** 8차 · [전체 차이](history/09차/직전차수.diff) |
+| 10차 | Codex Orbit · 10차 | **폴더:** [폴더](history/10차/) · **설명:** [설명](history/10차/README.md) · **직전 차수와 실제 비교:** 9차 · [전체 차이](history/10차/직전차수.diff) |
+| 11차 | Codex Orbit · 11차 | **폴더:** [폴더](history/11차/) · **설명:** [설명](history/11차/README.md) · **직전 차수와 실제 비교:** 10차 · [전체 차이](history/11차/직전차수.diff) |
+| 12차 | Codex Orbit · 12차 | **폴더:** [폴더](history/12차/) · **설명:** [설명](history/12차/README.md) · **직전 차수와 실제 비교:** 11차 · [전체 차이](history/12차/직전차수.diff) |
+| 13차 | Codex Orbit · 13차 | **폴더:** [폴더](history/13차/) · **설명:** [설명](history/13차/README.md) · **직전 차수와 실제 비교:** 12차 · [전체 차이](history/13차/직전차수.diff) |
+| 14차 | Codex Orbit · 14차 | **폴더:** [폴더](history/14차/) · **설명:** [설명](history/14차/README.md) · **직전 차수와 실제 비교:** 13차 · [전체 차이](history/14차/직전차수.diff) |
+| 15차 | Codex Orbit · 15차 | **폴더:** [폴더](history/15차/) · **설명:** [설명](history/15차/README.md) · **직전 차수와 실제 비교:** 14차 · [전체 차이](history/15차/직전차수.diff) |
+| 16차 | Codex Orbit · 16차 | **폴더:** [폴더](history/16차/) · **설명:** [설명](history/16차/README.md) · **직전 차수와 실제 비교:** 15차 · [전체 차이](history/16차/직전차수.diff) |
+| 17차 | Codex Orbit · 17차 | **폴더:** [폴더](history/17차/) · **설명:** [설명](history/17차/README.md) · **직전 차수와 실제 비교:** 16차 · [전체 차이](history/17차/직전차수.diff) |
+| 18차 | Codex Orbit · 18차 | **폴더:** [폴더](history/18차/) · **설명:** [설명](history/18차/README.md) · **직전 차수와 실제 비교:** 17차 · [전체 차이](history/18차/직전차수.diff) |
+| 19차 | Codex Orbit · 19차 | **폴더:** [폴더](history/19차/) · **설명:** [설명](history/19차/README.md) · **직전 차수와 실제 비교:** 18차 · [전체 차이](history/19차/직전차수.diff) |
+| 20차 | Codex Orbit · 20차 | **폴더:** [폴더](docs/20차/) · **설명:** [설명](docs/20차/README.md) · **직전 차수와 실제 비교:** [비교 대상 없는 근거](docs/20차/README.md) |
+| 21차 | Codex Orbit · 21차 | **폴더:** [폴더](history/21차/) · **설명:** [설명](history/21차/README.md) · **직전 차수와 실제 비교:** 19차 · [전체 차이](history/21차/직전차수.diff) |
+| 22차 | Codex Orbit · 22차 | **폴더:** [폴더](history/22차/) · **설명:** [설명](history/22차/README.md) · **직전 차수와 실제 비교:** 21차 · [전체 차이](history/22차/직전차수.diff) |
+| 23차 | Codex Orbit · 23차 | **폴더:** [폴더](history/23차/) · **설명:** [설명](history/23차/README.md) · **직전 차수와 실제 비교:** 22차 · [전체 차이](history/23차/직전차수.diff) |
+| 24차 | Codex Orbit · 24차 | **폴더:** [폴더](history/24차/) · **설명:** [설명](history/24차/README.md) · **직전 차수와 실제 비교:** 23차 · [전체 차이](history/24차/직전차수.diff) |
+| 25차 | Codex Orbit · 25차 | **폴더:** [폴더](history/25/) · **설명:** [설명](history/25/README.md) · **직전 차수와 실제 비교:** 24차 · [전체 차이](history/25/직전차수.diff) |
+| 26차 | Codex Orbit · 26차 | **폴더:** [폴더](history/26/) · **설명:** [설명](history/26/README.md) · **직전 차수와 실제 비교:** 25차 · [전체 차이](history/26/직전차수.diff) |
+| 27차 | Codex Orbit · 27차 | **폴더:** [폴더](history/27/) · **설명:** [설명](history/27/README.md) · **직전 차수와 실제 비교:** 26차 · [전체 차이](docs/27차_전체변경.diff) |
+| 28차 | Codex Orbit · 28차 | **폴더:** [폴더](history/28/) · **설명:** [설명](history/28/README.md) · **직전 차수와 실제 비교:** 27차 · [전체 차이](docs/28차_전체변경.diff) |
+| 29차 | Codex Orbit · 29차 | **폴더:** [폴더](history/29차/) · **설명:** [설명](history/29차/README.md) · **직전 차수와 실제 비교:** 28차 · [전체 차이](history/29차/직전차수.diff) |
+| 30차 | Codex Orbit · 30차 | **폴더:** [폴더](history/30차/) · **설명:** [설명](history/30차/README.md) · **직전 차수와 실제 비교:** 29차 · [전체 차이](history/30차/직전차수.diff) |
+| 31차 | 화면 마감과 테마 선택 | **폴더:** [폴더](history/31차/) · **설명:** [설명](history/31차/README.md) · **직전 차수와 실제 비교:** 30차 · [전체 차이](history/31차/직전차수.diff) |
+| 32차 | 지역 검색과 날짜별 입체 조형 | **폴더:** [자료 폴더](history/32차) · **설명:** [상세 설명](history/32차/README.md) · **직전 차수와 실제 비교:** [전체 비교·범위](docs/32차_전체변경.diff) |
+| 33차 | 자동 위치·강수량·도시 행사 진행 자료 | **자료 폴더:** [자료 폴더](history/33차) · **상세 설명:** [상세 설명](history/33차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/33차/직전차수.diff) |
+| 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](history/34차) · **상세 설명:** [상세 설명](history/34차/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/34차_전체변경.diff) |
+| 최종 | Codex Orbit · 최종 | **폴더:** [폴더](docs/최종/) · **설명:** [설명](docs/최종/README.md) · **직전 차수와 실제 비교:** [비교 대상 없는 근거](docs/최종/README.md) |
 
 Historical sources and supporting documents/assets are preserved with full comparisons, byte counts and SHA-256. [Archive manifests](docs/ARCHIVE_FILES.md) distinguish original copies, privacy edits and exclusions. Design images use synthetic examples. No private full-source ZIP, personal conversations, operating memories or credentials are published. Existing legal notices are preserved; no new license is assigned. This software work has no manuscript requiring a paper PDF.
 

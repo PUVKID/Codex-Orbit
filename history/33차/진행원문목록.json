@@ -1,0 +1,258 @@
+[
+  {
+    "path": "assets/city-festivals/official-announcements.json",
+    "stored_path": "history/33차/assets/city-festivals/official-announcements.json",
+    "bytes": 10727,
+    "sha256": "c1eceb6fa3041399bc2a98257bc2bc3976df0fa0ac073356bbcde1bcede57058",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "assets/City-Festivals-NOTICE.txt",
+    "stored_path": "history/33차/assets/City-Festivals-NOTICE.txt",
+    "bytes": 3493,
+    "sha256": "2bf833a850198ce2e0082e98f5c06ba3649353273c3f83e01c2db1dd9a44ea44",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "assets/사용법.md",
+    "stored_path": "archive/objects/de7bf1cf4abbafc81486ab750f61493f0eefddb6f8e77f78912f5f73c4d8dc27.bin",
+    "bytes": 10891,
+    "sha256": "de7bf1cf4abbafc81486ab750f61493f0eefddb6f8e77f78912f5f73c4d8dc27",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "docs/2026-11-10_33차_자동지역과강수량_명세.md",
+    "stored_path": "archive/objects/5501ef876ac4c0d9c2348536edbdb849c0b9b27a36a5ce2184325a3a9fc070e6.bin",
+    "bytes": 5119,
+    "sha256": "5501ef876ac4c0d9c2348536edbdb849c0b9b27a36a5ce2184325a3a9fc070e6",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "docs/33차_도시축제_자료범위.md",
+    "stored_path": "archive/objects/dbdf1b1dc7a9487f4389b65b763d713267326e9e3e5ea0adb0e891ae4c1585f9.bin",
+    "bytes": 3117,
+    "sha256": "dbdf1b1dc7a9487f4389b65b763d713267326e9e3e5ea0adb0e891ae4c1585f9",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "README.en.md",
+    "stored_path": "archive/objects/478a765ccdc3c474b63933e3b262e45f8d4d865b99124d1e742d248b27b396dc.bin",
+    "bytes": 8141,
+    "sha256": "478a765ccdc3c474b63933e3b262e45f8d4d865b99124d1e742d248b27b396dc",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "README.md",
+    "stored_path": "archive/objects/0238667238e2afb4fe89529cb34e88a73ad4dab1045e54f53faa1b9bf8177618.bin",
+    "bytes": 11486,
+    "sha256": "0238667238e2afb4fe89529cb34e88a73ad4dab1045e54f53faa1b9bf8177618",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "src/app.py",
+    "stored_path": "history/33차/src/app.py",
+    "bytes": 149183,
+    "sha256": "968253df4caa7ce6aa1c3871e3cc39fb91a52c43deb1cf41dddfcf4212ab58b8",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "src/calendar_art.py",
+    "stored_path": "history/33차/src/calendar_art.py",
+    "bytes": 5588,
+    "sha256": "4118053eaf370f43b1f9c10f96548866547e0a34f367835703d864f8446b2766",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "src/calendar_city.py",
+    "stored_path": "history/33차/src/calendar_city.py",
+    "bytes": 1602,
+    "sha256": "b8cf6a205200b39a4807520c7b562611ef478f075fb311e093174f685f77b484",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "src/calendar_motion.py",
+    "stored_path": "history/33차/src/calendar_motion.py",
+    "bytes": 26450,
+    "sha256": "a011393f0de45636563a57ab073dd1da35e2d1665a8843c44f34cf309e5882b4",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "src/calendar_renderer.py",
+    "stored_path": "history/33차/src/calendar_renderer.py",
+    "bytes": 52889,
+    "sha256": "d226345b42bd6374dfd671adbc0d181162d96ff28fae28d85bc52d169d541736",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "src/calendar_specials.py",
+    "stored_path": "history/33차/src/calendar_specials.py",
+    "bytes": 4140,
+    "sha256": "d291a121624d9774300c5758b843214a8c8e6e76e3cf51150e0ffeaa5aed4b42",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "src/city_festival_geometry.py",
+    "stored_path": "history/33차/src/city_festival_geometry.py",
+    "bytes": 5238,
+    "sha256": "5c923c39d5e03e3d805d94e6fcdc4ce49f7b193cfd192968be4210e6697048a1",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "src/city_festival_updates.py",
+    "stored_path": "history/33차/src/city_festival_updates.py",
+    "bytes": 8620,
+    "sha256": "834598f4dd8ed92a749c07a1f273152b55908e035fc35a22b331997d2e3af84c",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "src/city_festivals.py",
+    "stored_path": "history/33차/src/city_festivals.py",
+    "bytes": 17054,
+    "sha256": "ec9b7e51138e509218d2c35733b9da10ec02ff9f61c45b99e6bac4f68f7b2c89",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "src/city_ui33.py",
+    "stored_path": "history/33차/src/city_ui33.py",
+    "bytes": 7110,
+    "sha256": "8e7cb360e1eae9761cdfa74fd2fa23c422e2f5b58e9297f6926b028be2f1d449",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "src/i18n.py",
+    "stored_path": "history/33차/src/i18n.py",
+    "bytes": 30896,
+    "sha256": "ed0c3cb2d2119c197b4ab98ded7a1f017aecae2a77c08ebb6780065d9bdf1375",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "src/ui_smoke32.py",
+    "stored_path": "history/33차/src/ui_smoke32.py",
+    "bytes": 19055,
+    "sha256": "a74288c858114589f100d1a9f1990b9f230f5f094dda91719d867532090acaf5",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "src/update_widgets.py",
+    "stored_path": "history/33차/src/update_widgets.py",
+    "bytes": 6420,
+    "sha256": "b2414e502d74d5e72adfba917d784c83d6b96744f41cce75bf9966fdd2b91744",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "src/weather.py",
+    "stored_path": "history/33차/src/weather.py",
+    "bytes": 40533,
+    "sha256": "246b11ea8261b497f15bf2f39446b7abf073383b51036fbfdf86073a8ba140a2",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "tests/test_city_calendar33.py",
+    "stored_path": "history/33차/tests/test_city_calendar33.py",
+    "bytes": 5543,
+    "sha256": "9bad458d1f8c0bdd4ddd80c4743a130b6b7a641b57fceca5af37f8235bcb40b3",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "tests/test_city_festivals33.py",
+    "stored_path": "history/33차/tests/test_city_festivals33.py",
+    "bytes": 29403,
+    "sha256": "e6940c8e69e731423daf81619c4b7fdbaed41139e94863556cafe9fd06ab3ee9",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "tests/test_city_ui33.py",
+    "stored_path": "history/33차/tests/test_city_ui33.py",
+    "bytes": 3212,
+    "sha256": "13484c4e3af481087937a22787cf3b6d7d0f81b64f386b778d2f83a6bde52793",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "tests/test_location_mode33.py",
+    "stored_path": "history/33차/tests/test_location_mode33.py",
+    "bytes": 3735,
+    "sha256": "e8c555509bcc3c5dbc3d9b5154aa74766f3e9e959f0cfa8334e93d7c2f89271f",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "tests/test_weather_city_ref33.py",
+    "stored_path": "history/33차/tests/test_weather_city_ref33.py",
+    "bytes": 3524,
+    "sha256": "2064194eab9eb1298f522b1e8193a98274f7bc70559a2543b7902b4b3ec0f86e",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "tests/test_weather_details32.py",
+    "stored_path": "history/33차/tests/test_weather_details32.py",
+    "bytes": 3530,
+    "sha256": "879f8bb913afd4a35101c081d2ae82d352a27134dfedba99b6bd175681ec92b0",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "tests/test_weather_integration.py",
+    "stored_path": "history/33차/tests/test_weather_integration.py",
+    "bytes": 4414,
+    "sha256": "7db599a39ff7776954f17eb849b37ab2df16cf185f9c78f9748c7a15029f34f8",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "tests/test_weather_precipitation33.py",
+    "stored_path": "history/33차/tests/test_weather_precipitation33.py",
+    "bytes": 5517,
+    "sha256": "4f43d579499f45428d90430a458e617627825a50f5cb78b574ee28e1952cabff",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "tests/test_weather_ui32.py",
+    "stored_path": "history/33차/tests/test_weather_ui32.py",
+    "bytes": 3639,
+    "sha256": "ed35169850fb899a56fb8b49d65886e0cae5b0b5eb5c6b2e38a0b33132bfdc7b",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "tools/generate_city_festivals.py",
+    "stored_path": "history/33차/tools/generate_city_festivals.py",
+    "bytes": 34496,
+    "sha256": "6a33492185341357cb840079b0aa0f790645332a5501675fda576b3f257735ed",
+    "disposition": "public_original",
+    "published_as_revision": false
+  },
+  {
+    "path": "tools/installer.iss",
+    "stored_path": "history/33차/tools/installer.iss",
+    "bytes": 3887,
+    "sha256": "4a9a251631865b93763ddbad2991ea0eb7ca8b2f3867bd64a6fad2773ea14733",
+    "disposition": "public_original",
+    "published_as_revision": false
+  }
+]

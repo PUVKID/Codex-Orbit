@@ -18,7 +18,7 @@ class WeatherDetailsTests(unittest.TestCase):
   now=time.time();return dict(current=dict(time=now,temperature_2m=8,relative_humidity_2m=67,weather_code=3),daily=dict(sunrise=[now-10000],sunset=[now+10000]),timezone='Asia/Seoul',utc_offset_seconds=32400)
  def test_one_request_same_coordinates_has_current_and_daily_fields(self):
   c,requests=self.create();c.refresh();q=parse_qs(urlparse(requests[-1][0]).query)
-  self.assertEqual(set(q['current'][0].split(',')),{'temperature_2m','relative_humidity_2m','weather_code'});self.assertEqual(q['daily'],['sunrise,sunset']);self.assertEqual(q['timezone'],['auto']);self.assertEqual(q['forecast_days'],['1'])
+  self.assertEqual(set(q['current'][0].split(',')),{'temperature_2m','relative_humidity_2m','weather_code','precipitation'});self.assertEqual(q['daily'],['sunrise,sunset']);self.assertEqual(q['timezone'],['auto']);self.assertEqual(q['forecast_days'],['1'])
  def test_valid_details_share_region_and_provider_time_zone(self):
   c,_=self.create();data=self.payload();c._weather_done(data)
   self.assertEqual(c.snapshot['humidity'],67);self.assertEqual(c.snapshot['weather_code'],3);self.assertEqual(c.snapshot['sunrise'],data['daily']['sunrise'][0]);self.assertEqual(c.snapshot['utc_offset_seconds'],32400);self.assertIn('수원',c.snapshot['region'])

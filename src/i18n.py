@@ -5,6 +5,57 @@ _language = 'ko'
 
 # 이 사전의 키는 앱 표시 문구이며 사용자 기록을 검색·치환하지 않습니다.
 _EN = {
+'축제 목록 {items}개 항목 · 발표 일정 {events}개':'Festival catalog: {items} items · {events} announced schedules',
+'시리즈':'Series',
+'개최 회차':'Edition',
+'미분류 항목':'Unclassified item',
+
+'행사 목록입니다. 개별 발표 일정은 위에서 확인합니다.':'This is a catalog series. Check the announced schedules above for exact dates.',
+'수동':'Manual',
+'자동':'Automatic',
+'약 {value}':'About {value}',
+'{percent} 남음':'{percent} remaining',
+'백분율은 소수 첫째 자리 반올림 · 원값: ':'Percentages rounded to 1 decimal place · Original value: ',
+'원비율: ':'Original fraction: ',
+'기온·강수량은 소수 둘째 자리 아래 버림 · 백분율은 소수 첫째 자리 반올림 · 원값: ':'Temperature and rain truncated after 2 decimal places · Percentages rounded to 1 decimal place · Original values: ',
+'현재 모드: 자동':'Current mode: Automatic',
+'현재 모드: 수동':'Current mode: Manual',
+'지역: ':'Location: ',
+'도시 행사':'City events',
+'도시·장소를 고르면 행사와 날씨를 함께 바꿉니다.':'Choose a city or place to update events and weather together.',
+'자동 추정':'Automatic estimate',
+'축제 목록·출처':'Festivals and sources',
+'도시 행사: 식별자 미확인':'City events: city identity unavailable',
+'도시 행사: 자료 미확인':'City events: data unavailable',
+'추정 지역의 행사':'Events for the estimated city',
+'선택 도시의 행사':'Events for the selected city',
+'목록 {series}개 · 발표 일정 {events}개':'{series} series · {events} announced schedules',
+'도시 축제·행사':'City festivals and events',
+'일정 기준 연도':'Schedule year',
+'수록 목록과 발표된 날짜를 구분합니다. 미발표 일정과 전 세계 모든 도시 행사를 보장하지 않습니다.':'The catalog and announced dates are separate. Unannounced schedules and all events in every city are not guaranteed.',
+'도시 식별자가 없습니다. 도시 검색 결과를 적용하면 지원 범위를 확인할 수 있습니다.':'City identity is unavailable. Apply a city search result to check coverage.',
+'발표된 날짜 {days}일':'{days} announced dates',
+'원본 수록 범위: ':'Original coverage: ',
+'발표된 일정: ':'Announced schedule: ',
+'행사 목록 · 개별 날짜 확인 필요':'Catalog series · exact dates need confirmation',
+'원본 자료 · 출처와 라이선스':'Original data, sources and licenses',
+'개별 날짜 미발표·미수록':'Exact dates not announced or not included',
+'라이선스: ':'License: ',
+'일정 새로고침':'Refresh schedules',
+'일정 갱신 실패 · 기존 자료 유지':'Schedule update failed · previous data kept',
+
+'표시: 소수 둘째 자리 아래 버림 · 원값: ':'Display: truncated after 2 decimal places · Original values: ',
+'위치 모드':'Location mode',
+'자동 · 네트워크 추정':'Automatic · network estimate',
+'수동 · 직접 선택':'Manual · choose a location',
+'현재 날씨 모드: 수동 · 직접 선택':'Current weather mode: Manual · selected location',
+'현재 날씨 모드: 자동 · 네트워크 추정':'Current weather mode: Automatic · network estimate',
+'자동 모드 적용':'Use automatic mode',
+'강수 ':'Rain ',
+'이전 강수 ':'Earlier rain ',
+'직전 {minutes:g}분':'last {minutes:g} min',
+'직전 {seconds}초':'last {seconds} sec',
+
 '회전 속도':'Rotation speed','{speed:g}배':'{speed:g}×','기본 1배 복원':'Reset to 1×',
 '회전 속도 변경 실패: {error}':'Unable to change rotation speed: {error}',
 '회전 속도만 변경합니다. 날짜와 시각은 그대로입니다.':'Changes rotation speed only. Date and time stay unchanged.',
@@ -114,3 +165,6 @@ _EN.update({'동명 지역이 있으니 도시·행정구역·나라를 확인�
 
 # 날씨 시간 초과와 선택 지역의 고정 출처 안내만 번역합니다.
 _EN.update({'위치 또는 기온 조회 시간 초과':'Location or temperature lookup timed out', '사용자 선택 지점 · Photon / OpenStreetMap':'Selected place · Photon / OpenStreetMap', '사용자 지정 도시 · Open-Meteo / GeoNames':'Selected city · Open-Meteo / GeoNames'})
+
+_EN.update({'시간 정보 충돌 · 날짜 조형 적용 제외':'Conflicting time information · excluded from the daily sculpture',
+            '공식 페이지에서 날짜 확인 · 시간은 미확인':'Date checked on the official page · time remains unconfirmed'})
