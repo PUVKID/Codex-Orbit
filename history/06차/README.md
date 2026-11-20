@@ -769,7 +769,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 최초 기준 선 읽기와 새 변경은 다릅니다.
 
-자산·글 꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
+자산·글꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
 
 과거 대용량 프레임 자산이 소스 이력에 없을 수 있습니다.
 
@@ -1464,7 +1464,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 최초 기준 선 읽기와 새 변경은 다릅니다.
 
-자산·글 꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
+자산·글꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
 
 과거 대용량 프레임 자산이 소스 이력에 없을 수 있습니다.
 
@@ -1820,7 +1820,7 @@ Codex App Server의 `account/rateLimits/read`를 읽기 전용으로 조회합�
 
 ### LEVEL 3·6차의 구체적인 기능과 확인
 
-app.py와 requirements뿐 아니라 theme.py·visuals.py를 함께 준비합니다. 앱을 열어 위젯과 메뉴·사용 한도 화면을 확인하고 자산이나 글 꼴 오류가 나오면 같은 차수 자료를 대조합니다. Qt 그림 코드를 실행한 사실만으로 서버 조회나 모든 화면 상태가 검증되지는 않습니다.
+app.py와 requirements뿐 아니라 theme.py·visuals.py를 함께 준비합니다. 앱을 열어 위젯과 메뉴·사용 한도 화면을 확인하고 자산이나 글꼴 오류가 나오면 같은 차수 자료를 대조합니다. Qt 그림 코드를 실행한 사실만으로 서버 조회나 모든 화면 상태가 검증되지는 않습니다.
 
 Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Python 의존성과 해당 자산을 준비한 뒤 **이 차수 폴더에서** `python src/app.py`를 실행합니다.
 
@@ -2276,7 +2276,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 최초 기준 선 읽기와 새 변경은 다릅니다.
 
-자산·글 꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
+자산·글꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
 
 과거 대용량 프레임 자산이 소스 이력에 없을 수 있습니다.
 
@@ -2989,7 +2989,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 최초 기준 선 읽기와 새 변경은 다릅니다.
 
-자산·글 꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
+자산·글꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
 
 과거 대용량 프레임 자산이 소스 이력에 없을 수 있습니다.
 
@@ -3236,7 +3236,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 최초 기준 선 읽기와 새 변경은 다릅니다.
 
-자산·글 꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
+자산·글꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
 
 과거 대용량 프레임 자산이 소스 이력에 없을 수 있습니다.
 

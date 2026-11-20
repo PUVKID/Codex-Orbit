@@ -546,7 +546,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 최초 기준 선 읽기와 새 변경은 다릅니다.
 
-자산·글 꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
+자산·글꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
 
 과거 대용량 프레임 자산이 소스 이력에 없을 수 있습니다.
 
@@ -1038,7 +1038,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 최초 기준 선 읽기와 새 변경은 다릅니다.
 
-자산·글 꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
+자산·글꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
 
 과거 대용량 프레임 자산이 소스 이력에 없을 수 있습니다.
 
@@ -1629,7 +1629,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 최초 기준 선 읽기와 새 변경은 다릅니다.
 
-자산·글 꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
+자산·글꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
 
 과거 대용량 프레임 자산이 소스 이력에 없을 수 있습니다.
 
@@ -2126,7 +2126,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 최초 기준 선 읽기와 새 변경은 다릅니다.
 
-자산·글 꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
+자산·글꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
 
 과거 대용량 프레임 자산이 소스 이력에 없을 수 있습니다.
 
@@ -2309,7 +2309,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 최초 기준 선 읽기와 새 변경은 다릅니다.
 
-자산·글 꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
+자산·글꼴 오류라면 이 차수 assets와 라이선스를 대조합니다.
 
 과거 대용량 프레임 자산이 소스 이력에 없을 수 있습니다.
 
