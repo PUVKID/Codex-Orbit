@@ -7,10 +7,25 @@
 | 파일 | 바이트 | SHA-256 |
 | --- | --- | --- |
 | [CodexOrbit.exe](https://github.com/PUVKID/Codex-Orbit/releases/download/v3.5.0/CodexOrbit.exe) | 105587262 | `b6571ba9d37f431f883f73a425fce93a96f4839810c637cd019a7e3adb78b645` |
-| [CodexOrbit-Setup.exe](https://github.com/PUVKID/Codex-Orbit/releases/download/v3.5.0/CodexOrbit-Setup.exe) | 107670155 | `3788cd64c8d778b883fb2555fd8230ff64c230e6a9cc5a7486f166f3225e74dc` |
+| [CodexOrbit-Setup.exe](https://github.com/PUVKID/Codex-Orbit/releases/download/v3.5.0/CodexOrbit-Setup.exe) | 107670093 | `b7978a6c3cf03a9f8278f4c8018555be7df2147e5d7f2f520df861c16dcd9226` |
+
+## 36차 설치 파일 교체
+
+제품 버전v3.5.0과 단일EXE는 유지하고, 선택 화면 없이 바탕화면 바로가기를 자동 생성하며 완료 화면 실행 체크박스를 제거한36차Setup으로 교체합니다. [36차 상세](../history/36차/README.md#reading-level-1) · [전체 비교](../history/36차/직전차수.diff)
+
+<details>
+<summary>교체 전35차Setup 생성 메타</summary>
+
+| 이전 파일 | 바이트 | SHA-256 |
+| --- | --- | --- |
+| CodexOrbit-Setup.exe · 35차 교체 전 | 107670155 | `3788cd64c8d778b883fb2555fd8230ff64c230e6a9cc5a7486f166f3225e74dc` |
+
+이 값은 교체 전 기록입니다. 위 현재 다운로드의Setup과 구분합니다.
+
+</details>
 
 <!-- 최소35-다운로드-시작 -->
-위 값은 새3.5.0 EXE·Setup의 실제 생성 메타입니다. 아래3.4.0 기록의 크기·해시는 이전 버전의 값입니다.
+위 현재Setup은36차 설치 선택 항목 수정본이고, EXE는35차와 같습니다. 아래3.4.0 기록의 크기·해시는 이전 버전의 값입니다.
 <!-- 최소35-다운로드-끝 -->
 
 ## 이전3.4.0 배포 기록

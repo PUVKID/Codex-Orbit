@@ -1,0 +1,19 @@
+{
+  "product_version": "3.5.0",
+  "source": "tools/installer.iss",
+  "before": {
+    "bytes": 3887,
+    "sha256": "6bba02dff1a97e401f9d1a89966b34d39c3666a6086663f70337d72102fee52c"
+  },
+  "after": {
+    "bytes": 3853,
+    "sha256": "42f7fd47ee0221f0e12ad56f194744bc924f42386af91f09abee0eb3d3745dbc"
+  },
+  "setup": {
+    "bytes": 107670093,
+    "sha256": "b7978a6c3cf03a9f8278f4c8018555be7df2147e5d7f2f520df861c16dcd9226"
+  },
+  "exe_unchanged_sha256": "b6571ba9d37f431f883f73a425fce93a96f4839810c637cd019a7e3adb78b645",
+  "font_cause": "미확정",
+  "direct_full_installer_ui": "이 문서 작업에서 미실행"
+}

@@ -1,4 +1,9 @@
-﻿[Setup]
+﻿#ifndef OrbitSourceDir
+#define OrbitSourceDir SourcePath
+#endif
+
+[Setup]
+SourceDir={#OrbitSourceDir}
 AppId=CodexOrbit.Desktop
 AppName=Codex Orbit
 AppVersion=3.5.0
@@ -43,9 +48,6 @@ english.LaunchApp=Launch Codex Orbit
 korean.FontError=내장 글꼴을 읽을 수 없습니다. 설치 파일을 다시 확인해 주세요.
 english.FontError=Could not load the bundled font. Please check the installer.
 
-[Tasks]
-Name: "desktopicon"; Description: "{cm:DesktopShortcut}"; Flags: unchecked
-
 [Files]
 Source: "..\배포\Usage.en.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\assets\NanumGothic-Bold.ttf"; DestDir: "{app}\assets"; Flags: ignoreversion
@@ -62,12 +64,12 @@ Source: "..\배포\배포안내.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\배포\라이선스\*"; DestDir: "{app}\라이선스"; Flags: ignoreversion recursesubdirs
 
 [Icons]
+Name: "{autodesktop}\Codex Orbit"; Filename: "{app}\CodexOrbit.exe"
 Name: "{group}\Codex Orbit"; Filename: "{app}\CodexOrbit.exe"
 Name: "{group}\{cm:UserGuide}"; Filename: "{app}\{cm:GuideFile}"
-Name: "{autodesktop}\Codex Orbit"; Filename: "{app}\CodexOrbit.exe"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\CodexOrbit.exe"; Description: "{cm:LaunchApp}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\CodexOrbit.exe"; Flags: nowait skipifsilent runasoriginaluser
 
 [Code]
 var
