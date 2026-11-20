@@ -8,7 +8,7 @@
 
 사용자 승인에 따라 같은 프로젝트 이름으로 공개 전달을 복구합니다.
 
-이 전 404 관측과 새 게시 작업을 구분하며 [2.10.0 Release](https://github.com/PUVKID/Codex-Orbit/releases/tag/v2.10.0)의 원격 게시·해시는 별도 확인합니다.
+이전 404 관측과 새 게시 작업을 구분하며 [2.10.0 Release](https://github.com/PUVKID/Codex-Orbit/releases/tag/v2.10.0)의 원격 게시·해시는 별도 확인합니다.
 
 ## 보완 내용
 

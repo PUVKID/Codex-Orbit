@@ -2911,11 +2911,11 @@ PyInstaller==6.22.3
 
 - **검증:** 당시 실행 결과는 이 공개 이력에 보존되지 않아 실행 여부를 확인할 수 없습니다. 여기서는 공개 소스 바이트만 비교했습니다.
 
-- **수정** `src/app.py`: 이 전 29190바이트, SHA-256 `87f6314b529e5831384703c6cd0fe97b212bb751eac632c0e7b422d1026f75da`; 현재 39580바이트, SHA-256 `93d5ba9d617c35f5e547642ddf31199791b462f1530856124ae65c780d2e7929`.
+- **수정** `src/app.py`: 이전 29190바이트, SHA-256 `87f6314b529e5831384703c6cd0fe97b212bb751eac632c0e7b422d1026f75da`; 현재 39580바이트, SHA-256 `93d5ba9d617c35f5e547642ddf31199791b462f1530856124ae65c780d2e7929`.
 
-- **수정** `src/core.py`: 이 전 8223바이트, SHA-256 `6e6ae64f8d21cb1af9972916c8cbbeb9fa9e43d76d69fa723521803370a7b970`; 현재 10204바이트, SHA-256 `0da59ecbba81ad77544766fa50f0b24bd5abbd8d8f8da37f269a8ff08979b981`.
+- **수정** `src/core.py`: 이전 8223바이트, SHA-256 `6e6ae64f8d21cb1af9972916c8cbbeb9fa9e43d76d69fa723521803370a7b970`; 현재 10204바이트, SHA-256 `0da59ecbba81ad77544766fa50f0b24bd5abbd8d8f8da37f269a8ff08979b981`.
 
-- **수정** `src/notifier.py`: 이 전 26813바이트, SHA-256 `2059fcac37723f34535eba05d83443a9dbd7e3dfb771200f190f2c8ed2ffb9a8`; 현재 30682바이트, SHA-256 `00b619819040824cf816bb95536385e8af190967933b7912498d3edbc7f3cb89`.
+- **수정** `src/notifier.py`: 이전 26813바이트, SHA-256 `2059fcac37723f34535eba05d83443a9dbd7e3dfb771200f190f2c8ed2ffb9a8`; 현재 30682바이트, SHA-256 `00b619819040824cf816bb95536385e8af190967933b7912498d3edbc7f3cb89`.
 
 [실행 소스 전체 Git 비교](직전차수.diff)와 [실제 바이트 명세](공개파일_비교.json)는 Python뿐 아니라 존재하는 보조 PowerShell과 의존성 목록을 포함합니다. `git -c core.autocrlf=false apply --reverse --binary -p1`로 현재 소스 사본에서 직전 소스의 파일 부재·신규·삭제 상태까지 복원해 원문 바이트를 대조했습니다.
 

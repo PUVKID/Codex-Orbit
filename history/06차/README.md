@@ -3655,7 +3655,7 @@ PyInstaller==6.22.3
 
 - **검증:** 당시 실행 결과는 이 공개 이력에 보존되지 않아 실행 여부를 확인할 수 없습니다. 여기서는 공개 소스 바이트만 비교했습니다.
 
-- **수정** `src/app.py`: 이 전 61692바이트, SHA-256 `8e2621c486a0ae9da8f05968e861afe0b9e580397bbdeb3c9bfc77fad949adbb`; 현재 62549바이트, SHA-256 `c803fe6fdda129d8910dfe5a9d608034fcd9284e56593f3935190dab39f59fa4`.
+- **수정** `src/app.py`: 이전 61692바이트, SHA-256 `8e2621c486a0ae9da8f05968e861afe0b9e580397bbdeb3c9bfc77fad949adbb`; 현재 62549바이트, SHA-256 `c803fe6fdda129d8910dfe5a9d608034fcd9284e56593f3935190dab39f59fa4`.
 
 - **추가** `src/theme.py`: 이전 없음; 현재 8014바이트, SHA-256 `6ac4f4457b8a7f2cbaddeb15e8a6858bc6e506eb962175099565d5af970e74d0`.
 

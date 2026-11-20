@@ -3943,7 +3943,7 @@ PyInstaller==6.22.3
 
 - **검증:** 당시 실행 결과는 이 공개 이력에 보존되지 않아 실행 여부를 확인할 수 없습니다. 여기서는 공개 소스 바이트만 비교했습니다.
 
-- **수정** `src/visuals.py`: 이 전 8374바이트, SHA-256 `0fc502586eafbb93a3aa6b56fb140d9697c2025b4dca39a2529feb4a505ada8a`; 현재 6585바이트, SHA-256 `3c6d9ed9ace7377a4506e94a4eff961289e6cc1d3f372b35a8cb5591ac8b5756`.
+- **수정** `src/visuals.py`: 이전 8374바이트, SHA-256 `0fc502586eafbb93a3aa6b56fb140d9697c2025b4dca39a2529feb4a505ada8a`; 현재 6585바이트, SHA-256 `3c6d9ed9ace7377a4506e94a4eff961289e6cc1d3f372b35a8cb5591ac8b5756`.
 
 [실행 소스 전체 Git 비교](직전차수.diff)와 [실제 바이트 명세](공개파일_비교.json)는 Python뿐 아니라 존재하는 보조 PowerShell과 의존성 목록을 포함합니다. `git -c core.autocrlf=false apply --reverse --binary -p1`로 현재 소스 사본에서 직전 소스의 파일 부재·신규·삭제 상태까지 복원해 원문 바이트를 대조했습니다.
 

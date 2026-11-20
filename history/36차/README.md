@@ -36,7 +36,7 @@
 
 tools/installer.iss의 Tasks/desktopicon 조건과 Run의 postinstall 플래그를 제거하고 Icons의 autodesktop 바로 가기를 조건 없이 생성합니다.
 
-원본 35차의 Files·글꼴 처리·앱 버전은 유지하고, SourceDir 전 처리 기본 값과 실제 빌드 인자를 구분합니다.
+원본 35차의 Files·글꼴 처리·앱 버전은 유지하고, SourceDir 전처리 기본 값과 실제 빌드 인자를 구분합니다.
 
 자세한 실행 플래그와 바이트 변경은 36차 전체 diff에 보존합니다.
 
