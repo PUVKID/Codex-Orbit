@@ -29,7 +29,7 @@ Ambient light ranges from 0 to 100; **0 turns it off**. The preview theme affect
 
 Your original color values are retained while readable foreground colors are adjusted. Daily fruit, flowers, holidays, city events and pixel 3D rotation remain available. Usage values, automatic/manual location and model, reasoning and task-resume notifications keep their existing meaning. Ambient lighting adds no full-window blur or separate animation timer.
 
-현재 3.5.0의 실행 파일·설치본 해시와 최소 실행 검사는 [검사 범위와 배포 상태](docs/35차_최소검사.md)에서 구분합니다. 아직 받지 않은 결과는 대기 상태입니다.
+**3.5.0은 미리보기 배포본**입니다. EXE·Setup 생성과 기본 실행의 최소 확인, 합성 화면 세 조합 완료와 네 번째 조합의 미해결 오류, 설정 검사 시간 초과를 [검사 범위와 배포 상태](docs/35차_최소검사.md)에서 구분합니다. 3.4.0 안정 릴리스는 별도로 유지합니다.
 
 
 ## Revision 32
