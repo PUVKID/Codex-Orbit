@@ -166,5 +166,7 @@ _EN.update({'동명 지역이 있으니 도시·행정구역·나라를 확인�
 # 날씨 시간 초과와 선택 지역의 고정 출처 안내만 번역합니다.
 _EN.update({'위치 또는 기온 조회 시간 초과':'Location or temperature lookup timed out', '사용자 선택 지점 · Photon / OpenStreetMap':'Selected place · Photon / OpenStreetMap', '사용자 지정 도시 · Open-Meteo / GeoNames':'Selected city · Open-Meteo / GeoNames'})
 
+_EN.update({'설명 더 보기':'Read full explanation','설명 접기':'Hide explanation'})
+
 _EN.update({'시간 정보 충돌 · 날짜 조형 적용 제외':'Conflicting time information · excluded from the daily sculpture',
             '공식 페이지에서 날짜 확인 · 시간은 미확인':'Date checked on the official page · time remains unconfirmed'})

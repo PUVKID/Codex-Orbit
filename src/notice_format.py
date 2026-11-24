@@ -18,7 +18,7 @@ def notice_previous_model(value):
     return notice_model_label(value['model'])
 
 
-def notice_reason(event, limit=210):
+def notice_reason(event, limit=210, *, max_sentences=2):
     """공개 목적 문장만 한두 개 골라 보여 주며 원문과 선택 동기는 새로 만들지 않습니다."""
     raw = public_text(event.get('reason'), '', 1000000)
     missing = raw in ('', '확인 불가', '확인되지 않음')
@@ -45,11 +45,11 @@ def notice_reason(event, limit=210):
             continue
         if sentence in selected:
             continue
-        for original, plain in ((r'\bUI\b', '화면'), (r'\bfixture\b', '검사용 예시'), (r'\bassert\b', '검사 조건'), (r'회귀(?:\s*검사)?', '기존 기능 재확인'), (r'파서', '기록 읽기'), (r'\bverifier\b', '확인 작업')) if get_language() == 'ko' else ():
+        for original, plain in ((r'\bUI\b', '화면'), (r'\bfixture\b', '검사용 예시'), (r'\bassert\b', '검사 조건'), (r'회귀(?:\s*검사)?를', '기존 기능 확인을'), (r'회귀(?:\s*검사)?', '기존 기능 확인'), (r'파서', '기록 읽기'), (r'스키마', '자료 형식'), (r'\bIPC\b', '앱 내부 통신'), (r'\bverifier\b', '확인 작업')) if get_language() == 'ko' else ():
             sentence = re.sub(original, plain, sentence)
         if len(' '.join(selected + [sentence])) <= limit:
             selected.append(sentence)
-        if len(selected) == 2:
+        if len(selected) == max_sentences:
             break
     result = ' '.join(selected)
     if not result:

@@ -582,7 +582,7 @@ class OrbitWidget(QWidget):
         if not hasattr(self,'timer') or not self.isVisible():return
         from calendar_motion import set_calendar_motion_size
         design=design_for_date(regional_calendar_date(),country=self.theme_country,city_ref=self.city_ref)
-        layout=desktop_widget_layout(self.width(),self.height(),t(design.title),True,True,text_scale=self.settings.values.get('text_scale',100)/100,weather_extras=self.weather_extras,clock_text=self.clock_text(),weather_text=self.weather_text,fraction=self.usage_fraction,state=self.usage_state,calendar_date=f'{design.date.month}/{design.date.day}')
+        layout=desktop_widget_layout(self.width(),self.height(),t(design.title),True,True,text_scale=self.settings.values.get('text_scale',100)/100,weather_extras=self.weather_extras,clock_text=self.clock_text(),weather_text=self.weather_text,fraction=self.usage_fraction,state=self.usage_state,calendar_date=design.date.strftime('%Y/%m/%d'))
         if self.weather_extras and self.minimumHeight()!=layout['minimum_height']:
             self.setMinimumHeight(layout['minimum_height'])
         size=max(32,min(2160,round(layout['art'].width()*self.devicePixelRatioF())))
@@ -749,7 +749,7 @@ class Notice(QFrame):
         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
         self.setObjectName('notice')
         set_ui_style(self,'#notice {background:#f9fffc;border:1px solid #bad8ce;border-radius:16px;} QLabel {color:#193c36;background:transparent;border:none;font-weight:700;}')
-        self.setFixedWidth(410)
+        self.setFixedWidth(500)
         layout = QVBoxLayout(self)
         layout.setContentsMargins(18, 14, 18, 14)
         layout.setSpacing(5)
@@ -757,7 +757,7 @@ class Notice(QFrame):
         self.text = QLabel()
         self.title.setTextFormat(Qt.TextFormat.PlainText)
         self.title.setWordWrap(True)
-        set_ui_style(self.title,'font-size:16px;color:#193c36;')
+        set_ui_style(self.title,'font-size:19px;color:#193c36;padding-bottom:4px;')
         self.text.setTextFormat(Qt.TextFormat.PlainText)
         self.text.setWordWrap(True)
         heading = QHBoxLayout()
@@ -786,29 +786,40 @@ class Notice(QFrame):
         self.task_value.setWordWrap(True)
         self.task_value.setTextFormat(Qt.TextFormat.PlainText)
         self.task_value.hide()
-        values = QGridLayout()
+        self.comparison = QFrame()
+        self.comparison.setObjectName('noticeComparison')
+        set_ui_style(self.comparison,'QFrame#noticeComparison {background:#edf8f2;border:1px solid #c4dfd0;border-radius:10px;}')
+        values = QGridLayout(self.comparison)
         self.values_layout = values
-        values.setHorizontalSpacing(12)
+        values.setContentsMargins(10,10,10,10)
+        values.setHorizontalSpacing(8)
         values.setVerticalSpacing(8)
         self.model_previous = QLabel()
         self.model_current = QLabel()
         self.effort_previous = QLabel()
         self.effort_current = QLabel()
         self.notice_after_heading = QLabel(t('변경 후'))
-        for column, text in ((0, '⬅️ ' + t('이전')), (1, '→'), (2, '➡️ ' + t('현재'))):
-            label = self.notice_after_heading if column == 2 else QLabel(text)
+        for column, text in ((1, '⬅️ ' + t('이전')), (2, '→'), (3, '➡️ ' + t('현재'))):
+            label = self.notice_after_heading if column == 3 else QLabel(text)
             set_ui_style(label,'font-size:12px;color:#355c50;')
             values.addWidget(label, 0, column)
+        self.comparison_labels=[]
+        for row, caption in ((1,'모델'),(2,'추론 강도')):
+            label=QLabel(t(caption));label.setWordWrap(True)
+            label.setMinimumWidth(60)
+            label.setMaximumWidth(66)
+            set_ui_style(label,'font-size:12px;color:#55736b;padding-right:4px;')
+            values.addWidget(label,row,0);self.comparison_labels.append(label)
         for row, (previous, current) in enumerate(((self.model_previous, self.model_current),
                                                     (self.effort_previous, self.effort_current)), 1):
-            for column, label in ((0, previous), (2, current)):
+            for column, label in ((1, previous), (3, current)):
                 label.setWordWrap(True)
                 label.setTextFormat(Qt.TextFormat.PlainText)
                 set_ui_style(label,'font-size:16px;font-weight:700;color:#355c50;padding:3px;')
                 values.addWidget(label, row, column)
-        values.setColumnStretch(0, 1)
-        values.setColumnStretch(2, 1)
-        layout.addLayout(values)
+        values.setColumnStretch(1, 1)
+        values.setColumnStretch(3, 1)
+        layout.addWidget(self.comparison)
         # 기존 필드는 실제 보이는 이전 행과 연결하며 숨김 호환 라벨은 만들지 않습니다.
         self.before_value = self.model_previous
         self.transition = self.model_previous
@@ -817,7 +828,7 @@ class Notice(QFrame):
         self.after_value.setTextFormat(Qt.TextFormat.PlainText)
         set_ui_style(self.after_value,'font-size:10px;color:#355c50;padding:0;')
         self.after_value.hide()
-        set_ui_style(self.text,'font-size:13px;color:#355c50;')
+        set_ui_style(self.text,'font-size:14px;color:#355c50;padding:10px 0;')
         layout.addWidget(self.text)
         self.selection_reason = QLabel()
         set_ui_style(self.selection_reason,'font-size:10px;color:#355c50;padding:0;')
@@ -827,18 +838,22 @@ class Notice(QFrame):
         hint = QLabel(t('🔎 자세히 보기'))
         self.detail_hint = hint
         set_ui_style(hint,'font-size:12px;color:#193c36;')
-        layout.addWidget(hint)
-        self.reason_disclosure = QPushButton(t('이유 원문 펼치기'))
+        self.reason_disclosure = QPushButton(t('설명 더 보기'))
         self.reason_disclosure.setCheckable(True)
         self.reason_disclosure.toggled.connect(self.show_reason_original)
-        set_ui_style(self.reason_disclosure,'font-size:12px;padding:2px 4px;min-height:20px;text-align:left;')
-        layout.addWidget(self.reason_disclosure)
+        set_ui_style(self.reason_disclosure,'QPushButton {font-size:12px;padding:4px 0;min-height:20px;text-align:left;background:transparent;border:0;} QPushButton:focus {border:1px solid #9bdbc9;}')
+        explanation_actions=QHBoxLayout()
+        explanation_actions.addWidget(self.reason_disclosure)
+        explanation_actions.addStretch()
+        explanation_actions.addWidget(hint)
+        layout.addLayout(explanation_actions)
         self.reason_original = QPlainTextEdit()
         self.reason_original.setReadOnly(True)
-        self.reason_original.setMaximumHeight(120)
-        self.reason_original.setMinimumHeight(90)
-        self.reason_original.hide()
-        layout.addWidget(self.reason_original)
+        self.reason_dialog = QDialog(self)
+        self.reason_dialog.setWindowTitle(t('공개 이유 원문'))
+        reason_layout = QVBoxLayout(self.reason_dialog)
+        reason_layout.addWidget(self.reason_original)
+        self.reason_dialog.finished.connect(lambda _: self.reason_disclosure.setChecked(False))
         self.queue_hint = QLabel('')
         self.queue_hint.setWordWrap(True)
         self.queue_hint.setTextFormat(Qt.TextFormat.PlainText)
@@ -865,7 +880,9 @@ class Notice(QFrame):
         from theme import unscaled_font_size
         widgets = [self, *self.findChildren(QWidget)]
         bases = [unscaled_font_size(widget) for widget in widgets]
-        self.setFixedWidth(round(410*min(scale,1.25)))
+        self.setFixedWidth(round(500*min(scale,1.25)))
+        for label in self.comparison_labels:
+            label.setMinimumWidth(round(60*scale));label.setMaximumWidth(round(66*scale))
         for widget,base in zip(widgets,bases):
             widget.setFont(app_font(round(base*scale)))
             widget.setProperty('orbit_text_scale31',scale)
@@ -879,10 +896,21 @@ class Notice(QFrame):
         if hasattr(self,'notice_event'):self.fit_content()
 
     def show_reason_original(self, expanded):
-        self.reason_original.setVisible(expanded)
-        self.reason_disclosure.setText(t('이유 원문 접기') if expanded else t('이유 원문 펼치기'))
-        self._last_fit_signature = None
-        self.fit_content()
+        # 긴 설명은 독립된 스크롤 창에서 읽어 알림의 배치와 높이를 유지합니다.
+        from observatory_panel import pause_notice, resume_notice
+        if expanded:
+            pause_notice(self)
+            screen = self.screen() or QApplication.primaryScreen()
+            available = getattr(self, 'available_rect', screen.availableGeometry())
+            self.reason_dialog.resize(min(self.width(), available.width()), min(360, available.height()))
+            self.reason_dialog.move(max(available.left(), min(self.x(), available.right()-self.reason_dialog.width()+1)),
+                                    max(available.top(), min(self.y(), available.bottom()-self.reason_dialog.height()+1)))
+            self.reason_dialog.show()
+            self.reason_dialog.raise_()
+        else:
+            self.reason_dialog.hide()
+            if self.isVisible() and not self.underMouse():resume_notice(self)
+        self.reason_disclosure.setText(t('설명 접기') if expanded else t('설명 더 보기'))
 
     def enterEvent(self, event):
         from observatory_panel import pause_notice
@@ -891,20 +919,21 @@ class Notice(QFrame):
 
     def leaveEvent(self, event):
         from observatory_panel import resume_notice
-        resume_notice(self)
+        if not self.reason_dialog.isVisible():resume_notice(self)
         super().leaveEvent(event)
 
     def set_pinned(self, value):
         from observatory_panel import pause_notice, resume_notice
         self.pinned = bool(value)
         if value:pause_notice(self)
-        elif not self.underMouse():resume_notice(self)
+        elif not self.underMouse() and not self.reason_dialog.isVisible():resume_notice(self)
 
     def dismiss(self):
         if not self.isVisible():
             return
         self.timer.stop()
         self.hide()
+        self.reason_dialog.hide()
         self.completed.emit(str(getattr(self, 'event_id', '')))
 
     def closeEvent(self, event):
@@ -924,7 +953,7 @@ class Notice(QFrame):
                 content = (str(getattr(self, 'notice_event', {}).get('chat_name') or t('채팅 제목 확인 불가')), label.text())
             elif label is self.queue_hint:
                 queue_height = 0 if compact else label.heightForWidth(width)
-                content = None
+                content = bool(label.text().strip())
             else:
                 content = label.text()
             labels.append((content, label.font().toString(), label.styleSheet(), label.isHidden(),
@@ -969,8 +998,8 @@ class Notice(QFrame):
         self.values_layout.setVerticalSpacing(2 if compact else 8)
         for label in (self.after_value, self.selection_reason, self.task_value):
             label.hide()
-        for label in (self.detail_hint, self.queue_hint):
-            label.setVisible(not compact)
+        self.detail_hint.setVisible(not compact)
+        self.queue_hint.setVisible(not compact and bool(self.queue_hint.text().strip()))
         self.layout().activate()
         margins = self.layout().contentsMargins()
         width = self.contentsRect().width() - margins.left() - margins.right()
@@ -1062,12 +1091,13 @@ class Notice(QFrame):
         self.effort_current.setText(friendly_effort(after_map.get('effort')))
         for key, labels in (('model', (self.model_previous, self.model_current)), ('effort', (self.effort_previous, self.effort_current))):
             changed = event.get('kind') != 'activity' and before is not None and before.get(key) and after_map.get(key) and before.get(key) != after_map.get(key)
-            for label in labels:
-                set_ui_style(label,'font-size:16px;font-weight:700;color:#355c50;padding:3px;' + ('background:#d4f3e7;border-radius:6px;' if changed else ''))
+            for index,label in enumerate(labels):
+                size=16 if key=='model' else 14
+                set_ui_style(label,f'font-size:{size}px;font-weight:700;color:#355c50;padding:5px;' + ('background:#d4f3e7;border-radius:6px;' if changed and index==1 else ''))
         self.after_value.setText((t('현재 설정 · ') if event.get('kind') == 'activity' else t('→ 변경 후 · ')) + (self.setting_label(after).replace('\n',' · ') if after is not None else t('확인 불가')))
-        self.text.setText(notice_reason_caption(event) + notice_reason(event))
+        self.text.setText(notice_reason_caption(event) + notice_reason(event, 140, max_sentences=1))
         self.reason_original.setPlainText(notice_reason_original(event))
-        self.reason_disclosure.setText(t('이유 원문 접기') if self.reason_disclosure.isChecked() else t('이유 원문 펼치기'))
+        self.reason_disclosure.setText(t('설명 접기') if self.reason_disclosure.isChecked() else t('설명 더 보기'))
         self.text.setToolTip(notice_reason_original(event))
         style_notice(self)
         self.fit_content()

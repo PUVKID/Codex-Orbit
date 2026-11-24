@@ -155,10 +155,8 @@ def draw_orbit(painter, elapsed, badge='—', fraction=None, state='unknown', he
     surface(DOCK_RECT,8)
     if calendar is not None:
         today = calendar.date
-        label(QRectF(-64,27,32,21),f'{today.month}/{today.day}',11,QColor(accent))
-        label(QRectF(-27,28,90,20),t(calendar.title),12)
-        text.setPen(QColor('#657587'))
-        text.drawLine(QPointF(-30,32),QPointF(-30,45))
+        label(QRectF(-64,25,128,13),today.strftime('%Y/%m/%d'),10,QColor(accent))
+        label(QRectF(-64,38,128,14),t(calendar.title),11)
     else:
         label(QRectF(-64,28,22,20),str(element.number),12,QColor(accent))
         label(QRectF(-39,24,50,28),element.symbol,SYMBOL_PIXELS)
@@ -194,7 +192,7 @@ def _wrapped_lines(value, font, width):
     return lines or ['']
 
 
-def desktop_widget_layout(width, height, title, show_weather=False, show_location=False, text_scale=1.0, weather_extras=(), *, clock_text=None, weather_text=None, fraction=None, state='unknown', calendar_date='12/31'):
+def desktop_widget_layout(width, height, title, show_weather=False, show_location=False, text_scale=1.0, weather_extras=(), *, clock_text=None, weather_text=None, fraction=None, state='unknown', calendar_date='2026/12/31'):
     """실제 글자 폭과 조형 최소 영역으로 안정된 읽기 높이를 계산합니다."""
     if type(text_scale) not in (int,float) or not math.isfinite(text_scale) or not .9 <= text_scale <= 1.5:
         raise ValueError('위젯 글자 배율은 0.9~1.5 범위여야 합니다.')
@@ -207,7 +205,7 @@ def desktop_widget_layout(width, height, title, show_weather=False, show_locatio
     info_line_height = math.ceil(QFontMetricsF(date_font).height())+2*text_scale
     extra_height = math.ceil(QFontMetricsF(weather_font).height())+2*text_scale
     # 매초 바뀌는 숫자의 너비로 날짜·시간 행 수가 출렁이지 않게 고정 표본으로 결정합니다.
-    split_clock = clock_text is not None and QFontMetricsF(date_font).horizontalAdvance('88/88  88:88:88') > text_width
+    split_clock = clock_text is not None and QFontMetricsF(date_font).horizontalAdvance('8888/88/88  88:88:88') > text_width
     clock_lines = ([calendar_date, clock_text] if split_clock else [calendar_date+('  '+clock_text if clock_text else '')])
     dock_height = len(clock_lines)*info_line_height + line_height*len(lines)+8
     primary_lines = _wrapped_lines(weather_text if weather_text is not None else '—', date_font, text_width) if show_weather else []
@@ -241,7 +239,7 @@ def draw_desktop_orbit(painter, width, height, source, design, fraction, state, 
     if cache is not None:
         return cache.draw(painter, width, height, source, design, fraction, state,
                           clock_text, weather_text, location_text, text_scale=text_scale, weather_extras=weather_extras)
-    layout = desktop_widget_layout(width, height, t(design.title), weather_text is not None, location_text is not None,text_scale=text_scale,weather_extras=weather_extras,clock_text=clock_text,weather_text=weather_text,fraction=fraction,state=state,calendar_date=f'{design.date.month}/{design.date.day}')
+    layout = desktop_widget_layout(width, height, t(design.title), weather_text is not None, location_text is not None,text_scale=text_scale,weather_extras=weather_extras,clock_text=clock_text,weather_text=weather_text,fraction=fraction,state=state,calendar_date=design.date.strftime('%Y/%m/%d'))
     painter.save()
     painter.setRenderHint(QPainter.RenderHint.Antialiasing)
     painter.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
@@ -332,7 +330,7 @@ class DesktopOverlayCache:
                tuple(sorted(colors().items())))
         if self.key != key:
             layout = desktop_widget_layout(width, height, title,
-                                           weather_text is not None, location_text is not None,text_scale=text_scale,weather_extras=weather_extras,clock_text=clock_text,weather_text=weather_text,fraction=fraction,state=state,calendar_date=f'{design.date.month}/{design.date.day}')
+                                           weather_text is not None, location_text is not None,text_scale=text_scale,weather_extras=weather_extras,clock_text=clock_text,weather_text=weather_text,fraction=fraction,state=state,calendar_date=design.date.strftime('%Y/%m/%d'))
             image = QImage(math.ceil(width*dpr), math.ceil(height*dpr),
                            QImage.Format.Format_ARGB32_Premultiplied)
             image.setDevicePixelRatio(dpr)
