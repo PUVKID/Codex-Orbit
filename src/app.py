@@ -836,8 +836,8 @@ class Notice(QFrame):
         close.clicked.connect(self.dismiss)
         heading.addWidget(close, 0, Qt.AlignmentFlag.AlignTop)
         layout.addLayout(heading)
-        self.category = NoticeValue()
-        self.category.set_symbol('activity')
+        self.category = QLabel()
+        self.category.setContentsMargins(0,0,0,0)
         set_ui_style(self.category,'font-size:13px;color:#355c50;padding:2px 0;')
         self.category.setWordWrap(True)
         self.category.setTextFormat(Qt.TextFormat.PlainText)
@@ -1142,7 +1142,7 @@ class Notice(QFrame):
         if event.get('kind') == 'activity' and before is not None and before == after:
             category += ' · ' + t('설정 유지')
         icon = '📋' if event.get('kind') == 'activity' and event.get('activity_type') == 'assigned' else '▶️' if event.get('kind') == 'activity' else '⚙️' if event.get('kind') == 'settings' else '🔄'
-        self.category.setText((t('기록 다시 보기 · ') if self.replay else '') + notice_plain(t(category)))
+        self.category.setText(('🔁 ' + t('기록 다시 보기 · ') if self.replay else '✅ ') + notice_plain(t(category)))
         set_ui_style(self.category,'font-size:13px;padding:2px 0;color:'+event_accent(event)+';')
         self.task_value.setText(task_explanation(event, 100))
         self.task_value.setToolTip(task_explanation(event, 2000))
@@ -1165,7 +1165,7 @@ class Notice(QFrame):
                 size=16 if key=='model' else 14
                 set_ui_style(label,f'font-size:{size}px;font-weight:700;color:#355c50;padding:5px;' + ('background:#d4f3e7;border-radius:6px;' if changed and index==1 else ''))
         self.after_value.setText((t('현재 설정 · ') if event.get('kind') == 'activity' else t('→ 변경 후 · ')) + (self.setting_label(after).replace('\n',' · ') if after is not None else t('확인 불가')))
-        self.text.setText(notice_plain(notice_reason_caption(event)) + ' ' + notice_reason(event, 140, max_sentences=1))
+        self.text.setText(notice_reason_caption(event) + notice_reason(event, 140, max_sentences=1))
         self.reason_original.setPlainText(notice_reason_original(event))
         self.reason_disclosure.setText(t('설명 접기') if self.reason_disclosure.isChecked() else t('설명 더 보기'))
         self.text.setToolTip(notice_reason_original(event))

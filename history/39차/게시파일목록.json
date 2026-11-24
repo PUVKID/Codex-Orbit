@@ -4,8 +4,8 @@
     {
       "path": "src/app.py",
       "change": "수정",
-      "bytes": 160536,
-      "sha256": "3591403cd91062c7c444eb68066db730c4bc42f806d5df55b4a75d08f92c1996"
+      "bytes": 160530,
+      "sha256": "a6519330d565027680ea5fc058b08f0dbbfea8df6354350c12186818dede2137"
     },
     {
       "path": "src/i18n.py",
@@ -40,14 +40,14 @@
     {
       "path": "docs/39차_알림아이콘.md",
       "change": "추가",
-      "bytes": 1282,
-      "sha256": "86874ba0a9df02ba4979c91e0eda7d9a420c93e2bd74090eb56abc35dc01c10e"
+      "bytes": 1855,
+      "sha256": "fc83bcfd326145c623c009aa7344581aa299a8463b2df40e485459245bbfc371"
     },
     {
       "path": "README.md",
       "change": "수정",
-      "bytes": 31540,
-      "sha256": "72708e68691f9c9f5bc245b2f11643c47c2caae48d17e4f97f4ee729fc44ec74"
+      "bytes": 32257,
+      "sha256": "38750d260abfebadc930f84d0ef0156e7107872a80970e1fe22221c9831481a9"
     },
     {
       "path": "README.en.md",
@@ -64,98 +64,104 @@
     {
       "path": "history/39차/문서원문/사용법.md.txt",
       "change": "추가",
-      "bytes": 16087,
-      "sha256": "25e89616a7128f65b5f06ddfd456c7106a7753930643aa38679306f660c8bf2c"
+      "bytes": 16660,
+      "sha256": "28d4dee4a7431fe6f1fd4a7b5a33dbd903bfe05f12390cb5dabeefa2568a9162"
     },
     {
       "path": "assets/사용법.md",
       "change": "수정",
-      "bytes": 16473,
-      "sha256": "67db27a5e2d74ad29bf98c10fcd62d7d44b04f6d5a18dda6dc2d21d7f7034567"
+      "bytes": 17190,
+      "sha256": "3bec4b1de8e321ccd4a1dc18ed1d72b62cb1af8c8037505985569524d4a9347f"
     },
     {
       "path": "docs/읽기안내/레벨1.md",
       "change": "수정",
-      "bytes": 103537,
-      "sha256": "d0f043bf922f8657d22e53f9f30b333a9930e316b7f70712b69aa39284324291"
+      "bytes": 104254,
+      "sha256": "40658a206632dbfc9b9ac2c2218b05b6cce3ced9823e1bf5d015e198be85cf7a"
     },
     {
       "path": "docs/읽기안내/레벨2.md",
       "change": "수정",
-      "bytes": 107488,
-      "sha256": "583cbfb271f62b7d3a92337fb180643692121fb71ae98f4899c08aa148627018"
+      "bytes": 108205,
+      "sha256": "3b29612606d757e46be98d7f251f093d1bff3f18bff5cefc05fe3881f464c019"
     },
     {
       "path": "docs/읽기안내/레벨3.md",
       "change": "수정",
-      "bytes": 118470,
-      "sha256": "9c2e62e3c6003afa5fbb97728da60602a128203d78463d8d1879e6b4579d23ad"
+      "bytes": 119187,
+      "sha256": "dbe2f6e194eb1b77619b809e30a0e6ff7823bb6ea4f1eb15688c167e253db6dd"
     },
     {
       "path": "docs/읽기안내/레벨4.md",
       "change": "수정",
-      "bytes": 104883,
-      "sha256": "0e8a1b46a5e2530c2a91bb6ceb6c297cfafdc595927c6996b14d7a836d7b2c91"
+      "bytes": 105600,
+      "sha256": "39a686c20eaf64ff3d45f456cf37360093eca3ed756737eb448cc17e72880dfa"
     },
     {
       "path": "docs/읽기안내/레벨5.md",
       "change": "수정",
-      "bytes": 120794,
-      "sha256": "ef7a4c7f0a4e835f6694df4fdb62c32adfa8929cfb95adb1751be6b5d7faef78"
+      "bytes": 121511,
+      "sha256": "872de22de1a658f9ffa82adc550035cb7ab2c9098cc820b639283a3c3c987300"
     },
     {
       "path": "history/39차/README.md",
       "change": "추가",
-      "bytes": 11391,
-      "sha256": "94da4506f46b5a0aed30d6dd1fe9023333c3a5b1ea7520a96fdd66d71def841b"
+      "bytes": 12108,
+      "sha256": "642d303559994aaa8d949aee247565aa6c389a5cc47832a98c889fed3e95461f"
     },
     {
       "path": "docs/DOWNLOADS.md",
       "change": "수정",
       "bytes": 10857,
-      "sha256": "60614abf446fca34e71fa3a53a4ad43dba78df9572df663c1a9d4d456740f9e1"
+      "sha256": "27246ed0b9a220158a57cb3eb841ee4780139325ec60b703cc34d9ab8cc213d7"
     },
     {
       "path": "변경기록_39차.md",
       "change": "추가",
-      "bytes": 1330,
-      "sha256": "0adea76cdfe7d3051c56563fe206b9b4df4b60c686344212374617b80e96717a"
+      "bytes": 1802,
+      "sha256": "3c96d0d8ca3d42ad3bf3cbbdc43a0fd5414e7911f9c5f0b19aef6179e9543039"
     },
     {
       "path": "history/39차/직전차수.diff",
       "change": "추가",
-      "bytes": 105278,
-      "sha256": "acc8c06adc74e70dfbfecb0f672a5bd1811e4edef3c099c6eacde1899fb4afbc"
+      "bytes": 111821,
+      "sha256": "8574194bd11e9b0fda30b6cddf6518d689a189ea480a1725982ffbe27244fb29"
     },
     {
       "path": "history/39차/비교01.md",
       "change": "추가",
-      "bytes": 70783,
-      "sha256": "9d55fa581d5f0da7d51d260906a3b369047fe5d083ad60287fc864f9b1da232c"
+      "bytes": 70756,
+      "sha256": "1339dfce64dc9fdf1cdf6f63dac07dd4ef514b57a2d7d9cb3929d1cec9f31cea"
     },
     {
       "path": "history/39차/비교02.md",
       "change": "추가",
-      "bytes": 35949,
-      "sha256": "d03237cf4be034426feef3ad8fca620bf3c52583ecd28922bc77bc58cbef81c0"
+      "bytes": 42651,
+      "sha256": "ea6b64efe4fe694a6ffc0aac1216b94a57a3ca60477f0c39d556d8476cb59d3f"
     },
     {
       "path": "history/39차/비교.md",
       "change": "추가",
-      "bytes": 218,
-      "sha256": "c0f9c584f4c5a3375c8a5f9fd4725a51df42f8b7b4abbde72be581e0c9a72a81"
+      "bytes": 579,
+      "sha256": "891d5b34d8cac2dd8cb22ded3408834b16234b01c070b67c4165361364aede76"
+    },
+    {
+      "path": "src/typography.py",
+      "change": "수정",
+      "bytes": 1942,
+      "sha256": "a4255629d3a9214101ca578c5e71ea1a9c45c9f3ab3ae6e2916e63490ca7346d"
     }
   ],
   "binaries": [
     {
       "name": "CodexOrbit.exe",
-      "bytes": 105736344,
-      "sha256": "3bde9f28146b62bbd9e091340c3b123bc12fb7295fd0026e24bac732c3ac0e34"
+      "bytes": 105736846,
+      "sha256": "8d8e078fee15e0dd6ac988b981ca7e1e7d275c706708c81a81bf6e0326b5a698"
     },
     {
       "name": "CodexOrbit-Setup.exe",
-      "bytes": 107815887,
-      "sha256": "9a09d8fa31c79e464009a54edaab50a3937913ef54c6b28e249e3bb058eb4659"
+      "bytes": 107819895,
+      "sha256": "f606e6738e1c67fbd19b79714a749be8d31a4e08d863ad4f824b6ae6cec15d80"
     }
   ]
 }

@@ -20,11 +20,17 @@ def register_fonts():
         identity=QFontDatabase.addApplicationFont(str(path))
         families=QFontDatabase.applicationFontFamilies(identity) if identity>=0 else []
         if not families:raise RuntimeError('필수 나눔고딕 글꼴 등록 실패: '+str(path))
+        # 일반 한글은 나눔고딕을 유지하고 컬러 기호는 Windows 이모지 글꼴로 분리합니다.
+        available=set(QFontDatabase.families())
+        emoji=[name for name in ('Segoe UI Emoji','Noto Color Emoji','Apple Color Emoji') if name in available]
+        if emoji:QFontDatabase.setApplicationEmojiFontFamilies(emoji)
         _family=families[0]
     return _family
 
 def app_font(pixels=None,weight=QFont.Weight.Bold):
-    font=QFont(register_fonts(),10,weight)
+    family=register_fonts()
+    font=QFont(family,10,weight)
+    font.setFamilies([family,'Segoe UI Emoji','Segoe UI Symbol'])
     if pixels is not None:font.setPixelSize(pixels)
     font.setStyleStrategy(font.styleStrategy() | QFont.StyleStrategy.NoSubpixelAntialias)
     return font

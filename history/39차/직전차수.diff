@@ -20,7 +20,7 @@ index c7ce2af16e15c5a9221f0083ed6dfeb9cbd3f430..c2fca1abd9f17adb741c392d442e39f4
  
  Historical sources and supporting documents/assets are preserved with full comparisons, byte counts and SHA-256. [Archive manifests](docs/ARCHIVE_FILES.md) distinguish original copies, privacy edits and exclusions.
 diff --git a/README.md b/README.md
-index d2ee01e1913c879da0670b6011caddb2d797b018..91a892ca73061808d524ec79bff3b6e040ae454c 100644
+index d2ee01e1913c879da0670b6011caddb2d797b018..f72af809b3454d509277fd7ceffdde4e17b85d8e 100644
 --- a/README.md
 +++ b/README.md
 @@ -1,4 +1,17 @@
@@ -49,10 +49,24 @@ index d2ee01e1913c879da0670b6011caddb2d797b018..91a892ca73061808d524ec79bff3b6e0
  <!-- 차수표 끝 -->
  
  원본 소스 비교에는 주석·공백·개행과 신규·삭제 상태를 포함합니다. 20차는 실행 소스 없이 38개 시 안, 21차는 110개 시안을 보존합니다. 최종 폴더의 개인 운영 검증 원문은 공개하지 않습니다. 역사 자료 2,281개 항목의 보존·정제·제외 사유와 원본/공개 SHA를 차수별로 연결했습니다.
-diff --git "a/assets/\354\202\254\354\232\251\353\262\225.md" "b/assets/\354\202\254\354\232\251\353\262\225.md"
-index af6f12c8a8e5475d0c5a786bee9411be889f6b8e..ac909fa7b085b6fdcdc32fec697e6274e12b0693 100644
---- "a/assets/\354\202\254\354\232\251\353\262\225.md"
-+++ "b/assets/\354\202\254\354\232\251\353\262\225.md"
+@@ -314,3 +328,13 @@ Windows 10/11 x64와 OpenGL 3.3을 지원하는 그래픽 드라이버가 필요
+ 
+ 
+ **37차 픽셀 모션 수리:** 날짜별 대상 133종과 도시 행사 형상 8종의 회전을 확인했습니다. [실제 확인 범위와 장면 준비 수리](docs/37차_3D초기화.md)를 함께 읽어 주세요.
++
++## 문장 속 체크·경고 기호 보완
++
++| 표시 | 처리 |
++| --- | --- |
++| ✅ ❌ ⚠️ ☑ → 🔥 🌙 | 한글 글꼴은 유지하고 기호는 이모지·기호 글꼴로 표시합니다. |
++| 상태·이유 | 상태 줄에 체크 기호를 표시하고 공개 이유 문장의 기호를 그대로 보존합니다. |
++| 플랫폼 | Windows 기본 Segoe UI Emoji를 우선 사용하며 Microsoft 글꼴 파일을 재배포하지 않습니다. |
++
++일반 한글과 **문장 속 실제 이모지**, 모델·버튼용 **직접 그린 그림**을 구분하여 표시합니다. Windows 화면에서 기호를 확인했으며 화면 없는 Qt 검사 환경의 글꼴 목록과 결과는 별도로 구분합니다.
+diff --git a/assets/사용법.md b/assets/사용법.md
+index af6f12c8a8e5475d0c5a786bee9411be889f6b8e..2a1ef6670196f96efa3aa8b0098bce4d39ea7d77 100644
+--- a/assets/사용법.md
++++ b/assets/사용법.md
 @@ -1,5 +1,16 @@
  <a name="-codex-orbit--320-사용법">
  
@@ -79,12 +93,26 @@ index af6f12c8a8e5475d0c5a786bee9411be889f6b8e..ac909fa7b085b6fdcdc32fec697e6274
  
  ## 37차 · 알림 센터
  
-diff --git "a/docs/39\354\260\250_\354\225\214\353\246\274\354\225\204\354\235\264\354\275\230.md" "b/docs/39\354\260\250_\354\225\214\353\246\274\354\225\204\354\235\264\354\275\230.md"
+@@ -124,3 +135,13 @@ Codex에서 로컬로 공개하는 기록·설정만 관측합니다. 서버 모
+ 
+ 
+ [이전 35차 문서 정비 안내 원문](사용법_35차_문서정비본.md)을 별도로 보존합니다.
++
++## 문장 속 체크·경고 기호 보완
++
++| 표시 | 처리 |
++| --- | --- |
++| ✅ ❌ ⚠️ ☑ → 🔥 🌙 | 한글 글꼴은 유지하고 기호는 이모지·기호 글꼴로 표시합니다. |
++| 상태·이유 | 상태 줄에 체크 기호를 표시하고 공개 이유 문장의 기호를 그대로 보존합니다. |
++| 플랫폼 | Windows 기본 Segoe UI Emoji를 우선 사용하며 Microsoft 글꼴 파일을 재배포하지 않습니다. |
++
++일반 한글과 **문장 속 실제 이모지**, 모델·버튼용 **직접 그린 그림**을 구분하여 표시합니다. Windows 화면에서 기호를 확인했으며 화면 없는 Qt 검사 환경의 글꼴 목록과 결과는 별도로 구분합니다.
+diff --git a/docs/39차_알림아이콘.md b/docs/39차_알림아이콘.md
 new file mode 100644
-index 0000000000000000000000000000000000000000..77fa20620e73666eb3157fe23b9df1d3a511ad8a
+index 0000000000000000000000000000000000000000..8ca9fa68f056091ee7327e1815a37350f258a81a
 --- /dev/null
-+++ "b/docs/39\354\260\250_\354\225\214\353\246\274\354\225\204\354\235\264\354\275\230.md"
-@@ -0,0 +1,27 @@
++++ b/docs/39차_알림아이콘.md
+@@ -0,0 +1,37 @@
 +# 39차 · 선명한 변경 알림
 +
 +| 표시 | 의미 |
@@ -112,8 +140,18 @@ index 0000000000000000000000000000000000000000..77fa20620e73666eb3157fe23b9df1d3
 +| 확대·테마 | 100/150%와 라이트·다크에서 비교합니다. |
 +| 공개 설명 | 기록된 설명만 보여 주며 비공개 추론을 만들어 내지 않습니다. |
 +| 기존 기능 | 날짜별 픽셀 모션·감시·날씨·계정 한도는 바꾸지 않습니다. |
++
++## 문장 속 기호
++
++| 표시 | 처리 |
++| --- | --- |
++| ✅ ❌ ⚠️ ☑ → 🔥 🌙 | 한글은 나눔고딕, 이모지는 설치된 이모지 글꼴로 표시합니다. |
++| 상태 줄 | 변경 관측에 체크, 기록 재생에 재생 기호를 표시합니다. |
++| 이유·원문 | 공개 문장의 기호를 그대로 보존합니다. |
++
++Windows 기본 Segoe UI Emoji를 우선 사용하며 Microsoft 글꼴 파일을 재배포하지 않습니다. 모델·버튼 그림 아이콘과 문장 속 실제 이모지는 서로 다른 표시 방식입니다.
 diff --git a/docs/DOWNLOADS.md b/docs/DOWNLOADS.md
-index 211771bdfbb2525a0d8dc5374c49f3e8643624e6..f13f2f9880b5c040f129f4e725d1b5d60cf22854 100644
+index 211771bdfbb2525a0d8dc5374c49f3e8643624e6..90c14a0144308509c6dae7c5bdf205bcc78faf87 100644
 --- a/docs/DOWNLOADS.md
 +++ b/docs/DOWNLOADS.md
 @@ -1,3 +1,15 @@
@@ -123,8 +161,8 @@ index 211771bdfbb2525a0d8dc5374c49f3e8643624e6..f13f2f9880b5c040f129f4e725d1b5d6
 +
 +| 파일 | 바이트 | SHA-256 |
 +| --- | --- | --- |
-+| [CodexOrbit.exe](https://github.com/PUVKID/Codex-Orbit/releases/download/v3.9.0/CodexOrbit.exe) | 105736344 | `3bde9f28146b62bbd9e091340c3b123bc12fb7295fd0026e24bac732c3ac0e34` |
-+| [CodexOrbit-Setup.exe](https://github.com/PUVKID/Codex-Orbit/releases/download/v3.9.0/CodexOrbit-Setup.exe) | 107815887 | `9a09d8fa31c79e464009a54edaab50a3937913ef54c6b28e249e3bb058eb4659` |
++| [CodexOrbit.exe](https://github.com/PUVKID/Codex-Orbit/releases/download/v3.9.0/CodexOrbit.exe) | 105736846 | `8d8e078fee15e0dd6ac988b981ca7e1e7d275c706708c81a81bf6e0326b5a698` |
++| [CodexOrbit-Setup.exe](https://github.com/PUVKID/Codex-Orbit/releases/download/v3.9.0/CodexOrbit-Setup.exe) | 107819895 | `f606e6738e1c67fbd19b79714a749be8d31a4e08d863ad4f824b6ae6cec15d80` |
 +
 +<details>
 +<summary>이전 배포 기록</summary>
@@ -147,10 +185,10 @@ index 21f4e7af93053601b923b27673b1aa4ccdced03e..9aca44556aafdcdb2770373a53871466
  | 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../history/37차) · **상세 설명:** [상세 설명](../history/37차/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/37차/비교/README.md) |
  | 38차 | 알림 가독성·연도 포함 날짜 | **자료 폴더:** [자료 폴더](../history/38차) · **상세 설명:** [상세 설명](../history/38차/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/38차/비교.md) |
 +| 39차 | 그림 아이콘·선명한 변경 알림 | **자료 폴더:** [자료 폴더](../history/39차) · **상세 설명:** [상세 설명](../history/39차/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/39차/비교.md) |
-diff --git "a/docs/\354\235\275\352\270\260\354\225\210\353\202\264/\353\240\210\353\262\2501.md" "b/docs/\354\235\275\352\270\260\354\225\210\353\202\264/\353\240\210\353\262\2501.md"
-index e11a27ff95145c721426454aecdc41a00c27871c..50f6734d1ab8328975c136624982882a6268143e 100644
---- "a/docs/\354\235\275\352\270\260\354\225\210\353\202\264/\353\240\210\353\262\2501.md"
-+++ "b/docs/\354\235\275\352\270\260\354\225\210\353\202\264/\353\240\210\353\262\2501.md"
+diff --git a/docs/읽기안내/레벨1.md b/docs/읽기안내/레벨1.md
+index e11a27ff95145c721426454aecdc41a00c27871c..ce03a8e16bca9940a914c0e79b263af8c97cead7 100644
+--- a/docs/읽기안내/레벨1.md
++++ b/docs/읽기안내/레벨1.md
 @@ -116,6 +116,7 @@
  | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../../history/36차) · **해당 수준 설명:** [같은 수준 상세](../../history/36차/README.md#reading-level-1) · **직전 비교 또는 범위:** [35차 이후 전체 변경](../../history/36차/직전차수.diff) |
  | 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../../history/37차) · **해당 수준 설명:** [같은 수준 상세](../../history/37차/README.md#reading-level-1) · **직전 비교 또는 범위:** [36차 이후 전체 변경](../../history/37차/비교/README.md) |
@@ -175,7 +213,7 @@ index e11a27ff95145c721426454aecdc41a00c27871c..50f6734d1ab8328975c136624982882a
  
  ## LEVEL 1 · 배포 사용법의 수준 안내 추가
  
-@@ -1162,3 +1165,39 @@ Windows의 모든 멈춤을 이 시간 안에 해결한다는 보장은 없습
+@@ -1162,3 +1165,49 @@ Windows의 모든 멈춤을 이 시간 안에 해결한다는 보장은 없습
  **이유가 기록되지 않았다면 확인 불가로 표시합니다.** 쉬운 설명을 만들기 위해 새로운 원인을 지어내지 않습니다.
  
  [38차 같은 수준](../../history/38차/README.md#reading-level-1)
@@ -215,10 +253,20 @@ index e11a27ff95145c721426454aecdc41a00c27871c..50f6734d1ab8328975c136624982882a
 +**이유는 기록된 공개 설명에 근거합니다.** 확인하지 못한 변경 원인을 새로 지어내지 않습니다.
 +
 +[39차 같은 수준](../../history/39차/README.md#reading-level-1)
-diff --git "a/docs/\354\235\275\352\270\260\354\225\210\353\202\264/\353\240\210\353\262\2502.md" "b/docs/\354\235\275\352\270\260\354\225\210\353\202\264/\353\240\210\353\262\2502.md"
-index 5ab31bdba2142c409e22e1b234f5f2404dba1d81..27e35ee6e837d9f2f33c32040234cbd0bd1e1957 100644
---- "a/docs/\354\235\275\352\270\260\354\225\210\353\202\264/\353\240\210\353\262\2502.md"
-+++ "b/docs/\354\235\275\352\270\260\354\225\210\353\202\264/\353\240\210\353\262\2502.md"
++
++## 문장 속 체크·경고 기호 보완
++
++| 표시 | 처리 |
++| --- | --- |
++| ✅ ❌ ⚠️ ☑ → 🔥 🌙 | 한글 글꼴은 유지하고 기호는 이모지·기호 글꼴로 표시합니다. |
++| 상태·이유 | 상태 줄에 체크 기호를 표시하고 공개 이유 문장의 기호를 그대로 보존합니다. |
++| 플랫폼 | Windows 기본 Segoe UI Emoji를 우선 사용하며 Microsoft 글꼴 파일을 재배포하지 않습니다. |
++
++일반 한글과 **문장 속 실제 이모지**, 모델·버튼용 **직접 그린 그림**을 구분하여 표시합니다. Windows 화면에서 기호를 확인했으며 화면 없는 Qt 검사 환경의 글꼴 목록과 결과는 별도로 구분합니다.
+diff --git a/docs/읽기안내/레벨2.md b/docs/읽기안내/레벨2.md
+index 5ab31bdba2142c409e22e1b234f5f2404dba1d81..460d5911cee6d9b9f3480241668a4431c4e76a83 100644
+--- a/docs/읽기안내/레벨2.md
++++ b/docs/읽기안내/레벨2.md
 @@ -116,6 +116,7 @@
  | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../../history/36차) · **해당 수준 설명:** [같은 수준 상세](../../history/36차/README.md#reading-level-2) · **직전 비교 또는 범위:** [35차 이후 전체 변경](../../history/36차/직전차수.diff) |
  | 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../../history/37차) · **해당 수준 설명:** [같은 수준 상세](../../history/37차/README.md#reading-level-2) · **직전 비교 또는 범위:** [36차 이후 전체 변경](../../history/37차/비교/README.md) |
@@ -243,7 +291,7 @@ index 5ab31bdba2142c409e22e1b234f5f2404dba1d81..27e35ee6e837d9f2f33c32040234cbd0
  
  ## LEVEL 2 · 배포 사용법의 수준 안내 추가
  
-@@ -1245,3 +1248,39 @@ Sol/태양·Astra/결정·Terra/구 체·Luna/초승달과 중립 코어는 시
+@@ -1245,3 +1248,49 @@ Sol/태양·Astra/결정·Terra/구 체·Luna/초승달과 중립 코어는 시
  **이유가 기록되지 않았다면 확인 불가로 표시합니다.** 쉬운 설명을 만들기 위해 새로운 원인을 지어내지 않습니다.
  
  [38차 같은 수준](../../history/38차/README.md#reading-level-2)
@@ -283,10 +331,20 @@ index 5ab31bdba2142c409e22e1b234f5f2404dba1d81..27e35ee6e837d9f2f33c32040234cbd0
 +**이유는 기록된 공개 설명에 근거합니다.** 확인하지 못한 변경 원인을 새로 지어내지 않습니다.
 +
 +[39차 같은 수준](../../history/39차/README.md#reading-level-2)
-diff --git "a/docs/\354\235\275\352\270\260\354\225\210\353\202\264/\353\240\210\353\262\2503.md" "b/docs/\354\235\275\352\270\260\354\225\210\353\202\264/\353\240\210\353\262\2503.md"
-index 8e25235444cb5557192a8dbd27b4b077de374a16..40a32c5afbb9a3cd8e58feb5b5f962753051d1e3 100644
---- "a/docs/\354\235\275\352\270\260\354\225\210\353\202\264/\353\240\210\353\262\2503.md"
-+++ "b/docs/\354\235\275\352\270\260\354\225\210\353\202\264/\353\240\210\353\262\2503.md"
++
++## 문장 속 체크·경고 기호 보완
++
++| 표시 | 처리 |
++| --- | --- |
++| ✅ ❌ ⚠️ ☑ → 🔥 🌙 | 한글 글꼴은 유지하고 기호는 이모지·기호 글꼴로 표시합니다. |
++| 상태·이유 | 상태 줄에 체크 기호를 표시하고 공개 이유 문장의 기호를 그대로 보존합니다. |
++| 플랫폼 | Windows 기본 Segoe UI Emoji를 우선 사용하며 Microsoft 글꼴 파일을 재배포하지 않습니다. |
++
++일반 한글과 **문장 속 실제 이모지**, 모델·버튼용 **직접 그린 그림**을 구분하여 표시합니다. Windows 화면에서 기호를 확인했으며 화면 없는 Qt 검사 환경의 글꼴 목록과 결과는 별도로 구분합니다.
+diff --git a/docs/읽기안내/레벨3.md b/docs/읽기안내/레벨3.md
+index 8e25235444cb5557192a8dbd27b4b077de374a16..3444a67258bb0b6e9d925e8017f19fa3230c49e6 100644
+--- a/docs/읽기안내/레벨3.md
++++ b/docs/읽기안내/레벨3.md
 @@ -114,6 +114,7 @@ Windows 실행 환경과 사용법·릴리스·보존 소스를 확인하고 실
  | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../../history/36차) · **해당 수준 설명:** [같은 수준 상세](../../history/36차/README.md#reading-level-3) · **직전 비교 또는 범위:** [35차 이후 전체 변경](../../history/36차/직전차수.diff) |
  | 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../../history/37차) · **해당 수준 설명:** [같은 수준 상세](../../history/37차/README.md#reading-level-3) · **직전 비교 또는 범위:** [36차 이후 전체 변경](../../history/37차/비교/README.md) |
@@ -319,7 +377,7 @@ index 8e25235444cb5557192a8dbd27b4b077de374a16..40a32c5afbb9a3cd8e58feb5b5f96275
  
  ## LEVEL 3 · 배포 사용법의 수준 안내 추가
  
-@@ -1256,3 +1260,39 @@ CSV는 수식 시작 문자와 앞 공백·탭·개행을 방어합니다.
+@@ -1256,3 +1260,49 @@ CSV는 수식 시작 문자와 앞 공백·탭·개행을 방어합니다.
  **이유가 기록되지 않았다면 확인 불가로 표시합니다.** 쉬운 설명을 만들기 위해 새로운 원인을 지어내지 않습니다.
  
  [38차 같은 수준](../../history/38차/README.md#reading-level-3)
@@ -359,10 +417,20 @@ index 8e25235444cb5557192a8dbd27b4b077de374a16..40a32c5afbb9a3cd8e58feb5b5f96275
 +**이유는 기록된 공개 설명에 근거합니다.** 확인하지 못한 변경 원인을 새로 지어내지 않습니다.
 +
 +[39차 같은 수준](../../history/39차/README.md#reading-level-3)
-diff --git "a/docs/\354\235\275\352\270\260\354\225\210\353\202\264/\353\240\210\353\262\2504.md" "b/docs/\354\235\275\352\270\260\354\225\210\353\202\264/\353\240\210\353\262\2504.md"
-index 1f7c58d9962f396aa6d22baa4e6ad9393cc33f4d..8819527177c241432c516ce8445032e69ccc9157 100644
---- "a/docs/\354\235\275\352\270\260\354\225\210\353\202\264/\353\240\210\353\262\2504.md"
-+++ "b/docs/\354\235\275\352\270\260\354\225\210\353\202\264/\353\240\210\353\262\2504.md"
++
++## 문장 속 체크·경고 기호 보완
++
++| 표시 | 처리 |
++| --- | --- |
++| ✅ ❌ ⚠️ ☑ → 🔥 🌙 | 한글 글꼴은 유지하고 기호는 이모지·기호 글꼴로 표시합니다. |
++| 상태·이유 | 상태 줄에 체크 기호를 표시하고 공개 이유 문장의 기호를 그대로 보존합니다. |
++| 플랫폼 | Windows 기본 Segoe UI Emoji를 우선 사용하며 Microsoft 글꼴 파일을 재배포하지 않습니다. |
++
++일반 한글과 **문장 속 실제 이모지**, 모델·버튼용 **직접 그린 그림**을 구분하여 표시합니다. Windows 화면에서 기호를 확인했으며 화면 없는 Qt 검사 환경의 글꼴 목록과 결과는 별도로 구분합니다.
+diff --git a/docs/읽기안내/레벨4.md b/docs/읽기안내/레벨4.md
+index 1f7c58d9962f396aa6d22baa4e6ad9393cc33f4d..c4797a5982ab3c1825d9c16fed7d158ecc032c97 100644
+--- a/docs/읽기안내/레벨4.md
++++ b/docs/읽기안내/레벨4.md
 @@ -118,6 +118,7 @@ Watcher 초기 기준선·새 이벤트, 알림 큐·표시·닫기·보관, 렌
  | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../../history/36차) · **해당 수준 설명:** [같은 수준 상세](../../history/36차/README.md#reading-level-4) · **직전 비교 또는 범위:** [35차 이후 전체 변경](../../history/36차/직전차수.diff) |
  | 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../../history/37차) · **해당 수준 설명:** [같은 수준 상세](../../history/37차/README.md#reading-level-4) · **직전 비교 또는 범위:** [36차 이후 전체 변경](../../history/37차/비교/README.md) |
@@ -387,7 +455,7 @@ index 1f7c58d9962f396aa6d22baa4e6ad9393cc33f4d..8819527177c241432c516ce8445032e6
  
  ## LEVEL 4 · 배포 사용법의 수준 안내 추가
  
-@@ -1170,3 +1173,39 @@ CSV 수식 방어는 수식 시작 문자·앞 공백·탭·개행을 다룹니
+@@ -1170,3 +1173,49 @@ CSV 수식 방어는 수식 시작 문자·앞 공백·탭·개행을 다룹니
  **이유가 기록되지 않았다면 확인 불가로 표시합니다.** 쉬운 설명을 만들기 위해 새로운 원인을 지어내지 않습니다.
  
  [38차 같은 수준](../../history/38차/README.md#reading-level-4)
@@ -427,10 +495,20 @@ index 1f7c58d9962f396aa6d22baa4e6ad9393cc33f4d..8819527177c241432c516ce8445032e6
 +**이유는 기록된 공개 설명에 근거합니다.** 확인하지 못한 변경 원인을 새로 지어내지 않습니다.
 +
 +[39차 같은 수준](../../history/39차/README.md#reading-level-4)
-diff --git "a/docs/\354\235\275\352\270\260\354\225\210\353\202\264/\353\240\210\353\262\2505.md" "b/docs/\354\235\275\352\270\260\354\225\210\353\202\264/\353\240\210\353\262\2505.md"
-index c0161d51ff7794f158ebad48ec03704f84062f1c..6020ff1c811c42e01841cfb75e9700cfa0c023d3 100644
---- "a/docs/\354\235\275\352\270\260\354\225\210\353\202\264/\353\240\210\353\262\2505.md"
-+++ "b/docs/\354\235\275\352\270\260\354\225\210\353\202\264/\353\240\210\353\262\2505.md"
++
++## 문장 속 체크·경고 기호 보완
++
++| 표시 | 처리 |
++| --- | --- |
++| ✅ ❌ ⚠️ ☑ → 🔥 🌙 | 한글 글꼴은 유지하고 기호는 이모지·기호 글꼴로 표시합니다. |
++| 상태·이유 | 상태 줄에 체크 기호를 표시하고 공개 이유 문장의 기호를 그대로 보존합니다. |
++| 플랫폼 | Windows 기본 Segoe UI Emoji를 우선 사용하며 Microsoft 글꼴 파일을 재배포하지 않습니다. |
++
++일반 한글과 **문장 속 실제 이모지**, 모델·버튼용 **직접 그린 그림**을 구분하여 표시합니다. Windows 화면에서 기호를 확인했으며 화면 없는 Qt 검사 환경의 글꼴 목록과 결과는 별도로 구분합니다.
+diff --git a/docs/읽기안내/레벨5.md b/docs/읽기안내/레벨5.md
+index c0161d51ff7794f158ebad48ec03704f84062f1c..43d9daccfd7fcc8ef05506920165747b4add2598 100644
+--- a/docs/읽기안내/레벨5.md
++++ b/docs/읽기안내/레벨5.md
 @@ -114,6 +114,7 @@
  | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../../history/36차) · **해당 수준 설명:** [같은 수준 상세](../../history/36차/README.md#reading-level-5) · **직전 비교 또는 범위:** [35차 이후 전체 변경](../../history/36차/직전차수.diff) |
  | 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../../history/37차) · **해당 수준 설명:** [같은 수준 상세](../../history/37차/README.md#reading-level-5) · **직전 비교 또는 범위:** [36차 이후 전체 변경](../../history/37차/비교/README.md) |
@@ -463,7 +541,7 @@ index c0161d51ff7794f158ebad48ec03704f84062f1c..6020ff1c811c42e01841cfb75e9700cf
  
  ## LEVEL 5 · 배포 사용법의 수준 안내 추가
  
-@@ -1258,3 +1262,39 @@ CSV 수식 방어와 허용 문장 내부의 민감정보 자동 판별 한계
+@@ -1258,3 +1262,49 @@ CSV 수식 방어와 허용 문장 내부의 민감정보 자동 판별 한계
  **이유가 기록되지 않았다면 확인 불가로 표시합니다.** 쉬운 설명을 만들기 위해 새로운 원인을 지어내지 않습니다.
  
  [38차 같은 수준](../../history/38차/README.md#reading-level-5)
@@ -503,12 +581,22 @@ index c0161d51ff7794f158ebad48ec03704f84062f1c..6020ff1c811c42e01841cfb75e9700cf
 +**이유는 기록된 공개 설명에 근거합니다.** 확인하지 못한 변경 원인을 새로 지어내지 않습니다.
 +
 +[39차 같은 수준](../../history/39차/README.md#reading-level-5)
-diff --git "a/history/39\354\260\250/README.md" "b/history/39\354\260\250/README.md"
++
++## 문장 속 체크·경고 기호 보완
++
++| 표시 | 처리 |
++| --- | --- |
++| ✅ ❌ ⚠️ ☑ → 🔥 🌙 | 한글 글꼴은 유지하고 기호는 이모지·기호 글꼴로 표시합니다. |
++| 상태·이유 | 상태 줄에 체크 기호를 표시하고 공개 이유 문장의 기호를 그대로 보존합니다. |
++| 플랫폼 | Windows 기본 Segoe UI Emoji를 우선 사용하며 Microsoft 글꼴 파일을 재배포하지 않습니다. |
++
++일반 한글과 **문장 속 실제 이모지**, 모델·버튼용 **직접 그린 그림**을 구분하여 표시합니다. Windows 화면에서 기호를 확인했으며 화면 없는 Qt 검사 환경의 글꼴 목록과 결과는 별도로 구분합니다.
+diff --git a/history/39차/README.md b/history/39차/README.md
 new file mode 100644
-index 0000000000000000000000000000000000000000..15de2c9a45bdfb6c8ccaa8bc4fe6ee8e0a4e4adb
+index 0000000000000000000000000000000000000000..5500a55f80af23b3f051e0aa3f455538d016a49d
 --- /dev/null
-+++ "b/history/39\354\260\250/README.md"
-@@ -0,0 +1,185 @@
++++ b/history/39차/README.md
+@@ -0,0 +1,195 @@
 +# 39차 · 선명한 변경 알림
 +
 +**3.9.0**은 알림의 장식을 직접 그린 그림으로 표시합니다. 채팅 제목, 이전·현재 모델과 추론 강도, 짧은 이유 순서로 읽으며 **바뀐 현재 값만 강조**합니다.
@@ -694,12 +782,22 @@ index 0000000000000000000000000000000000000000..15de2c9a45bdfb6c8ccaa8bc4fe6ee8e
 +**이유는 기록된 공개 설명에 근거합니다.** 확인하지 못한 변경 원인을 새로 지어내지 않습니다.
 +
 +[같은 수준 프로젝트](../../docs/읽기안내/레벨5.md) · [직전38차 같은 수준](../38차/README.md#reading-level-5)
-diff --git "a/history/39\354\260\250/\353\254\270\354\204\234\354\233\220\353\254\270/\354\202\254\354\232\251\353\262\225.md.txt" "b/history/39\354\260\250/\353\254\270\354\204\234\354\233\220\353\254\270/\354\202\254\354\232\251\353\262\225.md.txt"
++
++## 문장 속 체크·경고 기호 보완
++
++| 표시 | 처리 |
++| --- | --- |
++| ✅ ❌ ⚠️ ☑ → 🔥 🌙 | 한글 글꼴은 유지하고 기호는 이모지·기호 글꼴로 표시합니다. |
++| 상태·이유 | 상태 줄에 체크 기호를 표시하고 공개 이유 문장의 기호를 그대로 보존합니다. |
++| 플랫폼 | Windows 기본 Segoe UI Emoji를 우선 사용하며 Microsoft 글꼴 파일을 재배포하지 않습니다. |
++
++일반 한글과 **문장 속 실제 이모지**, 모델·버튼용 **직접 그린 그림**을 구분하여 표시합니다. Windows 화면에서 기호를 확인했으며 화면 없는 Qt 검사 환경의 글꼴 목록과 결과는 별도로 구분합니다.
+diff --git a/history/39차/문서원문/사용법.md.txt b/history/39차/문서원문/사용법.md.txt
 new file mode 100644
-index 0000000000000000000000000000000000000000..86d9727770d3c3cb0fe57deba3758490a9f328df
+index 0000000000000000000000000000000000000000..f2ea78e8959a94508f971d4c64e82328a10197e3
 --- /dev/null
-+++ "b/history/39\354\260\250/\353\254\270\354\204\234\354\233\220\353\254\270/\354\202\254\354\232\251\353\262\225.md.txt"
-@@ -0,0 +1,125 @@
++++ b/history/39차/문서원문/사용법.md.txt
+@@ -0,0 +1,135 @@
 +# 🪐 Codex Orbit · 3.9.0 사용법
 +
 +## 39차 · 선명한 알림 아이콘
@@ -825,8 +923,18 @@ index 0000000000000000000000000000000000000000..86d9727770d3c3cb0fe57deba3758490
 +지역 설정의 ‘축제 목록·출처’에서 선택 도시 또는 추정 도시의 수록 항목과 발표 일정을 구분해 봅니다. 전체 항목에는 검증된 행사 시리즈, 개최 회차, 아직 분류되지 않은 항목이 함께 있으며 시리즈 수로 부풀리지 않습니다. 이름이나 가까운 좌표만으로 도시를 만들어 연결하지 않습니다. 주소·장소에 검증된 도시 식별자가 없으면 목록 지원 범위가 미확인으로 표시될 수 있습니다.
 +
 +실제 발표된 정확한 날짜에만 음악·영화·눈·빛·카니발·꽃·문화·열기구의 8가지 입체 모티프를 적용합니다. 주요 고정 특집은 유지합니다. 모든 개별 축제의 독립 수작업 모델이나 미발표 미래 개최일을 보장하지 않습니다. 발표 일정의 날짜·출처·라이선스를 확인할 수 있고 ‘일정 새로고침’은 검증된 국가 자료를 받아 같은 도시·날짜에도 새 자료를 반영합니다. 연결·검증 실패 시 기존 자료를 유지하고 상태를 표시합니다. 목록은 전 세계 모든 도시 행사의 완전한 사전이 아닙니다.
++
++## 문장 속 기호
++
++| 표시 | 처리 |
++| --- | --- |
++| ✅ ❌ ⚠️ ☑ → 🔥 🌙 | 한글은 나눔고딕, 이모지는 설치된 이모지 글꼴로 표시합니다. |
++| 상태 줄 | 변경 관측에 체크, 기록 재생에 재생 기호를 표시합니다. |
++| 이유·원문 | 공개 문장의 기호를 그대로 보존합니다. |
++
++Windows 기본 Segoe UI Emoji를 우선 사용하며 Microsoft 글꼴 파일을 재배포하지 않습니다. 모델·버튼 그림 아이콘과 문장 속 실제 이모지는 서로 다른 표시 방식입니다.
 diff --git a/src/app.py b/src/app.py
-index c534ddbe79ca9dd6bbac55f1cc06d461e1029af6..8b5bbb7b1b2bba3b5ec44e574ea3bc5c44ba4ee9 100644
+index c534ddbe79ca9dd6bbac55f1cc06d461e1029af6..f89d3f006dcfb5eebc01c68d4c398e6d4bfdd01b 100644
 --- a/src/app.py
 +++ b/src/app.py
 @@ -18,7 +18,7 @@ from notice_format import (friendly_effort, previous_field, short_reason, public
@@ -913,7 +1021,7 @@ index c534ddbe79ca9dd6bbac55f1cc06d461e1029af6..8b5bbb7b1b2bba3b5ec44e574ea3bc5c
          self.title = QLabel(t('모델 · 추론 강도 변경'))
          self.text = QLabel()
          self.title.setTextFormat(Qt.TextFormat.PlainText)
-@@ -768,15 +827,17 @@ class Notice(QFrame):
+@@ -768,8 +827,9 @@ class Notice(QFrame):
          set_ui_style(self.title_marker,'font-size:16px;')
          heading.addWidget(self.title_marker, 0, Qt.AlignmentFlag.AlignTop)
          heading.addWidget(self.title, 1)
@@ -924,12 +1032,11 @@ index c534ddbe79ca9dd6bbac55f1cc06d461e1029af6..8b5bbb7b1b2bba3b5ec44e574ea3bc5c
          close.setToolTip(t('알림 닫기 · 이력은 유지됩니다'))
          set_ui_style(close,'padding:0;font-size:12px;min-height:28px;max-height:28px;border-width:1px;')
          close.setFixedSize(64, 30)
-         close.clicked.connect(self.dismiss)
+@@ -777,6 +837,7 @@ class Notice(QFrame):
          heading.addWidget(close, 0, Qt.AlignmentFlag.AlignTop)
          layout.addLayout(heading)
--        self.category = QLabel()
-+        self.category = NoticeValue()
-+        self.category.set_symbol('activity')
+         self.category = QLabel()
++        self.category.setContentsMargins(0,0,0,0)
          set_ui_style(self.category,'font-size:13px;color:#355c50;padding:2px 0;')
          self.category.setWordWrap(True)
          self.category.setTextFormat(Qt.TextFormat.PlainText)
@@ -990,12 +1097,12 @@ index c534ddbe79ca9dd6bbac55f1cc06d461e1029af6..8b5bbb7b1b2bba3b5ec44e574ea3bc5c
              source = widget.property('orbit_style_source')
              set_ui_style(widget,widget.styleSheet() if source is None else source)
          height=round(30*scale)
-@@ -1076,26 +1142,30 @@ class Notice(QFrame):
+@@ -1076,19 +1142,23 @@ class Notice(QFrame):
          if event.get('kind') == 'activity' and before is not None and before == after:
              category += ' · ' + t('설정 유지')
          icon = '📋' if event.get('kind') == 'activity' and event.get('activity_type') == 'assigned' else '▶️' if event.get('kind') == 'activity' else '⚙️' if event.get('kind') == 'settings' else '🔄'
 -        self.category.setText(('🔁 ' + t('기록 다시 보기 · ') if self.replay else '') + icon + ' ' + t(category))
-+        self.category.setText((t('기록 다시 보기 · ') if self.replay else '') + notice_plain(t(category)))
++        self.category.setText(('🔁 ' + t('기록 다시 보기 · ') if self.replay else '✅ ') + notice_plain(t(category)))
          set_ui_style(self.category,'font-size:13px;padding:2px 0;color:'+event_accent(event)+';')
          self.task_value.setText(task_explanation(event, 100))
          self.task_value.setToolTip(task_explanation(event, 2000))
@@ -1020,14 +1127,6 @@ index c534ddbe79ca9dd6bbac55f1cc06d461e1029af6..8b5bbb7b1b2bba3b5ec44e574ea3bc5c
          for key, labels in (('model', (self.model_previous, self.model_current)), ('effort', (self.effort_previous, self.effort_current))):
              changed = event.get('kind') != 'activity' and before is not None and before.get(key) and after_map.get(key) and before.get(key) != after_map.get(key)
              for index,label in enumerate(labels):
-                 size=16 if key=='model' else 14
-                 set_ui_style(label,f'font-size:{size}px;font-weight:700;color:#355c50;padding:5px;' + ('background:#d4f3e7;border-radius:6px;' if changed and index==1 else ''))
-         self.after_value.setText((t('현재 설정 · ') if event.get('kind') == 'activity' else t('→ 변경 후 · ')) + (self.setting_label(after).replace('\n',' · ') if after is not None else t('확인 불가')))
--        self.text.setText(notice_reason_caption(event) + notice_reason(event, 140, max_sentences=1))
-+        self.text.setText(notice_plain(notice_reason_caption(event)) + ' ' + notice_reason(event, 140, max_sentences=1))
-         self.reason_original.setPlainText(notice_reason_original(event))
-         self.reason_disclosure.setText(t('설명 접기') if self.reason_disclosure.isChecked() else t('설명 더 보기'))
-         self.text.setToolTip(notice_reason_original(event))
 @@ -1972,7 +2042,7 @@ class Controller(QObject):
          card.broadcast_mode = False
          card.apply_text_scale(self.settings.values.get('text_scale', 100) / 100)
@@ -1114,6 +1213,29 @@ index 58b625facf2908dd0a7de02461d905b36d379489..5e2c670117d4968ea878f3039018214f
  '표시: 소수 둘째 자리 아래 버림 · 원값: ':'Display: truncated after 2 decimal places · Original values: ',
  '위치 모드':'Location mode',
  '자동 · 네트워크 추정':'Automatic · network estimate',
+diff --git a/src/typography.py b/src/typography.py
+index e069a5b8659f92043c2aa3ae961ecf4a6d48c780..471fb10438e1eb887cc5577d18b3befe3f197efc 100644
+--- a/src/typography.py
++++ b/src/typography.py
+@@ -20,11 +20,17 @@ def register_fonts():
+         identity=QFontDatabase.addApplicationFont(str(path))
+         families=QFontDatabase.applicationFontFamilies(identity) if identity>=0 else []
+         if not families:raise RuntimeError('필수 나눔고딕 글꼴 등록 실패: '+str(path))
++        # 일반 한글은 나눔고딕을 유지하고 컬러 기호는 Windows 이모지 글꼴로 분리합니다.
++        available=set(QFontDatabase.families())
++        emoji=[name for name in ('Segoe UI Emoji','Noto Color Emoji','Apple Color Emoji') if name in available]
++        if emoji:QFontDatabase.setApplicationEmojiFontFamilies(emoji)
+         _family=families[0]
+     return _family
+ 
+ def app_font(pixels=None,weight=QFont.Weight.Bold):
+-    font=QFont(register_fonts(),10,weight)
++    family=register_fonts()
++    font=QFont(family,10,weight)
++    font.setFamilies([family,'Segoe UI Emoji','Segoe UI Symbol'])
+     if pixels is not None:font.setPixelSize(pixels)
+     font.setStyleStrategy(font.styleStrategy() | QFont.StyleStrategy.NoSubpixelAntialias)
+     return font
 diff --git a/src/update_widgets.py b/src/update_widgets.py
 index f0efb437894e9305e753ae4de6bb3131c74c23f6..7c0ea579e0762e664ffefc12cea04e64d3779bf9 100644
 --- a/src/update_widgets.py
@@ -1239,12 +1361,12 @@ index 0000000000000000000000000000000000000000..77959b6251878c78e66e169c6f875d18
 +a=Analysis([str(root/'src/orbit_entry.py')],pathex=[str(root/'src')],binaries=binaries,datas=datas,hiddenimports=hiddenimports,hookspath=[],hooksconfig={},runtime_hooks=[],excludes=[],noarchive=False,optimize=0)
 +pyz=PYZ(a.pure)
 +exe=EXE(pyz,a.scripts,a.binaries,a.datas,[],name='CodexOrbit',debug=False,bootloader_ignore_signals=False,strip=False,upx=True,upx_exclude=[],runtime_tmpdir=None,console=False,disable_windowed_traceback=False,argv_emulation=False,target_arch=None,codesign_identity=None,entitlements_file=None,icon=[str(root/'assets/Orbit.ico')])
-diff --git "a/\353\263\200\352\262\275\352\270\260\353\241\235_39\354\260\250.md" "b/\353\263\200\352\262\275\352\270\260\353\241\235_39\354\260\250.md"
+diff --git a/변경기록_39차.md b/변경기록_39차.md
 new file mode 100644
-index 0000000000000000000000000000000000000000..73147e093b3d82046b6dcad84bd58abf24329529
+index 0000000000000000000000000000000000000000..af23cf5127d2fc0d6dbf0d4f429dbdf26fcf67a5
 --- /dev/null
-+++ "b/\353\263\200\352\262\275\352\270\260\353\241\235_39\354\260\250.md"
-@@ -0,0 +1,27 @@
++++ b/변경기록_39차.md
+@@ -0,0 +1,37 @@
 +# 39차 공개 변경 기록
 +
 +**3.9.0**은 알림의 장식을 직접 그린 그림으로 표시합니다. 채팅 제목, 이전·현재 모델과 추론 강도, 짧은 이유 순서로 읽으며 **바뀐 현재 값만 강조**합니다.
@@ -1272,3 +1394,13 @@ index 0000000000000000000000000000000000000000..73147e093b3d82046b6dcad84bd58abf
 +| `docs/DOWNLOADS.md` | 수정 |
 +
 +[전체 비교](history/39차/직전차수.diff)는 실제 코드·문서·주석·공백 차이를 포함합니다. 비교 자신과 파생 웹 보기·파일 목록은 자기참조를 피하기 위해 제외합니다. 앱 수정이며 논문 원고는 없습니다. 개인 지침·인증·실제 대화·위치는 공개하지 않습니다.
++
++## 기호 보완
++
++| 파일 | 추가 변경 |
++| --- | --- |
++| src/typography.py | 이모지 전용 글꼴 명시·기호 글꼴 보조 |
++| src/app.py | 체크 상태·이유 문장의 실제 기호 표시 |
++| 안내 | 문장 속 이모지와 그림 아이콘의 표시 방식을 구분 |
++
++최초 39차 뒤 체크 기호의 누락 보고를 받아 보완한 이력이며 최초 구현과 중간 확인은 Git 이력에 보존합니다.
