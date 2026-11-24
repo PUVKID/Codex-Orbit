@@ -1,20 +1,287 @@
 diff --git a/README.en.md b/README.en.md
-index 04d55b7f117451208794b4720570ef2ab6465878..b7050e25c36b0f28a5ff44467024741bf7840b18 100644
+index 63612a1f33d4233a5a64c0de1399f0b6a762b6a3..505bfe550d5b415194d7bc5a8f1acd7868ea8696 100644
 --- a/README.en.md
 +++ b/README.en.md
-@@ -1,6 +1,7 @@
- <a name="-codex-orbit-320"></a>
- <a id="codex-orbit-340"></a>
+@@ -1,235 +1,258 @@
+-<a name="-codex-orbit-320"></a>
+-<a id="codex-orbit-340"></a>
 -# Codex Orbit 3.5.0
+-
+-<!-- user-levels:start -->
+-**수준별 전체 안내:** [LEVEL 1 - Beginner](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A81.md) · [LEVEL 2 - Explorer](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A82.md) · [LEVEL 3 - Practitioner](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A83.md) · [LEVEL 4 - Advanced](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A84.md) · [LEVEL 5 - Expert](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A85.md)
+-
+-## Features and conditions
+-
+-| Feature | Input or condition | Behavior and limit |
+-| --- | --- | --- |
+-| Notifications | Observed local model and effort changes | Separates previous values, current values and published explanations. |
+-| Calendar sculpture | Date, country and verified announced event dates | Preserves the daily subject while keeping text sharp. |
+-| Location and weather | Automatic estimate or explicitly selected search result | Distinguishes precipitation intervals, zero and unavailable data. |
+-| Account usage | Signed-in Codex account-limit percentages | Not an exact remaining-token count; original values remain available. |
+-
+-## Revision 34 · Pixel 3D sculptures and city festivals
+-
+-Daily subjects use pixel rendering of actual 3D meshes with a full vertical-axis turn.
+-
+-Labels and weather remain sharp.
+-
+-Automatic/Manual location controls, precipitation intervals and rounded percentage summaries retain original values.
+-
+-Catalog items, verified series, editions, unclassified items and announced dates are distinct.
+-
+-Worldwide completeness and unannounced future dates are not promised.
+-
+-Revision33 had no separate release.
+-
+-Its working originals are preserved as history in this publication and its work is integrated into Revision34.
+-
+-GPU work runs in an owned child process with a separate internal entry branch.
+-
+-Preparation within five seconds and the existing two-second displayed-frame check are separate criteria.
+-
+-Cleanup first requests normal shutdown, then limits any required forced cleanup to the owned Job; this is not an absolute guarantee against OS stalls.
+-
+-Final observations are reported separately in the verification document. [Details](history/34차/README.md) · [Revision33 working files](history/33차/README.md) · [Changes](변경기록_34차.md)
+-
+-
+-<!-- user-levels:end -->
+-
+-## 36차·설치 선택 항목 정리
+-
+-제품 버전은 **3.5.0**을 유지하며 설치 파일만 교체했습니다.
+-
+-선택 화면 없이 **바탕화면 바로가기를 자동 생성**하고 완료 화면의 실행 체크 박스를 제거한 차수입니다.
+-
+-앱 EXE·150% 설정은 같은 버전 그대로입니다. [현재 다운로드](docs/DOWNLOADS.md)에서 새 Setup과 교체 전 35차해 시를 구분합니다.
+-
+-[LEVEL 1](history/36차/README.md#reading-level-1) · [LEVEL 2](history/36차/README.md#reading-level-2) · [LEVEL 3](history/36차/README.md#reading-level-3) · [LEVEL 4](history/36차/README.md#reading-level-4) · [LEVEL 5](history/36차/README.md#reading-level-5)
+-
+-## Revision 35 · Colors and ambient light
+-
+-Choose System, Light or Dark in **Appearance**, then open **Customize colors** beside it.
+-
+-Select one of six palettes, enter the accent and dark/light background hex values, or use the color picker.
+-
+-Ambient light ranges from 0 to 100; **0 turns it off**.
+-
+-The preview theme affects the preview only.
+-
+-**Apply** saves the selection, while **Cancel** keeps your previous settings.
+-
+-Restore defaults also requires Apply.
+-
+-Invalid colors show an explanation and disable Apply.
+-
+-A save failure restores the previous settings and colors.
+-
+-Your original color values are retained while readable foreground colors are adjusted.
+-
+-Daily fruit, flowers, holidays, city events and pixel 3D rotation remain available.
+-
+-Usage values, automatic/manual location and model, reasoning and task-resume notifications keep their existing meaning.
+-
+-Ambient lighting adds no full-window blur or separate animation timer.
+-
+-**3.5.0은 정식 배포 본**입니다.
+-
+-EXE·Setup 생성과 기본 실행의 최소 확인, 합성 화면 세 조합 완료와 네 번째 자동 검사 미완료, 설정 검사 시간 초과를 [검사 범위와 배포 상태](docs/35차_최소검사.md)에서 구분합니다.
+-
+-사용자는 150% 배율의 실사용이 정상이라고 직접 확인했습니다.
+-
+-이는 자동 검사 전체 통과와 구분합니다.
+-
+-
+-## Revision 32
+-
+-One daily 3D subject replaces the calendar rings and side ornaments.
+-
+-Explicit city/place search supplies weather, humidity and sunrise/sunset.
+-
+-Country holiday templates cover 250 countries/territories with future-data limitations.
+-
+-IP location remains an estimate. [Details](history/32차/README.md) · [Changes](변경기록_32차.md)
+-
+-A Windows desktop app with the original date-based 3D calendar themes enabled by default.
+-
+-The observatory remains available as an explicit choice.
+-
+-Model-change notifications, account rate-limit percentages, time and weather are preserved.
+-
+-[한국어](README.md) · [Downloads](docs/DOWNLOADS.md) · [User guide](docs/Usage.en.md) · [Validation scope](docs/공개검증_32차.md) · [All revisions](docs/REVISION_INDEX.md)
+-
+-In the optional observatory, three silver mesh rings surround model-specific sun, crystal, sphere or crescent cores.
+-
+-Explicitly recorded agent states appear as satellites.
+-
+-Pins, bookmarks, history replay and an away summary help navigate records.
+-
+-Unknown values remain unknown.
+-
+-Replay does not change model settings, and local observations do not certify the server's model identity.
+-
+-Notifications compare the chat title, previous model/reasoning, current model/reasoning and recorded reason.
+-
+-Original IDs and records are preserved.
+-
+-Hover pauses dismissal; notifications can be pinned.
+-
+-Privacy mode masks titles, tasks and tooltips.
+-
+-Local diagnostic ZIPs exclude conversations, credentials, paths and raw events.
+-
+-User-triggered updates accept official releases, verify SHA-256 and restore the previous executable if the replacement fails its startup check.
+-
+-The white/slate-blue light interface and the dark theme use Nanum Gothic Bold.
+-
+-Docking, text scale, pause, reduced motion and resource quality are available.
+-
+-Monitoring continues while motion is paused.
+-
+-Remaining limits are percentages, not token counts.
+-
+-The calendar mode preserves 888 monthly themes for 2026–2099 and daily procedural geometry.
+-
+-One GPU worker keeps the 3840×2160 render source; observatory quality caps are 20/30/60fps.
+-
+-These are not claims of a fixed 240fps or monitor refresh rate.
+-
+-
+-## Revision 31: synthetic screens from the packaged app
+-
+-These screens use synthetic activity without personal records. Model and reasoning values are test examples, not claims about actual execution or account state.
+-
+-![Light synthetic screen](docs/images/31-light-synthetic.png)
+-
+-![Dark synthetic screen](docs/images/31-dark-synthetic.png)
+-
+-## Version 3.1.0
+-
+-Choose System, Light or Dark appearance with saved preferences.
+-
+-Language, text size and rotation speed share a settings area.
+-
+-Overview separates selected settings from observed execution.
+-
+-Display settings explains motion, docking, sound, quality, diagnostics and updates.
+-
+-Privacy mode masks titles and task descriptions while preserving stored records.
+-
+-Date-based artwork and notification behavior are retained. [Revision 31](history/31차/README.md)
+-
+-## Version 3.0.1
+-
+-Missing display-mode settings now select the calendar.
+-
+-Model events preserve the date title and geometry.
+-
+-The existing yearly, monthly and daily theme code and assets remain unchanged. [Revision 30](history/30차/README.md) · [Validation](docs/공개검증_30차.md)
+-
+-## Revision history
+-
+-| 차수 | 핵심 변경 | 자료 |
+-| --- | --- | --- |
+-| 1차 | Codex Orbit·1차 | **폴더:** [폴더](history/01차/) · **설명:** [설명](history/01차/README.md) · **직전 차수와 실제 비교:** [비교 대상 없는 근거](history/01차/직전차수.diff) |
+-| 2차 | Codex Orbit·2차 | **폴더:** [폴더](history/02차/) · **설명:** [설명](history/02차/README.md) · **직전 차수와 실제 비교:** 1차·[전체 차이](history/02차/직전차수.diff) |
+-| 3차 | Codex Orbit·3차 | **폴더:** [폴더](history/03차/) · **설명:** [설명](history/03차/README.md) · **직전 차수와 실제 비교:** 2차·[전체 차이](history/03차/직전차수.diff) |
+-| 4차 | Codex Orbit·4차 | **폴더:** [폴더](history/04차/) · **설명:** [설명](history/04차/README.md) · **직전 차수와 실제 비교:** 3차·[전체 차이](history/04차/직전차수.diff) |
+-| 5차 | Codex Orbit·5차 | **폴더:** [폴더](history/05차/) · **설명:** [설명](history/05차/README.md) · **직전 차수와 실제 비교:** 4차·[전체 차이](history/05차/직전차수.diff) |
+-| 6차 | Codex Orbit·6차 | **폴더:** [폴더](history/06차/) · **설명:** [설명](history/06차/README.md) · **직전 차수와 실제 비교:** 5차·[전체 차이](history/06%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
+-| 7차 | Codex Orbit·7차 | **폴더:** [폴더](history/07차/) · **설명:** [설명](history/07차/README.md) · **직전 차수와 실제 비교:** 6차·[전체 차이](history/07차/직전차수.diff) |
+-| 8차 | Codex Orbit·8차 | **폴더:** [폴더](history/08차/) · **설명:** [설명](history/08차/README.md) · **직전 차수와 실제 비교:** 7차·[전체 차이](history/08차/직전차수.diff) |
+-| 9차 | Codex Orbit·9차 | **폴더:** [폴더](history/09차/) · **설명:** [설명](history/09차/README.md) · **직전 차수와 실제 비교:** 8차·[전체 차이](history/09차/직전차수.diff) |
+-| 10차 | Codex Orbit·10차 | **폴더:** [폴더](history/10차/) · **설명:** [설명](history/10차/README.md) · **직전 차수와 실제 비교:** 9차·[전체 차이](history/10차/직전차수.diff) |
+-| 11차 | Codex Orbit·11차 | **폴더:** [폴더](history/11차/) · **설명:** [설명](history/11차/README.md) · **직전 차수와 실제 비교:** 10차·[전체 차이](history/11차/직전차수.diff) |
+-| 12차 | Codex Orbit·12차 | **폴더:** [폴더](history/12차/) · **설명:** [설명](history/12차/README.md) · **직전 차수와 실제 비교:** 11차·[전체 차이](history/12차/직전차수.diff) |
+-| 13차 | Codex Orbit·13차 | **폴더:** [폴더](history/13차/) · **설명:** [설명](history/13차/README.md) · **직전 차수와 실제 비교:** 12차·[전체 차이](history/13차/직전차수.diff) |
+-| 14차 | Codex Orbit·14차 | **폴더:** [폴더](history/14차/) · **설명:** [설명](history/14차/README.md) · **직전 차수와 실제 비교:** 13차·[전체 차이](history/14차/직전차수.diff) |
+-| 15차 | Codex Orbit·15차 | **폴더:** [폴더](history/15차/) · **설명:** [설명](history/15차/README.md) · **직전 차수와 실제 비교:** 14차·[전체 차이](history/15차/직전차수.diff) |
+-| 16차 | Codex Orbit·16차 | **폴더:** [폴더](history/16차/) · **설명:** [설명](history/16차/README.md) · **직전 차수와 실제 비교:** 15차·[전체 차이](history/16차/직전차수.diff) |
+-| 17차 | Codex Orbit·17차 | **폴더:** [폴더](history/17차/) · **설명:** [설명](history/17차/README.md) · **직전 차수와 실제 비교:** 16차·[전체 차이](history/17차/직전차수.diff) |
+-| 18차 | Codex Orbit·18차 | **폴더:** [폴더](history/18차/) · **설명:** [설명](history/18차/README.md) · **직전 차수와 실제 비교:** 17차·[전체 차이](history/18%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
+-| 19차 | Codex Orbit·19차 | **폴더:** [폴더](history/19차/) · **설명:** [설명](history/19차/README.md) · **직전 차수와 실제 비교:** 18차·[전체 차이](history/19차/직전차수.diff) |
+-| 20차 | Codex Orbit·20차 | **폴더:** [폴더](docs/20차/) · **설명:** [설명](docs/20차/README.md) · **직전 차수와 실제 비교:** [비교 대상 없는 근거](docs/20차/README.md) |
+-| 21차 | Codex Orbit·21차 | **폴더:** [폴더](history/21차/) · **설명:** [설명](history/21차/README.md) · **직전 차수와 실제 비교:** 19차·[전체 차이](history/21차/직전차수.diff) |
+-| 22차 | Codex Orbit·22차 | **폴더:** [폴더](history/22차/) · **설명:** [설명](history/22차/README.md) · **직전 차수와 실제 비교:** 21차·[전체 차이](history/22%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
+-| 23차 | Codex Orbit·23차 | **폴더:** [폴더](history/23차/) · **설명:** [설명](history/23차/README.md) · **직전 차수와 실제 비교:** 22차·[전체 차이](history/23%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
+-| 24차 | Codex Orbit·24차 | **폴더:** [폴더](history/24차/) · **설명:** [설명](history/24차/README.md) · **직전 차수와 실제 비교:** 23차·[전체 차이](history/24차/직전차수.diff) |
+-| 25차 | Codex Orbit·25차 | **폴더:** [폴더](history/25/) · **설명:** [설명](history/25/README.md) · **직전 차수와 실제 비교:** 24차·[전체 차이](history/25/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
+-| 26차 | Codex Orbit·26차 | **폴더:** [폴더](history/26/) · **설명:** [설명](history/26/README.md) · **직전 차수와 실제 비교:** 25차·[전체 차이](history/26/직전차수.diff) |
+-| 27차 | Codex Orbit·27차 | **폴더:** [폴더](history/27/) · **설명:** [설명](history/27/README.md) · **직전 차수와 실제 비교:** 26차·[전체 차이](docs/27차_전체변경.diff) |
+-| 28차 | Codex Orbit·28차 | **폴더:** [폴더](history/28/) · **설명:** [설명](history/28/README.md) · **직전 차수와 실제 비교:** 27차·[전체 차이](docs/28%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+-| 29차 | Codex Orbit·29차 | **폴더:** [폴더](history/29차/) · **설명:** [설명](history/29차/README.md) · **직전 차수와 실제 비교:** 28차·[전체 차이](history/29%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
+-| 30차 | Codex Orbit·30차 | **폴더:** [폴더](history/30차/) · **설명:** [설명](history/30차/README.md) · **직전 차수와 실제 비교:** 29차·[전체 차이](history/30차/직전차수.diff) |
+-| 31차 | 화면 마감과 테마 선택 | **폴더:** [폴더](history/31차/) · **설명:** [설명](history/31차/README.md) · **직전 차수와 실제 비교:** 30차·[전체 차이](history/31차/직전차수.diff) |
+-| 32차 | 지역 검색과 날짜별 입체 조형 | **폴더:** [자료 폴더](history/32차) · **설명:** [상세 설명](history/32차/README.md) · **직전 차수와 실제 비교:** [전체 비교·범위](docs/32%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+-| 33차 | 자동 위치·강수량·도시 행사 진행 자료 | **자료 폴더:** [자료 폴더](history/33차) · **상세 설명:** [상세 설명](history/33차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/33%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
+-| 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](history/34차) · **상세 설명:** [상세 설명](history/34차/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/34%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+-| 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](history/35차) · **상세 설명:** [상세 설명](history/35차/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/35%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+-| 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](history/36차) · **상세 설명:** [상세 설명](history/36차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/36차/직전차수.diff) |
+-| 최종 | Codex Orbit · 최종 | **폴더:** [폴더](docs/최종/) · **설명:** [설명](docs/최종/README.md) · **직전 차수와 실제 비교:** [비교 대상 없는 근거](docs/최종/README.md) |
+-
+-Historical sources and supporting documents/assets are preserved with full comparisons, byte counts and SHA-256. [Archive manifests](docs/ARCHIVE_FILES.md) distinguish original copies, privacy edits and exclusions.
+-
+-Design images use synthetic examples.
+-
+-No private full-source ZIP, personal conversations, operating memories or credentials are published.
+-
+-Existing legal notices are preserved; no new license is assigned.
+-
+-This software work has no manuscript requiring a paper PDF.
+-
+-
+-## Synthetic examples
+-
+-Actual Qt screens using synthetic events and example values; no private chats or real account readings.
+-
+-![Synthetic Qt example](docs/images/observatory-29.png)
+-
+-![Synthetic Qt example](docs/images/history-29.png)
+-
+-![Synthetic Qt example](docs/images/widget-29.png)
++<a name="-codex-orbit-320"></a>
++<a id="codex-orbit-340"></a>
 +<a id="codex-orbit-350"></a>
 +# Codex Orbit 3.7.0
- 
- <!-- user-levels:start -->
- **수준별 전체 안내:** [LEVEL 1 - Beginner](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A81.md) · [LEVEL 2 - Explorer](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A82.md) · [LEVEL 3 - Practitioner](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A83.md) · [LEVEL 4 - Advanced](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A84.md) · [LEVEL 5 - Expert](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A85.md)
-@@ -21,6 +22,24 @@ Daily subjects use pixel rendering of actual 3D meshes with a full vertical-axis
- 
- <!-- user-levels:end -->
- 
++
++<!-- user-levels:start -->
++**수준별 전체 안내:** [LEVEL 1 - Beginner](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A81.md) · [LEVEL 2 - Explorer](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A82.md) · [LEVEL 3 - Practitioner](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A83.md) · [LEVEL 4 - Advanced](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A84.md) · [LEVEL 5 - Expert](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A85.md)
++
++## Features and conditions
++
++| Feature | Input or condition | Behavior and limit |
++| --- | --- | --- |
++| Notifications | Observed local model and effort changes | Separates previous values, current values and published explanations. |
++| Calendar sculpture | Date, country and verified announced event dates | Preserves the daily subject while keeping text sharp. |
++| Location and weather | Automatic estimate or explicitly selected search result | Distinguishes precipitation intervals, zero and unavailable data. |
++| Account usage | Signed-in Codex account-limit percentages | Not an exact remaining-token count; original values remain available. |
++
++## Revision 34 · Pixel 3D sculptures and city festivals
++
++Daily subjects use pixel rendering of actual 3D meshes with a full vertical-axis turn.
++
++Labels and weather remain sharp.
++
++Automatic/Manual location controls, precipitation intervals and rounded percentage summaries retain original values.
++
++Catalog items, verified series, editions, unclassified items and announced dates are distinct.
++
++Worldwide completeness and unannounced future dates are not promised.
++
++Revision33 had no separate release.
++
++Its working originals are preserved as history in this publication and its work is integrated into Revision34.
++
++GPU work runs in an owned child process with a separate internal entry branch.
++
++Preparation within five seconds and the existing two-second displayed-frame check are separate criteria.
++
++Cleanup first requests normal shutdown, then limits any required forced cleanup to the owned Job; this is not an absolute guarantee against OS stalls.
++
++Final observations are reported separately in the verification document. [Details](history/34차/README.md) · [Revision33 working files](history/33차/README.md) · [Changes](변경기록_34차.md)
++
++
++<!-- user-levels:end -->
++
 +## 37차 · 알림 센터와 감시 상태·업데이트 안내
 +
 +**3.7.0**은 관측 기록을 찾아보는 알림 센터, 감시 상태와 알림 표시 조절, 공식 업데이트 안내를 연결한 차수입니다. 시스템·라이트·다크와 날짜별 과일·꽃 픽셀 입체 조형은 유지합니다. 실제 기록과 미리보기, 구현된 기능과 아직 확인하지 않은 실행 범위를 구분합니다.
@@ -33,41 +300,516 @@ index 04d55b7f117451208794b4720570ef2ab6465878..b7050e25c36b0f28a5ff44467024741b
 +
 +지역 표시는 국가·시도·도시명과 식별자 정합성을 강화했습니다. 자동 위치는 연결망의 추정값이며 실제 기기 위치의 정확도를 보장하지 않습니다. [지역 표시 정합성](docs/37차_지역정합.md)
 +
- ## 36차 · 설치 선택 항목 정리
- 
- 제품 버전은 **3.5.0**을 유지하며 설치 파일만 교체했습니다. 선택 화면 없이 **바탕화면 바로가기를 자동 생성**하고 완료 화면의 실행 체크박스를 제거한 차수입니다. 앱EXE·150% 설정은 같은 버전 그대로입니다. [현재 다운로드](docs/DOWNLOADS.md)에서 새Setup과 교체 전35차 해시를 구분합니다.
-@@ -109,6 +128,7 @@ Missing display-mode settings now select the calendar. Model events preserve the
- | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](history/34차) · **상세 설명:** [상세 설명](history/34차/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/34차_전체변경.diff) |
- | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](history/35차) · **상세 설명:** [상세 설명](history/35차/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/35차_전체변경.diff) |
- | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](history/36차) · **상세 설명:** [상세 설명](history/36차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/36차/직전차수.diff) |
++## 36차·설치 선택 항목 정리
++
++제품 버전은 **3.5.0**을 유지하며 설치 파일만 교체했습니다.
++
++선택 화면 없이 **바탕화면 바로가기를 자동 생성**하고 완료 화면의 실행 체크 박스를 제거한 차수입니다.
++
++앱 EXE·150% 설정은 같은 버전 그대로입니다. [현재 다운로드](docs/DOWNLOADS.md)에서 새 Setup과 교체 전 35차해 시를 구분합니다.
++
++[LEVEL 1](history/36차/README.md#reading-level-1) · [LEVEL 2](history/36차/README.md#reading-level-2) · [LEVEL 3](history/36차/README.md#reading-level-3) · [LEVEL 4](history/36차/README.md#reading-level-4) · [LEVEL 5](history/36차/README.md#reading-level-5)
++
++## Revision 35 · Colors and ambient light
++
++Choose System, Light or Dark in **Appearance**, then open **Customize colors** beside it.
++
++Select one of six palettes, enter the accent and dark/light background hex values, or use the color picker.
++
++Ambient light ranges from 0 to 100; **0 turns it off**.
++
++The preview theme affects the preview only.
++
++**Apply** saves the selection, while **Cancel** keeps your previous settings.
++
++Restore defaults also requires Apply.
++
++Invalid colors show an explanation and disable Apply.
++
++A save failure restores the previous settings and colors.
++
++Your original color values are retained while readable foreground colors are adjusted.
++
++Daily fruit, flowers, holidays, city events and pixel 3D rotation remain available.
++
++Usage values, automatic/manual location and model, reasoning and task-resume notifications keep their existing meaning.
++
++Ambient lighting adds no full-window blur or separate animation timer.
++
++**3.5.0은 정식 배포 본**입니다.
++
++EXE·Setup 생성과 기본 실행의 최소 확인, 합성 화면 세 조합 완료와 네 번째 자동 검사 미완료, 설정 검사 시간 초과를 [검사 범위와 배포 상태](docs/35차_최소검사.md)에서 구분합니다.
++
++사용자는 150% 배율의 실사용이 정상이라고 직접 확인했습니다.
++
++이는 자동 검사 전체 통과와 구분합니다.
++
++
++## Revision 32
++
++One daily 3D subject replaces the calendar rings and side ornaments.
++
++Explicit city/place search supplies weather, humidity and sunrise/sunset.
++
++Country holiday templates cover 250 countries/territories with future-data limitations.
++
++IP location remains an estimate. [Details](history/32차/README.md) · [Changes](변경기록_32차.md)
++
++A Windows desktop app with the original date-based 3D calendar themes enabled by default.
++
++The observatory remains available as an explicit choice.
++
++Model-change notifications, account rate-limit percentages, time and weather are preserved.
++
++[한국어](README.md) · [Downloads](docs/DOWNLOADS.md) · [User guide](docs/Usage.en.md) · [Validation scope](docs/공개검증_32차.md) · [All revisions](docs/REVISION_INDEX.md)
++
++In the optional observatory, three silver mesh rings surround model-specific sun, crystal, sphere or crescent cores.
++
++Explicitly recorded agent states appear as satellites.
++
++Pins, bookmarks, history replay and an away summary help navigate records.
++
++Unknown values remain unknown.
++
++Replay does not change model settings, and local observations do not certify the server's model identity.
++
++Notifications compare the chat title, previous model/reasoning, current model/reasoning and recorded reason.
++
++Original IDs and records are preserved.
++
++Hover pauses dismissal; notifications can be pinned.
++
++Privacy mode masks titles, tasks and tooltips.
++
++Local diagnostic ZIPs exclude conversations, credentials, paths and raw events.
++
++User-triggered updates accept official releases, verify SHA-256 and restore the previous executable if the replacement fails its startup check.
++
++The white/slate-blue light interface and the dark theme use Nanum Gothic Bold.
++
++Docking, text scale, pause, reduced motion and resource quality are available.
++
++Monitoring continues while motion is paused.
++
++Remaining limits are percentages, not token counts.
++
++The calendar mode preserves 888 monthly themes for 2026–2099 and daily procedural geometry.
++
++One GPU worker keeps the 3840×2160 render source; observatory quality caps are 20/30/60fps.
++
++These are not claims of a fixed 240fps or monitor refresh rate.
++
++
++## Revision 31: synthetic screens from the packaged app
++
++These screens use synthetic activity without personal records. Model and reasoning values are test examples, not claims about actual execution or account state.
++
++![Light synthetic screen](docs/images/31-light-synthetic.png)
++
++![Dark synthetic screen](docs/images/31-dark-synthetic.png)
++
++## Version 3.1.0
++
++Choose System, Light or Dark appearance with saved preferences.
++
++Language, text size and rotation speed share a settings area.
++
++Overview separates selected settings from observed execution.
++
++Display settings explains motion, docking, sound, quality, diagnostics and updates.
++
++Privacy mode masks titles and task descriptions while preserving stored records.
++
++Date-based artwork and notification behavior are retained. [Revision 31](history/31차/README.md)
++
++## Version 3.0.1
++
++Missing display-mode settings now select the calendar.
++
++Model events preserve the date title and geometry.
++
++The existing yearly, monthly and daily theme code and assets remain unchanged. [Revision 30](history/30차/README.md) · [Validation](docs/공개검증_30차.md)
++
++## Revision history
++
++| 차수 | 핵심 변경 | 자료 |
++| --- | --- | --- |
++| 1차 | Codex Orbit·1차 | **폴더:** [폴더](history/01차/) · **설명:** [설명](history/01차/README.md) · **직전 차수와 실제 비교:** [비교 대상 없는 근거](history/01차/직전차수.diff) |
++| 2차 | Codex Orbit·2차 | **폴더:** [폴더](history/02차/) · **설명:** [설명](history/02차/README.md) · **직전 차수와 실제 비교:** 1차·[전체 차이](history/02차/직전차수.diff) |
++| 3차 | Codex Orbit·3차 | **폴더:** [폴더](history/03차/) · **설명:** [설명](history/03차/README.md) · **직전 차수와 실제 비교:** 2차·[전체 차이](history/03차/직전차수.diff) |
++| 4차 | Codex Orbit·4차 | **폴더:** [폴더](history/04차/) · **설명:** [설명](history/04차/README.md) · **직전 차수와 실제 비교:** 3차·[전체 차이](history/04차/직전차수.diff) |
++| 5차 | Codex Orbit·5차 | **폴더:** [폴더](history/05차/) · **설명:** [설명](history/05차/README.md) · **직전 차수와 실제 비교:** 4차·[전체 차이](history/05차/직전차수.diff) |
++| 6차 | Codex Orbit·6차 | **폴더:** [폴더](history/06차/) · **설명:** [설명](history/06차/README.md) · **직전 차수와 실제 비교:** 5차·[전체 차이](history/06%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
++| 7차 | Codex Orbit·7차 | **폴더:** [폴더](history/07차/) · **설명:** [설명](history/07차/README.md) · **직전 차수와 실제 비교:** 6차·[전체 차이](history/07차/직전차수.diff) |
++| 8차 | Codex Orbit·8차 | **폴더:** [폴더](history/08차/) · **설명:** [설명](history/08차/README.md) · **직전 차수와 실제 비교:** 7차·[전체 차이](history/08차/직전차수.diff) |
++| 9차 | Codex Orbit·9차 | **폴더:** [폴더](history/09차/) · **설명:** [설명](history/09차/README.md) · **직전 차수와 실제 비교:** 8차·[전체 차이](history/09차/직전차수.diff) |
++| 10차 | Codex Orbit·10차 | **폴더:** [폴더](history/10차/) · **설명:** [설명](history/10차/README.md) · **직전 차수와 실제 비교:** 9차·[전체 차이](history/10차/직전차수.diff) |
++| 11차 | Codex Orbit·11차 | **폴더:** [폴더](history/11차/) · **설명:** [설명](history/11차/README.md) · **직전 차수와 실제 비교:** 10차·[전체 차이](history/11차/직전차수.diff) |
++| 12차 | Codex Orbit·12차 | **폴더:** [폴더](history/12차/) · **설명:** [설명](history/12차/README.md) · **직전 차수와 실제 비교:** 11차·[전체 차이](history/12차/직전차수.diff) |
++| 13차 | Codex Orbit·13차 | **폴더:** [폴더](history/13차/) · **설명:** [설명](history/13차/README.md) · **직전 차수와 실제 비교:** 12차·[전체 차이](history/13차/직전차수.diff) |
++| 14차 | Codex Orbit·14차 | **폴더:** [폴더](history/14차/) · **설명:** [설명](history/14차/README.md) · **직전 차수와 실제 비교:** 13차·[전체 차이](history/14차/직전차수.diff) |
++| 15차 | Codex Orbit·15차 | **폴더:** [폴더](history/15차/) · **설명:** [설명](history/15차/README.md) · **직전 차수와 실제 비교:** 14차·[전체 차이](history/15차/직전차수.diff) |
++| 16차 | Codex Orbit·16차 | **폴더:** [폴더](history/16차/) · **설명:** [설명](history/16차/README.md) · **직전 차수와 실제 비교:** 15차·[전체 차이](history/16차/직전차수.diff) |
++| 17차 | Codex Orbit·17차 | **폴더:** [폴더](history/17차/) · **설명:** [설명](history/17차/README.md) · **직전 차수와 실제 비교:** 16차·[전체 차이](history/17차/직전차수.diff) |
++| 18차 | Codex Orbit·18차 | **폴더:** [폴더](history/18차/) · **설명:** [설명](history/18차/README.md) · **직전 차수와 실제 비교:** 17차·[전체 차이](history/18%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
++| 19차 | Codex Orbit·19차 | **폴더:** [폴더](history/19차/) · **설명:** [설명](history/19차/README.md) · **직전 차수와 실제 비교:** 18차·[전체 차이](history/19차/직전차수.diff) |
++| 20차 | Codex Orbit·20차 | **폴더:** [폴더](docs/20차/) · **설명:** [설명](docs/20차/README.md) · **직전 차수와 실제 비교:** [비교 대상 없는 근거](docs/20차/README.md) |
++| 21차 | Codex Orbit·21차 | **폴더:** [폴더](history/21차/) · **설명:** [설명](history/21차/README.md) · **직전 차수와 실제 비교:** 19차·[전체 차이](history/21차/직전차수.diff) |
++| 22차 | Codex Orbit·22차 | **폴더:** [폴더](history/22차/) · **설명:** [설명](history/22차/README.md) · **직전 차수와 실제 비교:** 21차·[전체 차이](history/22%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
++| 23차 | Codex Orbit·23차 | **폴더:** [폴더](history/23차/) · **설명:** [설명](history/23차/README.md) · **직전 차수와 실제 비교:** 22차·[전체 차이](history/23%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
++| 24차 | Codex Orbit·24차 | **폴더:** [폴더](history/24차/) · **설명:** [설명](history/24차/README.md) · **직전 차수와 실제 비교:** 23차·[전체 차이](history/24차/직전차수.diff) |
++| 25차 | Codex Orbit·25차 | **폴더:** [폴더](history/25/) · **설명:** [설명](history/25/README.md) · **직전 차수와 실제 비교:** 24차·[전체 차이](history/25/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
++| 26차 | Codex Orbit·26차 | **폴더:** [폴더](history/26/) · **설명:** [설명](history/26/README.md) · **직전 차수와 실제 비교:** 25차·[전체 차이](history/26/직전차수.diff) |
++| 27차 | Codex Orbit·27차 | **폴더:** [폴더](history/27/) · **설명:** [설명](history/27/README.md) · **직전 차수와 실제 비교:** 26차·[전체 차이](docs/27차_전체변경.diff) |
++| 28차 | Codex Orbit·28차 | **폴더:** [폴더](history/28/) · **설명:** [설명](history/28/README.md) · **직전 차수와 실제 비교:** 27차·[전체 차이](docs/28%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
++| 29차 | Codex Orbit·29차 | **폴더:** [폴더](history/29차/) · **설명:** [설명](history/29차/README.md) · **직전 차수와 실제 비교:** 28차·[전체 차이](history/29%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
++| 30차 | Codex Orbit·30차 | **폴더:** [폴더](history/30차/) · **설명:** [설명](history/30차/README.md) · **직전 차수와 실제 비교:** 29차·[전체 차이](history/30차/직전차수.diff) |
++| 31차 | 화면 마감과 테마 선택 | **폴더:** [폴더](history/31차/) · **설명:** [설명](history/31차/README.md) · **직전 차수와 실제 비교:** 30차·[전체 차이](history/31차/직전차수.diff) |
++| 32차 | 지역 검색과 날짜별 입체 조형 | **폴더:** [자료 폴더](history/32차) · **설명:** [상세 설명](history/32차/README.md) · **직전 차수와 실제 비교:** [전체 비교·범위](docs/32%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
++| 33차 | 자동 위치·강수량·도시 행사 진행 자료 | **자료 폴더:** [자료 폴더](history/33차) · **상세 설명:** [상세 설명](history/33차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/33%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
++| 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](history/34차) · **상세 설명:** [상세 설명](history/34차/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/34%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
++| 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](history/35차) · **상세 설명:** [상세 설명](history/35차/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/35%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
++| 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](history/36차) · **상세 설명:** [상세 설명](history/36차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/36차/직전차수.diff) |
 +| 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](history/37차) · **상세 설명:** [상세 설명](history/37차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/37차/비교/README.md) |
- | 최종 | Codex Orbit · 최종 | **폴더:** [폴더](docs/최종/) · **설명:** [설명](docs/최종/README.md) · **직전 차수와 실제 비교:** [비교 대상 없는 근거](docs/최종/README.md) |
- 
- Historical sources and supporting documents/assets are preserved with full comparisons, byte counts and SHA-256. [Archive manifests](docs/ARCHIVE_FILES.md) distinguish original copies, privacy edits and exclusions. Design images use synthetic examples. No private full-source ZIP, personal conversations, operating memories or credentials are published. Existing legal notices are preserved; no new license is assigned. This software work has no manuscript requiring a paper PDF.
-@@ -123,3 +143,6 @@ Actual Qt screens using synthetic events and example values; no private chats or
- ![Synthetic Qt example](docs/images/history-29.png)
- 
- ![Synthetic Qt example](docs/images/widget-29.png)
++| 최종 | Codex Orbit · 최종 | **폴더:** [폴더](docs/최종/) · **설명:** [설명](docs/최종/README.md) · **직전 차수와 실제 비교:** [비교 대상 없는 근거](docs/최종/README.md) |
++
++Historical sources and supporting documents/assets are preserved with full comparisons, byte counts and SHA-256. [Archive manifests](docs/ARCHIVE_FILES.md) distinguish original copies, privacy edits and exclusions.
++
++Design images use synthetic examples.
++
++No private full-source ZIP, personal conversations, operating memories or credentials are published.
++
++Existing legal notices are preserved; no new license is assigned.
++
++This software work has no manuscript requiring a paper PDF.
++
++
++## Synthetic examples
++
++Actual Qt screens using synthetic events and example values; no private chats or real account readings.
++
++![Synthetic Qt example](docs/images/observatory-29.png)
++
++![Synthetic Qt example](docs/images/history-29.png)
++
++![Synthetic Qt example](docs/images/widget-29.png)
 +
 +
 +**37차 픽셀 모션 수리:** 날짜별 대상 133종과 도시 행사 형상 8종의 회전을 확인했습니다. [실제 확인 범위와 장면 준비 수리](docs/37차_3D초기화.md)를 함께 읽어 주세요.
 diff --git a/README.md b/README.md
-index a523683a830af3fce25fd604604e52e466e4c1a7..4bf9a87e6358086f5aea2fdc1b9b9a616a69110f 100644
+index 0c141a5e9aacb387a61c3ee8ca9cf45c8eadc8a1..4f1e9e1d21fc0b6734b322e9fc1075ed57b56a99 100644
 --- a/README.md
 +++ b/README.md
-@@ -1,6 +1,7 @@
- <a name="-codex-orbit-320"></a>
- <a id="codex-orbit-340"></a>
+@@ -1,279 +1,302 @@
+-<a name="-codex-orbit-320"></a>
+-<a id="codex-orbit-340"></a>
 -# Codex Orbit 3.5.0
+-
+-연도·월·일에 맞춘 3D 테마를 기본으로 보여 주는 Windows 바탕화면 앱입니다. 관측소는 명시적으로 선택해 사용할 수 있습니다.
+-
+-<!-- project-levels:start -->
+-## 주요 기능과 사용 조건
+-
+-| 기능 | 입력·조건 | 동작·한계 |
+-| --- | --- | --- |
+-| 알림 | 기록에 있는 모델·추론 강도 변화 | 이전 값과 현재 값, 공개된 이유를 구분합니다. |
+-| 날짜별 모형 | 날짜·국가와 확인된 행사 날짜 | 그날의 입체 대상을 보여 주며 글자는 또렷하게 유지합니다. |
+-| 지역과 날씨 | 자동 추정 또는 직접 고른 검색 결과 | 기온·강수량과 집계 간격을 읽고 미확인 값을 구분합니다. |
+-| 사용 한도 | 로그인된 Codex가 제공하는 계정 비율 | 남은 토큰 개수가 아니며 원값을 툴팁에서 확인합니다. |
+-
+-## 읽는 수준 선택
+-
+-| 수준 | 설명 범위 |
+-| --- | --- |
+-| [LEVEL 1 - Beginner](docs/읽기안내/레벨1.md) | 낯선 용어를 풀어 쓰며 실제 동작·예시·오해하기 쉬운 범위를 읽습니다. |
+-| [LEVEL 2 - Explorer](docs/읽기안내/레벨2.md) | 입력·처리·출력과 기능 사이의 연결, 차수 변화를 따라갑니다. |
+-| [LEVEL 3 - Practitioner](docs/읽기안내/레벨3.md) | 준비 조건·사용 순서·설정·결과 및 실패 확인 방법을 읽습니다. |
+-| [LEVEL 4 - Advanced](docs/읽기안내/레벨4.md) | 모듈 설계·상태 전이·검증 경계와 구현 선택을 검토합니다. |
+-| [LEVEL 5 - Expert](docs/읽기안내/레벨5.md) | 실제 코드·프로토콜·설정값·전체 비교와 측정 근거를 대조합니다. |
+-
+-모든 안내는 같은 프로젝트와 전체 차수를 다룹니다. 기존 상세 본문은 아래에 계속 보존합니다.
+-<!-- project-levels:end -->
+-
+-## 36차·설치 선택 항목 정리
+-
+-제품 버전은 **3.5.0**을 유지하며 설치 파일만 교체했습니다.
+-
+-선택 화면 없이 **바탕화면 바로가기를 자동 생성**하고 완료 화면의 실행 체크 박스를 제거한 차수입니다.
+-
+-앱 EXE·150% 설정은 같은 버전 그대로입니다. [현재 다운로드](docs/DOWNLOADS.md)에서 새 Setup과 교체 전 35차 해시를 구분합니다.
+-
+-[LEVEL 1](history/36차/README.md#reading-level-1) · [LEVEL 2](history/36차/README.md#reading-level-2) · [LEVEL 3](history/36차/README.md#reading-level-3) · [LEVEL 4](history/36차/README.md#reading-level-4) · [LEVEL 5](history/36차/README.md#reading-level-5)
+-
+-## 35차·색상과 조명
+-
+-화면 위쪽 **화면 테마**에서 시스템·라이트·다크를 선택합니다. 옆의 **색상 꾸미기**를 누르면 여섯 가지 색 조합을 고르거나 포인트색·다크 배경·라이트 배경의 색상 코드를 직접 입력할 수 있습니다. 색 선택 버튼도 제공합니다.
+-
+-조명 강도는 0부터 100까지 조절하며 **0은 조명 끄기**입니다.
+-
+-미리보기의 다크·라이트 선택은 미리보기만 바꿉니다.
+-
+-**적용**해야 저장되며 **취소**하면 기존 설정을 유지합니다.
+-
+-기본값 복원도 적용 전에는 저장하지 않습니다.
+-
+-잘못된 색상 코드에는 설명을 표시하고 적용을 막으며, 저장 실패 시 이전 설정과 화면을 복원합니다.
+-
+-입력한 원색은 보존하고 글자색은 읽기 좋게 보정합니다. 날짜별 과일·꽃·기념일·도시 행사와 픽셀 입체 회전은 유지합니다. 잔량 막대의 실제 비율·원값, 자동·수동 위치, 모델·추론·작업 재개 알림도 그대로 사용합니다. 조명은 화면 전체 흐림이나 별도 애니메이션 타이머를 추가하지 않습니다.
+-
+-**3.5.0은 정식 배포 본**입니다.
+-
+-EXE·Setup 생성과 기본 실행의 최소 확인, 합성 화면 세 조합 완료와 네 번째 자동 검사 미완료, 설정 검사 시간 초과를 [검사 범위와 배포 상태](docs/35차_최소검사.md)에서 구분합니다.
+-
+-사용자는 150% 배율의 실사용이 정상이라고 직접 확인했습니다.
+-
+-이는 자동 검사 전체 통과와 구분합니다.
+-
+-
+-## 34차·픽셀 입체 조형과 도시 행사
+-
+-날짜별 과일·꽃·기념일과 도시 행사 주제를 실제 입체 메시의 픽셀 렌더로 표시하고 세로 축으로 한 바퀴 회전합니다.
+-
+-글자·날씨·잔 량은 또렷하게 유지합니다.
+-
+-자동·수동 위치와 강수량 집계 간격, 소수 첫째 자리 반올림·원값 확인을 이어받습니다.
+-
+-도시 축제 목록 항목과 발표 일정, 근거 있는 시리즈·개최분·미분류를 구분합니다.
+-
+-공식 날짜만 8 종 행사 모티프로 연결하고 출처·라이선스·갱신과 수록 한계를 표시합니다.
+-
+-전 세계 모든 행사나 미발표 미래 날짜를 보장하지 않습니다. 33차는 별도 릴리스 없이 진행한 원문을 이번 공개에 보존하고 34차에 통합했으며, 당시 진행 상태와 34차의 실제 검증 결과를 구분합니다.
+-
+-GPU 작업은 별도 소유 프로세스에 격리하고 일반 앱과 내부 GPU 진입을 분리합니다.
+-
+-최대 5초 준비와 준비 뒤 표시 프레임의 기존 2초 검사는 별개이며, 종료는 정상 회 수를 먼저 요청하고 필요한 경우 소유 Job만 한정해 강제 회수합니다.
+-
+-OS의 모든 정지를 기한 안에 해결한다는 보장은 아닙니다.
+-
+-실제 최종 결과는 검증 문서에서 구분해 확인합니다.
+-
+-[34차 상세](history/34차/README.md) · [33차 진행 자료](history/33차/README.md) · [변경 기록](변경기록_34차.md) · [기능 범위](docs/2026-11-13_34차_픽셀3D_명세.md) · [GPU 프로세스 격리](docs/34차_그래픽프로세스격리.md)
+-
+-연도·월·일에 맞춘 3D 테마를 기본으로 보여 주는 Windows 바탕화면 앱입니다. 관측소는 명시적으로 선택해 사용할 수 있습니다.
+-
+-로컬 기록에서 확인한 모델·추론 강도 변화와 작업 상태를 보여 주며, 실제 계정 사용 한도 비율·시계·기온을 함께 확인할 수 있습니다.
+-
+-[English](README.en.md) · [다운로드](docs/DOWNLOADS.md) · [사용법](docs/사용법.md) · [검증 범위](docs/공개검증_34차.md) · [변경 기록](변경기록_34차.md) · [권리·공개 범위](공개범위.md)
+-
+-
+-## 32차·지역 검색과 당일 입체 조형
+-
+-날짜 위젯은 고리와 좌우 장식 없이 당일 대상 하나를 표시합니다. 기존 888개 월별 주제와 일반 일 대상을 보존하고, 250개 국가·지역의 공휴일·지원 기념일에는 실제 행사 명과 특집 조형을 적용합니다. 미래 법 개정과 모든 도시 축제까지 확정한 자료는 아닙니다.
+-
+-지역 표시를 눌러 도시·주소·장소·국가를 직접 검색합니다. 선택 지점의 기온·날씨·습도·일출·일몰을 받아오며, 자동 IP 위치는 추정임을 표시합니다.
+-
+-알림은 이전·현재 모델과 추론 강도를 나란히 비교하고 짧은 설명과 접을 수 있는 원문으로 정리했습니다. 화면은 흰색·슬레이트 블루와 다크 테마를 제공합니다.
+-
+-[32차 상세](history/32차/README.md) · [변경 기록](변경기록_32차.md) · [지역·행사 범위](docs/2026-11-10_32차_지역검색과국가별행사_추가명세.md)
+-
+-## 32차 실제 배포 본의 합성 화면
+-
+-실제 배포 EXE에서 개인 기록·네트워크 없이 검사한 화면입니다. 기온·습도·잔량과 모델 값은 합성 예시입니다. [검증 범위](docs/공개검증_32차.md)
+-
+-![라이트 화면](docs/images/32-light-window-synthetic.png)
+-
+-![다크 화면](docs/images/32-dark-window-synthetic.png)
+-
+-## 이전 31차 실제 배포 본의 합성 화면
+-
+-개인 기록 없이 만든 합성 작업입니다. 모델·추론 값은 화면 검사용 예시이며 실제 실행 모델이나 계정 상태를 뜻하지 않습니다.
+-
+-![라이트 합성 화면](docs/images/31-light-synthetic.png)
+-
+-![다크 합성 화면](docs/images/31-dark-synthetic.png)
+-
+-## 31차·화면 마감과 테마 선택
+-
+-시스템·라이트·다크 화면 테마를 즉시 적용하고 선택을 저장합니다.
+-
+-언어·글자 크기·회전 속도는 같은 설정 영역에서 조절하고, 작업 현황에서 선택 설정과 최근 실행 관측을 구분합니다.
+-
+-화면 설정 메뉴는 움직임 줄이기·가장자리 붙이기·알림 소리·성능과 화질·문제 확인용 파일 저장·새 버전 확인을 설명합니다.
+-
+-프라이버시 모드는 화면의 제목과 작업 설명을 가리며 저장 원문을 유지합니다.
+-
+-날짜별 과일·세 금속 링·날짜 규칙과 모델·추론 변경 알림은 유지합니다.
+-
+-[31차 상세](history/31차/README.md) · [변경 기록](변경기록_32차.md)
+-
+-<a name="implementation-details"></a>
+-
+-<a name="-감시표시저장업데이트의-연결"></a>
+-## 감시·표시·저장·업데이트의 연결
+-
+-30차 소스에서 `notifier.Watcher`는 로컬 JSONL을 읽어 설정 관측·실행 관측·공개 이유를 구분하고 `app.py`가 알림·위젯·상세 이력을 표시합니다. `core.py`는 JSONL 꼬리 읽기·채팅 제목·화면 위치와 Markdown 적용/복구를 담당합니다. `activity.py`의 작업 상태와 `notice_format.py`의 표현을 렌더러의 장식 상태와 구분합니다.
+-
+-**경계:** 기록 읽기
+-
+-**실제 처리:** 30차 notifier는 읽기 묶음 512KiB·레코드 2MiB·파일 4096개·poll 총 8MiB·대기 256개·주기 0.2초 상한을 둡니다. 최초 기준 선과 새 기록 알림을 구분합니다.
+-
+-**경계:** 표시
+-
+-**실제 처리:** calendar가 기본이며 명시 선택한 관측소는 유지합니다. calendar_renderer·observatory_scene의 GPU 그림과 실제 모델/추론 기록은 별개입니다.
+-
+-**경계:** 계정 한도
+-
+-**실제 처리:** UsageClient가 codex.exe app-server를 QProcess 분리 파이프로 열고 읽기 요청합니다. 30초 갱신·12초 응답 제한·65초 이후 오래된 값 표시를 적용합니다.
+-
+-**경계:** 연결 실패
+-
+-**실제 처리:** 한도 조회 실패 때 이전 값을 stale로 표시하고 최대 3회,3/6/9초 지연으로 다시 연결합니다. 미확인을 0%로 바꾸지 않습니다.
+-
+-**경계:** 종료
+-
+-**실제 처리:** UsageClient.close는 타이머와 pending을 정리하고 종료 요청 뒤 500ms 대기, 필요하면 kill 후 500ms 대기합니다.
+-
+-**경계:** 배포 교체
+-
+-**실제 처리:** safe_update의 check →stage →apply 단계로 공식 릴리스·자산·SHA·로컬 경계를 검사하고 실행 확인 실패 시 이전 EXE를 복구합니다. MAX_DOWNLOAD는 512MiB입니다.
+-
+-
+-사용자는 감시 경로·언어·표시 모드·모션/자원 품질을 고르고 새 알림의 이전/이후 값과 근거를 읽습니다.
+-
+-날씨·사용 한도·업데이트는 네트워크 또는 App Server 기능이며 로컬 감시기의 기능 범위와 나눠 봅니다. 방송 모드와 진단 ZIP의 공개 제외 조건을 유지합니다. 실제 사용 법·릴리스·빌드 안내와 차수별 함수/설정 참조는 아래에 연결되어 있습니다.
+-
+-[각 차수의 코드·조건·관측·전체 비교](docs/REVISION_INDEX.md)
+-
+-## 30차·원래 날짜별 테마 기본 복원
+-
+-설정에 표시 모드가 없는 경우에도 원래 날짜별 달력 조형을 표시합니다. 모델 변경 이벤트를 받아도 날짜 제목과 조형은 유지합니다. 888개 월 테마·일별 디자인·색·재질·날짜 규칙은 바꾸지 않았습니다. 이전/현재 모델·추론 강도·알림 기능도 유지합니다.
+-
+-[30차 변경 기록](변경기록_30차.md) · [검증 범위](docs/공개검증_30차.md) · [29차와 전체 비교](docs/30%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md)
+-
+-## 선택 가능한 29차 관측소 기능
+-
+-- 은색 금속 링 세 개가 서로 다른 축에서 움직입니다. 솔의 태양·아스트라의 결정·테라의 구체·루나의 초승달 코어와 추론 강도별 입자 밀도를 구분합니다. 확인되지 않은 모델은 중립 조형으로 표시합니다.
+-- 위성은 기록에서 명시적으로 관측한 작업 상태를 표시합니다. 관심 채팅 고정·기록 북마크·자리비움 요약·시간 슬라이더 재생을 제공하며 재생은 실제 모델 설정을 바꾸지 않습니다.
+-- 알림은 채팅 제목·이전 모델과 추론 강도·현재 모델과 추론 강도·기록된 이유를 비교합니다. 정확한 모델 ID와 원문 기록은 보존하고 표시 제목의 장식 이모지를 정리합니다. 마우스를 올리면 자동 닫힘을 멈추고 알림을 고정할 수 있습니다.
+-- 방송 모드는 열린 알림·제목·작업·툴팁을 가립니다. 진단 ZIP은 대화·인증·경로·이벤트 원문을 제외한 항목만 로컬에 저장합니다. 업데이트는 사용자가 확인을 눌러 공식 릴리스를 조회하고 SHA-256 대조 후 준비하며, 교체 후 실행 확인 실패 시 이전 실행 파일로 복구합니다.
+-- 민트와 화이트 화면·나눔고딕 Bold를 사용합니다. 글자 크기·가장자리 도킹·펼침·재생/일시 정지·모션 축소·자원 품질을 조절할 수 있으며 일시 정지 중에도 알림 감시는 계속됩니다.
+-
+-실제 한도는 **남은 사용 한도 비율**이며 남은 토큰 개수가 아닙니다. 미확인은 0%와 구분합니다. 선택 설정 관측과 실제 실행 기록 관측을 구분하며 로컬 기록이 서버 모델 신원을 보증하지 않습니다. 기록되지 않은 이유와 작업 상태를 만들어 내지 않습니다.
+-
+-## 달력 모드와 기존 기능
+-
+-2026~2099년의 [888개 월 테마](docs/연도별_월별_테마_전체.md)와 [CSV](docs/연도별_월별_테마_전체.csv), 날짜별 실제 메시 조형을 달력 모드로 보존합니다.
+-
+-공통 생성 규칙을 재사용하므로 888개 수작업 모델을 뜻하지 않습니다.
+-
+-한영 선 택·날씨·IP 기반 지역·시계·속도 조절을 유지합니다.
+-
+-하나의 GPU 작업자가 3840×2160 원본을 렌더하며 관측소 품질은 20/30/60fps 상한을 사용합니다.
+-
+-실제 생성률과 모니터 표시율은 별개이고 고정 240fps 달성을 주장하지 않습니다.
+-
+-## 모든 차수와 실제 자료
+-
+-<details>
+-<summary><strong>모든 차수와 실제 자료 자세히 보기</strong></summary>
+-
+-
+-[전체 목차](docs/REVISION_INDEX.md) · [차수별 보조 자료·시안·제외 대응](docs/ARCHIVE_FILES.md)
+-
+-<!-- 차수표 시작 -->
+-| 차수 | 핵심 변경 | 자료 |
+-| --- | --- | --- |
+-| 1차 | Codex Orbit·1차 | **자료 폴더·원본:** [자료 폴더](history/01%EC%B0%A8) · **상세 설명:** [상세 설명](history/01%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/01%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 2차 | Codex Orbit·2차 | **자료 폴더·원본:** [자료 폴더](history/02%EC%B0%A8) · **상세 설명:** [상세 설명](history/02%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/02%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 3차 | Codex Orbit·3차 | **자료 폴더·원본:** [자료 폴더](history/03%EC%B0%A8) · **상세 설명:** [상세 설명](history/03%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/03%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 4차 | Codex Orbit·4차 | **자료 폴더·원본:** [자료 폴더](history/04%EC%B0%A8) · **상세 설명:** [상세 설명](history/04%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/04%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 5차 | Codex Orbit·5차 | **자료 폴더·원본:** [자료 폴더](history/05%EC%B0%A8) · **상세 설명:** [상세 설명](history/05%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/05%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 6차 | Codex Orbit·6차 | **자료 폴더·원본:** [자료 폴더](history/06%EC%B0%A8) · **상세 설명:** [상세 설명](history/06%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/06%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
+-| 7차 | Codex Orbit·7차 | **자료 폴더·원본:** [자료 폴더](history/07%EC%B0%A8) · **상세 설명:** [상세 설명](history/07%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/07%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 8차 | Codex Orbit·8차 | **자료 폴더·원본:** [자료 폴더](history/08%EC%B0%A8) · **상세 설명:** [상세 설명](history/08%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/08%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 9차 | Codex Orbit·9차 | **자료 폴더·원본:** [자료 폴더](history/09%EC%B0%A8) · **상세 설명:** [상세 설명](history/09%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/09%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 10차 | Codex Orbit·10차 | **자료 폴더·원본:** [자료 폴더](history/10%EC%B0%A8) · **상세 설명:** [상세 설명](history/10%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/10%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 11차 | Codex Orbit·11차 | **자료 폴더·원본:** [자료 폴더](history/11%EC%B0%A8) · **상세 설명:** [상세 설명](history/11%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/11%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 12차 | Codex Orbit·12차 | **자료 폴더·원본:** [자료 폴더](history/12%EC%B0%A8) · **상세 설명:** [상세 설명](history/12%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/12%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 13차 | Codex Orbit·13차 | **자료 폴더·원본:** [자료 폴더](history/13%EC%B0%A8) · **상세 설명:** [상세 설명](history/13%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/13%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 14차 | Codex Orbit·14차 | **자료 폴더·원본:** [자료 폴더](history/14%EC%B0%A8) · **상세 설명:** [상세 설명](history/14%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/14%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 15차 | Codex Orbit·15차 | **자료 폴더·원본:** [자료 폴더](history/15%EC%B0%A8) · **상세 설명:** [상세 설명](history/15%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/15%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 16차 | Codex Orbit·16차 | **자료 폴더·원본:** [자료 폴더](history/16%EC%B0%A8) · **상세 설명:** [상세 설명](history/16%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/16%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 17차 | Codex Orbit·17차 | **자료 폴더·원본:** [자료 폴더](history/17%EC%B0%A8) · **상세 설명:** [상세 설명](history/17%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/17%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 18차 | Codex Orbit·18차 | **자료 폴더·원본:** [자료 폴더](history/18%EC%B0%A8) · **상세 설명:** [상세 설명](history/18%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/18%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
+-| 19차 | Codex Orbit·19차 | **자료 폴더·원본:** [자료 폴더](history/19%EC%B0%A8) · **상세 설명:** [상세 설명](history/19%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/19%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 20차 | Codex Orbit·20차 | **자료 폴더·원본:** [자료 폴더](docs/20%EC%B0%A8) · **상세 설명:** [상세 설명](docs/20%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/20%EC%B0%A8/README.md) |
+-| 21차 | Codex Orbit·21차 | **자료 폴더·원본:** [자료 폴더](history/21%EC%B0%A8) · **상세 설명:** [상세 설명](history/21%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/21%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 22차 | Codex Orbit·22차 | **자료 폴더·원본:** [자료 폴더](history/22%EC%B0%A8) · **상세 설명:** [상세 설명](history/22%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/22%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
+-| 23차 | Codex Orbit·23차 | **자료 폴더·원본:** [자료 폴더](history/23%EC%B0%A8) · **상세 설명:** [상세 설명](history/23%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/23%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
+-| 24차 | Codex Orbit·24차 | **자료 폴더·원본:** [자료 폴더](history/24%EC%B0%A8) · **상세 설명:** [상세 설명](history/24%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/24%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 25차 | Codex Orbit·25차 | **자료 폴더·원본:** [자료 폴더](history/25) · **상세 설명:** [상세 설명](history/25/README.md) · **직전 비교·범위:** [전체 비교·범위](history/25/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
+-| 26차 | Codex Orbit·26차 | **자료 폴더·원본:** [자료 폴더](history/26) · **상세 설명:** [상세 설명](history/26/README.md) · **직전 비교·범위:** [전체 비교·범위](history/26/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 27차 | Codex Orbit·27차 | **자료 폴더·원본:** [자료 폴더](history/27) · **상세 설명:** [상세 설명](history/27/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/27%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD.diff) |
+-| 28차 | Codex Orbit·28차 | **자료 폴더·원본:** [자료 폴더](history/28) · **상세 설명:** [상세 설명](history/28/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/28%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+-| 최종 | Codex Orbit · 최종 | **자료 폴더·원본:** [자료 폴더](docs/%EC%B5%9C%EC%A2%85) · **상세 설명:** [상세 설명](docs/%EC%B5%9C%EC%A2%85/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/%EC%B5%9C%EC%A2%85/README.md) |
+-| 29차 | Codex Orbit·29차 | **자료 폴더·원본:** [자료 폴더](history/29%EC%B0%A8) · **상세 설명:** [상세 설명](history/29%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/29%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) · [소스 비교](history/29%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
+-| 30차 | Codex Orbit·30차 | **자료 폴더·원본:** [자료 폴더](history/30%EC%B0%A8) · **상세 설명:** [상세 설명](history/30%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/30%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 31차 | 화면 마감과 테마 선택 | **자료 폴더·원본:** [자료 폴더](history/31%EC%B0%A8) · **상세 설명:** [상세 설명](history/31%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/31%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 32차 | 지역 검색과 날짜별 입체 조형 | **자료 폴더·원본:** [자료 폴더](history/32차) · **상세 설명:** [상세 설명](history/32차/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/32%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+-| 33차 | 자동 위치·강수량·도시 행사 진행 자료 | **자료 폴더:** [자료 폴더](history/33차) · **상세 설명:** [상세 설명](history/33차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/33%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
+-| 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](history/34차) · **상세 설명:** [상세 설명](history/34차/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/34%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+-| 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](history/35차) · **상세 설명:** [상세 설명](history/35차/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/35%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+-| 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](history/36차) · **상세 설명:** [상세 설명](history/36차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/36차/직전차수.diff) |
+-<!-- 차수표 끝 -->
+-
+-원본 소스 비교에는 주석·공백·개행과 신규·삭제 상태를 포함합니다. 20차는 실행 소스 없이 38개 시 안, 21차는 110개 시안을 보존합니다. 최종 폴더의 개인 운영 검증 원문은 공개하지 않습니다. 역사 자료 2,281개 항목의 보존·정제·제외 사유와 원본/공개 SHA를 차수별로 연결했습니다.
+-
+-</details>
+-
+-## 실행·소스와 권리
+-
+-Windows 10/11 x64와 OpenGL 3.3을 지원하는 그래픽 드라이버가 필요합니다. 단일 EXE는 Python 설치 없이 실행하고 설치 본은 현재 사용자용 바로 가기·제 거를 제공합니다. GPU 준비/실패는 정적 표식 또는 오류 설명으로 구분합니다.
+-
+-공개 소스는 GitHub 자동 Source code ZIP 또는 이 저장소에서 받습니다.
+-
+-비공개 전체 개발 ZIP·개인 대화·지침·인증 자료는 배포하지 않습니다.
+-
+-기존 라이선스 고지를 보존하며 새 소스 라이선스를 임의 부여하지 않습니다.
+-
+-재빌드는 `python -B -X utf8 tools/build_distribution.py`를 사용합니다.
+-
+-원고가 없는 앱 작업으로 논문 PDF를 만들지 않았습니다.
+-
+-
+-## 이전 29차 합성 예시 화면
+-
+-다음 이미지는 실제 Qt 앱에 합성 이벤트와 예시 값을 넣은 화면이며 개인 채팅·실계정 수치가 아닙니다.
+-
+-![실제 Qt·GPU로 표시한 합성 시연입니다. 예시 제목·72%는 실제 계정 잔량이나 실제 모델 변경을 증명하지 않습니다.](docs/images/observatory-29.png)
+-
+-![합성 기록으로 이전·현재 모델과 추론 강도 비교를 확인한 실제 Qt 화면입니다.](docs/images/history-29.png)
+-
+-![투명 위젯의 합성 시연이며 실제 ModernGL 프레임을 표시합니다.](docs/images/widget-29.png)
++<a name="-codex-orbit-320"></a>
++<a id="codex-orbit-340"></a>
 +<a id="codex-orbit-350"></a>
 +# Codex Orbit 3.7.0
- 
- 연도·월·일에 맞춘 3D 테마를 기본으로 보여 주는 Windows 바탕화면 앱입니다. 관측소는 명시적으로 선택해 사용할 수 있습니다.
- 
-@@ -27,6 +28,24 @@
- 모든 안내는 같은 프로젝트와 전체 차수를 다룹니다. 기존 상세 본문은 아래에 계속 보존합니다.
- <!-- project-levels:end -->
- 
++
++연도·월·일에 맞춘 3D 테마를 기본으로 보여 주는 Windows 바탕화면 앱입니다. 관측소는 명시적으로 선택해 사용할 수 있습니다.
++
++<!-- project-levels:start -->
++## 주요 기능과 사용 조건
++
++| 기능 | 입력·조건 | 동작·한계 |
++| --- | --- | --- |
++| 알림 | 기록에 있는 모델·추론 강도 변화 | 이전 값과 현재 값, 공개된 이유를 구분합니다. |
++| 날짜별 모형 | 날짜·국가와 확인된 행사 날짜 | 그날의 입체 대상을 보여 주며 글자는 또렷하게 유지합니다. |
++| 지역과 날씨 | 자동 추정 또는 직접 고른 검색 결과 | 기온·강수량과 집계 간격을 읽고 미확인 값을 구분합니다. |
++| 사용 한도 | 로그인된 Codex가 제공하는 계정 비율 | 남은 토큰 개수가 아니며 원값을 툴팁에서 확인합니다. |
++
++## 읽는 수준 선택
++
++| 수준 | 설명 범위 |
++| --- | --- |
++| [LEVEL 1 - Beginner](docs/읽기안내/레벨1.md) | 낯선 용어를 풀어 쓰며 실제 동작·예시·오해하기 쉬운 범위를 읽습니다. |
++| [LEVEL 2 - Explorer](docs/읽기안내/레벨2.md) | 입력·처리·출력과 기능 사이의 연결, 차수 변화를 따라갑니다. |
++| [LEVEL 3 - Practitioner](docs/읽기안내/레벨3.md) | 준비 조건·사용 순서·설정·결과 및 실패 확인 방법을 읽습니다. |
++| [LEVEL 4 - Advanced](docs/읽기안내/레벨4.md) | 모듈 설계·상태 전이·검증 경계와 구현 선택을 검토합니다. |
++| [LEVEL 5 - Expert](docs/읽기안내/레벨5.md) | 실제 코드·프로토콜·설정값·전체 비교와 측정 근거를 대조합니다. |
++
++모든 안내는 같은 프로젝트와 전체 차수를 다룹니다. 기존 상세 본문은 아래에 계속 보존합니다.
++<!-- project-levels:end -->
++
 +## 37차 · 알림 센터와 감시 상태·업데이트 안내
 +
 +**3.7.0**은 관측 기록을 찾아보는 알림 센터, 감시 상태와 알림 표시 조절, 공식 업데이트 안내를 연결한 차수입니다. 시스템·라이트·다크와 날짜별 과일·꽃 픽셀 입체 조형은 유지합니다. 실제 기록과 미리보기, 구현된 기능과 아직 확인하지 않은 실행 범위를 구분합니다.
@@ -86,21 +828,257 @@ index a523683a830af3fce25fd604604e52e466e4c1a7..4bf9a87e6358086f5aea2fdc1b9b9a61
 +
 +지역 표시는 국가·시도·도시명과 식별자 정합성을 강화했습니다. 자동 위치는 연결망의 추정값이며 실제 기기 위치의 정확도를 보장하지 않습니다. [지역 표시 정합성](docs/37차_지역정합.md)
 +
- ## 36차 · 설치 선택 항목 정리
- 
- 제품 버전은 **3.5.0**을 유지하며 설치 파일만 교체했습니다. 선택 화면 없이 **바탕화면 바로가기를 자동 생성**하고 완료 화면의 실행 체크박스를 제거한 차수입니다. 앱EXE·150% 설정은 같은 버전 그대로입니다. [현재 다운로드](docs/DOWNLOADS.md)에서 새Setup과 교체 전35차 해시를 구분합니다.
-@@ -200,6 +219,7 @@
- | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](history/34차) · **상세 설명:** [상세 설명](history/34차/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/34차_전체변경.diff) |
- | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](history/35차) · **상세 설명:** [상세 설명](history/35차/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/35차_전체변경.diff) |
- | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](history/36차) · **상세 설명:** [상세 설명](history/36차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/36차/직전차수.diff) |
++## 36차·설치 선택 항목 정리
++
++제품 버전은 **3.5.0**을 유지하며 설치 파일만 교체했습니다.
++
++선택 화면 없이 **바탕화면 바로가기를 자동 생성**하고 완료 화면의 실행 체크 박스를 제거한 차수입니다.
++
++앱 EXE·150% 설정은 같은 버전 그대로입니다. [현재 다운로드](docs/DOWNLOADS.md)에서 새 Setup과 교체 전 35차 해시를 구분합니다.
++
++[LEVEL 1](history/36차/README.md#reading-level-1) · [LEVEL 2](history/36차/README.md#reading-level-2) · [LEVEL 3](history/36차/README.md#reading-level-3) · [LEVEL 4](history/36차/README.md#reading-level-4) · [LEVEL 5](history/36차/README.md#reading-level-5)
++
++## 35차·색상과 조명
++
++화면 위쪽 **화면 테마**에서 시스템·라이트·다크를 선택합니다. 옆의 **색상 꾸미기**를 누르면 여섯 가지 색 조합을 고르거나 포인트색·다크 배경·라이트 배경의 색상 코드를 직접 입력할 수 있습니다. 색 선택 버튼도 제공합니다.
++
++조명 강도는 0부터 100까지 조절하며 **0은 조명 끄기**입니다.
++
++미리보기의 다크·라이트 선택은 미리보기만 바꿉니다.
++
++**적용**해야 저장되며 **취소**하면 기존 설정을 유지합니다.
++
++기본값 복원도 적용 전에는 저장하지 않습니다.
++
++잘못된 색상 코드에는 설명을 표시하고 적용을 막으며, 저장 실패 시 이전 설정과 화면을 복원합니다.
++
++입력한 원색은 보존하고 글자색은 읽기 좋게 보정합니다. 날짜별 과일·꽃·기념일·도시 행사와 픽셀 입체 회전은 유지합니다. 잔량 막대의 실제 비율·원값, 자동·수동 위치, 모델·추론·작업 재개 알림도 그대로 사용합니다. 조명은 화면 전체 흐림이나 별도 애니메이션 타이머를 추가하지 않습니다.
++
++**3.5.0은 정식 배포 본**입니다.
++
++EXE·Setup 생성과 기본 실행의 최소 확인, 합성 화면 세 조합 완료와 네 번째 자동 검사 미완료, 설정 검사 시간 초과를 [검사 범위와 배포 상태](docs/35차_최소검사.md)에서 구분합니다.
++
++사용자는 150% 배율의 실사용이 정상이라고 직접 확인했습니다.
++
++이는 자동 검사 전체 통과와 구분합니다.
++
++
++## 34차·픽셀 입체 조형과 도시 행사
++
++날짜별 과일·꽃·기념일과 도시 행사 주제를 실제 입체 메시의 픽셀 렌더로 표시하고 세로 축으로 한 바퀴 회전합니다.
++
++글자·날씨·잔 량은 또렷하게 유지합니다.
++
++자동·수동 위치와 강수량 집계 간격, 소수 첫째 자리 반올림·원값 확인을 이어받습니다.
++
++도시 축제 목록 항목과 발표 일정, 근거 있는 시리즈·개최분·미분류를 구분합니다.
++
++공식 날짜만 8 종 행사 모티프로 연결하고 출처·라이선스·갱신과 수록 한계를 표시합니다.
++
++전 세계 모든 행사나 미발표 미래 날짜를 보장하지 않습니다. 33차는 별도 릴리스 없이 진행한 원문을 이번 공개에 보존하고 34차에 통합했으며, 당시 진행 상태와 34차의 실제 검증 결과를 구분합니다.
++
++GPU 작업은 별도 소유 프로세스에 격리하고 일반 앱과 내부 GPU 진입을 분리합니다.
++
++최대 5초 준비와 준비 뒤 표시 프레임의 기존 2초 검사는 별개이며, 종료는 정상 회 수를 먼저 요청하고 필요한 경우 소유 Job만 한정해 강제 회수합니다.
++
++OS의 모든 정지를 기한 안에 해결한다는 보장은 아닙니다.
++
++실제 최종 결과는 검증 문서에서 구분해 확인합니다.
++
++[34차 상세](history/34차/README.md) · [33차 진행 자료](history/33차/README.md) · [변경 기록](변경기록_34차.md) · [기능 범위](docs/2026-11-13_34차_픽셀3D_명세.md) · [GPU 프로세스 격리](docs/34차_그래픽프로세스격리.md)
++
++연도·월·일에 맞춘 3D 테마를 기본으로 보여 주는 Windows 바탕화면 앱입니다. 관측소는 명시적으로 선택해 사용할 수 있습니다.
++
++로컬 기록에서 확인한 모델·추론 강도 변화와 작업 상태를 보여 주며, 실제 계정 사용 한도 비율·시계·기온을 함께 확인할 수 있습니다.
++
++[English](README.en.md) · [다운로드](docs/DOWNLOADS.md) · [사용법](docs/사용법.md) · [검증 범위](docs/공개검증_34차.md) · [변경 기록](변경기록_34차.md) · [권리·공개 범위](공개범위.md)
++
++
++## 32차·지역 검색과 당일 입체 조형
++
++날짜 위젯은 고리와 좌우 장식 없이 당일 대상 하나를 표시합니다. 기존 888개 월별 주제와 일반 일 대상을 보존하고, 250개 국가·지역의 공휴일·지원 기념일에는 실제 행사 명과 특집 조형을 적용합니다. 미래 법 개정과 모든 도시 축제까지 확정한 자료는 아닙니다.
++
++지역 표시를 눌러 도시·주소·장소·국가를 직접 검색합니다. 선택 지점의 기온·날씨·습도·일출·일몰을 받아오며, 자동 IP 위치는 추정임을 표시합니다.
++
++알림은 이전·현재 모델과 추론 강도를 나란히 비교하고 짧은 설명과 접을 수 있는 원문으로 정리했습니다. 화면은 흰색·슬레이트 블루와 다크 테마를 제공합니다.
++
++[32차 상세](history/32차/README.md) · [변경 기록](변경기록_32차.md) · [지역·행사 범위](docs/2026-11-10_32차_지역검색과국가별행사_추가명세.md)
++
++## 32차 실제 배포 본의 합성 화면
++
++실제 배포 EXE에서 개인 기록·네트워크 없이 검사한 화면입니다. 기온·습도·잔량과 모델 값은 합성 예시입니다. [검증 범위](docs/공개검증_32차.md)
++
++![라이트 화면](docs/images/32-light-window-synthetic.png)
++
++![다크 화면](docs/images/32-dark-window-synthetic.png)
++
++## 이전 31차 실제 배포 본의 합성 화면
++
++개인 기록 없이 만든 합성 작업입니다. 모델·추론 값은 화면 검사용 예시이며 실제 실행 모델이나 계정 상태를 뜻하지 않습니다.
++
++![라이트 합성 화면](docs/images/31-light-synthetic.png)
++
++![다크 합성 화면](docs/images/31-dark-synthetic.png)
++
++## 31차·화면 마감과 테마 선택
++
++시스템·라이트·다크 화면 테마를 즉시 적용하고 선택을 저장합니다.
++
++언어·글자 크기·회전 속도는 같은 설정 영역에서 조절하고, 작업 현황에서 선택 설정과 최근 실행 관측을 구분합니다.
++
++화면 설정 메뉴는 움직임 줄이기·가장자리 붙이기·알림 소리·성능과 화질·문제 확인용 파일 저장·새 버전 확인을 설명합니다.
++
++프라이버시 모드는 화면의 제목과 작업 설명을 가리며 저장 원문을 유지합니다.
++
++날짜별 과일·세 금속 링·날짜 규칙과 모델·추론 변경 알림은 유지합니다.
++
++[31차 상세](history/31차/README.md) · [변경 기록](변경기록_32차.md)
++
++<a name="implementation-details"></a>
++
++<a name="-감시표시저장업데이트의-연결"></a>
++## 감시·표시·저장·업데이트의 연결
++
++30차 소스에서 `notifier.Watcher`는 로컬 JSONL을 읽어 설정 관측·실행 관측·공개 이유를 구분하고 `app.py`가 알림·위젯·상세 이력을 표시합니다. `core.py`는 JSONL 꼬리 읽기·채팅 제목·화면 위치와 Markdown 적용/복구를 담당합니다. `activity.py`의 작업 상태와 `notice_format.py`의 표현을 렌더러의 장식 상태와 구분합니다.
++
++**경계:** 기록 읽기
++
++**실제 처리:** 30차 notifier는 읽기 묶음 512KiB·레코드 2MiB·파일 4096개·poll 총 8MiB·대기 256개·주기 0.2초 상한을 둡니다. 최초 기준 선과 새 기록 알림을 구분합니다.
++
++**경계:** 표시
++
++**실제 처리:** calendar가 기본이며 명시 선택한 관측소는 유지합니다. calendar_renderer·observatory_scene의 GPU 그림과 실제 모델/추론 기록은 별개입니다.
++
++**경계:** 계정 한도
++
++**실제 처리:** UsageClient가 codex.exe app-server를 QProcess 분리 파이프로 열고 읽기 요청합니다. 30초 갱신·12초 응답 제한·65초 이후 오래된 값 표시를 적용합니다.
++
++**경계:** 연결 실패
++
++**실제 처리:** 한도 조회 실패 때 이전 값을 stale로 표시하고 최대 3회,3/6/9초 지연으로 다시 연결합니다. 미확인을 0%로 바꾸지 않습니다.
++
++**경계:** 종료
++
++**실제 처리:** UsageClient.close는 타이머와 pending을 정리하고 종료 요청 뒤 500ms 대기, 필요하면 kill 후 500ms 대기합니다.
++
++**경계:** 배포 교체
++
++**실제 처리:** safe_update의 check →stage →apply 단계로 공식 릴리스·자산·SHA·로컬 경계를 검사하고 실행 확인 실패 시 이전 EXE를 복구합니다. MAX_DOWNLOAD는 512MiB입니다.
++
++
++사용자는 감시 경로·언어·표시 모드·모션/자원 품질을 고르고 새 알림의 이전/이후 값과 근거를 읽습니다.
++
++날씨·사용 한도·업데이트는 네트워크 또는 App Server 기능이며 로컬 감시기의 기능 범위와 나눠 봅니다. 방송 모드와 진단 ZIP의 공개 제외 조건을 유지합니다. 실제 사용 법·릴리스·빌드 안내와 차수별 함수/설정 참조는 아래에 연결되어 있습니다.
++
++[각 차수의 코드·조건·관측·전체 비교](docs/REVISION_INDEX.md)
++
++## 30차·원래 날짜별 테마 기본 복원
++
++설정에 표시 모드가 없는 경우에도 원래 날짜별 달력 조형을 표시합니다. 모델 변경 이벤트를 받아도 날짜 제목과 조형은 유지합니다. 888개 월 테마·일별 디자인·색·재질·날짜 규칙은 바꾸지 않았습니다. 이전/현재 모델·추론 강도·알림 기능도 유지합니다.
++
++[30차 변경 기록](변경기록_30차.md) · [검증 범위](docs/공개검증_30차.md) · [29차와 전체 비교](docs/30%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md)
++
++## 선택 가능한 29차 관측소 기능
++
++- 은색 금속 링 세 개가 서로 다른 축에서 움직입니다. 솔의 태양·아스트라의 결정·테라의 구체·루나의 초승달 코어와 추론 강도별 입자 밀도를 구분합니다. 확인되지 않은 모델은 중립 조형으로 표시합니다.
++- 위성은 기록에서 명시적으로 관측한 작업 상태를 표시합니다. 관심 채팅 고정·기록 북마크·자리비움 요약·시간 슬라이더 재생을 제공하며 재생은 실제 모델 설정을 바꾸지 않습니다.
++- 알림은 채팅 제목·이전 모델과 추론 강도·현재 모델과 추론 강도·기록된 이유를 비교합니다. 정확한 모델 ID와 원문 기록은 보존하고 표시 제목의 장식 이모지를 정리합니다. 마우스를 올리면 자동 닫힘을 멈추고 알림을 고정할 수 있습니다.
++- 방송 모드는 열린 알림·제목·작업·툴팁을 가립니다. 진단 ZIP은 대화·인증·경로·이벤트 원문을 제외한 항목만 로컬에 저장합니다. 업데이트는 사용자가 확인을 눌러 공식 릴리스를 조회하고 SHA-256 대조 후 준비하며, 교체 후 실행 확인 실패 시 이전 실행 파일로 복구합니다.
++- 민트와 화이트 화면·나눔고딕 Bold를 사용합니다. 글자 크기·가장자리 도킹·펼침·재생/일시 정지·모션 축소·자원 품질을 조절할 수 있으며 일시 정지 중에도 알림 감시는 계속됩니다.
++
++실제 한도는 **남은 사용 한도 비율**이며 남은 토큰 개수가 아닙니다. 미확인은 0%와 구분합니다. 선택 설정 관측과 실제 실행 기록 관측을 구분하며 로컬 기록이 서버 모델 신원을 보증하지 않습니다. 기록되지 않은 이유와 작업 상태를 만들어 내지 않습니다.
++
++## 달력 모드와 기존 기능
++
++2026~2099년의 [888개 월 테마](docs/연도별_월별_테마_전체.md)와 [CSV](docs/연도별_월별_테마_전체.csv), 날짜별 실제 메시 조형을 달력 모드로 보존합니다.
++
++공통 생성 규칙을 재사용하므로 888개 수작업 모델을 뜻하지 않습니다.
++
++한영 선 택·날씨·IP 기반 지역·시계·속도 조절을 유지합니다.
++
++하나의 GPU 작업자가 3840×2160 원본을 렌더하며 관측소 품질은 20/30/60fps 상한을 사용합니다.
++
++실제 생성률과 모니터 표시율은 별개이고 고정 240fps 달성을 주장하지 않습니다.
++
++## 모든 차수와 실제 자료
++
++<details>
++<summary><strong>모든 차수와 실제 자료 자세히 보기</strong></summary>
++
++
++[전체 목차](docs/REVISION_INDEX.md) · [차수별 보조 자료·시안·제외 대응](docs/ARCHIVE_FILES.md)
++
++<!-- 차수표 시작 -->
++| 차수 | 핵심 변경 | 자료 |
++| --- | --- | --- |
++| 1차 | Codex Orbit·1차 | **자료 폴더·원본:** [자료 폴더](history/01%EC%B0%A8) · **상세 설명:** [상세 설명](history/01%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/01%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 2차 | Codex Orbit·2차 | **자료 폴더·원본:** [자료 폴더](history/02%EC%B0%A8) · **상세 설명:** [상세 설명](history/02%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/02%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 3차 | Codex Orbit·3차 | **자료 폴더·원본:** [자료 폴더](history/03%EC%B0%A8) · **상세 설명:** [상세 설명](history/03%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/03%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 4차 | Codex Orbit·4차 | **자료 폴더·원본:** [자료 폴더](history/04%EC%B0%A8) · **상세 설명:** [상세 설명](history/04%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/04%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 5차 | Codex Orbit·5차 | **자료 폴더·원본:** [자료 폴더](history/05%EC%B0%A8) · **상세 설명:** [상세 설명](history/05%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/05%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 6차 | Codex Orbit·6차 | **자료 폴더·원본:** [자료 폴더](history/06%EC%B0%A8) · **상세 설명:** [상세 설명](history/06%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/06%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
++| 7차 | Codex Orbit·7차 | **자료 폴더·원본:** [자료 폴더](history/07%EC%B0%A8) · **상세 설명:** [상세 설명](history/07%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/07%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 8차 | Codex Orbit·8차 | **자료 폴더·원본:** [자료 폴더](history/08%EC%B0%A8) · **상세 설명:** [상세 설명](history/08%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/08%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 9차 | Codex Orbit·9차 | **자료 폴더·원본:** [자료 폴더](history/09%EC%B0%A8) · **상세 설명:** [상세 설명](history/09%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/09%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 10차 | Codex Orbit·10차 | **자료 폴더·원본:** [자료 폴더](history/10%EC%B0%A8) · **상세 설명:** [상세 설명](history/10%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/10%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 11차 | Codex Orbit·11차 | **자료 폴더·원본:** [자료 폴더](history/11%EC%B0%A8) · **상세 설명:** [상세 설명](history/11%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/11%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 12차 | Codex Orbit·12차 | **자료 폴더·원본:** [자료 폴더](history/12%EC%B0%A8) · **상세 설명:** [상세 설명](history/12%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/12%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 13차 | Codex Orbit·13차 | **자료 폴더·원본:** [자료 폴더](history/13%EC%B0%A8) · **상세 설명:** [상세 설명](history/13%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/13%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 14차 | Codex Orbit·14차 | **자료 폴더·원본:** [자료 폴더](history/14%EC%B0%A8) · **상세 설명:** [상세 설명](history/14%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/14%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 15차 | Codex Orbit·15차 | **자료 폴더·원본:** [자료 폴더](history/15%EC%B0%A8) · **상세 설명:** [상세 설명](history/15%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/15%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 16차 | Codex Orbit·16차 | **자료 폴더·원본:** [자료 폴더](history/16%EC%B0%A8) · **상세 설명:** [상세 설명](history/16%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/16%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 17차 | Codex Orbit·17차 | **자료 폴더·원본:** [자료 폴더](history/17%EC%B0%A8) · **상세 설명:** [상세 설명](history/17%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/17%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 18차 | Codex Orbit·18차 | **자료 폴더·원본:** [자료 폴더](history/18%EC%B0%A8) · **상세 설명:** [상세 설명](history/18%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/18%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
++| 19차 | Codex Orbit·19차 | **자료 폴더·원본:** [자료 폴더](history/19%EC%B0%A8) · **상세 설명:** [상세 설명](history/19%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/19%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 20차 | Codex Orbit·20차 | **자료 폴더·원본:** [자료 폴더](docs/20%EC%B0%A8) · **상세 설명:** [상세 설명](docs/20%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/20%EC%B0%A8/README.md) |
++| 21차 | Codex Orbit·21차 | **자료 폴더·원본:** [자료 폴더](history/21%EC%B0%A8) · **상세 설명:** [상세 설명](history/21%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/21%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 22차 | Codex Orbit·22차 | **자료 폴더·원본:** [자료 폴더](history/22%EC%B0%A8) · **상세 설명:** [상세 설명](history/22%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/22%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
++| 23차 | Codex Orbit·23차 | **자료 폴더·원본:** [자료 폴더](history/23%EC%B0%A8) · **상세 설명:** [상세 설명](history/23%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/23%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
++| 24차 | Codex Orbit·24차 | **자료 폴더·원본:** [자료 폴더](history/24%EC%B0%A8) · **상세 설명:** [상세 설명](history/24%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/24%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 25차 | Codex Orbit·25차 | **자료 폴더·원본:** [자료 폴더](history/25) · **상세 설명:** [상세 설명](history/25/README.md) · **직전 비교·범위:** [전체 비교·범위](history/25/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
++| 26차 | Codex Orbit·26차 | **자료 폴더·원본:** [자료 폴더](history/26) · **상세 설명:** [상세 설명](history/26/README.md) · **직전 비교·범위:** [전체 비교·범위](history/26/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 27차 | Codex Orbit·27차 | **자료 폴더·원본:** [자료 폴더](history/27) · **상세 설명:** [상세 설명](history/27/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/27%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD.diff) |
++| 28차 | Codex Orbit·28차 | **자료 폴더·원본:** [자료 폴더](history/28) · **상세 설명:** [상세 설명](history/28/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/28%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
++| 최종 | Codex Orbit · 최종 | **자료 폴더·원본:** [자료 폴더](docs/%EC%B5%9C%EC%A2%85) · **상세 설명:** [상세 설명](docs/%EC%B5%9C%EC%A2%85/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/%EC%B5%9C%EC%A2%85/README.md) |
++| 29차 | Codex Orbit·29차 | **자료 폴더·원본:** [자료 폴더](history/29%EC%B0%A8) · **상세 설명:** [상세 설명](history/29%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/29%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) · [소스 비교](history/29%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
++| 30차 | Codex Orbit·30차 | **자료 폴더·원본:** [자료 폴더](history/30%EC%B0%A8) · **상세 설명:** [상세 설명](history/30%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/30%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 31차 | 화면 마감과 테마 선택 | **자료 폴더·원본:** [자료 폴더](history/31%EC%B0%A8) · **상세 설명:** [상세 설명](history/31%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](history/31%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 32차 | 지역 검색과 날짜별 입체 조형 | **자료 폴더·원본:** [자료 폴더](history/32차) · **상세 설명:** [상세 설명](history/32차/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/32%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
++| 33차 | 자동 위치·강수량·도시 행사 진행 자료 | **자료 폴더:** [자료 폴더](history/33차) · **상세 설명:** [상세 설명](history/33차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/33%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
++| 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](history/34차) · **상세 설명:** [상세 설명](history/34차/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/34%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
++| 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](history/35차) · **상세 설명:** [상세 설명](history/35차/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/35%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
++| 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](history/36차) · **상세 설명:** [상세 설명](history/36차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/36차/직전차수.diff) |
 +| 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](history/37차) · **상세 설명:** [상세 설명](history/37차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/37차/비교/README.md) |
- <!-- 차수표 끝 -->
- 
- 원본 소스 비교에는 주석·공백·개행과 신규·삭제 상태를 포함합니다. 20차는 실행 소스 없이 38개 시안, 21차는 110개 시안을 보존합니다. 최종 폴더의 개인 운영 검증 원문은 공개하지 않습니다. 역사 자료 2,281개 항목의 보존·정제·제외 사유와 원본/공개 SHA를 차수별로 연결했습니다.
-@@ -220,3 +240,6 @@ Windows 10/11 x64와 OpenGL 3.3을 지원하는 그래픽 드라이버가 필요
- ![합성 기록으로 이전·현재 모델과 추론 강도 비교를 확인한 실제 Qt 화면입니다.](docs/images/history-29.png)
- 
- ![투명 위젯의 합성 시연이며 실제 ModernGL 프레임을 표시합니다.](docs/images/widget-29.png)
++<!-- 차수표 끝 -->
++
++원본 소스 비교에는 주석·공백·개행과 신규·삭제 상태를 포함합니다. 20차는 실행 소스 없이 38개 시 안, 21차는 110개 시안을 보존합니다. 최종 폴더의 개인 운영 검증 원문은 공개하지 않습니다. 역사 자료 2,281개 항목의 보존·정제·제외 사유와 원본/공개 SHA를 차수별로 연결했습니다.
++
++</details>
++
++## 실행·소스와 권리
++
++Windows 10/11 x64와 OpenGL 3.3을 지원하는 그래픽 드라이버가 필요합니다. 단일 EXE는 Python 설치 없이 실행하고 설치 본은 현재 사용자용 바로 가기·제 거를 제공합니다. GPU 준비/실패는 정적 표식 또는 오류 설명으로 구분합니다.
++
++공개 소스는 GitHub 자동 Source code ZIP 또는 이 저장소에서 받습니다.
++
++비공개 전체 개발 ZIP·개인 대화·지침·인증 자료는 배포하지 않습니다.
++
++기존 라이선스 고지를 보존하며 새 소스 라이선스를 임의 부여하지 않습니다.
++
++재빌드는 `python -B -X utf8 tools/build_distribution.py`를 사용합니다.
++
++원고가 없는 앱 작업으로 논문 PDF를 만들지 않았습니다.
++
++
++## 이전 29차 합성 예시 화면
++
++다음 이미지는 실제 Qt 앱에 합성 이벤트와 예시 값을 넣은 화면이며 개인 채팅·실계정 수치가 아닙니다.
++
++![실제 Qt·GPU로 표시한 합성 시연입니다. 예시 제목·72%는 실제 계정 잔량이나 실제 모델 변경을 증명하지 않습니다.](docs/images/observatory-29.png)
++
++![합성 기록으로 이전·현재 모델과 추론 강도 비교를 확인한 실제 Qt 화면입니다.](docs/images/history-29.png)
++
++![투명 위젯의 합성 시연이며 실제 ModernGL 프레임을 표시합니다.](docs/images/widget-29.png)
 +
 +
 +**37차 픽셀 모션 수리:** 날짜별 대상 133종과 도시 행사 형상 8종의 회전을 확인했습니다. [실제 확인 범위와 장면 준비 수리](docs/37차_3D초기화.md)를 함께 읽어 주세요.
@@ -2079,87 +3057,143 @@ literal 0
 HcmV?d00001
 
 diff --git a/assets/사용법.md b/assets/사용법.md
-index 7e54834104903b0acd1f724217d3274979347dd1..dce6e9cd0659bbbef7b12ffe5fd3a6e83cee26d4 100644
+index 3ce45395a27ab25e4708dee4a5b77bc198c45af8..d0fb3d7e1e67707a21212ed926a8131ab26e4c6b 100644
 --- a/assets/사용법.md
 +++ b/assets/사용법.md
-@@ -1,108 +1,112 @@
+@@ -1,195 +1,115 @@
 -<a name="-codex-orbit--320-사용법"></a>
 -<a id="codex-orbit--340-사용법"></a>
 -# Codex Orbit · 3.5.0 사용법
-+<a name="-codex-orbit--320-사용법">
-+<a id="codex-orbit--340-사용법">
-+# 🪐 Codex Orbit · 3.7.0 사용법
- 
+-
 -<!-- user-levels:start -->
 -**수준별 전체 안내:** [LEVEL 1 - Beginner](../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A81.md) · [LEVEL 2 - Explorer](../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A82.md) · [LEVEL 3 - Practitioner](../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A83.md) · [LEVEL 4 - Advanced](../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A84.md) · [LEVEL 5 - Expert](../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A85.md)
 -<!-- user-levels:end -->
-+## 37차 · 알림 센터
- 
--## 35차 · 색상과 조명
+-
+-## 35차·색상과 조명
 -
 -화면 위쪽 **화면 테마**에서 시스템·라이트·다크를 선택합니다. 옆의 **색상 꾸미기**를 누르면 여섯 가지 색 조합을 고르거나 포인트색·다크 배경·라이트 배경의 색상 코드를 직접 입력할 수 있습니다. 색 선택 버튼도 제공합니다.
 -
--조명 강도는 0부터 100까지 조절하며 **0은 조명 끄기**입니다. 미리보기의 다크·라이트 선택은 미리보기만 바꿉니다. **적용**해야 저장되며 **취소**하면 기존 설정을 유지합니다. 기본값 복원도 적용 전에는 저장하지 않습니다. 잘못된 색상 코드에는 설명을 표시하고 적용을 막으며, 저장 실패 시 이전 설정과 화면을 복원합니다.
+-조명 강도는 0부터 100까지 조절하며 **0은 조명 끄기**입니다.
+-
+-미리보기의 다크·라이트 선택은 미리보기만 바꿉니다.
+-
+-**적용**해야 저장되며 **취소**하면 기존 설정을 유지합니다.
+-
+-기본값 복원도 적용 전에는 저장하지 않습니다.
+-
+-잘못된 색상 코드에는 설명을 표시하고 적용을 막으며, 저장 실패 시 이전 설정과 화면을 복원합니다.
 -
 -입력한 원색은 보존하고 글자색은 읽기 좋게 보정합니다. 날짜별 과일·꽃·기념일·도시 행사와 픽셀 입체 회전은 유지합니다. 잔량 막대의 실제 비율·원값, 자동·수동 위치, 모델·추론·작업 재개 알림도 그대로 사용합니다. 조명은 화면 전체 흐림이나 별도 애니메이션 타이머를 추가하지 않습니다.
 -
--**3.5.0은 정식 배포본**입니다. EXE·Setup 생성과 기본 실행의 최소 확인, 합성 화면 세 조합 완료와 네 번째 자동 검사 미완료, 설정 검사 시간 초과를 [검사 범위와 배포 상태](../docs/35차_최소검사.md)에서 구분합니다. 사용자는 150% 배율의 실사용이 정상이라고 직접 확인했습니다. 이는 자동 검사 전체 통과와 구분합니다.
+-**3.5.0은 정식 배포 본**입니다.
+-
+-EXE·Setup 생성과 기본 실행의 최소 확인, 합성 화면 세 조합 완료와 네 번째 자동 검사 미완료, 설정 검사 시간 초과를 [검사 범위와 배포 상태](../docs/35차_최소검사.md)에서 구분합니다.
+-
+-사용자는 150% 배율의 실사용이 정상이라고 직접 확인했습니다.
+-
+-이는 자동 검사 전체 통과와 구분합니다.
 -
 -
--## 34차 · 픽셀 입체 조형
+-## 34차·픽셀 입체 조형
 -
--날짜별 과일·꽃·기념일과 도시 행사 주제를 유지하면서 실제 입체 모형의 픽셀 표현을 표시합니다. 모형은 세로축을 중심으로 한 바퀴 회전하며, 지명·기온·강수량·잔량과 알림 글자는 또렷하게 표시합니다. 위치는 자동·수동을 고르고 기본 화면에는 지명을 간결하게 표시합니다. 백분율 요약은 소수 첫째 자리 반올림이며 원값은 툴팁에서 확인합니다.
+-날짜별 과일·꽃·기념일과 도시 행사 주제를 유지하면서 실제 입체 모형의 픽셀 표현을 표시합니다.
+-
+-모형은 세로축을 중심으로 한 바퀴 회전하며, 지명·기온·강수량·잔량과 알림 글자는 또렷하게 표시합니다.
+-
+-위치는 자동·수동을 고르고 기본 화면에는 지명을 간결하게 표시합니다.
+-
+-백분율 요약은 소수 첫째 자리 반올림이며 원값은 툴팁에서 확인합니다.
 -
 -## 지역·날씨와 도시 행사
 -
 -위치는 자동 네트워크 추정이 기본입니다. 지역 선택 창에서 자동·수동을 명확히 고릅니다. 수동 검색이나 취소만으로 저장하지 않으며, 자동 모드로 돌아가면 이전 수동 위치를 해제하고 다시 조회합니다. 국가만 고르면 행사 기준만 바뀌고 날씨 지역은 유지됩니다. 네트워크 추정은 GPS나 건물 주소가 아닙니다.
 -
--습도 옆에는 강수량(mm)과 제공 자료의 실제 직전 집계 간격을 표시합니다. 실제 0과 미확인(—)을 구분하고, 오래된 값은 이전 정보로 표시합니다. 일출·일몰은 제공 지역의 시간대를 유지합니다.
+-습도 옆에는 강수량(mm)과 제공 자료의 실제 직전 집계 간격을 표시합니다. 실제 0 과 미확인(—)을 구분하고, 오래된 값은 이전 정보로 표시합니다. 일출·일몰은 제공 지역의 시간대를 유지합니다.
 -
--화면 위의 선택 영역에서 언어·화면 테마(시스템/라이트/다크)·글자 크기를 바꿀 수 있습니다. 테마는 즉시 적용되고 저장되며, 시스템은 운영체제의 테마 변화를 따릅니다. 왼쪽 작업 현황에서 기록된 작업과 선택 설정·최근 실행에서 확인한 값을 구분해 봅니다. 화면 설정에는 움직임 줄이기·화면 가장자리에 붙이기·알림 소리·성능과 화질·문제 확인용 파일 저장·새 버전 확인이 있습니다. 프라이버시 모드는 화면에서 채팅 제목과 작업 설명을 가리며 저장된 기록은 그대로 유지합니다. 기존 월별 주제와 날짜별 대상은 유지하고, 날짜 위젯의 고리와 좌우 보조 장식은 제거했습니다. 당일 대상 하나를 입체로 표시합니다.
+-화면 위의 선택 영역에서 언어·화면 테마(시스템/라이트/다크)·글자 크기를 바꿀 수 있습니다.
 -
--투명한 바탕화면에서 당일의 3D 대상 하나가 움직이며, 로컬 Codex의 모델·추론 강도 변경과 작업 배정·재개를 알려 줍니다. 개인 기록은 이 컴퓨터에 저장합니다.
+-테마는 즉시 적용되고 저장되며, 시스템은 운영체제의 테마 변화를 따릅니다.
+-
+-왼쪽 작업 현황에서 기록된 작업과 선택 설정·최근 실행에서 확인한 값을 구분해 봅니다.
+-
+-화면 설정에는 움직임 줄이기·화면 가장자리에 붙이기·알림 소리·성능과 화질·문제 확인용 파일 저장·새 버전 확인이 있습니다.
+-
+-프라이버시 모드는 화면에서 채팅 제목과 작업 설명을 가리며 저장된 기록은 그대로 유지합니다.
+-
+-기존 월별 주제와 날짜별 대상은 유지하고, 날짜 위젯의 고리와 좌우 보조 장식은 제거했습니다.
+-
+-당일 대상 하나를 입체로 표시합니다.
+-
+-투명한 바탕 화면에서 당일의 3D 대상 하나가 움직이며, 로컬 Codex의 모델·추론 강도 변경과 작업 배정·재개를 알려 줍니다. 개인 기록은 이 컴퓨터에 저장합니다.
 -
 -## 도시 축제와 발표 일정
 -
--지역 설정의 ‘축제 목록·출처’에서 선택 도시 또는 추정 도시의 수록 항목과 발표 일정을 구분해 봅니다. 전체 항목에는 검증된 행사 시리즈, 개최 회차, 아직 분류되지 않은 항목이 함께 있으며 시리즈 수로 부풀리지 않습니다. 이름이나 가까운 좌표만으로 도시를 만들어 연결하지 않습니다. 주소·장소에 검증된 도시 식별자가 없으면 목록 지원 범위가 미확인으로 표시될 수 있습니다.
+-지역 설정의 ‘축제 목록·출처’에서 선택 도시 또는 추정 도시의 수록 항목과 발표 일정을 구분해 봅니다.
 -
--실제 발표된 정확한 날짜에만 음악·영화·눈·빛·카니발·꽃·문화·열기구의 8가지 입체 모티프를 적용합니다. 주요 고정 특집은 유지합니다. 모든 개별 축제의 독립 수작업 모델이나 미발표 미래 개최일을 보장하지 않습니다. 발표 일정의 날짜·출처·라이선스를 확인할 수 있고 ‘일정 새로고침’은 검증된 국가 자료를 받아 같은 도시·날짜에도 새 자료를 반영합니다. 연결·검증 실패 시 기존 자료를 유지하고 상태를 표시합니다. 목록은 전 세계 모든 도시 행사의 완전한 사전이 아닙니다.
+-전체 항목에는 검증된 행사 시리즈, 개최 회차, 아직 분류되지 않은 항목이 함께 있으며 시리즈 수로 부풀리지 않습니다.
+-
+-이름이나 가까운 좌표만으로 도시를 만들어 연결하지 않습니다.
+-
+-주소·장소에 검증된 도시 식별자가 없으면 목록 지원 범위가 미확인으로 표시될 수 있습니다.
+-
+-실제 발표된 정확한 날짜에만 음악·영화·눈·빛·카니발·꽃·문화·열 기구의 8가지 입체 모티프를 적용합니다.
+-
+-주요 고정 특집은 유지합니다.
+-
+-모든 개별 축제의 독립 수작업 모델이나 미발표 미래 개최 일을 보장하지 않습니다.
+-
+-발표 일정의 날짜·출처·라이선스를 확인할 수 있고 ‘일정 새로 고침’은 검증된 국가 자료를 받아 같은 도시·날짜에도 새 자료를 반영합니다.
+-
+-연결·검증 실패 시 기존 자료를 유지하고 상태를 표시합니다.
+-
+-목록은 전 세계 모든 도시 행사의 완전한 사전이 아닙니다.
 -
 -
+-화면 위의 선택 영역에서 언어·화면 테마(시스템/라이트/다크)·글자 크기를 바꿀 수 있습니다.
 -
--화면 위의 선택 영역에서 언어·화면 테마(시스템/라이트/다크)·글자 크기를 바꿀 수 있습니다. 테마는 즉시 적용되고 저장되며, 시스템은 운영체제의 테마 변화를 따릅니다. 왼쪽 작업 현황에서 기록된 작업과 선택 설정·최근 실행에서 확인한 값을 구분해 봅니다. 화면 설정에는 움직임 줄이기·화면 가장자리에 붙이기·알림 소리·성능과 화질·문제 확인용 파일 저장·새 버전 확인이 있습니다. 프라이버시 모드는 화면에서 채팅 제목과 작업 설명을 가리며 저장된 기록은 그대로 유지합니다. 기존 월별 주제와 날짜별 대상은 유지하고, 날짜 **위젯**의 고리와 좌우 보조 장식은 제거했습니다. 당일 대상 하나를 입체로 표시합니다.
+-테마는 즉시 적용되고 저장되며, 시스템은 운영체제의 테마 변화를 따릅니다.
 -
--투명한 바탕화면에서 당일의 3D 대상 하나가 움직이며, 로컬 Codex의 모델·추론 강도 변경과 작업 배정·재개를 알려 줍니다. 개인 기록은 이 컴퓨터에 저장합니다.
-+처음 실행할 때 재질 준비가 오래 걸리면 위젯에 **3D 준비 중**이 표시됩니다. 창 표시 전 대기는 최대 5초이며 이후 앱 조작을 계속할 수 있습니다. 실제 초기화 오류는 **3D 표시 오류**로 구분합니다. 첫 준비와 일반 프레임의 제한 시간은 다르며, 준비 상태를 실제 움직이는 3D로 표시하지 않습니다.
- 
+-왼쪽 작업 현황에서 기록된 작업과 선택 설정·최근 실행에서 확인한 값을 구분해 봅니다.
+-
+-화면 설정에는 움직임 줄이기·화면 가장자리에 붙이기·알림 소리·성능과 화질·문제 확인용 파일 저장·새 버전 확인이 있습니다.
+-
+-프라이버시 모드는 화면에서 채팅 제목과 작업 설명을 가리며 저장된 기록은 그대로 유지합니다.
+-
+-기존 월별 주제와 날짜별 대상은 유지하고, 날짜 **위젯**의 고리와 좌우 보조 장식은 제거했습니다.
+-
+-당일 대상 하나를 입체로 표시합니다.
+-
+-투명한 바탕 화면에서 당일의 3D 대상 하나가 움직이며, 로컬 Codex의 모델·추론 강도 변경과 작업 배정·재개를 알려 줍니다. 개인 기록은 이 컴퓨터에 저장합니다.
+-
 -## 시작
-+위젯을 눌러 창을 연 뒤 왼쪽 **알림 센터**를 선택합니다. **기록 탐색**에서 채팅 제목·모델·이유·작업을 검색하고, 종류·기간·순서와 채팅별 묶음을 고를 수 있습니다. 기록을 선택하면 이전과 현재 모델·추론 강도, 이유와 맡은 작업을 확인합니다. 기록 재표시는 새 모델 변경이 아닙니다.
- 
+-
 -1. 단일 `CodexOrbit.exe`를 실행하거나 `CodexOrbit-Setup.exe`로 현재 사용자에게 설치합니다. 둘을 동시에 같은 데이터 폴더에서 실행하지 않습니다.
 -2. 위젯을 클릭하면 기록과 실제 계정 사용 한도가 열립니다. 드래그로 이동하고 오른쪽·아래 가장자리로 크기를 조절합니다.
 -3. 첫 감시는 이전 기록을 기준선으로 읽습니다. 이후 새 변경을 알립니다. 선택 설정과 실행 관측은 서로 구분합니다.
-+**알림 설정**에서 표시 시간·동시 표시 개수·작업 알림·알림음을 조절합니다. 집중 시간이나 채팅별 음소거를 켜도 기록 수집은 계속합니다. **알림 다시 받기**로 집중을 끝내고, **모든 음소거 해제**로 채팅별 음소거를 풉니다. 가상 알림 미리보기는 실제 변경 기록에 남지 않습니다.
- 
+-
 -## 알림 읽기
-+위쪽 상태띠에서 감시 상태와 최근 진행을 확인합니다. 멈춤이나 지연이 보이면 **감시 다시 연결**을 누릅니다. **프라이버시 모드**는 채팅 제목과 작업 설명을 화면·복사·내보내기에서 가립니다. 저장된 원문을 삭제하지 않습니다.
- 
+-
 -채팅 제목에는 장식 이모지를 붙이지 않습니다. 표시만 정리하며 Codex의 원래 제목을 바꾸지 않습니다.
-+지역은 도시와 시도·국가를 함께 확인합니다. 수원시는 **경기도 · 대한민국**입니다. 자동 위치는 연결망의 위치 자료를 사용하므로 실제 기기 위치와 다를 수 있습니다. 다른 도시로 잡히면 **지역 변경 → 수동**에서 시도·국가까지 맞는 도시를 골라 주세요. 이번 버전은 서로 다른 동명 도시나 번역 후보를 섞지 않도록 확인을 강화했습니다.
- 
+-
 -- 채팅 제목
 -- ⬅️ 이전 모델 / 이전 추론 강도
 -- ➡️ 현재 모델 / 현재 추론 강도
 -- 💡 쉬운 이유
 -
--☀️ Sol · ✨ Astra · 🌍 Terra · 🌙 Luna를 정확한 모델 ID와 함께 표시합니다. 추론 강도는 ⚪ 없음 · 💧 최소 · 🌱 낮음 · ⚖️ 보통 · 🔥 높음 · 🚀 매우 높음 · ⚡ 최고로 구분합니다. 기록되지 않은 이전 값이나 이유는 만들어 쓰지 않습니다. 공개된 배정 설명은 설명으로 표시하며 비공개 사고 과정을 보여 준다고 주장하지 않습니다.
+-☀️ Sol·✨ Astra·🌍 Terra·🌙 Luna를 정확한 모델 ID와 함께 표시합니다.
+-
+-추론 강도는 ⚪ 없음·💧 최소·🌱 낮음·⚖️ 보통·🔥 높음·🚀 매우 높음·⚡ 최고로 구분합니다.
+-
+-기록되지 않은 이전 값이나 이유는 만들어 쓰지 않습니다.
+-
+-공개된 배정 설명은 설명으로 표시하며 비공개 사고 과정을 보여 준다고 주장하지 않습니다.
 -
 -새 변경은 독립 알림으로 바로 표시합니다. 마우스를 올리면 자동 닫힘이 멈추고, 📌 고정하면 계속 남습니다. ☆ 기록 보관으로 북마크할 수 있습니다. 닫아도 이력은 남습니다. 화면에 표시할 수 있는 새 알림 상한을 넘긴 이력은 기록에서 확인합니다.
 -
 -## 입체 관측소
 -
 -- Sol은 태양, Astra는 결정, Terra는 구체, Luna는 초승달 코어입니다. 모델이 미확인이면 중립 코어를 사용합니다.
--- 실제 로컬 기록에서 확인한 작업자는 위성으로 표시합니다. 위성이나 작업 목록을 누르면 해당 채팅 기록을 엽니다. ★ 관심 채팅은 우선 궤도에 표시합니다. 위성은 최대 24개이며 나머지도 목록에서 확인합니다.
+-- 실제 로컬 기록에서 확인한 작업자는 위성으로 표시합니다. 위성이나 작업 목록을 누르면 해당 채팅 기록을 엽니다. ★ 관심 채팅은 우선 궤도에 표시합니다. 위성은 최대 24개이며 나머지 도 목록에서 확인합니다.
 -- 진행·완료·응답 대기·오류·중단은 명시된 기록이 있을 때만 표시합니다. 확인되지 않은 작업을 진행 중이나 완료로 추정하지 않습니다.
 -- 이전/현재 값은 같은 비중으로 표시하고 실제 바뀐 값만 강조합니다. 선택한 설정과 실행 중 관측한 설정은 구분합니다.
 -- 슬라이더는 저장된 기록을 재생합니다. 실제 Codex 모델이나 추론 강도를 되돌리는 기능이 아닙니다.
@@ -2169,7 +3203,7 @@ index 7e54834104903b0acd1f724217d3274979347dd1..dce6e9cd0659bbbef7b12ffe5fd3a6e8
 -
 -기록창의 조작줄과 위젯 우클릭에서 언어·회전 속도·관측소/달력 모드·일시정지·모션 축소·자원 사용을 조절합니다. **글자 크기는 위젯 크기와 별도로** 바꿉니다. 좌측에서 입체 관측소·변경 기록·사용 한도를 선택해 작은 창에서도 각 화면을 넓게 볼 수 있습니다.
 -
--절전·균형·고화질은 자원 사용 상한을 조절합니다. 고품질 원본 렌더는 3840×2160이며 실제 표시 크기에 맞게 전달합니다. 초당 240프레임 달성을 보장하거나 새로 실험하지 않습니다. 모션을 정지해도 감시·알림·시계는 계속 동작합니다.
+-절전·균형·고화질은 자원 사용 상한을 조절합니다. 고품질 원본 렌더는 3840×2160이며 실제 표시 크기에 맞게 전달합니다. 초당 240 프레임 달성을 보장하거나 새로 실험하지 않습니다. 모션을 정지해도 감시·알림·시계는 계속 동작합니다.
 -
 -가장자리 도킹을 켜고 화면 좌우 끝에 두면 작은 손잡이로 접히며, 마우스를 올리면 펼쳐집니다. 화면 연결이 달라지면 보이는 영역으로 위치를 보정합니다.
 -
@@ -2179,49 +3213,273 @@ index 7e54834104903b0acd1f724217d3274979347dd1..dce6e9cd0659bbbef7b12ffe5fd3a6e8
 -
 -잔량은 설치된 Codex의 로그인 상태에서 조회한 **계정 사용 한도 비율**입니다. 정확한 남은 토큰 개수가 아닙니다. 숫자와 막대, 관측소의 입체 용기로 표시합니다. 미확인은 0%와 다르며, 오래된 값은 조회 상태와 함께 구분합니다.
 -
--위젯의 지역 표시를 눌러 도시·지역, 주소·장소 또는 국가를 검색하고 결과에서 직접 선택합니다. 도시·장소를 고르면 해당 지점의 현재 기온·날씨·습도·일출·일몰을 네트워크로 받습니다. 국가만 고르면 디자인 국가만 바꾸고 날씨 기준 지역은 별도로 표시합니다. 자동 위치는 IP 기반 추정이므로 VPN·통신망에 따라 다른 도시가 나올 수 있습니다. Windows 위치 서비스를 켤 필요가 없습니다. 상세 주소는 검색 결과에 있는 정보만 표시하며 실제 건물 위치를 자동으로 보장하지 않습니다. 날씨는 선택 좌표 주변의 기상 자료이며 건물마다 별도의 실측 기온을 제공하는 것은 아닙니다. 연결 실패와 오래된 값은 갱신 상태로 구분합니다.
+-위젯의 지역 표시를 눌러 도시·지역, 주소·장소 또는 국가를 검색하고 결과에서 직접 선택합니다.
+-
+-도시·장소를 고르면 해당 지점의 현재 기온·날씨·습도·일출·일몰을 네트워크로 받습니다.
+-
+-국가만 고르면 디자인 국가만 바꾸고 날씨 기준 지역은 별도로 표시합니다.
+-
+-자동 위치는 IP 기반 추정이므로 VPN·통신망에 따라 다른 도시가 나올 수 있습니다.
+-
+-Windows 위치 서비스를 켤 필요가 없습니다.
+-
+-상세 주소는 검색 결과에 있는 정보만 표시하며 실제 건물 위치를 자동으로 보장하지 않습니다.
+-
+-날씨는 선택 좌표 주변의 기상 자료이며 건물마다 별도의 실측 기온을 제공하는 것은 아닙니다.
+-
+-연결 실패와 오래된 값은 갱신 상태로 구분합니다.
 -
 -## 날짜별 조형
 -
--달력 모드는 2026~2099년의 888개 연월 주제와 날짜별 대상 조형을 사용합니다. [전체 월 테마](../docs/연도별_월별_테마_전체.md)와 CSV를 확인하십시오. 날짜별 조형은 규칙에 따라 생성되며 27,028개의 개별 수작업 모델 파일이 있다는 뜻이 아닙니다. 선택 도시와 디자인 국가가 일치하고 날씨 응답에서 시차가 확인되면 해당 현지 날짜를 사용합니다. 국가만 선택해 시간대가 정해지지 않으면 한국 날짜 기준을 안내합니다. 250개 국가·지역의 공휴일과 지원 기념일에는 실제 행사명과 특집 조형을 우선합니다. 미래 법 개정이나 모든 도시 축제까지 확정한 자료는 아닙니다.
+-달력 모드는 2026~2099년의 888개 연 월 주제와 날짜별 대상 조형을 사용합니다. [전체 월 테마](../docs/연도별_월별_테마_전체.md)와 CSV를 확인하십시오.
+-
+-날짜별 조형은 규칙에 따라 생성되며 27,028개의 개별 수작업 모델 파일이 있다는 뜻이 아닙니다.
+-
+-선택 도시와 디자인 국가가 일치하고 날씨 응답에서 시차가 확인되면 해당 현지 날짜를 사용합니다.
+-
+-국가만 선택해 시간대가 정해지지 않으면 한국 날짜 기준을 안내합니다. 250개 국가·지역의 공휴일과 지원 기념일에는 실제 행사 명과 특집 조형을 우선 합니다.
+-
+-미래 법 개정이나 모든 도시 축제까지 확정한 자료는 아닙니다.
 -
 -## MD·진단·업데이트
 -
--배포 폴더의 `기본_지침.md`는 공유 가능한 시작 자료입니다. 개인 MD를 다른 사람에게 줄 때 대화·연락처·인증값을 먼저 제외하십시오. 위젯이 Codex의 모든 채팅에 MD를 강제로 주입하거나 비공개 추론을 읽는 것은 아닙니다. Codex에 적용하려면 해당 프로젝트가 지원하는 지침 파일로 사용해야 합니다.
+-배포 폴더의 `기본_지침.md`는 공유 가능한 시작 자료입니다. 개인 MD를 다른 사람에게 줄 때 대화·연락처·인증 값을 먼저 제외하십시오. 위젯이 Codex의 모든 채팅에 MD를 강제로 주입하거나 비공개 추론을 읽는 것은 아닙니다. Codex에 적용하려면 해당 프로젝트가 지원하는 지침 파일로 사용해야 합니다.
 -
 -‘문제 확인용 파일 저장’은 대화·이벤트 원문·인증값·개인 경로를 제외한 허용 항목만 **로컬 파일**로 저장합니다. 자동 전송하지 않습니다.
 -
 -‘새 버전 확인’은 공식 `PUVKID/Codex-Orbit` HTTPS 릴리스만 확인합니다. 새 버전을 내려받아 SHA-256을 검증한 뒤 직접 설치·재시작할 수 있습니다. 재시작 검사 실패 시 이전 실행 파일을 복구하며 개인 설정과 MD는 보존합니다. 소스 실행에서는 배포 EXE의 설치 동작을 대신 수행하지 않습니다.
-+## 35차 · 색상과 조명
- 
+-
 -## 한계와 문제 확인
-+화면 위쪽 **화면 테마**에서 시스템·라이트·다크를 선택합니다. 옆의 **색상 꾸미기**를 누르면 여섯 가지 색 조합을 고르거나 포인트색·다크 배경·라이트 배경의 색상 코드를 직접 입력할 수 있습니다. 색 선택 버튼도 제공합니다.
- 
+-
 -Codex에서 로컬로 공개하는 기록·설정만 관측합니다. 서버 모델 신원이나 비공개 추론을 증명하지 않습니다. 기록이 없는 이유·이전 값·작업 상태는 확인 불가로 표시합니다. 감시가 중단되거나 복구되면 상태가 바뀔 때 한 번 알립니다.
-+조명 강도는 0부터 100까지 조절하며 **0은 조명 끄기**입니다. 미리보기의 다크·라이트 선택은 미리보기만 바꿉니다. **적용**해야 저장되며 **취소**하면 기존 설정을 유지합니다. 기본값 복원도 적용 전에는 저장하지 않습니다. 잘못된 색상 코드에는 설명을 표시하고 적용을 막으며, 저장 실패 시 이전 설정과 화면을 복원합니다.
- 
--필요 환경: Windows 10/11 x64, OpenGL 3.3 지원 그래픽 드라이버. 개인 데이터는 사용자 AppData의 CodexOrbit 폴더에 유지하며 제거 프로그램은 개인 기록을 임의로 지우지 않습니다. 출처·라이선스는 배포의 라이선스 폴더를 확인하십시오.
-+입력한 원색은 보존하고 글자색은 읽기 좋게 보정합니다. 날짜별 과일·꽃·기념일·도시 행사와 픽셀 입체 회전은 유지합니다. 잔량 막대의 실제 비율·원값, 자동·수동 위치, 모델·추론·작업 재개 알림도 그대로 사용합니다. 조명은 화면 전체 흐림이나 별도 애니메이션 타이머를 추가하지 않습니다.
- 
+-
+-필요 환경: Windows 10/11 x64, OpenGL 3.3 지 원 그래픽 드라이버. 개인 데이터는 사용자 AppData의 CodexOrbit 폴더에 유지하며 제거 프로그램은 개인 기록을 임의로 지우지 않습니다. 출처·라이선스는 배포의 라이선스 폴더를 확인하십시오.
+-
 -주소·장소 검색 자료는 © OpenStreetMap contributors입니다. [저작권·ODbL 안내](https://www.openstreetmap.org/copyright)를 확인할 수 있습니다. 공개 검색 서버에 검색어를 보내며 모든 장소의 수록이나 건물 단위 정확도를 보장하지 않습니다.
-+**설명 수준 선택**
++<a name="-codex-orbit--320-사용법">
++<a id="codex-orbit--340-사용법">
++# 🪐 Codex Orbit · 3.7.0 사용법
 +
-+[LEVEL 1 - Beginner](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨1.md) · [LEVEL 2 - Explorer](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨2.md) · [LEVEL 3 - Practitioner](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨3.md) · [LEVEL 4 - Advanced](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨4.md) · [LEVEL 5 - Expert](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨5.md)
++## 37차 · 알림 센터
 +
-+## 34차 · 픽셀 입체 조형
++처음 실행할 때 재질 준비가 오래 걸리면 위젯에 **3D 준비 중**이 표시됩니다. 창 표시 전 대기는 최대 5초이며 이후 앱 조작을 계속할 수 있습니다. 실제 초기화 오류는 **3D 표시 오류**로 구분합니다. 첫 준비와 일반 프레임의 제한 시간은 다르며, 준비 상태를 실제 움직이는 3D로 표시하지 않습니다.
 +
-+날짜별 과일·꽃·기념일과 도시 행사 주제를 유지하면서 실제 입체 모형의 픽셀 표현을 표시합니다. 모형은 세로축을 중심으로 한 바퀴 회전하며, 지명·기온·강수량·잔량과 알림 글자는 또렷하게 표시합니다. 위치는 자동·수동을 고르고 기본 화면에는 지명을 간결하게 표시합니다. 백분율 요약은 소수 첫째 자리 반올림이며 원값은 툴팁에서 확인합니다.
++위젯을 눌러 창을 연 뒤 왼쪽 **알림 센터**를 선택합니다. **기록 탐색**에서 채팅 제목·모델·이유·작업을 검색하고, 종류·기간·순서와 채팅별 묶음을 고를 수 있습니다. 기록을 선택하면 이전과 현재 모델·추론 강도, 이유와 맡은 작업을 확인합니다. 기록 재표시는 새 모델 변경이 아닙니다.
 +
++**알림 설정**에서 표시 시간·동시 표시 개수·작업 알림·알림음을 조절합니다. 집중 시간이나 채팅별 음소거를 켜도 기록 수집은 계속합니다. **알림 다시 받기**로 집중을 끝내고, **모든 음소거 해제**로 채팅별 음소거를 풉니다. 가상 알림 미리보기는 실제 변경 기록에 남지 않습니다.
++
++위쪽 상태띠에서 감시 상태와 최근 진행을 확인합니다. 멈춤이나 지연이 보이면 **감시 다시 연결**을 누릅니다. **프라이버시 모드**는 채팅 제목과 작업 설명을 화면·복사·내보내기에서 가립니다. 저장된 원문을 삭제하지 않습니다.
++
++지역은 도시와 시도·국가를 함께 확인합니다. 수원시는 **경기도 · 대한민국**입니다. 자동 위치는 연결망의 위치 자료를 사용하므로 실제 기기 위치와 다를 수 있습니다. 다른 도시로 잡히면 **지역 변경 → 수동**에서 시도·국가까지 맞는 도시를 골라 주세요. 이번 버전은 서로 다른 동명 도시나 번역 후보를 섞지 않도록 확인을 강화했습니다.
++
++## 35차 · 색상과 조명
++
++화면 위쪽 **화면 테마**에서 시스템·라이트·다크를 선택합니다. 옆의 **색상 꾸미기**를 누르면 여섯 가지 색 조합을 고르거나 포인트색·다크 배경·라이트 배경의 색상 코드를 직접 입력할 수 있습니다. 색 선택 버튼도 제공합니다.
++
++조명 강도는 0부터 100까지 조절하며 **0은 조명 끄기**입니다. 미리보기의 다크·라이트 선택은 미리보기만 바꿉니다. **적용**해야 저장되며 **취소**하면 기존 설정을 유지합니다. 기본값 복원도 적용 전에는 저장하지 않습니다. 잘못된 색상 코드에는 설명을 표시하고 적용을 막으며, 저장 실패 시 이전 설정과 화면을 복원합니다.
++
++입력한 원색은 보존하고 글자색은 읽기 좋게 보정합니다. 날짜별 과일·꽃·기념일·도시 행사와 픽셀 입체 회전은 유지합니다. 잔량 막대의 실제 비율·원값, 자동·수동 위치, 모델·추론·작업 재개 알림도 그대로 사용합니다. 조명은 화면 전체 흐림이나 별도 애니메이션 타이머를 추가하지 않습니다.
++
++**설명 수준 선택**
++
++[LEVEL 1 - Beginner](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨1.md) · [LEVEL 2 - Explorer](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨2.md) · [LEVEL 3 - Practitioner](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨3.md) · [LEVEL 4 - Advanced](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨4.md) · [LEVEL 5 - Expert](https://github.com/PUVKID/Codex-Orbit/blob/main/docs/읽기안내/레벨5.md)
++
++## 34차 · 픽셀 입체 조형
++
++날짜별 과일·꽃·기념일과 도시 행사 주제를 유지하면서 실제 입체 모형의 픽셀 표현을 표시합니다. 모형은 세로축을 중심으로 한 바퀴 회전하며, 지명·기온·강수량·잔량과 알림 글자는 또렷하게 표시합니다. 위치는 자동·수동을 고르고 기본 화면에는 지명을 간결하게 표시합니다. 백분율 요약은 소수 첫째 자리 반올림이며 원값은 툴팁에서 확인합니다.
++
++
++## 지역·날씨와 도시 행사
++
++위치는 자동 네트워크 추정이 기본입니다. 지역 선택 창에서 자동·수동을 명확히 고릅니다. 수동 검색이나 취소만으로 저장하지 않으며, 자동 모드로 돌아가면 이전 수동 위치를 해제하고 다시 조회합니다. 국가만 고르면 행사 기준만 바뀌고 날씨 지역은 유지됩니다. 네트워크 추정은 GPS나 건물 주소가 아닙니다.
++
++습도 옆에는 강수량(mm)과 제공 자료의 실제 직전 집계 간격을 표시합니다. 실제 0과 미확인(—)을 구분하고, 오래된 값은 이전 정보로 표시합니다. 일출·일몰은 제공 지역의 시간대를 유지합니다.
++
++화면 위의 선택 영역에서 언어·화면 테마(시스템/라이트/다크)·글자 크기를 바꿀 수 있습니다. 테마는 즉시 적용되고 저장되며, 시스템은 운영체제의 테마 변화를 따릅니다. 왼쪽 작업 현황에서 기록된 작업과 선택 설정·최근 실행에서 확인한 값을 구분해 봅니다. 화면 설정에는 움직임 줄이기·화면 가장자리에 붙이기·알림 소리·성능과 화질·문제 확인용 파일 저장·새 버전 확인이 있습니다. 프라이버시 모드는 화면에서 채팅 제목과 작업 설명을 가리며 저장된 기록은 그대로 유지합니다. 기존 월별 주제와 날짜별 대상은 유지하고, 날짜 위젯의 고리와 좌우 보조 장식은 제거했습니다. 당일 대상 하나를 입체로 표시합니다.
++
++투명한 바탕화면에서 당일의 3D 대상 하나가 움직이며, 로컬 Codex의 모델·추론 강도 변경과 작업 배정·재개를 알려 줍니다. 개인 기록은 이 컴퓨터에 저장합니다.
++
++## 시작
++
++1. 단일 `CodexOrbit.exe`를 실행하거나 `CodexOrbit-Setup.exe`로 현재 사용자에게 설치합니다. 둘을 동시에 같은 데이터 폴더에서 실행하지 않습니다.
++2. 위젯을 클릭하면 기록과 실제 계정 사용 한도가 열립니다. 드래그로 이동하고 오른쪽·아래 가장자리로 크기를 조절합니다.
++3. 첫 감시는 이전 기록을 기준선으로 읽습니다. 이후 새 변경을 알립니다. 선택 설정과 실행 관측은 서로 구분합니다.
++
++## 알림 읽기
++
++채팅 제목에는 장식 이모지를 붙이지 않습니다. 표시만 정리하며 Codex의 원래 제목을 바꾸지 않습니다.
++
++- 채팅 제목
++- ⬅️ 이전 모델 / 이전 추론 강도
++- ➡️ 현재 모델 / 현재 추론 강도
++- 💡 쉬운 이유
++
++☀️ Sol · ✨ Astra · 🌍 Terra · 🌙 Luna를 정확한 모델 ID와 함께 표시합니다. 추론 강도는 ⚪ 없음 · 💧 최소 · 🌱 낮음 · ⚖️ 보통 · 🔥 높음 · 🚀 매우 높음 · ⚡ 최고로 구분합니다. 기록되지 않은 이전 값이나 이유는 만들어 쓰지 않습니다. 공개된 배정 설명은 설명으로 표시하며 비공개 사고 과정을 보여 준다고 주장하지 않습니다.
++
++새 변경은 독립 알림으로 바로 표시합니다. 마우스를 올리면 자동 닫힘이 멈추고, 📌 고정하면 계속 남습니다. ☆ 기록 보관으로 북마크할 수 있습니다. 닫아도 이력은 남습니다. 화면에 표시할 수 있는 새 알림 상한을 넘긴 이력은 기록에서 확인합니다.
++
++## 입체 관측소
++
++- Sol은 태양, Astra는 결정, Terra는 구체, Luna는 초승달 코어입니다. 모델이 미확인이면 중립 코어를 사용합니다.
++- 실제 로컬 기록에서 확인한 작업자는 위성으로 표시합니다. 위성이나 작업 목록을 누르면 해당 채팅 기록을 엽니다. ★ 관심 채팅은 우선 궤도에 표시합니다. 위성은 최대 24개이며 나머지도 목록에서 확인합니다.
++- 진행·완료·응답 대기·오류·중단은 명시된 기록이 있을 때만 표시합니다. 확인되지 않은 작업을 진행 중이나 완료로 추정하지 않습니다.
++- 이전/현재 값은 같은 비중으로 표시하고 실제 바뀐 값만 강조합니다. 선택한 설정과 실행 중 관측한 설정은 구분합니다.
++- 슬라이더는 저장된 기록을 재생합니다. 실제 Codex 모델이나 추론 강도를 되돌리는 기능이 아닙니다.
++- 자리비움 이후 기록 수와 보관한 기록을 확인할 수 있습니다. 채팅 직접 이동은 지원이 확인되지 않아 ID 복사를 제공합니다.
++
++## 화면 조작
++
++기록창의 조작줄과 위젯 우클릭에서 언어·회전 속도·관측소/달력 모드·일시정지·모션 축소·자원 사용을 조절합니다. **글자 크기는 위젯 크기와 별도로** 바꿉니다. 좌측에서 입체 관측소·변경 기록·사용 한도를 선택해 작은 창에서도 각 화면을 넓게 볼 수 있습니다.
++
++절전·균형·고화질은 자원 사용 상한을 조절합니다. 고품질 원본 렌더는 3840×2160이며 실제 표시 크기에 맞게 전달합니다. 초당 240프레임 달성을 보장하거나 새로 실험하지 않습니다. 모션을 정지해도 감시·알림·시계는 계속 동작합니다.
++
++가장자리 도킹을 켜고 화면 좌우 끝에 두면 작은 손잡이로 접히며, 마우스를 올리면 펼쳐집니다. 화면 연결이 달라지면 보이는 영역으로 위치를 보정합니다.
++
++프라이버시 모드는 제목·작업 설명을 이미 열린 알림과 상세창까지 즉시 가립니다. 저장 원문을 삭제하지 않습니다. 알림음은 기본 꺼짐이며 종류별 운영체제의 짧은 소리를 선택적으로 사용합니다.
++
++## 실제 사용 한도·날씨·시계
++
++잔량은 설치된 Codex의 로그인 상태에서 조회한 **계정 사용 한도 비율**입니다. 정확한 남은 토큰 개수가 아닙니다. 숫자와 막대, 관측소의 입체 용기로 표시합니다. 미확인은 0%와 다르며, 오래된 값은 조회 상태와 함께 구분합니다.
++
++위젯의 지역 표시를 눌러 도시·지역, 주소·장소 또는 국가를 검색하고 결과에서 직접 선택합니다. 도시·장소를 고르면 해당 지점의 현재 기온·날씨·습도·강수량·일출·일몰을 네트워크로 받습니다. 국가만 고르면 디자인 국가만 바꾸고 날씨 기준 지역은 별도로 표시합니다. 자동 위치는 IP 기반 추정이므로 VPN·통신망에 따라 다른 도시가 나올 수 있습니다. Windows 위치 서비스를 켤 필요가 없습니다. 상세 주소는 검색 결과에 있는 정보만 표시하며 실제 건물 위치를 자동으로 보장하지 않습니다. 날씨는 선택 좌표 주변의 기상 자료이며 건물마다 별도의 실측 기온을 제공하는 것은 아닙니다. 연결 실패와 오래된 값은 갱신 상태로 구분합니다.
++
++## 날짜별 조형
++
++달력 모드는 2026~2099년의 888개 연월 주제와 날짜별 대상 조형을 사용합니다. [전체 월 테마](../docs/연도별_월별_테마_전체.md)와 CSV를 확인하십시오. 날짜별 조형은 규칙에 따라 생성되며 27,028개의 개별 수작업 모델 파일이 있다는 뜻이 아닙니다. 선택 도시와 디자인 국가가 일치하고 날씨 응답에서 시차가 확인되면 해당 현지 날짜를 사용합니다. 국가만 선택해 시간대가 정해지지 않으면 한국 날짜 기준을 안내합니다. 250개 국가·지역의 공휴일과 지원 기념일에는 실제 행사명과 특집 조형을 우선합니다. 미래 법 개정이나 모든 도시 축제까지 확정한 자료는 아닙니다.
++
++## MD·진단·업데이트
++
++배포 폴더의 `기본_지침.md`는 공유 가능한 시작 자료입니다. 개인 MD를 다른 사람에게 줄 때 대화·연락처·인증값을 먼저 제외하십시오. 위젯이 Codex의 모든 채팅에 MD를 강제로 주입하거나 비공개 추론을 읽는 것은 아닙니다. Codex에 적용하려면 해당 프로젝트가 지원하는 지침 파일로 사용해야 합니다.
++
++‘문제 확인용 파일 저장’은 대화·이벤트 원문·인증값·개인 경로를 제외한 허용 항목만 **로컬 파일**로 저장합니다. 자동 전송하지 않습니다.
++
++‘새 버전 확인’은 공식 `PUVKID/Codex-Orbit` HTTPS 릴리스만 확인합니다. 새 버전을 내려받아 SHA-256을 검증한 뒤 직접 설치·재시작할 수 있습니다. 재시작 검사 실패 시 이전 실행 파일을 복구하며 개인 설정과 MD는 보존합니다. 소스 실행에서는 배포 EXE의 설치 동작을 대신 수행하지 않습니다.
++
++## 한계와 문제 확인
++
++Codex에서 로컬로 공개하는 기록·설정만 관측합니다. 서버 모델 신원이나 비공개 추론을 증명하지 않습니다. 기록이 없는 이유·이전 값·작업 상태는 확인 불가로 표시합니다. 감시가 중단되거나 복구되면 상태가 바뀔 때 한 번 알립니다.
++
++필요 환경: Windows 10/11 x64, OpenGL 3.3 지원 그래픽 드라이버. 개인 데이터는 사용자 AppData의 CodexOrbit 폴더에 유지하며 제거 프로그램은 개인 기록을 임의로 지우지 않습니다. 출처·라이선스는 배포의 라이선스 폴더를 확인하십시오.
++
++주소·장소 검색 자료는 © OpenStreetMap contributors입니다. [저작권·ODbL 안내](https://www.openstreetmap.org/copyright)를 확인할 수 있습니다. 공개 검색 서버에 검색어를 보내며 모든 장소의 수록이나 건물 단위 정확도를 보장하지 않습니다.
++
++## 도시 축제와 발표 일정
++
++지역 설정의 ‘축제 목록·출처’에서 선택 도시 또는 추정 도시의 수록 항목과 발표 일정을 구분해 봅니다. 전체 항목에는 검증된 행사 시리즈, 개최 회차, 아직 분류되지 않은 항목이 함께 있으며 시리즈 수로 부풀리지 않습니다. 이름이나 가까운 좌표만으로 도시를 만들어 연결하지 않습니다. 주소·장소에 검증된 도시 식별자가 없으면 목록 지원 범위가 미확인으로 표시될 수 있습니다.
++
++실제 발표된 정확한 날짜에만 음악·영화·눈·빛·카니발·꽃·문화·열기구의 8가지 입체 모티프를 적용합니다. 주요 고정 특집은 유지합니다. 모든 개별 축제의 독립 수작업 모델이나 미발표 미래 개최일을 보장하지 않습니다. 발표 일정의 날짜·출처·라이선스를 확인할 수 있고 ‘일정 새로고침’은 검증된 국가 자료를 받아 같은 도시·날짜에도 새 자료를 반영합니다. 연결·검증 실패 시 기존 자료를 유지하고 상태를 표시합니다. 목록은 전 세계 모든 도시 행사의 완전한 사전이 아닙니다.
++
++
++[이전 35차 문서 정비 안내 원문](사용법_35차_문서정비본.md)을 별도로 보존합니다.
+diff --git a/assets/사용법_35차_문서정비본.md b/assets/사용법_35차_문서정비본.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..3ce45395a27ab25e4708dee4a5b77bc198c45af8
+--- /dev/null
++++ b/assets/사용법_35차_문서정비본.md
+@@ -0,0 +1,195 @@
++<a name="-codex-orbit--320-사용법"></a>
++<a id="codex-orbit--340-사용법"></a>
++# Codex Orbit · 3.5.0 사용법
++
++<!-- user-levels:start -->
++**수준별 전체 안내:** [LEVEL 1 - Beginner](../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A81.md) · [LEVEL 2 - Explorer](../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A82.md) · [LEVEL 3 - Practitioner](../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A83.md) · [LEVEL 4 - Advanced](../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A84.md) · [LEVEL 5 - Expert](../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A85.md)
++<!-- user-levels:end -->
++
++## 35차·색상과 조명
++
++화면 위쪽 **화면 테마**에서 시스템·라이트·다크를 선택합니다. 옆의 **색상 꾸미기**를 누르면 여섯 가지 색 조합을 고르거나 포인트색·다크 배경·라이트 배경의 색상 코드를 직접 입력할 수 있습니다. 색 선택 버튼도 제공합니다.
++
++조명 강도는 0부터 100까지 조절하며 **0은 조명 끄기**입니다.
++
++미리보기의 다크·라이트 선택은 미리보기만 바꿉니다.
++
++**적용**해야 저장되며 **취소**하면 기존 설정을 유지합니다.
++
++기본값 복원도 적용 전에는 저장하지 않습니다.
++
++잘못된 색상 코드에는 설명을 표시하고 적용을 막으며, 저장 실패 시 이전 설정과 화면을 복원합니다.
++
++입력한 원색은 보존하고 글자색은 읽기 좋게 보정합니다. 날짜별 과일·꽃·기념일·도시 행사와 픽셀 입체 회전은 유지합니다. 잔량 막대의 실제 비율·원값, 자동·수동 위치, 모델·추론·작업 재개 알림도 그대로 사용합니다. 조명은 화면 전체 흐림이나 별도 애니메이션 타이머를 추가하지 않습니다.
++
++**3.5.0은 정식 배포 본**입니다.
++
++EXE·Setup 생성과 기본 실행의 최소 확인, 합성 화면 세 조합 완료와 네 번째 자동 검사 미완료, 설정 검사 시간 초과를 [검사 범위와 배포 상태](../docs/35차_최소검사.md)에서 구분합니다.
++
++사용자는 150% 배율의 실사용이 정상이라고 직접 확인했습니다.
++
++이는 자동 검사 전체 통과와 구분합니다.
++
++
++## 34차·픽셀 입체 조형
++
++날짜별 과일·꽃·기념일과 도시 행사 주제를 유지하면서 실제 입체 모형의 픽셀 표현을 표시합니다.
++
++모형은 세로축을 중심으로 한 바퀴 회전하며, 지명·기온·강수량·잔량과 알림 글자는 또렷하게 표시합니다.
++
++위치는 자동·수동을 고르고 기본 화면에는 지명을 간결하게 표시합니다.
++
++백분율 요약은 소수 첫째 자리 반올림이며 원값은 툴팁에서 확인합니다.
 +
 +## 지역·날씨와 도시 행사
 +
 +위치는 자동 네트워크 추정이 기본입니다. 지역 선택 창에서 자동·수동을 명확히 고릅니다. 수동 검색이나 취소만으로 저장하지 않으며, 자동 모드로 돌아가면 이전 수동 위치를 해제하고 다시 조회합니다. 국가만 고르면 행사 기준만 바뀌고 날씨 지역은 유지됩니다. 네트워크 추정은 GPS나 건물 주소가 아닙니다.
 +
-+습도 옆에는 강수량(mm)과 제공 자료의 실제 직전 집계 간격을 표시합니다. 실제 0과 미확인(—)을 구분하고, 오래된 값은 이전 정보로 표시합니다. 일출·일몰은 제공 지역의 시간대를 유지합니다.
++습도 옆에는 강수량(mm)과 제공 자료의 실제 직전 집계 간격을 표시합니다. 실제 0 과 미확인(—)을 구분하고, 오래된 값은 이전 정보로 표시합니다. 일출·일몰은 제공 지역의 시간대를 유지합니다.
 +
-+화면 위의 선택 영역에서 언어·화면 테마(시스템/라이트/다크)·글자 크기를 바꿀 수 있습니다. 테마는 즉시 적용되고 저장되며, 시스템은 운영체제의 테마 변화를 따릅니다. 왼쪽 작업 현황에서 기록된 작업과 선택 설정·최근 실행에서 확인한 값을 구분해 봅니다. 화면 설정에는 움직임 줄이기·화면 가장자리에 붙이기·알림 소리·성능과 화질·문제 확인용 파일 저장·새 버전 확인이 있습니다. 프라이버시 모드는 화면에서 채팅 제목과 작업 설명을 가리며 저장된 기록은 그대로 유지합니다. 기존 월별 주제와 날짜별 대상은 유지하고, 날짜 위젯의 고리와 좌우 보조 장식은 제거했습니다. 당일 대상 하나를 입체로 표시합니다.
++화면 위의 선택 영역에서 언어·화면 테마(시스템/라이트/다크)·글자 크기를 바꿀 수 있습니다.
 +
-+투명한 바탕화면에서 당일의 3D 대상 하나가 움직이며, 로컬 Codex의 모델·추론 강도 변경과 작업 배정·재개를 알려 줍니다. 개인 기록은 이 컴퓨터에 저장합니다.
++테마는 즉시 적용되고 저장되며, 시스템은 운영체제의 테마 변화를 따릅니다.
++
++왼쪽 작업 현황에서 기록된 작업과 선택 설정·최근 실행에서 확인한 값을 구분해 봅니다.
++
++화면 설정에는 움직임 줄이기·화면 가장자리에 붙이기·알림 소리·성능과 화질·문제 확인용 파일 저장·새 버전 확인이 있습니다.
++
++프라이버시 모드는 화면에서 채팅 제목과 작업 설명을 가리며 저장된 기록은 그대로 유지합니다.
++
++기존 월별 주제와 날짜별 대상은 유지하고, 날짜 위젯의 고리와 좌우 보조 장식은 제거했습니다.
++
++당일 대상 하나를 입체로 표시합니다.
++
++투명한 바탕 화면에서 당일의 3D 대상 하나가 움직이며, 로컬 Codex의 모델·추론 강도 변경과 작업 배정·재개를 알려 줍니다. 개인 기록은 이 컴퓨터에 저장합니다.
++
++## 도시 축제와 발표 일정
++
++지역 설정의 ‘축제 목록·출처’에서 선택 도시 또는 추정 도시의 수록 항목과 발표 일정을 구분해 봅니다.
++
++전체 항목에는 검증된 행사 시리즈, 개최 회차, 아직 분류되지 않은 항목이 함께 있으며 시리즈 수로 부풀리지 않습니다.
++
++이름이나 가까운 좌표만으로 도시를 만들어 연결하지 않습니다.
++
++주소·장소에 검증된 도시 식별자가 없으면 목록 지원 범위가 미확인으로 표시될 수 있습니다.
++
++실제 발표된 정확한 날짜에만 음악·영화·눈·빛·카니발·꽃·문화·열 기구의 8가지 입체 모티프를 적용합니다.
++
++주요 고정 특집은 유지합니다.
++
++모든 개별 축제의 독립 수작업 모델이나 미발표 미래 개최 일을 보장하지 않습니다.
++
++발표 일정의 날짜·출처·라이선스를 확인할 수 있고 ‘일정 새로 고침’은 검증된 국가 자료를 받아 같은 도시·날짜에도 새 자료를 반영합니다.
++
++연결·검증 실패 시 기존 자료를 유지하고 상태를 표시합니다.
++
++목록은 전 세계 모든 도시 행사의 완전한 사전이 아닙니다.
++
++
++화면 위의 선택 영역에서 언어·화면 테마(시스템/라이트/다크)·글자 크기를 바꿀 수 있습니다.
++
++테마는 즉시 적용되고 저장되며, 시스템은 운영체제의 테마 변화를 따릅니다.
++
++왼쪽 작업 현황에서 기록된 작업과 선택 설정·최근 실행에서 확인한 값을 구분해 봅니다.
++
++화면 설정에는 움직임 줄이기·화면 가장자리에 붙이기·알림 소리·성능과 화질·문제 확인용 파일 저장·새 버전 확인이 있습니다.
++
++프라이버시 모드는 화면에서 채팅 제목과 작업 설명을 가리며 저장된 기록은 그대로 유지합니다.
++
++기존 월별 주제와 날짜별 대상은 유지하고, 날짜 **위젯**의 고리와 좌우 보조 장식은 제거했습니다.
++
++당일 대상 하나를 입체로 표시합니다.
++
++투명한 바탕 화면에서 당일의 3D 대상 하나가 움직이며, 로컬 Codex의 모델·추론 강도 변경과 작업 배정·재개를 알려 줍니다. 개인 기록은 이 컴퓨터에 저장합니다.
 +
 +## 시작
 +
@@ -2238,14 +3496,20 @@ index 7e54834104903b0acd1f724217d3274979347dd1..dce6e9cd0659bbbef7b12ffe5fd3a6e8
 +- ➡️ 현재 모델 / 현재 추론 강도
 +- 💡 쉬운 이유
 +
-+☀️ Sol · ✨ Astra · 🌍 Terra · 🌙 Luna를 정확한 모델 ID와 함께 표시합니다. 추론 강도는 ⚪ 없음 · 💧 최소 · 🌱 낮음 · ⚖️ 보통 · 🔥 높음 · 🚀 매우 높음 · ⚡ 최고로 구분합니다. 기록되지 않은 이전 값이나 이유는 만들어 쓰지 않습니다. 공개된 배정 설명은 설명으로 표시하며 비공개 사고 과정을 보여 준다고 주장하지 않습니다.
++☀️ Sol·✨ Astra·🌍 Terra·🌙 Luna를 정확한 모델 ID와 함께 표시합니다.
++
++추론 강도는 ⚪ 없음·💧 최소·🌱 낮음·⚖️ 보통·🔥 높음·🚀 매우 높음·⚡ 최고로 구분합니다.
++
++기록되지 않은 이전 값이나 이유는 만들어 쓰지 않습니다.
++
++공개된 배정 설명은 설명으로 표시하며 비공개 사고 과정을 보여 준다고 주장하지 않습니다.
 +
 +새 변경은 독립 알림으로 바로 표시합니다. 마우스를 올리면 자동 닫힘이 멈추고, 📌 고정하면 계속 남습니다. ☆ 기록 보관으로 북마크할 수 있습니다. 닫아도 이력은 남습니다. 화면에 표시할 수 있는 새 알림 상한을 넘긴 이력은 기록에서 확인합니다.
 +
 +## 입체 관측소
 +
 +- Sol은 태양, Astra는 결정, Terra는 구체, Luna는 초승달 코어입니다. 모델이 미확인이면 중립 코어를 사용합니다.
-+- 실제 로컬 기록에서 확인한 작업자는 위성으로 표시합니다. 위성이나 작업 목록을 누르면 해당 채팅 기록을 엽니다. ★ 관심 채팅은 우선 궤도에 표시합니다. 위성은 최대 24개이며 나머지도 목록에서 확인합니다.
++- 실제 로컬 기록에서 확인한 작업자는 위성으로 표시합니다. 위성이나 작업 목록을 누르면 해당 채팅 기록을 엽니다. ★ 관심 채팅은 우선 궤도에 표시합니다. 위성은 최대 24개이며 나머지 도 목록에서 확인합니다.
 +- 진행·완료·응답 대기·오류·중단은 명시된 기록이 있을 때만 표시합니다. 확인되지 않은 작업을 진행 중이나 완료로 추정하지 않습니다.
 +- 이전/현재 값은 같은 비중으로 표시하고 실제 바뀐 값만 강조합니다. 선택한 설정과 실행 중 관측한 설정은 구분합니다.
 +- 슬라이더는 저장된 기록을 재생합니다. 실제 Codex 모델이나 추론 강도를 되돌리는 기능이 아닙니다.
@@ -2255,7 +3519,7 @@ index 7e54834104903b0acd1f724217d3274979347dd1..dce6e9cd0659bbbef7b12ffe5fd3a6e8
 +
 +기록창의 조작줄과 위젯 우클릭에서 언어·회전 속도·관측소/달력 모드·일시정지·모션 축소·자원 사용을 조절합니다. **글자 크기는 위젯 크기와 별도로** 바꿉니다. 좌측에서 입체 관측소·변경 기록·사용 한도를 선택해 작은 창에서도 각 화면을 넓게 볼 수 있습니다.
 +
-+절전·균형·고화질은 자원 사용 상한을 조절합니다. 고품질 원본 렌더는 3840×2160이며 실제 표시 크기에 맞게 전달합니다. 초당 240프레임 달성을 보장하거나 새로 실험하지 않습니다. 모션을 정지해도 감시·알림·시계는 계속 동작합니다.
++절전·균형·고화질은 자원 사용 상한을 조절합니다. 고품질 원본 렌더는 3840×2160이며 실제 표시 크기에 맞게 전달합니다. 초당 240 프레임 달성을 보장하거나 새로 실험하지 않습니다. 모션을 정지해도 감시·알림·시계는 계속 동작합니다.
 +
 +가장자리 도킹을 켜고 화면 좌우 끝에 두면 작은 손잡이로 접히며, 마우스를 올리면 펼쳐집니다. 화면 연결이 달라지면 보이는 영역으로 위치를 보정합니다.
 +
@@ -2265,15 +3529,37 @@ index 7e54834104903b0acd1f724217d3274979347dd1..dce6e9cd0659bbbef7b12ffe5fd3a6e8
 +
 +잔량은 설치된 Codex의 로그인 상태에서 조회한 **계정 사용 한도 비율**입니다. 정확한 남은 토큰 개수가 아닙니다. 숫자와 막대, 관측소의 입체 용기로 표시합니다. 미확인은 0%와 다르며, 오래된 값은 조회 상태와 함께 구분합니다.
 +
-+위젯의 지역 표시를 눌러 도시·지역, 주소·장소 또는 국가를 검색하고 결과에서 직접 선택합니다. 도시·장소를 고르면 해당 지점의 현재 기온·날씨·습도·강수량·일출·일몰을 네트워크로 받습니다. 국가만 고르면 디자인 국가만 바꾸고 날씨 기준 지역은 별도로 표시합니다. 자동 위치는 IP 기반 추정이므로 VPN·통신망에 따라 다른 도시가 나올 수 있습니다. Windows 위치 서비스를 켤 필요가 없습니다. 상세 주소는 검색 결과에 있는 정보만 표시하며 실제 건물 위치를 자동으로 보장하지 않습니다. 날씨는 선택 좌표 주변의 기상 자료이며 건물마다 별도의 실측 기온을 제공하는 것은 아닙니다. 연결 실패와 오래된 값은 갱신 상태로 구분합니다.
++위젯의 지역 표시를 눌러 도시·지역, 주소·장소 또는 국가를 검색하고 결과에서 직접 선택합니다.
++
++도시·장소를 고르면 해당 지점의 현재 기온·날씨·습도·일출·일몰을 네트워크로 받습니다.
++
++국가만 고르면 디자인 국가만 바꾸고 날씨 기준 지역은 별도로 표시합니다.
++
++자동 위치는 IP 기반 추정이므로 VPN·통신망에 따라 다른 도시가 나올 수 있습니다.
++
++Windows 위치 서비스를 켤 필요가 없습니다.
++
++상세 주소는 검색 결과에 있는 정보만 표시하며 실제 건물 위치를 자동으로 보장하지 않습니다.
++
++날씨는 선택 좌표 주변의 기상 자료이며 건물마다 별도의 실측 기온을 제공하는 것은 아닙니다.
++
++연결 실패와 오래된 값은 갱신 상태로 구분합니다.
 +
 +## 날짜별 조형
 +
-+달력 모드는 2026~2099년의 888개 연월 주제와 날짜별 대상 조형을 사용합니다. [전체 월 테마](../docs/연도별_월별_테마_전체.md)와 CSV를 확인하십시오. 날짜별 조형은 규칙에 따라 생성되며 27,028개의 개별 수작업 모델 파일이 있다는 뜻이 아닙니다. 선택 도시와 디자인 국가가 일치하고 날씨 응답에서 시차가 확인되면 해당 현지 날짜를 사용합니다. 국가만 선택해 시간대가 정해지지 않으면 한국 날짜 기준을 안내합니다. 250개 국가·지역의 공휴일과 지원 기념일에는 실제 행사명과 특집 조형을 우선합니다. 미래 법 개정이나 모든 도시 축제까지 확정한 자료는 아닙니다.
++달력 모드는 2026~2099년의 888개 연 월 주제와 날짜별 대상 조형을 사용합니다. [전체 월 테마](../docs/연도별_월별_테마_전체.md)와 CSV를 확인하십시오.
++
++날짜별 조형은 규칙에 따라 생성되며 27,028개의 개별 수작업 모델 파일이 있다는 뜻이 아닙니다.
++
++선택 도시와 디자인 국가가 일치하고 날씨 응답에서 시차가 확인되면 해당 현지 날짜를 사용합니다.
++
++국가만 선택해 시간대가 정해지지 않으면 한국 날짜 기준을 안내합니다. 250개 국가·지역의 공휴일과 지원 기념일에는 실제 행사 명과 특집 조형을 우선 합니다.
++
++미래 법 개정이나 모든 도시 축제까지 확정한 자료는 아닙니다.
 +
 +## MD·진단·업데이트
 +
-+배포 폴더의 `기본_지침.md`는 공유 가능한 시작 자료입니다. 개인 MD를 다른 사람에게 줄 때 대화·연락처·인증값을 먼저 제외하십시오. 위젯이 Codex의 모든 채팅에 MD를 강제로 주입하거나 비공개 추론을 읽는 것은 아닙니다. Codex에 적용하려면 해당 프로젝트가 지원하는 지침 파일로 사용해야 합니다.
++배포 폴더의 `기본_지침.md`는 공유 가능한 시작 자료입니다. 개인 MD를 다른 사람에게 줄 때 대화·연락처·인증 값을 먼저 제외하십시오. 위젯이 Codex의 모든 채팅에 MD를 강제로 주입하거나 비공개 추론을 읽는 것은 아닙니다. Codex에 적용하려면 해당 프로젝트가 지원하는 지침 파일로 사용해야 합니다.
 +
 +‘문제 확인용 파일 저장’은 대화·이벤트 원문·인증값·개인 경로를 제외한 허용 항목만 **로컬 파일**로 저장합니다. 자동 전송하지 않습니다.
 +
@@ -2283,15 +3569,9 @@ index 7e54834104903b0acd1f724217d3274979347dd1..dce6e9cd0659bbbef7b12ffe5fd3a6e8
 +
 +Codex에서 로컬로 공개하는 기록·설정만 관측합니다. 서버 모델 신원이나 비공개 추론을 증명하지 않습니다. 기록이 없는 이유·이전 값·작업 상태는 확인 불가로 표시합니다. 감시가 중단되거나 복구되면 상태가 바뀔 때 한 번 알립니다.
 +
-+필요 환경: Windows 10/11 x64, OpenGL 3.3 지원 그래픽 드라이버. 개인 데이터는 사용자 AppData의 CodexOrbit 폴더에 유지하며 제거 프로그램은 개인 기록을 임의로 지우지 않습니다. 출처·라이선스는 배포의 라이선스 폴더를 확인하십시오.
++필요 환경: Windows 10/11 x64, OpenGL 3.3 지 원 그래픽 드라이버. 개인 데이터는 사용자 AppData의 CodexOrbit 폴더에 유지하며 제거 프로그램은 개인 기록을 임의로 지우지 않습니다. 출처·라이선스는 배포의 라이선스 폴더를 확인하십시오.
 +
 +주소·장소 검색 자료는 © OpenStreetMap contributors입니다. [저작권·ODbL 안내](https://www.openstreetmap.org/copyright)를 확인할 수 있습니다. 공개 검색 서버에 검색어를 보내며 모든 장소의 수록이나 건물 단위 정확도를 보장하지 않습니다.
-+
-+## 도시 축제와 발표 일정
-+
-+지역 설정의 ‘축제 목록·출처’에서 선택 도시 또는 추정 도시의 수록 항목과 발표 일정을 구분해 봅니다. 전체 항목에는 검증된 행사 시리즈, 개최 회차, 아직 분류되지 않은 항목이 함께 있으며 시리즈 수로 부풀리지 않습니다. 이름이나 가까운 좌표만으로 도시를 만들어 연결하지 않습니다. 주소·장소에 검증된 도시 식별자가 없으면 목록 지원 범위가 미확인으로 표시될 수 있습니다.
-+
-+실제 발표된 정확한 날짜에만 음악·영화·눈·빛·카니발·꽃·문화·열기구의 8가지 입체 모티프를 적용합니다. 주요 고정 특집은 유지합니다. 모든 개별 축제의 독립 수작업 모델이나 미발표 미래 개최일을 보장하지 않습니다. 발표 일정의 날짜·출처·라이선스를 확인할 수 있고 ‘일정 새로고침’은 검증된 국가 자료를 받아 같은 도시·날짜에도 새 자료를 반영합니다. 연결·검증 실패 시 기존 자료를 유지하고 상태를 표시합니다. 목록은 전 세계 모든 도시 행사의 완전한 사전이 아닙니다.
 diff --git a/docs/37차_3D초기화.md b/docs/37차_3D초기화.md
 new file mode 100644
 index 0000000000000000000000000000000000000000..19315625e0c2a37d10d6a27248478378e0a3f2f5
@@ -2728,7 +4008,7 @@ index 0000000000000000000000000000000000000000..0e20211410fbe139b03e895c86e43b74
 +
 +[장면 준비 수리와 확인 범위](37차_3D초기화.md)
 diff --git a/docs/DOWNLOADS.md b/docs/DOWNLOADS.md
-index 2c468f8bbc8d92e26ff7e3649c1f8c2724c5e640..2e56caf70c7d26580bba69a7479cf8da055875d1 100644
+index e19fcb34a5cac09e20ca3767debd29373926c4f0..cf5a6168cbd501dcda1a738a4735c6ae0432663e 100644
 --- a/docs/DOWNLOADS.md
 +++ b/docs/DOWNLOADS.md
 @@ -1,4 +1,22 @@
@@ -2755,51 +4035,136 @@ index 2c468f8bbc8d92e26ff7e3649c1f8c2724c5e640..2e56caf70c7d26580bba69a7479cf8da
  
  [35차 상세](../history/35차/README.md#reading-level-1) · [최소 검사 상태](35차_최소검사.md) · [사용법](사용법.md)
  
-@@ -132,3 +150,5 @@ Windows 10/11 x64용 단일 실행본과 현재 사용자 설치본입니다. [R
+@@ -131,3 +149,5 @@
  
  
  공개 소스는 저장소와 GitHub의 Source code ZIP에서 받습니다. 비공개 전체 개발 ZIP·개인 위치·운영 원문은 공개 첨부에 넣지 않습니다.
 +
 +</details>
 diff --git a/docs/REVISION_INDEX.md b/docs/REVISION_INDEX.md
-index 2f6e618ccd6176087055c26e7009558752fa4d36..1eb31a5ad48cfff7e74c053635522671e9822ce8 100644
+index bac90f79d2634dd360cae57edca9a60c962801e1..2be63a89a4853997452be330f4ac32c9ba81268a 100644
 --- a/docs/REVISION_INDEX.md
 +++ b/docs/REVISION_INDEX.md
-@@ -42,3 +42,4 @@
- | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../history/34차) · **상세 설명:** [상세 설명](../history/34차/README.md) · **직전 비교·범위:** [전체 비교·범위](34차_전체변경.diff) |
- | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../history/35차) · **상세 설명:** [상세 설명](../history/35차/README.md) · **직전 비교·범위:** [전체 비교·범위](35차_전체변경.diff) |
- | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../history/36차) · **상세 설명:** [상세 설명](../history/36차/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/36차/직전차수.diff) |
+@@ -1,44 +1,45 @@
+-<a name="️-차수별-독립-프로젝트-안내"></a>
+-# 차수별 독립 프로젝트 안내
+-
+-[프로젝트 첫 화면](../README.md)에서 전체 구현을 읽고 아래에서 실제 차수·최종본·부분 자료를 선택할 수 있습니다. 각 상세 페이지에는 해당 코드·설정·자료 종류에 맞는 기능·사용 조건·실제 관측과 전체 비교를 연결했습니다.
+-
+-| 차수 | 핵심 변경 | 자료 |
+-| --- | --- | --- |
+-| 1차 | Codex Orbit·1차 | **자료 폴더·원본:** [자료 폴더](../history/01%EC%B0%A8) · **상세 설명:** [상세 설명](../history/01%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/01%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 2차 | Codex Orbit·2차 | **자료 폴더·원본:** [자료 폴더](../history/02%EC%B0%A8) · **상세 설명:** [상세 설명](../history/02%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/02%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 3차 | Codex Orbit·3차 | **자료 폴더·원본:** [자료 폴더](../history/03%EC%B0%A8) · **상세 설명:** [상세 설명](../history/03%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/03%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 4차 | Codex Orbit·4차 | **자료 폴더·원본:** [자료 폴더](../history/04%EC%B0%A8) · **상세 설명:** [상세 설명](../history/04%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/04%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 5차 | Codex Orbit·5차 | **자료 폴더·원본:** [자료 폴더](../history/05%EC%B0%A8) · **상세 설명:** [상세 설명](../history/05%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/05%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 6차 | Codex Orbit·6차 | **자료 폴더·원본:** [자료 폴더](../history/06%EC%B0%A8) · **상세 설명:** [상세 설명](../history/06%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/06%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
+-| 7차 | Codex Orbit·7차 | **자료 폴더·원본:** [자료 폴더](../history/07%EC%B0%A8) · **상세 설명:** [상세 설명](../history/07%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/07%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 8차 | Codex Orbit·8차 | **자료 폴더·원본:** [자료 폴더](../history/08%EC%B0%A8) · **상세 설명:** [상세 설명](../history/08%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/08%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 9차 | Codex Orbit·9차 | **자료 폴더·원본:** [자료 폴더](../history/09%EC%B0%A8) · **상세 설명:** [상세 설명](../history/09%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/09%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 10차 | Codex Orbit·10차 | **자료 폴더·원본:** [자료 폴더](../history/10%EC%B0%A8) · **상세 설명:** [상세 설명](../history/10%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/10%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 11차 | Codex Orbit·11차 | **자료 폴더·원본:** [자료 폴더](../history/11%EC%B0%A8) · **상세 설명:** [상세 설명](../history/11%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/11%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 12차 | Codex Orbit·12차 | **자료 폴더·원본:** [자료 폴더](../history/12%EC%B0%A8) · **상세 설명:** [상세 설명](../history/12%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/12%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 13차 | Codex Orbit·13차 | **자료 폴더·원본:** [자료 폴더](../history/13%EC%B0%A8) · **상세 설명:** [상세 설명](../history/13%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/13%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 14차 | Codex Orbit·14차 | **자료 폴더·원본:** [자료 폴더](../history/14%EC%B0%A8) · **상세 설명:** [상세 설명](../history/14%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/14%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 15차 | Codex Orbit·15차 | **자료 폴더·원본:** [자료 폴더](../history/15%EC%B0%A8) · **상세 설명:** [상세 설명](../history/15%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/15%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 16차 | Codex Orbit·16차 | **자료 폴더·원본:** [자료 폴더](../history/16%EC%B0%A8) · **상세 설명:** [상세 설명](../history/16%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/16%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 17차 | Codex Orbit·17차 | **자료 폴더·원본:** [자료 폴더](../history/17%EC%B0%A8) · **상세 설명:** [상세 설명](../history/17%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/17%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 18차 | Codex Orbit·18차 | **자료 폴더·원본:** [자료 폴더](../history/18%EC%B0%A8) · **상세 설명:** [상세 설명](../history/18%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/18%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
+-| 19차 | Codex Orbit·19차 | **자료 폴더·원본:** [자료 폴더](../history/19%EC%B0%A8) · **상세 설명:** [상세 설명](../history/19%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/19%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 20차 | Codex Orbit·20차 | **자료 폴더·원본:** [자료 폴더](20%EC%B0%A8) · **상세 설명:** [상세 설명](20%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](20%EC%B0%A8/README.md) |
+-| 21차 | Codex Orbit·21차 | **자료 폴더·원본:** [자료 폴더](../history/21%EC%B0%A8) · **상세 설명:** [상세 설명](../history/21%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/21%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 22차 | Codex Orbit·22차 | **자료 폴더·원본:** [자료 폴더](../history/22%EC%B0%A8) · **상세 설명:** [상세 설명](../history/22%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/22%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
+-| 23차 | Codex Orbit·23차 | **자료 폴더·원본:** [자료 폴더](../history/23%EC%B0%A8) · **상세 설명:** [상세 설명](../history/23%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/23%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
+-| 24차 | Codex Orbit·24차 | **자료 폴더·원본:** [자료 폴더](../history/24%EC%B0%A8) · **상세 설명:** [상세 설명](../history/24%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/24%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 25차 | Codex Orbit·25차 | **자료 폴더·원본:** [자료 폴더](../history/25) · **상세 설명:** [상세 설명](../history/25/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/25/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
+-| 26차 | Codex Orbit·26차 | **자료 폴더·원본:** [자료 폴더](../history/26) · **상세 설명:** [상세 설명](../history/26/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/26/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 27차 | Codex Orbit·27차 | **자료 폴더·원본:** [자료 폴더](../history/27) · **상세 설명:** [상세 설명](../history/27/README.md) · **직전 비교·범위:** [전체 비교·범위](27%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD.diff) |
+-| 28차 | Codex Orbit·28차 | **자료 폴더·원본:** [자료 폴더](../history/28) · **상세 설명:** [상세 설명](../history/28/README.md) · **직전 비교·범위:** [전체 비교·범위](28%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+-| 최종 | Codex Orbit · 최종 | **자료 폴더·원본:** [자료 폴더](%EC%B5%9C%EC%A2%85) · **상세 설명:** [상세 설명](%EC%B5%9C%EC%A2%85/README.md) · **직전 비교·범위:** [전체 비교·범위](%EC%B5%9C%EC%A2%85/README.md) |
+-| 29차 | Codex Orbit·29차 | **자료 폴더·원본:** [자료 폴더](../history/29%EC%B0%A8) · **상세 설명:** [상세 설명](../history/29%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](29%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) · [소스 비교](../history/29%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
+-| 30차 | Codex Orbit·30차 | **자료 폴더·원본:** [자료 폴더](../history/30%EC%B0%A8) · **상세 설명:** [상세 설명](../history/30%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/30%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 31차 | 화면 마감과 테마 선택 | **자료 폴더·원본:** [자료 폴더](../history/31%EC%B0%A8) · **상세 설명:** [상세 설명](../history/31%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/31%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
+-| 32차 | 지역 검색과 날짜별 입체 조형 | **자료 폴더·원본:** [자료 폴더](../history/32차) · **상세 설명:** [상세 설명](../history/32차/README.md) · **직전 비교·범위:** [전체 비교·범위](32%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+-| 33차 | 자동 위치·강수량·도시 행사 진행 자료 | **자료 폴더:** [자료 폴더](../history/33차) · **상세 설명:** [상세 설명](../history/33차/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/33%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
+-| 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../history/34차) · **상세 설명:** [상세 설명](../history/34차/README.md) · **직전 비교·범위:** [전체 비교·범위](34%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+-| 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../history/35차) · **상세 설명:** [상세 설명](../history/35차/README.md) · **직전 비교·범위:** [전체 비교·범위](35%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+-| 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../history/36차) · **상세 설명:** [상세 설명](../history/36차/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/36차/직전차수.diff) |
++<a name="️-차수별-독립-프로젝트-안내"></a>
++# 차수별 독립 프로젝트 안내
++
++[프로젝트 첫 화면](../README.md)에서 전체 구현을 읽고 아래에서 실제 차수·최종본·부분 자료를 선택할 수 있습니다. 각 상세 페이지에는 해당 코드·설정·자료 종류에 맞는 기능·사용 조건·실제 관측과 전체 비교를 연결했습니다.
++
++| 차수 | 핵심 변경 | 자료 |
++| --- | --- | --- |
++| 1차 | Codex Orbit·1차 | **자료 폴더·원본:** [자료 폴더](../history/01%EC%B0%A8) · **상세 설명:** [상세 설명](../history/01%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/01%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 2차 | Codex Orbit·2차 | **자료 폴더·원본:** [자료 폴더](../history/02%EC%B0%A8) · **상세 설명:** [상세 설명](../history/02%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/02%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 3차 | Codex Orbit·3차 | **자료 폴더·원본:** [자료 폴더](../history/03%EC%B0%A8) · **상세 설명:** [상세 설명](../history/03%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/03%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 4차 | Codex Orbit·4차 | **자료 폴더·원본:** [자료 폴더](../history/04%EC%B0%A8) · **상세 설명:** [상세 설명](../history/04%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/04%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 5차 | Codex Orbit·5차 | **자료 폴더·원본:** [자료 폴더](../history/05%EC%B0%A8) · **상세 설명:** [상세 설명](../history/05%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/05%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 6차 | Codex Orbit·6차 | **자료 폴더·원본:** [자료 폴더](../history/06%EC%B0%A8) · **상세 설명:** [상세 설명](../history/06%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/06%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
++| 7차 | Codex Orbit·7차 | **자료 폴더·원본:** [자료 폴더](../history/07%EC%B0%A8) · **상세 설명:** [상세 설명](../history/07%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/07%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 8차 | Codex Orbit·8차 | **자료 폴더·원본:** [자료 폴더](../history/08%EC%B0%A8) · **상세 설명:** [상세 설명](../history/08%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/08%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 9차 | Codex Orbit·9차 | **자료 폴더·원본:** [자료 폴더](../history/09%EC%B0%A8) · **상세 설명:** [상세 설명](../history/09%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/09%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 10차 | Codex Orbit·10차 | **자료 폴더·원본:** [자료 폴더](../history/10%EC%B0%A8) · **상세 설명:** [상세 설명](../history/10%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/10%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 11차 | Codex Orbit·11차 | **자료 폴더·원본:** [자료 폴더](../history/11%EC%B0%A8) · **상세 설명:** [상세 설명](../history/11%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/11%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 12차 | Codex Orbit·12차 | **자료 폴더·원본:** [자료 폴더](../history/12%EC%B0%A8) · **상세 설명:** [상세 설명](../history/12%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/12%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 13차 | Codex Orbit·13차 | **자료 폴더·원본:** [자료 폴더](../history/13%EC%B0%A8) · **상세 설명:** [상세 설명](../history/13%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/13%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 14차 | Codex Orbit·14차 | **자료 폴더·원본:** [자료 폴더](../history/14%EC%B0%A8) · **상세 설명:** [상세 설명](../history/14%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/14%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 15차 | Codex Orbit·15차 | **자료 폴더·원본:** [자료 폴더](../history/15%EC%B0%A8) · **상세 설명:** [상세 설명](../history/15%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/15%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 16차 | Codex Orbit·16차 | **자료 폴더·원본:** [자료 폴더](../history/16%EC%B0%A8) · **상세 설명:** [상세 설명](../history/16%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/16%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 17차 | Codex Orbit·17차 | **자료 폴더·원본:** [자료 폴더](../history/17%EC%B0%A8) · **상세 설명:** [상세 설명](../history/17%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/17%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 18차 | Codex Orbit·18차 | **자료 폴더·원본:** [자료 폴더](../history/18%EC%B0%A8) · **상세 설명:** [상세 설명](../history/18%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/18%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
++| 19차 | Codex Orbit·19차 | **자료 폴더·원본:** [자료 폴더](../history/19%EC%B0%A8) · **상세 설명:** [상세 설명](../history/19%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/19%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 20차 | Codex Orbit·20차 | **자료 폴더·원본:** [자료 폴더](20%EC%B0%A8) · **상세 설명:** [상세 설명](20%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](20%EC%B0%A8/README.md) |
++| 21차 | Codex Orbit·21차 | **자료 폴더·원본:** [자료 폴더](../history/21%EC%B0%A8) · **상세 설명:** [상세 설명](../history/21%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/21%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 22차 | Codex Orbit·22차 | **자료 폴더·원본:** [자료 폴더](../history/22%EC%B0%A8) · **상세 설명:** [상세 설명](../history/22%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/22%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
++| 23차 | Codex Orbit·23차 | **자료 폴더·원본:** [자료 폴더](../history/23%EC%B0%A8) · **상세 설명:** [상세 설명](../history/23%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/23%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
++| 24차 | Codex Orbit·24차 | **자료 폴더·원본:** [자료 폴더](../history/24%EC%B0%A8) · **상세 설명:** [상세 설명](../history/24%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/24%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 25차 | Codex Orbit·25차 | **자료 폴더·원본:** [자료 폴더](../history/25) · **상세 설명:** [상세 설명](../history/25/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/25/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
++| 26차 | Codex Orbit·26차 | **자료 폴더·원본:** [자료 폴더](../history/26) · **상세 설명:** [상세 설명](../history/26/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/26/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 27차 | Codex Orbit·27차 | **자료 폴더·원본:** [자료 폴더](../history/27) · **상세 설명:** [상세 설명](../history/27/README.md) · **직전 비교·범위:** [전체 비교·범위](27%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD.diff) |
++| 28차 | Codex Orbit·28차 | **자료 폴더·원본:** [자료 폴더](../history/28) · **상세 설명:** [상세 설명](../history/28/README.md) · **직전 비교·범위:** [전체 비교·범위](28%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
++| 최종 | Codex Orbit · 최종 | **자료 폴더·원본:** [자료 폴더](%EC%B5%9C%EC%A2%85) · **상세 설명:** [상세 설명](%EC%B5%9C%EC%A2%85/README.md) · **직전 비교·범위:** [전체 비교·범위](%EC%B5%9C%EC%A2%85/README.md) |
++| 29차 | Codex Orbit·29차 | **자료 폴더·원본:** [자료 폴더](../history/29%EC%B0%A8) · **상세 설명:** [상세 설명](../history/29%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](29%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) · [소스 비교](../history/29%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
++| 30차 | Codex Orbit·30차 | **자료 폴더·원본:** [자료 폴더](../history/30%EC%B0%A8) · **상세 설명:** [상세 설명](../history/30%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/30%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 31차 | 화면 마감과 테마 선택 | **자료 폴더·원본:** [자료 폴더](../history/31%EC%B0%A8) · **상세 설명:** [상세 설명](../history/31%EC%B0%A8/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/31%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) |
++| 32차 | 지역 검색과 날짜별 입체 조형 | **자료 폴더·원본:** [자료 폴더](../history/32차) · **상세 설명:** [상세 설명](../history/32차/README.md) · **직전 비교·범위:** [전체 비교·범위](32%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
++| 33차 | 자동 위치·강수량·도시 행사 진행 자료 | **자료 폴더:** [자료 폴더](../history/33차) · **상세 설명:** [상세 설명](../history/33차/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/33%EC%B0%A8/%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98-%EC%97%B4%EB%9E%8C.md) |
++| 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../history/34차) · **상세 설명:** [상세 설명](../history/34차/README.md) · **직전 비교·범위:** [전체 비교·범위](34%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
++| 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../history/35차) · **상세 설명:** [상세 설명](../history/35차/README.md) · **직전 비교·범위:** [전체 비교·범위](35%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
++| 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../history/36차) · **상세 설명:** [상세 설명](../history/36차/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/36차/직전차수.diff) |
 +| 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../history/37차) · **상세 설명:** [상세 설명](../history/37차/README.md) · **직전 비교·범위:** [전체 비교·범위](../history/37차/비교/README.md) |
 diff --git a/docs/읽기안내/레벨1.md b/docs/읽기안내/레벨1.md
-index 7074a70131d7d882a3e4e0280f5fc37514d7eba3..e27ccde01a7b37b7e70a5d4399b3d7b6f6ac0b9c 100644
+index c3d0365b8ef47000985dbdb460e03c90dabe0bca..d3dcb4b785ee494c78be2333b1f77e93a19fc7d4 100644
 --- a/docs/읽기안내/레벨1.md
 +++ b/docs/읽기안내/레벨1.md
-@@ -101,6 +101,7 @@
- | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-1) · **직전 비교·범위:** [전체 비교·범위](../34차_전체변경.diff) |
- | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-1) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../../docs/35차_전체변경.diff) |
+@@ -107,6 +107,7 @@
+ | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-1) · **직전 비교·범위:** [전체 비교·범위](../34%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+ | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-1) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../35%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
  | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../../history/36차) · **해당 수준 설명:** [같은 수준 상세](../../history/36차/README.md#reading-level-1) · **직전 비교 또는 범위:** [35차 이후 전체 변경](../../history/36차/직전차수.diff) |
 +| 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../../history/37차) · **해당 수준 설명:** [같은 수준 상세](../../history/37차/README.md#reading-level-1) · **직전 비교 또는 범위:** [36차 이후 전체 변경](../../history/37차/비교/README.md) |
  
  ## LEVEL 1 · 논문·원고와 원본 자료의 범위
  
-@@ -464,6 +465,7 @@ Windows 10/11 x64와 OpenGL 3.3을 지원하는 그래픽 드라이버가 필요
- | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-1) · **직전 비교·범위:** [전체 비교·범위](../34차_전체변경.diff) |
- | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-1) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../../docs/35차_전체변경.diff) |
+@@ -513,6 +514,7 @@
+ | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-1) · **직전 비교·범위:** [전체 비교·범위](../34%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+ | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-1) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../35%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
  | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../../history/36차) · **해당 수준 설명:** [같은 수준 상세](../../history/36차/README.md#reading-level-1) · **직전 비교 또는 범위:** [35차 이후 전체 변경](../../history/36차/직전차수.diff) |
 +| 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../../history/37차) · **해당 수준 설명:** [같은 수준 상세](../../history/37차/README.md#reading-level-1) · **직전 비교 또는 범위:** [36차 이후 전체 변경](../../history/37차/비교/README.md) |
  <!-- 차수표 끝 -->
  
- 원본 소스 비교에는 주석·공백·개행과 신규·삭제 상태를 포함합니다. 20차는 실행 소스 없이 38개 시안, 21차는 110개 시안을 보존합니다. 최종 폴더의 개인 운영 검증 원문은 공개하지 않습니다. 역사 자료 2,281개 항목의 보존·정제·제외 사유와 원본/공개 SHA를 차수별로 연결했습니다.
-@@ -606,6 +608,7 @@ Codex Orbit은 Windows 바탕화면에서 날짜에 맞는 입체 모형과 시
- | 34차 | 픽셀 입체 조형과 도시 행사 | [자료 폴더](../../history/34차) · **해당 수준 설명:** [같은 수준 상세](../../history/34차/README.md#reading-level-1) · **직전 비교 또는 범위:** [비교 또는 보존 범위](../../docs/34차_전체변경.diff) |
- | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-1) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../../docs/35차_전체변경.diff) |
+ 원본 소스 비교에는 주석·공백·개행과 신규·삭제 상태를 포함합니다. 20차는 실행 소스 없이 38개 시 안, 21차는 110개 시안을 보존합니다. 최종 폴더의 개인 운영 검증 원문은 공개하지 않습니다. 역사 자료 2,281개 항목의 보존·정제·제외 사유와 원본/공개 SHA를 차수별로 연결했습니다.
+@@ -775,6 +777,7 @@
+ | 34차 | 픽셀 입체 조형과 도시 행사 | [자료 폴더](../../history/34차) · **해당 수준 설명:** [같은 수준 상세](../../history/34차/README.md#reading-level-1) · **직전 비교 또는 범위:** [비교 또는 보존 범위](../34%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+ | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-1) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../35%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
  | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../../history/36차) · **해당 수준 설명:** [같은 수준 상세](../../history/36차/README.md#reading-level-1) · **직전 비교 또는 범위:** [35차 이후 전체 변경](../../history/36차/직전차수.diff) |
 +| 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../../history/37차) · **해당 수준 설명:** [같은 수준 상세](../../history/37차/README.md#reading-level-1) · **직전 비교 또는 범위:** [36차 이후 전체 변경](../../history/37차/비교/README.md) |
  
  
- 
-@@ -644,3 +647,31 @@ Codex Orbit은 Windows 바탕화면에서 날짜에 맞는 입체 모형과 시
- 확인 범위는 최종 설치 명세와 Setup 빌드 결과입니다. 글꼴이 그려지는 문제의 원인은 확정하지 않았으며, 선택 요소를 제거한 변경과 구분합니다. 기존35차 검사·실사용 확인과 실패 이력은35차 기록에 유지합니다.
+ ## LEVEL 1 · 배포 사용법의 수준 안내 추가
+@@ -862,3 +865,31 @@
+ 확인 범위는 최종 설치 명세와 Setup 빌드 결과입니다. 글꼴이 그려지는 문제의 원인은 확정하지 않았으며, 선택 요소를 제거한 변경과 구분합니다. 기존 35차 검사·실 사용 확인과 실패 이력은 35차 기록에 유지합니다.
  
  [36차의 같은 수준 설명](../../history/36차/README.md#reading-level-1) · [직전 전체 비교](../../history/36차/직전차수.diff)
 +
@@ -2831,35 +4196,35 @@ index 7074a70131d7d882a3e4e0280f5fc37514d7eba3..e27ccde01a7b37b7e70a5d4399b3d7b6
 +
 +**37차 픽셀 모션 수리:** 날짜별 대상 133종과 도시 행사 형상 8종의 회전을 확인했습니다. [실제 확인 범위와 장면 준비 수리](../37차_3D초기화.md)를 함께 읽어 주세요.
 diff --git a/docs/읽기안내/레벨2.md b/docs/읽기안내/레벨2.md
-index d4f9ead6f752dfb2fd74a8911a9f888c571a4173..34de516a6c7d56033d9fa24910f2cac2b58017a4 100644
+index 138eebcf5ec9eab89a626e5cf2fdaa9c48ff7cb0..8776ea14d2782266aabe47732c550ac7107ad86b 100644
 --- a/docs/읽기안내/레벨2.md
 +++ b/docs/읽기안내/레벨2.md
-@@ -101,6 +101,7 @@ notifier는 기록 변화,core는 읽기·제목·위치·지침 적용/복구,a
- | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-2) · **직전 비교·범위:** [전체 비교·범위](../34차_전체변경.diff) |
- | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-2) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../../docs/35차_전체변경.diff) |
+@@ -107,6 +107,7 @@
+ | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-2) · **직전 비교·범위:** [전체 비교·범위](../34%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+ | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-2) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../35%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
  | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../../history/36차) · **해당 수준 설명:** [같은 수준 상세](../../history/36차/README.md#reading-level-2) · **직전 비교 또는 범위:** [35차 이후 전체 변경](../../history/36차/직전차수.diff) |
 +| 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../../history/37차) · **해당 수준 설명:** [같은 수준 상세](../../history/37차/README.md#reading-level-2) · **직전 비교 또는 범위:** [36차 이후 전체 변경](../../history/37차/비교/README.md) |
  
  ## LEVEL 2 · 논문·원고와 원본 자료의 범위
  
-@@ -538,6 +539,7 @@ Windows 10/11 x64와 OpenGL 3.3을 지원하는 그래픽 드라이버가 필요
- | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-2) · **직전 비교·범위:** [전체 비교·범위](../34차_전체변경.diff) |
- | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-2) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../../docs/35차_전체변경.diff) |
+@@ -611,6 +612,7 @@
+ | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-2) · **직전 비교·범위:** [전체 비교·범위](../34%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+ | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-2) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../35%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
  | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../../history/36차) · **해당 수준 설명:** [같은 수준 상세](../../history/36차/README.md#reading-level-2) · **직전 비교 또는 범위:** [35차 이후 전체 변경](../../history/36차/직전차수.diff) |
 +| 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../../history/37차) · **해당 수준 설명:** [같은 수준 상세](../../history/37차/README.md#reading-level-2) · **직전 비교 또는 범위:** [36차 이후 전체 변경](../../history/37차/비교/README.md) |
  <!-- 차수표 끝 -->
  
- 원본 소스 비교에는 주석·공백·개행과 신규·삭제 상태를 포함합니다. 20차는 실행 소스 없이 38개 시안, 21차는 110개 시안을 보존합니다. 최종 폴더의 개인 운영 검증 원문은 공개하지 않습니다. 역사 자료 2,281개 항목의 보존·정제·제외 사유와 원본/공개 SHA를 차수별로 연결했습니다.
-@@ -667,6 +669,7 @@ Sol/태양·Astra/결정·Terra/구체·Luna/초승달과 중립 코어는 시
- | 34차 | 픽셀 입체 조형과 도시 행사 | [자료 폴더](../../history/34차) · **해당 수준 설명:** [같은 수준 상세](../../history/34차/README.md#reading-level-2) · **직전 비교 또는 범위:** [비교 또는 보존 범위](../../docs/34차_전체변경.diff) |
- | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-2) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../../docs/35차_전체변경.diff) |
+ 원본 소스 비교에는 주석·공백·개행과 신규·삭제 상태를 포함합니다. 20차는 실행 소스 없이 38개 시 안, 21차는 110개 시안을 보존합니다. 최종 폴더의 개인 운영 검증 원문은 공개하지 않습니다. 역사 자료 2,281개 항목의 보존·정제·제외 사유와 원본/공개 SHA를 차수별로 연결했습니다.
+@@ -828,6 +830,7 @@
+ | 34차 | 픽셀 입체 조형과 도시 행사 | [자료 폴더](../../history/34차) · **해당 수준 설명:** [같은 수준 상세](../../history/34차/README.md#reading-level-2) · **직전 비교 또는 범위:** [비교 또는 보존 범위](../34%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+ | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-2) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../35%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
  | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../../history/36차) · **해당 수준 설명:** [같은 수준 상세](../../history/36차/README.md#reading-level-2) · **직전 비교 또는 범위:** [35차 이후 전체 변경](../../history/36차/직전차수.diff) |
 +| 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../../history/37차) · **해당 수준 설명:** [같은 수준 상세](../../history/37차/README.md#reading-level-2) · **직전 비교 또는 범위:** [36차 이후 전체 변경](../../history/37차/비교/README.md) |
  
  
- 
-@@ -702,3 +705,31 @@ Sol/태양·Astra/결정·Terra/구체·Luna/초승달과 중립 코어는 시
- 확인 범위는 최종 설치 명세와 Setup 빌드 결과입니다. 글꼴이 그려지는 문제의 원인은 확정하지 않았으며, 선택 요소를 제거한 변경과 구분합니다. 기존35차 검사·실사용 확인과 실패 이력은35차 기록에 유지합니다.
+ ## LEVEL 2 · 배포 사용법의 수준 안내 추가
+@@ -898,3 +901,31 @@
+ 확인 범위는 최종 설치 명세와 Setup 빌드 결과입니다. 글꼴이 그려지는 문제의 원인은 확정하지 않았으며, 선택 요소를 제거한 변경과 구분합니다. 기존 35차 검사·실 사용 확인과 실패 이력은 35차 기록에 유지합니다.
  
  [36차의 같은 수준 설명](../../history/36차/README.md#reading-level-2) · [직전 전체 비교](../../history/36차/직전차수.diff)
 +
@@ -2891,43 +4256,43 @@ index d4f9ead6f752dfb2fd74a8911a9f888c571a4173..34de516a6c7d56033d9fa24910f2cac2
 +
 +**37차 픽셀 모션 수리:** 날짜별 대상 133종과 도시 행사 형상 8종의 회전을 확인했습니다. [실제 확인 범위와 장면 준비 수리](../37차_3D초기화.md)를 함께 읽어 주세요.
 diff --git a/docs/읽기안내/레벨3.md b/docs/읽기안내/레벨3.md
-index 2856be5d22659394100f69b8167bc187e417d197..454825e82709e769783a36ba4b4e442fddf3faf0 100644
+index 45c2c542e56999b038e745a80d632e67e0c9f00b..8e2a08813792198967cbe0d5c112ca3821dd9a97 100644
 --- a/docs/읽기안내/레벨3.md
 +++ b/docs/읽기안내/레벨3.md
-@@ -101,6 +101,7 @@ Windows10/11 x64·OpenGL3.3 지원 드라이버와 실제 실행 파일을 확
- | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-3) · **직전 비교·범위:** [전체 비교·범위](../34차_전체변경.diff) |
- | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-3) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../../docs/35차_전체변경.diff) |
+@@ -107,6 +107,7 @@
+ | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-3) · **직전 비교·범위:** [전체 비교·범위](../34%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+ | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-3) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../35%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
  | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../../history/36차) · **해당 수준 설명:** [같은 수준 상세](../../history/36차/README.md#reading-level-3) · **직전 비교 또는 범위:** [35차 이후 전체 변경](../../history/36차/직전차수.diff) |
 +| 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../../history/37차) · **해당 수준 설명:** [같은 수준 상세](../../history/37차/README.md#reading-level-3) · **직전 비교 또는 범위:** [36차 이후 전체 변경](../../history/37차/비교/README.md) |
  
  ## LEVEL 3 · 논문·원고와 원본 자료의 범위
  
-@@ -363,6 +364,7 @@ Watcher·core·activity·notice_format·UsageClient·safe_update의 실제 경
- | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-3) · **직전 비교·범위:** [전체 비교·범위](../34차_전체변경.diff) |
- | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-3) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../../docs/35차_전체변경.diff) |
+@@ -401,6 +402,7 @@
+ | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-3) · **직전 비교·범위:** [전체 비교·범위](../34%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+ | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-3) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../35%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
  | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../../history/36차) · **해당 수준 설명:** [같은 수준 상세](../../history/36차/README.md#reading-level-3) · **직전 비교 또는 범위:** [35차 이후 전체 변경](../../history/36차/직전차수.diff) |
 +| 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../../history/37차) · **해당 수준 설명:** [같은 수준 상세](../../history/37차/README.md#reading-level-3) · **직전 비교 또는 범위:** [36차 이후 전체 변경](../../history/37차/비교/README.md) |
  
  [이 항목의 전체 조건·원문](#source-section-10)
  
-@@ -573,6 +575,7 @@ Windows 10/11 x64와 OpenGL 3.3을 지원하는 그래픽 드라이버가 필요
- | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-3) · **직전 비교·범위:** [전체 비교·범위](../34차_전체변경.diff) |
- | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-3) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../../docs/35차_전체변경.diff) |
+@@ -646,6 +648,7 @@
+ | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-3) · **직전 비교·범위:** [전체 비교·범위](../34%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+ | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-3) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../35%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
  | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../../history/36차) · **해당 수준 설명:** [같은 수준 상세](../../history/36차/README.md#reading-level-3) · **직전 비교 또는 범위:** [35차 이후 전체 변경](../../history/36차/직전차수.diff) |
 +| 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../../history/37차) · **해당 수준 설명:** [같은 수준 상세](../../history/37차/README.md#reading-level-3) · **직전 비교 또는 범위:** [36차 이후 전체 변경](../../history/37차/비교/README.md) |
  <!-- 차수표 끝 -->
  
- 원본 소스 비교에는 주석·공백·개행과 신규·삭제 상태를 포함합니다. 20차는 실행 소스 없이 38개 시안, 21차는 110개 시안을 보존합니다. 최종 폴더의 개인 운영 검증 원문은 공개하지 않습니다. 역사 자료 2,281개 항목의 보존·정제·제외 사유와 원본/공개 SHA를 차수별로 연결했습니다.
-@@ -699,6 +702,7 @@ Windows 10/11 x64와 OpenGL 3.3을 지원하는 그래픽 드라이버가 필요
- | 34차 | 픽셀 입체 조형과 도시 행사 | [자료 폴더](../../history/34차) · **해당 수준 설명:** [같은 수준 상세](../../history/34차/README.md#reading-level-3) · **직전 비교 또는 범위:** [비교 또는 보존 범위](../../docs/34차_전체변경.diff) |
- | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-3) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../../docs/35차_전체변경.diff) |
+ 원본 소스 비교에는 주석·공백·개행과 신규·삭제 상태를 포함합니다. 20차는 실행 소스 없이 38개 시 안, 21차는 110개 시안을 보존합니다. 최종 폴더의 개인 운영 검증 원문은 공개하지 않습니다. 역사 자료 2,281개 항목의 보존·정제·제외 사유와 원본/공개 SHA를 차수별로 연결했습니다.
+@@ -838,6 +841,7 @@
+ | 34차 | 픽셀 입체 조형과 도시 행사 | [자료 폴더](../../history/34차) · **해당 수준 설명:** [같은 수준 상세](../../history/34차/README.md#reading-level-3) · **직전 비교 또는 범위:** [비교 또는 보존 범위](../34%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+ | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-3) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../35%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
  | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../../history/36차) · **해당 수준 설명:** [같은 수준 상세](../../history/36차/README.md#reading-level-3) · **직전 비교 또는 범위:** [35차 이후 전체 변경](../../history/36차/직전차수.diff) |
 +| 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../../history/37차) · **해당 수준 설명:** [같은 수준 상세](../../history/37차/README.md#reading-level-3) · **직전 비교 또는 범위:** [36차 이후 전체 변경](../../history/37차/비교/README.md) |
  
  
- 
-@@ -734,3 +738,31 @@ Windows 10/11 x64와 OpenGL 3.3을 지원하는 그래픽 드라이버가 필요
- 확인 범위는 최종 설치 명세와 Setup 빌드 결과입니다. 글꼴이 그려지는 문제의 원인은 확정하지 않았으며, 선택 요소를 제거한 변경과 구분합니다. 기존35차 검사·실사용 확인과 실패 이력은35차 기록에 유지합니다.
+ ## LEVEL 3 · 배포 사용법의 수준 안내 추가
+@@ -912,3 +916,31 @@
+ 확인 범위는 최종 설치 명세와 Setup 빌드 결과입니다. 글꼴이 그려지는 문제의 원인은 확정하지 않았으며, 선택 요소를 제거한 변경과 구분합니다. 기존 35차 검사·실 사용 확인과 실패 이력은 35차 기록에 유지합니다.
  
  [36차의 같은 수준 설명](../../history/36차/README.md#reading-level-3) · [직전 전체 비교](../../history/36차/직전차수.diff)
 +
@@ -2959,35 +4324,35 @@ index 2856be5d22659394100f69b8167bc187e417d197..454825e82709e769783a36ba4b4e442f
 +
 +**37차 픽셀 모션 수리:** 날짜별 대상 133종과 도시 행사 형상 8종의 회전을 확인했습니다. [실제 확인 범위와 장면 준비 수리](../37차_3D초기화.md)를 함께 읽어 주세요.
 diff --git a/docs/읽기안내/레벨4.md b/docs/읽기안내/레벨4.md
-index e1cc73c9cd4827ace14689cf4e68afec79472533..9b0807da6a0c75b6875e7583b438cdcae756e82d 100644
+index 04a06b9c487870a9e82c4690bc9960c8864455bc..b5460b0bb8301f2a1fab44f0f37fa2c06dd3c7c6 100644
 --- a/docs/읽기안내/레벨4.md
 +++ b/docs/읽기안내/레벨4.md
-@@ -101,6 +101,7 @@ Watcher/core/activity/notice_format과 calendar_renderer/observatory_scene,Usage
- | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-4) · **직전 비교·범위:** [전체 비교·범위](../34차_전체변경.diff) |
- | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-4) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../../docs/35차_전체변경.diff) |
+@@ -107,6 +107,7 @@
+ | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-4) · **직전 비교·범위:** [전체 비교·범위](../34%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+ | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-4) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../35%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
  | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../../history/36차) · **해당 수준 설명:** [같은 수준 상세](../../history/36차/README.md#reading-level-4) · **직전 비교 또는 범위:** [35차 이후 전체 변경](../../history/36차/직전차수.diff) |
 +| 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../../history/37차) · **해당 수준 설명:** [같은 수준 상세](../../history/37차/README.md#reading-level-4) · **직전 비교 또는 범위:** [36차 이후 전체 변경](../../history/37차/비교/README.md) |
  
  ## LEVEL 4 · 논문·원고와 원본 자료의 범위
  
-@@ -516,6 +517,7 @@ Windows 10/11 x64와 OpenGL 3.3을 지원하는 그래픽 드라이버가 필요
- | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-4) · **직전 비교·범위:** [전체 비교·범위](../34차_전체변경.diff) |
- | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-4) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../../docs/35차_전체변경.diff) |
+@@ -589,6 +590,7 @@
+ | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-4) · **직전 비교·범위:** [전체 비교·범위](../34%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+ | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-4) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../35%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
  | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../../history/36차) · **해당 수준 설명:** [같은 수준 상세](../../history/36차/README.md#reading-level-4) · **직전 비교 또는 범위:** [35차 이후 전체 변경](../../history/36차/직전차수.diff) |
 +| 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../../history/37차) · **해당 수준 설명:** [같은 수준 상세](../../history/37차/README.md#reading-level-4) · **직전 비교 또는 범위:** [36차 이후 전체 변경](../../history/37차/비교/README.md) |
  <!-- 차수표 끝 -->
  
- 원본 소스 비교에는 주석·공백·개행과 신규·삭제 상태를 포함합니다. 20차는 실행 소스 없이 38개 시안, 21차는 110개 시안을 보존합니다. 최종 폴더의 개인 운영 검증 원문은 공개하지 않습니다. 역사 자료 2,281개 항목의 보존·정제·제외 사유와 원본/공개 SHA를 차수별로 연결했습니다.
-@@ -635,6 +637,7 @@ Windows 10/11 x64·OpenGL 3.3이 필요하고 단일 EXE는 Python 없는 실행
- | 34차 | 픽셀 입체 조형과 도시 행사 | [자료 폴더](../../history/34차) · **해당 수준 설명:** [같은 수준 상세](../../history/34차/README.md#reading-level-4) · **직전 비교 또는 범위:** [비교 또는 보존 범위](../../docs/34차_전체변경.diff) |
- | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-4) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../../docs/35차_전체변경.diff) |
+ 원본 소스 비교에는 주석·공백·개행과 신규·삭제 상태를 포함합니다. 20차는 실행 소스 없이 38개 시 안, 21차는 110개 시안을 보존합니다. 최종 폴더의 개인 운영 검증 원문은 공개하지 않습니다. 역사 자료 2,281개 항목의 보존·정제·제외 사유와 원본/공개 SHA를 차수별로 연결했습니다.
+@@ -784,6 +786,7 @@
+ | 34차 | 픽셀 입체 조형과 도시 행사 | [자료 폴더](../../history/34차) · **해당 수준 설명:** [같은 수준 상세](../../history/34차/README.md#reading-level-4) · **직전 비교 또는 범위:** [비교 또는 보존 범위](../34%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+ | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-4) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../35%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
  | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../../history/36차) · **해당 수준 설명:** [같은 수준 상세](../../history/36차/README.md#reading-level-4) · **직전 비교 또는 범위:** [35차 이후 전체 변경](../../history/36차/직전차수.diff) |
 +| 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../../history/37차) · **해당 수준 설명:** [같은 수준 상세](../../history/37차/README.md#reading-level-4) · **직전 비교 또는 범위:** [36차 이후 전체 변경](../../history/37차/비교/README.md) |
  
  
- 
-@@ -670,3 +673,30 @@ tools/installer.iss의 Tasks/desktopicon 조건과 Run의 postinstall 플래그
- 확인 범위는 최종 설치 명세와 Setup 빌드 결과입니다. 글꼴이 그려지는 문제의 원인은 확정하지 않았으며, 선택 요소를 제거한 변경과 구분합니다. 기존35차 검사·실사용 확인과 실패 이력은35차 기록에 유지합니다.
+ ## LEVEL 4 · 배포 사용법의 수준 안내 추가
+@@ -862,3 +865,30 @@
+ 확인 범위는 최종 설치 명세와 Setup 빌드 결과입니다. 글꼴이 그려지는 문제의 원인은 확정하지 않았으며, 선택 요소를 제거한 변경과 구분합니다. 기존 35차 검사·실 사용 확인과 실패 이력은 35차 기록에 유지합니다.
  
  [36차의 같은 수준 설명](../../history/36차/README.md#reading-level-4) · [직전 전체 비교](../../history/36차/직전차수.diff)
 +
@@ -3018,43 +4383,43 @@ index e1cc73c9cd4827ace14689cf4e68afec79472533..9b0807da6a0c75b6875e7583b438cdca
 +
 +**37차 픽셀 모션 수리:** 날짜별 대상 133종과 도시 행사 형상 8종의 회전을 확인했습니다. [실제 확인 범위와 장면 준비 수리](../37차_3D초기화.md)를 함께 읽어 주세요.
 diff --git a/docs/읽기안내/레벨5.md b/docs/읽기안내/레벨5.md
-index f3c06d669e5445b7b5fafbd7c902a00c79478192..e3a0f293633fe1b81747a1c6b062cc7ea6513f69 100644
+index 07596b8773bbbc49e9eb1163bfb78f74ba8eaa55..233a2c3e8420e1d8a9201c22b6c906f71bf10006 100644
 --- a/docs/읽기안내/레벨5.md
 +++ b/docs/읽기안내/레벨5.md
-@@ -101,6 +101,7 @@ JSONL·활동 tracker·UsageClient의 읽기 출처와 렌더 상태를 대조
- | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-5) · **직전 비교·범위:** [전체 비교·범위](../34차_전체변경.diff) |
- | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-5) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../../docs/35차_전체변경.diff) |
+@@ -107,6 +107,7 @@
+ | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-5) · **직전 비교·범위:** [전체 비교·범위](../34%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+ | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-5) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../35%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
  | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../../history/36차) · **해당 수준 설명:** [같은 수준 상세](../../history/36차/README.md#reading-level-5) · **직전 비교 또는 범위:** [35차 이후 전체 변경](../../history/36차/직전차수.diff) |
 +| 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../../history/37차) · **해당 수준 설명:** [같은 수준 상세](../../history/37차/README.md#reading-level-5) · **직전 비교 또는 범위:** [36차 이후 전체 변경](../../history/37차/비교/README.md) |
  
  ## LEVEL 5 · 논문·원고와 원본 자료의 범위
  
-@@ -385,6 +386,7 @@ JSONL·활동 tracker·UsageClient의 읽기 출처와 렌더 상태를 대조
- | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-5) · **직전 비교·범위:** [전체 비교·범위](../34차_전체변경.diff) |
- | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-5) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../../docs/35차_전체변경.diff) |
+@@ -416,6 +417,7 @@
+ | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-5) · **직전 비교·범위:** [전체 비교·범위](../34%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+ | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-5) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../35%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
  | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../../history/36차) · **해당 수준 설명:** [같은 수준 상세](../../history/36차/README.md#reading-level-5) · **직전 비교 또는 범위:** [35차 이후 전체 변경](../../history/36차/직전차수.diff) |
 +| 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../../history/37차) · **해당 수준 설명:** [같은 수준 상세](../../history/37차/README.md#reading-level-5) · **직전 비교 또는 범위:** [36차 이후 전체 변경](../../history/37차/비교/README.md) |
  
  [이 항목의 전체 조건·원문](#source-section-10)
  
-@@ -599,6 +601,7 @@ Windows 10/11 x64와 OpenGL 3.3을 지원하는 그래픽 드라이버가 필요
- | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-5) · **직전 비교·범위:** [전체 비교·범위](../34차_전체변경.diff) |
- | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-5) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../../docs/35차_전체변경.diff) |
+@@ -663,6 +665,7 @@
+ | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](../../history/34차) · **상세 설명:** [상세 설명](../../history/34차/README.md#reading-level-5) · **직전 비교·범위:** [전체 비교·범위](../34%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+ | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-5) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../35%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
  | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../../history/36차) · **해당 수준 설명:** [같은 수준 상세](../../history/36차/README.md#reading-level-5) · **직전 비교 또는 범위:** [35차 이후 전체 변경](../../history/36차/직전차수.diff) |
 +| 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../../history/37차) · **해당 수준 설명:** [같은 수준 상세](../../history/37차/README.md#reading-level-5) · **직전 비교 또는 범위:** [36차 이후 전체 변경](../../history/37차/비교/README.md) |
  <!-- 차수표 끝 -->
  
- 원본 소스 비교에는 주석·공백·개행과 신규·삭제 상태를 포함합니다. 20차는 실행 소스 없이 38개 시안, 21차는 110개 시안을 보존합니다. 최종 폴더의 개인 운영 검증 원문은 공개하지 않습니다. 역사 자료 2,281개 항목의 보존·정제·제외 사유와 원본/공개 SHA를 차수별로 연결했습니다.
-@@ -722,6 +725,7 @@ Windows 10/11 x64·OpenGL 3.3 드라이버가 필요합니다. 단일 EXE는 Pyt
- | 34차 | 픽셀 입체 조형과 도시 행사 | [자료 폴더](../../history/34차) · **해당 수준 설명:** [같은 수준 상세](../../history/34차/README.md#reading-level-5) · **직전 비교 또는 범위:** [비교 또는 보존 범위](../../docs/34차_전체변경.diff) |
- | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-5) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../../docs/35차_전체변경.diff) |
+ 원본 소스 비교에는 주석·공백·개행과 신규·삭제 상태를 포함합니다. 20차는 실행 소스 없이 38개 시 안, 21차는 110개 시안을 보존합니다. 최종 폴더의 개인 운영 검증 원문은 공개하지 않습니다. 역사 자료 2,281개 항목의 보존·정제·제외 사유와 원본/공개 SHA를 차수별로 연결했습니다.
+@@ -888,6 +891,7 @@
+ | 34차 | 픽셀 입체 조형과 도시 행사 | [자료 폴더](../../history/34차) · **해당 수준 설명:** [같은 수준 상세](../../history/34차/README.md#reading-level-5) · **직전 비교 또는 범위:** [비교 또는 보존 범위](../34%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
+ | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](../../history/35차) · **해당 수준 설명:** [같은 수준 상세](../../history/35차/README.md#reading-level-5) · **직전 비교 또는 범위:** [34차 이후 전체 변경](../35%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) |
  | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](../../history/36차) · **해당 수준 설명:** [같은 수준 상세](../../history/36차/README.md#reading-level-5) · **직전 비교 또는 범위:** [35차 이후 전체 변경](../../history/36차/직전차수.diff) |
 +| 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](../../history/37차) · **해당 수준 설명:** [같은 수준 상세](../../history/37차/README.md#reading-level-5) · **직전 비교 또는 범위:** [36차 이후 전체 변경](../../history/37차/비교/README.md) |
  
  
- 
-@@ -757,3 +761,30 @@ Windows 10/11 x64·OpenGL 3.3 드라이버가 필요합니다. 단일 EXE는 Pyt
- 확인 범위는 최종 설치 명세와 Setup 빌드 결과입니다. 글꼴이 그려지는 문제의 원인은 확정하지 않았으며, 선택 요소를 제거한 변경과 구분합니다. 기존35차 검사·실사용 확인과 실패 이력은35차 기록에 유지합니다.
+ ## LEVEL 5 · 배포 사용법의 수준 안내 추가
+@@ -960,3 +964,30 @@
+ 확인 범위는 최종 설치 명세와 Setup 빌드 결과입니다. 글꼴이 그려지는 문제의 원인은 확정하지 않았으며, 선택 요소를 제거한 변경과 구분합니다. 기존 35차 검사·실 사용 확인과 실패 이력은 35차 기록에 유지합니다.
  
  [36차의 같은 수준 설명](../../history/36차/README.md#reading-level-5) · [직전 전체 비교](../../history/36차/직전차수.diff)
 +
@@ -3586,10 +4951,10 @@ index 0000000000000000000000000000000000000000..6ce0a7a888620132cbfcd8567707760e
 +도시 행사 자료는 실제 발표 일정이 있을 때만 적용하며, 이 확인을 전 세계 모든 축제 수록 주장으로 확대하지 않습니다.
 diff --git a/history/37차/변경원문.json b/history/37차/변경원문.json
 new file mode 100644
-index 0000000000000000000000000000000000000000..c7916701656c630466c9ab033bf313d085095a49
+index 0000000000000000000000000000000000000000..3c6cea2cf806e5a5ff31f0b853e4f4aed5502574
 --- /dev/null
 +++ b/history/37차/변경원문.json
-@@ -0,0 +1,433 @@
+@@ -0,0 +1,436 @@
 +{
 +  "product_version": "3.7.0",
 +  "sources": [
@@ -4021,7 +5386,10 @@ index 0000000000000000000000000000000000000000..c7916701656c630466c9ab033bf313d0
 +    "history/37차/비교/**"
 +  ],
 +  "excluded": "개인 운영 기억·evidence·AGENTS·이동 기록·계정·인증·개인 경로·대화",
-+  "verification_scope": "기존 관련 검사 재사용; 실제 GUI 관측과 미실시 범위는 최소 검사 문서"
++  "verification_scope": "기존 관련 검사 재사용; 실제 GUI 관측과 미실시 범위는 최소 검사 문서",
++  "integration_comparison_base": "6befe99871fde95bbde411c0c488c6945228b51d",
++  "earlier_feature_base": "614bbb760caad413bbfe10f6c9bd8674bcd4d5eb",
++  "concurrent_document_changes_preserved": true
 +}
 diff --git a/src/app.py b/src/app.py
 index 544d1ad4e5ee3b1005d7575d84b4c4900c20484b..aad6c35d3d72167d4619552cd26cbc933d62a5b1 100644
@@ -6575,10 +7943,10 @@ index c568f9e819e2c8b4015b730c141e48ea443cb661..7c9fa16a561bc927cbeb3725c6048757
  DefaultGroupName=Codex Orbit
 diff --git a/변경기록_37차.md b/변경기록_37차.md
 new file mode 100644
-index 0000000000000000000000000000000000000000..b32936a0ffc5e984635dcebe7ed0fd35994e6a27
+index 0000000000000000000000000000000000000000..bb601f6aeb948c52895e569e01335eee4d6fc94c
 --- /dev/null
 +++ b/변경기록_37차.md
-@@ -0,0 +1,63 @@
+@@ -0,0 +1,65 @@
 +# 37차 · 알림 센터와 감시 상태·업데이트 안내
 +
 +제품 버전은 **3.7.0**입니다. 알림 센터 탐색·복사·내보내기, 감시 상태와 표시 정책, 공식 업데이트 안내를 기존 앱에 연결했습니다. 세부 50개 항목은 유지·보완과 새 연결을 구분합니다.
@@ -6639,6 +8007,8 @@ index 0000000000000000000000000000000000000000..b32936a0ffc5e984635dcebe7ed0fd35
 +| `tools/installer.iss` | 수정 |
 +| `변경기록_37차.md` | 추가 |
 +
-+비교 기준은 `614bbb760caad413bbfe10f6c9bd8674bcd4d5eb`입니다. [전체 비교 목차](history/37차/비교/README.md)에서 웹 열람 조각·원문·이전/다음을 연결합니다. 전체 diff 자신과 비교 폴더의 파생 파일은 자기참조를 피하기 위해 full diff에서 제외하고 실제 게시 파일 명세에는 모두 기록합니다. 분할 원문은 순서대로 재결합해 한 번만 바이트·SHA-256을 확인합니다.
++비교 기준은 `6befe99871fde95bbde411c0c488c6945228b51d`입니다. [전체 비교 목차](history/37차/비교/README.md)에서 웹 열람 조각·원문·이전/다음을 연결합니다. 전체 diff 자신과 비교 폴더의 파생 파일은 자기참조를 피하기 위해 full diff에서 제외하고 실제 게시 파일 명세에는 모두 기록합니다. 분할 원문은 순서대로 재결합해 한 번만 바이트·SHA-256을 확인합니다.
 +
 +[37차 상세](history/37차/README.md#reading-level-1) · [실제 최소 확인](docs/37차_최소검사.md) · [현재 다운로드](docs/DOWNLOADS.md)
++
++동시에 게시된 문서 정비를 병합했습니다. 기존 차수의 문장·표·웹 열람 링크를 유지하며, 이전 사용 안내는 [35차 문서 정비본](assets/사용법_35차_문서정비본.md)에 보존합니다.

@@ -429,5 +429,8 @@
     "history/37차/비교/**"
   ],
   "excluded": "개인 운영 기억·evidence·AGENTS·이동 기록·계정·인증·개인 경로·대화",
-  "verification_scope": "기존 관련 검사 재사용; 실제 GUI 관측과 미실시 범위는 최소 검사 문서"
+  "verification_scope": "기존 관련 검사 재사용; 실제 GUI 관측과 미실시 범위는 최소 검사 문서",
+  "integration_comparison_base": "6befe99871fde95bbde411c0c488c6945228b51d",
+  "earlier_feature_base": "614bbb760caad413bbfe10f6c9bd8674bcd4d5eb",
+  "concurrent_document_changes_preserved": true
 }

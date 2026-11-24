@@ -1,9497 +1,1522 @@
-<div align="center">
+# Codex Orbit·26차
 
-<a name="-codex-orbit--26차"></a>
-# Codex Orbit · 26차
+전체 내용을 아래 페이지 순서로 읽을 수 있습니다.
 
-상세창 슬라이더와 위젯 메뉴에서 회전 속도를 조절하고 저장합니다. 모션 배율과 실제 시계·날짜·날씨·계정 한도 갱신은 별개입니다.
+| 순서 | 본문 |
+| --- | --- |
+| 1 / 5 | [상세 읽기](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md) |
+| 2 / 5 | [상세 읽기](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md) |
+| 3 / 5 | [상세 읽기](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md) |
+| 4 / 5 | [상세 읽기](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md) |
+| 5 / 5 | [상세 읽기](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_05.md) |
 
-**기술 분류:** Windows 데스크톱 · Python · PySide6
+## 항목 바로가기
 
-[핵심 기능](#features) · [사용 흐름](#usage) · [자료 구성](#structure) · [준비와 실행](#setup) · [결과 읽기](#results) · [직전 변경](#changes)
+<a id="-codex-orbit--26차"></a>
 
-</div>
-<!-- reading-levels:start -->
-[LEVEL 1 - Beginner](#reading-level-1) · [LEVEL 2 - Explorer](#reading-level-2) · [LEVEL 3 - Practitioner](#reading-level-3) · [LEVEL 4 - Advanced](#reading-level-4) · [LEVEL 5 - Expert](#reading-level-5)
-
-프로젝트 전체의 설명은 [LEVEL 1 - Beginner](../../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A81.md)부터 [LEVEL 5 - Expert](../../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A85.md)까지 같은 범위로 연결됩니다.
+[-codex-orbit--26차](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#-codex-orbit--26차)
 
 <a id="reading-level-1"></a>
-## LEVEL 1 - Beginner
 
-### LEVEL 1 · 이 자료가 하는 일과 달라진 점
-
-상세창 슬라이더와 위젯 메뉴에서 회전 속도를 조절하고 저장합니다. 모션 배율과 실제 시계·날짜·날씨·계정 한도 갱신은 별개입니다.
-
-### LEVEL 1 · 실제 동작을 따라 읽기
-
-상세창 슬라이더와 위젯 메뉴에서 회전 속도를 조절하고 저장합니다. 모션 배율과 실제 시계·날짜·날씨·계정 한도 갱신은 별개입니다.
-
-로컬 세션 기록에서 모델·추론 강도의 변경과 명시된 배정을 구분합니다. 감시기는 외부 통신 없이 로컬 자료를 읽습니다.
-
-공개 협업 호출과 소유자가 확인된 native 활동을 연결합니다.
-
-검증된 금속 원자 프레임을 추출 없이 읽는 제한 메모리 재생기입니다.
-
-같은 실제3D 자산을 공유하는 정적 마크와 가시성 기반 내부 모션입니다.
-
-2026~2099년의 날짜별 조형 규칙입니다. 외부 데이터와 계정 정보를 사용하지 않습니다.
-
-실제 대상 이름과 조형 특징을 연결하는 편집 사전입니다.
-
-한 GPU 작업 스레드와 최대 네 이미지로 날짜별 모션을 공유합니다.
-
-현재 날짜의 실제 메시를 소유 스레드의 오프스크린 GPU에서 렌더합니다.
-
-한국 날짜의1~31일에 대응하는 원소와 디자인 영감 팔레트입니다.
-
-오늘 원소 하나의 압축 프레임만 여는 제한 메모리 재생기입니다.
-
-원본3D 자산을 변경하지 않는 제한 메모리 Qt 색 합성입니다.
-
-프로세스 전용 고해상도 대기로 전역 타이머 설정 없이 프레임을 조율합니다.
-
-앱이 소유한 문구만 번역하며 이벤트 원문은 호출자가 그대로 보존합니다.
-
-Codex App Server의 `account/rateLimits/read`를 읽기 전용으로 조회합니다. 표시값은 남은 토큰 개수가 아니라 계정 사용 한도 비율입니다.
-
-지역·기온 조회 모듈은 네트워크를 사용합니다. 로컬 감시기의 외부 통신 여부와 앱 전체의 날씨 조회를 구분합니다.
-
-JSONL은 한 줄마다 하나의 JSON 기록을 담은 파일입니다. CLI는 명령어와 옵션을 입력해 프로그램을 실행하는 방식입니다. RGB LED는 색을 바꾸어 상태를 나타내는 불빛입니다.
-
-입력 — 현재 사용자 Codex의 로컬 JSONL과 이 차수의 앱 설정
-
-처리 — 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시
-
-출력 — 알림·변경 이력·로컬 진단 기록
-
-### LEVEL 1 · 준비하고 확인할 것
-
-Windows와 해당 폴더의 requirements.txt를 기준으로 Python 의존성을 준비합니다. history는 공개 소스 보존본이며 현재 루트 assets가 과거 모든 차수의 자산과 호환된다는 뜻은 아닙니다. 날짜별 실제 메시 렌더에는 ModernGL과 OpenGL 3.3을 지원하는 그래픽 드라이버가 필요합니다.
-
-자산과 의존성을 준비한 이 차수 폴더에서 `python src/app.py`를 실행합니다. history 소스만으로 과거 배포 EXE와 동일한 화면·자산이 모두 복원되지는 않습니다.
-
-#### LEVEL 1 · 이 차수 원래 안내의 세부 조건
-
-#### LEVEL 1 · 사용하는 사람에게 달라진 점
-
-상세창 슬라이더와 위젯 우클릭 메뉴에서 회전 속도를 0.25~3배로 선택하고 1배로 복원할 수 있습니다. 선택값은 저장되어 다음 실행에도 적용됩니다. 속도를 바꿔도 조형의 회전 각도를 이어서 재생하며 날짜·시계·기온·계정 조회 간격은 그대로입니다. 저장이 실패하면 이전 배율로 복원하고 선택한 한국어·영어로 오류를 안내합니다. 정적 정보와 움직이는 조형을 나누어 갱신하는 변경도 포함합니다.
-
-[26차 검증 요약](../../docs/%EA%B3%B5%EA%B0%9C%EA%B2%80%EC%A6%9D_26%EC%B0%A8.md)에서 개발 전체·공개본·중앙 소스 검사와 배포 실행 결과를 구분합니다. 고정 240fps는 달성하지 못했으며 추가 달성 작업은 제외됐습니다. 26차 변경 기록의 실측 생성 약 227~230fps, 고유 Qt 그리기 약 214~229fps를 모니터 표시율로 해석하지 않습니다.
-
-#### LEVEL 1 · 이 보관본의 의존성 목록
-
-[requirements.txt](requirements.txt)의 실제 항목입니다. 외부 실행 도구와 GPU 드라이버는 별도로 준비합니다.
-
-```text
-PySide6-Essentials==6.12.0
-PyInstaller==6.22.3
-moderngl==5.13.0
-glcontext==3.1.0
-numpy==2.5.4
-Pillow==13.0.0
-```
-
-#### LEVEL 1 · 소스에서 제공하는 CLI 옵션
-
-**진입 소스:** [app.py](src/app.py)
-
-**정의된 옵션 이름:** `--data-dir`, `--sessions`, `--smoke-test`, `--usage-smoke-test`, `--smoke-report`, `--show-details`, `--show-event`
-
-**진입 소스:** [notifier.py](src/notifier.py)
-
-**정의된 옵션 이름:** `--sessions`, `--work`
-
-
-각 옵션의 기본값·필수값·부작용은 해당 main과 인자 정의를 함께 확인합니다.
-
-
-<details>
-<summary>함수 역할·기본값·입력 거부 조건의 세부 참조</summary>
-
-다음 항목은 이 자료의 Python 소스에 명시된 선언입니다. 전체 분기와 호출 순서는 각 행의 코드 위치에서 이어서 읽을 수 있습니다.
-
-#### LEVEL 1 · [src/activity.py](src/activity.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`safe_public_text`](src/activity.py#L15) | 보호문·비공개 표식·긴 인코딩 덩어리는 해석하거나 노출하지 않습니다. |
-| [`configuration`](src/activity.py#L76) | 원본 시각이 있는 자기 관측만 전역 256개로 제한해 보존합니다. |
-| [`defer`](src/activity.py#L160) | 원본 본문 없이 검증에 필요한 native 필드만 전역 32개까지 기다립니다. |
-| [`observe`](src/activity.py#L273) | 그 활동의 첫 관측만 보강하며 이후 모델 변경은 별도 감지를 유지합니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`MAX_ACTIVITY_EVENTS`](src/activity.py#L7) | `정의=128` |
-| [`MAX_ACTIVITY_SEEN`](src/activity.py#L8) | `정의=8192` |
-| [`MAX_ACTIVITY_CALLS`](src/activity.py#L9) | `정의=32` |
-| [`MAX_PUBLIC_CALLS`](src/activity.py#L10) | `정의=128` |
-| [`MAX_DEFERRED_ACTIVITIES`](src/activity.py#L11) | `정의=32` |
-| [`MAX_CONFIGURATION_SNAPSHOTS`](src/activity.py#L12) | `정의=256` |
-
-**거부 조건:** [`not isinstance(self.data['calls'], dict) or not isinstance(self.data['deferred'], list)`](src/activity.py#L66)
-
-**오류 메시지:** 활동 호출/지연 상태 구조 오류입니다. 원본을 자동 초기화하지 않습니다.
-
-**거부 조건:** [`not isinstance(self.data['configurations'], list)`](src/activity.py#L68)
-
-**오류 메시지:** 활동 관측 시각 구조 오류입니다. 원본을 자동 초기화하지 않습니다.
-
-
-#### LEVEL 1 · [src/app.py](src/app.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`validated_motion_speed`](src/app.py#L42) | 설정과 UI의 속도는 유한한 실제 숫자 범위로 제한합니다. |
-| [`_application_gui_root`](src/app.py#L49) | Python 순환 수집과 무관하게 살아 있는 GUI 소유자를 앱에 보관합니다. |
-| [`operation_record`](src/app.py#L67) | 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다. |
-| [`previous_field`](src/app.py#L106) | 이전 기록 전체 부재와 개별 필드 미기록을 구분하고 관측값만 표시합니다. |
-| [`short_reason`](src/app.py#L130) | 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. |
-| [`public_text`](src/app.py#L182) | 공개 문장만 표시하며 보호된 도구 페이로드를 해석하거나 노출하지 않습니다. |
-| [`selection_explanation`](src/app.py#L203) | 공개된 작업 목적을 모델 선택 이유로 바꾸어 말하지 않습니다. |
-| [`NoticeDelivery`](src/app.py#L309) | Qt 예약 호출을 포함한 미처리 전달 수를 스레드 사이에서 제한합니다. |
-| [`NoticeTicket`](src/app.py#L334) | 중복 반환과 종료 뒤 도착한 신호도 같은 한도를 다시 늘리지 않습니다. |
-| [`DiagnosticLabel`](src/app.py#L918) | 오류가 있을 때 변경 기록 안에 원문을 보여 주는 읽기 전용 라벨입니다. |
-| [`QuitGuard`](src/app.py#L1394) | 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다. |
-| [`usage_smoke_state`](src/app.py#L1956) | 지연된 신호 인자 대신 최신 스냅샷과 현재 레이아웃의 실제 표시를 대조합니다. |
-| [`motion_smoke_stage`](src/app.py#L1980) | 실제 GPU 렌더 수를 기준으로 준비·비교 단계를 판정합니다. |
-| [`_content_fit_signature`](src/app.py#L759) | 말줄임 전 제목과 실제 높이에 영향을 주는 표시 조건만 비교합니다. |
-| [`promote_first_observation`](src/app.py#L1363) | 실제 첫 관측 한 행만 안정된 활동 ID로 보강하며 다른 변경은 보존합니다. |
-| [`change_motion_speed`](src/app.py#L1484) | 사용자 조작의 실패는 실제 속도를 복원한 뒤 상세창에서 안내합니다. |
-| [`_finish_closed_gui`](src/app.py#L1948) | 외부 QThread 참조를 무효화하지 않고 종료된 감시기와 GUI 소유자를 해제합니다. |
-
-**설정·옵션:** [`--data-dir`](src/app.py#L1996)
-
-**코드의 선언:** `type=Path; default=Path(os.environ.get('LOCALAPPDATA', Path.home())) / 'CodexOrbit'`
-
-**설정·옵션:** [`--sessions`](src/app.py#L1997)
-
-**코드의 선언:** `type=Path`
-
-**설정·옵션:** [`--smoke-test`](src/app.py#L1998)
-
-**코드의 선언:** `action='store_true'`
-
-**설정·옵션:** [`--usage-smoke-test`](src/app.py#L1999)
-
-**코드의 선언:** `action='store_true'; help='실제 계정 잔량과 표시를 조회한 뒤 종료'`
-
-**설정·옵션:** [`--smoke-report`](src/app.py#L2000)
-
-**코드의 선언:** `type=Path`
-
-**설정·옵션:** [`--show-details`](src/app.py#L2001)
-
-**코드의 선언:** `action='store_true'`
-
-**설정·옵션:** [`--show-event`](src/app.py#L2002)
-
-**코드의 선언:** `help='기존 이력의 이벤트 ID 또는 대상 ID를 다시 표시'`
-
-**설정·옵션:** [`EMPTY_HISTORY_GUIDANCE`](src/app.py#L39)
-
-**코드의 선언:** `정의='변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'`
-
-**설정·옵션:** [`ROLE_LABELS`](src/app.py#L116)
-
-**코드의 선언:** `정의={'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}`
-
-
-**거부 조건:** [`application is None or QThread.currentThread() != application.thread()`](src/app.py#L52)
-
-**오류 메시지:** GUI 소유자는 QApplication의 메인 스레드에서 생성해야 합니다.
-
-**거부 조건:** [`QThread.currentThread() != application.thread()`](src/app.py#L1523)
-
-**오류 메시지:** 언어는 GUI 메인 스레드에서만 변경할 수 있습니다.
-
-**거부 조건:** [`not lock.tryLock(100)`](src/app.py#L2024)
-
-**오류 메시지:** 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다.
-
-**거부 조건:** [`not isinstance(value, dict)`](src/app.py#L295)
-
-**오류 메시지:** 앱 설정은 JSON 객체여야 합니다.
-
-**거부 조건:** [`self.closed or len(self.tickets) &gt;= MAX_PENDING`](src/app.py#L318)
-
-**오류 메시지:** 알림 전달 대기 한도 또는 종료 상태: 다음 감시 주기에 재시도합니다.
-
-
-#### LEVEL 1 · [src/atom_frames.py](src/atom_frames.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`AtomAssetError`](src/atom_frames.py#L27) | 필수 시각 자산 오류를 시작 실패 경로에 전달합니다. |
-| [`AtomFrames`](src/atom_frames.py#L50) | 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대24장만 보존합니다. |
-| [`close_runtime_frames`](src/atom_frames.py#L172) | 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
-| [`get_atom_frames`](src/atom_frames.py#L183) | 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FRAME_COUNT`](src/atom_frames.py#L16) | `정의=540` |
-| [`FRAME_SIZE`](src/atom_frames.py#L17) | `정의=296` |
-| [`FPS`](src/atom_frames.py#L18) | `정의=30` |
-| [`PERIOD_SECONDS`](src/atom_frames.py#L19) | `정의=18` |
-| [`CACHE_LIMIT`](src/atom_frames.py#L20) | `정의=24` |
-| [`MAX_ARCHIVE_BYTES`](src/atom_frames.py#L21) | `정의=128 * 1024 * 1024` |
-| [`MAX_FRAME_BYTES`](src/atom_frames.py#L22) | `정의=1024 * 1024` |
-| [`MAX_TOTAL_BYTES`](src/atom_frames.py#L23) | `정의=256 * 1024 * 1024` |
-| [`MAX_MANIFEST_BYTES`](src/atom_frames.py#L24) | `정의=64 * 1024` |
-
-**거부 조건:** [`key in value`](src/atom_frames.py#L44)
-
-**오류 메시지:** 원자 자산 매니페스트에 중복 필드가 있습니다.
-
-**거부 조건:** [`not 0 &lt; manifest_path.stat().st_size &lt;= MAX_MANIFEST_BYTES`](src/atom_frames.py#L69)
-
-**오류 메시지:** 원자 자산 매니페스트 크기가 허용 범위를 벗어났습니다.
-
-**거부 조건:** [`not isinstance(self.manifest, dict)`](src/atom_frames.py#L75)
-
-**오류 메시지:** 원자 자산 매니페스트는 객체여야 합니다.
-
-**거부 조건:** [`not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None`](src/atom_frames.py#L85)
-
-**오류 메시지:** 원자 프레임 ZIP의 SHA256 형식이 잘못됐습니다.
-
-**거부 조건:** [`not 0 &lt; archive_path.stat().st_size &lt;= MAX_ARCHIVE_BYTES`](src/atom_frames.py#L87)
-
-**오류 메시지:** 원자 프레임 ZIP 크기가 허용 범위를 벗어났습니다.
-
-**거부 조건:** [`hasher.hexdigest() != digest`](src/atom_frames.py#L94)
-
-**오류 메시지:** 원자 프레임 ZIP의 SHA256이 일치하지 않습니다.
-
-**거부 조건:** [`len(members) != FRAME_COUNT or {item.filename for item in members} != names`](src/atom_frames.py#L100)
-
-**오류 메시지:** 원자 프레임 ZIP의 정확한540개 이름·목록이 일치하지 않습니다.
-
-**거부 조건:** [`sum(item.file_size for item in members) &gt; MAX_TOTAL_BYTES`](src/atom_frames.py#L102)
-
-**오류 메시지:** 원자 프레임 전체 읽기 상한을 초과했습니다.
-
-**거부 조건:** [`actual != self.identities`](src/atom_frames.py#L133)
-
-**오류 메시지:** 검증 뒤 원자 자산이 변경됐습니다. 앱을 다시 실행해 주세요.
-
-**거부 조건:** [`isinstance(elapsed, bool) or not isinstance(elapsed, (int, float)) or not math.isfinite(elapsed)`](src/atom_frames.py#L138)
-
-**오류 메시지:** 원자 프레임의 재생 시각이 유한한 숫자가 아닙니다.
-
-**거부 조건:** [`item.is_dir() or item.flag_bits & 1 or item.compress_type not in                     (zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED) or                     not 0 &lt; item.file_size &lt;= MAX_FRAME_BYTES`](src/atom_frames.py#L105)
-
-**오류 메시지:** 원자 프레임 멤버의 형식·크기가 허용 범위를 벗어났습니다.
-
-
-#### LEVEL 1 · [src/brand.py](src/brand.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`motion_brand_source`](src/brand.py#L32) | 원소 프레임의 실제 크기에 비례해 여백만 줄이며 영역 밖을 복사하지 않습니다. |
-| [`BrandClock`](src/brand.py#L40) | 보이는 로고만 단일 시계에서 같은 프레임으로 갱신합니다. |
-| [`AnimatedBrand`](src/brand.py#L106) | 닫힘·숨김 이벤트에 맞춰 재생 구독을 끝내는 실제3D 로고입니다. |
-| [`validate_symbols`](src/brand.py#L137) | 실제 메시에서 제작한 고정 기호 일곱 개를 창 생성 전에 검증합니다. |
-| [`symbol_image`](src/brand.py#L181) | 실제 메시 렌더만 축소하고 새로운 도형이나 글자를 덧그리지 않습니다. |
-| [`with_symbol`](src/brand.py#L209) | 원문 QLabel을 유지하며 기능 의미를 읽기 쉬운 기호로 보조합니다. |
-
-**설정·옵션:** [`SYMBOL_NAMES`](src/brand.py#L133)
-
-**코드의 선언:** `정의=('model', 'reasoning', 'time', 'reason', 'usage', 'refresh', 'history')`
-
-
-**거부 조건:** [`not 1 &lt;= size &lt;= 512`](src/brand.py#L22)
-
-**오류 메시지:** 브랜드 이미지 크기는1~512px여야 합니다.
-
-**거부 조건:** [`name not in SYMBOL_NAMES or not 1 &lt;= size &lt;= 96`](src/brand.py#L184)
-
-**오류 메시지:** 3D 기능 기호의 종류나 크기가 올바르지 않습니다.
-
-**거부 조건:** [`not 0 &lt; path.stat().st_size &lt;= 65536`](src/brand.py#L142)
-
-**오류 메시지:** 3D 기능 기호 매니페스트 크기 오류입니다.
-
-**거부 조건:** [`type(metadata.get('schema_version')) is not int or metadata['schema_version'] != 1`](src/brand.py#L145)
-
-**오류 메시지:** 3D 기능 기호 매니페스트 버전 오류입니다.
-
-**거부 조건:** [`not isinstance(files, dict) or set(files) != set(SYMBOL_NAMES)`](src/brand.py#L148)
-
-**오류 메시지:** 3D 기능 기호 일곱 개 목록이 일치하지 않습니다.
-
-**거부 조건:** [`not isinstance(record, dict) or record.get('filename') != name+'.png'`](src/brand.py#L153)
-
-**오류 메시지:** 3D 기능 기호의 고정 파일 이름이 일치하지 않습니다.
-
-**거부 조건:** [`not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None`](src/brand.py#L156)
-
-**오류 메시지:** 3D 기능 기호의 SHA256 형식 오류입니다.
-
-**거부 조건:** [`not 0 &lt; path.stat().st_size &lt;= 262144`](src/brand.py#L159)
-
-**오류 메시지:** 3D 기능 기호 읽기 크기 상한 오류입니다.
-
-
-#### LEVEL 1 · [src/calendar_art.py](src/calendar_art.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`current_date`](src/calendar_art.py#L33) | 호스트의 현지 시간대와 무관하게 한국 날짜를 사용합니다. |
-| [`_month_palette`](src/calendar_art.py#L50) | 반올림 충돌만 가장 가까운 미사용 RGB로 옮기고 월별 결과를 불변 보관합니다. |
-| [`design_for_date`](src/calendar_art.py#L78) | 유효한 날짜만 허용하며 지원 범위 밖을 다른 날짜로 몰래 대체하지 않습니다. |
-| [`all_designs`](src/calendar_art.py#L95) | 현재 모델만 렌더하며 이 반복자는 작은 카탈로그를 작성할 때만 사용합니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FIRST_DATE`](src/calendar_art.py#L10) | `정의=date(2026,1,1)` |
-| [`LAST_DATE`](src/calendar_art.py#L11) | `정의=date(2099,12,31)` |
-| [`KST`](src/calendar_art.py#L12) | `정의=timezone(timedelta(hours=9))` |
-| [`THEMES`](src/calendar_art.py#L13) | `정의=tuple(row.title for row in all_collections())` |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`type(value) is not date`](src/calendar_art.py#L80) | 조형 날짜는 datetime.date여야 합니다. |
-| [`not FIRST_DATE &lt;= value &lt;= LAST_DATE`](src/calendar_art.py#L82) | 날짜별 조형 지원 범위는 2026-01-01부터 2099-12-31까지입니다. |
-
-#### LEVEL 1 · [src/calendar_catalog.py](src/calendar_catalog.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`joining_particle`](src/calendar_catalog.py#L208) | 마지막 한글 음절의 받침에 맞춰 대상 이름을 연결합니다. |
-
-**설정·옵션:** [`POOLS`](src/calendar_catalog.py#L166)
-
-**코드의 선언:** `정의={'꽃': _objects(_FLOWERS,'꽃'), '열매': _objects(_FRUITS,'열매'),          '잎': _objects(_LEAVES,'잎'), '악기': _objects(_MUSIC,'악기')}`
-
-**설정·옵션:** [`OBJECTS`](src/calendar_catalog.py#L168)
-
-**코드의 선언:** `정의={obj.key:obj for pool in POOLS.values() for obj in pool}`
-
-**설정·옵션:** [`COMPOSITION_NAMES`](src/calendar_catalog.py#L193)
-
-**코드의 선언:** `정의={'bouquet':'꽃다발형','diagonal':'대각선형','shelter':'감싸는 형태',                      'stage':'연주대형','triangle':'삼각형 정물','fan':'부채형'}`
-
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`not 0 &lt;= index &lt; 888 or not 1 &lt;= month &lt;= 12`](src/calendar_catalog.py#L217) | 연월 컬렉션은 2026년 1월부터 2099년 12월까지입니다. |
-
-#### LEVEL 1 · [src/calendar_motion.py](src/calendar_motion.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`next_frame_deadline`](src/calendar_motion.py#L21) | 정상 슬롯을 유지하고 늦은 프레임은 추가 대기나 누적 추격 없이 이어갑니다. |
-| [`fallback_image`](src/calendar_motion.py#L26) | GPU 준비·실패 때만 쓰는 월 주제의 정적 평면 표식입니다. 3D 성공으로 가장하지 않습니다. |
-| [`_Worker`](src/calendar_motion.py#L60) | Qt 객체나 UI를 조작하지 않고 복사된 최신 이미지 하나만 전달합니다. |
-| [`prepare_calendar_motion`](src/calendar_motion.py#L232) | 창 표시 전에 같은 작업자의 첫 실제 프레임을 최대 5초 준비합니다. |
-| [`set_calendar_motion_speed`](src/calendar_motion.py#L262) | 현재 위상을 유지하고 이후 모션의 배율만 바꿉니다. 실제 시계와 날짜는 바꾸지 않습니다. |
-| [`set_calendar_motion_size`](src/calendar_motion.py#L268) | 현재 보이는 각 소유자의 실제 픽셀 요구 중 최대 크기만 전달합니다. |
-| [`record_calendar_presentation`](src/calendar_motion.py#L276) | Qt 그리기 경로가 실제로 소비한 서로 다른 프레임만 셉니다. |
-| [`get_calendar_error`](src/calendar_motion.py#L285) | 제품은 이 문자열을 상태나 툴팁에 표시해 대체 표식과 실제 3D를 구분할 수 있습니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FPS`](src/calendar_motion.py#L15) | `정의=240` |
-| [`SIZE`](src/calendar_motion.py#L16) | `정의=384` |
-| [`RENDER_SIZE`](src/calendar_motion.py#L17) | `정의=(3840, 2160)` |
-
-**거부 조건:** [`app is None or QThread.currentThread()!=app.thread()`](src/calendar_motion.py#L211)
-
-**오류 메시지:** 날짜별 모션 API는 Qt 메인 스레드에서 호출해야 합니다.
-
-**거부 조건:** [`type(timeout_seconds) not in (int,float) or not 0 &lt; timeout_seconds &lt;= 5`](src/calendar_motion.py#L234)
-
-**오류 메시지:** 3D 준비 제한은 0초 초과 5초 이하여야 합니다.
-
-**거부 조건:** [`type(visible) is not bool`](src/calendar_motion.py#L258)
-
-**오류 메시지:** 표시 상태는 bool이어야 합니다.
-
-**거부 조건:** [`type(size) is not int or not 32&lt;=size&lt;=2160`](src/calendar_motion.py#L270)
-
-**오류 메시지:** 전달 크기는32~2160 정수여야 합니다.
-
-**거부 조건:** [`self.closed`](src/calendar_motion.py#L167)
-
-**오류 메시지:** 날짜별 모션 서비스가 닫혔습니다.
-
-**거부 조건:** [`self.closed`](src/calendar_motion.py#L180)
-
-**오류 메시지:** 날짜별 모션 서비스가 닫혔습니다.
-
-**거부 조건:** [`type(elapsed) not in (int,float)`](src/calendar_motion.py#L181)
-
-**오류 메시지:** 재생 시각은 유한한 숫자여야 합니다.
-
-**거부 조건:** [`not valid`](src/calendar_motion.py#L184)
-
-**오류 메시지:** 재생 시각은 유한한 숫자여야 합니다.
-
-**거부 조건:** [`_retiring.worker.isRunning()`](src/calendar_motion.py#L221)
-
-**오류 메시지:** 이전 GPU 작업 스레드가 종료 중입니다.
-
-
-#### LEVEL 1 · [src/calendar_renderer.py](src/calendar_renderer.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`rotation`](src/calendar_renderer.py#L24) | 정규화된 실제 3D축을 중심으로 로드리게스 회전행렬을 만듭니다. |
-| [`finish`](src/calendar_renderer.py#L48) | 표면 법선과 삼각형 winding을 일치시킵니다. |
-| [`box`](src/calendar_renderer.py#L58) | 육면체 면을 실제 둥근 모서리와 구면 꼭짓점으로 투영합니다. |
-| [`lathe`](src/calendar_renderer.py#L84) | 회전체의 실제 앞뒤·옆면을 만들며 다각 단면은 평면 법선을 보존합니다. |
-| [`tube`](src/calendar_renderer.py#L104) | 3D 경로를 따라 원형 단면을 운반합니다. 코일은 실제 깊이를 가집니다. |
-| [`_object_geometry`](src/calendar_renderer.py#L145) | 대상 이름에 연결된 주요 구조를 실제 삼각형 부품으로 구성합니다. |
-| [`_ring_geometry`](src/calendar_renderer.py#L323) | 날짜와 무관한 세 링만 읽기 전용 배열로 한 번 생성합니다. |
-| [`build_geometry`](src/calendar_renderer.py#L334) | 날짜별 주연과 서로 다른 두 월 모티프를 명시적 대상 사전에서 렌더합니다. |
-| [`CalendarRenderer`](src/calendar_renderer.py#L378) | 컨텍스트를 만든 스레드에서만 사용하고 현재 날짜의 버퍼만 보유합니다. |
-| [`render_date`](src/calendar_renderer.py#L489) | 미리보기와 직접 검증용 동기 렌더입니다. 앱은 공유 작업 스레드를 사용합니다. |
-| [`set_output_size`](src/calendar_renderer.py#L425) | 원본 타깃은 유지하고 중앙 정사각형의 GPU 전달 크기만 변경합니다. |
-| [`render_original`](src/calendar_renderer.py#L470) | 검증·내보내기 때만 실제 직사각형 원본 전체를 CPU로 읽습니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`PERIOD`](src/calendar_renderer.py#L132) | `정의=12.0` |
-| [`SIZE`](src/calendar_renderer.py#L133) | `정의=384` |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`subject.recipe!=design.shape_recipe`](src/calendar_renderer.py#L338) | 대상과 형상 규칙이 일치하지 않습니다. |
-| [`type(elapsed) not in (int,float)`](src/calendar_renderer.py#L364) | 모션 시각은 유한한 숫자여야 합니다. |
-| [`not valid`](src/calendar_renderer.py#L367) | 모션 시각은 유한한 숫자여야 합니다. |
-| [`threading.get_ident()!=self.thread_id`](src/calendar_renderer.py#L423) | GPU 컨텍스트는 생성 스레드에서만 사용할 수 있습니다. |
-| [`type(size) is not int or not 32&lt;=size&lt;=2160`](src/calendar_renderer.py#L428) | 전달 크기는32~2160 정수여야 합니다. |
-
-#### LEVEL 1 · [src/core.py](src/core.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`read_jsonl_tail`](src/core.py#L19) | 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
-| [`title_catalog`](src/core.py#L56) | 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
-| [`resolve_title`](src/core.py#L86) | 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
-| [`safe_path`](src/core.py#L110) | 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`MAX_TEXT_BYTES`](src/core.py#L10) | `정의=2 * 1024 * 1024` |
-| [`BEGIN`](src/core.py#L11) | `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
-| [`END`](src/core.py#L12) | `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
-
-**거부 조건:** [`path.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L125)
-
-**오류 메시지:** 문서가 2 MiB 상한을 초과했습니다.
-
-**거부 조건:** [`not isinstance(cache, dict) or not isinstance(cache.get('titles'), dict)`](src/core.py#L65)
-
-**오류 메시지:** 제목 캐시 구조가 올바르지 않습니다.
-
-**거부 조건:** [`target.name.lower() != 'agents.md'`](src/core.py#L136)
-
-**오류 메시지:** 적용 대상은 AGENTS.md 파일이어야 합니다.
-
-**거부 조건:** [`not target.parent.is_dir()`](src/core.py#L138)
-
-**오류 메시지:** 대상 폴더가 존재하지 않습니다.
-
-**거부 조건:** [`target.exists() and (not target.is_file() or target.stat().st_size &gt; MAX_TEXT_BYTES)`](src/core.py#L140)
-
-**오류 메시지:** 대상은 2 MiB 이하의 일반 파일이어야 합니다.
-
-**거부 조건:** [`not content.strip() or len(added) &gt; MAX_TEXT_BYTES`](src/core.py#L147)
-
-**오류 메시지:** 빈 지침 또는 2 MiB 초과 지침은 적용할 수 없습니다.
-
-**거부 조건:** [`BEGIN in added or END in added`](src/core.py#L149)
-
-**오류 메시지:** 지침 내용에 앱 관리구역 표식을 넣을 수 없습니다.
-
-**거부 조건:** [`len(result) &gt; MAX_TEXT_BYTES`](src/core.py#L163)
-
-**오류 메시지:** 적용 결과가 2 MiB 상한을 초과합니다.
-
-**거부 조건:** [`target.exists() != existed or digest(target.read_bytes() if existed else b'') != expected`](src/core.py#L170)
-
-**오류 메시지:** 대상 파일이 미리보기/적용 이후 변경되었습니다. 새 미리보기가 필요합니다.
-
-**거부 조건:** [`digest(plan['original']) != plan['before_hash'] or digest(plan['applied_bytes']) != plan['after_hash']`](src/core.py#L190)
-
-**오류 메시지:** 미리보기 데이터가 변경되었습니다.
-
-**거부 조건:** [`backup.parent != safe_path(self.data_dir / 'backups') or not backup.is_file() or backup.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L210)
-
-**오류 메시지:** 유효한 앱 원문 백업이 아닙니다.
-
-**거부 조건:** [`digest(raw) != receipt['before_hash']`](src/core.py#L213)
-
-**오류 메시지:** 백업 해시가 일치하지 않습니다.
-
-**거부 조건:** [`not isinstance(row, dict)`](src/core.py#L41)
-
-**오류 메시지:** JSON 객체가 아닙니다.
-
-**거부 조건:** [`original.count(BEGIN) != 1 or original.count(END) != 1 or original.index(BEGIN) &gt;= original.index(END)`](src/core.py#L156)
-
-**오류 메시지:** 기존 관리구역 표식이 손상되었거나 중복되었습니다.
-
-
-#### LEVEL 1 · [src/element_frames.py](src/element_frames.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`ElementAssetError`](src/element_frames.py#L24) | 필수 원소 자산 실패를 숨기지 않고 앱의 시작·표시 오류로 전달합니다. |
-| [`preflight_element_frames`](src/element_frames.py#L132) | 활성 원소의 해시·목록·첫 프레임을 확인합니다.31개를 적재하지 않습니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`CACHE_LIMIT`](src/element_frames.py#L15) | `정의=24` |
-| [`FRAME_SIZE`](src/element_frames.py#L16) | `정의=192` |
-| [`FRAME_COUNT`](src/element_frames.py#L17) | `정의=540` |
-| [`FPS`](src/element_frames.py#L18) | `정의=30` |
-| [`PERIOD_SECONDS`](src/element_frames.py#L19) | `정의=18` |
-| [`MAX_ARCHIVE_BYTES`](src/element_frames.py#L20) | `정의=64*1024*1024` |
-| [`MAX_FRAME_BYTES`](src/element_frames.py#L21) | `정의=512*1024` |
-
-**거부 조건:** [`type(number) is not int or not 1&lt;=number&lt;=31`](src/element_frames.py#L34)
-
-**오류 메시지:** 원소 번호는1~31 정수여야 합니다.
-
-**거부 조건:** [`not 0&lt;manifest.stat().st_size&lt;=64*1024`](src/element_frames.py#L65)
-
-**오류 메시지:** 원소 매니페스트 크기 오류
-
-**거부 조건:** [`not isinstance(self.manifest,dict)`](src/element_frames.py#L69)
-
-**오류 메시지:** 원소 매니페스트는 객체여야 합니다.
-
-**거부 조건:** [`not isinstance(digest,str) or not re.fullmatch('[0-9a-f]{64}',digest)`](src/element_frames.py#L74)
-
-**오류 메시지:** 원소 해시 형식 오류
-
-**거부 조건:** [`not 0&lt;archive.stat().st_size&lt;=MAX_ARCHIVE_BYTES`](src/element_frames.py#L75)
-
-**오류 메시지:** 원소 압축파일 크기 초과
-
-**거부 조건:** [`hasher.hexdigest()!=digest`](src/element_frames.py#L78)
-
-**오류 메시지:** 원소 ZIP 해시 불일치
-
-**거부 조건:** [`len(members)!=540 or {m.filename for m in members}!={f'frame_{i:04d}.png' for i in range(540)}`](src/element_frames.py#L80)
-
-**오류 메시지:** 원소 ZIP 정확한540프레임 목록 불일치
-
-**거부 조건:** [`sum(m.file_size for m in members)&gt;128*1024*1024`](src/element_frames.py#L82)
-
-**오류 메시지:** 원소 해제 크기 초과
-
-**거부 조건:** [`actual!=self.identities`](src/element_frames.py#L91)
-
-**오류 메시지:** 실행 중 원소 자산이 변경됐습니다.
-
-**거부 조건:** [`isinstance(elapsed,bool) or not isinstance(elapsed,(int,float)) or not math.isfinite(elapsed)`](src/element_frames.py#L106)
-
-**오류 메시지:** 원소 재생 시각은 유한한 숫자여야 합니다.
-
-**거부 조건:** [`self.archive is None`](src/element_frames.py#L107)
-
-**오류 메시지:** 원소 재생기가 닫혔습니다.
-
-**거부 조건:** [`member.is_dir() or member.flag_bits&1 or member.compress_type not in (zipfile.ZIP_STORED,zipfile.ZIP_DEFLATED)                     or not 0&lt;member.file_size&lt;=MAX_FRAME_BYTES`](src/element_frames.py#L84)
-
-**오류 메시지:** 원소 ZIP 멤버 형식 오류
-
-**거부 조건:** [`len(data)&gt;MAX_FRAME_BYTES or len(data)&lt;33 or data[:8]!=b'\x89PNG\r\n\x1a\n' or data[12:16]!=b'IHDR'                     or struct.unpack('&gt;II',data[16:24])!=(192,192) or data[24:26]!=bytes((8,6))`](src/element_frames.py#L96)
-
-**오류 메시지:** 원소 PNG 형식 오류
-
-**거부 조건:** [`image.isNull() or image.size().width()!=192 or image.height()!=192 or not image.hasAlphaChannel()`](src/element_frames.py#L99)
-
-**오류 메시지:** 원소 PNG 디코딩 오류
-
-**거부 조건:** [`any(image.pixelColor(x,y).alpha() for x,y in ((0,0),(191,0),(0,191),(191,191)))`](src/element_frames.py#L100)
-
-**오류 메시지:** 원소 PNG 투명 모서리 오류
-
-
-#### LEVEL 1 · [src/element_visuals.py](src/element_visuals.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`colorize_atom`](src/element_visuals.py#L5) | SourceAtop은 원본 알파를 유지하며 명암에 부드러운 영감색을 더합니다. |
-
-#### LEVEL 1 · [src/elements.py](src/elements.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`daily_element`](src/elements.py#L43) | 매 호출 실제 날짜를 다시 읽어 자정·절전 복귀·시계 되돌림을 반영합니다. |
-
-**설정·옵션:** [`KST`](src/elements.py#L5)
-
-**코드의 선언:** `정의=timezone(timedelta(hours=9))`
-
-**설정·옵션:** [`PALETTE_NOTE`](src/elements.py#L8)
-
-**코드의 선언:** `정의='원소에서 영감받은 디자인 색이며 실제 원소·불꽃색이나 전자배치 재현이 아닙니다.'`
-
-**설정·옵션:** [`ELEMENTS`](src/elements.py#L39)
-
-**코드의 선언:** `정의=tuple(Element(index,symbol,name,color,accent)                  for index,(symbol,name,color,accent) in enumerate(_ROWS,1))`
-
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`value.tzinfo is None or value.utcoffset() is None`](src/elements.py#L46) | 원소 날짜에는 시간대가 있는 datetime이 필요합니다. |
-
-#### LEVEL 1 · [src/frame_pacing.py](src/frame_pacing.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`validate_motion_speed`](src/frame_pacing.py#L7) | 유한한 0.25~3배 숫자만 받아 bool과 잘못된 설정을 거부합니다. |
-| [`MotionClock`](src/frame_pacing.py#L20) | 실제 날짜·시계와 분리하여 배율별 경과 시간을 연속 적분합니다. |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`type(value) not in (int, float)`](src/frame_pacing.py#L9) | 회전 속도는 0.25~3배의 유한한 숫자여야 합니다. |
-| [`not valid`](src/frame_pacing.py#L15) | 회전 속도는 0.25~3배의 유한한 숫자여야 합니다. |
-
-#### LEVEL 1 · [src/i18n.py](src/i18n.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`translate`](src/i18n.py#L51) | 명시한 앱 문구만 번역하고 전달된 값은 번역하지 않습니다. |
-| [`remember_translations`](src/i18n.py#L63) | 생성 당시 정적인 앱 문구만 기록하여 사용자 원문과 구분합니다. |
-
-#### LEVEL 1 · [src/motion_label.py](src/motion_label.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`MotionImageLabel`](src/motion_label.py#L6) | 최신 이미지 한 개를 보관하고 크기·DPR 변경 때만 기본 크기 힌트를 갱신합니다. |
-
-#### LEVEL 1 · [src/notifier.py](src/notifier.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`atomic_json`](src/notifier.py#L33) | 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도합니다. |
-| [`source_datetime`](src/notifier.py#L63) | 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. |
-| [`duplicate_record`](src/notifier.py#L212) | 원본 시각이 있는 복제 기록만 제외하며 기준선 재생의 순서는 복원합니다. |
-| [`settings_record`](src/notifier.py#L223) | 자기 채팅의 native 설정 필드만 관측하며 변경 주체와 실행 모델은 추정하지 않습니다. |
-| [`lookup_parent_reason`](src/notifier.py#L376) | 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. |
-| [`enrich_event`](src/notifier.py#L423) | 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
-| [`replay_activity_prefix`](src/notifier.py#L445) | 고정된 과거 소비 구간의 활동 메타만 파일별 기존 예산 안에서 복원합니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`--sessions`](src/notifier.py#L739) | `type=Path; default=Path.home() / '.codex/sessions'` |
-| [`--work`](src/notifier.py#L740) | `type=Path; default=ROOT / 'work'` |
-| [`ROOT`](src/notifier.py#L18) | `정의=Path(__file__).resolve().parents[1]` |
-| [`APP_ID`](src/notifier.py#L19) | `정의='Yunseok.Codex.ModelChangeNotifier'` |
-| [`READ_BYTES`](src/notifier.py#L20) | `정의=512 * 1024` |
-| [`MAX_RECORD`](src/notifier.py#L21) | `정의=2 * 1024 * 1024` |
-| [`MAX_FILES`](src/notifier.py#L22) | `정의=4096` |
-| [`LOG_BYTES`](src/notifier.py#L23) | `정의=2 * 1024 * 1024` |
-| [`POLL_READ_BYTES`](src/notifier.py#L24) | `정의=8 * 1024 * 1024` |
-| [`MAX_PENDING`](src/notifier.py#L25) | `정의=256` |
-| [`POLL_INTERVAL_SECONDS`](src/notifier.py#L26) | `정의=0.2` |
-
-**거부 조건:** [`self.state_path.stat().st_size &gt; 16 * 1024 * 1024`](src/notifier.py#L90)
-
-**오류 메시지:** 상태 파일이 16 MiB 상한을 초과했습니다. 원본 보존 후 점검이 필요합니다.
-
-**거부 조건:** [`self.state.get('schema_version') not in (2, 3)`](src/notifier.py#L94)
-
-**오류 메시지:** 구형 상태는 요청과 관측이 혼합되어 있습니다. 원본 보존 후 명시적 재기준선이 필요합니다.
-
-**거부 조건:** [`not isinstance(self.state.get('files'), dict) or not isinstance(self.state.get('models'), dict)`](src/notifier.py#L96)
-
-**오류 메시지:** 상태 파일 구조 오류입니다. 자동 초기화하지 않습니다.
-
-**거부 조건:** [`not isinstance(self.state.get('declarations'), dict)`](src/notifier.py#L98)
-
-**오류 메시지:** 명시 배정 상태 구조 오류입니다. 자동 초기화하지 않습니다.
-
-**거부 조건:** [`not isinstance(self.state.get('settings'), dict)`](src/notifier.py#L117)
-
-**오류 메시지:** 채팅 선택 설정 상태 구조 오류입니다. 자동 초기화하지 않습니다.
-
-**거부 조건:** [`backup.read_bytes() != original`](src/notifier.py#L105)
-
-**오류 메시지:** 이전 상태 백업이 원본과 다릅니다. 자동 덮어쓰기하지 않습니다.
-
-**거부 조건:** [`any(isinstance(v, bool) or not isinstance(v, int) or v &lt; 0 for v in (offset, end))`](src/notifier.py#L112)
-
-**오류 메시지:** 이전 상태의 파일 위치가 올바르지 않습니다. 자동 초기화하지 않습니다.
-
-**거부 조건:** [`backup.read_bytes() != original`](src/notifier.py#L123)
-
-**오류 메시지:** 활동 이행 백업이 원본과 다릅니다. 자동 덮어쓰기하지 않습니다.
-
-**거부 조건:** [`isinstance(end, bool) or not isinstance(end, int) or end &lt; 0`](src/notifier.py#L131)
-
-**오류 메시지:** 활동 기준선의 파일 위치가 올바르지 않습니다.
-
-**거부 조건:** [`not isinstance(record, dict)`](src/notifier.py#L523)
-
-**오류 메시지:** JSON 객체가 아닙니다.
-
-**거부 조건:** [`path.stat().st_size &gt; 20000`](src/notifier.py#L603)
-
-**오류 메시지:** 명시 알림 파일 상한 초과
-
-**거부 조건:** [`not isinstance(record, dict)`](src/notifier.py#L467)
-
-**오류 메시지:** JSON 객체가 아닙니다.
-
-
-#### LEVEL 1 · [src/theme.py](src/theme.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`MonochromeStyle`](src/theme.py#L53) | 파일·메시지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. |
-| [`KoreanDialogs`](src/theme.py#L78) | 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역합니다. |
-| [`DialogLayout`](src/theme.py#L94) | 앱 파일 선택창의 이름 열과 한글 버튼에 충분한 공간을 확보합니다. |
-
-#### LEVEL 1 · [src/typography.py](src/typography.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`register_fonts`](src/typography.py#L8) | 필수 파일이나 Qt 등록 실패를 숨기지 않고 시작 오류로 전달합니다. |
-
-#### LEVEL 1 · [src/usage.py](src/usage.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`number`](src/usage.py#L16) | 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
-| [`normalize_limits`](src/usage.py#L35) | 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
-| [`discover_codex`](src/usage.py#L69) | 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`MAX_BYTES`](src/usage.py#L12) | `정의=1024 * 1024` |
-| [`KST`](src/usage.py#L13) | `정의=timezone(timedelta(hours=9))` |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`not isinstance(message, dict)`](src/usage.py#L226) | 객체가 아닌 응답 |
-
-#### LEVEL 1 · [src/usage_frames.py](src/usage_frames.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`UsageAssetError`](src/usage_frames.py#L27) | 조형 표시 오류를 호출자에게 전달하며 계정 조회 흐름과 분리합니다. |
-| [`UsageFrames`](src/usage_frames.py#L50) | 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대16장만 보존합니다. |
-| [`close_usage_frames`](src/usage_frames.py#L183) | 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
-| [`preflight_usage_frames`](src/usage_frames.py#L194) | 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
-| [`get_usage_frame`](src/usage_frames.py#L207) | 공유 팩의 한 프레임을 반환하며 계정 조회 상태에는 관여하지 않습니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FRAME_COUNT`](src/usage_frames.py#L16) | `정의=360` |
-| [`FRAME_SIZE`](src/usage_frames.py#L17) | `정의=384` |
-| [`FPS`](src/usage_frames.py#L18) | `정의=30` |
-| [`PERIOD_SECONDS`](src/usage_frames.py#L19) | `정의=12` |
-| [`CACHE_LIMIT`](src/usage_frames.py#L20) | `정의=16` |
-| [`MAX_ARCHIVE_BYTES`](src/usage_frames.py#L21) | `정의=128 * 1024 * 1024` |
-| [`MAX_FRAME_BYTES`](src/usage_frames.py#L22) | `정의=1024 * 1024` |
-| [`MAX_TOTAL_BYTES`](src/usage_frames.py#L23) | `정의=256 * 1024 * 1024` |
-| [`MAX_MANIFEST_BYTES`](src/usage_frames.py#L24) | `정의=64 * 1024` |
-
-**거부 조건:** [`key in value`](src/usage_frames.py#L44)
-
-**오류 메시지:** 대시보드 조형 자산 매니페스트에 중복 필드가 있습니다.
-
-**거부 조건:** [`not 0 &lt; manifest_path.stat().st_size &lt;= MAX_MANIFEST_BYTES`](src/usage_frames.py#L69)
-
-**오류 메시지:** 대시보드 조형 자산 매니페스트 크기가 허용 범위를 벗어났습니다.
-
-**거부 조건:** [`not isinstance(self.manifest, dict)`](src/usage_frames.py#L75)
-
-**오류 메시지:** 대시보드 조형 자산 매니페스트는 객체여야 합니다.
-
-**거부 조건:** [`not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None`](src/usage_frames.py#L85)
-
-**오류 메시지:** 대시보드 조형 프레임 ZIP의 SHA256 형식이 잘못됐습니다.
-
-**거부 조건:** [`not 0 &lt; archive_path.stat().st_size &lt;= MAX_ARCHIVE_BYTES`](src/usage_frames.py#L87)
-
-**오류 메시지:** 대시보드 조형 프레임 ZIP 크기가 허용 범위를 벗어났습니다.
-
-**거부 조건:** [`hasher.hexdigest() != digest`](src/usage_frames.py#L94)
-
-**오류 메시지:** 대시보드 조형 프레임 ZIP의 SHA256이 일치하지 않습니다.
-
-**거부 조건:** [`len(members) != FRAME_COUNT or {item.filename for item in members} != names`](src/usage_frames.py#L100)
-
-**오류 메시지:** 대시보드 조형 프레임 ZIP의 정확한360개 이름·목록이 일치하지 않습니다.
-
-**거부 조건:** [`sum(item.file_size for item in members) &gt; MAX_TOTAL_BYTES`](src/usage_frames.py#L102)
-
-**오류 메시지:** 대시보드 조형 프레임 전체 읽기 상한을 초과했습니다.
-
-**거부 조건:** [`actual != self.identities`](src/usage_frames.py#L133)
-
-**오류 메시지:** 검증 뒤 대시보드 조형 자산이 변경됐습니다. 앱을 다시 실행해 주세요.
-
-**거부 조건:** [`type(elapsed) not in (int, float)`](src/usage_frames.py#L138)
-
-**오류 메시지:** 조형 재생 시각은 유한한 숫자여야 합니다.
-
-**거부 조건:** [`not finite`](src/usage_frames.py#L144)
-
-**오류 메시지:** 대시보드 조형 프레임의 재생 시각이 유한한 숫자가 아닙니다.
-
-**거부 조건:** [`self.archive is None`](src/usage_frames.py#L149)
-
-**오류 메시지:** 조형 재생기가 닫혔습니다.
-
-**거부 조건:** [`item.is_dir() or item.flag_bits & 1 or item.compress_type not in                     (zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED) or                     not 0 &lt; item.file_size &lt;= MAX_FRAME_BYTES`](src/usage_frames.py#L105)
-
-**오류 메시지:** 대시보드 조형 프레임 멤버의 형식·크기가 허용 범위를 벗어났습니다.
-
-
-#### LEVEL 1 · [src/usage_widgets.py](src/usage_widgets.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`CalendarHero`](src/usage_widgets.py#L9) | 사용 한도 화면에서만 날짜별 입체 이미지를 갱신합니다. |
-
-#### LEVEL 1 · [src/visuals.py](src/visuals.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`rotate_point`](src/visuals.py#L12) | X·Y·Z 순서로 회전하며 깊이 좌표를 보존합니다. |
-| [`axis_rotate`](src/visuals.py#L40) | 로드리게스 식으로 고유 축 주위를 회전하며 공통 Z 변환을 쓰지 않습니다. |
-| [`orbit_segments`](src/visuals.py#L63) | 제작 매니페스트와 일치하는 기하 검증용 메타입니다. GUI 드로잉에는 쓰지 않습니다. |
-| [`status_label`](src/visuals.py#L80) | 읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다. |
-| [`element_labels`](src/visuals.py#L85) | 원자번호와 계정 퍼센트를 서로 다른 명시적 라벨로 구분합니다. |
-| [`usage_bar`](src/visuals.py#L99) | 숫자와 채움에 같은 실제 비율을 쓰며 최소 채움 폭을 강제하지 않습니다. |
-| [`_frame_for_element`](src/visuals.py#L111) | 원소별 실제 제작 프레임을 읽습니다. 이전 형상으로 대체하지 않습니다. |
-| [`draw_orbit`](src/visuals.py#L117) | 달력 조형·날짜 도크·실제 잔량을 분리하고 명시한 원소 미리보기도 보존합니다. |
-| [`desktop_widget_layout`](src/visuals.py#L176) | 이름을 화면 픽셀 크기로 줄 바꿈하고 조형·잔량 영역을 분리합니다. |
-| [`draw_desktop_orbit`](src/visuals.py#L212) | 위젯의 조형과 글자를 별개 영역에 그려 작은 글자 축소를 막습니다. |
-| [`_draw_desktop_information`](src/visuals.py#L227) | 움직이는 GPU 이미지와 분리한 도크·시계·지역·기온·잔량을 그립니다. |
-| [`DesktopOverlayCache`](src/visuals.py#L278) | 한 위젯의 완전 입력이 같을 때만 단일 투명 정보 레이어를 재사용합니다. |
-
-**설정·옵션:** [`MOTION_PERIOD`](src/visuals.py#L27)
-
-**코드의 선언:** `정의=18`
-
-**설정·옵션:** [`RING_TURNS`](src/visuals.py#L28)
-
-**코드의 선언:** `정의=(1, -2, 3)`
-
-**설정·옵션:** [`RING_AZIMUTHS`](src/visuals.py#L29)
-
-**코드의 선언:** `정의=(8., 128., 248.)`
-
-**설정·옵션:** [`RING_AXIS_TILTS`](src/visuals.py#L30)
-
-**코드의 선언:** `정의=(42., 46., 49.)`
-
-**설정·옵션:** [`RING_RADII`](src/visuals.py#L35)
-
-**코드의 선언:** `정의=(45., 51., 57.)`
-
-**설정·옵션:** [`BASE_ANGLES`](src/visuals.py#L36)
-
-**코드의 선언:** `정의=tuple((math.radians(tilt), 0., math.radians(azimuth))                     for tilt, azimuth in zip((52., 58., 62.), RING_AZIMUTHS))`
-
-**설정·옵션:** [`ATOM_RECT`](src/visuals.py#L92)
-
-**코드의 선언:** `정의=QRectF(-48,-74,96,96)`
-
-**설정·옵션:** [`DOCK_RECT`](src/visuals.py#L93)
-
-**코드의 선언:** `정의=QRectF(-68,25,136,27)`
-
-**설정·옵션:** [`USAGE_RECT`](src/visuals.py#L94)
-
-**코드의 선언:** `정의=QRectF(-68,56,136,16)`
-
-**설정·옵션:** [`USAGE_TRACK_RECT`](src/visuals.py#L95)
-
-**코드의 선언:** `정의=QRectF(-61,62,62,4)`
-
-**설정·옵션:** [`SYMBOL_PIXELS`](src/visuals.py#L96)
-
-**코드의 선언:** `정의=24`
-
-
-#### LEVEL 1 · [src/weather.py](src/weather.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`localized_region`](src/weather.py#L27) | 검색 전 임시 표시에는 검증된 국내 사전 또는 실제 원문 지명을 사용합니다. |
-| [`select_geocoded_region`](src/weather.py#L67) | 동일 국가이면서 IP 추정 좌표에서30km 이내인 가장 가까운 검색 결과만 수락합니다. |
-
-**설정·옵션:** [`_COUNTRIES`](src/weather.py#L23)
-
-**코드의 선언:** `정의={'US': '미국', 'JP': '일본', 'CN': '중국', 'GB': '영국', 'DE': '독일',               'FR': '프랑스', 'CA': '캐나다', 'AU': '호주', 'SG': '싱가포르', 'TW': '대만'}`
-
-
-**거부 조건:** [`language not in ('ko', 'en')`](src/weather.py#L29)
-
-**오류 메시지:** 지원 언어는 ko 또는 en입니다.
-
-**거부 조건:** [`language not in ('ko', 'en')`](src/weather.py#L111)
-
-**오류 메시지:** 지원 언어는 ko 또는 en입니다.
-
-**거부 조건:** [`language not in ('ko', 'en')`](src/weather.py#L155)
-
-**오류 메시지:** 지원 언어는 ko 또는 en입니다.
-
-**거부 조건:** [`not self._valid_number(latitude, -90, 90) or not self._valid_number(longitude, -180, 180)`](src/weather.py#L249)
-
-**오류 메시지:** 위치 범위
-
-**거부 조건:** [`not self._valid_number(temperature, -100, 70)`](src/weather.py#L321)
-
-**오류 메시지:** 기온 범위
-
-**거부 조건:** [`not self._valid_number(observed, 0, now + 300)`](src/weather.py#L325)
-
-**오류 메시지:** 기온 제공 시각
-
-**거부 조건:** [`not isinstance(data, dict)`](src/weather.py#L232)
-
-**오류 메시지:** 응답 형식
-
-
-</details>
-
-1. 이 차수의 소스·requirements와 필요한 자산을 한 작업 폴더에 준비합니다.
-2. 앱을 열고 위젯·상세창에서 감시 경로와 표시되는 기록을 확인합니다.
-3. 새 변경이 기록되면 이전·이후 값과 이유를 비교하고, 기록 종류와 근거 수준을 함께 읽습니다.
-4. 설정·이력은 개인 운영자료로 관리하고 다른 사용자에게 공유하기 전에 내용을 확인합니다.
-
-### LEVEL 1 · 결과와 주의할 범위
-
-변경 전·후 모델과 추론 강도, 공개된 이유, 관측 시각과 근거 수준을 함께 읽습니다. 기록되지 않은 값은 미확인으로 남깁니다. 로컬 기록은 서버 모델 신원 증명이 아닙니다.
-
-**상황:** 알림이 나타나지 않음
-
-**확인할 내용:** 감시하는 sessions 경로·새 JSONL 기록·중복 실행 잠금·알림 설정을 확인합니다. 최초 기준선 읽기와 새 변경 감지는 다릅니다.
-
-**상황:** 자산 또는 글꼴 오류
-
-**확인할 내용:** 이 차수에서 참조하는 assets와 라이선스를 준비합니다. 소스 이력에는 과거 대용량 프레임 자산이 없을 수 있습니다.
-
-**상황:** 이유 또는 이전값이 없음
-
-**확인할 내용:** 원문 기록에 해당 필드가 있는지 확인합니다. 누락된 동기를 추정해서 채우지 않습니다.
-
-
-[자료 폴더](.) · [직전 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [이 차수의 원래 전체 상세](#reading-level-5)
-
-
-
-### LEVEL 1 · 26차의 구체적인 기능과 확인
-
-상세창의 미는 막대와 위젯 메뉴로 회전 속도를 고르고 그 선택을 저장할 수 있습니다. 모형의 움직이는 속도만 조절하며 시계·날짜·날씨·계정 사용 한도를 실제로 갱신하는 속도를 바꾸지는 않습니다. 2026~2099년 날짜별 모형과 오늘의 원소를 보여 주고 기록된 모델·추론 강도 변화도 알립니다.
-
-기록을 읽는 감시기는 이 컴퓨터의 파일을 읽지만 지역·기온을 가져오는 기능은 네트워크를 사용합니다. 계정 사용 한도는 별도로 조회하는 비율이며 남은 토큰 개수가 아닙니다. 글자 표시의 번역은 앱이 가진 문구에 적용하고 원래 기록은 보존합니다.
-
-Windows와 해당 차수의 소스·의존성·자산, OpenGL 3.3 드라이버와 ModernGL을 준비해 `python src/app.py`를 실행합니다. 이전 배포본의 모든 자산이 공개 소스에 남았다고 보장하지 않습니다. 알림이 없으면 감시 경로와 새 기록·실행 잠금·설정을 확인합니다. 당시 실행 결과는 공개 이력에 없어 성공으로 추정하지 않습니다.
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · 목적과 이 차수의 역할
-
-상세창 슬라이더와 위젯 메뉴에서 회전 속도를 조절하고 저장합니다. 모션 배율과 실제 시계·날짜·날씨·계정 한도 갱신은 별개입니다.
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · 핵심 기능과 보존 범위
-
-- 항목 1: 상세창 슬라이더와 위젯 메뉴에서 회전 속도를 조절하고 저장합니다. 모션 배율과 실제 시계·날짜·날씨·계정 한도 갱신은 별개입니다.
-- 항목 2: 로컬 세션 기록에서 모델·추론 강도의 변경과 명시된 배정을 구분합니다. 감시기는 외부 통신 없이 로컬 자료를 읽습니다.
-- 항목 3: 공개 협업 호출과 소유자가 확인된 앱이 직접 남긴 활동을 연결합니다.
-- 항목 4: 검증된 금속 원자 그림 한 장을 추출 없이 읽는 제한 메모리 재생기입니다.
-- 항목 5: 같은 실제3D 자산을 공유하는 정적 마크와 가시성 기반 내부 모션입니다.
-- 항목 6: 2026~2099년의 날짜별 조형 규칙입니다. 외부 데이터와 계정 정보를 사용하지 않습니다.
-- 항목 7: 실제 대상 이름과 조형 특징을 연결하는 편집 사전입니다.
-- 항목 8: 한 그래픽 장치(GPU) 작업 프로그램 내부의 작업 흐름와 최대 네 이미지로 날짜별 모션을 공유합니다.
-- 항목 9: 현재 날짜의 실제 삼각형 표면으로 만든 입체 모형를 소유 프로그램 내부의 작업 흐름의 화면 밖 전용 공간의 그래픽 장치(GPU)에서 렌더합니다.
-- 항목 10: 한국 날짜의1~31일에 대응하는 원소와 디자인 영감 팔레트입니다.
-- 항목 11: 오늘 원소 하나의 압축 그림 한 장만 여는 제한 메모리 재생기입니다.
-- 항목 12: 원본3D 자산을 변경하지 않는 제한 메모리 Qt 색 합성입니다.
-- 항목 13: 프로세스 전용 고해상도 대기로 전역 타이머 설정 없이 그림 한 장을 조율합니다.
-- 항목 14: 앱의 메뉴·설명처럼 앱이 만든 글만 언어를 바꿉니다. 실제 기록에 적힌 문장은 원문 그대로 보존해야 하며 번역한 앱 문구로 바꾸지 않습니다.
-- 항목 15: Codex App Server의 `account/rateLimits/read`를 읽기 전용으로 조회합니다. 표시값은 남은 토큰 개수가 아니라 계정 사용 한도 비율입니다.
-- 항목 16: 지역·기온 조회 모듈은 네트워크를 사용합니다. 로컬 감시기의 외부 통신 여부와 앱 전체의 날씨 조회를 구분합니다.
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · 입력·처리·출력
-
-읽는 예: 입력은 읽어 올 자료, 처리는 자료에서 변화와 이유를 찾는 과정, 출력은 사용자가 볼 알림·이력입니다. 기록에 없는 이전값이나 이유를 결과에 덧붙이지 않습니다.
-
-- 항목 입력: 현재 사용자 Codex의 로컬 한 줄에 기록 하나를 담는 JSONL 파일과 이 차수의 앱 설정
-- 항목 처리: 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시
-- 항목 출력: 알림·변경 이력·로컬 진단 기록
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · 화면과 사용 흐름
-
-1. 이 차수의 소스·requirements와 필요한 자산을 한 작업 폴더에 준비합니다.
-2. 앱을 열고 위젯·상세창에서 감시 경로와 표시되는 기록을 확인합니다.
-3. 새 변경이 기록되면 이전·이후 값과 이유를 비교하고, 기록 종류와 근거 수준을 함께 읽습니다.
-4. 설정·이력은 개인 운영자료로 관리하고 다른 사용자에게 공유하기 전에 내용을 확인합니다.
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · 실제 자료 구성
-
-읽는 예: 설명 문서와 실행 소스, 목록 자료의 역할을 나누어 읽습니다. 보존 목록의 제외 항목은 누락을 숨긴 것이 아니라 공개하지 않은 범위와 이유를 표시한 것입니다.
-
-- 항목 [src/](src): 앱을 구성하는 소스 파일이 들어 있는 폴더입니다.
-- 항목 [README.md](README.md#reading-level-1): 사람이 읽는 설명 문서입니다.
-- 항목 [requirements.txt](requirements.txt): 실행에 필요한 외부 도구와 버전을 적은 일반 텍스트입니다.
-- 항목 [공개파일_비교.json](%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json): 파일 목록·지문·보존 범위를 이름과 값으로 담은 자료입니다.
-- 항목 [보존자료.md](%EB%B3%B4%EC%A1%B4%EC%9E%90%EB%A3%8C.md): 사람이 읽는 설명 문서입니다.
-- 항목 [부가자료_보존.json](%EB%B6%80%EA%B0%80%EC%9E%90%EB%A3%8C_%EB%B3%B4%EC%A1%B4.json): 파일 목록·지문·보존 범위를 이름과 값으로 담은 자료입니다.
-- 항목 [직전차수.diff](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff): 직전 자료와 달라진 줄을 추가·삭제 표시로 기록한 전체 비교 파일입니다.
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · 주요 모듈과 코드 읽기
-
-읽는 예: 모듈은 기능별로 나눈 소스 파일입니다. 같은 파일 이름이 여러 차수에 있어도 내용이 같다고 가정하지 않고 해당 차수의 링크를 엽니다.
-
-- 항목 [src/app.py](src/app.py): Codex Orbit: 독립 회전 위젯과 로컬 변경 기록·사용 한도.
-- 항목 [src/notifier.py](src/notifier.py): 현재 사용자 로컬 한 줄에 기록 하나를 담는 JSONL 파일을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다.
-- 항목 [src/activity.py](src/activity.py): 공개 협업 호출과 소유자가 확인된 앱이 직접 남긴 활동을 연결합니다.
-- 항목 [src/atom_frames.py](src/atom_frames.py): 검증된 금속 원자 그림 한 장을 추출 없이 읽는 제한 메모리 재생기입니다.
-- 항목 [src/brand.py](src/brand.py): 같은 실제3D 자산을 공유하는 정적 마크와 가시성 기반 내부 모션입니다.
-- 항목 [src/calendar_art.py](src/calendar_art.py): 2026~2099년의 날짜별 조형 규칙입니다. 외부 데이터와 계정 정보를 사용하지 않습니다.
-- 항목 [src/calendar_catalog.py](src/calendar_catalog.py): 실제 대상 이름과 조형 특징을 연결하는 편집 사전입니다.
-- 항목 [src/calendar_motion.py](src/calendar_motion.py): 한 그래픽 장치(GPU) 작업 프로그램 내부의 작업 흐름와 최대 네 이미지로 날짜별 모션을 공유합니다.
-- 항목 [src/calendar_renderer.py](src/calendar_renderer.py): 현재 날짜의 실제 삼각형 표면으로 만든 입체 모형를 소유 프로그램 내부의 작업 흐름의 화면 밖 전용 공간의 그래픽 장치(GPU)에서 렌더합니다.
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · 설치 환경과 실행·사용법
-
-읽는 예: 실행 소스가 있는 차수는 그 차수의 외부 도구 목록과 그림·글꼴 자료를 함께 준비합니다. 소스가 확인되지 않은 문서 차수에는 실행 명령을 만들어 적용하지 않습니다.
-
-Windows와 해당 폴더의 requirements.txt를 기준으로 Python 의존성을 준비합니다. history는 공개 소스 보존본이며 현재 루트 assets가 과거 모든 차수의 자산과 호환된다는 뜻은 아닙니다. 날짜별 실제 삼각형 표면으로 만든 입체 모형 렌더에는 ModernGL과 OpenGL 3.3을 지원하는 그래픽 드라이버가 필요합니다.
-
-자산과 의존성을 준비한 이 차수 폴더에서 `python src/app.py`를 실행합니다. history 소스만으로 과거 배포 EXE와 동일한 화면·자산이 모두 복원되지는 않습니다.
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · 사용하는 사람에게 달라진 점
-
-상세창 슬라이더와 위젯 우클릭 메뉴에서 회전 속도를 0.25~3배로 선택하고 1배로 복원할 수 있습니다. 선택값은 저장되어 다음 실행에도 적용됩니다. 속도를 바꿔도 조형의 회전 각도를 이어서 재생하며 날짜·시계·기온·계정 조회 간격은 그대로입니다. 저장이 실패하면 이전 배율로 복원하고 선택한 한국어·영어로 오류를 안내합니다. 정적 정보와 움직이는 조형을 나누어 갱신하는 변경도 포함합니다.
-
-[26차 검증 요약](../../docs/%EA%B3%B5%EA%B0%9C%EA%B2%80%EC%A6%9D_26%EC%B0%A8.md)에서 개발 전체·공개본·중앙 소스 검사와 배포 실행 결과를 구분합니다. 고정 240fps는 달성하지 못했으며 추가 달성 작업은 제외됐습니다. 26차 변경 기록의 실측 생성 약 227~230fps, 고유 Qt 그리기 약 214~229fps를 모니터 표시율로 해석하지 않습니다.
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · 이 보관본의 의존성 목록
-
-읽는 예: 의존성은 이 앱이 불러 쓰는 외부 도구입니다. >=는 적힌 버전 이상이라는 뜻이며 버전 숫자와 앱의 성능 수치를 구분합니다.
-
-[requirements.txt](requirements.txt)의 실제 항목입니다. 외부 실행 도구와 그래픽 장치(GPU) 드라이버는 별도로 준비합니다.
-
-```text
-PySide6-Essentials==6.12.0
-PyInstaller==6.22.3
-moderngl==5.13.0
-glcontext==3.1.0
-numpy==2.5.4
-Pillow==13.0.0
-```
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · 소스에서 제공하는 CLI 옵션
-
-읽는 예: CLI 옵션은 프로그램을 시작할 때 뒤에 붙이는 선택 항목입니다. Path는 파일·폴더 경로, store_true는 옵션 이름을 붙이면 켜지는 스위치입니다. --sessions 뒤에는 읽을 기록 폴더를, --data-dir 뒤에는 설정·이력 폴더를 지정합니다.
-
-- 항목 [app.py](src/app.py): `--data-dir`, `--sessions`, `--smoke-test`, `--usage-smoke-test`, `--smoke-report`, `--show-details`, `--show-event`
-- 항목 [notifier.py](src/notifier.py): `--sessions`, `--work`
-
-각 옵션의 기본값·필수값·부작용은 해당 main과 인자 정의를 함께 확인합니다.
-
-
-
-함수 역할·기본값·입력 거부 조건의 세부 참조
-
-다음 항목은 이 자료의 Python 소스에 명시된 선언입니다. 전체 분기와 호출 순서는 각 행의 코드 위치에서 이어서 읽을 수 있습니다.
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · [src/activity.py](src/activity.py)
-
-공개된 작업 배정과 앱에 남은 활동이 같은 작업인지 연결하는 부분입니다. 작업 이름이 비슷하다는 이유만으로 같은 작업으로 합치지 않습니다.
-
-**맡은 일과 결과**
-
-- 처리: 보호문·비공개 표식·긴 인코딩 덩어리는 해석하거나 노출하지 않습니다. [구현 이름 safe_public_text](src/activity.py#L15)
-
-- 처리: 원래 기록 시각이 있는 해당 작업 자신의 관측만 보존합니다. 여러 작업을 모두 합쳐 최대 256개이며 작업마다 256개씩 늘리는 제한이 아닙니다. [구현 이름 configuration](src/activity.py#L76)
-
-- 처리: 연결 확인에 필요한 앱 기록 항목만 남겨 나중 대조를 기다립니다. 대화 본문은 보관하지 않으며 모든 작업을 합쳐 대기 자료를 최대 32개로 제한합니다. [구현 이름 defer](src/activity.py#L160)
-
-- 처리: 그 작업을 처음 발견한 기록만 추가 정보로 보완합니다. 예를 들어 첫 배정 이유가 늦게 확인되면 처음 행을 보완하며, 뒤에 실제로 바뀐 모델 기록은 별도의 변화로 남깁니다. [구현 이름 observe](src/activity.py#L273)
-
-**선택값과 제한값**
-
-- 보존할 활동 이벤트 수 상한는 **128**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_ACTIVITY_EVENTS](src/activity.py#L7) 원래 선언을 함께 대조합니다: `정의=128`
-
-- 이미 본 활동 식별자의 수 상한는 **8192**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_ACTIVITY_SEEN](src/activity.py#L8) 원래 선언을 함께 대조합니다: `정의=8192`
-
-- 추적할 활동 호출 수 상한는 **32**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_ACTIVITY_CALLS](src/activity.py#L9) 원래 선언을 함께 대조합니다: `정의=32`
-
-- 공개 호출 수 상한는 **128**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_PUBLIC_CALLS](src/activity.py#L10) 원래 선언을 함께 대조합니다: `정의=128`
-
-- 연결 확인을 기다리는 활동 수의 전체 상한는 **32**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_DEFERRED_ACTIVITIES](src/activity.py#L11) 원래 선언을 함께 대조합니다: `정의=32`
-
-- 시각이 있는 설정 관측 수의 전체 상한는 **256**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_CONFIGURATION_SNAPSHOTS](src/activity.py#L12) 원래 선언을 함께 대조합니다: `정의=256`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 조건: 활동 호출은 이름과 값의 사전 자료, 연결 대기는 순서 있는 목록이어야 합니다. 어느 한쪽이라도 다른 형식이면 원본을 지우지 않고 오류로 남깁니다. [해당 검사](src/activity.py#L66)
-
-- 실패 조건: 시각이 있는 설정 관측은 순서 있는 목록이어야 합니다. 다른 형식이면 원본을 빈 값으로 바꾸어 숨기지 않습니다. [해당 검사](src/activity.py#L68)
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · [src/app.py](src/app.py)
-
-창·설정·알림 전달을 묶는 부분입니다. 예를 들어 알림을 기다리는 중 앱을 닫으면 감시 작업의 정리를 기다린 뒤 종료합니다.
-
-**맡은 일과 결과**
-
-- 처리: 설정과 UI의 속도는 유한한 실제 숫자 범위로 제한합니다. [구현 이름 validated_motion_speed](src/app.py#L42)
-
-- 처리: Python이 더 쓰지 않는 객체를 정리하는 동안에도 살아 있어야 할 창의 관리자를 앱이 계속 보관합니다. 창이 보이는데 관리 객체만 먼저 사라지는 일을 막기 위한 수명 관리입니다. [구현 이름 _application_gui_root](src/app.py#L49)
-
-- 처리: 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다. [구현 이름 operation_record](src/app.py#L67)
-
-- 처리: 이전 기록 전체 부재와 개별 필드 미기록을 구분하고 관측값만 표시합니다. [구현 이름 previous_field](src/app.py#L106)
-
-- 처리: 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. [구현 이름 short_reason](src/app.py#L130)
-
-- 처리: 공개 문장만 표시하며 보호된 도구 페이로드를 해석하거나 노출하지 않습니다. [구현 이름 public_text](src/app.py#L182)
-
-- 처리: 공개된 작업 목적을 모델 선택 이유로 바꾸어 말하지 않습니다. [구현 이름 selection_explanation](src/app.py#L203)
-
-- 처리: Qt 예약 호출을 포함한 미처리 전달 수를 프로그램 내부의 작업 흐름 사이에서 제한합니다. [구현 이름 NoticeDelivery](src/app.py#L309)
-
-- 처리: 중복 반환과 종료 뒤 도착한 신호도 같은 한도를 다시 늘리지 않습니다. [구현 이름 NoticeTicket](src/app.py#L334)
-
-- 처리: 오류가 있을 때 변경 기록 안에 원문을 보여 주는 읽기 전용 라벨입니다. [구현 이름 DiagnosticLabel](src/app.py#L918)
-
-- 처리: 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다. [구현 이름 QuitGuard](src/app.py#L1394)
-
-- 처리: 지연된 신호 인자 대신 최신 그 시점의 복사본과 현재 레이아웃의 실제 표시를 대조합니다. [구현 이름 usage_smoke_state](src/app.py#L1956)
-
-- 처리: 실제 그래픽 장치(GPU) 렌더 수를 기준으로 준비·비교 단계를 판정합니다. [구현 이름 motion_smoke_stage](src/app.py#L1980)
-
-- 처리: 말줄임 전 제목과 실제 높이에 영향을 주는 표시 조건만 비교합니다. [구현 이름 _content_fit_signature](src/app.py#L759)
-
-- 처리: 실제 첫 관측 한 행만 안정된 활동 ID로 보강하며 다른 변경은 보존합니다. [구현 이름 promote_first_observation](src/app.py#L1363)
-
-- 처리: 사용자 조작의 실패는 실제 속도를 복원한 뒤 상세창에서 안내합니다. [구현 이름 change_motion_speed](src/app.py#L1484)
-
-- 처리: 외부 QThread 참조를 무효화하지 않고 종료된 감시기와 GUI 소유자를 해제합니다. [구현 이름 _finish_closed_gui](src/app.py#L1948)
-
-**선택값과 제한값**
-
-- 개인 설정·이력 저장 폴더를 고르는 옵션; 미지정 시 현재 사용자의 LOCALAPPDATA 아래 CodexOrbit, 그 환경값이 없으면 사용자 홈 아래 CodexOrbit입니다. 경로를 입력하는 옵션입니다. [--data-dir](src/app.py#L1996) 원래 선언을 함께 대조합니다: `type=Path; default=Path(os.environ.get('LOCALAPPDATA', Path.home())) / 'CodexOrbit'`
-
-- 읽을 Codex 기록 폴더를 고르는 옵션입니다. 경로를 입력하는 옵션입니다. [--sessions](src/app.py#L1997) 원래 선언을 함께 대조합니다: `type=Path`
-
-- 앱 시작 확인 모드를 켜는 옵션입니다. 값을 뒤에 쓰지 않고 이름만 붙여 켭니다. [--smoke-test](src/app.py#L1998) 원래 선언을 함께 대조합니다: `action='store_true'`
-
-- 실제 계정 한도와 표시를 조회한 뒤 종료하는 확인 옵션입니다. 값을 뒤에 쓰지 않고 이름만 붙여 켭니다. [--usage-smoke-test](src/app.py#L1999) 원래 선언을 함께 대조합니다: `action='store_true'; help='실제 계정 잔량과 표시를 조회한 뒤 종료'`
-
-- 시작 확인 결과를 저장할 파일 경로 옵션입니다. 경로를 입력하는 옵션입니다. [--smoke-report](src/app.py#L2000) 원래 선언을 함께 대조합니다: `type=Path`
-
-- 시작할 때 상세창을 여는 옵션입니다. 값을 뒤에 쓰지 않고 이름만 붙여 켭니다. [--show-details](src/app.py#L2001) 원래 선언을 함께 대조합니다: `action='store_true'`
-
-- 기존 이벤트 ID 또는 대상 ID를 지정해 그 이력을 다시 표시하는 옵션입니다. 뒤에 해당 식별자를 입력합니다. [--show-event](src/app.py#L2002) 원래 선언을 함께 대조합니다: `help='기존 이력의 이벤트 ID 또는 대상 ID를 다시 표시'`
-
-- 이력이 없을 때 첫 실행은 기준선이며 새 변화를 기다린다고 알려 주는 문구는 **'변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [EMPTY_HISTORY_GUIDANCE](src/app.py#L39) 원래 선언을 함께 대조합니다: `정의='변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'`
-
-- 부모 조율·작업 분류·간단한 수정·구현·심층 검토·독립 검증·판단 재검토 역할의 표시 이름 대응표입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존합니다. [ROLE_LABELS](src/app.py#L116) 원래 선언을 함께 대조합니다: `정의={'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 조건: GUI 소유자는 QApplication의 메인 프로그램 내부의 작업 흐름에서 생성해야 합니다. 화면·언어 변경은 화면을 담당하는 작업 흐름에서, 그래픽 작업 공간은 그것을 만든 작업 흐름에서만 다루어야 합니다. [해당 검사](src/app.py#L52)
-
-- 실패 조건: 언어는 GUI 메인 프로그램 내부의 작업 흐름에서만 변경할 수 있습니다. 화면·언어 변경은 화면을 담당하는 작업 흐름에서, 그래픽 작업 공간은 그것을 만든 작업 흐름에서만 다루어야 합니다. [해당 검사](src/app.py#L1523)
-
-- 실패 조건: 같은 자료 폴더를 다른 실행본이 쓰고 있거나 잠금 파일에 접근하지 못하면 시작을 멈춥니다. 두 앱이 같은 설정·이력을 동시에 덮어쓰게 하지 않습니다. [해당 검사](src/app.py#L2024)
-
-- 실패 조건: 앱 설정은 항목 이름과 값으로 구성된 JSON 자료여야 합니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 합니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/app.py#L295)
-
-- 실패 조건: 알림 전달 대기 한도 또는 종료 상태: 다음 감시 주기에 재시도합니다. [해당 검사](src/app.py#L318)
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · [src/atom_frames.py](src/atom_frames.py)
-
-입체 원자 모형을 미리 그린 여러 그림을 차례로 읽는 부분입니다. 압축 묶음 전체의 일치 여부를 먼저 확인하고 필요한 그림만 메모리에 둡니다.
-
-**맡은 일과 결과**
-
-- 처리: 필수 시각 자산 오류를 시작 실패 경로에 전달합니다. [구현 이름 AtomAssetError](src/atom_frames.py#L27)
-
-- 처리: 시작 시 전체 무결성을 검사하고 해제된 화면용 이미지 객체(QImage)는 최대24장만 보존합니다. [구현 이름 AtomFrames](src/atom_frames.py#L50)
-
-- 처리: 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. [구현 이름 close_runtime_frames](src/atom_frames.py#L172)
-
-- 처리: 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. [구현 이름 get_atom_frames](src/atom_frames.py#L183)
-
-**선택값과 제한값**
-
-- 압축 묶음에 있어야 하는 그림의 정확한 장수는 **540**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_COUNT](src/atom_frames.py#L16) 원래 선언을 함께 대조합니다: `정의=540`
-
-- 그림 한 변의 픽셀 수는 **296**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_SIZE](src/atom_frames.py#L17) 원래 선언을 함께 대조합니다: `정의=296`
-
-- 초당 그림 수의 설정값는 **30**입니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [FPS](src/atom_frames.py#L18) 원래 선언을 함께 대조합니다: `정의=30`
-
-- 한 재생 주기의 초 단위 길이는 **18**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [PERIOD_SECONDS](src/atom_frames.py#L19) 원래 선언을 함께 대조합니다: `정의=18`
-
-- 풀어 놓은 그림을 메모리에 보관하는 최대 장수는 **24**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [CACHE_LIMIT](src/atom_frames.py#L20) 원래 선언을 함께 대조합니다: `정의=24`
-
-- 압축 파일 자체를 읽을 수 있는 최대 바이트 수는 **128 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_ARCHIVE_BYTES](src/atom_frames.py#L21) 원래 선언을 함께 대조합니다: `정의=128 * 1024 * 1024`
-
-- 개별 그림 한 장의 최대 바이트 수는 **1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_FRAME_BYTES](src/atom_frames.py#L22) 원래 선언을 함께 대조합니다: `정의=1024 * 1024`
-
-- 그림들을 풀어 읽은 크기 합계의 최대 바이트 수는 **256 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_TOTAL_BYTES](src/atom_frames.py#L23) 원래 선언을 함께 대조합니다: `정의=256 * 1024 * 1024`
-
-- 자산 명세 문서의 최대 바이트 수는 **64 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_MANIFEST_BYTES](src/atom_frames.py#L24) 원래 선언을 함께 대조합니다: `정의=64 * 1024`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 조건: 명세 문서에 같은 항목 이름이 두 번 나오면 어느 값을 믿어야 할지 모호하므로 거부합니다. [해당 검사](src/atom_frames.py#L44)
-
-- 실패 조건: 원자 자산 자산의 파일명·크기·지문을 적은 명세 문서 크기가 허용 범위를 벗어났습니다. 파일 크기는 이 모듈의 MAX_MANIFEST_BYTES 이하여야 합니다. 빈 파일도 받지 않습니다. [해당 검사](src/atom_frames.py#L69)
-
-- 실패 조건: 원자 자산 자산의 파일명·크기·지문을 적은 명세 문서는 객체여야 합니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 합니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/atom_frames.py#L75)
-
-- 실패 조건: 파일 내용 지문은 문자열이며 64개의 16진수 문자로 이루어져야 합니다. 여기서 16진수 문자는 0~9와 a~f입니다. 이 검사에서는 소문자만 허용합니다. 숫자·잘못된 길이·다른 문자는 지문으로 받지 않습니다. [해당 검사](src/atom_frames.py#L85)
-
-- 실패 조건: 원자 그림 한 장 ZIP 크기가 허용 범위를 벗어났습니다. 파일 크기는 이 모듈의 MAX_ARCHIVE_BYTES 이하여야 합니다. 빈 파일도 받지 않습니다. [해당 검사](src/atom_frames.py#L87)
-
-- 실패 조건: 압축 파일의 전체 내용을 읽어 계산한 SHA-256 지문이 명세 지문과 같아야 합니다. 다른 파일이나 내용 변경을 감지하면 재생하지 않습니다. [해당 검사](src/atom_frames.py#L94)
-
-- 실패 조건: 압축 묶음 안의 파일 수는 정확히 540개이고 파일 이름의 전체 목록도 예상 목록과 정확히 같아야 합니다. 이름 누락·추가·다른 이름은 같은 장수여도 거부합니다. [해당 검사](src/atom_frames.py#L100)
-
-- 실패 조건: 압축을 풀어 읽는 개별 파일 크기를 모두 더한 값이 이 모듈의 MAX_TOTAL_BYTES 이하여야 합니다. 압축 파일 자체가 작아도 풀린 합계가 더 크면 거부합니다. [해당 검사](src/atom_frames.py#L102)
-
-- 실패 조건: 검증 때와 현재 파일의 식별 정보가 달라지면 실행 중 자산 변경으로 처리합니다. 앱을 다시 시작해 검증해야 합니다. [해당 검사](src/atom_frames.py#L133)
-
-- 실패 조건: 원자 그림 한 장의 재생 시각이 유한한 숫자가 아닙니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻합니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/atom_frames.py#L138)
-
-- 실패 조건: 압축 묶음 안의 항목은 폴더가 아닌 파일이고 암호화되지 않아야 합니다. 허용한 무압축 또는 DEFLATE 압축이어야 하며 크기는 0보다 크고 개별 그림 상한 이하여야 합니다. 이 중 하나라도 맞지 않으면 거부합니다. [해당 검사](src/atom_frames.py#L105)
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · [src/brand.py](src/brand.py)
-
-여러 창의 로고와 기능 기호를 같은 제작 자료로 표시하는 부분입니다. 창을 숨기면 보이지 않는 로고의 재생 구독을 끝냅니다.
-
-**맡은 일과 결과**
-
-- 처리: 원소 그림 한 장의 실제 크기에 비례해 여백만 줄이며 영역 밖을 복사하지 않습니다. [구현 이름 motion_brand_source](src/brand.py#L32)
-
-- 처리: 보이는 로고만 단일 시계에서 같은 그림 한 장으로 갱신합니다. [구현 이름 BrandClock](src/brand.py#L40)
-
-- 처리: 닫힘·숨김 이벤트에 맞춰 재생 구독을 끝내는 실제3D 로고입니다. [구현 이름 AnimatedBrand](src/brand.py#L106)
-
-- 처리: 실제 삼각형 표면으로 만든 입체 모형에서 제작한 고정 기호 일곱 개를 창 생성 전에 검증합니다. [구현 이름 validate_symbols](src/brand.py#L137)
-
-- 처리: 실제 삼각형 표면으로 만든 입체 모형 렌더만 축소하고 새로운 도형이나 글자를 덧그리지 않습니다. [구현 이름 symbol_image](src/brand.py#L181)
-
-- 처리: 원문 글자 표시 부품(QLabel)을 유지하며 기능 의미를 읽기 쉬운 기호로 보조합니다. [구현 이름 with_symbol](src/brand.py#L209)
-
-**선택값과 제한값**
-
-- 모델·추론·시간·이유·한도·새로고침·이력의 일곱 기능 기호 이름는 **('model', 'reasoning', 'time', 'reason', 'usage', 'refresh', 'history')**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [SYMBOL_NAMES](src/brand.py#L133) 원래 선언을 함께 대조합니다: `정의=('model', 'reasoning', 'time', 'reason', 'usage', 'refresh', 'history')`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 조건: 브랜드 그림 한 변의 크기는 1~512픽셀이어야 합니다. 이 범위를 벗어나면 그림을 만들지 않습니다. [해당 검사](src/brand.py#L22)
-
-- 실패 조건: 기능 기호는 모델·추론·시간·이유·한도·새로고침·이력의 일곱 종류 중 하나이고 크기는 1~96픽셀이어야 합니다. 종류나 크기 중 하나라도 맞지 않으면 거부합니다. [해당 검사](src/brand.py#L184)
-
-- 실패 조건: 3D 기능 기호 자산의 파일명·크기·지문을 적은 명세 문서 크기 오류입니다. 파일 크기는 65,536바이트 이하여야 합니다. 빈 파일도 받지 않습니다. [해당 검사](src/brand.py#L142)
-
-- 실패 조건: 명세 버전은 참/거짓이 아닌 정수 1이어야 합니다. 다른 버전이나 참 값을 1처럼 받아들이지 않습니다. [해당 검사](src/brand.py#L145)
-
-- 실패 조건: 기호 파일 목록은 이름과 값의 사전이고 일곱 기능 기호의 이름과 정확히 같아야 합니다. 빠진 기호나 추가된 기호가 있어도 거부합니다. [해당 검사](src/brand.py#L148)
-
-- 실패 조건: 각 기호 정보는 이름과 값의 사전이고 파일명은 해당 기호 이름에 .png를 붙인 고정 이름이어야 합니다. [해당 검사](src/brand.py#L153)
-
-- 실패 조건: 파일 내용 지문은 문자열이며 64개의 16진수 문자로 이루어져야 합니다. 여기서 16진수 문자는 0~9와 a~f입니다. 이 검사에서는 소문자만 허용합니다. 숫자·잘못된 길이·다른 문자는 지문으로 받지 않습니다. [해당 검사](src/brand.py#L156)
-
-- 실패 조건: 3D 기능 기호 읽기 크기 상한 오류입니다. 파일 크기는 262,144바이트 이하여야 합니다. 빈 파일도 받지 않습니다. [해당 검사](src/brand.py#L159)
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · [src/calendar_art.py](src/calendar_art.py)
-
-날짜를 받아 그날의 조형 규칙을 고릅니다. 지원하지 않는 날짜를 넣으면 다른 날짜의 모형으로 몰래 바꾸지 않고 오류로 알립니다.
-
-**맡은 일과 결과**
-
-- 처리: 호스트의 현지 시간대와 무관하게 한국 날짜를 사용합니다. [구현 이름 current_date](src/calendar_art.py#L33)
-
-- 처리: 반올림 충돌만 가장 가까운 미사용 빨강·초록·파랑의 색값(RGB)로 옮기고 월별 결과를 내용이 고정된 보관합니다. [구현 이름 _month_palette](src/calendar_art.py#L50)
-
-- 처리: 유효한 날짜만 허용하며 지원 범위 밖을 다른 날짜로 몰래 대체하지 않습니다. [구현 이름 design_for_date](src/calendar_art.py#L78)
-
-- 처리: 현재 모델만 렌더하며 이 반복자는 작은 카탈로그를 작성할 때만 사용합니다. [구현 이름 all_designs](src/calendar_art.py#L95)
-
-**선택값과 제한값**
-
-- 조형을 지원하는 첫 날짜는 2026-1-1입니다. [FIRST_DATE](src/calendar_art.py#L10) 원래 선언을 함께 대조합니다: `정의=date(2026,1,1)`
-
-- 조형을 지원하는 마지막 날짜는 2099-12-31입니다. [LAST_DATE](src/calendar_art.py#L11) 원래 선언을 함께 대조합니다: `정의=date(2099,12,31)`
-
-- 한국 표준시인 UTC보다 9시간 빠른 시간대입니다. [KST](src/calendar_art.py#L12) 원래 선언을 함께 대조합니다: `정의=timezone(timedelta(hours=9))`
-
-- 연월별 조형 모음에서 가져온 주제 이름 목록입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존합니다. [THEMES](src/calendar_art.py#L13) 원래 선언을 함께 대조합니다: `정의=tuple(row.title for row in all_collections())`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 조건: 날짜 입력은 날짜 전용 값이어야 합니다. 날짜처럼 보이는 문장이나 날짜·시각이 합쳐진 다른 형식을 대신 받지 않습니다. [해당 검사](src/calendar_art.py#L80)
-
-- 실패 조건: 지원 날짜는 2026-01-01부터 2099-12-31까지 양 끝을 포함합니다. 이보다 이르거나 늦은 날짜를 다른 날짜로 바꾸지 않고 오류로 알립니다. [해당 검사](src/calendar_art.py#L82)
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · [src/calendar_catalog.py](src/calendar_catalog.py)
-
-꽃·열매·잎·악기의 이름과 눈에 보이는 구조를 연결한 사전입니다. 예를 들어 이름만 바꾸는 것이 아니라 그 이름에 대응하는 조형 규칙을 찾는 데 씁니다.
-
-**맡은 일과 결과**
-
-- 처리: 마지막 한글 음절의 받침에 맞춰 대상 이름을 연결합니다. [구현 이름 joining_particle](src/calendar_catalog.py#L208)
-
-**선택값과 제한값**
-
-- 꽃·열매·잎·악기별 대상 모음입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존합니다. [POOLS](src/calendar_catalog.py#L166) 원래 선언을 함께 대조합니다: `정의={'꽃': _objects(_FLOWERS,'꽃'), '열매': _objects(_FRUITS,'열매'),          '잎': _objects(_LEAVES,'잎'), '악기': _objects(_MUSIC,'악기')}`
-
-- 대상 고유 이름으로 조형 대상을 찾는 사전입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존합니다. [OBJECTS](src/calendar_catalog.py#L168) 원래 선언을 함께 대조합니다: `정의={obj.key:obj for pool in POOLS.values() for obj in pool}`
-
-- 꽃다발형·대각선형·감싸는 형태·연주대형·삼각형 정물·부채형의 표시 이름 대응표입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존합니다. [COMPOSITION_NAMES](src/calendar_catalog.py#L193) 원래 선언을 함께 대조합니다: `정의={'bouquet':'꽃다발형','diagonal':'대각선형','shelter':'감싸는 형태',                      'stage':'연주대형','triangle':'삼각형 정물','fan':'부채형'}`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 조건: 연월 색인은 0~887, 월은 1~12여야 합니다. 둘 중 하나라도 범위를 벗어나면 지원 연월 모음으로 사용하지 않습니다. [해당 검사](src/calendar_catalog.py#L217)
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · [src/calendar_motion.py](src/calendar_motion.py)
-
-입체 그림 계산 작업 하나를 여러 화면이 공유하도록 연결합니다. 준비에 실패할 때의 정지 표식과 실제 입체 그림 성공을 구별합니다.
-
-**맡은 일과 결과**
-
-- 처리: 정상 슬롯을 유지하고 늦은 그림 한 장은 추가 대기나 누적 추격 없이 이어갑니다. [구현 이름 next_frame_deadline](src/calendar_motion.py#L21)
-
-- 처리: 그래픽 장치(GPU) 준비·실패 때만 쓰는 월 주제의 정적 평면 표식입니다. 3D 성공으로 가장하지 않습니다. [구현 이름 fallback_image](src/calendar_motion.py#L26)
-
-- 처리: 그림을 계산하는 별도 작업은 화면 버튼이나 창을 직접 건드리지 않습니다. 가장 최근에 만든 그림 하나를 복사해 화면 담당 작업에 전달합니다. Qt는 창과 버튼을 만드는 도구 이름입니다. [구현 이름 _Worker](src/calendar_motion.py#L60)
-
-- 처리: 창 표시 전에 같은 작업자의 첫 실제 그림 한 장을 최대 5초 준비합니다. [구현 이름 prepare_calendar_motion](src/calendar_motion.py#L232)
-
-- 처리: 지금 회전한 위치를 유지한 채 앞으로 도는 속도만 바꿉니다. 예를 들어 회전 중 속도를 올려도 모형이 시작 위치로 튀지 않습니다. 바탕화면 시계와 날짜가 더 빠르게 흐르는 것은 아닙니다. [구현 이름 set_calendar_motion_speed](src/calendar_motion.py#L262)
-
-- 처리: 현재 보이는 각 소유자의 실제 픽셀 요구 중 최대 크기만 전달합니다. [구현 이름 set_calendar_motion_size](src/calendar_motion.py#L268)
-
-- 처리: Qt 그리기 경로가 실제로 소비한 서로 다른 그림 한 장만 셉니다. [구현 이름 record_calendar_presentation](src/calendar_motion.py#L276)
-
-- 처리: 제품은 이 문자열을 상태나 툴팁에 표시해 대체 표식과 실제 3D를 구분할 수 있습니다. [구현 이름 get_calendar_error](src/calendar_motion.py#L285)
-
-**선택값과 제한값**
-
-- 초당 그림 수의 설정값는 **240**입니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [FPS](src/calendar_motion.py#L15) 원래 선언을 함께 대조합니다: `정의=240`
-
-- 공유 그림의 기본 크기는 **384**입니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [SIZE](src/calendar_motion.py#L16) 원래 선언을 함께 대조합니다: `정의=384`
-
-- 그래픽 장치에서 그릴 원본 가로·세로 픽셀 크기는 **(3840, 2160)**입니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [RENDER_SIZE](src/calendar_motion.py#L17) 원래 선언을 함께 대조합니다: `정의=(3840, 2160)`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 조건: 날짜별 모션 API는 Qt 메인 프로그램 내부의 작업 흐름에서 호출해야 합니다. 화면·언어 변경은 화면을 담당하는 작업 흐름에서, 그래픽 작업 공간은 그것을 만든 작업 흐름에서만 다루어야 합니다. [해당 검사](src/calendar_motion.py#L211)
-
-- 실패 조건: 기다릴 시간은 참/거짓을 제외한 실제 숫자로 0초보다 크고 5초 이하여야 합니다. 숫자가 아닌 입력이나 범위 밖 값은 거부합니다. [해당 검사](src/calendar_motion.py#L234)
-
-- 실패 조건: 화면에 보이는지의 값은 참 또는 거짓이어야 합니다. 0·1·문자열을 대신 받지 않습니다. [해당 검사](src/calendar_motion.py#L258)
-
-- 실패 조건: 전달할 그림 크기는 참/거짓을 제외한 정수로 32~2160 범위여야 합니다. 예를 들어 소수나 범위를 벗어난 크기는 거부합니다. [해당 검사](src/calendar_motion.py#L270)
-
-- 실패 조건: 날짜별 모션 서비스가 닫혔습니다. [해당 검사](src/calendar_motion.py#L167)
-
-- 실패 조건: 날짜별 모션 서비스가 닫혔습니다. [해당 검사](src/calendar_motion.py#L180)
-
-- 실패 조건: 재생 시각은 유한한 숫자여야 합니다. [해당 검사](src/calendar_motion.py#L181)
-
-- 실패 조건: 재생 시각은 유한한 숫자여야 합니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻합니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/calendar_motion.py#L184)
-
-- 실패 조건: 이전 그래픽 장치(GPU) 작업 프로그램 내부의 작업 흐름가 종료 중입니다. [해당 검사](src/calendar_motion.py#L221)
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · [src/calendar_renderer.py](src/calendar_renderer.py)
-
-삼각형으로 이루어진 실제 입체 표면을 만들고 그래픽 장치(GPU)에서 그립니다. 앞면·뒷면·깊이가 있으며 그림을 만든 작업에서만 그래픽 작업 공간을 사용합니다.
-
-**맡은 일과 결과**
-
-- 처리: 입체 회전축의 방향을 길이 1의 기준으로 맞춘 뒤, 그 축 주위를 돌리는 계산표를 만듭니다. 로드리게스 회전행렬은 이 계산표의 이름입니다. 축의 길이가 커졌다고 모형 크기까지 커지는 계산을 피합니다. [구현 이름 rotation](src/calendar_renderer.py#L24)
-
-- 처리: 입체 표면을 이루는 삼각형의 꼭짓점 순서와 바깥을 향하는 방향을 맞춥니다. 법선은 표면의 바깥 방향, winding은 꼭짓점을 도는 순서입니다. 두 방향이 맞아야 앞면과 조명을 같은 기준으로 계산합니다. [구현 이름 finish](src/calendar_renderer.py#L48)
-
-- 처리: 육면체 면을 실제 둥근 모서리와 구면 꼭짓점으로 투영합니다. [구현 이름 box](src/calendar_renderer.py#L58)
-
-- 처리: 단면을 축 주위로 돌려 앞면·뒷면·옆면이 있는 입체를 만듭니다. 단면이 각진 다각형이면 각 면의 바깥 방향도 평평한 면에 맞춥니다. 단순한 앞면 그림을 입체처럼 표시하는 방식과 구별됩니다. [구현 이름 lathe](src/calendar_renderer.py#L84)
-
-- 처리: 3D 경로를 따라 원형 단면을 운반합니다. 코일은 실제 깊이를 가집니다. [구현 이름 tube](src/calendar_renderer.py#L104)
-
-- 처리: 대상 이름에 연결된 주요 구조를 실제 삼각형 부품으로 구성합니다. [구현 이름 _object_geometry](src/calendar_renderer.py#L145)
-
-- 처리: 날짜와 무관한 세 링만 읽기 전용 배열로 한 번 생성합니다. [구현 이름 _ring_geometry](src/calendar_renderer.py#L323)
-
-- 처리: 날짜별 주연과 서로 다른 두 월 모티프를 명시적 대상 사전에서 렌더합니다. [구현 이름 build_geometry](src/calendar_renderer.py#L334)
-
-- 처리: 그래픽 작업 공간를 만든 프로그램 내부의 작업 흐름에서만 사용하고 현재 날짜의 버퍼만 보유합니다. [구현 이름 CalendarRenderer](src/calendar_renderer.py#L378)
-
-- 처리: 미리보기와 직접 검증용 동기 렌더입니다. 앱은 공유 작업 프로그램 내부의 작업 흐름를 사용합니다. [구현 이름 render_date](src/calendar_renderer.py#L489)
-
-- 처리: 원본 타깃은 유지하고 중앙 정사각형의 그래픽 장치(GPU) 전달 크기만 변경합니다. [구현 이름 set_output_size](src/calendar_renderer.py#L425)
-
-- 처리: 검증·내보내기 때만 실제 직사각형 원본 전체를 중앙 처리 장치(CPU)로 읽습니다. [구현 이름 render_original](src/calendar_renderer.py#L470)
-
-**선택값과 제한값**
-
-- 입체 조형의 회전 주기는 **12.0**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [PERIOD](src/calendar_renderer.py#L132) 원래 선언을 함께 대조합니다: `정의=12.0`
-
-- 공유 그림의 기본 크기는 **384**입니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [SIZE](src/calendar_renderer.py#L133) 원래 선언을 함께 대조합니다: `정의=384`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 조건: 대상 사전의 형상 규칙과 선택된 디자인의 규칙이 같아야 합니다. 이름과 모형 구성이 다른 자료는 렌더하지 않습니다. [해당 검사](src/calendar_renderer.py#L338)
-
-- 실패 조건: 모션 시각은 유한한 숫자여야 합니다. [해당 검사](src/calendar_renderer.py#L364)
-
-- 실패 조건: 모션 시각은 유한한 숫자여야 합니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻합니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/calendar_renderer.py#L367)
-
-- 실패 조건: 그래픽 장치(GPU) 그래픽 작업 공간는 생성 프로그램 내부의 작업 흐름에서만 사용할 수 있습니다. 화면·언어 변경은 화면을 담당하는 작업 흐름에서, 그래픽 작업 공간은 그것을 만든 작업 흐름에서만 다루어야 합니다. [해당 검사](src/calendar_renderer.py#L423)
-
-- 실패 조건: 전달할 그림 크기는 참/거짓을 제외한 정수로 32~2160 범위여야 합니다. 예를 들어 소수나 범위를 벗어난 크기는 거부합니다. [해당 검사](src/calendar_renderer.py#L428)
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · [src/core.py](src/core.py)
-
-기록 읽기와 지침 문서의 미리보기·적용·복원을 담당합니다. 예를 들어 미리보기 뒤 문서가 바뀌면 옛 미리보기로 덮어쓰지 않고 새 미리보기를 요구합니다.
-
-**맡은 일과 결과**
-
-- 처리: 기록 파일에서 실제 줄바꿈 문자(LF)가 있는 자리만 한 기록의 경계로 봅니다. 읽기 범위의 맨 앞이나 맨 뒤에서 잘린 기록은 완성된 기록처럼 읽지 않습니다. 예를 들어 한 기록 안에 줄바꿈처럼 보이는 특수 문자가 있어도 기록 두 개로 나누지 않습니다. [구현 이름 read_jsonl_tail](src/core.py#L19)
-
-- 처리: 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. [구현 이름 title_catalog](src/core.py#L56)
-
-- 처리: 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. [구현 이름 resolve_title](src/core.py#L86)
-
-- 처리: 지침을 넣을 파일뿐 아니라 그 파일까지 거치는 상위 폴더도 확인합니다. 바로가기처럼 다른 위치로 연결된 파일·폴더(링크 또는 Windows 재분석 지점)가 있으면 적용을 멈춥니다. 예를 들어 선택한 폴더가 다른 폴더로 연결돼 있으면 그곳의 파일을 대신 고치지 않습니다. [구현 이름 safe_path](src/core.py#L110)
-
-**선택값과 제한값**
-
-- 지침 문서의 최대 바이트 수는 **2 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_TEXT_BYTES](src/core.py#L10) 원래 선언을 함께 대조합니다: `정의=2 * 1024 * 1024`
-
-- 앱이 관리하는 지침 구역의 시작 표식는 **b'<!-- CODEX-ORBIT:BEGIN -->'**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [BEGIN](src/core.py#L11) 원래 선언을 함께 대조합니다: `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'`
-
-- 앱이 관리하는 지침 구역의 끝 표식는 **b'<!-- CODEX-ORBIT:END -->'**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [END](src/core.py#L12) 원래 선언을 함께 대조합니다: `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 조건: 문서가 2 MiB 상한을 초과했습니다. 파일 크기는 2MiB 이하여야 합니다. [해당 검사](src/core.py#L125)
-
-- 실패 조건: 제목 보관 자료와 그 안의 titles 항목은 모두 이름과 값의 사전 자료여야 합니다. 어느 쪽이라도 목록·문자열 등 다른 형식이면 거부합니다. [해당 검사](src/core.py#L65)
-
-- 실패 조건: 대상 파일명은 대소문자를 무시했을 때 AGENTS.md여야 합니다. 다른 이름의 문서에는 적용하지 않습니다. [해당 검사](src/core.py#L136)
-
-- 실패 조건: 대상 문서의 바로 위 폴더가 실제로 있어야 합니다. 없는 폴더에 문서를 새로 만들며 적용하지 않습니다. [해당 검사](src/core.py#L138)
-
-- 실패 조건: 대상이 이미 있으면 일반 파일이며 2MiB 이하여야 합니다. 폴더 등 다른 종류이거나 더 크면 적용하지 않습니다. [해당 검사](src/core.py#L140)
-
-- 실패 조건: 공백을 제외한 지침 내용이 있어야 하며 추가할 바이트는 2MiB 이하여야 합니다. 빈 내용이나 더 큰 내용은 거부합니다. [해당 검사](src/core.py#L147)
-
-- 실패 조건: 넣을 지침 안에 앱 관리 구역의 시작 또는 끝 표식이 하나라도 있으면 거부합니다. 구역 경계를 내용이 대신 만들어서는 안 됩니다. [해당 검사](src/core.py#L149)
-
-- 실패 조건: 적용 결과가 2 MiB 상한을 초과합니다. [해당 검사](src/core.py#L163)
-
-- 실패 조건: 미리보기 때 파일이 있었는지와 지금 존재하는지가 같아야 하고, 현재 내용의 지문도 예상 지문과 같아야 합니다. 새 파일 생성·삭제·내용 변경 중 하나라도 있으면 새 미리보기가 필요합니다. [해당 검사](src/core.py#L170)
-
-- 실패 조건: 미리보기에 보관한 원문과 적용 예정 내용 각각의 지문이 처음 값과 같아야 합니다. 둘 중 하나라도 바뀌면 적용하지 않습니다. [해당 검사](src/core.py#L190)
-
-- 실패 조건: 백업은 앱 데이터의 backups 폴더 바로 안에 있는 일반 파일이며 2MiB 이하여야 합니다. 다른 위치나 잘못된 종류·큰 파일은 복원에 쓰지 않습니다. [해당 검사](src/core.py#L210)
-
-- 실패 조건: 백업 내용의 지문이 적용 전 원문의 지문과 같아야 합니다. 다르면 원래 문서로 확인할 수 없어 복원하지 않습니다. [해당 검사](src/core.py#L213)
-
-- 실패 조건: 항목 이름과 값으로 구성된 JSON 자료가 아닙니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 합니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/core.py#L41)
-
-- 실패 조건: 이미 있는 관리 구역의 시작 표식과 끝 표식은 각각 정확히 하나이며 시작이 끝보다 앞에 있어야 합니다. 중복·누락·순서 뒤집힘은 거부합니다. [해당 검사](src/core.py#L156)
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · [src/element_frames.py](src/element_frames.py)
-
-오늘 원소에 필요한 압축 그림만 엽니다. 31개 원소의 모든 그림을 한꺼번에 메모리에 올리는 방식이 아닙니다.
-
-**맡은 일과 결과**
-
-- 처리: 필수 원소 자산 실패를 숨기지 않고 앱의 시작·표시 오류로 전달합니다. [구현 이름 ElementAssetError](src/element_frames.py#L24)
-
-- 처리: 활성 원소의 해시·목록·첫 그림 한 장을 확인합니다.31개를 적재하지 않습니다. [구현 이름 preflight_element_frames](src/element_frames.py#L132)
-
-**선택값과 제한값**
-
-- 풀어 놓은 그림을 메모리에 보관하는 최대 장수는 **24**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [CACHE_LIMIT](src/element_frames.py#L15) 원래 선언을 함께 대조합니다: `정의=24`
-
-- 그림 한 변의 픽셀 수는 **192**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_SIZE](src/element_frames.py#L16) 원래 선언을 함께 대조합니다: `정의=192`
-
-- 압축 묶음에 있어야 하는 그림의 정확한 장수는 **540**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_COUNT](src/element_frames.py#L17) 원래 선언을 함께 대조합니다: `정의=540`
-
-- 초당 그림 수의 설정값는 **30**입니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [FPS](src/element_frames.py#L18) 원래 선언을 함께 대조합니다: `정의=30`
-
-- 한 재생 주기의 초 단위 길이는 **18**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [PERIOD_SECONDS](src/element_frames.py#L19) 원래 선언을 함께 대조합니다: `정의=18`
-
-- 압축 파일 자체를 읽을 수 있는 최대 바이트 수는 **64*1024*1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_ARCHIVE_BYTES](src/element_frames.py#L20) 원래 선언을 함께 대조합니다: `정의=64*1024*1024`
-
-- 개별 그림 한 장의 최대 바이트 수는 **512*1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_FRAME_BYTES](src/element_frames.py#L21) 원래 선언을 함께 대조합니다: `정의=512*1024`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 조건: 원소 번호는 참/거짓이 아닌 정수 1~31이어야 합니다. 0·32·소수·문자열 등은 받지 않습니다. [해당 검사](src/element_frames.py#L34)
-
-- 실패 조건: 원소 자산의 파일명·크기·지문을 적은 명세 문서 크기 오류 파일 크기는 65,536바이트 이하여야 합니다. 빈 파일도 받지 않습니다. [해당 검사](src/element_frames.py#L65)
-
-- 실패 조건: 원소 자산의 파일명·크기·지문을 적은 명세 문서는 객체여야 합니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 합니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/element_frames.py#L69)
-
-- 실패 조건: 파일 내용 지문은 문자열이며 64개의 16진수 문자로 이루어져야 합니다. 여기서 16진수 문자는 0~9와 a~f입니다. 이 검사에서는 소문자만 허용합니다. 숫자·잘못된 길이·다른 문자는 지문으로 받지 않습니다. [해당 검사](src/element_frames.py#L74)
-
-- 실패 조건: 원소 압축파일 크기 초과 파일 크기는 이 모듈의 MAX_ARCHIVE_BYTES 이하여야 합니다. 빈 파일도 받지 않습니다. [해당 검사](src/element_frames.py#L75)
-
-- 실패 조건: 압축 파일의 전체 내용을 읽어 계산한 SHA-256 지문이 명세 지문과 같아야 합니다. 다른 파일이나 내용 변경을 감지하면 재생하지 않습니다. [해당 검사](src/element_frames.py#L78)
-
-- 실패 조건: 압축 묶음 안의 파일 수는 정확히 540개이고 파일 이름의 전체 목록도 예상 목록과 정확히 같아야 합니다. 이름 누락·추가·다른 이름은 같은 장수여도 거부합니다. frame_0000.png부터 frame_0539.png까지의 고정 이름입니다. [해당 검사](src/element_frames.py#L80)
-
-- 실패 조건: 압축을 풀어 읽는 개별 파일 크기를 모두 더한 값이 128×1024×1024바이트 이하여야 합니다. 압축 파일 자체가 작아도 풀린 합계가 더 크면 거부합니다. [해당 검사](src/element_frames.py#L82)
-
-- 실패 조건: 검증 때와 현재 파일의 식별 정보가 달라지면 실행 중 자산 변경으로 처리합니다. 앱을 다시 시작해 검증해야 합니다. [해당 검사](src/element_frames.py#L91)
-
-- 실패 조건: 원소 재생 시각은 유한한 숫자여야 합니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻합니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/element_frames.py#L106)
-
-- 실패 조건: 원소 재생기가 닫혔습니다. [해당 검사](src/element_frames.py#L107)
-
-- 실패 조건: 압축 묶음 안의 항목은 폴더가 아닌 파일이고 암호화되지 않아야 합니다. 허용한 무압축 또는 DEFLATE 압축이어야 하며 크기는 0보다 크고 개별 그림 상한 이하여야 합니다. 이 중 하나라도 맞지 않으면 거부합니다. [해당 검사](src/element_frames.py#L84)
-
-- 실패 조건: 읽은 그림은 개별 크기 상한 이하이면서 최소 33바이트여야 합니다. PNG 시작 표식과 IHDR 머리말, 192×192 크기, 8비트 RGBA 형식을 모두 확인합니다. 하나라도 다르면 그림을 받지 않습니다. [해당 검사](src/element_frames.py#L96)
-
-- 실패 조건: 그림을 실제 이미지로 읽을 수 있어야 하며 가로와 세로가 각각 192이고 투명도 정보가 있어야 합니다. 이 조건을 하나라도 만족하지 못하면 거부합니다. [해당 검사](src/element_frames.py#L99)
-
-- 실패 조건: 192×192 그림의 네 모서리 (0,0), (191,0), (0,191), (191,191)는 모두 완전히 투명해야 합니다. 한 모서리라도 불투명한 부분이 있으면 거부합니다. [해당 검사](src/element_frames.py#L100)
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · [src/element_visuals.py](src/element_visuals.py)
-
-이미 만든 입체 원자 그림의 투명한 모양을 유지하면서 디자인 색만 덧입힙니다.
-
-**맡은 일과 결과**
-
-- 처리: 그림에서 원래 투명했던 부분은 계속 투명하게 두고, 원래 보이던 모양의 밝고 어두운 부분에만 색을 부드럽게 입힙니다. 이 겹치기 방식을 SourceAtop이라고 합니다. 예를 들어 둥근 모형에 색을 입혀도 바깥의 투명 배경이 네모난 색판으로 바뀌지 않습니다. [구현 이름 colorize_atom](src/element_visuals.py#L5)
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · [src/elements.py](src/elements.py)
-
-한국 날짜의 1일부터 31일까지에 대응하는 원소 이름과 디자인 색을 고릅니다. 예를 들어 자정이나 절전 복귀 후 다시 날짜를 읽어 그날의 원소를 고릅니다.
-
-**맡은 일과 결과**
-
-- 처리: 매 호출 실제 날짜를 다시 읽어 자정·절전 복귀·시계 되돌림을 반영합니다. [구현 이름 daily_element](src/elements.py#L43)
-
-**선택값과 제한값**
-
-- 한국 표준시인 UTC보다 9시간 빠른 시간대입니다. [KST](src/elements.py#L5) 원래 선언을 함께 대조합니다: `정의=timezone(timedelta(hours=9))`
-
-- 색은 원소에서 받은 디자인 영감이며 실제 원소색·불꽃색·전자 배치를 재현하지 않는다는 안내입니다. [PALETTE_NOTE](src/elements.py#L8) 원래 선언을 함께 대조합니다: `정의='원소에서 영감받은 디자인 색이며 실제 원소·불꽃색이나 전자배치 재현이 아닙니다.'`
-
-- 원소 번호·기호·이름·색·강조색을 차례로 묶은 목록입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존합니다. [ELEMENTS](src/elements.py#L39) 원래 선언을 함께 대조합니다: `정의=tuple(Element(index,symbol,name,color,accent)                  for index,(symbol,name,color,accent) in enumerate(_ROWS,1))`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 조건: 날짜·시각에 시간대 정보와 실제 시차가 모두 있어야 합니다. 어느 쪽이라도 없으면 한국 날짜로 해석할 수 없어 거부합니다. [해당 검사](src/elements.py#L46)
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · [src/frame_pacing.py](src/frame_pacing.py)
-
-회전 속도와 다음 그림을 보여 줄 시간을 계산합니다. 모형 속도를 바꾸어도 실제 시계·날짜의 진행 속도는 바꾸지 않습니다.
-
-**맡은 일과 결과**
-
-- 처리: 유한한 0.25~3배 숫자만 받아 참/거짓 두 가지 값과 잘못된 설정을 거부합니다. [구현 이름 validate_motion_speed](src/frame_pacing.py#L7)
-
-- 처리: 모형이 움직이는 데 쓰는 시간만 속도 배율에 따라 이어 계산합니다. 예를 들어 속도를 바꾸기 전까지 움직인 양을 보존한 다음 새 속도로 이어 갑니다. 실제 날짜와 시계는 이 계산에 따라 바뀌지 않습니다. [구현 이름 MotionClock](src/frame_pacing.py#L20)
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 조건: 회전 속도는 0.25~3배의 유한한 숫자여야 합니다. [해당 검사](src/frame_pacing.py#L9)
-
-- 실패 조건: 회전 속도는 0.25~3배의 유한한 숫자여야 합니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻합니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/frame_pacing.py#L15)
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · [src/i18n.py](src/i18n.py)
-
-앱이 만든 문구의 한국어·영어 표시를 관리합니다. 실제 기록 문장은 앱 번역문과 구분해 보존합니다.
-
-**맡은 일과 결과**
-
-- 처리: 명시한 앱 문구만 번역하고 전달된 값은 번역하지 않습니다. [구현 이름 translate](src/i18n.py#L51)
-
-- 처리: 생성 당시 정적인 앱 문구만 기록하여 사용자 원문과 구분합니다. [구현 이름 remember_translations](src/i18n.py#L63)
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · [src/motion_label.py](src/motion_label.py)
-
-움직이는 그림을 화면에 붙이는 부분입니다. 그림이 보이는지와 필요한 크기를 재생 쪽에 전달합니다.
-
-**맡은 일과 결과**
-
-- 처리: 최신 이미지 한 개를 보관하고 크기·DPR 변경 때만 기본 크기 힌트를 갱신합니다. [구현 이름 MotionImageLabel](src/motion_label.py#L6)
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · [src/notifier.py](src/notifier.py)
-
-현재 사용자의 기록 파일을 주기적으로 읽어 새 변화를 찾습니다. 첫 실행에서는 과거 기록을 기준으로 삼고 과거 전체를 새 알림으로 만들지 않습니다.
-
-**맡은 일과 결과**
-
-- 처리: 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도합니다. [구현 이름 atomic_json](src/notifier.py#L33)
-
-- 처리: 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. [구현 이름 source_datetime](src/notifier.py#L63)
-
-- 처리: 원본 시각이 있는 복제 기록만 제외하며 기준선 재생의 순서는 복원합니다. [구현 이름 duplicate_record](src/notifier.py#L212)
-
-- 처리: 현재 채팅의 공식 기록에 직접 적힌 설정 항목만 읽습니다. 앱이 직접 남긴는 앱이 직접 남긴 항목이라는 뜻입니다. 누가 바꿨는지, 서버에서 어떤 모델이 실행됐는지는 그 설정만으로 추측하지 않습니다. [구현 이름 settings_record](src/notifier.py#L223)
-
-- 처리: 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. [구현 이름 lookup_parent_reason](src/notifier.py#L376)
-
-- 처리: 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. [구현 이름 enrich_event](src/notifier.py#L423)
-
-- 처리: 이미 읽은 과거 범위에서 작업의 식별 정보만 다시 연결합니다. 대화 본문을 새로 읽어 저장하는 기능이 아니며 각 파일을 읽는 기존 양의 제한도 유지합니다. [구현 이름 replay_activity_prefix](src/notifier.py#L445)
-
-**선택값과 제한값**
-
-- 읽을 Codex 기록 폴더를 고르는 옵션입니다. 경로를 입력하는 옵션입니다. 기본은 현재 사용자 홈의 .codex/sessions 폴더입니다. [--sessions](src/notifier.py#L739) 원래 선언을 함께 대조합니다: `type=Path; default=Path.home() / '.codex/sessions'`
-
-- 감시기의 작업 자료 폴더를 고르는 옵션; 기본은 프로젝트 아래 work입니다. 경로를 입력하는 옵션입니다. [--work](src/notifier.py#L740) 원래 선언을 함께 대조합니다: `type=Path; default=ROOT / 'work'`
-
-- 이 소스 파일을 기준으로 두 단계 위의 프로젝트 폴더입니다. [ROOT](src/notifier.py#L18) 원래 선언을 함께 대조합니다: `정의=Path(__file__).resolve().parents[1]`
-
-- Windows가 앱을 구분하는 고정 이름는 **'Yunseok.Codex.ModelChangeNotifier'**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [APP_ID](src/notifier.py#L19) 원래 선언을 함께 대조합니다: `정의='Yunseok.Codex.ModelChangeNotifier'`
-
-- 한 번에 나누어 읽는 기록의 바이트 수는 **512 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [READ_BYTES](src/notifier.py#L20) 원래 선언을 함께 대조합니다: `정의=512 * 1024`
-
-- 기록 하나를 읽는 최대 바이트 수는 **2 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_RECORD](src/notifier.py#L21) 원래 선언을 함께 대조합니다: `정의=2 * 1024 * 1024`
-
-- 한 번의 감시에서 다룰 파일 수의 상한는 **4096**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_FILES](src/notifier.py#L22) 원래 선언을 함께 대조합니다: `정의=4096`
-
-- 로그 파일 크기의 바이트 상한는 **2 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [LOG_BYTES](src/notifier.py#L23) 원래 선언을 함께 대조합니다: `정의=2 * 1024 * 1024`
-
-- 한 감시 주기에서 읽는 전체 바이트 수 상한는 **8 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [POLL_READ_BYTES](src/notifier.py#L24) 원래 선언을 함께 대조합니다: `정의=8 * 1024 * 1024`
-
-- 아직 전달이 끝나지 않은 알림 수의 상한는 **256**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_PENDING](src/notifier.py#L25) 원래 선언을 함께 대조합니다: `정의=256`
-
-- 감시를 다시 확인하는 초 단위 간격는 **0.2**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [POLL_INTERVAL_SECONDS](src/notifier.py#L26) 원래 선언을 함께 대조합니다: `정의=0.2`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 조건: 상태 파일이 16 MiB 상한을 초과했습니다. 원본 보존 후 점검이 필요합니다. 파일 크기는 16MiB 이하여야 합니다. [해당 검사](src/notifier.py#L90)
-
-- 실패 조건: 저장 상태의 버전이 2 또는 3이 아니면 요청과 관측이 섞인 구형 자료로 봅니다. 원본을 보존하고 사용자가 명시한 새 기준선 절차가 필요합니다. [해당 검사](src/notifier.py#L94)
-
-- 실패 조건: 저장 상태의 files와 models는 모두 이름과 값의 사전 자료여야 합니다. 하나라도 다른 형식이면 원본을 빈 상태로 초기화하지 않고 오류로 둡니다. [해당 검사](src/notifier.py#L96)
-
-- 실패 조건: 명시 배정 상태 구조 오류입니다. 자동 초기화하지 않습니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 합니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/notifier.py#L98)
-
-- 실패 조건: 채팅 선택 설정 상태 구조 오류입니다. 자동 초기화하지 않습니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 합니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/notifier.py#L117)
-
-- 실패 조건: 새로 만든 이행 백업의 전체 바이트가 원본과 같아야 합니다. 다르면 자동 덮어쓰기를 중단합니다. [해당 검사](src/notifier.py#L105)
-
-- 실패 조건: 파일을 읽은 시작·끝 위치는 참/거짓을 제외한 0 이상의 정수여야 합니다. 음수·문자열·참/거짓을 파일 위치로 사용하지 않습니다. [해당 검사](src/notifier.py#L112)
-
-- 실패 조건: 새로 만든 이행 백업의 전체 바이트가 원본과 같아야 합니다. 다르면 자동 덮어쓰기를 중단합니다. [해당 검사](src/notifier.py#L123)
-
-- 실패 조건: 파일을 읽은 시작·끝 위치는 참/거짓을 제외한 0 이상의 정수여야 합니다. 음수·문자열·참/거짓을 파일 위치로 사용하지 않습니다. [해당 검사](src/notifier.py#L131)
-
-- 실패 조건: 항목 이름과 값으로 구성된 JSON 자료가 아닙니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 합니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/notifier.py#L523)
-
-- 실패 조건: 명시 알림 파일 상한 초과 파일 크기는 20,000바이트 이하여야 합니다. [해당 검사](src/notifier.py#L603)
-
-- 실패 조건: 항목 이름과 값으로 구성된 JSON 자료가 아닙니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 합니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/notifier.py#L467)
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · [src/theme.py](src/theme.py)
-
-파일 선택창·버튼·기본 기호의 색과 문구·배치를 맞춥니다. 긴 한글 버튼이나 파일 이름이 들어갈 공간도 다룹니다.
-
-**맡은 일과 결과**
-
-- 처리: 파일·삼각형 표면으로 만든 입체 모형지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. [구현 이름 MonochromeStyle](src/theme.py#L53)
-
-- 처리: 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역합니다. [구현 이름 KoreanDialogs](src/theme.py#L78)
-
-- 처리: 앱 파일 선택창의 이름 열과 한글 버튼에 충분한 공간을 확보합니다. [구현 이름 DialogLayout](src/theme.py#L94)
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · [src/typography.py](src/typography.py)
-
-화면 글꼴 파일을 앱에 등록합니다. 필수 글꼴이 없거나 등록되지 않으면 시작 오류로 알리며 성공한 것처럼 숨기지 않습니다.
-
-**맡은 일과 결과**
-
-- 처리: 필수 파일이나 Qt 등록 실패를 숨기지 않고 시작 오류로 전달합니다. [구현 이름 register_fonts](src/typography.py#L8)
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · [src/usage.py](src/usage.py)
-
-Codex의 읽기 전용 계정 조회로 사용 한도 응답을 읽습니다. 예를 들어 자료가 없다는 상태를 잔량 0으로 바꾸지 않습니다.
-
-**맡은 일과 결과**
-
-- 처리: 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. [구현 이름 number](src/usage.py#L16)
-
-- 처리: 계정에서 여러 사용 한도 구간을 보내 주면 그 공식 구간을 먼저 사용합니다. 버킷은 서로 다른 기간의 한도 묶음이라는 뜻입니다. 기간이나 수치가 응답에 없으면 임의로 채우지 않습니다. [구현 이름 normalize_limits](src/usage.py#L35)
-
-- 처리: 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. [구현 이름 discover_codex](src/usage.py#L69)
-
-**선택값과 제한값**
-
-- 응답을 읽는 최대 바이트 수는 **1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_BYTES](src/usage.py#L12) 원래 선언을 함께 대조합니다: `정의=1024 * 1024`
-
-- 한국 표준시인 UTC보다 9시간 빠른 시간대입니다. [KST](src/usage.py#L13) 원래 선언을 함께 대조합니다: `정의=timezone(timedelta(hours=9))`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 조건: 객체가 아닌 응답 자료는 항목 이름과 값의 쌍으로 구성되어야 합니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/usage.py#L226)
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · [src/usage_frames.py](src/usage_frames.py)
-
-한도 화면의 움직이는 조형에 쓸 그림을 읽습니다. 이 그림이 읽히는 것과 계정 한도 조회에 성공하는 것은 서로 다른 결과입니다.
-
-**맡은 일과 결과**
-
-- 처리: 조형 표시 오류를 호출자에게 전달하며 계정 조회 흐름과 분리합니다. [구현 이름 UsageAssetError](src/usage_frames.py#L27)
-
-- 처리: 시작 시 전체 무결성을 검사하고 해제된 화면용 이미지 객체(QImage)는 최대16장만 보존합니다. [구현 이름 UsageFrames](src/usage_frames.py#L50)
-
-- 처리: 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. [구현 이름 close_usage_frames](src/usage_frames.py#L183)
-
-- 처리: 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. [구현 이름 preflight_usage_frames](src/usage_frames.py#L194)
-
-- 처리: 공유 팩의 한 그림 한 장을 반환하며 계정 조회 상태에는 관여하지 않습니다. [구현 이름 get_usage_frame](src/usage_frames.py#L207)
-
-**선택값과 제한값**
-
-- 압축 묶음에 있어야 하는 그림의 정확한 장수는 **360**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_COUNT](src/usage_frames.py#L16) 원래 선언을 함께 대조합니다: `정의=360`
-
-- 그림 한 변의 픽셀 수는 **384**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_SIZE](src/usage_frames.py#L17) 원래 선언을 함께 대조합니다: `정의=384`
-
-- 초당 그림 수의 설정값는 **30**입니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [FPS](src/usage_frames.py#L18) 원래 선언을 함께 대조합니다: `정의=30`
-
-- 한 재생 주기의 초 단위 길이는 **12**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [PERIOD_SECONDS](src/usage_frames.py#L19) 원래 선언을 함께 대조합니다: `정의=12`
-
-- 풀어 놓은 그림을 메모리에 보관하는 최대 장수는 **16**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [CACHE_LIMIT](src/usage_frames.py#L20) 원래 선언을 함께 대조합니다: `정의=16`
-
-- 압축 파일 자체를 읽을 수 있는 최대 바이트 수는 **128 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_ARCHIVE_BYTES](src/usage_frames.py#L21) 원래 선언을 함께 대조합니다: `정의=128 * 1024 * 1024`
-
-- 개별 그림 한 장의 최대 바이트 수는 **1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_FRAME_BYTES](src/usage_frames.py#L22) 원래 선언을 함께 대조합니다: `정의=1024 * 1024`
-
-- 그림들을 풀어 읽은 크기 합계의 최대 바이트 수는 **256 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_TOTAL_BYTES](src/usage_frames.py#L23) 원래 선언을 함께 대조합니다: `정의=256 * 1024 * 1024`
-
-- 자산 명세 문서의 최대 바이트 수는 **64 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_MANIFEST_BYTES](src/usage_frames.py#L24) 원래 선언을 함께 대조합니다: `정의=64 * 1024`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 조건: 명세 문서에 같은 항목 이름이 두 번 나오면 어느 값을 믿어야 할지 모호하므로 거부합니다. [해당 검사](src/usage_frames.py#L44)
-
-- 실패 조건: 대시보드 조형 자산 자산의 파일명·크기·지문을 적은 명세 문서 크기가 허용 범위를 벗어났습니다. 파일 크기는 이 모듈의 MAX_MANIFEST_BYTES 이하여야 합니다. 빈 파일도 받지 않습니다. [해당 검사](src/usage_frames.py#L69)
-
-- 실패 조건: 대시보드 조형 자산 자산의 파일명·크기·지문을 적은 명세 문서는 객체여야 합니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 합니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/usage_frames.py#L75)
-
-- 실패 조건: 파일 내용 지문은 문자열이며 64개의 16진수 문자로 이루어져야 합니다. 여기서 16진수 문자는 0~9와 a~f입니다. 이 검사에서는 소문자만 허용합니다. 숫자·잘못된 길이·다른 문자는 지문으로 받지 않습니다. [해당 검사](src/usage_frames.py#L85)
-
-- 실패 조건: 대시보드 조형 그림 한 장 ZIP 크기가 허용 범위를 벗어났습니다. 파일 크기는 이 모듈의 MAX_ARCHIVE_BYTES 이하여야 합니다. 빈 파일도 받지 않습니다. [해당 검사](src/usage_frames.py#L87)
-
-- 실패 조건: 압축 파일의 전체 내용을 읽어 계산한 SHA-256 지문이 명세 지문과 같아야 합니다. 다른 파일이나 내용 변경을 감지하면 재생하지 않습니다. [해당 검사](src/usage_frames.py#L94)
-
-- 실패 조건: 압축 묶음 안의 파일 수는 정확히 360개이고 파일 이름의 전체 목록도 예상 목록과 정확히 같아야 합니다. 이름 누락·추가·다른 이름은 같은 장수여도 거부합니다. [해당 검사](src/usage_frames.py#L100)
-
-- 실패 조건: 압축을 풀어 읽는 개별 파일 크기를 모두 더한 값이 이 모듈의 MAX_TOTAL_BYTES 이하여야 합니다. 압축 파일 자체가 작아도 풀린 합계가 더 크면 거부합니다. [해당 검사](src/usage_frames.py#L102)
-
-- 실패 조건: 검증 때와 현재 파일의 식별 정보가 달라지면 실행 중 자산 변경으로 처리합니다. 앱을 다시 시작해 검증해야 합니다. [해당 검사](src/usage_frames.py#L133)
-
-- 실패 조건: 조형 재생 시각은 유한한 숫자여야 합니다. [해당 검사](src/usage_frames.py#L138)
-
-- 실패 조건: 대시보드 조형 그림 한 장의 재생 시각이 유한한 숫자가 아닙니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻합니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/usage_frames.py#L144)
-
-- 실패 조건: 조형 재생기가 닫혔습니다. [해당 검사](src/usage_frames.py#L149)
-
-- 실패 조건: 압축 묶음 안의 항목은 폴더가 아닌 파일이고 암호화되지 않아야 합니다. 허용한 무압축 또는 DEFLATE 압축이어야 하며 크기는 0보다 크고 개별 그림 상한 이하여야 합니다. 이 중 하나라도 맞지 않으면 거부합니다. [해당 검사](src/usage_frames.py#L105)
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · [src/usage_widgets.py](src/usage_widgets.py)
-
-계정 한도 화면에 날짜 조형을 표시하는 연결 부분입니다. 계정 조회 수치 자체를 만드는 부분과 구분합니다.
-
-**맡은 일과 결과**
-
-- 처리: 사용 한도 화면에서만 날짜별 입체 이미지를 갱신합니다. [구현 이름 CalendarHero](src/usage_widgets.py#L9)
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · [src/visuals.py](src/visuals.py)
-
-입체 그림과 글자·날짜·한도 막대를 배치합니다. 원소 번호와 계정 한도 비율은 각각 이름을 붙여 서로 다른 숫자로 표시합니다.
-
-**맡은 일과 결과**
-
-- 처리: X·Y·Z 순서로 회전하며 깊이 좌표를 보존합니다. [구현 이름 rotate_point](src/visuals.py#L12)
-
-- 처리: 모든 고리를 화면의 같은 축으로 돌리지 않고 각 고리가 가진 회전축을 중심으로 돌립니다. 로드리게스 식은 어느 방향의 축이든 그 축을 기준으로 입체 점을 돌리는 계산식입니다. 예를 들어 기울어진 고리는 그 기울어진 축을 유지하며 돕니다. [구현 이름 axis_rotate](src/visuals.py#L40)
-
-- 처리: 제작 자산의 파일명·크기·지문을 적은 명세 문서와 일치하는 기하 검증용 메타입니다. GUI 드로잉에는 쓰지 않습니다. [구현 이름 orbit_segments](src/visuals.py#L63)
-
-- 처리: 읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다. [구현 이름 status_label](src/visuals.py#L80)
-
-- 처리: 원자번호와 계정 퍼센트를 서로 다른 명시적 라벨로 구분합니다. [구현 이름 element_labels](src/visuals.py#L85)
-
-- 처리: 숫자와 채움에 같은 실제 비율을 쓰며 최소 채움 폭을 강제하지 않습니다. [구현 이름 usage_bar](src/visuals.py#L99)
-
-- 처리: 원소별 실제 제작 그림 한 장을 읽습니다. 이전 형상으로 대체하지 않습니다. [구현 이름 _frame_for_element](src/visuals.py#L111)
-
-- 처리: 달력 조형·날짜 도크·실제 잔량을 분리하고 명시한 원소 미리보기도 보존합니다. [구현 이름 draw_orbit](src/visuals.py#L117)
-
-- 처리: 이름을 화면 픽셀 크기로 줄 바꿈하고 조형·잔량 영역을 분리합니다. [구현 이름 desktop_widget_layout](src/visuals.py#L176)
-
-- 처리: 위젯의 조형과 글자를 별개 영역에 그려 작은 글자 축소를 막습니다. [구현 이름 draw_desktop_orbit](src/visuals.py#L212)
-
-- 처리: 움직이는 그래픽 장치(GPU) 이미지와 분리한 도크·시계·지역·기온·잔량을 그립니다. [구현 이름 _draw_desktop_information](src/visuals.py#L227)
-
-- 처리: 한 위젯의 완전 입력이 같을 때만 단일 투명 정보 레이어를 재사용합니다. [구현 이름 DesktopOverlayCache](src/visuals.py#L278)
-
-**선택값과 제한값**
-
-- 조형 움직임 한 주기의 길이는 **18**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MOTION_PERIOD](src/visuals.py#L27) 원래 선언을 함께 대조합니다: `정의=18`
-
-- 각 고리의 회전 횟수와 방향는 **(1, -2, 3)**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [RING_TURNS](src/visuals.py#L28) 원래 선언을 함께 대조합니다: `정의=(1, -2, 3)`
-
-- 각 고리 축이 향하는 방향 각도는 **(8., 128., 248.)**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [RING_AZIMUTHS](src/visuals.py#L29) 원래 선언을 함께 대조합니다: `정의=(8., 128., 248.)`
-
-- 각 고리 회전축의 기울기 각도는 **(42., 46., 49.)**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [RING_AXIS_TILTS](src/visuals.py#L30) 원래 선언을 함께 대조합니다: `정의=(42., 46., 49.)`
-
-- 각 고리 반지름는 **(45., 51., 57.)**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [RING_RADII](src/visuals.py#L35) 원래 선언을 함께 대조합니다: `정의=(45., 51., 57.)`
-
-- 각 고리의 초기 기울기와 방향을 라디안이라는 각도 단위로 묶은 값입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존합니다. [BASE_ANGLES](src/visuals.py#L36) 원래 선언을 함께 대조합니다: `정의=tuple((math.radians(tilt), 0., math.radians(azimuth))                     for tilt, azimuth in zip((52., 58., 62.), RING_AZIMUTHS))`
-
-- 원자 그림을 배치할 사각형 영역입니다. 왼쪽 위치 -48, 위쪽 위치 -74, 가로 길이 96, 세로 길이 96입니다. QRectF는 이 네 값으로 사각형을 나타내는 형식이며 음수 위치는 기준점의 왼쪽·위쪽입니다. [ATOM_RECT](src/visuals.py#L92) 원래 선언을 함께 대조합니다: `정의=QRectF(-48,-74,96,96)`
-
-- 날짜 등 도크 정보를 배치할 사각형 영역입니다. 왼쪽 위치 -68, 위쪽 위치 25, 가로 길이 136, 세로 길이 27입니다. QRectF는 이 네 값으로 사각형을 나타내는 형식이며 음수 위치는 기준점의 왼쪽·위쪽입니다. [DOCK_RECT](src/visuals.py#L93) 원래 선언을 함께 대조합니다: `정의=QRectF(-68,25,136,27)`
-
-- 한도 정보를 배치할 사각형 영역입니다. 왼쪽 위치 -68, 위쪽 위치 56, 가로 길이 136, 세로 길이 16입니다. QRectF는 이 네 값으로 사각형을 나타내는 형식이며 음수 위치는 기준점의 왼쪽·위쪽입니다. [USAGE_RECT](src/visuals.py#L94) 원래 선언을 함께 대조합니다: `정의=QRectF(-68,56,136,16)`
-
-- 한도 막대의 바탕 사각형 영역입니다. 왼쪽 위치 -61, 위쪽 위치 62, 가로 길이 62, 세로 길이 4입니다. QRectF는 이 네 값으로 사각형을 나타내는 형식이며 음수 위치는 기준점의 왼쪽·위쪽입니다. [USAGE_TRACK_RECT](src/visuals.py#L95) 원래 선언을 함께 대조합니다: `정의=QRectF(-61,62,62,4)`
-
-- 기능 기호를 그릴 픽셀 크기는 **24**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [SYMBOL_PIXELS](src/visuals.py#L96) 원래 선언을 함께 대조합니다: `정의=24`
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · [src/weather.py](src/weather.py)
-
-지역 이름을 정리하고 인터넷에서 날씨를 조회합니다. 예를 들어 자동 위치를 한국어 이름과 연결할 때 다른 국가의 동명 도시를 받아들이지 않도록 확인합니다.
-
-**맡은 일과 결과**
-
-- 처리: 검색 전 임시 표시에는 검증된 국내 사전 또는 실제 원문 지명을 사용합니다. [구현 이름 localized_region](src/weather.py#L27)
-
-- 처리: 동일 국가이면서 IP 추정 좌표에서30km 이내인 가장 가까운 검색 결과만 수락합니다. [구현 이름 select_geocoded_region](src/weather.py#L67)
-
-**선택값과 제한값**
-
-- US·JP·CN·GB·DE·FR·CA·AU·SG·TW를 미국·일본·중국·영국·독일·프랑스·캐나다·호주·싱가포르·대만으로 표시하는 사전입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존합니다. [_COUNTRIES](src/weather.py#L23) 원래 선언을 함께 대조합니다: `정의={'US': '미국', 'JP': '일본', 'CN': '중국', 'GB': '영국', 'DE': '독일',               'FR': '프랑스', 'CA': '캐나다', 'AU': '호주', 'SG': '싱가포르', 'TW': '대만'}`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 조건: 언어값은 한국어 ko 또는 영어 en만 허용합니다. 다른 언어 이름은 이 경로에서 거부합니다. [해당 검사](src/weather.py#L29)
-
-- 실패 조건: 언어값은 한국어 ko 또는 영어 en만 허용합니다. 다른 언어 이름은 이 경로에서 거부합니다. [해당 검사](src/weather.py#L111)
-
-- 실패 조건: 언어값은 한국어 ko 또는 영어 en만 허용합니다. 다른 언어 이름은 이 경로에서 거부합니다. [해당 검사](src/weather.py#L155)
-
-- 실패 조건: 위도는 -90~90, 경도는 -180~180 범위의 유효한 숫자여야 합니다. 어느 좌표라도 잘못되면 그 위치로 날씨를 조회하지 않습니다. [해당 검사](src/weather.py#L249)
-
-- 실패 조건: 기온은 -100~70 범위의 유효한 숫자만 받습니다. 범위 밖 값이나 잘못된 형식은 정상 기온으로 표시하지 않습니다. [해당 검사](src/weather.py#L321)
-
-- 실패 조건: 날씨 제공 시각은 0 이상이고 현재 시각에서 300초를 더한 값 이하여야 합니다. 지나치게 미래이거나 잘못된 시각은 받지 않습니다. [해당 검사](src/weather.py#L325)
-
-- 실패 조건: 응답 형식 자료는 항목 이름과 값의 쌍으로 구성되어야 합니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/weather.py#L232)
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · 처리 결과와 출력 읽기
-
-읽는 예: 표시된 설정·요청과 실제로 관측한 실행은 다른 근거입니다. 예를 들어 모델을 지정했다는 기록만으로 서버에서 그 모델이 실행됐다고 결론내리지 않습니다.
-
-변경 전·후 모델과 추론 강도, 공개된 이유, 관측 시각과 근거 수준을 함께 읽습니다. 기록되지 않은 값은 미확인으로 남깁니다. 로컬 기록은 서버 모델 신원 증명이 아닙니다.
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · 제약과 문제 해결
-
-- 항목 알림이 나타나지 않음: 감시하는 sessions 경로·새 한 줄에 기록 하나를 담는 JSONL 파일 기록·중복 실행 잠금·알림 설정을 확인합니다. 최초 기준선 읽기와 새 변경 감지는 다릅니다.
-- 항목 자산 또는 글꼴 오류: 이 차수에서 참조하는 assets와 라이선스를 준비합니다. 소스 이력에는 과거 대용량 그림 한 장 자산이 없을 수 있습니다.
-- 항목 이유 또는 이전값이 없음: 원문 기록에 해당 필드가 있는지 확인합니다. 누락된 동기를 추정해서 채우지 않습니다.
-
-### LEVEL 1 · 26차 추가 해설 · LEVEL 1 · 직전 자료와 전체 비교
-
-읽는 예: diff는 두 자료에서 달라진 줄 전체를 보여 주는 파일입니다. +는 추가, -는 삭제를 뜻하며 주석·공백·줄바꿈도 변경에 포함됩니다. SHA-256은 파일 내용의 지문이고, 큰 그림·실행 파일은 크기와 지문으로 같음을 대조합니다. 지문이 있다는 것만으로 실행에 성공한 것은 아닙니다.
-
-25차에서 26차로 이어지는 실제 파일 비교입니다.
-
-[전체 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff)
-
-추가·수정·삭제, 주석·공백·개행과 바이너리 크기·해시는 연결된 원래 비교 자료에서 확인합니다.
-
-
-파일별 비교·크기·해시 자세히 보기
-
-텍스트는 엄격 UTF-8로 판정하며 [전체 텍스트 차이](직전차수.diff)에는 주석과 공백을 포함합니다. 파일별 바이트 수와 SHA-256 및 바이너리 여부는 [비교 명세](공개파일_비교.json)에 기록합니다.
-
-- **검증:** 이 폴더의 diff는 소스 바이트 비교입니다. 이후 로컬 원본 검증 자료를 대조해 작성한 [공개 검증 요약](../../docs/공개검증_26차.md)을 함께 제공합니다. 비공개 원본 로그는 공개하지 않으며 소스 비교 자체를 실행 결과로 해석하지 않습니다.
-
-- **수정** `src/app.py`: 이전 110155바이트, SHA-256 `bb0421143d08d6930d62f19252819ca26a91444466002c1a559b0dc87895ac3b`; 현재 116115바이트, SHA-256 `ccb4c5771ab1a01e416e81dcc3678629cd5a5a2613e50d5e7c4a3e4263da964f`.
-
-- **수정** `src/calendar_motion.py`: 이전 15710바이트, SHA-256 `fcd254efc4bf9e4a15eb9a1d75177323d34763716cea207e2bd95348b93463a0`; 현재 16207바이트, SHA-256 `ddb3e8afdf5f46f7bb8f997e75c39234550f28bade6223e19f81e37579765791`.
-
-- **수정** `src/frame_pacing.py`: 이전 2625바이트, SHA-256 `6ca862a2eaa6707665f19514315de584424ab66017eff8f7898e3a4f6c6a9cb5`; 현재 3692바이트, SHA-256 `09cd3768e4baa326bb0e08e4d7fd8130f05526024686b88f8ef2f9b0366b1bb1`.
-
-- **수정** `src/i18n.py`: 이전 19942바이트, SHA-256 `2dbea990824fb7107019228d5ecf6a75d7ce1a7062d0984f2a00908c7e26cec1`; 현재 20538바이트, SHA-256 `091208c023ccecdefd7957dcc3bacd8acc5c44324dd587ac36986ac3dc81106a`.
-
-- **추가** `src/motion_label.py`: 이전 없음; 현재 2380바이트, SHA-256 `f76a05b63a676282ff4816c25ce0d7bc4aa01396889559c76021d5f858a0c60d`.
-
-- **수정** `src/usage_widgets.py`: 이전 2471바이트, SHA-256 `a5e8de93da797f5f269551061d30878d8c0f86cae8824e89ba052bd6b28aeee2`; 현재 2516바이트, SHA-256 `9ad1be24d27cbf072db6892a2bc3c431304002f90f9a9d46d59494a91b74814c`.
-
-- **수정** `src/visuals.py`: 이전 13297바이트, SHA-256 `d4bb20ebbfa421b5f05a482aedbb0b2202b7f7ffc2e6f7e22916ace3d0d72e1d`; 현재 15915바이트, SHA-256 `13a8d20b188ac2e82bc57771263dd6c2bef7cb3ab96ef259d51fd73fa380a57a`.
-
-[실행 소스 전체 Git 비교](직전차수.diff)와 [실제 바이트 명세](공개파일_비교.json)는 Python뿐 아니라 존재하는 보조 PowerShell과 의존성 목록을 포함합니다. `git -c core.autocrlf=false apply --reverse --binary -p1`로 현재 소스 사본에서 직전 소스의 파일 부재·신규·삭제 상태까지 복원해 원문 바이트를 대조했습니다. 부가 자료는 이 소스 비교에 섞지 않고 위 명세로 구분합니다.
-
-
-
-[프로젝트](../../README.md) · [전체 차수](../../docs/REVISION_INDEX.md) · [원본 자료](.) · [← 이전: 25차](../25/README.md#reading-level-1) · [다음: 27차 →](../27/README.md#reading-level-1)
+[reading-level-1](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#reading-level-1)
 
 <a id="reading-level-2"></a>
-## LEVEL 2 - Explorer
 
-### LEVEL 2 · 목적과 구성의 연결
+[reading-level-2](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#reading-level-2)
 
-상세창 슬라이더와 위젯 메뉴에서 회전 속도를 조절하고 저장합니다. 모션 배율과 실제 시계·날짜·날씨·계정 한도 갱신은 별개입니다.
+<a id="codex-orbit26차"></a>
 
-상세창 슬라이더와 위젯 메뉴에서 회전 속도를 조절하고 저장합니다. 모션 배율과 실제 시계·날짜·날씨·계정 한도 갱신은 별개입니다.
+[codex-orbit26차](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#codex-orbit26차)
 
-로컬 세션 기록에서 모델·추론 강도의 변경과 명시된 배정을 구분합니다. 감시기는 외부 통신 없이 로컬 자료를 읽습니다.
+<a id="level-1---beginner"></a>
 
-공개 협업 호출과 소유자가 확인된 native 활동을 연결합니다.
+[level-1---beginner](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1---beginner)
 
-검증된 금속 원자 프레임을 추출 없이 읽는 제한 메모리 재생기입니다.
+<a id="level-1--이-자료가-하는-일과-달라진-점"></a>
 
-같은 실제3D 자산을 공유하는 정적 마크와 가시성 기반 내부 모션입니다.
+[level-1--이-자료가-하는-일과-달라진-점](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--이-자료가-하는-일과-달라진-점)
 
-2026~2099년의 날짜별 조형 규칙입니다. 외부 데이터와 계정 정보를 사용하지 않습니다.
+<a id="level-1--실제-동작을-따라-읽기"></a>
 
-실제 대상 이름과 조형 특징을 연결하는 편집 사전입니다.
+[level-1--실제-동작을-따라-읽기](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--실제-동작을-따라-읽기)
 
-한 GPU 작업 스레드와 최대 네 이미지로 날짜별 모션을 공유합니다.
+<a id="level-1--준비하고-확인할-것"></a>
 
-현재 날짜의 실제 메시를 소유 스레드의 오프스크린 GPU에서 렌더합니다.
+[level-1--준비하고-확인할-것](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--준비하고-확인할-것)
 
-한국 날짜의1~31일에 대응하는 원소와 디자인 영감 팔레트입니다.
+<a id="level-1--이-차수-원래-안내의-세부-조건"></a>
 
-오늘 원소 하나의 압축 프레임만 여는 제한 메모리 재생기입니다.
+[level-1--이-차수-원래-안내의-세부-조건](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--이-차수-원래-안내의-세부-조건)
 
-원본3D 자산을 변경하지 않는 제한 메모리 Qt 색 합성입니다.
+<a id="level-1--사용하는-사람에게-달라진-점"></a>
 
-프로세스 전용 고해상도 대기로 전역 타이머 설정 없이 프레임을 조율합니다.
+[level-1--사용하는-사람에게-달라진-점](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--사용하는-사람에게-달라진-점)
 
-앱이 소유한 문구만 번역하며 이벤트 원문은 호출자가 그대로 보존합니다.
+<a id="level-1--이-보관본의-의존성-목록"></a>
 
-Codex App Server의 `account/rateLimits/read`를 읽기 전용으로 조회합니다. 표시값은 남은 토큰 개수가 아니라 계정 사용 한도 비율입니다.
+[level-1--이-보관본의-의존성-목록](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--이-보관본의-의존성-목록)
 
-지역·기온 조회 모듈은 네트워크를 사용합니다. 로컬 감시기의 외부 통신 여부와 앱 전체의 날씨 조회를 구분합니다.
+<a id="level-1--소스에서-제공하는-cli-옵션"></a>
 
-### LEVEL 2 · 입력에서 출력으로
+[level-1--소스에서-제공하는-cli-옵션](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--소스에서-제공하는-cli-옵션)
 
-| 단계 | 내용 |
-| --- | --- |
-| 입력 | 현재 사용자 Codex의 로컬 JSONL과 이 차수의 앱 설정 |
-| 처리 | 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시 |
-| 출력 | 알림·변경 이력·로컬 진단 기록 |
+<a id="level-1--srcactivitypysrcactivitypy"></a>
 
+[level-1--srcactivitypysrcactivitypy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--srcactivitypysrcactivitypy)
 
-입력·처리·출력은 위의 같은 자료 흐름을 다른 단계에서 읽는 기준입니다. 처리 조건과 출력의 의미를 함께 확인합니다.
+<a id="level-1--srcapppysrcapppy"></a>
 
-### LEVEL 2 · 설정과 처리 순서의 관계
+[level-1--srcapppysrcapppy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--srcapppysrcapppy)
 
-1. 이 차수의 소스·requirements와 필요한 자산을 한 작업 폴더에 준비합니다.
-2. 앱을 열고 위젯·상세창에서 감시 경로와 표시되는 기록을 확인합니다.
-3. 새 변경이 기록되면 이전·이후 값과 이유를 비교하고, 기록 종류와 근거 수준을 함께 읽습니다.
-4. 설정·이력은 개인 운영자료로 관리하고 다른 사용자에게 공유하기 전에 내용을 확인합니다.
+<a id="level-1--srcatom_framespysrcatom_framespy"></a>
 
-Windows와 해당 폴더의 requirements.txt를 기준으로 Python 의존성을 준비합니다. history는 공개 소스 보존본이며 현재 루트 assets가 과거 모든 차수의 자산과 호환된다는 뜻은 아닙니다. 날짜별 실제 메시 렌더에는 ModernGL과 OpenGL 3.3을 지원하는 그래픽 드라이버가 필요합니다.
+[level-1--srcatom_framespysrcatom_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--srcatom_framespysrcatom_framespy)
 
-자산과 의존성을 준비한 이 차수 폴더에서 `python src/app.py`를 실행합니다. history 소스만으로 과거 배포 EXE와 동일한 화면·자산이 모두 복원되지는 않습니다.
+<a id="level-1--srcbrandpysrcbrandpy"></a>
 
-#### LEVEL 2 · 이 차수 원래 안내의 세부 조건
+[level-1--srcbrandpysrcbrandpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--srcbrandpysrcbrandpy)
 
-#### LEVEL 2 · 사용하는 사람에게 달라진 점
+<a id="level-1--srccalendar_artpysrccalendar_artpy"></a>
 
-상세창 슬라이더와 위젯 우클릭 메뉴에서 회전 속도를 0.25~3배로 선택하고 1배로 복원할 수 있습니다. 선택값은 저장되어 다음 실행에도 적용됩니다. 속도를 바꿔도 조형의 회전 각도를 이어서 재생하며 날짜·시계·기온·계정 조회 간격은 그대로입니다. 저장이 실패하면 이전 배율로 복원하고 선택한 한국어·영어로 오류를 안내합니다. 정적 정보와 움직이는 조형을 나누어 갱신하는 변경도 포함합니다.
+[level-1--srccalendar_artpysrccalendar_artpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--srccalendar_artpysrccalendar_artpy)
 
-[26차 검증 요약](../../docs/%EA%B3%B5%EA%B0%9C%EA%B2%80%EC%A6%9D_26%EC%B0%A8.md)에서 개발 전체·공개본·중앙 소스 검사와 배포 실행 결과를 구분합니다. 고정 240fps는 달성하지 못했으며 추가 달성 작업은 제외됐습니다. 26차 변경 기록의 실측 생성 약 227~230fps, 고유 Qt 그리기 약 214~229fps를 모니터 표시율로 해석하지 않습니다.
+<a id="level-1--srccalendar_catalogpysrccalendar_catalogpy"></a>
 
-#### LEVEL 2 · 이 보관본의 의존성 목록
+[level-1--srccalendar_catalogpysrccalendar_catalogpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--srccalendar_catalogpysrccalendar_catalogpy)
 
-[requirements.txt](requirements.txt)의 실제 항목입니다. 외부 실행 도구와 GPU 드라이버는 별도로 준비합니다.
+<a id="level-1--srccalendar_motionpysrccalendar_motionpy"></a>
 
-```text
-PySide6-Essentials==6.12.0
-PyInstaller==6.22.3
-moderngl==5.13.0
-glcontext==3.1.0
-numpy==2.5.4
-Pillow==13.0.0
-```
+[level-1--srccalendar_motionpysrccalendar_motionpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--srccalendar_motionpysrccalendar_motionpy)
 
-#### LEVEL 2 · 소스에서 제공하는 CLI 옵션
+<a id="level-1--srccalendar_rendererpysrccalendar_rendererpy"></a>
 
-**진입 소스:** [app.py](src/app.py)
+[level-1--srccalendar_rendererpysrccalendar_rendererpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--srccalendar_rendererpysrccalendar_rendererpy)
 
-**정의된 옵션 이름:** `--data-dir`, `--sessions`, `--smoke-test`, `--usage-smoke-test`, `--smoke-report`, `--show-details`, `--show-event`
+<a id="level-1--srccorepysrccorepy"></a>
 
-**진입 소스:** [notifier.py](src/notifier.py)
+[level-1--srccorepysrccorepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--srccorepysrccorepy)
 
-**정의된 옵션 이름:** `--sessions`, `--work`
+<a id="level-1--srcelement_framespysrcelement_framespy"></a>
 
+[level-1--srcelement_framespysrcelement_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--srcelement_framespysrcelement_framespy)
 
-각 옵션의 기본값·필수값·부작용은 해당 main과 인자 정의를 함께 확인합니다.
+<a id="level-1--srcelement_visualspysrcelement_visualspy"></a>
 
+[level-1--srcelement_visualspysrcelement_visualspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--srcelement_visualspysrcelement_visualspy)
 
-<details>
-<summary>함수 역할·기본값·입력 거부 조건의 세부 참조</summary>
+<a id="level-1--srcelementspysrcelementspy"></a>
 
-다음 항목은 이 자료의 Python 소스에 명시된 선언입니다. 전체 분기와 호출 순서는 각 행의 코드 위치에서 이어서 읽을 수 있습니다.
+[level-1--srcelementspysrcelementspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--srcelementspysrcelementspy)
 
-#### LEVEL 2 · [src/activity.py](src/activity.py)
+<a id="level-1--srcframe_pacingpysrcframe_pacingpy"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`safe_public_text`](src/activity.py#L15) | 보호문·비공개 표식·긴 인코딩 덩어리는 해석하거나 노출하지 않습니다. |
-| [`configuration`](src/activity.py#L76) | 원본 시각이 있는 자기 관측만 전역 256개로 제한해 보존합니다. |
-| [`defer`](src/activity.py#L160) | 원본 본문 없이 검증에 필요한 native 필드만 전역 32개까지 기다립니다. |
-| [`observe`](src/activity.py#L273) | 그 활동의 첫 관측만 보강하며 이후 모델 변경은 별도 감지를 유지합니다. |
+[level-1--srcframe_pacingpysrcframe_pacingpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--srcframe_pacingpysrcframe_pacingpy)
 
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`MAX_ACTIVITY_EVENTS`](src/activity.py#L7) | `정의=128` |
-| [`MAX_ACTIVITY_SEEN`](src/activity.py#L8) | `정의=8192` |
-| [`MAX_ACTIVITY_CALLS`](src/activity.py#L9) | `정의=32` |
-| [`MAX_PUBLIC_CALLS`](src/activity.py#L10) | `정의=128` |
-| [`MAX_DEFERRED_ACTIVITIES`](src/activity.py#L11) | `정의=32` |
-| [`MAX_CONFIGURATION_SNAPSHOTS`](src/activity.py#L12) | `정의=256` |
+<a id="level-1--srci18npysrci18npy"></a>
 
-**거부 조건:** [`not isinstance(self.data['calls'], dict) or not isinstance(self.data['deferred'], list)`](src/activity.py#L66)
+[level-1--srci18npysrci18npy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--srci18npysrci18npy)
 
-**오류 메시지:** 활동 호출/지연 상태 구조 오류입니다. 원본을 자동 초기화하지 않습니다.
+<a id="level-1--srcmotion_labelpysrcmotion_labelpy"></a>
 
-**거부 조건:** [`not isinstance(self.data['configurations'], list)`](src/activity.py#L68)
+[level-1--srcmotion_labelpysrcmotion_labelpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--srcmotion_labelpysrcmotion_labelpy)
 
-**오류 메시지:** 활동 관측 시각 구조 오류입니다. 원본을 자동 초기화하지 않습니다.
+<a id="level-1--srcnotifierpysrcnotifierpy"></a>
 
+[level-1--srcnotifierpysrcnotifierpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--srcnotifierpysrcnotifierpy)
 
-#### LEVEL 2 · [src/app.py](src/app.py)
+<a id="level-1--srcthemepysrcthemepy"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`validated_motion_speed`](src/app.py#L42) | 설정과 UI의 속도는 유한한 실제 숫자 범위로 제한합니다. |
-| [`_application_gui_root`](src/app.py#L49) | Python 순환 수집과 무관하게 살아 있는 GUI 소유자를 앱에 보관합니다. |
-| [`operation_record`](src/app.py#L67) | 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다. |
-| [`previous_field`](src/app.py#L106) | 이전 기록 전체 부재와 개별 필드 미기록을 구분하고 관측값만 표시합니다. |
-| [`short_reason`](src/app.py#L130) | 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. |
-| [`public_text`](src/app.py#L182) | 공개 문장만 표시하며 보호된 도구 페이로드를 해석하거나 노출하지 않습니다. |
-| [`selection_explanation`](src/app.py#L203) | 공개된 작업 목적을 모델 선택 이유로 바꾸어 말하지 않습니다. |
-| [`NoticeDelivery`](src/app.py#L309) | Qt 예약 호출을 포함한 미처리 전달 수를 스레드 사이에서 제한합니다. |
-| [`NoticeTicket`](src/app.py#L334) | 중복 반환과 종료 뒤 도착한 신호도 같은 한도를 다시 늘리지 않습니다. |
-| [`DiagnosticLabel`](src/app.py#L918) | 오류가 있을 때 변경 기록 안에 원문을 보여 주는 읽기 전용 라벨입니다. |
-| [`QuitGuard`](src/app.py#L1394) | 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다. |
-| [`usage_smoke_state`](src/app.py#L1956) | 지연된 신호 인자 대신 최신 스냅샷과 현재 레이아웃의 실제 표시를 대조합니다. |
-| [`motion_smoke_stage`](src/app.py#L1980) | 실제 GPU 렌더 수를 기준으로 준비·비교 단계를 판정합니다. |
-| [`_content_fit_signature`](src/app.py#L759) | 말줄임 전 제목과 실제 높이에 영향을 주는 표시 조건만 비교합니다. |
-| [`promote_first_observation`](src/app.py#L1363) | 실제 첫 관측 한 행만 안정된 활동 ID로 보강하며 다른 변경은 보존합니다. |
-| [`change_motion_speed`](src/app.py#L1484) | 사용자 조작의 실패는 실제 속도를 복원한 뒤 상세창에서 안내합니다. |
-| [`_finish_closed_gui`](src/app.py#L1948) | 외부 QThread 참조를 무효화하지 않고 종료된 감시기와 GUI 소유자를 해제합니다. |
+[level-1--srcthemepysrcthemepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--srcthemepysrcthemepy)
 
-**설정·옵션:** [`--data-dir`](src/app.py#L1996)
+<a id="level-1--srctypographypysrctypographypy"></a>
 
-**코드의 선언:** `type=Path; default=Path(os.environ.get('LOCALAPPDATA', Path.home())) / 'CodexOrbit'`
+[level-1--srctypographypysrctypographypy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--srctypographypysrctypographypy)
 
-**설정·옵션:** [`--sessions`](src/app.py#L1997)
+<a id="level-1--srcusagepysrcusagepy"></a>
 
-**코드의 선언:** `type=Path`
+[level-1--srcusagepysrcusagepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--srcusagepysrcusagepy)
 
-**설정·옵션:** [`--smoke-test`](src/app.py#L1998)
+<a id="level-1--srcusage_framespysrcusage_framespy"></a>
 
-**코드의 선언:** `action='store_true'`
+[level-1--srcusage_framespysrcusage_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--srcusage_framespysrcusage_framespy)
 
-**설정·옵션:** [`--usage-smoke-test`](src/app.py#L1999)
+<a id="level-1--srcusage_widgetspysrcusage_widgetspy"></a>
 
-**코드의 선언:** `action='store_true'; help='실제 계정 잔량과 표시를 조회한 뒤 종료'`
+[level-1--srcusage_widgetspysrcusage_widgetspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--srcusage_widgetspysrcusage_widgetspy)
 
-**설정·옵션:** [`--smoke-report`](src/app.py#L2000)
+<a id="level-1--srcvisualspysrcvisualspy"></a>
 
-**코드의 선언:** `type=Path`
+[level-1--srcvisualspysrcvisualspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--srcvisualspysrcvisualspy)
 
-**설정·옵션:** [`--show-details`](src/app.py#L2001)
+<a id="level-1--srcweatherpysrcweatherpy"></a>
 
-**코드의 선언:** `action='store_true'`
+[level-1--srcweatherpysrcweatherpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--srcweatherpysrcweatherpy)
 
-**설정·옵션:** [`--show-event`](src/app.py#L2002)
+<a id="level-1--결과와-주의할-범위"></a>
 
-**코드의 선언:** `help='기존 이력의 이벤트 ID 또는 대상 ID를 다시 표시'`
+[level-1--결과와-주의할-범위](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-1--결과와-주의할-범위)
 
-**설정·옵션:** [`EMPTY_HISTORY_GUIDANCE`](src/app.py#L39)
+<a id="level-126차의-구체적인-기능과-확인"></a>
 
-**코드의 선언:** `정의='변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'`
+[level-126차의-구체적인-기능과-확인](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차의-구체적인-기능과-확인)
 
-**설정·옵션:** [`ROLE_LABELS`](src/app.py#L116)
+<a id="level-126차-추가-해설level-1목적과-이-차수의-역할"></a>
 
-**코드의 선언:** `정의={'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}`
+[level-126차-추가-해설level-1목적과-이-차수의-역할](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1목적과-이-차수의-역할)
 
+<a id="level-126차-추가-해설level-1핵심-기능과-보존-범위"></a>
 
-**거부 조건:** [`application is None or QThread.currentThread() != application.thread()`](src/app.py#L52)
+[level-126차-추가-해설level-1핵심-기능과-보존-범위](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1핵심-기능과-보존-범위)
 
-**오류 메시지:** GUI 소유자는 QApplication의 메인 스레드에서 생성해야 합니다.
+<a id="level-126차-추가-해설level-1입력처리출력"></a>
 
-**거부 조건:** [`QThread.currentThread() != application.thread()`](src/app.py#L1523)
+[level-126차-추가-해설level-1입력처리출력](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1입력처리출력)
 
-**오류 메시지:** 언어는 GUI 메인 스레드에서만 변경할 수 있습니다.
+<a id="level-126차-추가-해설level-1화면과-사용-흐름"></a>
 
-**거부 조건:** [`not lock.tryLock(100)`](src/app.py#L2024)
+[level-126차-추가-해설level-1화면과-사용-흐름](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1화면과-사용-흐름)
 
-**오류 메시지:** 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다.
+<a id="level-126차-추가-해설level-1실제-자료-구성"></a>
 
-**거부 조건:** [`not isinstance(value, dict)`](src/app.py#L295)
+[level-126차-추가-해설level-1실제-자료-구성](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1실제-자료-구성)
 
-**오류 메시지:** 앱 설정은 JSON 객체여야 합니다.
+<a id="level-126차-추가-해설level-1주요-모듈과-코드-읽기"></a>
 
-**거부 조건:** [`self.closed or len(self.tickets) &gt;= MAX_PENDING`](src/app.py#L318)
+[level-126차-추가-해설level-1주요-모듈과-코드-읽기](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1주요-모듈과-코드-읽기)
 
-**오류 메시지:** 알림 전달 대기 한도 또는 종료 상태: 다음 감시 주기에 재시도합니다.
+<a id="level-126차-추가-해설level-1설치-환경과-실행사용법"></a>
 
+[level-126차-추가-해설level-1설치-환경과-실행사용법](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1설치-환경과-실행사용법)
 
-#### LEVEL 2 · [src/atom_frames.py](src/atom_frames.py)
+<a id="level-126차-추가-해설level-1사용하는-사람에게-달라진-점"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`AtomAssetError`](src/atom_frames.py#L27) | 필수 시각 자산 오류를 시작 실패 경로에 전달합니다. |
-| [`AtomFrames`](src/atom_frames.py#L50) | 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대24장만 보존합니다. |
-| [`close_runtime_frames`](src/atom_frames.py#L172) | 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
-| [`get_atom_frames`](src/atom_frames.py#L183) | 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
+[level-126차-추가-해설level-1사용하는-사람에게-달라진-점](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1사용하는-사람에게-달라진-점)
 
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FRAME_COUNT`](src/atom_frames.py#L16) | `정의=540` |
-| [`FRAME_SIZE`](src/atom_frames.py#L17) | `정의=296` |
-| [`FPS`](src/atom_frames.py#L18) | `정의=30` |
-| [`PERIOD_SECONDS`](src/atom_frames.py#L19) | `정의=18` |
-| [`CACHE_LIMIT`](src/atom_frames.py#L20) | `정의=24` |
-| [`MAX_ARCHIVE_BYTES`](src/atom_frames.py#L21) | `정의=128 * 1024 * 1024` |
-| [`MAX_FRAME_BYTES`](src/atom_frames.py#L22) | `정의=1024 * 1024` |
-| [`MAX_TOTAL_BYTES`](src/atom_frames.py#L23) | `정의=256 * 1024 * 1024` |
-| [`MAX_MANIFEST_BYTES`](src/atom_frames.py#L24) | `정의=64 * 1024` |
+<a id="level-126차-추가-해설level-1이-보관-본의-의존성-목록"></a>
 
-**거부 조건:** [`key in value`](src/atom_frames.py#L44)
+[level-126차-추가-해설level-1이-보관-본의-의존성-목록](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1이-보관-본의-의존성-목록)
 
-**오류 메시지:** 원자 자산 매니페스트에 중복 필드가 있습니다.
+<a id="level-126차-추가-해설level-1소스에서-제공하는-cli-옵션"></a>
 
-**거부 조건:** [`not 0 &lt; manifest_path.stat().st_size &lt;= MAX_MANIFEST_BYTES`](src/atom_frames.py#L69)
+[level-126차-추가-해설level-1소스에서-제공하는-cli-옵션](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1소스에서-제공하는-cli-옵션)
 
-**오류 메시지:** 원자 자산 매니페스트 크기가 허용 범위를 벗어났습니다.
+<a id="level-126차-추가-해설level-1srcactivitypysrcactivitypy"></a>
 
-**거부 조건:** [`not isinstance(self.manifest, dict)`](src/atom_frames.py#L75)
+[level-126차-추가-해설level-1srcactivitypysrcactivitypy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1srcactivitypysrcactivitypy)
 
-**오류 메시지:** 원자 자산 매니페스트는 객체여야 합니다.
+<a id="level-126차-추가-해설level-1srcapppysrcapppy"></a>
 
-**거부 조건:** [`not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None`](src/atom_frames.py#L85)
+[level-126차-추가-해설level-1srcapppysrcapppy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1srcapppysrcapppy)
 
-**오류 메시지:** 원자 프레임 ZIP의 SHA256 형식이 잘못됐습니다.
+<a id="level-126차-추가-해설level-1srcatom_framespysrcatom_framespy"></a>
 
-**거부 조건:** [`not 0 &lt; archive_path.stat().st_size &lt;= MAX_ARCHIVE_BYTES`](src/atom_frames.py#L87)
+[level-126차-추가-해설level-1srcatom_framespysrcatom_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1srcatom_framespysrcatom_framespy)
 
-**오류 메시지:** 원자 프레임 ZIP 크기가 허용 범위를 벗어났습니다.
+<a id="level-126차-추가-해설level-1srcbrandpysrcbrandpy"></a>
 
-**거부 조건:** [`hasher.hexdigest() != digest`](src/atom_frames.py#L94)
+[level-126차-추가-해설level-1srcbrandpysrcbrandpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1srcbrandpysrcbrandpy)
 
-**오류 메시지:** 원자 프레임 ZIP의 SHA256이 일치하지 않습니다.
+<a id="level-126차-추가-해설level-1srccalendar_artpysrccalendar_artpy"></a>
 
-**거부 조건:** [`len(members) != FRAME_COUNT or {item.filename for item in members} != names`](src/atom_frames.py#L100)
+[level-126차-추가-해설level-1srccalendar_artpysrccalendar_artpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1srccalendar_artpysrccalendar_artpy)
 
-**오류 메시지:** 원자 프레임 ZIP의 정확한540개 이름·목록이 일치하지 않습니다.
+<a id="level-126차-추가-해설level-1srccalendar_catalogpysrccalendar_catalogpy"></a>
 
-**거부 조건:** [`sum(item.file_size for item in members) &gt; MAX_TOTAL_BYTES`](src/atom_frames.py#L102)
+[level-126차-추가-해설level-1srccalendar_catalogpysrccalendar_catalogpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1srccalendar_catalogpysrccalendar_catalogpy)
 
-**오류 메시지:** 원자 프레임 전체 읽기 상한을 초과했습니다.
+<a id="level-126차-추가-해설level-1srccalendar_motionpysrccalendar_motionpy"></a>
 
-**거부 조건:** [`actual != self.identities`](src/atom_frames.py#L133)
+[level-126차-추가-해설level-1srccalendar_motionpysrccalendar_motionpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1srccalendar_motionpysrccalendar_motionpy)
 
-**오류 메시지:** 검증 뒤 원자 자산이 변경됐습니다. 앱을 다시 실행해 주세요.
+<a id="level-126차-추가-해설level-1srccalendar_rendererpysrccalendar_rendererpy"></a>
 
-**거부 조건:** [`isinstance(elapsed, bool) or not isinstance(elapsed, (int, float)) or not math.isfinite(elapsed)`](src/atom_frames.py#L138)
+[level-126차-추가-해설level-1srccalendar_rendererpysrccalendar_rendererpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1srccalendar_rendererpysrccalendar_rendererpy)
 
-**오류 메시지:** 원자 프레임의 재생 시각이 유한한 숫자가 아닙니다.
+<a id="level-126차-추가-해설level-1srccorepysrccorepy"></a>
 
-**거부 조건:** [`item.is_dir() or item.flag_bits & 1 or item.compress_type not in                     (zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED) or                     not 0 &lt; item.file_size &lt;= MAX_FRAME_BYTES`](src/atom_frames.py#L105)
+[level-126차-추가-해설level-1srccorepysrccorepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1srccorepysrccorepy)
 
-**오류 메시지:** 원자 프레임 멤버의 형식·크기가 허용 범위를 벗어났습니다.
+<a id="level-126차-추가-해설level-1srcelement_framespysrcelement_framespy"></a>
 
+[level-126차-추가-해설level-1srcelement_framespysrcelement_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1srcelement_framespysrcelement_framespy)
 
-#### LEVEL 2 · [src/brand.py](src/brand.py)
+<a id="level-126차-추가-해설level-1srcelement_visualspysrcelement_visualspy"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`motion_brand_source`](src/brand.py#L32) | 원소 프레임의 실제 크기에 비례해 여백만 줄이며 영역 밖을 복사하지 않습니다. |
-| [`BrandClock`](src/brand.py#L40) | 보이는 로고만 단일 시계에서 같은 프레임으로 갱신합니다. |
-| [`AnimatedBrand`](src/brand.py#L106) | 닫힘·숨김 이벤트에 맞춰 재생 구독을 끝내는 실제3D 로고입니다. |
-| [`validate_symbols`](src/brand.py#L137) | 실제 메시에서 제작한 고정 기호 일곱 개를 창 생성 전에 검증합니다. |
-| [`symbol_image`](src/brand.py#L181) | 실제 메시 렌더만 축소하고 새로운 도형이나 글자를 덧그리지 않습니다. |
-| [`with_symbol`](src/brand.py#L209) | 원문 QLabel을 유지하며 기능 의미를 읽기 쉬운 기호로 보조합니다. |
+[level-126차-추가-해설level-1srcelement_visualspysrcelement_visualspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1srcelement_visualspysrcelement_visualspy)
 
-**설정·옵션:** [`SYMBOL_NAMES`](src/brand.py#L133)
+<a id="level-126차-추가-해설level-1srcelementspysrcelementspy"></a>
 
-**코드의 선언:** `정의=('model', 'reasoning', 'time', 'reason', 'usage', 'refresh', 'history')`
+[level-126차-추가-해설level-1srcelementspysrcelementspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1srcelementspysrcelementspy)
 
+<a id="level-126차-추가-해설level-1srcframe_pacingpysrcframe_pacingpy"></a>
 
-**거부 조건:** [`not 1 &lt;= size &lt;= 512`](src/brand.py#L22)
+[level-126차-추가-해설level-1srcframe_pacingpysrcframe_pacingpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1srcframe_pacingpysrcframe_pacingpy)
 
-**오류 메시지:** 브랜드 이미지 크기는1~512px여야 합니다.
+<a id="level-126차-추가-해설level-1srci18npysrci18npy"></a>
 
-**거부 조건:** [`name not in SYMBOL_NAMES or not 1 &lt;= size &lt;= 96`](src/brand.py#L184)
+[level-126차-추가-해설level-1srci18npysrci18npy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1srci18npysrci18npy)
 
-**오류 메시지:** 3D 기능 기호의 종류나 크기가 올바르지 않습니다.
+<a id="level-126차-추가-해설level-1srcmotion_labelpysrcmotion_labelpy"></a>
 
-**거부 조건:** [`not 0 &lt; path.stat().st_size &lt;= 65536`](src/brand.py#L142)
+[level-126차-추가-해설level-1srcmotion_labelpysrcmotion_labelpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1srcmotion_labelpysrcmotion_labelpy)
 
-**오류 메시지:** 3D 기능 기호 매니페스트 크기 오류입니다.
+<a id="level-126차-추가-해설level-1srcnotifierpysrcnotifierpy"></a>
 
-**거부 조건:** [`type(metadata.get('schema_version')) is not int or metadata['schema_version'] != 1`](src/brand.py#L145)
+[level-126차-추가-해설level-1srcnotifierpysrcnotifierpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1srcnotifierpysrcnotifierpy)
 
-**오류 메시지:** 3D 기능 기호 매니페스트 버전 오류입니다.
+<a id="level-126차-추가-해설level-1srcthemepysrcthemepy"></a>
 
-**거부 조건:** [`not isinstance(files, dict) or set(files) != set(SYMBOL_NAMES)`](src/brand.py#L148)
+[level-126차-추가-해설level-1srcthemepysrcthemepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1srcthemepysrcthemepy)
 
-**오류 메시지:** 3D 기능 기호 일곱 개 목록이 일치하지 않습니다.
+<a id="level-126차-추가-해설level-1srctypographypysrctypographypy"></a>
 
-**거부 조건:** [`not isinstance(record, dict) or record.get('filename') != name+'.png'`](src/brand.py#L153)
+[level-126차-추가-해설level-1srctypographypysrctypographypy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1srctypographypysrctypographypy)
 
-**오류 메시지:** 3D 기능 기호의 고정 파일 이름이 일치하지 않습니다.
+<a id="level-126차-추가-해설level-1srcusagepysrcusagepy"></a>
 
-**거부 조건:** [`not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None`](src/brand.py#L156)
+[level-126차-추가-해설level-1srcusagepysrcusagepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1srcusagepysrcusagepy)
 
-**오류 메시지:** 3D 기능 기호의 SHA256 형식 오류입니다.
+<a id="level-126차-추가-해설level-1srcusage_framespysrcusage_framespy"></a>
 
-**거부 조건:** [`not 0 &lt; path.stat().st_size &lt;= 262144`](src/brand.py#L159)
+[level-126차-추가-해설level-1srcusage_framespysrcusage_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1srcusage_framespysrcusage_framespy)
 
-**오류 메시지:** 3D 기능 기호 읽기 크기 상한 오류입니다.
+<a id="level-126차-추가-해설level-1srcusage_widgetspysrcusage_widgetspy"></a>
 
+[level-126차-추가-해설level-1srcusage_widgetspysrcusage_widgetspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1srcusage_widgetspysrcusage_widgetspy)
 
-#### LEVEL 2 · [src/calendar_art.py](src/calendar_art.py)
+<a id="level-126차-추가-해설level-1srcvisualspysrcvisualspy"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`current_date`](src/calendar_art.py#L33) | 호스트의 현지 시간대와 무관하게 한국 날짜를 사용합니다. |
-| [`_month_palette`](src/calendar_art.py#L50) | 반올림 충돌만 가장 가까운 미사용 RGB로 옮기고 월별 결과를 불변 보관합니다. |
-| [`design_for_date`](src/calendar_art.py#L78) | 유효한 날짜만 허용하며 지원 범위 밖을 다른 날짜로 몰래 대체하지 않습니다. |
-| [`all_designs`](src/calendar_art.py#L95) | 현재 모델만 렌더하며 이 반복자는 작은 카탈로그를 작성할 때만 사용합니다. |
+[level-126차-추가-해설level-1srcvisualspysrcvisualspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1srcvisualspysrcvisualspy)
 
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FIRST_DATE`](src/calendar_art.py#L10) | `정의=date(2026,1,1)` |
-| [`LAST_DATE`](src/calendar_art.py#L11) | `정의=date(2099,12,31)` |
-| [`KST`](src/calendar_art.py#L12) | `정의=timezone(timedelta(hours=9))` |
-| [`THEMES`](src/calendar_art.py#L13) | `정의=tuple(row.title for row in all_collections())` |
+<a id="level-126차-추가-해설level-1srcweatherpysrcweatherpy"></a>
 
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`type(value) is not date`](src/calendar_art.py#L80) | 조형 날짜는 datetime.date여야 합니다. |
-| [`not FIRST_DATE &lt;= value &lt;= LAST_DATE`](src/calendar_art.py#L82) | 날짜별 조형 지원 범위는 2026-01-01부터 2099-12-31까지입니다. |
+[level-126차-추가-해설level-1srcweatherpysrcweatherpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1srcweatherpysrcweatherpy)
 
-#### LEVEL 2 · [src/calendar_catalog.py](src/calendar_catalog.py)
+<a id="level-126차-추가-해설level-1처리-결과와-출력-읽기"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`joining_particle`](src/calendar_catalog.py#L208) | 마지막 한글 음절의 받침에 맞춰 대상 이름을 연결합니다. |
+[level-126차-추가-해설level-1처리-결과와-출력-읽기](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1처리-결과와-출력-읽기)
 
-**설정·옵션:** [`POOLS`](src/calendar_catalog.py#L166)
+<a id="level-126차-추가-해설level-1제약과-문제-해결"></a>
 
-**코드의 선언:** `정의={'꽃': _objects(_FLOWERS,'꽃'), '열매': _objects(_FRUITS,'열매'),          '잎': _objects(_LEAVES,'잎'), '악기': _objects(_MUSIC,'악기')}`
+[level-126차-추가-해설level-1제약과-문제-해결](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1제약과-문제-해결)
 
-**설정·옵션:** [`OBJECTS`](src/calendar_catalog.py#L168)
+<a id="level-126차-추가-해설level-1직전-자료와-전체-비교"></a>
 
-**코드의 선언:** `정의={obj.key:obj for pool in POOLS.values() for obj in pool}`
+[level-126차-추가-해설level-1직전-자료와-전체-비교](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-126차-추가-해설level-1직전-자료와-전체-비교)
 
-**설정·옵션:** [`COMPOSITION_NAMES`](src/calendar_catalog.py#L193)
+<a id="level-2---explorer"></a>
 
-**코드의 선언:** `정의={'bouquet':'꽃다발형','diagonal':'대각선형','shelter':'감싸는 형태',                      'stage':'연주대형','triangle':'삼각형 정물','fan':'부채형'}`
+[level-2---explorer](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-2---explorer)
 
+<a id="level-2--목적과-구성의-연결"></a>
 
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`not 0 &lt;= index &lt; 888 or not 1 &lt;= month &lt;= 12`](src/calendar_catalog.py#L217) | 연월 컬렉션은 2026년 1월부터 2099년 12월까지입니다. |
+[level-2--목적과-구성의-연결](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-2--목적과-구성의-연결)
 
-#### LEVEL 2 · [src/calendar_motion.py](src/calendar_motion.py)
+<a id="level-2--입력에서-출력으로"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`next_frame_deadline`](src/calendar_motion.py#L21) | 정상 슬롯을 유지하고 늦은 프레임은 추가 대기나 누적 추격 없이 이어갑니다. |
-| [`fallback_image`](src/calendar_motion.py#L26) | GPU 준비·실패 때만 쓰는 월 주제의 정적 평면 표식입니다. 3D 성공으로 가장하지 않습니다. |
-| [`_Worker`](src/calendar_motion.py#L60) | Qt 객체나 UI를 조작하지 않고 복사된 최신 이미지 하나만 전달합니다. |
-| [`prepare_calendar_motion`](src/calendar_motion.py#L232) | 창 표시 전에 같은 작업자의 첫 실제 프레임을 최대 5초 준비합니다. |
-| [`set_calendar_motion_speed`](src/calendar_motion.py#L262) | 현재 위상을 유지하고 이후 모션의 배율만 바꿉니다. 실제 시계와 날짜는 바꾸지 않습니다. |
-| [`set_calendar_motion_size`](src/calendar_motion.py#L268) | 현재 보이는 각 소유자의 실제 픽셀 요구 중 최대 크기만 전달합니다. |
-| [`record_calendar_presentation`](src/calendar_motion.py#L276) | Qt 그리기 경로가 실제로 소비한 서로 다른 프레임만 셉니다. |
-| [`get_calendar_error`](src/calendar_motion.py#L285) | 제품은 이 문자열을 상태나 툴팁에 표시해 대체 표식과 실제 3D를 구분할 수 있습니다. |
+[level-2--입력에서-출력으로](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-2--입력에서-출력으로)
 
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FPS`](src/calendar_motion.py#L15) | `정의=240` |
-| [`SIZE`](src/calendar_motion.py#L16) | `정의=384` |
-| [`RENDER_SIZE`](src/calendar_motion.py#L17) | `정의=(3840, 2160)` |
+<a id="level-2--설정과-처리-순서의-관계"></a>
 
-**거부 조건:** [`app is None or QThread.currentThread()!=app.thread()`](src/calendar_motion.py#L211)
+[level-2--설정과-처리-순서의-관계](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-2--설정과-처리-순서의-관계)
 
-**오류 메시지:** 날짜별 모션 API는 Qt 메인 스레드에서 호출해야 합니다.
+<a id="level-2--이-차수-원래-안내의-세부-조건"></a>
 
-**거부 조건:** [`type(timeout_seconds) not in (int,float) or not 0 &lt; timeout_seconds &lt;= 5`](src/calendar_motion.py#L234)
+[level-2--이-차수-원래-안내의-세부-조건](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-2--이-차수-원래-안내의-세부-조건)
 
-**오류 메시지:** 3D 준비 제한은 0초 초과 5초 이하여야 합니다.
+<a id="level-2--사용하는-사람에게-달라진-점"></a>
 
-**거부 조건:** [`type(visible) is not bool`](src/calendar_motion.py#L258)
+[level-2--사용하는-사람에게-달라진-점](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-2--사용하는-사람에게-달라진-점)
 
-**오류 메시지:** 표시 상태는 bool이어야 합니다.
+<a id="level-2--이-보관본의-의존성-목록"></a>
 
-**거부 조건:** [`type(size) is not int or not 32&lt;=size&lt;=2160`](src/calendar_motion.py#L270)
+[level-2--이-보관본의-의존성-목록](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-2--이-보관본의-의존성-목록)
 
-**오류 메시지:** 전달 크기는32~2160 정수여야 합니다.
+<a id="level-2--소스에서-제공하는-cli-옵션"></a>
 
-**거부 조건:** [`self.closed`](src/calendar_motion.py#L167)
+[level-2--소스에서-제공하는-cli-옵션](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-2--소스에서-제공하는-cli-옵션)
 
-**오류 메시지:** 날짜별 모션 서비스가 닫혔습니다.
+<a id="level-2--srcactivitypysrcactivitypy"></a>
 
-**거부 조건:** [`self.closed`](src/calendar_motion.py#L180)
+[level-2--srcactivitypysrcactivitypy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-2--srcactivitypysrcactivitypy)
 
-**오류 메시지:** 날짜별 모션 서비스가 닫혔습니다.
+<a id="level-2--srcapppysrcapppy"></a>
 
-**거부 조건:** [`type(elapsed) not in (int,float)`](src/calendar_motion.py#L181)
+[level-2--srcapppysrcapppy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-2--srcapppysrcapppy)
 
-**오류 메시지:** 재생 시각은 유한한 숫자여야 합니다.
+<a id="level-2--srcatom_framespysrcatom_framespy"></a>
 
-**거부 조건:** [`not valid`](src/calendar_motion.py#L184)
+[level-2--srcatom_framespysrcatom_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-2--srcatom_framespysrcatom_framespy)
 
-**오류 메시지:** 재생 시각은 유한한 숫자여야 합니다.
+<a id="level-2--srcbrandpysrcbrandpy"></a>
 
-**거부 조건:** [`_retiring.worker.isRunning()`](src/calendar_motion.py#L221)
+[level-2--srcbrandpysrcbrandpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-2--srcbrandpysrcbrandpy)
 
-**오류 메시지:** 이전 GPU 작업 스레드가 종료 중입니다.
+<a id="level-2--srccalendar_artpysrccalendar_artpy"></a>
 
+[level-2--srccalendar_artpysrccalendar_artpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-2--srccalendar_artpysrccalendar_artpy)
 
-#### LEVEL 2 · [src/calendar_renderer.py](src/calendar_renderer.py)
+<a id="level-2--srccalendar_catalogpysrccalendar_catalogpy"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`rotation`](src/calendar_renderer.py#L24) | 정규화된 실제 3D축을 중심으로 로드리게스 회전행렬을 만듭니다. |
-| [`finish`](src/calendar_renderer.py#L48) | 표면 법선과 삼각형 winding을 일치시킵니다. |
-| [`box`](src/calendar_renderer.py#L58) | 육면체 면을 실제 둥근 모서리와 구면 꼭짓점으로 투영합니다. |
-| [`lathe`](src/calendar_renderer.py#L84) | 회전체의 실제 앞뒤·옆면을 만들며 다각 단면은 평면 법선을 보존합니다. |
-| [`tube`](src/calendar_renderer.py#L104) | 3D 경로를 따라 원형 단면을 운반합니다. 코일은 실제 깊이를 가집니다. |
-| [`_object_geometry`](src/calendar_renderer.py#L145) | 대상 이름에 연결된 주요 구조를 실제 삼각형 부품으로 구성합니다. |
-| [`_ring_geometry`](src/calendar_renderer.py#L323) | 날짜와 무관한 세 링만 읽기 전용 배열로 한 번 생성합니다. |
-| [`build_geometry`](src/calendar_renderer.py#L334) | 날짜별 주연과 서로 다른 두 월 모티프를 명시적 대상 사전에서 렌더합니다. |
-| [`CalendarRenderer`](src/calendar_renderer.py#L378) | 컨텍스트를 만든 스레드에서만 사용하고 현재 날짜의 버퍼만 보유합니다. |
-| [`render_date`](src/calendar_renderer.py#L489) | 미리보기와 직접 검증용 동기 렌더입니다. 앱은 공유 작업 스레드를 사용합니다. |
-| [`set_output_size`](src/calendar_renderer.py#L425) | 원본 타깃은 유지하고 중앙 정사각형의 GPU 전달 크기만 변경합니다. |
-| [`render_original`](src/calendar_renderer.py#L470) | 검증·내보내기 때만 실제 직사각형 원본 전체를 CPU로 읽습니다. |
+[level-2--srccalendar_catalogpysrccalendar_catalogpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-2--srccalendar_catalogpysrccalendar_catalogpy)
 
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`PERIOD`](src/calendar_renderer.py#L132) | `정의=12.0` |
-| [`SIZE`](src/calendar_renderer.py#L133) | `정의=384` |
+<a id="level-2--srccalendar_motionpysrccalendar_motionpy"></a>
 
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`subject.recipe!=design.shape_recipe`](src/calendar_renderer.py#L338) | 대상과 형상 규칙이 일치하지 않습니다. |
-| [`type(elapsed) not in (int,float)`](src/calendar_renderer.py#L364) | 모션 시각은 유한한 숫자여야 합니다. |
-| [`not valid`](src/calendar_renderer.py#L367) | 모션 시각은 유한한 숫자여야 합니다. |
-| [`threading.get_ident()!=self.thread_id`](src/calendar_renderer.py#L423) | GPU 컨텍스트는 생성 스레드에서만 사용할 수 있습니다. |
-| [`type(size) is not int or not 32&lt;=size&lt;=2160`](src/calendar_renderer.py#L428) | 전달 크기는32~2160 정수여야 합니다. |
+[level-2--srccalendar_motionpysrccalendar_motionpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-2--srccalendar_motionpysrccalendar_motionpy)
 
-#### LEVEL 2 · [src/core.py](src/core.py)
+<a id="level-2--srccalendar_rendererpysrccalendar_rendererpy"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`read_jsonl_tail`](src/core.py#L19) | 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
-| [`title_catalog`](src/core.py#L56) | 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
-| [`resolve_title`](src/core.py#L86) | 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
-| [`safe_path`](src/core.py#L110) | 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
+[level-2--srccalendar_rendererpysrccalendar_rendererpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-2--srccalendar_rendererpysrccalendar_rendererpy)
 
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`MAX_TEXT_BYTES`](src/core.py#L10) | `정의=2 * 1024 * 1024` |
-| [`BEGIN`](src/core.py#L11) | `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
-| [`END`](src/core.py#L12) | `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
+<a id="level-2--srccorepysrccorepy"></a>
 
-**거부 조건:** [`path.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L125)
+[level-2--srccorepysrccorepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-2--srccorepysrccorepy)
 
-**오류 메시지:** 문서가 2 MiB 상한을 초과했습니다.
+<a id="level-2--srcelement_framespysrcelement_framespy"></a>
 
-**거부 조건:** [`not isinstance(cache, dict) or not isinstance(cache.get('titles'), dict)`](src/core.py#L65)
-
-**오류 메시지:** 제목 캐시 구조가 올바르지 않습니다.
-
-**거부 조건:** [`target.name.lower() != 'agents.md'`](src/core.py#L136)
-
-**오류 메시지:** 적용 대상은 AGENTS.md 파일이어야 합니다.
-
-**거부 조건:** [`not target.parent.is_dir()`](src/core.py#L138)
-
-**오류 메시지:** 대상 폴더가 존재하지 않습니다.
-
-**거부 조건:** [`target.exists() and (not target.is_file() or target.stat().st_size &gt; MAX_TEXT_BYTES)`](src/core.py#L140)
-
-**오류 메시지:** 대상은 2 MiB 이하의 일반 파일이어야 합니다.
-
-**거부 조건:** [`not content.strip() or len(added) &gt; MAX_TEXT_BYTES`](src/core.py#L147)
-
-**오류 메시지:** 빈 지침 또는 2 MiB 초과 지침은 적용할 수 없습니다.
-
-**거부 조건:** [`BEGIN in added or END in added`](src/core.py#L149)
-
-**오류 메시지:** 지침 내용에 앱 관리구역 표식을 넣을 수 없습니다.
-
-**거부 조건:** [`len(result) &gt; MAX_TEXT_BYTES`](src/core.py#L163)
-
-**오류 메시지:** 적용 결과가 2 MiB 상한을 초과합니다.
-
-**거부 조건:** [`target.exists() != existed or digest(target.read_bytes() if existed else b'') != expected`](src/core.py#L170)
-
-**오류 메시지:** 대상 파일이 미리보기/적용 이후 변경되었습니다. 새 미리보기가 필요합니다.
-
-**거부 조건:** [`digest(plan['original']) != plan['before_hash'] or digest(plan['applied_bytes']) != plan['after_hash']`](src/core.py#L190)
-
-**오류 메시지:** 미리보기 데이터가 변경되었습니다.
-
-**거부 조건:** [`backup.parent != safe_path(self.data_dir / 'backups') or not backup.is_file() or backup.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L210)
-
-**오류 메시지:** 유효한 앱 원문 백업이 아닙니다.
-
-**거부 조건:** [`digest(raw) != receipt['before_hash']`](src/core.py#L213)
-
-**오류 메시지:** 백업 해시가 일치하지 않습니다.
-
-**거부 조건:** [`not isinstance(row, dict)`](src/core.py#L41)
-
-**오류 메시지:** JSON 객체가 아닙니다.
-
-**거부 조건:** [`original.count(BEGIN) != 1 or original.count(END) != 1 or original.index(BEGIN) &gt;= original.index(END)`](src/core.py#L156)
-
-**오류 메시지:** 기존 관리구역 표식이 손상되었거나 중복되었습니다.
-
-
-#### LEVEL 2 · [src/element_frames.py](src/element_frames.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`ElementAssetError`](src/element_frames.py#L24) | 필수 원소 자산 실패를 숨기지 않고 앱의 시작·표시 오류로 전달합니다. |
-| [`preflight_element_frames`](src/element_frames.py#L132) | 활성 원소의 해시·목록·첫 프레임을 확인합니다.31개를 적재하지 않습니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`CACHE_LIMIT`](src/element_frames.py#L15) | `정의=24` |
-| [`FRAME_SIZE`](src/element_frames.py#L16) | `정의=192` |
-| [`FRAME_COUNT`](src/element_frames.py#L17) | `정의=540` |
-| [`FPS`](src/element_frames.py#L18) | `정의=30` |
-| [`PERIOD_SECONDS`](src/element_frames.py#L19) | `정의=18` |
-| [`MAX_ARCHIVE_BYTES`](src/element_frames.py#L20) | `정의=64*1024*1024` |
-| [`MAX_FRAME_BYTES`](src/element_frames.py#L21) | `정의=512*1024` |
-
-**거부 조건:** [`type(number) is not int or not 1&lt;=number&lt;=31`](src/element_frames.py#L34)
-
-**오류 메시지:** 원소 번호는1~31 정수여야 합니다.
-
-**거부 조건:** [`not 0&lt;manifest.stat().st_size&lt;=64*1024`](src/element_frames.py#L65)
-
-**오류 메시지:** 원소 매니페스트 크기 오류
-
-**거부 조건:** [`not isinstance(self.manifest,dict)`](src/element_frames.py#L69)
-
-**오류 메시지:** 원소 매니페스트는 객체여야 합니다.
-
-**거부 조건:** [`not isinstance(digest,str) or not re.fullmatch('[0-9a-f]{64}',digest)`](src/element_frames.py#L74)
-
-**오류 메시지:** 원소 해시 형식 오류
-
-**거부 조건:** [`not 0&lt;archive.stat().st_size&lt;=MAX_ARCHIVE_BYTES`](src/element_frames.py#L75)
-
-**오류 메시지:** 원소 압축파일 크기 초과
-
-**거부 조건:** [`hasher.hexdigest()!=digest`](src/element_frames.py#L78)
-
-**오류 메시지:** 원소 ZIP 해시 불일치
-
-**거부 조건:** [`len(members)!=540 or {m.filename for m in members}!={f'frame_{i:04d}.png' for i in range(540)}`](src/element_frames.py#L80)
-
-**오류 메시지:** 원소 ZIP 정확한540프레임 목록 불일치
-
-**거부 조건:** [`sum(m.file_size for m in members)&gt;128*1024*1024`](src/element_frames.py#L82)
-
-**오류 메시지:** 원소 해제 크기 초과
-
-**거부 조건:** [`actual!=self.identities`](src/element_frames.py#L91)
-
-**오류 메시지:** 실행 중 원소 자산이 변경됐습니다.
-
-**거부 조건:** [`isinstance(elapsed,bool) or not isinstance(elapsed,(int,float)) or not math.isfinite(elapsed)`](src/element_frames.py#L106)
-
-**오류 메시지:** 원소 재생 시각은 유한한 숫자여야 합니다.
-
-**거부 조건:** [`self.archive is None`](src/element_frames.py#L107)
-
-**오류 메시지:** 원소 재생기가 닫혔습니다.
-
-**거부 조건:** [`member.is_dir() or member.flag_bits&1 or member.compress_type not in (zipfile.ZIP_STORED,zipfile.ZIP_DEFLATED)                     or not 0&lt;member.file_size&lt;=MAX_FRAME_BYTES`](src/element_frames.py#L84)
-
-**오류 메시지:** 원소 ZIP 멤버 형식 오류
-
-**거부 조건:** [`len(data)&gt;MAX_FRAME_BYTES or len(data)&lt;33 or data[:8]!=b'\x89PNG\r\n\x1a\n' or data[12:16]!=b'IHDR'                     or struct.unpack('&gt;II',data[16:24])!=(192,192) or data[24:26]!=bytes((8,6))`](src/element_frames.py#L96)
-
-**오류 메시지:** 원소 PNG 형식 오류
-
-**거부 조건:** [`image.isNull() or image.size().width()!=192 or image.height()!=192 or not image.hasAlphaChannel()`](src/element_frames.py#L99)
-
-**오류 메시지:** 원소 PNG 디코딩 오류
-
-**거부 조건:** [`any(image.pixelColor(x,y).alpha() for x,y in ((0,0),(191,0),(0,191),(191,191)))`](src/element_frames.py#L100)
-
-**오류 메시지:** 원소 PNG 투명 모서리 오류
-
-
-#### LEVEL 2 · [src/element_visuals.py](src/element_visuals.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`colorize_atom`](src/element_visuals.py#L5) | SourceAtop은 원본 알파를 유지하며 명암에 부드러운 영감색을 더합니다. |
-
-#### LEVEL 2 · [src/elements.py](src/elements.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`daily_element`](src/elements.py#L43) | 매 호출 실제 날짜를 다시 읽어 자정·절전 복귀·시계 되돌림을 반영합니다. |
-
-**설정·옵션:** [`KST`](src/elements.py#L5)
-
-**코드의 선언:** `정의=timezone(timedelta(hours=9))`
-
-**설정·옵션:** [`PALETTE_NOTE`](src/elements.py#L8)
-
-**코드의 선언:** `정의='원소에서 영감받은 디자인 색이며 실제 원소·불꽃색이나 전자배치 재현이 아닙니다.'`
-
-**설정·옵션:** [`ELEMENTS`](src/elements.py#L39)
-
-**코드의 선언:** `정의=tuple(Element(index,symbol,name,color,accent)                  for index,(symbol,name,color,accent) in enumerate(_ROWS,1))`
-
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`value.tzinfo is None or value.utcoffset() is None`](src/elements.py#L46) | 원소 날짜에는 시간대가 있는 datetime이 필요합니다. |
-
-#### LEVEL 2 · [src/frame_pacing.py](src/frame_pacing.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`validate_motion_speed`](src/frame_pacing.py#L7) | 유한한 0.25~3배 숫자만 받아 bool과 잘못된 설정을 거부합니다. |
-| [`MotionClock`](src/frame_pacing.py#L20) | 실제 날짜·시계와 분리하여 배율별 경과 시간을 연속 적분합니다. |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`type(value) not in (int, float)`](src/frame_pacing.py#L9) | 회전 속도는 0.25~3배의 유한한 숫자여야 합니다. |
-| [`not valid`](src/frame_pacing.py#L15) | 회전 속도는 0.25~3배의 유한한 숫자여야 합니다. |
-
-#### LEVEL 2 · [src/i18n.py](src/i18n.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`translate`](src/i18n.py#L51) | 명시한 앱 문구만 번역하고 전달된 값은 번역하지 않습니다. |
-| [`remember_translations`](src/i18n.py#L63) | 생성 당시 정적인 앱 문구만 기록하여 사용자 원문과 구분합니다. |
-
-#### LEVEL 2 · [src/motion_label.py](src/motion_label.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`MotionImageLabel`](src/motion_label.py#L6) | 최신 이미지 한 개를 보관하고 크기·DPR 변경 때만 기본 크기 힌트를 갱신합니다. |
-
-#### LEVEL 2 · [src/notifier.py](src/notifier.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`atomic_json`](src/notifier.py#L33) | 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도합니다. |
-| [`source_datetime`](src/notifier.py#L63) | 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. |
-| [`duplicate_record`](src/notifier.py#L212) | 원본 시각이 있는 복제 기록만 제외하며 기준선 재생의 순서는 복원합니다. |
-| [`settings_record`](src/notifier.py#L223) | 자기 채팅의 native 설정 필드만 관측하며 변경 주체와 실행 모델은 추정하지 않습니다. |
-| [`lookup_parent_reason`](src/notifier.py#L376) | 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. |
-| [`enrich_event`](src/notifier.py#L423) | 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
-| [`replay_activity_prefix`](src/notifier.py#L445) | 고정된 과거 소비 구간의 활동 메타만 파일별 기존 예산 안에서 복원합니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`--sessions`](src/notifier.py#L739) | `type=Path; default=Path.home() / '.codex/sessions'` |
-| [`--work`](src/notifier.py#L740) | `type=Path; default=ROOT / 'work'` |
-| [`ROOT`](src/notifier.py#L18) | `정의=Path(__file__).resolve().parents[1]` |
-| [`APP_ID`](src/notifier.py#L19) | `정의='Yunseok.Codex.ModelChangeNotifier'` |
-| [`READ_BYTES`](src/notifier.py#L20) | `정의=512 * 1024` |
-| [`MAX_RECORD`](src/notifier.py#L21) | `정의=2 * 1024 * 1024` |
-| [`MAX_FILES`](src/notifier.py#L22) | `정의=4096` |
-| [`LOG_BYTES`](src/notifier.py#L23) | `정의=2 * 1024 * 1024` |
-| [`POLL_READ_BYTES`](src/notifier.py#L24) | `정의=8 * 1024 * 1024` |
-| [`MAX_PENDING`](src/notifier.py#L25) | `정의=256` |
-| [`POLL_INTERVAL_SECONDS`](src/notifier.py#L26) | `정의=0.2` |
-
-**거부 조건:** [`self.state_path.stat().st_size &gt; 16 * 1024 * 1024`](src/notifier.py#L90)
-
-**오류 메시지:** 상태 파일이 16 MiB 상한을 초과했습니다. 원본 보존 후 점검이 필요합니다.
-
-**거부 조건:** [`self.state.get('schema_version') not in (2, 3)`](src/notifier.py#L94)
-
-**오류 메시지:** 구형 상태는 요청과 관측이 혼합되어 있습니다. 원본 보존 후 명시적 재기준선이 필요합니다.
-
-**거부 조건:** [`not isinstance(self.state.get('files'), dict) or not isinstance(self.state.get('models'), dict)`](src/notifier.py#L96)
-
-**오류 메시지:** 상태 파일 구조 오류입니다. 자동 초기화하지 않습니다.
-
-**거부 조건:** [`not isinstance(self.state.get('declarations'), dict)`](src/notifier.py#L98)
-
-**오류 메시지:** 명시 배정 상태 구조 오류입니다. 자동 초기화하지 않습니다.
-
-**거부 조건:** [`not isinstance(self.state.get('settings'), dict)`](src/notifier.py#L117)
-
-**오류 메시지:** 채팅 선택 설정 상태 구조 오류입니다. 자동 초기화하지 않습니다.
-
-**거부 조건:** [`backup.read_bytes() != original`](src/notifier.py#L105)
-
-**오류 메시지:** 이전 상태 백업이 원본과 다릅니다. 자동 덮어쓰기하지 않습니다.
-
-**거부 조건:** [`any(isinstance(v, bool) or not isinstance(v, int) or v &lt; 0 for v in (offset, end))`](src/notifier.py#L112)
-
-**오류 메시지:** 이전 상태의 파일 위치가 올바르지 않습니다. 자동 초기화하지 않습니다.
-
-**거부 조건:** [`backup.read_bytes() != original`](src/notifier.py#L123)
-
-**오류 메시지:** 활동 이행 백업이 원본과 다릅니다. 자동 덮어쓰기하지 않습니다.
-
-**거부 조건:** [`isinstance(end, bool) or not isinstance(end, int) or end &lt; 0`](src/notifier.py#L131)
-
-**오류 메시지:** 활동 기준선의 파일 위치가 올바르지 않습니다.
-
-**거부 조건:** [`not isinstance(record, dict)`](src/notifier.py#L523)
-
-**오류 메시지:** JSON 객체가 아닙니다.
-
-**거부 조건:** [`path.stat().st_size &gt; 20000`](src/notifier.py#L603)
-
-**오류 메시지:** 명시 알림 파일 상한 초과
-
-**거부 조건:** [`not isinstance(record, dict)`](src/notifier.py#L467)
-
-**오류 메시지:** JSON 객체가 아닙니다.
-
-
-#### LEVEL 2 · [src/theme.py](src/theme.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`MonochromeStyle`](src/theme.py#L53) | 파일·메시지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. |
-| [`KoreanDialogs`](src/theme.py#L78) | 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역합니다. |
-| [`DialogLayout`](src/theme.py#L94) | 앱 파일 선택창의 이름 열과 한글 버튼에 충분한 공간을 확보합니다. |
-
-#### LEVEL 2 · [src/typography.py](src/typography.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`register_fonts`](src/typography.py#L8) | 필수 파일이나 Qt 등록 실패를 숨기지 않고 시작 오류로 전달합니다. |
-
-#### LEVEL 2 · [src/usage.py](src/usage.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`number`](src/usage.py#L16) | 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
-| [`normalize_limits`](src/usage.py#L35) | 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
-| [`discover_codex`](src/usage.py#L69) | 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`MAX_BYTES`](src/usage.py#L12) | `정의=1024 * 1024` |
-| [`KST`](src/usage.py#L13) | `정의=timezone(timedelta(hours=9))` |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`not isinstance(message, dict)`](src/usage.py#L226) | 객체가 아닌 응답 |
-
-#### LEVEL 2 · [src/usage_frames.py](src/usage_frames.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`UsageAssetError`](src/usage_frames.py#L27) | 조형 표시 오류를 호출자에게 전달하며 계정 조회 흐름과 분리합니다. |
-| [`UsageFrames`](src/usage_frames.py#L50) | 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대16장만 보존합니다. |
-| [`close_usage_frames`](src/usage_frames.py#L183) | 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
-| [`preflight_usage_frames`](src/usage_frames.py#L194) | 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
-| [`get_usage_frame`](src/usage_frames.py#L207) | 공유 팩의 한 프레임을 반환하며 계정 조회 상태에는 관여하지 않습니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FRAME_COUNT`](src/usage_frames.py#L16) | `정의=360` |
-| [`FRAME_SIZE`](src/usage_frames.py#L17) | `정의=384` |
-| [`FPS`](src/usage_frames.py#L18) | `정의=30` |
-| [`PERIOD_SECONDS`](src/usage_frames.py#L19) | `정의=12` |
-| [`CACHE_LIMIT`](src/usage_frames.py#L20) | `정의=16` |
-| [`MAX_ARCHIVE_BYTES`](src/usage_frames.py#L21) | `정의=128 * 1024 * 1024` |
-| [`MAX_FRAME_BYTES`](src/usage_frames.py#L22) | `정의=1024 * 1024` |
-| [`MAX_TOTAL_BYTES`](src/usage_frames.py#L23) | `정의=256 * 1024 * 1024` |
-| [`MAX_MANIFEST_BYTES`](src/usage_frames.py#L24) | `정의=64 * 1024` |
-
-**거부 조건:** [`key in value`](src/usage_frames.py#L44)
-
-**오류 메시지:** 대시보드 조형 자산 매니페스트에 중복 필드가 있습니다.
-
-**거부 조건:** [`not 0 &lt; manifest_path.stat().st_size &lt;= MAX_MANIFEST_BYTES`](src/usage_frames.py#L69)
-
-**오류 메시지:** 대시보드 조형 자산 매니페스트 크기가 허용 범위를 벗어났습니다.
-
-**거부 조건:** [`not isinstance(self.manifest, dict)`](src/usage_frames.py#L75)
-
-**오류 메시지:** 대시보드 조형 자산 매니페스트는 객체여야 합니다.
-
-**거부 조건:** [`not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None`](src/usage_frames.py#L85)
-
-**오류 메시지:** 대시보드 조형 프레임 ZIP의 SHA256 형식이 잘못됐습니다.
-
-**거부 조건:** [`not 0 &lt; archive_path.stat().st_size &lt;= MAX_ARCHIVE_BYTES`](src/usage_frames.py#L87)
-
-**오류 메시지:** 대시보드 조형 프레임 ZIP 크기가 허용 범위를 벗어났습니다.
-
-**거부 조건:** [`hasher.hexdigest() != digest`](src/usage_frames.py#L94)
-
-**오류 메시지:** 대시보드 조형 프레임 ZIP의 SHA256이 일치하지 않습니다.
-
-**거부 조건:** [`len(members) != FRAME_COUNT or {item.filename for item in members} != names`](src/usage_frames.py#L100)
-
-**오류 메시지:** 대시보드 조형 프레임 ZIP의 정확한360개 이름·목록이 일치하지 않습니다.
-
-**거부 조건:** [`sum(item.file_size for item in members) &gt; MAX_TOTAL_BYTES`](src/usage_frames.py#L102)
-
-**오류 메시지:** 대시보드 조형 프레임 전체 읽기 상한을 초과했습니다.
-
-**거부 조건:** [`actual != self.identities`](src/usage_frames.py#L133)
-
-**오류 메시지:** 검증 뒤 대시보드 조형 자산이 변경됐습니다. 앱을 다시 실행해 주세요.
-
-**거부 조건:** [`type(elapsed) not in (int, float)`](src/usage_frames.py#L138)
-
-**오류 메시지:** 조형 재생 시각은 유한한 숫자여야 합니다.
-
-**거부 조건:** [`not finite`](src/usage_frames.py#L144)
-
-**오류 메시지:** 대시보드 조형 프레임의 재생 시각이 유한한 숫자가 아닙니다.
-
-**거부 조건:** [`self.archive is None`](src/usage_frames.py#L149)
-
-**오류 메시지:** 조형 재생기가 닫혔습니다.
-
-**거부 조건:** [`item.is_dir() or item.flag_bits & 1 or item.compress_type not in                     (zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED) or                     not 0 &lt; item.file_size &lt;= MAX_FRAME_BYTES`](src/usage_frames.py#L105)
-
-**오류 메시지:** 대시보드 조형 프레임 멤버의 형식·크기가 허용 범위를 벗어났습니다.
-
-
-#### LEVEL 2 · [src/usage_widgets.py](src/usage_widgets.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`CalendarHero`](src/usage_widgets.py#L9) | 사용 한도 화면에서만 날짜별 입체 이미지를 갱신합니다. |
-
-#### LEVEL 2 · [src/visuals.py](src/visuals.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`rotate_point`](src/visuals.py#L12) | X·Y·Z 순서로 회전하며 깊이 좌표를 보존합니다. |
-| [`axis_rotate`](src/visuals.py#L40) | 로드리게스 식으로 고유 축 주위를 회전하며 공통 Z 변환을 쓰지 않습니다. |
-| [`orbit_segments`](src/visuals.py#L63) | 제작 매니페스트와 일치하는 기하 검증용 메타입니다. GUI 드로잉에는 쓰지 않습니다. |
-| [`status_label`](src/visuals.py#L80) | 읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다. |
-| [`element_labels`](src/visuals.py#L85) | 원자번호와 계정 퍼센트를 서로 다른 명시적 라벨로 구분합니다. |
-| [`usage_bar`](src/visuals.py#L99) | 숫자와 채움에 같은 실제 비율을 쓰며 최소 채움 폭을 강제하지 않습니다. |
-| [`_frame_for_element`](src/visuals.py#L111) | 원소별 실제 제작 프레임을 읽습니다. 이전 형상으로 대체하지 않습니다. |
-| [`draw_orbit`](src/visuals.py#L117) | 달력 조형·날짜 도크·실제 잔량을 분리하고 명시한 원소 미리보기도 보존합니다. |
-| [`desktop_widget_layout`](src/visuals.py#L176) | 이름을 화면 픽셀 크기로 줄 바꿈하고 조형·잔량 영역을 분리합니다. |
-| [`draw_desktop_orbit`](src/visuals.py#L212) | 위젯의 조형과 글자를 별개 영역에 그려 작은 글자 축소를 막습니다. |
-| [`_draw_desktop_information`](src/visuals.py#L227) | 움직이는 GPU 이미지와 분리한 도크·시계·지역·기온·잔량을 그립니다. |
-| [`DesktopOverlayCache`](src/visuals.py#L278) | 한 위젯의 완전 입력이 같을 때만 단일 투명 정보 레이어를 재사용합니다. |
-
-**설정·옵션:** [`MOTION_PERIOD`](src/visuals.py#L27)
-
-**코드의 선언:** `정의=18`
-
-**설정·옵션:** [`RING_TURNS`](src/visuals.py#L28)
-
-**코드의 선언:** `정의=(1, -2, 3)`
-
-**설정·옵션:** [`RING_AZIMUTHS`](src/visuals.py#L29)
-
-**코드의 선언:** `정의=(8., 128., 248.)`
-
-**설정·옵션:** [`RING_AXIS_TILTS`](src/visuals.py#L30)
-
-**코드의 선언:** `정의=(42., 46., 49.)`
-
-**설정·옵션:** [`RING_RADII`](src/visuals.py#L35)
-
-**코드의 선언:** `정의=(45., 51., 57.)`
-
-**설정·옵션:** [`BASE_ANGLES`](src/visuals.py#L36)
-
-**코드의 선언:** `정의=tuple((math.radians(tilt), 0., math.radians(azimuth))                     for tilt, azimuth in zip((52., 58., 62.), RING_AZIMUTHS))`
-
-**설정·옵션:** [`ATOM_RECT`](src/visuals.py#L92)
-
-**코드의 선언:** `정의=QRectF(-48,-74,96,96)`
-
-**설정·옵션:** [`DOCK_RECT`](src/visuals.py#L93)
-
-**코드의 선언:** `정의=QRectF(-68,25,136,27)`
-
-**설정·옵션:** [`USAGE_RECT`](src/visuals.py#L94)
-
-**코드의 선언:** `정의=QRectF(-68,56,136,16)`
-
-**설정·옵션:** [`USAGE_TRACK_RECT`](src/visuals.py#L95)
-
-**코드의 선언:** `정의=QRectF(-61,62,62,4)`
-
-**설정·옵션:** [`SYMBOL_PIXELS`](src/visuals.py#L96)
-
-**코드의 선언:** `정의=24`
-
-
-#### LEVEL 2 · [src/weather.py](src/weather.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`localized_region`](src/weather.py#L27) | 검색 전 임시 표시에는 검증된 국내 사전 또는 실제 원문 지명을 사용합니다. |
-| [`select_geocoded_region`](src/weather.py#L67) | 동일 국가이면서 IP 추정 좌표에서30km 이내인 가장 가까운 검색 결과만 수락합니다. |
-
-**설정·옵션:** [`_COUNTRIES`](src/weather.py#L23)
-
-**코드의 선언:** `정의={'US': '미국', 'JP': '일본', 'CN': '중국', 'GB': '영국', 'DE': '독일',               'FR': '프랑스', 'CA': '캐나다', 'AU': '호주', 'SG': '싱가포르', 'TW': '대만'}`
-
-
-**거부 조건:** [`language not in ('ko', 'en')`](src/weather.py#L29)
-
-**오류 메시지:** 지원 언어는 ko 또는 en입니다.
-
-**거부 조건:** [`language not in ('ko', 'en')`](src/weather.py#L111)
-
-**오류 메시지:** 지원 언어는 ko 또는 en입니다.
-
-**거부 조건:** [`language not in ('ko', 'en')`](src/weather.py#L155)
-
-**오류 메시지:** 지원 언어는 ko 또는 en입니다.
-
-**거부 조건:** [`not self._valid_number(latitude, -90, 90) or not self._valid_number(longitude, -180, 180)`](src/weather.py#L249)
-
-**오류 메시지:** 위치 범위
-
-**거부 조건:** [`not self._valid_number(temperature, -100, 70)`](src/weather.py#L321)
-
-**오류 메시지:** 기온 범위
-
-**거부 조건:** [`not self._valid_number(observed, 0, now + 300)`](src/weather.py#L325)
-
-**오류 메시지:** 기온 제공 시각
-
-**거부 조건:** [`not isinstance(data, dict)`](src/weather.py#L232)
-
-**오류 메시지:** 응답 형식
-
-
-</details>
-
-### LEVEL 2 · 관측과 해석을 구분하기
-
-변경 전·후 모델과 추론 강도, 공개된 이유, 관측 시각과 근거 수준을 함께 읽습니다. 기록되지 않은 값은 미확인으로 남깁니다. 로컬 기록은 서버 모델 신원 증명이 아닙니다.
-
-**상황:** 알림이 나타나지 않음
-
-**확인할 내용:** 감시하는 sessions 경로·새 JSONL 기록·중복 실행 잠금·알림 설정을 확인합니다. 최초 기준선 읽기와 새 변경 감지는 다릅니다.
-
-**상황:** 자산 또는 글꼴 오류
-
-**확인할 내용:** 이 차수에서 참조하는 assets와 라이선스를 준비합니다. 소스 이력에는 과거 대용량 프레임 자산이 없을 수 있습니다.
-
-**상황:** 이유 또는 이전값이 없음
-
-**확인할 내용:** 원문 기록에 해당 필드가 있는지 확인합니다. 누락된 동기를 추정해서 채우지 않습니다.
-
-
-[자료 폴더](.) · [직전 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [이 차수의 원래 전체 상세](#reading-level-5)
-
-
-
-### LEVEL 2 · 26차의 구체적인 기능과 확인
-
-상세창 슬라이더와 위젯 메뉴의 회전 속도는 저장되며 모션 배율과 실제 시계·날짜·날씨·사용 한도의 갱신은 독립적입니다. 날짜별 대상·메시·공유 모션은 GPU 작업 스레드 하나와 최대 네 이미지를 사용합니다. 원소는 한국 날짜 1~31일에 대응하고 오늘의 압축 프레임만 열어 제한된 메모리로 재생합니다.
-
-로컬 JSONL에서 명시된 변경과 배정을 구분하는 감시기는 외부 통신을 하지 않습니다. 지역·기온 조회는 네트워크를 쓰고 계정 사용 한도는 App Server에 읽기 전용으로 요청합니다. 앱 소유 문구만 번역하며 기록 원문을 유지합니다. 프로세스 전용 고해상도 대기로 프레임을 조율하되 전역 타이머를 변경하지 않습니다.
-
-25차 대비 전체 소스 차이와 설정 값을 해당 diff에서 확인합니다. 이 차수 소스와 자산을 준비해 실행할 수 있으나 공개 이력에 당시 실행 결과는 남지 않았고 현재 자산의 과거 호환도 보장되지 않습니다.
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · 목적과 이 차수의 역할
-
-상세창 슬라이더와 위젯 메뉴에서 회전 속도를 조절하고 저장합니다. 모션 배율과 실제 시계·날짜·날씨·계정 한도 갱신은 별개입니다.
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · 핵심 기능과 보존 범위
-
-- 구성 관계 1: 상세창 슬라이더와 위젯 메뉴에서 회전 속도를 조절하고 저장합니다. 모션 배율과 실제 시계·날짜·날씨·계정 한도 갱신은 별개입니다.
-- 구성 관계 2: 로컬 세션 기록에서 모델·추론 강도의 변경과 명시된 배정을 구분합니다. 감시기는 외부 통신 없이 로컬 자료를 읽습니다.
-- 구성 관계 3: 공개 협업 호출과 소유자가 확인된 앱이 직접 남긴 활동을 연결합니다.
-- 구성 관계 4: 검증된 금속 원자 그림 한 장을 추출 없이 읽는 제한 메모리 재생기입니다.
-- 구성 관계 5: 같은 실제3D 자산을 공유하는 정적 마크와 가시성 기반 내부 모션입니다.
-- 구성 관계 6: 2026~2099년의 날짜별 조형 규칙입니다. 외부 데이터와 계정 정보를 사용하지 않습니다.
-- 구성 관계 7: 실제 대상 이름과 조형 특징을 연결하는 편집 사전입니다.
-- 구성 관계 8: 한 그래픽 장치(GPU) 작업 프로그램 내부의 작업 흐름와 최대 네 이미지로 날짜별 모션을 공유합니다.
-- 구성 관계 9: 현재 날짜의 실제 삼각형 표면으로 만든 입체 모형를 소유 프로그램 내부의 작업 흐름의 화면 밖 전용 공간의 그래픽 장치(GPU)에서 렌더합니다.
-- 구성 관계 10: 한국 날짜의1~31일에 대응하는 원소와 디자인 영감 팔레트입니다.
-- 구성 관계 11: 오늘 원소 하나의 압축 그림 한 장만 여는 제한 메모리 재생기입니다.
-- 구성 관계 12: 원본3D 자산을 변경하지 않는 제한 메모리 Qt 색 합성입니다.
-- 구성 관계 13: 프로세스 전용 고해상도 대기로 전역 타이머 설정 없이 그림 한 장을 조율합니다.
-- 구성 관계 14: 앱의 메뉴·설명처럼 앱이 만든 글만 언어를 바꿉니다. 실제 기록에 적힌 문장은 원문 그대로 보존해야 하며 번역한 앱 문구로 바꾸지 않습니다.
-- 구성 관계 15: Codex App Server의 `account/rateLimits/read`를 읽기 전용으로 조회합니다. 표시값은 남은 토큰 개수가 아니라 계정 사용 한도 비율입니다.
-- 구성 관계 16: 지역·기온 조회 모듈은 네트워크를 사용합니다. 로컬 감시기의 외부 통신 여부와 앱 전체의 날씨 조회를 구분합니다.
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · 입력·처리·출력
-
-원리 연결: 입력은 읽어 올 자료, 처리는 자료에서 변화와 이유를 찾는 과정, 출력은 사용자가 볼 알림·이력입니다. 기록에 없는 이전값이나 이유를 결과에 덧붙이지 않습니다.
-
-- 구성 관계 입력: 현재 사용자 Codex의 로컬 한 줄에 기록 하나를 담는 JSONL 파일과 이 차수의 앱 설정
-- 구성 관계 처리: 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시
-- 구성 관계 출력: 알림·변경 이력·로컬 진단 기록
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · 화면과 사용 흐름
-
-1. 이 차수의 소스·requirements와 필요한 자산을 한 작업 폴더에 준비합니다.
-2. 앱을 열고 위젯·상세창에서 감시 경로와 표시되는 기록을 확인합니다.
-3. 새 변경이 기록되면 이전·이후 값과 이유를 비교하고, 기록 종류와 근거 수준을 함께 읽습니다.
-4. 설정·이력은 개인 운영자료로 관리하고 다른 사용자에게 공유하기 전에 내용을 확인합니다.
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · 실제 자료 구성
-
-원리 연결: 설명 문서와 실행 소스, 목록 자료의 역할을 나누어 읽습니다. 보존 목록의 제외 항목은 누락을 숨긴 것이 아니라 공개하지 않은 범위와 이유를 표시한 것입니다.
-
-- 구성 관계 [src/](src): 앱을 구성하는 소스 파일이 들어 있는 폴더입니다.
-- 구성 관계 [README.md](README.md#reading-level-2): 사람이 읽는 설명 문서입니다.
-- 구성 관계 [requirements.txt](requirements.txt): 실행에 필요한 외부 도구와 버전을 적은 일반 텍스트입니다.
-- 구성 관계 [공개파일_비교.json](%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json): 파일 목록·지문·보존 범위를 이름과 값으로 담은 자료입니다.
-- 구성 관계 [보존자료.md](%EB%B3%B4%EC%A1%B4%EC%9E%90%EB%A3%8C.md): 사람이 읽는 설명 문서입니다.
-- 구성 관계 [부가자료_보존.json](%EB%B6%80%EA%B0%80%EC%9E%90%EB%A3%8C_%EB%B3%B4%EC%A1%B4.json): 파일 목록·지문·보존 범위를 이름과 값으로 담은 자료입니다.
-- 구성 관계 [직전차수.diff](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff): 직전 자료와 달라진 줄을 추가·삭제 표시로 기록한 전체 비교 파일입니다.
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · 주요 모듈과 코드 읽기
-
-원리 연결: 모듈은 기능별로 나눈 소스 파일입니다. 같은 파일 이름이 여러 차수에 있어도 내용이 같다고 가정하지 않고 해당 차수의 링크를 엽니다.
-
-- 구성 관계 [src/app.py](src/app.py): Codex Orbit: 독립 회전 위젯과 로컬 변경 기록·사용 한도.
-- 구성 관계 [src/notifier.py](src/notifier.py): 현재 사용자 로컬 한 줄에 기록 하나를 담는 JSONL 파일을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다.
-- 구성 관계 [src/activity.py](src/activity.py): 공개 협업 호출과 소유자가 확인된 앱이 직접 남긴 활동을 연결합니다.
-- 구성 관계 [src/atom_frames.py](src/atom_frames.py): 검증된 금속 원자 그림 한 장을 추출 없이 읽는 제한 메모리 재생기입니다.
-- 구성 관계 [src/brand.py](src/brand.py): 같은 실제3D 자산을 공유하는 정적 마크와 가시성 기반 내부 모션입니다.
-- 구성 관계 [src/calendar_art.py](src/calendar_art.py): 2026~2099년의 날짜별 조형 규칙입니다. 외부 데이터와 계정 정보를 사용하지 않습니다.
-- 구성 관계 [src/calendar_catalog.py](src/calendar_catalog.py): 실제 대상 이름과 조형 특징을 연결하는 편집 사전입니다.
-- 구성 관계 [src/calendar_motion.py](src/calendar_motion.py): 한 그래픽 장치(GPU) 작업 프로그램 내부의 작업 흐름와 최대 네 이미지로 날짜별 모션을 공유합니다.
-- 구성 관계 [src/calendar_renderer.py](src/calendar_renderer.py): 현재 날짜의 실제 삼각형 표면으로 만든 입체 모형를 소유 프로그램 내부의 작업 흐름의 화면 밖 전용 공간의 그래픽 장치(GPU)에서 렌더합니다.
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · 설치 환경과 실행·사용법
-
-원리 연결: 실행 소스가 있는 차수는 그 차수의 외부 도구 목록과 그림·글꼴 자료를 함께 준비합니다. 소스가 확인되지 않은 문서 차수에는 실행 명령을 만들어 적용하지 않습니다.
-
-Windows와 해당 폴더의 requirements.txt를 기준으로 Python 의존성을 준비합니다. history는 공개 소스 보존본이며 현재 루트 assets가 과거 모든 차수의 자산과 호환된다는 뜻은 아닙니다. 날짜별 실제 삼각형 표면으로 만든 입체 모형 렌더에는 ModernGL과 OpenGL 3.3을 지원하는 그래픽 드라이버가 필요합니다.
-
-자산과 의존성을 준비한 이 차수 폴더에서 `python src/app.py`를 실행합니다. history 소스만으로 과거 배포 EXE와 동일한 화면·자산이 모두 복원되지는 않습니다.
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · 사용하는 사람에게 달라진 점
-
-상세창 슬라이더와 위젯 우클릭 메뉴에서 회전 속도를 0.25~3배로 선택하고 1배로 복원할 수 있습니다. 선택값은 저장되어 다음 실행에도 적용됩니다. 속도를 바꿔도 조형의 회전 각도를 이어서 재생하며 날짜·시계·기온·계정 조회 간격은 그대로입니다. 저장이 실패하면 이전 배율로 복원하고 선택한 한국어·영어로 오류를 안내합니다. 정적 정보와 움직이는 조형을 나누어 갱신하는 변경도 포함합니다.
-
-[26차 검증 요약](../../docs/%EA%B3%B5%EA%B0%9C%EA%B2%80%EC%A6%9D_26%EC%B0%A8.md)에서 개발 전체·공개본·중앙 소스 검사와 배포 실행 결과를 구분합니다. 고정 240fps는 달성하지 못했으며 추가 달성 작업은 제외됐습니다. 26차 변경 기록의 실측 생성 약 227~230fps, 고유 Qt 그리기 약 214~229fps를 모니터 표시율로 해석하지 않습니다.
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · 이 보관본의 의존성 목록
-
-원리 연결: 의존성은 이 앱이 불러 쓰는 외부 도구입니다. >=는 적힌 버전 이상이라는 뜻이며 버전 숫자와 앱의 성능 수치를 구분합니다.
-
-[requirements.txt](requirements.txt)의 실제 항목입니다. 외부 실행 도구와 그래픽 장치(GPU) 드라이버는 별도로 준비합니다.
-
-```text
-PySide6-Essentials==6.12.0
-PyInstaller==6.22.3
-moderngl==5.13.0
-glcontext==3.1.0
-numpy==2.5.4
-Pillow==13.0.0
-```
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · 소스에서 제공하는 CLI 옵션
-
-원리 연결: CLI 옵션은 프로그램을 시작할 때 뒤에 붙이는 선택 항목입니다. Path는 파일·폴더 경로, store_true는 옵션 이름을 붙이면 켜지는 스위치입니다. --sessions 뒤에는 읽을 기록 폴더를, --data-dir 뒤에는 설정·이력 폴더를 지정합니다.
-
-- 구성 관계 [app.py](src/app.py): `--data-dir`, `--sessions`, `--smoke-test`, `--usage-smoke-test`, `--smoke-report`, `--show-details`, `--show-event`
-- 구성 관계 [notifier.py](src/notifier.py): `--sessions`, `--work`
-
-각 옵션의 기본값·필수값·부작용은 해당 main과 인자 정의를 함께 확인합니다.
-
-
-
-함수 역할·기본값·입력 거부 조건의 세부 참조
-
-다음 항목은 이 자료의 Python 소스에 명시된 선언입니다. 전체 분기와 호출 순서는 각 행의 코드 위치에서 이어서 읽을 수 있습니다.
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · [src/activity.py](src/activity.py)
-
-공개 호출과 직접 관측은 출처가 다릅니다. 원래 시각·소유자·안정된 ID가 연결 조건이며 대기 자료와 확정 관측의 보존 한도도 따로 둡니다.
-
-**맡은 일과 결과**
-
-- 이 부분의 역할: 보호문·비공개 표식·긴 인코딩 덩어리는 해석하거나 노출하지 않습니다. [구현 이름 safe_public_text](src/activity.py#L15)
-
-- 이 부분의 역할: 원래 기록 시각이 있는 해당 작업 자신의 관측만 보존하는 구조입니다. 여러 작업을 모두 합쳐 최대 256개이며 작업마다 256개씩 늘리는 제한이 아닙니다. [구현 이름 configuration](src/activity.py#L76)
-
-- 이 부분의 역할: 연결 확인에 필요한 앱 기록 항목만 남겨 나중 대조를 기다립니다. 대화 본문은 보관하지 않으며 모든 작업을 합쳐 대기 자료를 최대 32개로 제한하는 구조입니다. [구현 이름 defer](src/activity.py#L160)
-
-- 이 부분의 역할: 그 작업을 처음 발견한 기록만 추가 정보로 보완하는 구조입니다. 예를 들어 첫 배정 이유가 늦게 확인되면 처음 행을 보완하며, 뒤에 실제로 바뀐 모델 기록은 별도의 변화로 남깁니다. [구현 이름 observe](src/activity.py#L273)
-
-**선택값과 제한값**
-
-- 구성에 쓰는 값: 보존할 활동 이벤트 수 상한는 **128**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_ACTIVITY_EVENTS](src/activity.py#L7) 원래 선언을 함께 대조합니다: `정의=128`
-
-- 구성에 쓰는 값: 이미 본 활동 식별자의 수 상한는 **8192**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_ACTIVITY_SEEN](src/activity.py#L8) 원래 선언을 함께 대조합니다: `정의=8192`
-
-- 구성에 쓰는 값: 추적할 활동 호출 수 상한는 **32**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_ACTIVITY_CALLS](src/activity.py#L9) 원래 선언을 함께 대조합니다: `정의=32`
-
-- 구성에 쓰는 값: 공개 호출 수 상한는 **128**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_PUBLIC_CALLS](src/activity.py#L10) 원래 선언을 함께 대조합니다: `정의=128`
-
-- 구성에 쓰는 값: 연결 확인을 기다리는 활동 수의 전체 상한는 **32**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_DEFERRED_ACTIVITIES](src/activity.py#L11) 원래 선언을 함께 대조합니다: `정의=32`
-
-- 구성에 쓰는 값: 시각이 있는 설정 관측 수의 전체 상한는 **256**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_CONFIGURATION_SNAPSHOTS](src/activity.py#L12) 원래 선언을 함께 대조합니다: `정의=256`
-
-**받지 않는 입력과 실패 처리**
-
-- 입력과 오류의 관계: 활동 호출은 이름과 값의 사전 자료, 연결 대기는 순서 있는 목록이어야 하는 구조입니다. 어느 한쪽이라도 다른 형식이면 원본을 지우지 않고 오류로 남깁니다. [해당 검사](src/activity.py#L66)
-
-- 입력과 오류의 관계: 시각이 있는 설정 관측은 순서 있는 목록이어야 하는 구조입니다. 다른 형식이면 원본을 빈 값으로 바꾸어 숨기지 않습니다. [해당 검사](src/activity.py#L68)
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · [src/app.py](src/app.py)
-
-화면은 관측 자료를 받아 전후 값을 정리하지만 선택 목적을 실행 이유로 바꾸지 않습니다. 창의 수명·대기 알림·감시 종료는 서로 연결되면서도 각각 상태를 갖습니다.
-
-**맡은 일과 결과**
-
-- 이 부분의 역할: 설정과 UI의 속도는 유한한 실제 숫자 범위로 제한하는 구조입니다. [구현 이름 validated_motion_speed](src/app.py#L42)
-
-- 이 부분의 역할: Python이 더 쓰지 않는 객체를 정리하는 동안에도 살아 있어야 할 창의 관리자를 앱이 계속 보관하는 구조입니다. 창이 보이는데 관리 객체만 먼저 사라지는 일을 막기 위한 수명 관리입니다. [구현 이름 _application_gui_root](src/app.py#L49)
-
-- 이 부분의 역할: 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록하는 구조입니다. [구현 이름 operation_record](src/app.py#L67)
-
-- 이 부분의 역할: 이전 기록 전체 부재와 개별 필드 미기록을 구분하고 관측값만 표시하는 구조입니다. [구현 이름 previous_field](src/app.py#L106)
-
-- 이 부분의 역할: 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. [구현 이름 short_reason](src/app.py#L130)
-
-- 이 부분의 역할: 공개 문장만 표시하며 보호된 도구 페이로드를 해석하거나 노출하지 않습니다. [구현 이름 public_text](src/app.py#L182)
-
-- 이 부분의 역할: 공개된 작업 목적을 모델 선택 이유로 바꾸어 말하지 않습니다. [구현 이름 selection_explanation](src/app.py#L203)
-
-- 이 부분의 역할: Qt 예약 호출을 포함한 미처리 전달 수를 프로그램 내부의 작업 흐름 사이에서 제한하는 구조입니다. [구현 이름 NoticeDelivery](src/app.py#L309)
-
-- 이 부분의 역할: 중복 반환과 종료 뒤 도착한 신호도 같은 한도를 다시 늘리지 않습니다. [구현 이름 NoticeTicket](src/app.py#L334)
-
-- 이 부분의 역할: 오류가 있을 때 변경 기록 안에 원문을 보여 주는 읽기 전용 라벨입니다. [구현 이름 DiagnosticLabel](src/app.py#L918)
-
-- 이 부분의 역할: 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리하는 구조입니다. [구현 이름 QuitGuard](src/app.py#L1394)
-
-- 이 부분의 역할: 지연된 신호 인자 대신 최신 그 시점의 복사본과 현재 레이아웃의 실제 표시를 대조하는 구조입니다. [구현 이름 usage_smoke_state](src/app.py#L1956)
-
-- 이 부분의 역할: 실제 그래픽 장치(GPU) 렌더 수를 기준으로 준비·비교 단계를 판정하는 구조입니다. [구현 이름 motion_smoke_stage](src/app.py#L1980)
-
-- 이 부분의 역할: 말줄임 전 제목과 실제 높이에 영향을 주는 표시 조건만 비교하는 구조입니다. [구현 이름 _content_fit_signature](src/app.py#L759)
-
-- 이 부분의 역할: 실제 첫 관측 한 행만 안정된 활동 ID로 보강하며 다른 변경은 보존하는 구조입니다. [구현 이름 promote_first_observation](src/app.py#L1363)
-
-- 이 부분의 역할: 사용자 조작의 실패는 실제 속도를 복원한 뒤 상세창에서 안내하는 구조입니다. [구현 이름 change_motion_speed](src/app.py#L1484)
-
-- 이 부분의 역할: 외부 QThread 참조를 무효화하지 않고 종료된 감시기와 GUI 소유자를 해제하는 구조입니다. [구현 이름 _finish_closed_gui](src/app.py#L1948)
-
-**선택값과 제한값**
-
-- 구성에 쓰는 값: 개인 설정·이력 저장 폴더를 고르는 옵션; 미지정 시 현재 사용자의 LOCALAPPDATA 아래 CodexOrbit, 그 환경값이 없으면 사용자 홈 아래 CodexOrbit입니다. 경로를 입력하는 옵션입니다. [--data-dir](src/app.py#L1996) 원래 선언을 함께 대조합니다: `type=Path; default=Path(os.environ.get('LOCALAPPDATA', Path.home())) / 'CodexOrbit'`
-
-- 구성에 쓰는 값: 읽을 Codex 기록 폴더를 고르는 옵션입니다. 경로를 입력하는 옵션입니다. [--sessions](src/app.py#L1997) 원래 선언을 함께 대조합니다: `type=Path`
-
-- 구성에 쓰는 값: 앱 시작 확인 모드를 켜는 옵션입니다. 값을 뒤에 쓰지 않고 이름만 붙여 켭니다. [--smoke-test](src/app.py#L1998) 원래 선언을 함께 대조합니다: `action='store_true'`
-
-- 구성에 쓰는 값: 실제 계정 한도와 표시를 조회한 뒤 종료하는 확인 옵션입니다. 값을 뒤에 쓰지 않고 이름만 붙여 켭니다. [--usage-smoke-test](src/app.py#L1999) 원래 선언을 함께 대조합니다: `action='store_true'; help='실제 계정 잔량과 표시를 조회한 뒤 종료'`
-
-- 구성에 쓰는 값: 시작 확인 결과를 저장할 파일 경로 옵션입니다. 경로를 입력하는 옵션입니다. [--smoke-report](src/app.py#L2000) 원래 선언을 함께 대조합니다: `type=Path`
-
-- 구성에 쓰는 값: 시작할 때 상세창을 여는 옵션입니다. 값을 뒤에 쓰지 않고 이름만 붙여 켭니다. [--show-details](src/app.py#L2001) 원래 선언을 함께 대조합니다: `action='store_true'`
-
-- 구성에 쓰는 값: 기존 이벤트 ID 또는 대상 ID를 지정해 그 이력을 다시 표시하는 옵션입니다. 뒤에 해당 식별자를 입력하는 구조입니다. [--show-event](src/app.py#L2002) 원래 선언을 함께 대조합니다: `help='기존 이력의 이벤트 ID 또는 대상 ID를 다시 표시'`
-
-- 구성에 쓰는 값: 이력이 없을 때 첫 실행은 기준선이며 새 변화를 기다린다고 알려 주는 문구는 **'변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [EMPTY_HISTORY_GUIDANCE](src/app.py#L39) 원래 선언을 함께 대조합니다: `정의='변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'`
-
-- 구성에 쓰는 값: 부모 조율·작업 분류·간단한 수정·구현·심층 검토·독립 검증·판단 재검토 역할의 표시 이름 대응표입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하는 구조입니다. [ROLE_LABELS](src/app.py#L116) 원래 선언을 함께 대조합니다: `정의={'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}`
-
-**받지 않는 입력과 실패 처리**
-
-- 입력과 오류의 관계: GUI 소유자는 QApplication의 메인 프로그램 내부의 작업 흐름에서 생성해야 하는 구조입니다. 화면·언어 변경은 화면을 담당하는 작업 흐름에서, 그래픽 작업 공간은 그것을 만든 작업 흐름에서만 다루어야 하는 구조입니다. [해당 검사](src/app.py#L52)
-
-- 입력과 오류의 관계: 언어는 GUI 메인 프로그램 내부의 작업 흐름에서만 변경할 수 있습니다. 화면·언어 변경은 화면을 담당하는 작업 흐름에서, 그래픽 작업 공간은 그것을 만든 작업 흐름에서만 다루어야 하는 구조입니다. [해당 검사](src/app.py#L1523)
-
-- 입력과 오류의 관계: 같은 자료 폴더를 다른 실행본이 쓰고 있거나 잠금 파일에 접근하지 못하면 시작을 멈춥니다. 두 앱이 같은 설정·이력을 동시에 덮어쓰게 하지 않습니다. [해당 검사](src/app.py#L2024)
-
-- 입력과 오류의 관계: 앱 설정은 항목 이름과 값으로 구성된 JSON 자료여야 하는 구조입니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 하는 구조입니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/app.py#L295)
-
-- 입력과 오류의 관계: 알림 전달 대기 한도 또는 종료 상태: 다음 감시 주기에 재시도하는 구조입니다. [해당 검사](src/app.py#L318)
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · [src/atom_frames.py](src/atom_frames.py)
-
-압축 자산의 전체 검증과 개별 프레임 읽기를 분리합니다. 한 번 검증한 팩을 모든 창이 공유하되 풀린 이미지 수는 별도 캐시 한도에 묶습니다.
-
-**맡은 일과 결과**
-
-- 이 부분의 역할: 필수 시각 자산 오류를 시작 실패 경로에 전달하는 구조입니다. [구현 이름 AtomAssetError](src/atom_frames.py#L27)
-
-- 이 부분의 역할: 시작 시 전체 무결성을 검사하고 해제된 화면용 이미지 객체(QImage)는 최대24장만 보존하는 구조입니다. [구현 이름 AtomFrames](src/atom_frames.py#L50)
-
-- 이 부분의 역할: 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리하는 구조입니다. [구현 이름 close_runtime_frames](src/atom_frames.py#L172)
-
-- 이 부분의 역할: 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유하는 구조입니다. [구현 이름 get_atom_frames](src/atom_frames.py#L183)
-
-**선택값과 제한값**
-
-- 구성에 쓰는 값: 압축 묶음에 있어야 하는 그림의 정확한 장수는 **540**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_COUNT](src/atom_frames.py#L16) 원래 선언을 함께 대조합니다: `정의=540`
-
-- 구성에 쓰는 값: 그림 한 변의 픽셀 수는 **296**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_SIZE](src/atom_frames.py#L17) 원래 선언을 함께 대조합니다: `정의=296`
-
-- 구성에 쓰는 값: 초당 그림 수의 설정값는 **30**입니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [FPS](src/atom_frames.py#L18) 원래 선언을 함께 대조합니다: `정의=30`
-
-- 구성에 쓰는 값: 한 재생 주기의 초 단위 길이는 **18**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [PERIOD_SECONDS](src/atom_frames.py#L19) 원래 선언을 함께 대조합니다: `정의=18`
-
-- 구성에 쓰는 값: 풀어 놓은 그림을 메모리에 보관하는 최대 장수는 **24**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [CACHE_LIMIT](src/atom_frames.py#L20) 원래 선언을 함께 대조합니다: `정의=24`
-
-- 구성에 쓰는 값: 압축 파일 자체를 읽을 수 있는 최대 바이트 수는 **128 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_ARCHIVE_BYTES](src/atom_frames.py#L21) 원래 선언을 함께 대조합니다: `정의=128 * 1024 * 1024`
-
-- 구성에 쓰는 값: 개별 그림 한 장의 최대 바이트 수는 **1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_FRAME_BYTES](src/atom_frames.py#L22) 원래 선언을 함께 대조합니다: `정의=1024 * 1024`
-
-- 구성에 쓰는 값: 그림들을 풀어 읽은 크기 합계의 최대 바이트 수는 **256 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_TOTAL_BYTES](src/atom_frames.py#L23) 원래 선언을 함께 대조합니다: `정의=256 * 1024 * 1024`
-
-- 구성에 쓰는 값: 자산 명세 문서의 최대 바이트 수는 **64 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_MANIFEST_BYTES](src/atom_frames.py#L24) 원래 선언을 함께 대조합니다: `정의=64 * 1024`
-
-**받지 않는 입력과 실패 처리**
-
-- 입력과 오류의 관계: 명세 문서에 같은 항목 이름이 두 번 나오면 어느 값을 믿어야 할지 모호하므로 거부하는 구조입니다. [해당 검사](src/atom_frames.py#L44)
-
-- 입력과 오류의 관계: 원자 자산 자산의 파일명·크기·지문을 적은 명세 문서 크기가 허용 범위를 벗어났습니다. 파일 크기는 이 모듈의 MAX_MANIFEST_BYTES 이하여야 하는 구조입니다. 빈 파일도 받지 않습니다. [해당 검사](src/atom_frames.py#L69)
-
-- 입력과 오류의 관계: 원자 자산 자산의 파일명·크기·지문을 적은 명세 문서는 객체여야 하는 구조입니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 하는 구조입니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/atom_frames.py#L75)
-
-- 입력과 오류의 관계: 파일 내용 지문은 문자열이며 64개의 16진수 문자로 이루어져야 하는 구조입니다. 여기서 16진수 문자는 0~9와 a~f입니다. 이 검사에서는 소문자만 허용하는 구조입니다. 숫자·잘못된 길이·다른 문자는 지문으로 받지 않습니다. [해당 검사](src/atom_frames.py#L85)
-
-- 입력과 오류의 관계: 원자 그림 한 장 ZIP 크기가 허용 범위를 벗어났습니다. 파일 크기는 이 모듈의 MAX_ARCHIVE_BYTES 이하여야 하는 구조입니다. 빈 파일도 받지 않습니다. [해당 검사](src/atom_frames.py#L87)
-
-- 입력과 오류의 관계: 압축 파일의 전체 내용을 읽어 계산한 SHA-256 지문이 명세 지문과 같아야 하는 구조입니다. 다른 파일이나 내용 변경을 감지하면 재생하지 않습니다. [해당 검사](src/atom_frames.py#L94)
-
-- 입력과 오류의 관계: 압축 묶음 안의 파일 수는 정확히 540개이고 파일 이름의 전체 목록도 예상 목록과 정확히 같아야 하는 구조입니다. 이름 누락·추가·다른 이름은 같은 장수여도 거부하는 구조입니다. [해당 검사](src/atom_frames.py#L100)
-
-- 입력과 오류의 관계: 압축을 풀어 읽는 개별 파일 크기를 모두 더한 값이 이 모듈의 MAX_TOTAL_BYTES 이하여야 하는 구조입니다. 압축 파일 자체가 작아도 풀린 합계가 더 크면 거부하는 구조입니다. [해당 검사](src/atom_frames.py#L102)
-
-- 입력과 오류의 관계: 검증 때와 현재 파일의 식별 정보가 달라지면 실행 중 자산 변경으로 처리하는 구조입니다. 앱을 다시 시작해 검증해야 하는 구조입니다. [해당 검사](src/atom_frames.py#L133)
-
-- 입력과 오류의 관계: 원자 그림 한 장의 재생 시각이 유한한 숫자가 아닙니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻하는 구조입니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/atom_frames.py#L138)
-
-- 입력과 오류의 관계: 압축 묶음 안의 항목은 폴더가 아닌 파일이고 암호화되지 않아야 하는 구조입니다. 허용한 무압축 또는 DEFLATE 압축이어야 하며 크기는 0보다 크고 개별 그림 상한 이하여야 하는 구조입니다. 이 중 하나라도 맞지 않으면 거부하는 구조입니다. [해당 검사](src/atom_frames.py#L105)
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · [src/brand.py](src/brand.py)
-
-여러 창의 로고와 기능 기호를 같은 제작 자료로 표시하는 부분입니다. 창을 숨기면 보이지 않는 로고의 재생 구독을 끝냅니다.
-
-**맡은 일과 결과**
-
-- 이 부분의 역할: 원소 그림 한 장의 실제 크기에 비례해 여백만 줄이며 영역 밖을 복사하지 않습니다. [구현 이름 motion_brand_source](src/brand.py#L32)
-
-- 이 부분의 역할: 보이는 로고만 단일 시계에서 같은 그림 한 장으로 갱신하는 구조입니다. [구현 이름 BrandClock](src/brand.py#L40)
-
-- 이 부분의 역할: 닫힘·숨김 이벤트에 맞춰 재생 구독을 끝내는 실제3D 로고입니다. [구현 이름 AnimatedBrand](src/brand.py#L106)
-
-- 이 부분의 역할: 실제 삼각형 표면으로 만든 입체 모형에서 제작한 고정 기호 일곱 개를 창 생성 전에 검증하는 구조입니다. [구현 이름 validate_symbols](src/brand.py#L137)
-
-- 이 부분의 역할: 실제 삼각형 표면으로 만든 입체 모형 렌더만 축소하고 새로운 도형이나 글자를 덧그리지 않습니다. [구현 이름 symbol_image](src/brand.py#L181)
-
-- 이 부분의 역할: 원문 글자 표시 부품(QLabel)을 유지하며 기능 의미를 읽기 쉬운 기호로 보조하는 구조입니다. [구현 이름 with_symbol](src/brand.py#L209)
-
-**선택값과 제한값**
-
-- 구성에 쓰는 값: 모델·추론·시간·이유·한도·새로고침·이력의 일곱 기능 기호 이름는 **('model', 'reasoning', 'time', 'reason', 'usage', 'refresh', 'history')**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [SYMBOL_NAMES](src/brand.py#L133) 원래 선언을 함께 대조합니다: `정의=('model', 'reasoning', 'time', 'reason', 'usage', 'refresh', 'history')`
-
-**받지 않는 입력과 실패 처리**
-
-- 입력과 오류의 관계: 브랜드 그림 한 변의 크기는 1~512픽셀이어야 하는 구조입니다. 이 범위를 벗어나면 그림을 만들지 않습니다. [해당 검사](src/brand.py#L22)
-
-- 입력과 오류의 관계: 기능 기호는 모델·추론·시간·이유·한도·새로고침·이력의 일곱 종류 중 하나이고 크기는 1~96픽셀이어야 하는 구조입니다. 종류나 크기 중 하나라도 맞지 않으면 거부하는 구조입니다. [해당 검사](src/brand.py#L184)
-
-- 입력과 오류의 관계: 3D 기능 기호 자산의 파일명·크기·지문을 적은 명세 문서 크기 오류입니다. 파일 크기는 65,536바이트 이하여야 하는 구조입니다. 빈 파일도 받지 않습니다. [해당 검사](src/brand.py#L142)
-
-- 입력과 오류의 관계: 명세 버전은 참/거짓이 아닌 정수 1이어야 하는 구조입니다. 다른 버전이나 참 값을 1처럼 받아들이지 않습니다. [해당 검사](src/brand.py#L145)
-
-- 입력과 오류의 관계: 기호 파일 목록은 이름과 값의 사전이고 일곱 기능 기호의 이름과 정확히 같아야 하는 구조입니다. 빠진 기호나 추가된 기호가 있어도 거부하는 구조입니다. [해당 검사](src/brand.py#L148)
-
-- 입력과 오류의 관계: 각 기호 정보는 이름과 값의 사전이고 파일명은 해당 기호 이름에 .png를 붙인 고정 이름이어야 하는 구조입니다. [해당 검사](src/brand.py#L153)
-
-- 입력과 오류의 관계: 파일 내용 지문은 문자열이며 64개의 16진수 문자로 이루어져야 하는 구조입니다. 여기서 16진수 문자는 0~9와 a~f입니다. 이 검사에서는 소문자만 허용하는 구조입니다. 숫자·잘못된 길이·다른 문자는 지문으로 받지 않습니다. [해당 검사](src/brand.py#L156)
-
-- 입력과 오류의 관계: 3D 기능 기호 읽기 크기 상한 오류입니다. 파일 크기는 262,144바이트 이하여야 하는 구조입니다. 빈 파일도 받지 않습니다. [해당 검사](src/brand.py#L159)
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · [src/calendar_art.py](src/calendar_art.py)
-
-날짜 검증 뒤 월 팔레트와 대상 규칙을 결정합니다. 2026~2099 범위와 한국 날짜 기준은 외부 계정·네트워크와 독립적입니다.
-
-**맡은 일과 결과**
-
-- 이 부분의 역할: 호스트의 현지 시간대와 무관하게 한국 날짜를 사용하는 구조입니다. [구현 이름 current_date](src/calendar_art.py#L33)
-
-- 이 부분의 역할: 반올림 충돌만 가장 가까운 미사용 빨강·초록·파랑의 색값(RGB)로 옮기고 월별 결과를 내용이 고정된 보관하는 구조입니다. [구현 이름 _month_palette](src/calendar_art.py#L50)
-
-- 이 부분의 역할: 유효한 날짜만 허용하며 지원 범위 밖을 다른 날짜로 몰래 대체하지 않습니다. [구현 이름 design_for_date](src/calendar_art.py#L78)
-
-- 이 부분의 역할: 현재 모델만 렌더하며 이 반복자는 작은 카탈로그를 작성할 때만 사용하는 구조입니다. [구현 이름 all_designs](src/calendar_art.py#L95)
-
-**선택값과 제한값**
-
-- 구성에 쓰는 값: 조형을 지원하는 첫 날짜는 2026-1-1입니다. [FIRST_DATE](src/calendar_art.py#L10) 원래 선언을 함께 대조합니다: `정의=date(2026,1,1)`
-
-- 구성에 쓰는 값: 조형을 지원하는 마지막 날짜는 2099-12-31입니다. [LAST_DATE](src/calendar_art.py#L11) 원래 선언을 함께 대조합니다: `정의=date(2099,12,31)`
-
-- 구성에 쓰는 값: 한국 표준시인 UTC보다 9시간 빠른 시간대입니다. [KST](src/calendar_art.py#L12) 원래 선언을 함께 대조합니다: `정의=timezone(timedelta(hours=9))`
-
-- 구성에 쓰는 값: 연월별 조형 모음에서 가져온 주제 이름 목록입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하는 구조입니다. [THEMES](src/calendar_art.py#L13) 원래 선언을 함께 대조합니다: `정의=tuple(row.title for row in all_collections())`
-
-**받지 않는 입력과 실패 처리**
-
-- 입력과 오류의 관계: 날짜 입력은 날짜 전용 값이어야 하는 구조입니다. 날짜처럼 보이는 문장이나 날짜·시각이 합쳐진 다른 형식을 대신 받지 않습니다. [해당 검사](src/calendar_art.py#L80)
-
-- 입력과 오류의 관계: 지원 날짜는 2026-01-01부터 2099-12-31까지 양 끝을 포함하는 구조입니다. 이보다 이르거나 늦은 날짜를 다른 날짜로 바꾸지 않고 오류로 알립니다. [해당 검사](src/calendar_art.py#L82)
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · [src/calendar_catalog.py](src/calendar_catalog.py)
-
-이름 사전과 형상 구성 사전은 실제 대상을 연결합니다. 월 번호와 연월 색인은 888개 주제의 위치이며 한글 이름 연결에는 받침 규칙을 사용합니다.
-
-**맡은 일과 결과**
-
-- 이 부분의 역할: 마지막 한글 음절의 받침에 맞춰 대상 이름을 연결하는 구조입니다. [구현 이름 joining_particle](src/calendar_catalog.py#L208)
-
-**선택값과 제한값**
-
-- 구성에 쓰는 값: 꽃·열매·잎·악기별 대상 모음입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하는 구조입니다. [POOLS](src/calendar_catalog.py#L166) 원래 선언을 함께 대조합니다: `정의={'꽃': _objects(_FLOWERS,'꽃'), '열매': _objects(_FRUITS,'열매'),          '잎': _objects(_LEAVES,'잎'), '악기': _objects(_MUSIC,'악기')}`
-
-- 구성에 쓰는 값: 대상 고유 이름으로 조형 대상을 찾는 사전입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하는 구조입니다. [OBJECTS](src/calendar_catalog.py#L168) 원래 선언을 함께 대조합니다: `정의={obj.key:obj for pool in POOLS.values() for obj in pool}`
-
-- 구성에 쓰는 값: 꽃다발형·대각선형·감싸는 형태·연주대형·삼각형 정물·부채형의 표시 이름 대응표입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하는 구조입니다. [COMPOSITION_NAMES](src/calendar_catalog.py#L193) 원래 선언을 함께 대조합니다: `정의={'bouquet':'꽃다발형','diagonal':'대각선형','shelter':'감싸는 형태',                      'stage':'연주대형','triangle':'삼각형 정물','fan':'부채형'}`
-
-**받지 않는 입력과 실패 처리**
-
-- 입력과 오류의 관계: 연월 색인은 0~887, 월은 1~12여야 하는 구조입니다. 둘 중 하나라도 범위를 벗어나면 지원 연월 모음으로 사용하지 않습니다. [해당 검사](src/calendar_catalog.py#L217)
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · [src/calendar_motion.py](src/calendar_motion.py)
-
-렌더 작업자는 최신 그림 하나를 전달하고 보이는 화면들의 크기 요구 중 최대를 사용합니다. 그림 생산과 Qt가 실제로 소비한 그림 수는 다릅니다.
-
-**맡은 일과 결과**
-
-- 이 부분의 역할: 정상 슬롯을 유지하고 늦은 그림 한 장은 추가 대기나 누적 추격 없이 이어갑니다. [구현 이름 next_frame_deadline](src/calendar_motion.py#L21)
-
-- 이 부분의 역할: 그래픽 장치(GPU) 준비·실패 때만 쓰는 월 주제의 정적 평면 표식입니다. 3D 성공으로 가장하지 않습니다. [구현 이름 fallback_image](src/calendar_motion.py#L26)
-
-- 이 부분의 역할: 그림을 계산하는 별도 작업은 화면 버튼이나 창을 직접 건드리지 않습니다. 가장 최근에 만든 그림 하나를 복사해 화면 담당 작업에 전달하는 구조입니다. Qt는 창과 버튼을 만드는 도구 이름입니다. [구현 이름 _Worker](src/calendar_motion.py#L60)
-
-- 이 부분의 역할: 창 표시 전에 같은 작업자의 첫 실제 그림 한 장을 최대 5초 준비하는 구조입니다. [구현 이름 prepare_calendar_motion](src/calendar_motion.py#L232)
-
-- 이 부분의 역할: 지금 회전한 위치를 유지한 채 앞으로 도는 속도만 바꿉니다. 예를 들어 회전 중 속도를 올려도 모형이 시작 위치로 튀지 않습니다. 바탕화면 시계와 날짜가 더 빠르게 흐르는 것은 아닙니다. [구현 이름 set_calendar_motion_speed](src/calendar_motion.py#L262)
-
-- 이 부분의 역할: 현재 보이는 각 소유자의 실제 픽셀 요구 중 최대 크기만 전달하는 구조입니다. [구현 이름 set_calendar_motion_size](src/calendar_motion.py#L268)
-
-- 이 부분의 역할: Qt 그리기 경로가 실제로 소비한 서로 다른 그림 한 장만 셉니다. [구현 이름 record_calendar_presentation](src/calendar_motion.py#L276)
-
-- 이 부분의 역할: 제품은 이 문자열을 상태나 툴팁에 표시해 대체 표식과 실제 3D를 구분할 수 있습니다. [구현 이름 get_calendar_error](src/calendar_motion.py#L285)
-
-**선택값과 제한값**
-
-- 구성에 쓰는 값: 초당 그림 수의 설정값는 **240**입니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [FPS](src/calendar_motion.py#L15) 원래 선언을 함께 대조합니다: `정의=240`
-
-- 구성에 쓰는 값: 공유 그림의 기본 크기는 **384**입니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [SIZE](src/calendar_motion.py#L16) 원래 선언을 함께 대조합니다: `정의=384`
-
-- 구성에 쓰는 값: 그래픽 장치에서 그릴 원본 가로·세로 픽셀 크기는 **(3840, 2160)**입니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [RENDER_SIZE](src/calendar_motion.py#L17) 원래 선언을 함께 대조합니다: `정의=(3840, 2160)`
-
-**받지 않는 입력과 실패 처리**
-
-- 입력과 오류의 관계: 날짜별 모션 API는 Qt 메인 프로그램 내부의 작업 흐름에서 호출해야 하는 구조입니다. 화면·언어 변경은 화면을 담당하는 작업 흐름에서, 그래픽 작업 공간은 그것을 만든 작업 흐름에서만 다루어야 하는 구조입니다. [해당 검사](src/calendar_motion.py#L211)
-
-- 입력과 오류의 관계: 기다릴 시간은 참/거짓을 제외한 실제 숫자로 0초보다 크고 5초 이하여야 하는 구조입니다. 숫자가 아닌 입력이나 범위 밖 값은 거부하는 구조입니다. [해당 검사](src/calendar_motion.py#L234)
-
-- 입력과 오류의 관계: 화면에 보이는지의 값은 참 또는 거짓이어야 하는 구조입니다. 0·1·문자열을 대신 받지 않습니다. [해당 검사](src/calendar_motion.py#L258)
-
-- 입력과 오류의 관계: 전달할 그림 크기는 참/거짓을 제외한 정수로 32~2160 범위여야 하는 구조입니다. 예를 들어 소수나 범위를 벗어난 크기는 거부하는 구조입니다. [해당 검사](src/calendar_motion.py#L270)
-
-- 입력과 오류의 관계: 날짜별 모션 서비스가 닫혔습니다. [해당 검사](src/calendar_motion.py#L167)
-
-- 입력과 오류의 관계: 날짜별 모션 서비스가 닫혔습니다. [해당 검사](src/calendar_motion.py#L180)
-
-- 입력과 오류의 관계: 재생 시각은 유한한 숫자여야 하는 구조입니다. [해당 검사](src/calendar_motion.py#L181)
-
-- 입력과 오류의 관계: 재생 시각은 유한한 숫자여야 하는 구조입니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻하는 구조입니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/calendar_motion.py#L184)
-
-- 입력과 오류의 관계: 이전 그래픽 장치(GPU) 작업 프로그램 내부의 작업 흐름가 종료 중입니다. [해당 검사](src/calendar_motion.py#L221)
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · [src/calendar_renderer.py](src/calendar_renderer.py)
-
-날짜 사전이 대상·형상 규칙을 고르고 삼각형 부품과 카메라가 이미지를 만듭니다. 날짜와 무관한 링은 재사용하지만 날짜 버퍼는 현재 날짜에 한정합니다.
-
-**맡은 일과 결과**
-
-- 이 부분의 역할: 입체 회전축의 방향을 길이 1의 기준으로 맞춘 뒤, 그 축 주위를 돌리는 계산표를 만듭니다. 로드리게스 회전행렬은 이 계산표의 이름입니다. 축의 길이가 커졌다고 모형 크기까지 커지는 계산을 피하는 구조입니다. [구현 이름 rotation](src/calendar_renderer.py#L24)
-
-- 이 부분의 역할: 입체 표면을 이루는 삼각형의 꼭짓점 순서와 바깥을 향하는 방향을 맞춥니다. 법선은 표면의 바깥 방향, winding은 꼭짓점을 도는 순서입니다. 두 방향이 맞아야 앞면과 조명을 같은 기준으로 계산하는 구조입니다. [구현 이름 finish](src/calendar_renderer.py#L48)
-
-- 이 부분의 역할: 육면체 면을 실제 둥근 모서리와 구면 꼭짓점으로 투영하는 구조입니다. [구현 이름 box](src/calendar_renderer.py#L58)
-
-- 이 부분의 역할: 단면을 축 주위로 돌려 앞면·뒷면·옆면이 있는 입체를 만듭니다. 단면이 각진 다각형이면 각 면의 바깥 방향도 평평한 면에 맞춥니다. 단순한 앞면 그림을 입체처럼 표시하는 방식과 구별됩니다. [구현 이름 lathe](src/calendar_renderer.py#L84)
-
-- 이 부분의 역할: 3D 경로를 따라 원형 단면을 운반하는 구조입니다. 코일은 실제 깊이를 가집니다. [구현 이름 tube](src/calendar_renderer.py#L104)
-
-- 이 부분의 역할: 대상 이름에 연결된 주요 구조를 실제 삼각형 부품으로 구성하는 구조입니다. [구현 이름 _object_geometry](src/calendar_renderer.py#L145)
-
-- 이 부분의 역할: 날짜와 무관한 세 링만 읽기 전용 배열로 한 번 생성하는 구조입니다. [구현 이름 _ring_geometry](src/calendar_renderer.py#L323)
-
-- 이 부분의 역할: 날짜별 주연과 서로 다른 두 월 모티프를 명시적 대상 사전에서 렌더하는 구조입니다. [구현 이름 build_geometry](src/calendar_renderer.py#L334)
-
-- 이 부분의 역할: 그래픽 작업 공간를 만든 프로그램 내부의 작업 흐름에서만 사용하고 현재 날짜의 버퍼만 보유하는 구조입니다. [구현 이름 CalendarRenderer](src/calendar_renderer.py#L378)
-
-- 이 부분의 역할: 미리보기와 직접 검증용 동기 렌더입니다. 앱은 공유 작업 프로그램 내부의 작업 흐름를 사용하는 구조입니다. [구현 이름 render_date](src/calendar_renderer.py#L489)
-
-- 이 부분의 역할: 원본 타깃은 유지하고 중앙 정사각형의 그래픽 장치(GPU) 전달 크기만 변경하는 구조입니다. [구현 이름 set_output_size](src/calendar_renderer.py#L425)
-
-- 이 부분의 역할: 검증·내보내기 때만 실제 직사각형 원본 전체를 중앙 처리 장치(CPU)로 읽습니다. [구현 이름 render_original](src/calendar_renderer.py#L470)
-
-**선택값과 제한값**
-
-- 구성에 쓰는 값: 입체 조형의 회전 주기는 **12.0**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [PERIOD](src/calendar_renderer.py#L132) 원래 선언을 함께 대조합니다: `정의=12.0`
-
-- 구성에 쓰는 값: 공유 그림의 기본 크기는 **384**입니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [SIZE](src/calendar_renderer.py#L133) 원래 선언을 함께 대조합니다: `정의=384`
-
-**받지 않는 입력과 실패 처리**
-
-- 입력과 오류의 관계: 대상 사전의 형상 규칙과 선택된 디자인의 규칙이 같아야 하는 구조입니다. 이름과 모형 구성이 다른 자료는 렌더하지 않습니다. [해당 검사](src/calendar_renderer.py#L338)
-
-- 입력과 오류의 관계: 모션 시각은 유한한 숫자여야 하는 구조입니다. [해당 검사](src/calendar_renderer.py#L364)
-
-- 입력과 오류의 관계: 모션 시각은 유한한 숫자여야 하는 구조입니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻하는 구조입니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/calendar_renderer.py#L367)
-
-- 입력과 오류의 관계: 그래픽 장치(GPU) 그래픽 작업 공간는 생성 프로그램 내부의 작업 흐름에서만 사용할 수 있습니다. 화면·언어 변경은 화면을 담당하는 작업 흐름에서, 그래픽 작업 공간은 그것을 만든 작업 흐름에서만 다루어야 하는 구조입니다. [해당 검사](src/calendar_renderer.py#L423)
-
-- 입력과 오류의 관계: 전달할 그림 크기는 참/거짓을 제외한 정수로 32~2160 범위여야 하는 구조입니다. 예를 들어 소수나 범위를 벗어난 크기는 거부하는 구조입니다. [해당 검사](src/calendar_renderer.py#L428)
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · [src/core.py](src/core.py)
-
-줄 단위 기록 해석과 문서 적용은 다른 입력을 다룹니다. 문서 적용은 미리보기 당시 내용의 지문을 기준으로 하여 동시 변경이나 다른 경로 연결을 감지합니다.
-
-**맡은 일과 결과**
-
-- 이 부분의 역할: 기록 파일에서 실제 줄바꿈 문자(LF)가 있는 자리만 한 기록의 경계로 봅니다. 읽기 범위의 맨 앞이나 맨 뒤에서 잘린 기록은 완성된 기록처럼 읽지 않습니다. 예를 들어 한 기록 안에 줄바꿈처럼 보이는 특수 문자가 있어도 기록 두 개로 나누지 않습니다. [구현 이름 read_jsonl_tail](src/core.py#L19)
-
-- 이 부분의 역할: 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존하는 구조입니다. [구현 이름 title_catalog](src/core.py#L56)
-
-- 이 부분의 역할: 자식 작업은 실제 부모 채팅 제목과 작업명을 분리하는 구조입니다. [구현 이름 resolve_title](src/core.py#L86)
-
-- 이 부분의 역할: 지침을 넣을 파일뿐 아니라 그 파일까지 거치는 상위 폴더도 확인하는 구조입니다. 바로가기처럼 다른 위치로 연결된 파일·폴더(링크 또는 Windows 재분석 지점)가 있으면 적용을 멈춥니다. 예를 들어 선택한 폴더가 다른 폴더로 연결돼 있으면 그곳의 파일을 대신 고치지 않습니다. [구현 이름 safe_path](src/core.py#L110)
-
-**선택값과 제한값**
-
-- 구성에 쓰는 값: 지침 문서의 최대 바이트 수는 **2 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_TEXT_BYTES](src/core.py#L10) 원래 선언을 함께 대조합니다: `정의=2 * 1024 * 1024`
-
-- 구성에 쓰는 값: 앱이 관리하는 지침 구역의 시작 표식는 **b'<!-- CODEX-ORBIT:BEGIN -->'**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [BEGIN](src/core.py#L11) 원래 선언을 함께 대조합니다: `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'`
-
-- 구성에 쓰는 값: 앱이 관리하는 지침 구역의 끝 표식는 **b'<!-- CODEX-ORBIT:END -->'**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [END](src/core.py#L12) 원래 선언을 함께 대조합니다: `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'`
-
-**받지 않는 입력과 실패 처리**
-
-- 입력과 오류의 관계: 문서가 2 MiB 상한을 초과했습니다. 파일 크기는 2MiB 이하여야 하는 구조입니다. [해당 검사](src/core.py#L125)
-
-- 입력과 오류의 관계: 제목 보관 자료와 그 안의 titles 항목은 모두 이름과 값의 사전 자료여야 하는 구조입니다. 어느 쪽이라도 목록·문자열 등 다른 형식이면 거부하는 구조입니다. [해당 검사](src/core.py#L65)
-
-- 입력과 오류의 관계: 대상 파일명은 대소문자를 무시했을 때 AGENTS.md여야 하는 구조입니다. 다른 이름의 문서에는 적용하지 않습니다. [해당 검사](src/core.py#L136)
-
-- 입력과 오류의 관계: 대상 문서의 바로 위 폴더가 실제로 있어야 하는 구조입니다. 없는 폴더에 문서를 새로 만들며 적용하지 않습니다. [해당 검사](src/core.py#L138)
-
-- 입력과 오류의 관계: 대상이 이미 있으면 일반 파일이며 2MiB 이하여야 하는 구조입니다. 폴더 등 다른 종류이거나 더 크면 적용하지 않습니다. [해당 검사](src/core.py#L140)
-
-- 입력과 오류의 관계: 공백을 제외한 지침 내용이 있어야 하며 추가할 바이트는 2MiB 이하여야 하는 구조입니다. 빈 내용이나 더 큰 내용은 거부하는 구조입니다. [해당 검사](src/core.py#L147)
-
-- 입력과 오류의 관계: 넣을 지침 안에 앱 관리 구역의 시작 또는 끝 표식이 하나라도 있으면 거부하는 구조입니다. 구역 경계를 내용이 대신 만들어서는 안 됩니다. [해당 검사](src/core.py#L149)
-
-- 입력과 오류의 관계: 적용 결과가 2 MiB 상한을 초과하는 구조입니다. [해당 검사](src/core.py#L163)
-
-- 입력과 오류의 관계: 미리보기 때 파일이 있었는지와 지금 존재하는지가 같아야 하고, 현재 내용의 지문도 예상 지문과 같아야 하는 구조입니다. 새 파일 생성·삭제·내용 변경 중 하나라도 있으면 새 미리보기가 필요하는 구조입니다. [해당 검사](src/core.py#L170)
-
-- 입력과 오류의 관계: 미리보기에 보관한 원문과 적용 예정 내용 각각의 지문이 처음 값과 같아야 하는 구조입니다. 둘 중 하나라도 바뀌면 적용하지 않습니다. [해당 검사](src/core.py#L190)
-
-- 입력과 오류의 관계: 백업은 앱 데이터의 backups 폴더 바로 안에 있는 일반 파일이며 2MiB 이하여야 하는 구조입니다. 다른 위치나 잘못된 종류·큰 파일은 복원에 쓰지 않습니다. [해당 검사](src/core.py#L210)
-
-- 입력과 오류의 관계: 백업 내용의 지문이 적용 전 원문의 지문과 같아야 하는 구조입니다. 다르면 원래 문서로 확인할 수 없어 복원하지 않습니다. [해당 검사](src/core.py#L213)
-
-- 입력과 오류의 관계: 항목 이름과 값으로 구성된 JSON 자료가 아닙니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 하는 구조입니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/core.py#L41)
-
-- 입력과 오류의 관계: 이미 있는 관리 구역의 시작 표식과 끝 표식은 각각 정확히 하나이며 시작이 끝보다 앞에 있어야 하는 구조입니다. 중복·누락·순서 뒤집힘은 거부하는 구조입니다. [해당 검사](src/core.py#L156)
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · [src/element_frames.py](src/element_frames.py)
-
-한국 날짜에서 고른 원소 번호가 활성 압축 팩 하나를 결정합니다. 압축 명세·목록·첫 프레임 검증은 전체 31개 팩 적재와 다릅니다.
-
-**맡은 일과 결과**
-
-- 이 부분의 역할: 필수 원소 자산 실패를 숨기지 않고 앱의 시작·표시 오류로 전달하는 구조입니다. [구현 이름 ElementAssetError](src/element_frames.py#L24)
-
-- 이 부분의 역할: 활성 원소의 해시·목록·첫 그림 한 장을 확인하는 구조입니다.31개를 적재하지 않습니다. [구현 이름 preflight_element_frames](src/element_frames.py#L132)
-
-**선택값과 제한값**
-
-- 구성에 쓰는 값: 풀어 놓은 그림을 메모리에 보관하는 최대 장수는 **24**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [CACHE_LIMIT](src/element_frames.py#L15) 원래 선언을 함께 대조합니다: `정의=24`
-
-- 구성에 쓰는 값: 그림 한 변의 픽셀 수는 **192**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_SIZE](src/element_frames.py#L16) 원래 선언을 함께 대조합니다: `정의=192`
-
-- 구성에 쓰는 값: 압축 묶음에 있어야 하는 그림의 정확한 장수는 **540**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_COUNT](src/element_frames.py#L17) 원래 선언을 함께 대조합니다: `정의=540`
-
-- 구성에 쓰는 값: 초당 그림 수의 설정값는 **30**입니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [FPS](src/element_frames.py#L18) 원래 선언을 함께 대조합니다: `정의=30`
-
-- 구성에 쓰는 값: 한 재생 주기의 초 단위 길이는 **18**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [PERIOD_SECONDS](src/element_frames.py#L19) 원래 선언을 함께 대조합니다: `정의=18`
-
-- 구성에 쓰는 값: 압축 파일 자체를 읽을 수 있는 최대 바이트 수는 **64*1024*1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_ARCHIVE_BYTES](src/element_frames.py#L20) 원래 선언을 함께 대조합니다: `정의=64*1024*1024`
-
-- 구성에 쓰는 값: 개별 그림 한 장의 최대 바이트 수는 **512*1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_FRAME_BYTES](src/element_frames.py#L21) 원래 선언을 함께 대조합니다: `정의=512*1024`
-
-**받지 않는 입력과 실패 처리**
-
-- 입력과 오류의 관계: 원소 번호는 참/거짓이 아닌 정수 1~31이어야 하는 구조입니다. 0·32·소수·문자열 등은 받지 않습니다. [해당 검사](src/element_frames.py#L34)
-
-- 입력과 오류의 관계: 원소 자산의 파일명·크기·지문을 적은 명세 문서 크기 오류 파일 크기는 65,536바이트 이하여야 하는 구조입니다. 빈 파일도 받지 않습니다. [해당 검사](src/element_frames.py#L65)
-
-- 입력과 오류의 관계: 원소 자산의 파일명·크기·지문을 적은 명세 문서는 객체여야 하는 구조입니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 하는 구조입니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/element_frames.py#L69)
-
-- 입력과 오류의 관계: 파일 내용 지문은 문자열이며 64개의 16진수 문자로 이루어져야 하는 구조입니다. 여기서 16진수 문자는 0~9와 a~f입니다. 이 검사에서는 소문자만 허용하는 구조입니다. 숫자·잘못된 길이·다른 문자는 지문으로 받지 않습니다. [해당 검사](src/element_frames.py#L74)
-
-- 입력과 오류의 관계: 원소 압축파일 크기 초과 파일 크기는 이 모듈의 MAX_ARCHIVE_BYTES 이하여야 하는 구조입니다. 빈 파일도 받지 않습니다. [해당 검사](src/element_frames.py#L75)
-
-- 입력과 오류의 관계: 압축 파일의 전체 내용을 읽어 계산한 SHA-256 지문이 명세 지문과 같아야 하는 구조입니다. 다른 파일이나 내용 변경을 감지하면 재생하지 않습니다. [해당 검사](src/element_frames.py#L78)
-
-- 입력과 오류의 관계: 압축 묶음 안의 파일 수는 정확히 540개이고 파일 이름의 전체 목록도 예상 목록과 정확히 같아야 하는 구조입니다. 이름 누락·추가·다른 이름은 같은 장수여도 거부하는 구조입니다. frame_0000.png부터 frame_0539.png까지의 고정 이름입니다. [해당 검사](src/element_frames.py#L80)
-
-- 입력과 오류의 관계: 압축을 풀어 읽는 개별 파일 크기를 모두 더한 값이 128×1024×1024바이트 이하여야 하는 구조입니다. 압축 파일 자체가 작아도 풀린 합계가 더 크면 거부하는 구조입니다. [해당 검사](src/element_frames.py#L82)
-
-- 입력과 오류의 관계: 검증 때와 현재 파일의 식별 정보가 달라지면 실행 중 자산 변경으로 처리하는 구조입니다. 앱을 다시 시작해 검증해야 하는 구조입니다. [해당 검사](src/element_frames.py#L91)
-
-- 입력과 오류의 관계: 원소 재생 시각은 유한한 숫자여야 하는 구조입니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻하는 구조입니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/element_frames.py#L106)
-
-- 입력과 오류의 관계: 원소 재생기가 닫혔습니다. [해당 검사](src/element_frames.py#L107)
-
-- 입력과 오류의 관계: 압축 묶음 안의 항목은 폴더가 아닌 파일이고 암호화되지 않아야 하는 구조입니다. 허용한 무압축 또는 DEFLATE 압축이어야 하며 크기는 0보다 크고 개별 그림 상한 이하여야 하는 구조입니다. 이 중 하나라도 맞지 않으면 거부하는 구조입니다. [해당 검사](src/element_frames.py#L84)
-
-- 입력과 오류의 관계: 읽은 그림은 개별 크기 상한 이하이면서 최소 33바이트여야 하는 구조입니다. PNG 시작 표식과 IHDR 머리말, 192×192 크기, 8비트 RGBA 형식을 모두 확인하는 구조입니다. 하나라도 다르면 그림을 받지 않습니다. [해당 검사](src/element_frames.py#L96)
-
-- 입력과 오류의 관계: 그림을 실제 이미지로 읽을 수 있어야 하며 가로와 세로가 각각 192이고 투명도 정보가 있어야 하는 구조입니다. 이 조건을 하나라도 만족하지 못하면 거부하는 구조입니다. [해당 검사](src/element_frames.py#L99)
-
-- 입력과 오류의 관계: 192×192 그림의 네 모서리 (0,0), (191,0), (0,191), (191,191)는 모두 완전히 투명해야 하는 구조입니다. 한 모서리라도 불투명한 부분이 있으면 거부하는 구조입니다. [해당 검사](src/element_frames.py#L100)
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · [src/element_visuals.py](src/element_visuals.py)
-
-이미 만든 입체 원자 그림의 투명한 모양을 유지하면서 디자인 색만 덧입힙니다.
-
-**맡은 일과 결과**
-
-- 이 부분의 역할: 그림에서 원래 투명했던 부분은 계속 투명하게 두고, 원래 보이던 모양의 밝고 어두운 부분에만 색을 부드럽게 입힙니다. 이 겹치기 방식을 SourceAtop이라고 하는 구조입니다. 예를 들어 둥근 모형에 색을 입혀도 바깥의 투명 배경이 네모난 색판으로 바뀌지 않습니다. [구현 이름 colorize_atom](src/element_visuals.py#L5)
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · [src/elements.py](src/elements.py)
-
-한국 날짜의 1일부터 31일까지에 대응하는 원소 이름과 디자인 색을 고릅니다. 예를 들어 자정이나 절전 복귀 후 다시 날짜를 읽어 그날의 원소를 고릅니다.
-
-**맡은 일과 결과**
-
-- 이 부분의 역할: 매 호출 실제 날짜를 다시 읽어 자정·절전 복귀·시계 되돌림을 반영하는 구조입니다. [구현 이름 daily_element](src/elements.py#L43)
-
-**선택값과 제한값**
-
-- 구성에 쓰는 값: 한국 표준시인 UTC보다 9시간 빠른 시간대입니다. [KST](src/elements.py#L5) 원래 선언을 함께 대조합니다: `정의=timezone(timedelta(hours=9))`
-
-- 구성에 쓰는 값: 색은 원소에서 받은 디자인 영감이며 실제 원소색·불꽃색·전자 배치를 재현하지 않는다는 안내입니다. [PALETTE_NOTE](src/elements.py#L8) 원래 선언을 함께 대조합니다: `정의='원소에서 영감받은 디자인 색이며 실제 원소·불꽃색이나 전자배치 재현이 아닙니다.'`
-
-- 구성에 쓰는 값: 원소 번호·기호·이름·색·강조색을 차례로 묶은 목록입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하는 구조입니다. [ELEMENTS](src/elements.py#L39) 원래 선언을 함께 대조합니다: `정의=tuple(Element(index,symbol,name,color,accent)                  for index,(symbol,name,color,accent) in enumerate(_ROWS,1))`
-
-**받지 않는 입력과 실패 처리**
-
-- 입력과 오류의 관계: 날짜·시각에 시간대 정보와 실제 시차가 모두 있어야 하는 구조입니다. 어느 쪽이라도 없으면 한국 날짜로 해석할 수 없어 거부하는 구조입니다. [해당 검사](src/elements.py#L46)
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · [src/frame_pacing.py](src/frame_pacing.py)
-
-회전 속도와 다음 그림을 보여 줄 시간을 계산하는 구조입니다. 모형 속도를 바꾸어도 실제 시계·날짜의 진행 속도는 바꾸지 않습니다.
-
-**맡은 일과 결과**
-
-- 이 부분의 역할: 유한한 0.25~3배 숫자만 받아 참/거짓 두 가지 값과 잘못된 설정을 거부하는 구조입니다. [구현 이름 validate_motion_speed](src/frame_pacing.py#L7)
-
-- 이 부분의 역할: 모형이 움직이는 데 쓰는 시간만 속도 배율에 따라 이어 계산하는 구조입니다. 예를 들어 속도를 바꾸기 전까지 움직인 양을 보존한 다음 새 속도로 이어 갑니다. 실제 날짜와 시계는 이 계산에 따라 바뀌지 않습니다. [구현 이름 MotionClock](src/frame_pacing.py#L20)
-
-**받지 않는 입력과 실패 처리**
-
-- 입력과 오류의 관계: 회전 속도는 0.25~3배의 유한한 숫자여야 하는 구조입니다. [해당 검사](src/frame_pacing.py#L9)
-
-- 입력과 오류의 관계: 회전 속도는 0.25~3배의 유한한 숫자여야 하는 구조입니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻하는 구조입니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/frame_pacing.py#L15)
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · [src/i18n.py](src/i18n.py)
-
-앱이 만든 문구의 한국어·영어 표시를 관리하는 구조입니다. 실제 기록 문장은 앱 번역문과 구분해 보존하는 구조입니다.
-
-**맡은 일과 결과**
-
-- 이 부분의 역할: 명시한 앱 문구만 번역하고 전달된 값은 번역하지 않습니다. [구현 이름 translate](src/i18n.py#L51)
-
-- 이 부분의 역할: 생성 당시 정적인 앱 문구만 기록하여 사용자 원문과 구분하는 구조입니다. [구현 이름 remember_translations](src/i18n.py#L63)
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · [src/motion_label.py](src/motion_label.py)
-
-움직이는 그림을 화면에 붙이는 부분입니다. 그림이 보이는지와 필요한 크기를 재생 쪽에 전달하는 구조입니다.
-
-**맡은 일과 결과**
-
-- 이 부분의 역할: 최신 이미지 한 개를 보관하고 크기·DPR 변경 때만 기본 크기 힌트를 갱신하는 구조입니다. [구현 이름 MotionImageLabel](src/motion_label.py#L6)
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · [src/notifier.py](src/notifier.py)
-
-순차 감시는 새 기록의 위치를 유지하고 과거 활동 보강은 기존 소비 구간 안에서 별도로 수행합니다. 원본 시각이 있는 복제만 제거하므로 처음 기준선의 순서도 보존됩니다.
-
-**맡은 일과 결과**
-
-- 이 부분의 역할: 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도하는 구조입니다. [구현 이름 atomic_json](src/notifier.py#L33)
-
-- 이 부분의 역할: 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. [구현 이름 source_datetime](src/notifier.py#L63)
-
-- 이 부분의 역할: 원본 시각이 있는 복제 기록만 제외하며 기준선 재생의 순서는 복원하는 구조입니다. [구현 이름 duplicate_record](src/notifier.py#L212)
-
-- 이 부분의 역할: 현재 채팅의 공식 기록에 직접 적힌 설정 항목만 읽습니다. 앱이 직접 남긴는 앱이 직접 남긴 항목이라는 뜻입니다. 누가 바꿨는지, 서버에서 어떤 모델이 실행됐는지는 그 설정만으로 추측하지 않습니다. [구현 이름 settings_record](src/notifier.py#L223)
-
-- 이 부분의 역할: 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. [구현 이름 lookup_parent_reason](src/notifier.py#L376)
-
-- 이 부분의 역할: 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강하는 구조입니다. [구현 이름 enrich_event](src/notifier.py#L423)
-
-- 이 부분의 역할: 이미 읽은 과거 범위에서 작업의 식별 정보만 다시 연결하는 구조입니다. 대화 본문을 새로 읽어 저장하는 기능이 아니며 각 파일을 읽는 기존 양의 제한도 유지하는 구조입니다. [구현 이름 replay_activity_prefix](src/notifier.py#L445)
-
-**선택값과 제한값**
-
-- 구성에 쓰는 값: 읽을 Codex 기록 폴더를 고르는 옵션입니다. 경로를 입력하는 옵션입니다. 기본은 현재 사용자 홈의 .codex/sessions 폴더입니다. [--sessions](src/notifier.py#L739) 원래 선언을 함께 대조합니다: `type=Path; default=Path.home() / '.codex/sessions'`
-
-- 구성에 쓰는 값: 감시기의 작업 자료 폴더를 고르는 옵션; 기본은 프로젝트 아래 work입니다. 경로를 입력하는 옵션입니다. [--work](src/notifier.py#L740) 원래 선언을 함께 대조합니다: `type=Path; default=ROOT / 'work'`
-
-- 구성에 쓰는 값: 이 소스 파일을 기준으로 두 단계 위의 프로젝트 폴더입니다. [ROOT](src/notifier.py#L18) 원래 선언을 함께 대조합니다: `정의=Path(__file__).resolve().parents[1]`
-
-- 구성에 쓰는 값: Windows가 앱을 구분하는 고정 이름는 **'Yunseok.Codex.ModelChangeNotifier'**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [APP_ID](src/notifier.py#L19) 원래 선언을 함께 대조합니다: `정의='Yunseok.Codex.ModelChangeNotifier'`
-
-- 구성에 쓰는 값: 한 번에 나누어 읽는 기록의 바이트 수는 **512 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [READ_BYTES](src/notifier.py#L20) 원래 선언을 함께 대조합니다: `정의=512 * 1024`
-
-- 구성에 쓰는 값: 기록 하나를 읽는 최대 바이트 수는 **2 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_RECORD](src/notifier.py#L21) 원래 선언을 함께 대조합니다: `정의=2 * 1024 * 1024`
-
-- 구성에 쓰는 값: 한 번의 감시에서 다룰 파일 수의 상한는 **4096**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_FILES](src/notifier.py#L22) 원래 선언을 함께 대조합니다: `정의=4096`
-
-- 구성에 쓰는 값: 로그 파일 크기의 바이트 상한는 **2 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [LOG_BYTES](src/notifier.py#L23) 원래 선언을 함께 대조합니다: `정의=2 * 1024 * 1024`
-
-- 구성에 쓰는 값: 한 감시 주기에서 읽는 전체 바이트 수 상한는 **8 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [POLL_READ_BYTES](src/notifier.py#L24) 원래 선언을 함께 대조합니다: `정의=8 * 1024 * 1024`
-
-- 구성에 쓰는 값: 아직 전달이 끝나지 않은 알림 수의 상한는 **256**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_PENDING](src/notifier.py#L25) 원래 선언을 함께 대조합니다: `정의=256`
-
-- 구성에 쓰는 값: 감시를 다시 확인하는 초 단위 간격는 **0.2**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [POLL_INTERVAL_SECONDS](src/notifier.py#L26) 원래 선언을 함께 대조합니다: `정의=0.2`
-
-**받지 않는 입력과 실패 처리**
-
-- 입력과 오류의 관계: 상태 파일이 16 MiB 상한을 초과했습니다. 원본 보존 후 점검이 필요하는 구조입니다. 파일 크기는 16MiB 이하여야 하는 구조입니다. [해당 검사](src/notifier.py#L90)
-
-- 입력과 오류의 관계: 저장 상태의 버전이 2 또는 3이 아니면 요청과 관측이 섞인 구형 자료로 봅니다. 원본을 보존하고 사용자가 명시한 새 기준선 절차가 필요하는 구조입니다. [해당 검사](src/notifier.py#L94)
-
-- 입력과 오류의 관계: 저장 상태의 files와 models는 모두 이름과 값의 사전 자료여야 하는 구조입니다. 하나라도 다른 형식이면 원본을 빈 상태로 초기화하지 않고 오류로 둡니다. [해당 검사](src/notifier.py#L96)
-
-- 입력과 오류의 관계: 명시 배정 상태 구조 오류입니다. 자동 초기화하지 않습니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 하는 구조입니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/notifier.py#L98)
-
-- 입력과 오류의 관계: 채팅 선택 설정 상태 구조 오류입니다. 자동 초기화하지 않습니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 하는 구조입니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/notifier.py#L117)
-
-- 입력과 오류의 관계: 새로 만든 이행 백업의 전체 바이트가 원본과 같아야 하는 구조입니다. 다르면 자동 덮어쓰기를 중단하는 구조입니다. [해당 검사](src/notifier.py#L105)
-
-- 입력과 오류의 관계: 파일을 읽은 시작·끝 위치는 참/거짓을 제외한 0 이상의 정수여야 하는 구조입니다. 음수·문자열·참/거짓을 파일 위치로 사용하지 않습니다. [해당 검사](src/notifier.py#L112)
-
-- 입력과 오류의 관계: 새로 만든 이행 백업의 전체 바이트가 원본과 같아야 하는 구조입니다. 다르면 자동 덮어쓰기를 중단하는 구조입니다. [해당 검사](src/notifier.py#L123)
-
-- 입력과 오류의 관계: 파일을 읽은 시작·끝 위치는 참/거짓을 제외한 0 이상의 정수여야 하는 구조입니다. 음수·문자열·참/거짓을 파일 위치로 사용하지 않습니다. [해당 검사](src/notifier.py#L131)
-
-- 입력과 오류의 관계: 항목 이름과 값으로 구성된 JSON 자료가 아닙니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 하는 구조입니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/notifier.py#L523)
-
-- 입력과 오류의 관계: 명시 알림 파일 상한 초과 파일 크기는 20,000바이트 이하여야 하는 구조입니다. [해당 검사](src/notifier.py#L603)
-
-- 입력과 오류의 관계: 항목 이름과 값으로 구성된 JSON 자료가 아닙니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 하는 구조입니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/notifier.py#L467)
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · [src/theme.py](src/theme.py)
-
-파일 선택창·버튼·기본 기호의 색과 문구·배치를 맞춥니다. 긴 한글 버튼이나 파일 이름이 들어갈 공간도 다룹니다.
-
-**맡은 일과 결과**
-
-- 이 부분의 역할: 파일·삼각형 표면으로 만든 입체 모형지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. [구현 이름 MonochromeStyle](src/theme.py#L53)
-
-- 이 부분의 역할: 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역하는 구조입니다. [구현 이름 KoreanDialogs](src/theme.py#L78)
-
-- 이 부분의 역할: 앱 파일 선택창의 이름 열과 한글 버튼에 충분한 공간을 확보하는 구조입니다. [구현 이름 DialogLayout](src/theme.py#L94)
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · [src/typography.py](src/typography.py)
-
-화면 글꼴 파일을 앱에 등록하는 구조입니다. 필수 글꼴이 없거나 등록되지 않으면 시작 오류로 알리며 성공한 것처럼 숨기지 않습니다.
-
-**맡은 일과 결과**
-
-- 이 부분의 역할: 필수 파일이나 Qt 등록 실패를 숨기지 않고 시작 오류로 전달하는 구조입니다. [구현 이름 register_fonts](src/typography.py#L8)
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · [src/usage.py](src/usage.py)
-
-Codex의 읽기 전용 계정 조회로 사용 한도 응답을 읽습니다. 예를 들어 자료가 없다는 상태를 잔량 0으로 바꾸지 않습니다.
-
-**맡은 일과 결과**
-
-- 이 부분의 역할: 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. [구현 이름 number](src/usage.py#L16)
-
-- 이 부분의 역할: 계정에서 여러 사용 한도 구간을 보내 주면 그 공식 구간을 먼저 사용하는 구조입니다. 버킷은 서로 다른 기간의 한도 묶음이라는 뜻입니다. 기간이나 수치가 응답에 없으면 임의로 채우지 않습니다. [구현 이름 normalize_limits](src/usage.py#L35)
-
-- 이 부분의 역할: 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. [구현 이름 discover_codex](src/usage.py#L69)
-
-**선택값과 제한값**
-
-- 구성에 쓰는 값: 응답을 읽는 최대 바이트 수는 **1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_BYTES](src/usage.py#L12) 원래 선언을 함께 대조합니다: `정의=1024 * 1024`
-
-- 구성에 쓰는 값: 한국 표준시인 UTC보다 9시간 빠른 시간대입니다. [KST](src/usage.py#L13) 원래 선언을 함께 대조합니다: `정의=timezone(timedelta(hours=9))`
-
-**받지 않는 입력과 실패 처리**
-
-- 입력과 오류의 관계: 객체가 아닌 응답 자료는 항목 이름과 값의 쌍으로 구성되어야 하는 구조입니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/usage.py#L226)
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · [src/usage_frames.py](src/usage_frames.py)
-
-계정 한도 수치를 가져오는 흐름과 화면 조형의 압축 그림을 읽는 흐름은 별개입니다. 조형 실패가 계정의 실제 잔량 0을 의미하지 않습니다.
-
-**맡은 일과 결과**
-
-- 이 부분의 역할: 조형 표시 오류를 호출자에게 전달하며 계정 조회 흐름과 분리하는 구조입니다. [구현 이름 UsageAssetError](src/usage_frames.py#L27)
-
-- 이 부분의 역할: 시작 시 전체 무결성을 검사하고 해제된 화면용 이미지 객체(QImage)는 최대16장만 보존하는 구조입니다. [구현 이름 UsageFrames](src/usage_frames.py#L50)
-
-- 이 부분의 역할: 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리하는 구조입니다. [구현 이름 close_usage_frames](src/usage_frames.py#L183)
-
-- 이 부분의 역할: 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유하는 구조입니다. [구현 이름 preflight_usage_frames](src/usage_frames.py#L194)
-
-- 이 부분의 역할: 공유 팩의 한 그림 한 장을 반환하며 계정 조회 상태에는 관여하지 않습니다. [구현 이름 get_usage_frame](src/usage_frames.py#L207)
-
-**선택값과 제한값**
-
-- 구성에 쓰는 값: 압축 묶음에 있어야 하는 그림의 정확한 장수는 **360**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_COUNT](src/usage_frames.py#L16) 원래 선언을 함께 대조합니다: `정의=360`
-
-- 구성에 쓰는 값: 그림 한 변의 픽셀 수는 **384**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_SIZE](src/usage_frames.py#L17) 원래 선언을 함께 대조합니다: `정의=384`
-
-- 구성에 쓰는 값: 초당 그림 수의 설정값는 **30**입니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [FPS](src/usage_frames.py#L18) 원래 선언을 함께 대조합니다: `정의=30`
-
-- 구성에 쓰는 값: 한 재생 주기의 초 단위 길이는 **12**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [PERIOD_SECONDS](src/usage_frames.py#L19) 원래 선언을 함께 대조합니다: `정의=12`
-
-- 구성에 쓰는 값: 풀어 놓은 그림을 메모리에 보관하는 최대 장수는 **16**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [CACHE_LIMIT](src/usage_frames.py#L20) 원래 선언을 함께 대조합니다: `정의=16`
-
-- 구성에 쓰는 값: 압축 파일 자체를 읽을 수 있는 최대 바이트 수는 **128 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_ARCHIVE_BYTES](src/usage_frames.py#L21) 원래 선언을 함께 대조합니다: `정의=128 * 1024 * 1024`
-
-- 구성에 쓰는 값: 개별 그림 한 장의 최대 바이트 수는 **1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_FRAME_BYTES](src/usage_frames.py#L22) 원래 선언을 함께 대조합니다: `정의=1024 * 1024`
-
-- 구성에 쓰는 값: 그림들을 풀어 읽은 크기 합계의 최대 바이트 수는 **256 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_TOTAL_BYTES](src/usage_frames.py#L23) 원래 선언을 함께 대조합니다: `정의=256 * 1024 * 1024`
-
-- 구성에 쓰는 값: 자산 명세 문서의 최대 바이트 수는 **64 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_MANIFEST_BYTES](src/usage_frames.py#L24) 원래 선언을 함께 대조합니다: `정의=64 * 1024`
-
-**받지 않는 입력과 실패 처리**
-
-- 입력과 오류의 관계: 명세 문서에 같은 항목 이름이 두 번 나오면 어느 값을 믿어야 할지 모호하므로 거부하는 구조입니다. [해당 검사](src/usage_frames.py#L44)
-
-- 입력과 오류의 관계: 대시보드 조형 자산 자산의 파일명·크기·지문을 적은 명세 문서 크기가 허용 범위를 벗어났습니다. 파일 크기는 이 모듈의 MAX_MANIFEST_BYTES 이하여야 하는 구조입니다. 빈 파일도 받지 않습니다. [해당 검사](src/usage_frames.py#L69)
-
-- 입력과 오류의 관계: 대시보드 조형 자산 자산의 파일명·크기·지문을 적은 명세 문서는 객체여야 하는 구조입니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 하는 구조입니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/usage_frames.py#L75)
-
-- 입력과 오류의 관계: 파일 내용 지문은 문자열이며 64개의 16진수 문자로 이루어져야 하는 구조입니다. 여기서 16진수 문자는 0~9와 a~f입니다. 이 검사에서는 소문자만 허용하는 구조입니다. 숫자·잘못된 길이·다른 문자는 지문으로 받지 않습니다. [해당 검사](src/usage_frames.py#L85)
-
-- 입력과 오류의 관계: 대시보드 조형 그림 한 장 ZIP 크기가 허용 범위를 벗어났습니다. 파일 크기는 이 모듈의 MAX_ARCHIVE_BYTES 이하여야 하는 구조입니다. 빈 파일도 받지 않습니다. [해당 검사](src/usage_frames.py#L87)
-
-- 입력과 오류의 관계: 압축 파일의 전체 내용을 읽어 계산한 SHA-256 지문이 명세 지문과 같아야 하는 구조입니다. 다른 파일이나 내용 변경을 감지하면 재생하지 않습니다. [해당 검사](src/usage_frames.py#L94)
-
-- 입력과 오류의 관계: 압축 묶음 안의 파일 수는 정확히 360개이고 파일 이름의 전체 목록도 예상 목록과 정확히 같아야 하는 구조입니다. 이름 누락·추가·다른 이름은 같은 장수여도 거부하는 구조입니다. [해당 검사](src/usage_frames.py#L100)
-
-- 입력과 오류의 관계: 압축을 풀어 읽는 개별 파일 크기를 모두 더한 값이 이 모듈의 MAX_TOTAL_BYTES 이하여야 하는 구조입니다. 압축 파일 자체가 작아도 풀린 합계가 더 크면 거부하는 구조입니다. [해당 검사](src/usage_frames.py#L102)
-
-- 입력과 오류의 관계: 검증 때와 현재 파일의 식별 정보가 달라지면 실행 중 자산 변경으로 처리하는 구조입니다. 앱을 다시 시작해 검증해야 하는 구조입니다. [해당 검사](src/usage_frames.py#L133)
-
-- 입력과 오류의 관계: 조형 재생 시각은 유한한 숫자여야 하는 구조입니다. [해당 검사](src/usage_frames.py#L138)
-
-- 입력과 오류의 관계: 대시보드 조형 그림 한 장의 재생 시각이 유한한 숫자가 아닙니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻하는 구조입니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/usage_frames.py#L144)
-
-- 입력과 오류의 관계: 조형 재생기가 닫혔습니다. [해당 검사](src/usage_frames.py#L149)
-
-- 입력과 오류의 관계: 압축 묶음 안의 항목은 폴더가 아닌 파일이고 암호화되지 않아야 하는 구조입니다. 허용한 무압축 또는 DEFLATE 압축이어야 하며 크기는 0보다 크고 개별 그림 상한 이하여야 하는 구조입니다. 이 중 하나라도 맞지 않으면 거부하는 구조입니다. [해당 검사](src/usage_frames.py#L105)
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · [src/usage_widgets.py](src/usage_widgets.py)
-
-계정 한도 화면에 날짜 조형을 표시하는 연결 부분입니다. 계정 조회 수치 자체를 만드는 부분과 구분하는 구조입니다.
-
-**맡은 일과 결과**
-
-- 이 부분의 역할: 사용 한도 화면에서만 날짜별 입체 이미지를 갱신하는 구조입니다. [구현 이름 CalendarHero](src/usage_widgets.py#L9)
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · [src/visuals.py](src/visuals.py)
-
-깊이를 가진 회전 좌표를 그리는 부분과 날짜·시계·한도 글자 배치는 독립적입니다. 실제 계정 비율은 숫자와 막대에 같은 값으로 전달합니다.
-
-**맡은 일과 결과**
-
-- 이 부분의 역할: X·Y·Z 순서로 회전하며 깊이 좌표를 보존하는 구조입니다. [구현 이름 rotate_point](src/visuals.py#L12)
-
-- 이 부분의 역할: 모든 고리를 화면의 같은 축으로 돌리지 않고 각 고리가 가진 회전축을 중심으로 돌립니다. 로드리게스 식은 어느 방향의 축이든 그 축을 기준으로 입체 점을 돌리는 계산식입니다. 예를 들어 기울어진 고리는 그 기울어진 축을 유지하며 돕니다. [구현 이름 axis_rotate](src/visuals.py#L40)
-
-- 이 부분의 역할: 제작 자산의 파일명·크기·지문을 적은 명세 문서와 일치하는 기하 검증용 메타입니다. GUI 드로잉에는 쓰지 않습니다. [구현 이름 orbit_segments](src/visuals.py#L63)
-
-- 이 부분의 역할: 읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다. [구현 이름 status_label](src/visuals.py#L80)
-
-- 이 부분의 역할: 원자번호와 계정 퍼센트를 서로 다른 명시적 라벨로 구분하는 구조입니다. [구현 이름 element_labels](src/visuals.py#L85)
-
-- 이 부분의 역할: 숫자와 채움에 같은 실제 비율을 쓰며 최소 채움 폭을 강제하지 않습니다. [구현 이름 usage_bar](src/visuals.py#L99)
-
-- 이 부분의 역할: 원소별 실제 제작 그림 한 장을 읽습니다. 이전 형상으로 대체하지 않습니다. [구현 이름 _frame_for_element](src/visuals.py#L111)
-
-- 이 부분의 역할: 달력 조형·날짜 도크·실제 잔량을 분리하고 명시한 원소 미리보기도 보존하는 구조입니다. [구현 이름 draw_orbit](src/visuals.py#L117)
-
-- 이 부분의 역할: 이름을 화면 픽셀 크기로 줄 바꿈하고 조형·잔량 영역을 분리하는 구조입니다. [구현 이름 desktop_widget_layout](src/visuals.py#L176)
-
-- 이 부분의 역할: 위젯의 조형과 글자를 별개 영역에 그려 작은 글자 축소를 막습니다. [구현 이름 draw_desktop_orbit](src/visuals.py#L212)
-
-- 이 부분의 역할: 움직이는 그래픽 장치(GPU) 이미지와 분리한 도크·시계·지역·기온·잔량을 그립니다. [구현 이름 _draw_desktop_information](src/visuals.py#L227)
-
-- 이 부분의 역할: 한 위젯의 완전 입력이 같을 때만 단일 투명 정보 레이어를 재사용하는 구조입니다. [구현 이름 DesktopOverlayCache](src/visuals.py#L278)
-
-**선택값과 제한값**
-
-- 구성에 쓰는 값: 조형 움직임 한 주기의 길이는 **18**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MOTION_PERIOD](src/visuals.py#L27) 원래 선언을 함께 대조합니다: `정의=18`
-
-- 구성에 쓰는 값: 각 고리의 회전 횟수와 방향는 **(1, -2, 3)**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [RING_TURNS](src/visuals.py#L28) 원래 선언을 함께 대조합니다: `정의=(1, -2, 3)`
-
-- 구성에 쓰는 값: 각 고리 축이 향하는 방향 각도는 **(8., 128., 248.)**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [RING_AZIMUTHS](src/visuals.py#L29) 원래 선언을 함께 대조합니다: `정의=(8., 128., 248.)`
-
-- 구성에 쓰는 값: 각 고리 회전축의 기울기 각도는 **(42., 46., 49.)**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [RING_AXIS_TILTS](src/visuals.py#L30) 원래 선언을 함께 대조합니다: `정의=(42., 46., 49.)`
-
-- 구성에 쓰는 값: 각 고리 반지름는 **(45., 51., 57.)**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [RING_RADII](src/visuals.py#L35) 원래 선언을 함께 대조합니다: `정의=(45., 51., 57.)`
-
-- 구성에 쓰는 값: 각 고리의 초기 기울기와 방향을 라디안이라는 각도 단위로 묶은 값입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하는 구조입니다. [BASE_ANGLES](src/visuals.py#L36) 원래 선언을 함께 대조합니다: `정의=tuple((math.radians(tilt), 0., math.radians(azimuth))                     for tilt, azimuth in zip((52., 58., 62.), RING_AZIMUTHS))`
-
-- 구성에 쓰는 값: 원자 그림을 배치할 사각형 영역입니다. 왼쪽 위치 -48, 위쪽 위치 -74, 가로 길이 96, 세로 길이 96입니다. QRectF는 이 네 값으로 사각형을 나타내는 형식이며 음수 위치는 기준점의 왼쪽·위쪽입니다. [ATOM_RECT](src/visuals.py#L92) 원래 선언을 함께 대조합니다: `정의=QRectF(-48,-74,96,96)`
-
-- 구성에 쓰는 값: 날짜 등 도크 정보를 배치할 사각형 영역입니다. 왼쪽 위치 -68, 위쪽 위치 25, 가로 길이 136, 세로 길이 27입니다. QRectF는 이 네 값으로 사각형을 나타내는 형식이며 음수 위치는 기준점의 왼쪽·위쪽입니다. [DOCK_RECT](src/visuals.py#L93) 원래 선언을 함께 대조합니다: `정의=QRectF(-68,25,136,27)`
-
-- 구성에 쓰는 값: 한도 정보를 배치할 사각형 영역입니다. 왼쪽 위치 -68, 위쪽 위치 56, 가로 길이 136, 세로 길이 16입니다. QRectF는 이 네 값으로 사각형을 나타내는 형식이며 음수 위치는 기준점의 왼쪽·위쪽입니다. [USAGE_RECT](src/visuals.py#L94) 원래 선언을 함께 대조합니다: `정의=QRectF(-68,56,136,16)`
-
-- 구성에 쓰는 값: 한도 막대의 바탕 사각형 영역입니다. 왼쪽 위치 -61, 위쪽 위치 62, 가로 길이 62, 세로 길이 4입니다. QRectF는 이 네 값으로 사각형을 나타내는 형식이며 음수 위치는 기준점의 왼쪽·위쪽입니다. [USAGE_TRACK_RECT](src/visuals.py#L95) 원래 선언을 함께 대조합니다: `정의=QRectF(-61,62,62,4)`
-
-- 구성에 쓰는 값: 기능 기호를 그릴 픽셀 크기는 **24**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [SYMBOL_PIXELS](src/visuals.py#L96) 원래 선언을 함께 대조합니다: `정의=24`
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · [src/weather.py](src/weather.py)
-
-지역 이름을 정리하고 인터넷에서 날씨를 조회하는 구조입니다. 예를 들어 자동 위치를 한국어 이름과 연결할 때 다른 국가의 동명 도시를 받아들이지 않도록 확인하는 구조입니다.
-
-**맡은 일과 결과**
-
-- 이 부분의 역할: 검색 전 임시 표시에는 검증된 국내 사전 또는 실제 원문 지명을 사용하는 구조입니다. [구현 이름 localized_region](src/weather.py#L27)
-
-- 이 부분의 역할: 동일 국가이면서 IP 추정 좌표에서30km 이내인 가장 가까운 검색 결과만 수락하는 구조입니다. [구현 이름 select_geocoded_region](src/weather.py#L67)
-
-**선택값과 제한값**
-
-- 구성에 쓰는 값: US·JP·CN·GB·DE·FR·CA·AU·SG·TW를 미국·일본·중국·영국·독일·프랑스·캐나다·호주·싱가포르·대만으로 표시하는 사전입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하는 구조입니다. [_COUNTRIES](src/weather.py#L23) 원래 선언을 함께 대조합니다: `정의={'US': '미국', 'JP': '일본', 'CN': '중국', 'GB': '영국', 'DE': '독일',               'FR': '프랑스', 'CA': '캐나다', 'AU': '호주', 'SG': '싱가포르', 'TW': '대만'}`
-
-**받지 않는 입력과 실패 처리**
-
-- 입력과 오류의 관계: 언어값은 한국어 ko 또는 영어 en만 허용하는 구조입니다. 다른 언어 이름은 이 경로에서 거부하는 구조입니다. [해당 검사](src/weather.py#L29)
-
-- 입력과 오류의 관계: 언어값은 한국어 ko 또는 영어 en만 허용하는 구조입니다. 다른 언어 이름은 이 경로에서 거부하는 구조입니다. [해당 검사](src/weather.py#L111)
-
-- 입력과 오류의 관계: 언어값은 한국어 ko 또는 영어 en만 허용하는 구조입니다. 다른 언어 이름은 이 경로에서 거부하는 구조입니다. [해당 검사](src/weather.py#L155)
-
-- 입력과 오류의 관계: 위도는 -90~90, 경도는 -180~180 범위의 유효한 숫자여야 하는 구조입니다. 어느 좌표라도 잘못되면 그 위치로 날씨를 조회하지 않습니다. [해당 검사](src/weather.py#L249)
-
-- 입력과 오류의 관계: 기온은 -100~70 범위의 유효한 숫자만 받습니다. 범위 밖 값이나 잘못된 형식은 정상 기온으로 표시하지 않습니다. [해당 검사](src/weather.py#L321)
-
-- 입력과 오류의 관계: 날씨 제공 시각은 0 이상이고 현재 시각에서 300초를 더한 값 이하여야 하는 구조입니다. 지나치게 미래이거나 잘못된 시각은 받지 않습니다. [해당 검사](src/weather.py#L325)
-
-- 입력과 오류의 관계: 응답 형식 자료는 항목 이름과 값의 쌍으로 구성되어야 하는 구조입니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/weather.py#L232)
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · 처리 결과와 출력 읽기
-
-원리 연결: 표시된 설정·요청과 실제로 관측한 실행은 다른 근거입니다. 예를 들어 모델을 지정했다는 기록만으로 서버에서 그 모델이 실행됐다고 결론내리지 않습니다.
-
-변경 전·후 모델과 추론 강도, 공개된 이유, 관측 시각과 근거 수준을 함께 읽습니다. 기록되지 않은 값은 미확인으로 남깁니다. 로컬 기록은 서버 모델 신원 증명이 아닙니다.
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · 제약과 문제 해결
-
-- 구성 관계 알림이 나타나지 않음: 감시하는 sessions 경로·새 한 줄에 기록 하나를 담는 JSONL 파일 기록·중복 실행 잠금·알림 설정을 확인합니다. 최초 기준선 읽기와 새 변경 감지는 다릅니다.
-- 구성 관계 자산 또는 글꼴 오류: 이 차수에서 참조하는 assets와 라이선스를 준비합니다. 소스 이력에는 과거 대용량 그림 한 장 자산이 없을 수 있습니다.
-- 구성 관계 이유 또는 이전값이 없음: 원문 기록에 해당 필드가 있는지 확인합니다. 누락된 동기를 추정해서 채우지 않습니다.
-
-### LEVEL 2 · 26차 추가 해설 · LEVEL 2 · 직전 자료와 전체 비교
-
-원리 연결: diff는 두 자료에서 달라진 줄 전체를 보여 주는 파일입니다. +는 추가, -는 삭제를 뜻하며 주석·공백·줄바꿈도 변경에 포함됩니다. SHA-256은 파일 내용의 지문이고, 큰 그림·실행 파일은 크기와 지문으로 같음을 대조합니다. 지문이 있다는 것만으로 실행에 성공한 것은 아닙니다.
-
-25차에서 26차로 이어지는 실제 파일 비교입니다.
-
-[전체 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff)
-
-추가·수정·삭제, 주석·공백·개행과 바이너리 크기·해시는 연결된 원래 비교 자료에서 확인합니다.
-
-
-파일별 비교·크기·해시 자세히 보기
-
-텍스트는 엄격 UTF-8로 판정하며 [전체 텍스트 차이](직전차수.diff)에는 주석과 공백을 포함합니다. 파일별 바이트 수와 SHA-256 및 바이너리 여부는 [비교 명세](공개파일_비교.json)에 기록합니다.
-
-- **검증:** 이 폴더의 diff는 소스 바이트 비교입니다. 이후 로컬 원본 검증 자료를 대조해 작성한 [공개 검증 요약](../../docs/공개검증_26차.md)을 함께 제공합니다. 비공개 원본 로그는 공개하지 않으며 소스 비교 자체를 실행 결과로 해석하지 않습니다.
-
-- **수정** `src/app.py`: 이전 110155바이트, SHA-256 `bb0421143d08d6930d62f19252819ca26a91444466002c1a559b0dc87895ac3b`; 현재 116115바이트, SHA-256 `ccb4c5771ab1a01e416e81dcc3678629cd5a5a2613e50d5e7c4a3e4263da964f`.
-
-- **수정** `src/calendar_motion.py`: 이전 15710바이트, SHA-256 `fcd254efc4bf9e4a15eb9a1d75177323d34763716cea207e2bd95348b93463a0`; 현재 16207바이트, SHA-256 `ddb3e8afdf5f46f7bb8f997e75c39234550f28bade6223e19f81e37579765791`.
-
-- **수정** `src/frame_pacing.py`: 이전 2625바이트, SHA-256 `6ca862a2eaa6707665f19514315de584424ab66017eff8f7898e3a4f6c6a9cb5`; 현재 3692바이트, SHA-256 `09cd3768e4baa326bb0e08e4d7fd8130f05526024686b88f8ef2f9b0366b1bb1`.
-
-- **수정** `src/i18n.py`: 이전 19942바이트, SHA-256 `2dbea990824fb7107019228d5ecf6a75d7ce1a7062d0984f2a00908c7e26cec1`; 현재 20538바이트, SHA-256 `091208c023ccecdefd7957dcc3bacd8acc5c44324dd587ac36986ac3dc81106a`.
-
-- **추가** `src/motion_label.py`: 이전 없음; 현재 2380바이트, SHA-256 `f76a05b63a676282ff4816c25ce0d7bc4aa01396889559c76021d5f858a0c60d`.
-
-- **수정** `src/usage_widgets.py`: 이전 2471바이트, SHA-256 `a5e8de93da797f5f269551061d30878d8c0f86cae8824e89ba052bd6b28aeee2`; 현재 2516바이트, SHA-256 `9ad1be24d27cbf072db6892a2bc3c431304002f90f9a9d46d59494a91b74814c`.
-
-- **수정** `src/visuals.py`: 이전 13297바이트, SHA-256 `d4bb20ebbfa421b5f05a482aedbb0b2202b7f7ffc2e6f7e22916ace3d0d72e1d`; 현재 15915바이트, SHA-256 `13a8d20b188ac2e82bc57771263dd6c2bef7cb3ab96ef259d51fd73fa380a57a`.
-
-[실행 소스 전체 Git 비교](직전차수.diff)와 [실제 바이트 명세](공개파일_비교.json)는 Python뿐 아니라 존재하는 보조 PowerShell과 의존성 목록을 포함합니다. `git -c core.autocrlf=false apply --reverse --binary -p1`로 현재 소스 사본에서 직전 소스의 파일 부재·신규·삭제 상태까지 복원해 원문 바이트를 대조했습니다. 부가 자료는 이 소스 비교에 섞지 않고 위 명세로 구분합니다.
-
-
-
-[프로젝트](../../README.md) · [전체 차수](../../docs/REVISION_INDEX.md) · [원본 자료](.) · [← 이전: 25차](../25/README.md#reading-level-2) · [다음: 27차 →](../27/README.md#reading-level-2)
+[level-2--srcelement_framespysrcelement_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_01.md#level-2--srcelement_framespysrcelement_framespy)
 
 <a id="reading-level-3"></a>
-## LEVEL 3 - Practitioner
 
-### LEVEL 3 · 이 차수를 준비하는 범위
+[reading-level-3](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#reading-level-3)
 
-상세창 슬라이더와 위젯 메뉴에서 회전 속도를 조절하고 저장합니다. 모션 배율과 실제 시계·날짜·날씨·계정 한도 갱신은 별개입니다.
+<a id="level-2--srcelement_visualspysrcelement_visualspy"></a>
 
-Windows와 해당 폴더의 requirements.txt를 기준으로 Python 의존성을 준비합니다. history는 공개 소스 보존본이며 현재 루트 assets가 과거 모든 차수의 자산과 호환된다는 뜻은 아닙니다. 날짜별 실제 메시 렌더에는 ModernGL과 OpenGL 3.3을 지원하는 그래픽 드라이버가 필요합니다.
+[level-2--srcelement_visualspysrcelement_visualspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-2--srcelement_visualspysrcelement_visualspy)
 
-자산과 의존성을 준비한 이 차수 폴더에서 `python src/app.py`를 실행합니다. history 소스만으로 과거 배포 EXE와 동일한 화면·자산이 모두 복원되지는 않습니다.
+<a id="level-2--srcelementspysrcelementspy"></a>
 
-#### LEVEL 3 · 이 차수 원래 안내의 세부 조건
+[level-2--srcelementspysrcelementspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-2--srcelementspysrcelementspy)
 
-#### LEVEL 3 · 사용하는 사람에게 달라진 점
+<a id="level-2--srcframe_pacingpysrcframe_pacingpy"></a>
 
-상세창 슬라이더와 위젯 우클릭 메뉴에서 회전 속도를 0.25~3배로 선택하고 1배로 복원할 수 있습니다. 선택값은 저장되어 다음 실행에도 적용됩니다. 속도를 바꿔도 조형의 회전 각도를 이어서 재생하며 날짜·시계·기온·계정 조회 간격은 그대로입니다. 저장이 실패하면 이전 배율로 복원하고 선택한 한국어·영어로 오류를 안내합니다. 정적 정보와 움직이는 조형을 나누어 갱신하는 변경도 포함합니다.
+[level-2--srcframe_pacingpysrcframe_pacingpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-2--srcframe_pacingpysrcframe_pacingpy)
 
-[26차 검증 요약](../../docs/%EA%B3%B5%EA%B0%9C%EA%B2%80%EC%A6%9D_26%EC%B0%A8.md)에서 개발 전체·공개본·중앙 소스 검사와 배포 실행 결과를 구분합니다. 고정 240fps는 달성하지 못했으며 추가 달성 작업은 제외됐습니다. 26차 변경 기록의 실측 생성 약 227~230fps, 고유 Qt 그리기 약 214~229fps를 모니터 표시율로 해석하지 않습니다.
+<a id="level-2--srci18npysrci18npy"></a>
 
-#### LEVEL 3 · 이 보관본의 의존성 목록
+[level-2--srci18npysrci18npy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-2--srci18npysrci18npy)
 
-[requirements.txt](requirements.txt)의 실제 항목입니다. 외부 실행 도구와 GPU 드라이버는 별도로 준비합니다.
+<a id="level-2--srcmotion_labelpysrcmotion_labelpy"></a>
 
-```text
-PySide6-Essentials==6.12.0
-PyInstaller==6.22.3
-moderngl==5.13.0
-glcontext==3.1.0
-numpy==2.5.4
-Pillow==13.0.0
-```
+[level-2--srcmotion_labelpysrcmotion_labelpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-2--srcmotion_labelpysrcmotion_labelpy)
 
-#### LEVEL 3 · 소스에서 제공하는 CLI 옵션
+<a id="level-2--srcnotifierpysrcnotifierpy"></a>
 
-**진입 소스:** [app.py](src/app.py)
+[level-2--srcnotifierpysrcnotifierpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-2--srcnotifierpysrcnotifierpy)
 
-**정의된 옵션 이름:** `--data-dir`, `--sessions`, `--smoke-test`, `--usage-smoke-test`, `--smoke-report`, `--show-details`, `--show-event`
+<a id="level-2--srcthemepysrcthemepy"></a>
 
-**진입 소스:** [notifier.py](src/notifier.py)
+[level-2--srcthemepysrcthemepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-2--srcthemepysrcthemepy)
 
-**정의된 옵션 이름:** `--sessions`, `--work`
+<a id="level-2--srctypographypysrctypographypy"></a>
 
+[level-2--srctypographypysrctypographypy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-2--srctypographypysrctypographypy)
 
-각 옵션의 기본값·필수값·부작용은 해당 main과 인자 정의를 함께 확인합니다.
+<a id="level-2--srcusagepysrcusagepy"></a>
 
+[level-2--srcusagepysrcusagepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-2--srcusagepysrcusagepy)
 
-<details>
-<summary>함수 역할·기본값·입력 거부 조건의 세부 참조</summary>
+<a id="level-2--srcusage_framespysrcusage_framespy"></a>
 
-다음 항목은 이 자료의 Python 소스에 명시된 선언입니다. 전체 분기와 호출 순서는 각 행의 코드 위치에서 이어서 읽을 수 있습니다.
+[level-2--srcusage_framespysrcusage_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-2--srcusage_framespysrcusage_framespy)
 
-#### LEVEL 3 · [src/activity.py](src/activity.py)
+<a id="level-2--srcusage_widgetspysrcusage_widgetspy"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`safe_public_text`](src/activity.py#L15) | 보호문·비공개 표식·긴 인코딩 덩어리는 해석하거나 노출하지 않습니다. |
-| [`configuration`](src/activity.py#L76) | 원본 시각이 있는 자기 관측만 전역 256개로 제한해 보존합니다. |
-| [`defer`](src/activity.py#L160) | 원본 본문 없이 검증에 필요한 native 필드만 전역 32개까지 기다립니다. |
-| [`observe`](src/activity.py#L273) | 그 활동의 첫 관측만 보강하며 이후 모델 변경은 별도 감지를 유지합니다. |
+[level-2--srcusage_widgetspysrcusage_widgetspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-2--srcusage_widgetspysrcusage_widgetspy)
 
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`MAX_ACTIVITY_EVENTS`](src/activity.py#L7) | `정의=128` |
-| [`MAX_ACTIVITY_SEEN`](src/activity.py#L8) | `정의=8192` |
-| [`MAX_ACTIVITY_CALLS`](src/activity.py#L9) | `정의=32` |
-| [`MAX_PUBLIC_CALLS`](src/activity.py#L10) | `정의=128` |
-| [`MAX_DEFERRED_ACTIVITIES`](src/activity.py#L11) | `정의=32` |
-| [`MAX_CONFIGURATION_SNAPSHOTS`](src/activity.py#L12) | `정의=256` |
+<a id="level-2--srcvisualspysrcvisualspy"></a>
 
-**거부 조건:** [`not isinstance(self.data['calls'], dict) or not isinstance(self.data['deferred'], list)`](src/activity.py#L66)
+[level-2--srcvisualspysrcvisualspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-2--srcvisualspysrcvisualspy)
 
-**오류 메시지:** 활동 호출/지연 상태 구조 오류입니다. 원본을 자동 초기화하지 않습니다.
+<a id="level-2--srcweatherpysrcweatherpy"></a>
 
-**거부 조건:** [`not isinstance(self.data['configurations'], list)`](src/activity.py#L68)
+[level-2--srcweatherpysrcweatherpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-2--srcweatherpysrcweatherpy)
 
-**오류 메시지:** 활동 관측 시각 구조 오류입니다. 원본을 자동 초기화하지 않습니다.
+<a id="level-2--관측과-해석을-구분하기"></a>
 
+[level-2--관측과-해석을-구분하기](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-2--관측과-해석을-구분하기)
 
-#### LEVEL 3 · [src/app.py](src/app.py)
+<a id="level-226차의-구체적인-기능과-확인"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`validated_motion_speed`](src/app.py#L42) | 설정과 UI의 속도는 유한한 실제 숫자 범위로 제한합니다. |
-| [`_application_gui_root`](src/app.py#L49) | Python 순환 수집과 무관하게 살아 있는 GUI 소유자를 앱에 보관합니다. |
-| [`operation_record`](src/app.py#L67) | 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다. |
-| [`previous_field`](src/app.py#L106) | 이전 기록 전체 부재와 개별 필드 미기록을 구분하고 관측값만 표시합니다. |
-| [`short_reason`](src/app.py#L130) | 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. |
-| [`public_text`](src/app.py#L182) | 공개 문장만 표시하며 보호된 도구 페이로드를 해석하거나 노출하지 않습니다. |
-| [`selection_explanation`](src/app.py#L203) | 공개된 작업 목적을 모델 선택 이유로 바꾸어 말하지 않습니다. |
-| [`NoticeDelivery`](src/app.py#L309) | Qt 예약 호출을 포함한 미처리 전달 수를 스레드 사이에서 제한합니다. |
-| [`NoticeTicket`](src/app.py#L334) | 중복 반환과 종료 뒤 도착한 신호도 같은 한도를 다시 늘리지 않습니다. |
-| [`DiagnosticLabel`](src/app.py#L918) | 오류가 있을 때 변경 기록 안에 원문을 보여 주는 읽기 전용 라벨입니다. |
-| [`QuitGuard`](src/app.py#L1394) | 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다. |
-| [`usage_smoke_state`](src/app.py#L1956) | 지연된 신호 인자 대신 최신 스냅샷과 현재 레이아웃의 실제 표시를 대조합니다. |
-| [`motion_smoke_stage`](src/app.py#L1980) | 실제 GPU 렌더 수를 기준으로 준비·비교 단계를 판정합니다. |
-| [`_content_fit_signature`](src/app.py#L759) | 말줄임 전 제목과 실제 높이에 영향을 주는 표시 조건만 비교합니다. |
-| [`promote_first_observation`](src/app.py#L1363) | 실제 첫 관측 한 행만 안정된 활동 ID로 보강하며 다른 변경은 보존합니다. |
-| [`change_motion_speed`](src/app.py#L1484) | 사용자 조작의 실패는 실제 속도를 복원한 뒤 상세창에서 안내합니다. |
-| [`_finish_closed_gui`](src/app.py#L1948) | 외부 QThread 참조를 무효화하지 않고 종료된 감시기와 GUI 소유자를 해제합니다. |
+[level-226차의-구체적인-기능과-확인](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차의-구체적인-기능과-확인)
 
-**설정·옵션:** [`--data-dir`](src/app.py#L1996)
+<a id="level-226차-추가-해설level-2목적과-이-차수의-역할"></a>
 
-**코드의 선언:** `type=Path; default=Path(os.environ.get('LOCALAPPDATA', Path.home())) / 'CodexOrbit'`
+[level-226차-추가-해설level-2목적과-이-차수의-역할](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2목적과-이-차수의-역할)
 
-**설정·옵션:** [`--sessions`](src/app.py#L1997)
+<a id="level-226차-추가-해설level-2핵심-기능과-보존-범위"></a>
 
-**코드의 선언:** `type=Path`
+[level-226차-추가-해설level-2핵심-기능과-보존-범위](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2핵심-기능과-보존-범위)
 
-**설정·옵션:** [`--smoke-test`](src/app.py#L1998)
+<a id="level-226차-추가-해설level-2입력처리출력"></a>
 
-**코드의 선언:** `action='store_true'`
+[level-226차-추가-해설level-2입력처리출력](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2입력처리출력)
 
-**설정·옵션:** [`--usage-smoke-test`](src/app.py#L1999)
+<a id="level-226차-추가-해설level-2화면과-사용-흐름"></a>
 
-**코드의 선언:** `action='store_true'; help='실제 계정 잔량과 표시를 조회한 뒤 종료'`
+[level-226차-추가-해설level-2화면과-사용-흐름](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2화면과-사용-흐름)
 
-**설정·옵션:** [`--smoke-report`](src/app.py#L2000)
+<a id="level-226차-추가-해설level-2실제-자료-구성"></a>
 
-**코드의 선언:** `type=Path`
+[level-226차-추가-해설level-2실제-자료-구성](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2실제-자료-구성)
 
-**설정·옵션:** [`--show-details`](src/app.py#L2001)
+<a id="level-226차-추가-해설level-2주요-모듈과-코드-읽기"></a>
 
-**코드의 선언:** `action='store_true'`
+[level-226차-추가-해설level-2주요-모듈과-코드-읽기](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2주요-모듈과-코드-읽기)
 
-**설정·옵션:** [`--show-event`](src/app.py#L2002)
+<a id="level-226차-추가-해설level-2설치-환경과-실행사용법"></a>
 
-**코드의 선언:** `help='기존 이력의 이벤트 ID 또는 대상 ID를 다시 표시'`
+[level-226차-추가-해설level-2설치-환경과-실행사용법](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2설치-환경과-실행사용법)
 
-**설정·옵션:** [`EMPTY_HISTORY_GUIDANCE`](src/app.py#L39)
+<a id="level-226차-추가-해설level-2사용하는-사람에게-달라진-점"></a>
 
-**코드의 선언:** `정의='변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'`
+[level-226차-추가-해설level-2사용하는-사람에게-달라진-점](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2사용하는-사람에게-달라진-점)
 
-**설정·옵션:** [`ROLE_LABELS`](src/app.py#L116)
+<a id="level-226차-추가-해설level-2이-보관-본의-의존성-목록"></a>
 
-**코드의 선언:** `정의={'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}`
+[level-226차-추가-해설level-2이-보관-본의-의존성-목록](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2이-보관-본의-의존성-목록)
 
+<a id="level-226차-추가-해설level-2소스에서-제공하는-cli-옵션"></a>
 
-**거부 조건:** [`application is None or QThread.currentThread() != application.thread()`](src/app.py#L52)
+[level-226차-추가-해설level-2소스에서-제공하는-cli-옵션](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2소스에서-제공하는-cli-옵션)
 
-**오류 메시지:** GUI 소유자는 QApplication의 메인 스레드에서 생성해야 합니다.
+<a id="level-226차-추가-해설level-2srcactivitypysrcactivitypy"></a>
 
-**거부 조건:** [`QThread.currentThread() != application.thread()`](src/app.py#L1523)
+[level-226차-추가-해설level-2srcactivitypysrcactivitypy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2srcactivitypysrcactivitypy)
 
-**오류 메시지:** 언어는 GUI 메인 스레드에서만 변경할 수 있습니다.
+<a id="level-226차-추가-해설level-2srcapppysrcapppy"></a>
 
-**거부 조건:** [`not lock.tryLock(100)`](src/app.py#L2024)
+[level-226차-추가-해설level-2srcapppysrcapppy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2srcapppysrcapppy)
 
-**오류 메시지:** 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다.
+<a id="level-226차-추가-해설level-2srcatom_framespysrcatom_framespy"></a>
 
-**거부 조건:** [`not isinstance(value, dict)`](src/app.py#L295)
+[level-226차-추가-해설level-2srcatom_framespysrcatom_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2srcatom_framespysrcatom_framespy)
 
-**오류 메시지:** 앱 설정은 JSON 객체여야 합니다.
+<a id="level-226차-추가-해설level-2srcbrandpysrcbrandpy"></a>
 
-**거부 조건:** [`self.closed or len(self.tickets) &gt;= MAX_PENDING`](src/app.py#L318)
+[level-226차-추가-해설level-2srcbrandpysrcbrandpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2srcbrandpysrcbrandpy)
 
-**오류 메시지:** 알림 전달 대기 한도 또는 종료 상태: 다음 감시 주기에 재시도합니다.
+<a id="level-226차-추가-해설level-2srccalendar_artpysrccalendar_artpy"></a>
 
+[level-226차-추가-해설level-2srccalendar_artpysrccalendar_artpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2srccalendar_artpysrccalendar_artpy)
 
-#### LEVEL 3 · [src/atom_frames.py](src/atom_frames.py)
+<a id="level-226차-추가-해설level-2srccalendar_catalogpysrccalendar_catalogpy"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`AtomAssetError`](src/atom_frames.py#L27) | 필수 시각 자산 오류를 시작 실패 경로에 전달합니다. |
-| [`AtomFrames`](src/atom_frames.py#L50) | 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대24장만 보존합니다. |
-| [`close_runtime_frames`](src/atom_frames.py#L172) | 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
-| [`get_atom_frames`](src/atom_frames.py#L183) | 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
+[level-226차-추가-해설level-2srccalendar_catalogpysrccalendar_catalogpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2srccalendar_catalogpysrccalendar_catalogpy)
 
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FRAME_COUNT`](src/atom_frames.py#L16) | `정의=540` |
-| [`FRAME_SIZE`](src/atom_frames.py#L17) | `정의=296` |
-| [`FPS`](src/atom_frames.py#L18) | `정의=30` |
-| [`PERIOD_SECONDS`](src/atom_frames.py#L19) | `정의=18` |
-| [`CACHE_LIMIT`](src/atom_frames.py#L20) | `정의=24` |
-| [`MAX_ARCHIVE_BYTES`](src/atom_frames.py#L21) | `정의=128 * 1024 * 1024` |
-| [`MAX_FRAME_BYTES`](src/atom_frames.py#L22) | `정의=1024 * 1024` |
-| [`MAX_TOTAL_BYTES`](src/atom_frames.py#L23) | `정의=256 * 1024 * 1024` |
-| [`MAX_MANIFEST_BYTES`](src/atom_frames.py#L24) | `정의=64 * 1024` |
+<a id="level-226차-추가-해설level-2srccalendar_motionpysrccalendar_motionpy"></a>
 
-**거부 조건:** [`key in value`](src/atom_frames.py#L44)
+[level-226차-추가-해설level-2srccalendar_motionpysrccalendar_motionpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2srccalendar_motionpysrccalendar_motionpy)
 
-**오류 메시지:** 원자 자산 매니페스트에 중복 필드가 있습니다.
+<a id="level-226차-추가-해설level-2srccalendar_rendererpysrccalendar_rendererpy"></a>
 
-**거부 조건:** [`not 0 &lt; manifest_path.stat().st_size &lt;= MAX_MANIFEST_BYTES`](src/atom_frames.py#L69)
+[level-226차-추가-해설level-2srccalendar_rendererpysrccalendar_rendererpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2srccalendar_rendererpysrccalendar_rendererpy)
 
-**오류 메시지:** 원자 자산 매니페스트 크기가 허용 범위를 벗어났습니다.
+<a id="level-226차-추가-해설level-2srccorepysrccorepy"></a>
 
-**거부 조건:** [`not isinstance(self.manifest, dict)`](src/atom_frames.py#L75)
+[level-226차-추가-해설level-2srccorepysrccorepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2srccorepysrccorepy)
 
-**오류 메시지:** 원자 자산 매니페스트는 객체여야 합니다.
+<a id="level-226차-추가-해설level-2srcelement_framespysrcelement_framespy"></a>
 
-**거부 조건:** [`not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None`](src/atom_frames.py#L85)
+[level-226차-추가-해설level-2srcelement_framespysrcelement_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2srcelement_framespysrcelement_framespy)
 
-**오류 메시지:** 원자 프레임 ZIP의 SHA256 형식이 잘못됐습니다.
+<a id="level-226차-추가-해설level-2srcelement_visualspysrcelement_visualspy"></a>
 
-**거부 조건:** [`not 0 &lt; archive_path.stat().st_size &lt;= MAX_ARCHIVE_BYTES`](src/atom_frames.py#L87)
+[level-226차-추가-해설level-2srcelement_visualspysrcelement_visualspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2srcelement_visualspysrcelement_visualspy)
 
-**오류 메시지:** 원자 프레임 ZIP 크기가 허용 범위를 벗어났습니다.
+<a id="level-226차-추가-해설level-2srcelementspysrcelementspy"></a>
 
-**거부 조건:** [`hasher.hexdigest() != digest`](src/atom_frames.py#L94)
+[level-226차-추가-해설level-2srcelementspysrcelementspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2srcelementspysrcelementspy)
 
-**오류 메시지:** 원자 프레임 ZIP의 SHA256이 일치하지 않습니다.
+<a id="level-226차-추가-해설level-2srcframe_pacingpysrcframe_pacingpy"></a>
 
-**거부 조건:** [`len(members) != FRAME_COUNT or {item.filename for item in members} != names`](src/atom_frames.py#L100)
+[level-226차-추가-해설level-2srcframe_pacingpysrcframe_pacingpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2srcframe_pacingpysrcframe_pacingpy)
 
-**오류 메시지:** 원자 프레임 ZIP의 정확한540개 이름·목록이 일치하지 않습니다.
+<a id="level-226차-추가-해설level-2srci18npysrci18npy"></a>
 
-**거부 조건:** [`sum(item.file_size for item in members) &gt; MAX_TOTAL_BYTES`](src/atom_frames.py#L102)
+[level-226차-추가-해설level-2srci18npysrci18npy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2srci18npysrci18npy)
 
-**오류 메시지:** 원자 프레임 전체 읽기 상한을 초과했습니다.
+<a id="level-226차-추가-해설level-2srcmotion_labelpysrcmotion_labelpy"></a>
 
-**거부 조건:** [`actual != self.identities`](src/atom_frames.py#L133)
+[level-226차-추가-해설level-2srcmotion_labelpysrcmotion_labelpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2srcmotion_labelpysrcmotion_labelpy)
 
-**오류 메시지:** 검증 뒤 원자 자산이 변경됐습니다. 앱을 다시 실행해 주세요.
+<a id="level-226차-추가-해설level-2srcnotifierpysrcnotifierpy"></a>
 
-**거부 조건:** [`isinstance(elapsed, bool) or not isinstance(elapsed, (int, float)) or not math.isfinite(elapsed)`](src/atom_frames.py#L138)
+[level-226차-추가-해설level-2srcnotifierpysrcnotifierpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2srcnotifierpysrcnotifierpy)
 
-**오류 메시지:** 원자 프레임의 재생 시각이 유한한 숫자가 아닙니다.
+<a id="level-226차-추가-해설level-2srcthemepysrcthemepy"></a>
 
-**거부 조건:** [`item.is_dir() or item.flag_bits & 1 or item.compress_type not in                     (zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED) or                     not 0 &lt; item.file_size &lt;= MAX_FRAME_BYTES`](src/atom_frames.py#L105)
+[level-226차-추가-해설level-2srcthemepysrcthemepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2srcthemepysrcthemepy)
 
-**오류 메시지:** 원자 프레임 멤버의 형식·크기가 허용 범위를 벗어났습니다.
+<a id="level-226차-추가-해설level-2srctypographypysrctypographypy"></a>
 
+[level-226차-추가-해설level-2srctypographypysrctypographypy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2srctypographypysrctypographypy)
 
-#### LEVEL 3 · [src/brand.py](src/brand.py)
+<a id="level-226차-추가-해설level-2srcusagepysrcusagepy"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`motion_brand_source`](src/brand.py#L32) | 원소 프레임의 실제 크기에 비례해 여백만 줄이며 영역 밖을 복사하지 않습니다. |
-| [`BrandClock`](src/brand.py#L40) | 보이는 로고만 단일 시계에서 같은 프레임으로 갱신합니다. |
-| [`AnimatedBrand`](src/brand.py#L106) | 닫힘·숨김 이벤트에 맞춰 재생 구독을 끝내는 실제3D 로고입니다. |
-| [`validate_symbols`](src/brand.py#L137) | 실제 메시에서 제작한 고정 기호 일곱 개를 창 생성 전에 검증합니다. |
-| [`symbol_image`](src/brand.py#L181) | 실제 메시 렌더만 축소하고 새로운 도형이나 글자를 덧그리지 않습니다. |
-| [`with_symbol`](src/brand.py#L209) | 원문 QLabel을 유지하며 기능 의미를 읽기 쉬운 기호로 보조합니다. |
+[level-226차-추가-해설level-2srcusagepysrcusagepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2srcusagepysrcusagepy)
 
-**설정·옵션:** [`SYMBOL_NAMES`](src/brand.py#L133)
+<a id="level-226차-추가-해설level-2srcusage_framespysrcusage_framespy"></a>
 
-**코드의 선언:** `정의=('model', 'reasoning', 'time', 'reason', 'usage', 'refresh', 'history')`
+[level-226차-추가-해설level-2srcusage_framespysrcusage_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2srcusage_framespysrcusage_framespy)
 
+<a id="level-226차-추가-해설level-2srcusage_widgetspysrcusage_widgetspy"></a>
 
-**거부 조건:** [`not 1 &lt;= size &lt;= 512`](src/brand.py#L22)
+[level-226차-추가-해설level-2srcusage_widgetspysrcusage_widgetspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2srcusage_widgetspysrcusage_widgetspy)
 
-**오류 메시지:** 브랜드 이미지 크기는1~512px여야 합니다.
+<a id="level-226차-추가-해설level-2srcvisualspysrcvisualspy"></a>
 
-**거부 조건:** [`name not in SYMBOL_NAMES or not 1 &lt;= size &lt;= 96`](src/brand.py#L184)
+[level-226차-추가-해설level-2srcvisualspysrcvisualspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2srcvisualspysrcvisualspy)
 
-**오류 메시지:** 3D 기능 기호의 종류나 크기가 올바르지 않습니다.
+<a id="level-226차-추가-해설level-2srcweatherpysrcweatherpy"></a>
 
-**거부 조건:** [`not 0 &lt; path.stat().st_size &lt;= 65536`](src/brand.py#L142)
+[level-226차-추가-해설level-2srcweatherpysrcweatherpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2srcweatherpysrcweatherpy)
 
-**오류 메시지:** 3D 기능 기호 매니페스트 크기 오류입니다.
+<a id="level-226차-추가-해설level-2처리-결과와-출력-읽기"></a>
 
-**거부 조건:** [`type(metadata.get('schema_version')) is not int or metadata['schema_version'] != 1`](src/brand.py#L145)
+[level-226차-추가-해설level-2처리-결과와-출력-읽기](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2처리-결과와-출력-읽기)
 
-**오류 메시지:** 3D 기능 기호 매니페스트 버전 오류입니다.
+<a id="level-226차-추가-해설level-2제약과-문제-해결"></a>
 
-**거부 조건:** [`not isinstance(files, dict) or set(files) != set(SYMBOL_NAMES)`](src/brand.py#L148)
+[level-226차-추가-해설level-2제약과-문제-해결](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2제약과-문제-해결)
 
-**오류 메시지:** 3D 기능 기호 일곱 개 목록이 일치하지 않습니다.
+<a id="level-226차-추가-해설level-2직전-자료와-전체-비교"></a>
 
-**거부 조건:** [`not isinstance(record, dict) or record.get('filename') != name+'.png'`](src/brand.py#L153)
+[level-226차-추가-해설level-2직전-자료와-전체-비교](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-226차-추가-해설level-2직전-자료와-전체-비교)
 
-**오류 메시지:** 3D 기능 기호의 고정 파일 이름이 일치하지 않습니다.
+<a id="level-3---practitioner"></a>
 
-**거부 조건:** [`not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None`](src/brand.py#L156)
+[level-3---practitioner](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3---practitioner)
 
-**오류 메시지:** 3D 기능 기호의 SHA256 형식 오류입니다.
+<a id="level-3--이-차수를-준비하는-범위"></a>
 
-**거부 조건:** [`not 0 &lt; path.stat().st_size &lt;= 262144`](src/brand.py#L159)
+[level-3--이-차수를-준비하는-범위](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--이-차수를-준비하는-범위)
 
-**오류 메시지:** 3D 기능 기호 읽기 크기 상한 오류입니다.
+<a id="level-3--이-차수-원래-안내의-세부-조건"></a>
 
+[level-3--이-차수-원래-안내의-세부-조건](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--이-차수-원래-안내의-세부-조건)
 
-#### LEVEL 3 · [src/calendar_art.py](src/calendar_art.py)
+<a id="level-3--사용하는-사람에게-달라진-점"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`current_date`](src/calendar_art.py#L33) | 호스트의 현지 시간대와 무관하게 한국 날짜를 사용합니다. |
-| [`_month_palette`](src/calendar_art.py#L50) | 반올림 충돌만 가장 가까운 미사용 RGB로 옮기고 월별 결과를 불변 보관합니다. |
-| [`design_for_date`](src/calendar_art.py#L78) | 유효한 날짜만 허용하며 지원 범위 밖을 다른 날짜로 몰래 대체하지 않습니다. |
-| [`all_designs`](src/calendar_art.py#L95) | 현재 모델만 렌더하며 이 반복자는 작은 카탈로그를 작성할 때만 사용합니다. |
+[level-3--사용하는-사람에게-달라진-점](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--사용하는-사람에게-달라진-점)
 
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FIRST_DATE`](src/calendar_art.py#L10) | `정의=date(2026,1,1)` |
-| [`LAST_DATE`](src/calendar_art.py#L11) | `정의=date(2099,12,31)` |
-| [`KST`](src/calendar_art.py#L12) | `정의=timezone(timedelta(hours=9))` |
-| [`THEMES`](src/calendar_art.py#L13) | `정의=tuple(row.title for row in all_collections())` |
+<a id="level-3--이-보관본의-의존성-목록"></a>
 
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`type(value) is not date`](src/calendar_art.py#L80) | 조형 날짜는 datetime.date여야 합니다. |
-| [`not FIRST_DATE &lt;= value &lt;= LAST_DATE`](src/calendar_art.py#L82) | 날짜별 조형 지원 범위는 2026-01-01부터 2099-12-31까지입니다. |
+[level-3--이-보관본의-의존성-목록](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--이-보관본의-의존성-목록)
 
-#### LEVEL 3 · [src/calendar_catalog.py](src/calendar_catalog.py)
+<a id="level-3--소스에서-제공하는-cli-옵션"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`joining_particle`](src/calendar_catalog.py#L208) | 마지막 한글 음절의 받침에 맞춰 대상 이름을 연결합니다. |
+[level-3--소스에서-제공하는-cli-옵션](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--소스에서-제공하는-cli-옵션)
 
-**설정·옵션:** [`POOLS`](src/calendar_catalog.py#L166)
+<a id="level-3--srcactivitypysrcactivitypy"></a>
 
-**코드의 선언:** `정의={'꽃': _objects(_FLOWERS,'꽃'), '열매': _objects(_FRUITS,'열매'),          '잎': _objects(_LEAVES,'잎'), '악기': _objects(_MUSIC,'악기')}`
+[level-3--srcactivitypysrcactivitypy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--srcactivitypysrcactivitypy)
 
-**설정·옵션:** [`OBJECTS`](src/calendar_catalog.py#L168)
+<a id="level-3--srcapppysrcapppy"></a>
 
-**코드의 선언:** `정의={obj.key:obj for pool in POOLS.values() for obj in pool}`
+[level-3--srcapppysrcapppy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--srcapppysrcapppy)
 
-**설정·옵션:** [`COMPOSITION_NAMES`](src/calendar_catalog.py#L193)
+<a id="level-3--srcatom_framespysrcatom_framespy"></a>
 
-**코드의 선언:** `정의={'bouquet':'꽃다발형','diagonal':'대각선형','shelter':'감싸는 형태',                      'stage':'연주대형','triangle':'삼각형 정물','fan':'부채형'}`
+[level-3--srcatom_framespysrcatom_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--srcatom_framespysrcatom_framespy)
 
+<a id="level-3--srcbrandpysrcbrandpy"></a>
 
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`not 0 &lt;= index &lt; 888 or not 1 &lt;= month &lt;= 12`](src/calendar_catalog.py#L217) | 연월 컬렉션은 2026년 1월부터 2099년 12월까지입니다. |
+[level-3--srcbrandpysrcbrandpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--srcbrandpysrcbrandpy)
 
-#### LEVEL 3 · [src/calendar_motion.py](src/calendar_motion.py)
+<a id="level-3--srccalendar_artpysrccalendar_artpy"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`next_frame_deadline`](src/calendar_motion.py#L21) | 정상 슬롯을 유지하고 늦은 프레임은 추가 대기나 누적 추격 없이 이어갑니다. |
-| [`fallback_image`](src/calendar_motion.py#L26) | GPU 준비·실패 때만 쓰는 월 주제의 정적 평면 표식입니다. 3D 성공으로 가장하지 않습니다. |
-| [`_Worker`](src/calendar_motion.py#L60) | Qt 객체나 UI를 조작하지 않고 복사된 최신 이미지 하나만 전달합니다. |
-| [`prepare_calendar_motion`](src/calendar_motion.py#L232) | 창 표시 전에 같은 작업자의 첫 실제 프레임을 최대 5초 준비합니다. |
-| [`set_calendar_motion_speed`](src/calendar_motion.py#L262) | 현재 위상을 유지하고 이후 모션의 배율만 바꿉니다. 실제 시계와 날짜는 바꾸지 않습니다. |
-| [`set_calendar_motion_size`](src/calendar_motion.py#L268) | 현재 보이는 각 소유자의 실제 픽셀 요구 중 최대 크기만 전달합니다. |
-| [`record_calendar_presentation`](src/calendar_motion.py#L276) | Qt 그리기 경로가 실제로 소비한 서로 다른 프레임만 셉니다. |
-| [`get_calendar_error`](src/calendar_motion.py#L285) | 제품은 이 문자열을 상태나 툴팁에 표시해 대체 표식과 실제 3D를 구분할 수 있습니다. |
+[level-3--srccalendar_artpysrccalendar_artpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--srccalendar_artpysrccalendar_artpy)
 
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FPS`](src/calendar_motion.py#L15) | `정의=240` |
-| [`SIZE`](src/calendar_motion.py#L16) | `정의=384` |
-| [`RENDER_SIZE`](src/calendar_motion.py#L17) | `정의=(3840, 2160)` |
+<a id="level-3--srccalendar_catalogpysrccalendar_catalogpy"></a>
 
-**거부 조건:** [`app is None or QThread.currentThread()!=app.thread()`](src/calendar_motion.py#L211)
+[level-3--srccalendar_catalogpysrccalendar_catalogpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--srccalendar_catalogpysrccalendar_catalogpy)
 
-**오류 메시지:** 날짜별 모션 API는 Qt 메인 스레드에서 호출해야 합니다.
+<a id="level-3--srccalendar_motionpysrccalendar_motionpy"></a>
 
-**거부 조건:** [`type(timeout_seconds) not in (int,float) or not 0 &lt; timeout_seconds &lt;= 5`](src/calendar_motion.py#L234)
+[level-3--srccalendar_motionpysrccalendar_motionpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--srccalendar_motionpysrccalendar_motionpy)
 
-**오류 메시지:** 3D 준비 제한은 0초 초과 5초 이하여야 합니다.
+<a id="level-3--srccalendar_rendererpysrccalendar_rendererpy"></a>
 
-**거부 조건:** [`type(visible) is not bool`](src/calendar_motion.py#L258)
+[level-3--srccalendar_rendererpysrccalendar_rendererpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--srccalendar_rendererpysrccalendar_rendererpy)
 
-**오류 메시지:** 표시 상태는 bool이어야 합니다.
+<a id="level-3--srccorepysrccorepy"></a>
 
-**거부 조건:** [`type(size) is not int or not 32&lt;=size&lt;=2160`](src/calendar_motion.py#L270)
+[level-3--srccorepysrccorepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--srccorepysrccorepy)
 
-**오류 메시지:** 전달 크기는32~2160 정수여야 합니다.
+<a id="level-3--srcelement_framespysrcelement_framespy"></a>
 
-**거부 조건:** [`self.closed`](src/calendar_motion.py#L167)
+[level-3--srcelement_framespysrcelement_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--srcelement_framespysrcelement_framespy)
 
-**오류 메시지:** 날짜별 모션 서비스가 닫혔습니다.
+<a id="level-3--srcelement_visualspysrcelement_visualspy"></a>
 
-**거부 조건:** [`self.closed`](src/calendar_motion.py#L180)
+[level-3--srcelement_visualspysrcelement_visualspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--srcelement_visualspysrcelement_visualspy)
 
-**오류 메시지:** 날짜별 모션 서비스가 닫혔습니다.
+<a id="level-3--srcelementspysrcelementspy"></a>
 
-**거부 조건:** [`type(elapsed) not in (int,float)`](src/calendar_motion.py#L181)
+[level-3--srcelementspysrcelementspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--srcelementspysrcelementspy)
 
-**오류 메시지:** 재생 시각은 유한한 숫자여야 합니다.
+<a id="level-3--srcframe_pacingpysrcframe_pacingpy"></a>
 
-**거부 조건:** [`not valid`](src/calendar_motion.py#L184)
+[level-3--srcframe_pacingpysrcframe_pacingpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--srcframe_pacingpysrcframe_pacingpy)
 
-**오류 메시지:** 재생 시각은 유한한 숫자여야 합니다.
+<a id="level-3--srci18npysrci18npy"></a>
 
-**거부 조건:** [`_retiring.worker.isRunning()`](src/calendar_motion.py#L221)
+[level-3--srci18npysrci18npy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--srci18npysrci18npy)
 
-**오류 메시지:** 이전 GPU 작업 스레드가 종료 중입니다.
+<a id="level-3--srcmotion_labelpysrcmotion_labelpy"></a>
 
+[level-3--srcmotion_labelpysrcmotion_labelpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--srcmotion_labelpysrcmotion_labelpy)
 
-#### LEVEL 3 · [src/calendar_renderer.py](src/calendar_renderer.py)
+<a id="level-3--srcnotifierpysrcnotifierpy"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`rotation`](src/calendar_renderer.py#L24) | 정규화된 실제 3D축을 중심으로 로드리게스 회전행렬을 만듭니다. |
-| [`finish`](src/calendar_renderer.py#L48) | 표면 법선과 삼각형 winding을 일치시킵니다. |
-| [`box`](src/calendar_renderer.py#L58) | 육면체 면을 실제 둥근 모서리와 구면 꼭짓점으로 투영합니다. |
-| [`lathe`](src/calendar_renderer.py#L84) | 회전체의 실제 앞뒤·옆면을 만들며 다각 단면은 평면 법선을 보존합니다. |
-| [`tube`](src/calendar_renderer.py#L104) | 3D 경로를 따라 원형 단면을 운반합니다. 코일은 실제 깊이를 가집니다. |
-| [`_object_geometry`](src/calendar_renderer.py#L145) | 대상 이름에 연결된 주요 구조를 실제 삼각형 부품으로 구성합니다. |
-| [`_ring_geometry`](src/calendar_renderer.py#L323) | 날짜와 무관한 세 링만 읽기 전용 배열로 한 번 생성합니다. |
-| [`build_geometry`](src/calendar_renderer.py#L334) | 날짜별 주연과 서로 다른 두 월 모티프를 명시적 대상 사전에서 렌더합니다. |
-| [`CalendarRenderer`](src/calendar_renderer.py#L378) | 컨텍스트를 만든 스레드에서만 사용하고 현재 날짜의 버퍼만 보유합니다. |
-| [`render_date`](src/calendar_renderer.py#L489) | 미리보기와 직접 검증용 동기 렌더입니다. 앱은 공유 작업 스레드를 사용합니다. |
-| [`set_output_size`](src/calendar_renderer.py#L425) | 원본 타깃은 유지하고 중앙 정사각형의 GPU 전달 크기만 변경합니다. |
-| [`render_original`](src/calendar_renderer.py#L470) | 검증·내보내기 때만 실제 직사각형 원본 전체를 CPU로 읽습니다. |
+[level-3--srcnotifierpysrcnotifierpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--srcnotifierpysrcnotifierpy)
 
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`PERIOD`](src/calendar_renderer.py#L132) | `정의=12.0` |
-| [`SIZE`](src/calendar_renderer.py#L133) | `정의=384` |
+<a id="level-3--srcthemepysrcthemepy"></a>
 
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`subject.recipe!=design.shape_recipe`](src/calendar_renderer.py#L338) | 대상과 형상 규칙이 일치하지 않습니다. |
-| [`type(elapsed) not in (int,float)`](src/calendar_renderer.py#L364) | 모션 시각은 유한한 숫자여야 합니다. |
-| [`not valid`](src/calendar_renderer.py#L367) | 모션 시각은 유한한 숫자여야 합니다. |
-| [`threading.get_ident()!=self.thread_id`](src/calendar_renderer.py#L423) | GPU 컨텍스트는 생성 스레드에서만 사용할 수 있습니다. |
-| [`type(size) is not int or not 32&lt;=size&lt;=2160`](src/calendar_renderer.py#L428) | 전달 크기는32~2160 정수여야 합니다. |
+[level-3--srcthemepysrcthemepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--srcthemepysrcthemepy)
 
-#### LEVEL 3 · [src/core.py](src/core.py)
+<a id="level-3--srctypographypysrctypographypy"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`read_jsonl_tail`](src/core.py#L19) | 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
-| [`title_catalog`](src/core.py#L56) | 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
-| [`resolve_title`](src/core.py#L86) | 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
-| [`safe_path`](src/core.py#L110) | 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
+[level-3--srctypographypysrctypographypy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--srctypographypysrctypographypy)
 
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`MAX_TEXT_BYTES`](src/core.py#L10) | `정의=2 * 1024 * 1024` |
-| [`BEGIN`](src/core.py#L11) | `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
-| [`END`](src/core.py#L12) | `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
+<a id="level-3--srcusagepysrcusagepy"></a>
 
-**거부 조건:** [`path.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L125)
+[level-3--srcusagepysrcusagepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--srcusagepysrcusagepy)
 
-**오류 메시지:** 문서가 2 MiB 상한을 초과했습니다.
+<a id="level-3--srcusage_framespysrcusage_framespy"></a>
 
-**거부 조건:** [`not isinstance(cache, dict) or not isinstance(cache.get('titles'), dict)`](src/core.py#L65)
+[level-3--srcusage_framespysrcusage_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--srcusage_framespysrcusage_framespy)
 
-**오류 메시지:** 제목 캐시 구조가 올바르지 않습니다.
+<a id="level-3--srcusage_widgetspysrcusage_widgetspy"></a>
 
-**거부 조건:** [`target.name.lower() != 'agents.md'`](src/core.py#L136)
+[level-3--srcusage_widgetspysrcusage_widgetspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--srcusage_widgetspysrcusage_widgetspy)
 
-**오류 메시지:** 적용 대상은 AGENTS.md 파일이어야 합니다.
+<a id="level-3--srcvisualspysrcvisualspy"></a>
 
-**거부 조건:** [`not target.parent.is_dir()`](src/core.py#L138)
+[level-3--srcvisualspysrcvisualspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--srcvisualspysrcvisualspy)
 
-**오류 메시지:** 대상 폴더가 존재하지 않습니다.
+<a id="level-3--srcweatherpysrcweatherpy"></a>
 
-**거부 조건:** [`target.exists() and (not target.is_file() or target.stat().st_size &gt; MAX_TEXT_BYTES)`](src/core.py#L140)
+[level-3--srcweatherpysrcweatherpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--srcweatherpysrcweatherpy)
 
-**오류 메시지:** 대상은 2 MiB 이하의 일반 파일이어야 합니다.
+<a id="level-3--실제-사용실험-순서"></a>
 
-**거부 조건:** [`not content.strip() or len(added) &gt; MAX_TEXT_BYTES`](src/core.py#L147)
+[level-3--실제-사용실험-순서](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--실제-사용실험-순서)
 
-**오류 메시지:** 빈 지침 또는 2 MiB 초과 지침은 적용할 수 없습니다.
+<a id="level-3--결과와-실패를-확인하기"></a>
 
-**거부 조건:** [`BEGIN in added or END in added`](src/core.py#L149)
+[level-3--결과와-실패를-확인하기](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--결과와-실패를-확인하기)
 
-**오류 메시지:** 지침 내용에 앱 관리구역 표식을 넣을 수 없습니다.
+<a id="level-3--실행-전-대조할-차수-조건"></a>
 
-**거부 조건:** [`len(result) &gt; MAX_TEXT_BYTES`](src/core.py#L163)
+[level-3--실행-전-대조할-차수-조건](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-3--실행-전-대조할-차수-조건)
 
-**오류 메시지:** 적용 결과가 2 MiB 상한을 초과합니다.
+<a id="level-326차의-구체적인-기능과-확인"></a>
 
-**거부 조건:** [`target.exists() != existed or digest(target.read_bytes() if existed else b'') != expected`](src/core.py#L170)
+[level-326차의-구체적인-기능과-확인](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-326차의-구체적인-기능과-확인)
 
-**오류 메시지:** 대상 파일이 미리보기/적용 이후 변경되었습니다. 새 미리보기가 필요합니다.
+<a id="level-326차-추가-해설level-3목적과-이-차수의-역할"></a>
 
-**거부 조건:** [`digest(plan['original']) != plan['before_hash'] or digest(plan['applied_bytes']) != plan['after_hash']`](src/core.py#L190)
+[level-326차-추가-해설level-3목적과-이-차수의-역할](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-326차-추가-해설level-3목적과-이-차수의-역할)
 
-**오류 메시지:** 미리보기 데이터가 변경되었습니다.
+<a id="level-326차-추가-해설level-3핵심-기능과-보존-범위"></a>
 
-**거부 조건:** [`backup.parent != safe_path(self.data_dir / 'backups') or not backup.is_file() or backup.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L210)
+[level-326차-추가-해설level-3핵심-기능과-보존-범위](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-326차-추가-해설level-3핵심-기능과-보존-범위)
 
-**오류 메시지:** 유효한 앱 원문 백업이 아닙니다.
+<a id="level-326차-추가-해설level-3입력처리출력"></a>
 
-**거부 조건:** [`digest(raw) != receipt['before_hash']`](src/core.py#L213)
+[level-326차-추가-해설level-3입력처리출력](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-326차-추가-해설level-3입력처리출력)
 
-**오류 메시지:** 백업 해시가 일치하지 않습니다.
+<a id="level-326차-추가-해설level-3화면과-사용-흐름"></a>
 
-**거부 조건:** [`not isinstance(row, dict)`](src/core.py#L41)
+[level-326차-추가-해설level-3화면과-사용-흐름](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-326차-추가-해설level-3화면과-사용-흐름)
 
-**오류 메시지:** JSON 객체가 아닙니다.
+<a id="level-326차-추가-해설level-3실제-자료-구성"></a>
 
-**거부 조건:** [`original.count(BEGIN) != 1 or original.count(END) != 1 or original.index(BEGIN) &gt;= original.index(END)`](src/core.py#L156)
-
-**오류 메시지:** 기존 관리구역 표식이 손상되었거나 중복되었습니다.
-
-
-#### LEVEL 3 · [src/element_frames.py](src/element_frames.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`ElementAssetError`](src/element_frames.py#L24) | 필수 원소 자산 실패를 숨기지 않고 앱의 시작·표시 오류로 전달합니다. |
-| [`preflight_element_frames`](src/element_frames.py#L132) | 활성 원소의 해시·목록·첫 프레임을 확인합니다.31개를 적재하지 않습니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`CACHE_LIMIT`](src/element_frames.py#L15) | `정의=24` |
-| [`FRAME_SIZE`](src/element_frames.py#L16) | `정의=192` |
-| [`FRAME_COUNT`](src/element_frames.py#L17) | `정의=540` |
-| [`FPS`](src/element_frames.py#L18) | `정의=30` |
-| [`PERIOD_SECONDS`](src/element_frames.py#L19) | `정의=18` |
-| [`MAX_ARCHIVE_BYTES`](src/element_frames.py#L20) | `정의=64*1024*1024` |
-| [`MAX_FRAME_BYTES`](src/element_frames.py#L21) | `정의=512*1024` |
-
-**거부 조건:** [`type(number) is not int or not 1&lt;=number&lt;=31`](src/element_frames.py#L34)
-
-**오류 메시지:** 원소 번호는1~31 정수여야 합니다.
-
-**거부 조건:** [`not 0&lt;manifest.stat().st_size&lt;=64*1024`](src/element_frames.py#L65)
-
-**오류 메시지:** 원소 매니페스트 크기 오류
-
-**거부 조건:** [`not isinstance(self.manifest,dict)`](src/element_frames.py#L69)
-
-**오류 메시지:** 원소 매니페스트는 객체여야 합니다.
-
-**거부 조건:** [`not isinstance(digest,str) or not re.fullmatch('[0-9a-f]{64}',digest)`](src/element_frames.py#L74)
-
-**오류 메시지:** 원소 해시 형식 오류
-
-**거부 조건:** [`not 0&lt;archive.stat().st_size&lt;=MAX_ARCHIVE_BYTES`](src/element_frames.py#L75)
-
-**오류 메시지:** 원소 압축파일 크기 초과
-
-**거부 조건:** [`hasher.hexdigest()!=digest`](src/element_frames.py#L78)
-
-**오류 메시지:** 원소 ZIP 해시 불일치
-
-**거부 조건:** [`len(members)!=540 or {m.filename for m in members}!={f'frame_{i:04d}.png' for i in range(540)}`](src/element_frames.py#L80)
-
-**오류 메시지:** 원소 ZIP 정확한540프레임 목록 불일치
-
-**거부 조건:** [`sum(m.file_size for m in members)&gt;128*1024*1024`](src/element_frames.py#L82)
-
-**오류 메시지:** 원소 해제 크기 초과
-
-**거부 조건:** [`actual!=self.identities`](src/element_frames.py#L91)
-
-**오류 메시지:** 실행 중 원소 자산이 변경됐습니다.
-
-**거부 조건:** [`isinstance(elapsed,bool) or not isinstance(elapsed,(int,float)) or not math.isfinite(elapsed)`](src/element_frames.py#L106)
-
-**오류 메시지:** 원소 재생 시각은 유한한 숫자여야 합니다.
-
-**거부 조건:** [`self.archive is None`](src/element_frames.py#L107)
-
-**오류 메시지:** 원소 재생기가 닫혔습니다.
-
-**거부 조건:** [`member.is_dir() or member.flag_bits&1 or member.compress_type not in (zipfile.ZIP_STORED,zipfile.ZIP_DEFLATED)                     or not 0&lt;member.file_size&lt;=MAX_FRAME_BYTES`](src/element_frames.py#L84)
-
-**오류 메시지:** 원소 ZIP 멤버 형식 오류
-
-**거부 조건:** [`len(data)&gt;MAX_FRAME_BYTES or len(data)&lt;33 or data[:8]!=b'\x89PNG\r\n\x1a\n' or data[12:16]!=b'IHDR'                     or struct.unpack('&gt;II',data[16:24])!=(192,192) or data[24:26]!=bytes((8,6))`](src/element_frames.py#L96)
-
-**오류 메시지:** 원소 PNG 형식 오류
-
-**거부 조건:** [`image.isNull() or image.size().width()!=192 or image.height()!=192 or not image.hasAlphaChannel()`](src/element_frames.py#L99)
-
-**오류 메시지:** 원소 PNG 디코딩 오류
-
-**거부 조건:** [`any(image.pixelColor(x,y).alpha() for x,y in ((0,0),(191,0),(0,191),(191,191)))`](src/element_frames.py#L100)
-
-**오류 메시지:** 원소 PNG 투명 모서리 오류
-
-
-#### LEVEL 3 · [src/element_visuals.py](src/element_visuals.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`colorize_atom`](src/element_visuals.py#L5) | SourceAtop은 원본 알파를 유지하며 명암에 부드러운 영감색을 더합니다. |
-
-#### LEVEL 3 · [src/elements.py](src/elements.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`daily_element`](src/elements.py#L43) | 매 호출 실제 날짜를 다시 읽어 자정·절전 복귀·시계 되돌림을 반영합니다. |
-
-**설정·옵션:** [`KST`](src/elements.py#L5)
-
-**코드의 선언:** `정의=timezone(timedelta(hours=9))`
-
-**설정·옵션:** [`PALETTE_NOTE`](src/elements.py#L8)
-
-**코드의 선언:** `정의='원소에서 영감받은 디자인 색이며 실제 원소·불꽃색이나 전자배치 재현이 아닙니다.'`
-
-**설정·옵션:** [`ELEMENTS`](src/elements.py#L39)
-
-**코드의 선언:** `정의=tuple(Element(index,symbol,name,color,accent)                  for index,(symbol,name,color,accent) in enumerate(_ROWS,1))`
-
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`value.tzinfo is None or value.utcoffset() is None`](src/elements.py#L46) | 원소 날짜에는 시간대가 있는 datetime이 필요합니다. |
-
-#### LEVEL 3 · [src/frame_pacing.py](src/frame_pacing.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`validate_motion_speed`](src/frame_pacing.py#L7) | 유한한 0.25~3배 숫자만 받아 bool과 잘못된 설정을 거부합니다. |
-| [`MotionClock`](src/frame_pacing.py#L20) | 실제 날짜·시계와 분리하여 배율별 경과 시간을 연속 적분합니다. |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`type(value) not in (int, float)`](src/frame_pacing.py#L9) | 회전 속도는 0.25~3배의 유한한 숫자여야 합니다. |
-| [`not valid`](src/frame_pacing.py#L15) | 회전 속도는 0.25~3배의 유한한 숫자여야 합니다. |
-
-#### LEVEL 3 · [src/i18n.py](src/i18n.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`translate`](src/i18n.py#L51) | 명시한 앱 문구만 번역하고 전달된 값은 번역하지 않습니다. |
-| [`remember_translations`](src/i18n.py#L63) | 생성 당시 정적인 앱 문구만 기록하여 사용자 원문과 구분합니다. |
-
-#### LEVEL 3 · [src/motion_label.py](src/motion_label.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`MotionImageLabel`](src/motion_label.py#L6) | 최신 이미지 한 개를 보관하고 크기·DPR 변경 때만 기본 크기 힌트를 갱신합니다. |
-
-#### LEVEL 3 · [src/notifier.py](src/notifier.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`atomic_json`](src/notifier.py#L33) | 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도합니다. |
-| [`source_datetime`](src/notifier.py#L63) | 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. |
-| [`duplicate_record`](src/notifier.py#L212) | 원본 시각이 있는 복제 기록만 제외하며 기준선 재생의 순서는 복원합니다. |
-| [`settings_record`](src/notifier.py#L223) | 자기 채팅의 native 설정 필드만 관측하며 변경 주체와 실행 모델은 추정하지 않습니다. |
-| [`lookup_parent_reason`](src/notifier.py#L376) | 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. |
-| [`enrich_event`](src/notifier.py#L423) | 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
-| [`replay_activity_prefix`](src/notifier.py#L445) | 고정된 과거 소비 구간의 활동 메타만 파일별 기존 예산 안에서 복원합니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`--sessions`](src/notifier.py#L739) | `type=Path; default=Path.home() / '.codex/sessions'` |
-| [`--work`](src/notifier.py#L740) | `type=Path; default=ROOT / 'work'` |
-| [`ROOT`](src/notifier.py#L18) | `정의=Path(__file__).resolve().parents[1]` |
-| [`APP_ID`](src/notifier.py#L19) | `정의='Yunseok.Codex.ModelChangeNotifier'` |
-| [`READ_BYTES`](src/notifier.py#L20) | `정의=512 * 1024` |
-| [`MAX_RECORD`](src/notifier.py#L21) | `정의=2 * 1024 * 1024` |
-| [`MAX_FILES`](src/notifier.py#L22) | `정의=4096` |
-| [`LOG_BYTES`](src/notifier.py#L23) | `정의=2 * 1024 * 1024` |
-| [`POLL_READ_BYTES`](src/notifier.py#L24) | `정의=8 * 1024 * 1024` |
-| [`MAX_PENDING`](src/notifier.py#L25) | `정의=256` |
-| [`POLL_INTERVAL_SECONDS`](src/notifier.py#L26) | `정의=0.2` |
-
-**거부 조건:** [`self.state_path.stat().st_size &gt; 16 * 1024 * 1024`](src/notifier.py#L90)
-
-**오류 메시지:** 상태 파일이 16 MiB 상한을 초과했습니다. 원본 보존 후 점검이 필요합니다.
-
-**거부 조건:** [`self.state.get('schema_version') not in (2, 3)`](src/notifier.py#L94)
-
-**오류 메시지:** 구형 상태는 요청과 관측이 혼합되어 있습니다. 원본 보존 후 명시적 재기준선이 필요합니다.
-
-**거부 조건:** [`not isinstance(self.state.get('files'), dict) or not isinstance(self.state.get('models'), dict)`](src/notifier.py#L96)
-
-**오류 메시지:** 상태 파일 구조 오류입니다. 자동 초기화하지 않습니다.
-
-**거부 조건:** [`not isinstance(self.state.get('declarations'), dict)`](src/notifier.py#L98)
-
-**오류 메시지:** 명시 배정 상태 구조 오류입니다. 자동 초기화하지 않습니다.
-
-**거부 조건:** [`not isinstance(self.state.get('settings'), dict)`](src/notifier.py#L117)
-
-**오류 메시지:** 채팅 선택 설정 상태 구조 오류입니다. 자동 초기화하지 않습니다.
-
-**거부 조건:** [`backup.read_bytes() != original`](src/notifier.py#L105)
-
-**오류 메시지:** 이전 상태 백업이 원본과 다릅니다. 자동 덮어쓰기하지 않습니다.
-
-**거부 조건:** [`any(isinstance(v, bool) or not isinstance(v, int) or v &lt; 0 for v in (offset, end))`](src/notifier.py#L112)
-
-**오류 메시지:** 이전 상태의 파일 위치가 올바르지 않습니다. 자동 초기화하지 않습니다.
-
-**거부 조건:** [`backup.read_bytes() != original`](src/notifier.py#L123)
-
-**오류 메시지:** 활동 이행 백업이 원본과 다릅니다. 자동 덮어쓰기하지 않습니다.
-
-**거부 조건:** [`isinstance(end, bool) or not isinstance(end, int) or end &lt; 0`](src/notifier.py#L131)
-
-**오류 메시지:** 활동 기준선의 파일 위치가 올바르지 않습니다.
-
-**거부 조건:** [`not isinstance(record, dict)`](src/notifier.py#L523)
-
-**오류 메시지:** JSON 객체가 아닙니다.
-
-**거부 조건:** [`path.stat().st_size &gt; 20000`](src/notifier.py#L603)
-
-**오류 메시지:** 명시 알림 파일 상한 초과
-
-**거부 조건:** [`not isinstance(record, dict)`](src/notifier.py#L467)
-
-**오류 메시지:** JSON 객체가 아닙니다.
-
-
-#### LEVEL 3 · [src/theme.py](src/theme.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`MonochromeStyle`](src/theme.py#L53) | 파일·메시지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. |
-| [`KoreanDialogs`](src/theme.py#L78) | 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역합니다. |
-| [`DialogLayout`](src/theme.py#L94) | 앱 파일 선택창의 이름 열과 한글 버튼에 충분한 공간을 확보합니다. |
-
-#### LEVEL 3 · [src/typography.py](src/typography.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`register_fonts`](src/typography.py#L8) | 필수 파일이나 Qt 등록 실패를 숨기지 않고 시작 오류로 전달합니다. |
-
-#### LEVEL 3 · [src/usage.py](src/usage.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`number`](src/usage.py#L16) | 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
-| [`normalize_limits`](src/usage.py#L35) | 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
-| [`discover_codex`](src/usage.py#L69) | 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`MAX_BYTES`](src/usage.py#L12) | `정의=1024 * 1024` |
-| [`KST`](src/usage.py#L13) | `정의=timezone(timedelta(hours=9))` |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`not isinstance(message, dict)`](src/usage.py#L226) | 객체가 아닌 응답 |
-
-#### LEVEL 3 · [src/usage_frames.py](src/usage_frames.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`UsageAssetError`](src/usage_frames.py#L27) | 조형 표시 오류를 호출자에게 전달하며 계정 조회 흐름과 분리합니다. |
-| [`UsageFrames`](src/usage_frames.py#L50) | 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대16장만 보존합니다. |
-| [`close_usage_frames`](src/usage_frames.py#L183) | 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
-| [`preflight_usage_frames`](src/usage_frames.py#L194) | 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
-| [`get_usage_frame`](src/usage_frames.py#L207) | 공유 팩의 한 프레임을 반환하며 계정 조회 상태에는 관여하지 않습니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FRAME_COUNT`](src/usage_frames.py#L16) | `정의=360` |
-| [`FRAME_SIZE`](src/usage_frames.py#L17) | `정의=384` |
-| [`FPS`](src/usage_frames.py#L18) | `정의=30` |
-| [`PERIOD_SECONDS`](src/usage_frames.py#L19) | `정의=12` |
-| [`CACHE_LIMIT`](src/usage_frames.py#L20) | `정의=16` |
-| [`MAX_ARCHIVE_BYTES`](src/usage_frames.py#L21) | `정의=128 * 1024 * 1024` |
-| [`MAX_FRAME_BYTES`](src/usage_frames.py#L22) | `정의=1024 * 1024` |
-| [`MAX_TOTAL_BYTES`](src/usage_frames.py#L23) | `정의=256 * 1024 * 1024` |
-| [`MAX_MANIFEST_BYTES`](src/usage_frames.py#L24) | `정의=64 * 1024` |
-
-**거부 조건:** [`key in value`](src/usage_frames.py#L44)
-
-**오류 메시지:** 대시보드 조형 자산 매니페스트에 중복 필드가 있습니다.
-
-**거부 조건:** [`not 0 &lt; manifest_path.stat().st_size &lt;= MAX_MANIFEST_BYTES`](src/usage_frames.py#L69)
-
-**오류 메시지:** 대시보드 조형 자산 매니페스트 크기가 허용 범위를 벗어났습니다.
-
-**거부 조건:** [`not isinstance(self.manifest, dict)`](src/usage_frames.py#L75)
-
-**오류 메시지:** 대시보드 조형 자산 매니페스트는 객체여야 합니다.
-
-**거부 조건:** [`not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None`](src/usage_frames.py#L85)
-
-**오류 메시지:** 대시보드 조형 프레임 ZIP의 SHA256 형식이 잘못됐습니다.
-
-**거부 조건:** [`not 0 &lt; archive_path.stat().st_size &lt;= MAX_ARCHIVE_BYTES`](src/usage_frames.py#L87)
-
-**오류 메시지:** 대시보드 조형 프레임 ZIP 크기가 허용 범위를 벗어났습니다.
-
-**거부 조건:** [`hasher.hexdigest() != digest`](src/usage_frames.py#L94)
-
-**오류 메시지:** 대시보드 조형 프레임 ZIP의 SHA256이 일치하지 않습니다.
-
-**거부 조건:** [`len(members) != FRAME_COUNT or {item.filename for item in members} != names`](src/usage_frames.py#L100)
-
-**오류 메시지:** 대시보드 조형 프레임 ZIP의 정확한360개 이름·목록이 일치하지 않습니다.
-
-**거부 조건:** [`sum(item.file_size for item in members) &gt; MAX_TOTAL_BYTES`](src/usage_frames.py#L102)
-
-**오류 메시지:** 대시보드 조형 프레임 전체 읽기 상한을 초과했습니다.
-
-**거부 조건:** [`actual != self.identities`](src/usage_frames.py#L133)
-
-**오류 메시지:** 검증 뒤 대시보드 조형 자산이 변경됐습니다. 앱을 다시 실행해 주세요.
-
-**거부 조건:** [`type(elapsed) not in (int, float)`](src/usage_frames.py#L138)
-
-**오류 메시지:** 조형 재생 시각은 유한한 숫자여야 합니다.
-
-**거부 조건:** [`not finite`](src/usage_frames.py#L144)
-
-**오류 메시지:** 대시보드 조형 프레임의 재생 시각이 유한한 숫자가 아닙니다.
-
-**거부 조건:** [`self.archive is None`](src/usage_frames.py#L149)
-
-**오류 메시지:** 조형 재생기가 닫혔습니다.
-
-**거부 조건:** [`item.is_dir() or item.flag_bits & 1 or item.compress_type not in                     (zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED) or                     not 0 &lt; item.file_size &lt;= MAX_FRAME_BYTES`](src/usage_frames.py#L105)
-
-**오류 메시지:** 대시보드 조형 프레임 멤버의 형식·크기가 허용 범위를 벗어났습니다.
-
-
-#### LEVEL 3 · [src/usage_widgets.py](src/usage_widgets.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`CalendarHero`](src/usage_widgets.py#L9) | 사용 한도 화면에서만 날짜별 입체 이미지를 갱신합니다. |
-
-#### LEVEL 3 · [src/visuals.py](src/visuals.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`rotate_point`](src/visuals.py#L12) | X·Y·Z 순서로 회전하며 깊이 좌표를 보존합니다. |
-| [`axis_rotate`](src/visuals.py#L40) | 로드리게스 식으로 고유 축 주위를 회전하며 공통 Z 변환을 쓰지 않습니다. |
-| [`orbit_segments`](src/visuals.py#L63) | 제작 매니페스트와 일치하는 기하 검증용 메타입니다. GUI 드로잉에는 쓰지 않습니다. |
-| [`status_label`](src/visuals.py#L80) | 읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다. |
-| [`element_labels`](src/visuals.py#L85) | 원자번호와 계정 퍼센트를 서로 다른 명시적 라벨로 구분합니다. |
-| [`usage_bar`](src/visuals.py#L99) | 숫자와 채움에 같은 실제 비율을 쓰며 최소 채움 폭을 강제하지 않습니다. |
-| [`_frame_for_element`](src/visuals.py#L111) | 원소별 실제 제작 프레임을 읽습니다. 이전 형상으로 대체하지 않습니다. |
-| [`draw_orbit`](src/visuals.py#L117) | 달력 조형·날짜 도크·실제 잔량을 분리하고 명시한 원소 미리보기도 보존합니다. |
-| [`desktop_widget_layout`](src/visuals.py#L176) | 이름을 화면 픽셀 크기로 줄 바꿈하고 조형·잔량 영역을 분리합니다. |
-| [`draw_desktop_orbit`](src/visuals.py#L212) | 위젯의 조형과 글자를 별개 영역에 그려 작은 글자 축소를 막습니다. |
-| [`_draw_desktop_information`](src/visuals.py#L227) | 움직이는 GPU 이미지와 분리한 도크·시계·지역·기온·잔량을 그립니다. |
-| [`DesktopOverlayCache`](src/visuals.py#L278) | 한 위젯의 완전 입력이 같을 때만 단일 투명 정보 레이어를 재사용합니다. |
-
-**설정·옵션:** [`MOTION_PERIOD`](src/visuals.py#L27)
-
-**코드의 선언:** `정의=18`
-
-**설정·옵션:** [`RING_TURNS`](src/visuals.py#L28)
-
-**코드의 선언:** `정의=(1, -2, 3)`
-
-**설정·옵션:** [`RING_AZIMUTHS`](src/visuals.py#L29)
-
-**코드의 선언:** `정의=(8., 128., 248.)`
-
-**설정·옵션:** [`RING_AXIS_TILTS`](src/visuals.py#L30)
-
-**코드의 선언:** `정의=(42., 46., 49.)`
-
-**설정·옵션:** [`RING_RADII`](src/visuals.py#L35)
-
-**코드의 선언:** `정의=(45., 51., 57.)`
-
-**설정·옵션:** [`BASE_ANGLES`](src/visuals.py#L36)
-
-**코드의 선언:** `정의=tuple((math.radians(tilt), 0., math.radians(azimuth))                     for tilt, azimuth in zip((52., 58., 62.), RING_AZIMUTHS))`
-
-**설정·옵션:** [`ATOM_RECT`](src/visuals.py#L92)
-
-**코드의 선언:** `정의=QRectF(-48,-74,96,96)`
-
-**설정·옵션:** [`DOCK_RECT`](src/visuals.py#L93)
-
-**코드의 선언:** `정의=QRectF(-68,25,136,27)`
-
-**설정·옵션:** [`USAGE_RECT`](src/visuals.py#L94)
-
-**코드의 선언:** `정의=QRectF(-68,56,136,16)`
-
-**설정·옵션:** [`USAGE_TRACK_RECT`](src/visuals.py#L95)
-
-**코드의 선언:** `정의=QRectF(-61,62,62,4)`
-
-**설정·옵션:** [`SYMBOL_PIXELS`](src/visuals.py#L96)
-
-**코드의 선언:** `정의=24`
-
-
-#### LEVEL 3 · [src/weather.py](src/weather.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`localized_region`](src/weather.py#L27) | 검색 전 임시 표시에는 검증된 국내 사전 또는 실제 원문 지명을 사용합니다. |
-| [`select_geocoded_region`](src/weather.py#L67) | 동일 국가이면서 IP 추정 좌표에서30km 이내인 가장 가까운 검색 결과만 수락합니다. |
-
-**설정·옵션:** [`_COUNTRIES`](src/weather.py#L23)
-
-**코드의 선언:** `정의={'US': '미국', 'JP': '일본', 'CN': '중국', 'GB': '영국', 'DE': '독일',               'FR': '프랑스', 'CA': '캐나다', 'AU': '호주', 'SG': '싱가포르', 'TW': '대만'}`
-
-
-**거부 조건:** [`language not in ('ko', 'en')`](src/weather.py#L29)
-
-**오류 메시지:** 지원 언어는 ko 또는 en입니다.
-
-**거부 조건:** [`language not in ('ko', 'en')`](src/weather.py#L111)
-
-**오류 메시지:** 지원 언어는 ko 또는 en입니다.
-
-**거부 조건:** [`language not in ('ko', 'en')`](src/weather.py#L155)
-
-**오류 메시지:** 지원 언어는 ko 또는 en입니다.
-
-**거부 조건:** [`not self._valid_number(latitude, -90, 90) or not self._valid_number(longitude, -180, 180)`](src/weather.py#L249)
-
-**오류 메시지:** 위치 범위
-
-**거부 조건:** [`not self._valid_number(temperature, -100, 70)`](src/weather.py#L321)
-
-**오류 메시지:** 기온 범위
-
-**거부 조건:** [`not self._valid_number(observed, 0, now + 300)`](src/weather.py#L325)
-
-**오류 메시지:** 기온 제공 시각
-
-**거부 조건:** [`not isinstance(data, dict)`](src/weather.py#L232)
-
-**오류 메시지:** 응답 형식
-
-
-</details>
-
-### LEVEL 3 · 실제 사용·실험 순서
-
-1. 이 차수의 소스·requirements와 필요한 자산을 한 작업 폴더에 준비합니다.
-2. 앱을 열고 위젯·상세창에서 감시 경로와 표시되는 기록을 확인합니다.
-3. 새 변경이 기록되면 이전·이후 값과 이유를 비교하고, 기록 종류와 근거 수준을 함께 읽습니다.
-4. 설정·이력은 개인 운영자료로 관리하고 다른 사용자에게 공유하기 전에 내용을 확인합니다.
-
-| 단계 | 내용 |
-| --- | --- |
-| 입력 | 현재 사용자 Codex의 로컬 JSONL과 이 차수의 앱 설정 |
-| 처리 | 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시 |
-| 출력 | 알림·변경 이력·로컬 진단 기록 |
-
-
-### LEVEL 3 · 결과와 실패를 확인하기
-
-변경 전·후 모델과 추론 강도, 공개된 이유, 관측 시각과 근거 수준을 함께 읽습니다. 기록되지 않은 값은 미확인으로 남깁니다. 로컬 기록은 서버 모델 신원 증명이 아닙니다.
-
-**상황:** 알림이 나타나지 않음
-
-**확인할 내용:** 감시하는 sessions 경로·새 JSONL 기록·중복 실행 잠금·알림 설정을 확인합니다. 최초 기준선 읽기와 새 변경 감지는 다릅니다.
-
-**상황:** 자산 또는 글꼴 오류
-
-**확인할 내용:** 이 차수에서 참조하는 assets와 라이선스를 준비합니다. 소스 이력에는 과거 대용량 프레임 자산이 없을 수 있습니다.
-
-**상황:** 이유 또는 이전값이 없음
-
-**확인할 내용:** 원문 기록에 해당 필드가 있는지 확인합니다. 누락된 동기를 추정해서 채우지 않습니다.
-
-
-### LEVEL 3 · 실행 전 대조할 차수 조건
-
-상세창 슬라이더와 위젯 메뉴에서 회전 속도를 조절하고 저장합니다. 모션 배율과 실제 시계·날짜·날씨·계정 한도 갱신은 별개입니다.
-
-로컬 세션 기록에서 모델·추론 강도의 변경과 명시된 배정을 구분합니다. 감시기는 외부 통신 없이 로컬 자료를 읽습니다.
-
-공개 협업 호출과 소유자가 확인된 native 활동을 연결합니다.
-
-검증된 금속 원자 프레임을 추출 없이 읽는 제한 메모리 재생기입니다.
-
-같은 실제3D 자산을 공유하는 정적 마크와 가시성 기반 내부 모션입니다.
-
-2026~2099년의 날짜별 조형 규칙입니다. 외부 데이터와 계정 정보를 사용하지 않습니다.
-
-실제 대상 이름과 조형 특징을 연결하는 편집 사전입니다.
-
-한 GPU 작업 스레드와 최대 네 이미지로 날짜별 모션을 공유합니다.
-
-현재 날짜의 실제 메시를 소유 스레드의 오프스크린 GPU에서 렌더합니다.
-
-한국 날짜의1~31일에 대응하는 원소와 디자인 영감 팔레트입니다.
-
-오늘 원소 하나의 압축 프레임만 여는 제한 메모리 재생기입니다.
-
-원본3D 자산을 변경하지 않는 제한 메모리 Qt 색 합성입니다.
-
-프로세스 전용 고해상도 대기로 전역 타이머 설정 없이 프레임을 조율합니다.
-
-앱이 소유한 문구만 번역하며 이벤트 원문은 호출자가 그대로 보존합니다.
-
-Codex App Server의 `account/rateLimits/read`를 읽기 전용으로 조회합니다. 표시값은 남은 토큰 개수가 아니라 계정 사용 한도 비율입니다.
-
-지역·기온 조회 모듈은 네트워크를 사용합니다. 로컬 감시기의 외부 통신 여부와 앱 전체의 날씨 조회를 구분합니다.
-
-[자료 폴더](.) · [직전 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [이 차수의 원래 전체 상세](#reading-level-5)
-
-
-
-### LEVEL 3 · 26차의 구체적인 기능과 확인
-
-Windows의 차수별 `requirements.txt`, 참조 자산·라이선스, ModernGL과 OpenGL 3.3 드라이버를 준비한 뒤 해당 폴더에서 `python src/app.py`를 실행합니다. 상세창 슬라이더 또는 위젯 메뉴에서 회전 속도를 선택하고 저장된 설정을 확인합니다. 시계·날짜·날씨·계정 한도 갱신은 회전 속도와 별개로 읽습니다.
-
-알림이 없다면 sessions 경로·새 JSONL 기록·중복 실행 잠금·알림 설정을 확인하고 최초 기준선과 새 변경을 구분합니다. 원문에 없는 이유나 이전값은 추정하지 않습니다. 자산·글꼴 오류는 해당 차수의 파일과 라이선스를 확인하며 이력에 과거 대용량 자산이 없을 수 있음을 감안합니다.
-
-날씨 조회의 네트워크 사용과 로컬 감시를 분리하고 사용 한도 비율을 남은 토큰으로 환산하지 않습니다. 25차와의 전체 비교에는 주석·공백·개행 및 파일별 크기·SHA가 포함됩니다. 당시 실행 결과가 보존되지 않아 실행 성공의 증거로 쓰지 않습니다.
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · 목적과 이 차수의 역할
-
-상세창 슬라이더와 위젯 메뉴에서 회전 속도를 조절하고 저장합니다. 모션 배율과 실제 시계·날짜·날씨·계정 한도 갱신은 별개입니다.
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · 핵심 기능과 보존 범위
-
-- 대조 항목 1: 상세창 슬라이더와 위젯 메뉴에서 회전 속도를 조절하고 저장합니다. 모션 배율과 실제 시계·날짜·날씨·계정 한도 갱신은 별개입니다.
-- 대조 항목 2: 로컬 세션 기록에서 모델·추론 강도의 변경과 명시된 배정을 구분합니다. 감시기는 외부 통신 없이 로컬 자료를 읽습니다.
-- 대조 항목 3: 공개 협업 호출과 소유자가 확인된 앱이 직접 남긴 활동을 연결합니다.
-- 대조 항목 4: 검증된 금속 원자 그림 한 장을 추출 없이 읽는 제한 메모리 재생기입니다.
-- 대조 항목 5: 같은 실제3D 자산을 공유하는 정적 마크와 가시성 기반 내부 모션입니다.
-- 대조 항목 6: 2026~2099년의 날짜별 조형 규칙입니다. 외부 데이터와 계정 정보를 사용하지 않습니다.
-- 대조 항목 7: 실제 대상 이름과 조형 특징을 연결하는 편집 사전입니다.
-- 대조 항목 8: 한 그래픽 장치(GPU) 작업 프로그램 내부의 작업 흐름와 최대 네 이미지로 날짜별 모션을 공유합니다.
-- 대조 항목 9: 현재 날짜의 실제 삼각형 표면으로 만든 입체 모형를 소유 프로그램 내부의 작업 흐름의 화면 밖 전용 공간의 그래픽 장치(GPU)에서 렌더합니다.
-- 대조 항목 10: 한국 날짜의1~31일에 대응하는 원소와 디자인 영감 팔레트입니다.
-- 대조 항목 11: 오늘 원소 하나의 압축 그림 한 장만 여는 제한 메모리 재생기입니다.
-- 대조 항목 12: 원본3D 자산을 변경하지 않는 제한 메모리 Qt 색 합성입니다.
-- 대조 항목 13: 프로세스 전용 고해상도 대기로 전역 타이머 설정 없이 그림 한 장을 조율합니다.
-- 대조 항목 14: 앱의 메뉴·설명처럼 앱이 만든 글만 언어를 바꿉니다. 실제 기록에 적힌 문장은 원문 그대로 보존해야 하며 번역한 앱 문구로 바꾸지 않습니다.
-- 대조 항목 15: Codex App Server의 `account/rateLimits/read`를 읽기 전용으로 조회합니다. 표시값은 남은 토큰 개수가 아니라 계정 사용 한도 비율입니다.
-- 대조 항목 16: 지역·기온 조회 모듈은 네트워크를 사용합니다. 로컬 감시기의 외부 통신 여부와 앱 전체의 날씨 조회를 구분합니다.
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · 입력·처리·출력
-
-실행·대조 순서: 입력은 읽어 올 자료, 처리는 자료에서 변화와 이유를 찾는 과정, 출력은 사용자가 볼 알림·이력입니다. 기록에 없는 이전값이나 이유를 결과에 덧붙이지 않습니다.
-
-- 대조 항목 입력: 현재 사용자 Codex의 로컬 한 줄에 기록 하나를 담는 JSONL 파일과 이 차수의 앱 설정
-- 대조 항목 처리: 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시
-- 대조 항목 출력: 알림·변경 이력·로컬 진단 기록
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · 화면과 사용 흐름
-
-1. 이 차수의 소스·requirements와 필요한 자산을 한 작업 폴더에 준비합니다.
-2. 앱을 열고 위젯·상세창에서 감시 경로와 표시되는 기록을 확인합니다.
-3. 새 변경이 기록되면 이전·이후 값과 이유를 비교하고, 기록 종류와 근거 수준을 함께 읽습니다.
-4. 설정·이력은 개인 운영자료로 관리하고 다른 사용자에게 공유하기 전에 내용을 확인합니다.
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · 실제 자료 구성
-
-실행·대조 순서: 설명 문서와 실행 소스, 목록 자료의 역할을 나누어 읽습니다. 보존 목록의 제외 항목은 누락을 숨긴 것이 아니라 공개하지 않은 범위와 이유를 표시한 것입니다.
-
-- 대조 항목 [src/](src): 앱을 구성하는 소스 파일이 들어 있는 폴더입니다.
-- 대조 항목 [README.md](README.md#reading-level-3): 사람이 읽는 설명 문서입니다.
-- 대조 항목 [requirements.txt](requirements.txt): 실행에 필요한 외부 도구와 버전을 적은 일반 텍스트입니다.
-- 대조 항목 [공개파일_비교.json](%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json): 파일 목록·지문·보존 범위를 이름과 값으로 담은 자료입니다.
-- 대조 항목 [보존자료.md](%EB%B3%B4%EC%A1%B4%EC%9E%90%EB%A3%8C.md): 사람이 읽는 설명 문서입니다.
-- 대조 항목 [부가자료_보존.json](%EB%B6%80%EA%B0%80%EC%9E%90%EB%A3%8C_%EB%B3%B4%EC%A1%B4.json): 파일 목록·지문·보존 범위를 이름과 값으로 담은 자료입니다.
-- 대조 항목 [직전차수.diff](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff): 직전 자료와 달라진 줄을 추가·삭제 표시로 기록한 전체 비교 파일입니다.
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · 주요 모듈과 코드 읽기
-
-실행·대조 순서: 모듈은 기능별로 나눈 소스 파일입니다. 같은 파일 이름이 여러 차수에 있어도 내용이 같다고 가정하지 않고 해당 차수의 링크를 엽니다.
-
-- 대조 항목 [src/app.py](src/app.py): Codex Orbit: 독립 회전 위젯과 로컬 변경 기록·사용 한도.
-- 대조 항목 [src/notifier.py](src/notifier.py): 현재 사용자 로컬 한 줄에 기록 하나를 담는 JSONL 파일을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다.
-- 대조 항목 [src/activity.py](src/activity.py): 공개 협업 호출과 소유자가 확인된 앱이 직접 남긴 활동을 연결합니다.
-- 대조 항목 [src/atom_frames.py](src/atom_frames.py): 검증된 금속 원자 그림 한 장을 추출 없이 읽는 제한 메모리 재생기입니다.
-- 대조 항목 [src/brand.py](src/brand.py): 같은 실제3D 자산을 공유하는 정적 마크와 가시성 기반 내부 모션입니다.
-- 대조 항목 [src/calendar_art.py](src/calendar_art.py): 2026~2099년의 날짜별 조형 규칙입니다. 외부 데이터와 계정 정보를 사용하지 않습니다.
-- 대조 항목 [src/calendar_catalog.py](src/calendar_catalog.py): 실제 대상 이름과 조형 특징을 연결하는 편집 사전입니다.
-- 대조 항목 [src/calendar_motion.py](src/calendar_motion.py): 한 그래픽 장치(GPU) 작업 프로그램 내부의 작업 흐름와 최대 네 이미지로 날짜별 모션을 공유합니다.
-- 대조 항목 [src/calendar_renderer.py](src/calendar_renderer.py): 현재 날짜의 실제 삼각형 표면으로 만든 입체 모형를 소유 프로그램 내부의 작업 흐름의 화면 밖 전용 공간의 그래픽 장치(GPU)에서 렌더합니다.
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · 설치 환경과 실행·사용법
-
-실행·대조 순서: 실행 소스가 있는 차수는 그 차수의 외부 도구 목록과 그림·글꼴 자료를 함께 준비합니다. 소스가 확인되지 않은 문서 차수에는 실행 명령을 만들어 적용하지 않습니다.
-
-Windows와 해당 폴더의 requirements.txt를 기준으로 Python 의존성을 준비합니다. history는 공개 소스 보존본이며 현재 루트 assets가 과거 모든 차수의 자산과 호환된다는 뜻은 아닙니다. 날짜별 실제 삼각형 표면으로 만든 입체 모형 렌더에는 ModernGL과 OpenGL 3.3을 지원하는 그래픽 드라이버가 필요합니다.
-
-자산과 의존성을 준비한 이 차수 폴더에서 `python src/app.py`를 실행합니다. history 소스만으로 과거 배포 EXE와 동일한 화면·자산이 모두 복원되지는 않습니다.
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · 사용하는 사람에게 달라진 점
-
-상세창 슬라이더와 위젯 우클릭 메뉴에서 회전 속도를 0.25~3배로 선택하고 1배로 복원할 수 있습니다. 선택값은 저장되어 다음 실행에도 적용됩니다. 속도를 바꿔도 조형의 회전 각도를 이어서 재생하며 날짜·시계·기온·계정 조회 간격은 그대로입니다. 저장이 실패하면 이전 배율로 복원하고 선택한 한국어·영어로 오류를 안내합니다. 정적 정보와 움직이는 조형을 나누어 갱신하는 변경도 포함합니다.
-
-[26차 검증 요약](../../docs/%EA%B3%B5%EA%B0%9C%EA%B2%80%EC%A6%9D_26%EC%B0%A8.md)에서 개발 전체·공개본·중앙 소스 검사와 배포 실행 결과를 구분합니다. 고정 240fps는 달성하지 못했으며 추가 달성 작업은 제외됐습니다. 26차 변경 기록의 실측 생성 약 227~230fps, 고유 Qt 그리기 약 214~229fps를 모니터 표시율로 해석하지 않습니다.
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · 이 보관본의 의존성 목록
-
-실행·대조 순서: 의존성은 이 앱이 불러 쓰는 외부 도구입니다. >=는 적힌 버전 이상이라는 뜻이며 버전 숫자와 앱의 성능 수치를 구분합니다.
-
-[requirements.txt](requirements.txt)의 실제 항목입니다. 외부 실행 도구와 그래픽 장치(GPU) 드라이버는 별도로 준비합니다.
-
-```text
-PySide6-Essentials==6.12.0
-PyInstaller==6.22.3
-moderngl==5.13.0
-glcontext==3.1.0
-numpy==2.5.4
-Pillow==13.0.0
-```
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · 소스에서 제공하는 CLI 옵션
-
-실행·대조 순서: CLI 옵션은 프로그램을 시작할 때 뒤에 붙이는 선택 항목입니다. Path는 파일·폴더 경로, store_true는 옵션 이름을 붙이면 켜지는 스위치입니다. --sessions 뒤에는 읽을 기록 폴더를, --data-dir 뒤에는 설정·이력 폴더를 지정합니다.
-
-- 대조 항목 [app.py](src/app.py): `--data-dir`, `--sessions`, `--smoke-test`, `--usage-smoke-test`, `--smoke-report`, `--show-details`, `--show-event`
-- 대조 항목 [notifier.py](src/notifier.py): `--sessions`, `--work`
-
-각 옵션의 기본값·필수값·부작용은 해당 main과 인자 정의를 함께 확인합니다.
-
-
-
-함수 역할·기본값·입력 거부 조건의 세부 참조
-
-다음 항목은 이 자료의 Python 소스에 명시된 선언입니다. 전체 분기와 호출 순서는 각 행의 코드 위치에서 이어서 읽을 수 있습니다.
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · [src/activity.py](src/activity.py)
-
-호출·대기·시각 관측의 저장 형식을 먼저 대조하고 첫 관측의 보강과 이후 변경 감지가 각각 남는지 확인합니다. 보호문이나 긴 인코딩을 풀어 원문으로 내보내지 않아야 합니다.
-
-**맡은 일과 결과**
-
-- 확인할 동작: 보호문·비공개 표식·긴 인코딩 덩어리는 해석하거나 노출하지 않습니다. [구현 이름 safe_public_text](src/activity.py#L15)
-
-- 확인할 동작: 원래 기록 시각이 있는 해당 작업 자신의 관측만 보존하는지 확인합니다. 여러 작업을 모두 합쳐 최대 256개이며 작업마다 256개씩 늘리는 제한이 아닌지 확인하는지 확인합니다. [구현 이름 configuration](src/activity.py#L76)
-
-- 확인할 동작: 연결 확인에 필요한 앱 기록 항목만 남겨 나중 대조를 기다립니다. 대화 본문은 보관하지 않으며 모든 작업을 합쳐 대기 자료를 최대 32개로 제한하는지 확인합니다. [구현 이름 defer](src/activity.py#L160)
-
-- 확인할 동작: 그 작업을 처음 발견한 기록만 추가 정보로 보완하는지 확인합니다. 예를 들어 첫 배정 이유가 늦게 확인되면 처음 행을 보완하며, 뒤에 실제로 바뀐 모델 기록은 별도의 변화로 남깁니다. [구현 이름 observe](src/activity.py#L273)
-
-**선택값과 제한값**
-
-- 준비·대조할 값: 보존할 활동 이벤트 수 상한는 **128**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_ACTIVITY_EVENTS](src/activity.py#L7) 원래 선언을 함께 대조합니다: `정의=128`
-
-- 준비·대조할 값: 이미 본 활동 식별자의 수 상한는 **8192**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_ACTIVITY_SEEN](src/activity.py#L8) 원래 선언을 함께 대조합니다: `정의=8192`
-
-- 준비·대조할 값: 추적할 활동 호출 수 상한는 **32**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_ACTIVITY_CALLS](src/activity.py#L9) 원래 선언을 함께 대조합니다: `정의=32`
-
-- 준비·대조할 값: 공개 호출 수 상한는 **128**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_PUBLIC_CALLS](src/activity.py#L10) 원래 선언을 함께 대조합니다: `정의=128`
-
-- 준비·대조할 값: 연결 확인을 기다리는 활동 수의 전체 상한는 **32**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_DEFERRED_ACTIVITIES](src/activity.py#L11) 원래 선언을 함께 대조합니다: `정의=32`
-
-- 준비·대조할 값: 시각이 있는 설정 관측 수의 전체 상한는 **256**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_CONFIGURATION_SNAPSHOTS](src/activity.py#L12) 원래 선언을 함께 대조합니다: `정의=256`
-
-**받지 않는 입력과 실패 처리**
-
-- 오류를 만났을 때 대조: 활동 호출은 이름과 값의 사전 자료, 연결 대기는 순서 있는 목록이어야 합니다. 어느 한쪽이라도 다른 형식이면 원본을 지우지 않고 오류로 남깁니다. [해당 검사](src/activity.py#L66)
-
-- 오류를 만났을 때 대조: 시각이 있는 설정 관측은 순서 있는 목록이어야 합니다. 다른 형식이면 원본을 빈 값으로 바꾸어 숨기지 않습니다. [해당 검사](src/activity.py#L68)
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · [src/app.py](src/app.py)
-
-창을 연 뒤 전후 값 미기록·공개 이유·대기 상한·언어 전환을 대조합니다. 속도 변경 실패에서는 실제 값 복원과 상세 안내를, 종료에서는 감시 정리 뒤 창 해제를 확인합니다.
-
-**맡은 일과 결과**
-
-- 확인할 동작: 설정과 UI의 속도는 유한한 실제 숫자 범위로 제한하는지 확인합니다. [구현 이름 validated_motion_speed](src/app.py#L42)
-
-- 확인할 동작: Python이 더 쓰지 않는 객체를 정리하는 동안에도 살아 있어야 할 창의 관리자를 앱이 계속 보관하는지 확인합니다. 창이 보이는데 관리 객체만 먼저 사라지는 일을 막기 위한 수명 관리인지 확인하는지 확인합니다. [구현 이름 _application_gui_root](src/app.py#L49)
-
-- 확인할 동작: 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록하는지 확인합니다. [구현 이름 operation_record](src/app.py#L67)
-
-- 확인할 동작: 이전 기록 전체 부재와 개별 필드 미기록을 구분하고 관측값만 표시하는지 확인합니다. [구현 이름 previous_field](src/app.py#L106)
-
-- 확인할 동작: 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. [구현 이름 short_reason](src/app.py#L130)
-
-- 확인할 동작: 공개 문장만 표시하며 보호된 도구 페이로드를 해석하거나 노출하지 않습니다. [구현 이름 public_text](src/app.py#L182)
-
-- 확인할 동작: 공개된 작업 목적을 모델 선택 이유로 바꾸어 말하지 않습니다. [구현 이름 selection_explanation](src/app.py#L203)
-
-- 확인할 동작: Qt 예약 호출을 포함한 미처리 전달 수를 프로그램 내부의 작업 흐름 사이에서 제한하는지 확인합니다. [구현 이름 NoticeDelivery](src/app.py#L309)
-
-- 확인할 동작: 중복 반환과 종료 뒤 도착한 신호도 같은 한도를 다시 늘리지 않습니다. [구현 이름 NoticeTicket](src/app.py#L334)
-
-- 확인할 동작: 오류가 있을 때 변경 기록 안에 원문을 보여 주는 읽기 전용 라벨인지 확인하는지 확인합니다. [구현 이름 DiagnosticLabel](src/app.py#L918)
-
-- 확인할 동작: 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리하는지 확인합니다. [구현 이름 QuitGuard](src/app.py#L1394)
-
-- 확인할 동작: 지연된 신호 인자 대신 최신 그 시점의 복사본과 현재 레이아웃의 실제 표시를 대조하는지 확인합니다. [구현 이름 usage_smoke_state](src/app.py#L1956)
-
-- 확인할 동작: 실제 그래픽 장치(GPU) 렌더 수를 기준으로 준비·비교 단계를 판정하는지 확인합니다. [구현 이름 motion_smoke_stage](src/app.py#L1980)
-
-- 확인할 동작: 말줄임 전 제목과 실제 높이에 영향을 주는 표시 조건만 비교하는지 확인합니다. [구현 이름 _content_fit_signature](src/app.py#L759)
-
-- 확인할 동작: 실제 첫 관측 한 행만 안정된 활동 ID로 보강하며 다른 변경은 보존하는지 확인합니다. [구현 이름 promote_first_observation](src/app.py#L1363)
-
-- 확인할 동작: 사용자 조작의 실패는 실제 속도를 복원한 뒤 상세창에서 안내하는지 확인합니다. [구현 이름 change_motion_speed](src/app.py#L1484)
-
-- 확인할 동작: 외부 QThread 참조를 무효화하지 않고 종료된 감시기와 GUI 소유자를 해제하는지 확인합니다. [구현 이름 _finish_closed_gui](src/app.py#L1948)
-
-**선택값과 제한값**
-
-- 준비·대조할 값: 개인 설정·이력 저장 폴더를 고르는 옵션; 미지정 시 현재 사용자의 LOCALAPPDATA 아래 CodexOrbit, 그 환경값이 없으면 사용자 홈 아래 CodexOrbit인지 확인하는지 확인합니다. 경로를 입력하는 옵션인지 확인하는지 확인합니다. [--data-dir](src/app.py#L1996) 원래 선언을 함께 대조합니다: `type=Path; default=Path(os.environ.get('LOCALAPPDATA', Path.home())) / 'CodexOrbit'`
-
-- 준비·대조할 값: 읽을 Codex 기록 폴더를 고르는 옵션인지 확인하는지 확인합니다. 경로를 입력하는 옵션인지 확인하는지 확인합니다. [--sessions](src/app.py#L1997) 원래 선언을 함께 대조합니다: `type=Path`
-
-- 준비·대조할 값: 앱 시작 확인 모드를 켜는 옵션인지 확인하는지 확인합니다. 값을 뒤에 쓰지 않고 이름만 붙여 켭니다. [--smoke-test](src/app.py#L1998) 원래 선언을 함께 대조합니다: `action='store_true'`
-
-- 준비·대조할 값: 실제 계정 한도와 표시를 조회한 뒤 종료하는 확인 옵션인지 확인하는지 확인합니다. 값을 뒤에 쓰지 않고 이름만 붙여 켭니다. [--usage-smoke-test](src/app.py#L1999) 원래 선언을 함께 대조합니다: `action='store_true'; help='실제 계정 잔량과 표시를 조회한 뒤 종료'`
-
-- 준비·대조할 값: 시작 확인 결과를 저장할 파일 경로 옵션인지 확인하는지 확인합니다. 경로를 입력하는 옵션인지 확인하는지 확인합니다. [--smoke-report](src/app.py#L2000) 원래 선언을 함께 대조합니다: `type=Path`
-
-- 준비·대조할 값: 시작할 때 상세창을 여는 옵션인지 확인하는지 확인합니다. 값을 뒤에 쓰지 않고 이름만 붙여 켭니다. [--show-details](src/app.py#L2001) 원래 선언을 함께 대조합니다: `action='store_true'`
-
-- 준비·대조할 값: 기존 이벤트 ID 또는 대상 ID를 지정해 그 이력을 다시 표시하는 옵션인지 확인하는지 확인합니다. 뒤에 해당 식별자를 입력하는지 확인합니다. [--show-event](src/app.py#L2002) 원래 선언을 함께 대조합니다: `help='기존 이력의 이벤트 ID 또는 대상 ID를 다시 표시'`
-
-- 준비·대조할 값: 이력이 없을 때 첫 실행은 기준선이며 새 변화를 기다린다고 알려 주는 문구는 **'변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [EMPTY_HISTORY_GUIDANCE](src/app.py#L39) 원래 선언을 함께 대조합니다: `정의='변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'`
-
-- 준비·대조할 값: 부모 조율·작업 분류·간단한 수정·구현·심층 검토·독립 검증·판단 재검토 역할의 표시 이름 대응표인지 확인하는지 확인합니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하는지 확인합니다. [ROLE_LABELS](src/app.py#L116) 원래 선언을 함께 대조합니다: `정의={'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}`
-
-**받지 않는 입력과 실패 처리**
-
-- 오류를 만났을 때 대조: GUI 소유자는 QApplication의 메인 프로그램 내부의 작업 흐름에서 생성해야 합니다. 화면·언어 변경은 화면을 담당하는 작업 흐름에서, 그래픽 작업 공간은 그것을 만든 작업 흐름에서만 다루어야 합니다. [해당 검사](src/app.py#L52)
-
-- 오류를 만났을 때 대조: 언어는 GUI 메인 프로그램 내부의 작업 흐름에서만 변경할 수 있습니다. 화면·언어 변경은 화면을 담당하는 작업 흐름에서, 그래픽 작업 공간은 그것을 만든 작업 흐름에서만 다루어야 합니다. [해당 검사](src/app.py#L1523)
-
-- 오류를 만났을 때 대조: 같은 자료 폴더를 다른 실행본이 쓰고 있거나 잠금 파일에 접근하지 못하면 시작을 멈춥니다. 두 앱이 같은 설정·이력을 동시에 덮어쓰게 하지 않습니다. [해당 검사](src/app.py#L2024)
-
-- 오류를 만났을 때 대조: 앱 설정은 항목 이름과 값으로 구성된 JSON 자료여야 합니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 합니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/app.py#L295)
-
-- 오류를 만났을 때 대조: 알림 전달 대기 한도 또는 종료 상태: 다음 감시 주기에 재시도하는지 확인합니다. [해당 검사](src/app.py#L318)
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · [src/atom_frames.py](src/atom_frames.py)
-
-명세·압축 크기·지문·정확한 프레임 이름을 확인한 뒤 재생합니다. 실행 중 자산 교체와 잘못된 재생 시각, 멤버 형식 오류는 각각 실패 조건으로 읽습니다.
-
-**맡은 일과 결과**
-
-- 확인할 동작: 필수 시각 자산 오류를 시작 실패 경로에 전달하는지 확인합니다. [구현 이름 AtomAssetError](src/atom_frames.py#L27)
-
-- 확인할 동작: 시작 시 전체 무결성을 검사하고 해제된 화면용 이미지 객체(QImage)는 최대24장만 보존하는지 확인합니다. [구현 이름 AtomFrames](src/atom_frames.py#L50)
-
-- 확인할 동작: 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리하는지 확인합니다. [구현 이름 close_runtime_frames](src/atom_frames.py#L172)
-
-- 확인할 동작: 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유하는지 확인합니다. [구현 이름 get_atom_frames](src/atom_frames.py#L183)
-
-**선택값과 제한값**
-
-- 준비·대조할 값: 압축 묶음에 있어야 하는 그림의 정확한 장수는 **540**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_COUNT](src/atom_frames.py#L16) 원래 선언을 함께 대조합니다: `정의=540`
-
-- 준비·대조할 값: 그림 한 변의 픽셀 수는 **296**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_SIZE](src/atom_frames.py#L17) 원래 선언을 함께 대조합니다: `정의=296`
-
-- 준비·대조할 값: 초당 그림 수의 설정값는 **30**인지 확인하는지 확인합니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [FPS](src/atom_frames.py#L18) 원래 선언을 함께 대조합니다: `정의=30`
-
-- 준비·대조할 값: 한 재생 주기의 초 단위 길이는 **18**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [PERIOD_SECONDS](src/atom_frames.py#L19) 원래 선언을 함께 대조합니다: `정의=18`
-
-- 준비·대조할 값: 풀어 놓은 그림을 메모리에 보관하는 최대 장수는 **24**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [CACHE_LIMIT](src/atom_frames.py#L20) 원래 선언을 함께 대조합니다: `정의=24`
-
-- 준비·대조할 값: 압축 파일 자체를 읽을 수 있는 최대 바이트 수는 **128 * 1024 * 1024**인지 확인하는지 확인합니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식인지 확인하는지 확인합니다. [MAX_ARCHIVE_BYTES](src/atom_frames.py#L21) 원래 선언을 함께 대조합니다: `정의=128 * 1024 * 1024`
-
-- 준비·대조할 값: 개별 그림 한 장의 최대 바이트 수는 **1024 * 1024**인지 확인하는지 확인합니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식인지 확인하는지 확인합니다. [MAX_FRAME_BYTES](src/atom_frames.py#L22) 원래 선언을 함께 대조합니다: `정의=1024 * 1024`
-
-- 준비·대조할 값: 그림들을 풀어 읽은 크기 합계의 최대 바이트 수는 **256 * 1024 * 1024**인지 확인하는지 확인합니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식인지 확인하는지 확인합니다. [MAX_TOTAL_BYTES](src/atom_frames.py#L23) 원래 선언을 함께 대조합니다: `정의=256 * 1024 * 1024`
-
-- 준비·대조할 값: 자산 명세 문서의 최대 바이트 수는 **64 * 1024**인지 확인하는지 확인합니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식인지 확인하는지 확인합니다. [MAX_MANIFEST_BYTES](src/atom_frames.py#L24) 원래 선언을 함께 대조합니다: `정의=64 * 1024`
-
-**받지 않는 입력과 실패 처리**
-
-- 오류를 만났을 때 대조: 명세 문서에 같은 항목 이름이 두 번 나오면 어느 값을 믿어야 할지 모호하므로 거부하는지 확인합니다. [해당 검사](src/atom_frames.py#L44)
-
-- 오류를 만났을 때 대조: 원자 자산 자산의 파일명·크기·지문을 적은 명세 문서 크기가 허용 범위를 벗어났습니다. 파일 크기는 이 모듈의 MAX_MANIFEST_BYTES 이하여야 합니다. 빈 파일도 받지 않습니다. [해당 검사](src/atom_frames.py#L69)
-
-- 오류를 만났을 때 대조: 원자 자산 자산의 파일명·크기·지문을 적은 명세 문서는 객체여야 합니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 합니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/atom_frames.py#L75)
-
-- 오류를 만났을 때 대조: 파일 내용 지문은 문자열이며 64개의 16진수 문자로 이루어져야 합니다. 여기서 16진수 문자는 0~9와 a~f인지 확인하는지 확인합니다. 이 검사에서는 소문자만 허용하는지 확인합니다. 숫자·잘못된 길이·다른 문자는 지문으로 받지 않습니다. [해당 검사](src/atom_frames.py#L85)
-
-- 오류를 만났을 때 대조: 원자 그림 한 장 ZIP 크기가 허용 범위를 벗어났습니다. 파일 크기는 이 모듈의 MAX_ARCHIVE_BYTES 이하여야 합니다. 빈 파일도 받지 않습니다. [해당 검사](src/atom_frames.py#L87)
-
-- 오류를 만났을 때 대조: 압축 파일의 전체 내용을 읽어 계산한 SHA-256 지문이 명세 지문과 같아야 합니다. 다른 파일이나 내용 변경을 감지하면 재생하지 않습니다. [해당 검사](src/atom_frames.py#L94)
-
-- 오류를 만났을 때 대조: 압축 묶음 안의 파일 수는 정확히 540개이고 파일 이름의 전체 목록도 예상 목록과 정확히 같아야 합니다. 이름 누락·추가·다른 이름은 같은 장수여도 거부하는지 확인합니다. [해당 검사](src/atom_frames.py#L100)
-
-- 오류를 만났을 때 대조: 압축을 풀어 읽는 개별 파일 크기를 모두 더한 값이 이 모듈의 MAX_TOTAL_BYTES 이하여야 합니다. 압축 파일 자체가 작아도 풀린 합계가 더 크면 거부하는지 확인합니다. [해당 검사](src/atom_frames.py#L102)
-
-- 오류를 만났을 때 대조: 검증 때와 현재 파일의 식별 정보가 달라지면 실행 중 자산 변경으로 처리하는지 확인합니다. 앱을 다시 시작해 검증해야 합니다. [해당 검사](src/atom_frames.py#L133)
-
-- 오류를 만났을 때 대조: 원자 그림 한 장의 재생 시각이 유한한 숫자가 아닌지 확인하는지 확인합니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻하는지 확인합니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/atom_frames.py#L138)
-
-- 오류를 만났을 때 대조: 압축 묶음 안의 항목은 폴더가 아닌 파일이고 암호화되지 않아야 합니다. 허용한 무압축 또는 DEFLATE 압축이어야 하며 크기는 0보다 크고 개별 그림 상한 이하여야 합니다. 이 중 하나라도 맞지 않으면 거부하는지 확인합니다. [해당 검사](src/atom_frames.py#L105)
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · [src/brand.py](src/brand.py)
-
-여러 창의 로고와 기능 기호를 같은 제작 자료로 표시하는 부분인지 확인하는지 확인합니다. 창을 숨기면 보이지 않는 로고의 재생 구독을 끝냅니다.
-
-**맡은 일과 결과**
-
-- 확인할 동작: 원소 그림 한 장의 실제 크기에 비례해 여백만 줄이며 영역 밖을 복사하지 않습니다. [구현 이름 motion_brand_source](src/brand.py#L32)
-
-- 확인할 동작: 보이는 로고만 단일 시계에서 같은 그림 한 장으로 갱신하는지 확인합니다. [구현 이름 BrandClock](src/brand.py#L40)
-
-- 확인할 동작: 닫힘·숨김 이벤트에 맞춰 재생 구독을 끝내는 실제3D 로고인지 확인하는지 확인합니다. [구현 이름 AnimatedBrand](src/brand.py#L106)
-
-- 확인할 동작: 실제 삼각형 표면으로 만든 입체 모형에서 제작한 고정 기호 일곱 개를 창 생성 전에 검증하는지 확인합니다. [구현 이름 validate_symbols](src/brand.py#L137)
-
-- 확인할 동작: 실제 삼각형 표면으로 만든 입체 모형 렌더만 축소하고 새로운 도형이나 글자를 덧그리지 않습니다. [구현 이름 symbol_image](src/brand.py#L181)
-
-- 확인할 동작: 원문 글자 표시 부품(QLabel)을 유지하며 기능 의미를 읽기 쉬운 기호로 보조하는지 확인합니다. [구현 이름 with_symbol](src/brand.py#L209)
-
-**선택값과 제한값**
-
-- 준비·대조할 값: 모델·추론·시간·이유·한도·새로고침·이력의 일곱 기능 기호 이름는 **('model', 'reasoning', 'time', 'reason', 'usage', 'refresh', 'history')**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [SYMBOL_NAMES](src/brand.py#L133) 원래 선언을 함께 대조합니다: `정의=('model', 'reasoning', 'time', 'reason', 'usage', 'refresh', 'history')`
-
-**받지 않는 입력과 실패 처리**
-
-- 오류를 만났을 때 대조: 브랜드 그림 한 변의 크기는 1~512픽셀이어야 합니다. 이 범위를 벗어나면 그림을 만들지 않습니다. [해당 검사](src/brand.py#L22)
-
-- 오류를 만났을 때 대조: 기능 기호는 모델·추론·시간·이유·한도·새로고침·이력의 일곱 종류 중 하나이고 크기는 1~96픽셀이어야 합니다. 종류나 크기 중 하나라도 맞지 않으면 거부하는지 확인합니다. [해당 검사](src/brand.py#L184)
-
-- 오류를 만났을 때 대조: 3D 기능 기호 자산의 파일명·크기·지문을 적은 명세 문서 크기 오류인지 확인하는지 확인합니다. 파일 크기는 65,536바이트 이하여야 합니다. 빈 파일도 받지 않습니다. [해당 검사](src/brand.py#L142)
-
-- 오류를 만났을 때 대조: 명세 버전은 참/거짓이 아닌 정수 1이어야 합니다. 다른 버전이나 참 값을 1처럼 받아들이지 않습니다. [해당 검사](src/brand.py#L145)
-
-- 오류를 만났을 때 대조: 기호 파일 목록은 이름과 값의 사전이고 일곱 기능 기호의 이름과 정확히 같아야 합니다. 빠진 기호나 추가된 기호가 있어도 거부하는지 확인합니다. [해당 검사](src/brand.py#L148)
-
-- 오류를 만났을 때 대조: 각 기호 정보는 이름과 값의 사전이고 파일명은 해당 기호 이름에 .png를 붙인 고정 이름이어야 합니다. [해당 검사](src/brand.py#L153)
-
-- 오류를 만났을 때 대조: 파일 내용 지문은 문자열이며 64개의 16진수 문자로 이루어져야 합니다. 여기서 16진수 문자는 0~9와 a~f인지 확인하는지 확인합니다. 이 검사에서는 소문자만 허용하는지 확인합니다. 숫자·잘못된 길이·다른 문자는 지문으로 받지 않습니다. [해당 검사](src/brand.py#L156)
-
-- 오류를 만났을 때 대조: 3D 기능 기호 읽기 크기 상한 오류인지 확인하는지 확인합니다. 파일 크기는 262,144바이트 이하여야 합니다. 빈 파일도 받지 않습니다. [해당 검사](src/brand.py#L159)
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · [src/calendar_art.py](src/calendar_art.py)
-
-시간대와 지원 날짜를 확인하고 범위 밖 입력이 다른 날짜로 대체되지 않는지 살핍니다. 월 팔레트는 반올림 충돌만 이동하며 전체 반복자는 카탈로그 작성용입니다.
-
-**맡은 일과 결과**
-
-- 확인할 동작: 호스트의 현지 시간대와 무관하게 한국 날짜를 사용하는지 확인합니다. [구현 이름 current_date](src/calendar_art.py#L33)
-
-- 확인할 동작: 반올림 충돌만 가장 가까운 미사용 빨강·초록·파랑의 색값(RGB)로 옮기고 월별 결과를 내용이 고정된 보관하는지 확인합니다. [구현 이름 _month_palette](src/calendar_art.py#L50)
-
-- 확인할 동작: 유효한 날짜만 허용하며 지원 범위 밖을 다른 날짜로 몰래 대체하지 않습니다. [구현 이름 design_for_date](src/calendar_art.py#L78)
-
-- 확인할 동작: 현재 모델만 렌더하며 이 반복자는 작은 카탈로그를 작성할 때만 사용하는지 확인합니다. [구현 이름 all_designs](src/calendar_art.py#L95)
-
-**선택값과 제한값**
-
-- 준비·대조할 값: 조형을 지원하는 첫 날짜는 2026-1-1인지 확인하는지 확인합니다. [FIRST_DATE](src/calendar_art.py#L10) 원래 선언을 함께 대조합니다: `정의=date(2026,1,1)`
-
-- 준비·대조할 값: 조형을 지원하는 마지막 날짜는 2099-12-31인지 확인하는지 확인합니다. [LAST_DATE](src/calendar_art.py#L11) 원래 선언을 함께 대조합니다: `정의=date(2099,12,31)`
-
-- 준비·대조할 값: 한국 표준시인 UTC보다 9시간 빠른 시간대인지 확인하는지 확인합니다. [KST](src/calendar_art.py#L12) 원래 선언을 함께 대조합니다: `정의=timezone(timedelta(hours=9))`
-
-- 준비·대조할 값: 연월별 조형 모음에서 가져온 주제 이름 목록인지 확인하는지 확인합니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하는지 확인합니다. [THEMES](src/calendar_art.py#L13) 원래 선언을 함께 대조합니다: `정의=tuple(row.title for row in all_collections())`
-
-**받지 않는 입력과 실패 처리**
-
-- 오류를 만났을 때 대조: 날짜 입력은 날짜 전용 값이어야 합니다. 날짜처럼 보이는 문장이나 날짜·시각이 합쳐진 다른 형식을 대신 받지 않습니다. [해당 검사](src/calendar_art.py#L80)
-
-- 오류를 만났을 때 대조: 지원 날짜는 2026-01-01부터 2099-12-31까지 양 끝을 포함하는지 확인합니다. 이보다 이르거나 늦은 날짜를 다른 날짜로 바꾸지 않고 오류로 알립니다. [해당 검사](src/calendar_art.py#L82)
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · [src/calendar_catalog.py](src/calendar_catalog.py)
-
-월 1~12와 연월 색인 0~887을 준비해 대상 이름·형상·구성 이름을 대조합니다. 꽃·열매·잎·악기 목록과 한글 조사 연결도 같은 사전을 읽습니다.
-
-**맡은 일과 결과**
-
-- 확인할 동작: 마지막 한글 음절의 받침에 맞춰 대상 이름을 연결하는지 확인합니다. [구현 이름 joining_particle](src/calendar_catalog.py#L208)
-
-**선택값과 제한값**
-
-- 준비·대조할 값: 꽃·열매·잎·악기별 대상 모음인지 확인하는지 확인합니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하는지 확인합니다. [POOLS](src/calendar_catalog.py#L166) 원래 선언을 함께 대조합니다: `정의={'꽃': _objects(_FLOWERS,'꽃'), '열매': _objects(_FRUITS,'열매'),          '잎': _objects(_LEAVES,'잎'), '악기': _objects(_MUSIC,'악기')}`
-
-- 준비·대조할 값: 대상 고유 이름으로 조형 대상을 찾는 사전인지 확인하는지 확인합니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하는지 확인합니다. [OBJECTS](src/calendar_catalog.py#L168) 원래 선언을 함께 대조합니다: `정의={obj.key:obj for pool in POOLS.values() for obj in pool}`
-
-- 준비·대조할 값: 꽃다발형·대각선형·감싸는 형태·연주대형·삼각형 정물·부채형의 표시 이름 대응표인지 확인하는지 확인합니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하는지 확인합니다. [COMPOSITION_NAMES](src/calendar_catalog.py#L193) 원래 선언을 함께 대조합니다: `정의={'bouquet':'꽃다발형','diagonal':'대각선형','shelter':'감싸는 형태',                      'stage':'연주대형','triangle':'삼각형 정물','fan':'부채형'}`
-
-**받지 않는 입력과 실패 처리**
-
-- 오류를 만났을 때 대조: 연월 색인은 0~887, 월은 1~12여야 합니다. 둘 중 하나라도 범위를 벗어나면 지원 연월 모음으로 사용하지 않습니다. [해당 검사](src/calendar_catalog.py#L217)
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · [src/calendar_motion.py](src/calendar_motion.py)
-
-첫 그림 준비 제한·보임 상태·요구 크기를 차례로 확인합니다. 속도 변경 후 현재 회전 위치가 유지되고 실제 날짜는 바뀌지 않는지, 정적 대체 표식이 오류 상태와 함께 보이는지 대조합니다.
-
-**맡은 일과 결과**
-
-- 확인할 동작: 정상 슬롯을 유지하고 늦은 그림 한 장은 추가 대기나 누적 추격 없이 이어갑니다. [구현 이름 next_frame_deadline](src/calendar_motion.py#L21)
-
-- 확인할 동작: 그래픽 장치(GPU) 준비·실패 때만 쓰는 월 주제의 정적 평면 표식인지 확인하는지 확인합니다. 3D 성공으로 가장하지 않습니다. [구현 이름 fallback_image](src/calendar_motion.py#L26)
-
-- 확인할 동작: 그림을 계산하는 별도 작업은 화면 버튼이나 창을 직접 건드리지 않습니다. 가장 최근에 만든 그림 하나를 복사해 화면 담당 작업에 전달하는지 확인합니다. Qt는 창과 버튼을 만드는 도구 이름인지 확인하는지 확인합니다. [구현 이름 _Worker](src/calendar_motion.py#L60)
-
-- 확인할 동작: 창 표시 전에 같은 작업자의 첫 실제 그림 한 장을 최대 5초 준비하는지 확인합니다. [구현 이름 prepare_calendar_motion](src/calendar_motion.py#L232)
-
-- 확인할 동작: 지금 회전한 위치를 유지한 채 앞으로 도는 속도만 바꿉니다. 예를 들어 회전 중 속도를 올려도 모형이 시작 위치로 튀지 않습니다. 바탕화면 시계와 날짜가 더 빠르게 흐르는 것은 아닌지 확인하는지 확인합니다. [구현 이름 set_calendar_motion_speed](src/calendar_motion.py#L262)
-
-- 확인할 동작: 현재 보이는 각 소유자의 실제 픽셀 요구 중 최대 크기만 전달하는지 확인합니다. [구현 이름 set_calendar_motion_size](src/calendar_motion.py#L268)
-
-- 확인할 동작: Qt 그리기 경로가 실제로 소비한 서로 다른 그림 한 장만 셉니다. [구현 이름 record_calendar_presentation](src/calendar_motion.py#L276)
-
-- 확인할 동작: 제품은 이 문자열을 상태나 툴팁에 표시해 대체 표식과 실제 3D를 구분할 수 있습니다. [구현 이름 get_calendar_error](src/calendar_motion.py#L285)
-
-**선택값과 제한값**
-
-- 준비·대조할 값: 초당 그림 수의 설정값는 **240**인지 확인하는지 확인합니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [FPS](src/calendar_motion.py#L15) 원래 선언을 함께 대조합니다: `정의=240`
-
-- 준비·대조할 값: 공유 그림의 기본 크기는 **384**인지 확인하는지 확인합니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [SIZE](src/calendar_motion.py#L16) 원래 선언을 함께 대조합니다: `정의=384`
-
-- 준비·대조할 값: 그래픽 장치에서 그릴 원본 가로·세로 픽셀 크기는 **(3840, 2160)**인지 확인하는지 확인합니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [RENDER_SIZE](src/calendar_motion.py#L17) 원래 선언을 함께 대조합니다: `정의=(3840, 2160)`
-
-**받지 않는 입력과 실패 처리**
-
-- 오류를 만났을 때 대조: 날짜별 모션 API는 Qt 메인 프로그램 내부의 작업 흐름에서 호출해야 합니다. 화면·언어 변경은 화면을 담당하는 작업 흐름에서, 그래픽 작업 공간은 그것을 만든 작업 흐름에서만 다루어야 합니다. [해당 검사](src/calendar_motion.py#L211)
-
-- 오류를 만났을 때 대조: 기다릴 시간은 참/거짓을 제외한 실제 숫자로 0초보다 크고 5초 이하여야 합니다. 숫자가 아닌 입력이나 범위 밖 값은 거부하는지 확인합니다. [해당 검사](src/calendar_motion.py#L234)
-
-- 오류를 만났을 때 대조: 화면에 보이는지의 값은 참 또는 거짓이어야 합니다. 0·1·문자열을 대신 받지 않습니다. [해당 검사](src/calendar_motion.py#L258)
-
-- 오류를 만났을 때 대조: 전달할 그림 크기는 참/거짓을 제외한 정수로 32~2160 범위여야 합니다. 예를 들어 소수나 범위를 벗어난 크기는 거부하는지 확인합니다. [해당 검사](src/calendar_motion.py#L270)
-
-- 오류를 만났을 때 대조: 날짜별 모션 서비스가 닫혔습니다. [해당 검사](src/calendar_motion.py#L167)
-
-- 오류를 만났을 때 대조: 날짜별 모션 서비스가 닫혔습니다. [해당 검사](src/calendar_motion.py#L180)
-
-- 오류를 만났을 때 대조: 재생 시각은 유한한 숫자여야 합니다. [해당 검사](src/calendar_motion.py#L181)
-
-- 오류를 만났을 때 대조: 재생 시각은 유한한 숫자여야 합니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻하는지 확인합니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/calendar_motion.py#L184)
-
-- 오류를 만났을 때 대조: 이전 그래픽 장치(GPU) 작업 프로그램 내부의 작업 흐름가 종료 중인지 확인하는지 확인합니다. [해당 검사](src/calendar_motion.py#L221)
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · [src/calendar_renderer.py](src/calendar_renderer.py)
-
-대상과 형상 규칙의 일치·유한한 재생 시각·GPU 생성 스레드를 먼저 대조합니다. 미리보기 동기 렌더, 앱 공유 렌더, 검증용 직사각 원본 내보내기를 구분합니다.
-
-**맡은 일과 결과**
-
-- 확인할 동작: 입체 회전축의 방향을 길이 1의 기준으로 맞춘 뒤, 그 축 주위를 돌리는 계산표를 만듭니다. 로드리게스 회전행렬은 이 계산표의 이름인지 확인하는지 확인합니다. 축의 길이가 커졌다고 모형 크기까지 커지는 계산을 피하는지 확인합니다. [구현 이름 rotation](src/calendar_renderer.py#L24)
-
-- 확인할 동작: 입체 표면을 이루는 삼각형의 꼭짓점 순서와 바깥을 향하는 방향을 맞춥니다. 법선은 표면의 바깥 방향, winding은 꼭짓점을 도는 순서인지 확인하는지 확인합니다. 두 방향이 맞아야 앞면과 조명을 같은 기준으로 계산하는지 확인합니다. [구현 이름 finish](src/calendar_renderer.py#L48)
-
-- 확인할 동작: 육면체 면을 실제 둥근 모서리와 구면 꼭짓점으로 투영하는지 확인합니다. [구현 이름 box](src/calendar_renderer.py#L58)
-
-- 확인할 동작: 단면을 축 주위로 돌려 앞면·뒷면·옆면이 있는 입체를 만듭니다. 단면이 각진 다각형이면 각 면의 바깥 방향도 평평한 면에 맞춥니다. 단순한 앞면 그림을 입체처럼 표시하는 방식과 구별됩니다. [구현 이름 lathe](src/calendar_renderer.py#L84)
-
-- 확인할 동작: 3D 경로를 따라 원형 단면을 운반하는지 확인합니다. 코일은 실제 깊이를 가집니다. [구현 이름 tube](src/calendar_renderer.py#L104)
-
-- 확인할 동작: 대상 이름에 연결된 주요 구조를 실제 삼각형 부품으로 구성하는지 확인합니다. [구현 이름 _object_geometry](src/calendar_renderer.py#L145)
-
-- 확인할 동작: 날짜와 무관한 세 링만 읽기 전용 배열로 한 번 생성하는지 확인합니다. [구현 이름 _ring_geometry](src/calendar_renderer.py#L323)
-
-- 확인할 동작: 날짜별 주연과 서로 다른 두 월 모티프를 명시적 대상 사전에서 렌더하는지 확인합니다. [구현 이름 build_geometry](src/calendar_renderer.py#L334)
-
-- 확인할 동작: 그래픽 작업 공간를 만든 프로그램 내부의 작업 흐름에서만 사용하고 현재 날짜의 버퍼만 보유하는지 확인합니다. [구현 이름 CalendarRenderer](src/calendar_renderer.py#L378)
-
-- 확인할 동작: 미리보기와 직접 검증용 동기 렌더인지 확인하는지 확인합니다. 앱은 공유 작업 프로그램 내부의 작업 흐름를 사용하는지 확인합니다. [구현 이름 render_date](src/calendar_renderer.py#L489)
-
-- 확인할 동작: 원본 타깃은 유지하고 중앙 정사각형의 그래픽 장치(GPU) 전달 크기만 변경하는지 확인합니다. [구현 이름 set_output_size](src/calendar_renderer.py#L425)
-
-- 확인할 동작: 검증·내보내기 때만 실제 직사각형 원본 전체를 중앙 처리 장치(CPU)로 읽습니다. [구현 이름 render_original](src/calendar_renderer.py#L470)
-
-**선택값과 제한값**
-
-- 준비·대조할 값: 입체 조형의 회전 주기는 **12.0**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [PERIOD](src/calendar_renderer.py#L132) 원래 선언을 함께 대조합니다: `정의=12.0`
-
-- 준비·대조할 값: 공유 그림의 기본 크기는 **384**인지 확인하는지 확인합니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [SIZE](src/calendar_renderer.py#L133) 원래 선언을 함께 대조합니다: `정의=384`
-
-**받지 않는 입력과 실패 처리**
-
-- 오류를 만났을 때 대조: 대상 사전의 형상 규칙과 선택된 디자인의 규칙이 같아야 합니다. 이름과 모형 구성이 다른 자료는 렌더하지 않습니다. [해당 검사](src/calendar_renderer.py#L338)
-
-- 오류를 만났을 때 대조: 모션 시각은 유한한 숫자여야 합니다. [해당 검사](src/calendar_renderer.py#L364)
-
-- 오류를 만났을 때 대조: 모션 시각은 유한한 숫자여야 합니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻하는지 확인합니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/calendar_renderer.py#L367)
-
-- 오류를 만났을 때 대조: 그래픽 장치(GPU) 그래픽 작업 공간는 생성 프로그램 내부의 작업 흐름에서만 사용할 수 있습니다. 화면·언어 변경은 화면을 담당하는 작업 흐름에서, 그래픽 작업 공간은 그것을 만든 작업 흐름에서만 다루어야 합니다. [해당 검사](src/calendar_renderer.py#L423)
-
-- 오류를 만났을 때 대조: 전달할 그림 크기는 참/거짓을 제외한 정수로 32~2160 범위여야 합니다. 예를 들어 소수나 범위를 벗어난 크기는 거부하는지 확인합니다. [해당 검사](src/calendar_renderer.py#L428)
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · [src/core.py](src/core.py)
-
-지침을 적용하기 전 파일명·실제 경로·크기·관리 표식과 미리보기를 대조합니다. 적용 전에 파일이 바뀌면 새 미리보기를 만들고 복원에서는 앱 백업과 원문 지문을 함께 확인합니다.
-
-**맡은 일과 결과**
-
-- 확인할 동작: 기록 파일에서 실제 줄바꿈 문자(LF)가 있는 자리만 한 기록의 경계로 봅니다. 읽기 범위의 맨 앞이나 맨 뒤에서 잘린 기록은 완성된 기록처럼 읽지 않습니다. 예를 들어 한 기록 안에 줄바꿈처럼 보이는 특수 문자가 있어도 기록 두 개로 나누지 않습니다. [구현 이름 read_jsonl_tail](src/core.py#L19)
-
-- 확인할 동작: 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존하는지 확인합니다. [구현 이름 title_catalog](src/core.py#L56)
-
-- 확인할 동작: 자식 작업은 실제 부모 채팅 제목과 작업명을 분리하는지 확인합니다. [구현 이름 resolve_title](src/core.py#L86)
-
-- 확인할 동작: 지침을 넣을 파일뿐 아니라 그 파일까지 거치는 상위 폴더도 확인하는지 확인합니다. 바로가기처럼 다른 위치로 연결된 파일·폴더(링크 또는 Windows 재분석 지점)가 있으면 적용을 멈춥니다. 예를 들어 선택한 폴더가 다른 폴더로 연결돼 있으면 그곳의 파일을 대신 고치지 않습니다. [구현 이름 safe_path](src/core.py#L110)
-
-**선택값과 제한값**
-
-- 준비·대조할 값: 지침 문서의 최대 바이트 수는 **2 * 1024 * 1024**인지 확인하는지 확인합니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식인지 확인하는지 확인합니다. [MAX_TEXT_BYTES](src/core.py#L10) 원래 선언을 함께 대조합니다: `정의=2 * 1024 * 1024`
-
-- 준비·대조할 값: 앱이 관리하는 지침 구역의 시작 표식는 **b'<!-- CODEX-ORBIT:BEGIN -->'**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [BEGIN](src/core.py#L11) 원래 선언을 함께 대조합니다: `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'`
-
-- 준비·대조할 값: 앱이 관리하는 지침 구역의 끝 표식는 **b'<!-- CODEX-ORBIT:END -->'**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [END](src/core.py#L12) 원래 선언을 함께 대조합니다: `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'`
-
-**받지 않는 입력과 실패 처리**
-
-- 오류를 만났을 때 대조: 문서가 2 MiB 상한을 초과했습니다. 파일 크기는 2MiB 이하여야 합니다. [해당 검사](src/core.py#L125)
-
-- 오류를 만났을 때 대조: 제목 보관 자료와 그 안의 titles 항목은 모두 이름과 값의 사전 자료여야 합니다. 어느 쪽이라도 목록·문자열 등 다른 형식이면 거부하는지 확인합니다. [해당 검사](src/core.py#L65)
-
-- 오류를 만났을 때 대조: 대상 파일명은 대소문자를 무시했을 때 AGENTS.md여야 합니다. 다른 이름의 문서에는 적용하지 않습니다. [해당 검사](src/core.py#L136)
-
-- 오류를 만났을 때 대조: 대상 문서의 바로 위 폴더가 실제로 있어야 합니다. 없는 폴더에 문서를 새로 만들며 적용하지 않습니다. [해당 검사](src/core.py#L138)
-
-- 오류를 만났을 때 대조: 대상이 이미 있으면 일반 파일이며 2MiB 이하여야 합니다. 폴더 등 다른 종류이거나 더 크면 적용하지 않습니다. [해당 검사](src/core.py#L140)
-
-- 오류를 만났을 때 대조: 공백을 제외한 지침 내용이 있어야 하며 추가할 바이트는 2MiB 이하여야 합니다. 빈 내용이나 더 큰 내용은 거부하는지 확인합니다. [해당 검사](src/core.py#L147)
-
-- 오류를 만났을 때 대조: 넣을 지침 안에 앱 관리 구역의 시작 또는 끝 표식이 하나라도 있으면 거부하는지 확인합니다. 구역 경계를 내용이 대신 만들어서는 안 됩니다. [해당 검사](src/core.py#L149)
-
-- 오류를 만났을 때 대조: 적용 결과가 2 MiB 상한을 초과하는지 확인합니다. [해당 검사](src/core.py#L163)
-
-- 오류를 만났을 때 대조: 미리보기 때 파일이 있었는지와 지금 존재하는지가 같아야 하고, 현재 내용의 지문도 예상 지문과 같아야 합니다. 새 파일 생성·삭제·내용 변경 중 하나라도 있으면 새 미리보기가 필요하는지 확인합니다. [해당 검사](src/core.py#L170)
-
-- 오류를 만났을 때 대조: 미리보기에 보관한 원문과 적용 예정 내용 각각의 지문이 처음 값과 같아야 합니다. 둘 중 하나라도 바뀌면 적용하지 않습니다. [해당 검사](src/core.py#L190)
-
-- 오류를 만났을 때 대조: 백업은 앱 데이터의 backups 폴더 바로 안에 있는 일반 파일이며 2MiB 이하여야 합니다. 다른 위치나 잘못된 종류·큰 파일은 복원에 쓰지 않습니다. [해당 검사](src/core.py#L210)
-
-- 오류를 만났을 때 대조: 백업 내용의 지문이 적용 전 원문의 지문과 같아야 합니다. 다르면 원래 문서로 확인할 수 없어 복원하지 않습니다. [해당 검사](src/core.py#L213)
-
-- 오류를 만났을 때 대조: 항목 이름과 값으로 구성된 JSON 자료가 아닌지 확인하는지 확인합니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 합니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/core.py#L41)
-
-- 오류를 만났을 때 대조: 이미 있는 관리 구역의 시작 표식과 끝 표식은 각각 정확히 하나이며 시작이 끝보다 앞에 있어야 합니다. 중복·누락·순서 뒤집힘은 거부하는지 확인합니다. [해당 검사](src/core.py#L156)
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · [src/element_frames.py](src/element_frames.py)
-
-1~31 원소 번호와 해당 자산의 지문을 대조합니다. PNG의 헤더·192×192 RGBA·투명 모서리까지 확인하며 실행 중 파일 변경과 닫힌 재생기의 접근 오류를 구분합니다.
-
-**맡은 일과 결과**
-
-- 확인할 동작: 필수 원소 자산 실패를 숨기지 않고 앱의 시작·표시 오류로 전달하는지 확인합니다. [구현 이름 ElementAssetError](src/element_frames.py#L24)
-
-- 확인할 동작: 활성 원소의 해시·목록·첫 그림 한 장을 확인하는지 확인합니다.31개를 적재하지 않습니다. [구현 이름 preflight_element_frames](src/element_frames.py#L132)
-
-**선택값과 제한값**
-
-- 준비·대조할 값: 풀어 놓은 그림을 메모리에 보관하는 최대 장수는 **24**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [CACHE_LIMIT](src/element_frames.py#L15) 원래 선언을 함께 대조합니다: `정의=24`
-
-- 준비·대조할 값: 그림 한 변의 픽셀 수는 **192**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_SIZE](src/element_frames.py#L16) 원래 선언을 함께 대조합니다: `정의=192`
-
-- 준비·대조할 값: 압축 묶음에 있어야 하는 그림의 정확한 장수는 **540**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_COUNT](src/element_frames.py#L17) 원래 선언을 함께 대조합니다: `정의=540`
-
-- 준비·대조할 값: 초당 그림 수의 설정값는 **30**인지 확인하는지 확인합니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [FPS](src/element_frames.py#L18) 원래 선언을 함께 대조합니다: `정의=30`
-
-- 준비·대조할 값: 한 재생 주기의 초 단위 길이는 **18**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [PERIOD_SECONDS](src/element_frames.py#L19) 원래 선언을 함께 대조합니다: `정의=18`
-
-- 준비·대조할 값: 압축 파일 자체를 읽을 수 있는 최대 바이트 수는 **64*1024*1024**인지 확인하는지 확인합니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식인지 확인하는지 확인합니다. [MAX_ARCHIVE_BYTES](src/element_frames.py#L20) 원래 선언을 함께 대조합니다: `정의=64*1024*1024`
-
-- 준비·대조할 값: 개별 그림 한 장의 최대 바이트 수는 **512*1024**인지 확인하는지 확인합니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식인지 확인하는지 확인합니다. [MAX_FRAME_BYTES](src/element_frames.py#L21) 원래 선언을 함께 대조합니다: `정의=512*1024`
-
-**받지 않는 입력과 실패 처리**
-
-- 오류를 만났을 때 대조: 원소 번호는 참/거짓이 아닌 정수 1~31이어야 합니다. 0·32·소수·문자열 등은 받지 않습니다. [해당 검사](src/element_frames.py#L34)
-
-- 오류를 만났을 때 대조: 원소 자산의 파일명·크기·지문을 적은 명세 문서 크기 오류 파일 크기는 65,536바이트 이하여야 합니다. 빈 파일도 받지 않습니다. [해당 검사](src/element_frames.py#L65)
-
-- 오류를 만났을 때 대조: 원소 자산의 파일명·크기·지문을 적은 명세 문서는 객체여야 합니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 합니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/element_frames.py#L69)
-
-- 오류를 만났을 때 대조: 파일 내용 지문은 문자열이며 64개의 16진수 문자로 이루어져야 합니다. 여기서 16진수 문자는 0~9와 a~f인지 확인하는지 확인합니다. 이 검사에서는 소문자만 허용하는지 확인합니다. 숫자·잘못된 길이·다른 문자는 지문으로 받지 않습니다. [해당 검사](src/element_frames.py#L74)
-
-- 오류를 만났을 때 대조: 원소 압축파일 크기 초과 파일 크기는 이 모듈의 MAX_ARCHIVE_BYTES 이하여야 합니다. 빈 파일도 받지 않습니다. [해당 검사](src/element_frames.py#L75)
-
-- 오류를 만났을 때 대조: 압축 파일의 전체 내용을 읽어 계산한 SHA-256 지문이 명세 지문과 같아야 합니다. 다른 파일이나 내용 변경을 감지하면 재생하지 않습니다. [해당 검사](src/element_frames.py#L78)
-
-- 오류를 만났을 때 대조: 압축 묶음 안의 파일 수는 정확히 540개이고 파일 이름의 전체 목록도 예상 목록과 정확히 같아야 합니다. 이름 누락·추가·다른 이름은 같은 장수여도 거부하는지 확인합니다. frame_0000.png부터 frame_0539.png까지의 고정 이름인지 확인하는지 확인합니다. [해당 검사](src/element_frames.py#L80)
-
-- 오류를 만났을 때 대조: 압축을 풀어 읽는 개별 파일 크기를 모두 더한 값이 128×1024×1024바이트 이하여야 합니다. 압축 파일 자체가 작아도 풀린 합계가 더 크면 거부하는지 확인합니다. [해당 검사](src/element_frames.py#L82)
-
-- 오류를 만났을 때 대조: 검증 때와 현재 파일의 식별 정보가 달라지면 실행 중 자산 변경으로 처리하는지 확인합니다. 앱을 다시 시작해 검증해야 합니다. [해당 검사](src/element_frames.py#L91)
-
-- 오류를 만났을 때 대조: 원소 재생 시각은 유한한 숫자여야 합니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻하는지 확인합니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/element_frames.py#L106)
-
-- 오류를 만났을 때 대조: 원소 재생기가 닫혔습니다. [해당 검사](src/element_frames.py#L107)
-
-- 오류를 만났을 때 대조: 압축 묶음 안의 항목은 폴더가 아닌 파일이고 암호화되지 않아야 합니다. 허용한 무압축 또는 DEFLATE 압축이어야 하며 크기는 0보다 크고 개별 그림 상한 이하여야 합니다. 이 중 하나라도 맞지 않으면 거부하는지 확인합니다. [해당 검사](src/element_frames.py#L84)
-
-- 오류를 만났을 때 대조: 읽은 그림은 개별 크기 상한 이하이면서 최소 33바이트여야 합니다. PNG 시작 표식과 IHDR 머리말, 192×192 크기, 8비트 RGBA 형식을 모두 확인하는지 확인합니다. 하나라도 다르면 그림을 받지 않습니다. [해당 검사](src/element_frames.py#L96)
-
-- 오류를 만났을 때 대조: 그림을 실제 이미지로 읽을 수 있어야 하며 가로와 세로가 각각 192이고 투명도 정보가 있어야 합니다. 이 조건을 하나라도 만족하지 못하면 거부하는지 확인합니다. [해당 검사](src/element_frames.py#L99)
-
-- 오류를 만났을 때 대조: 192×192 그림의 네 모서리 (0,0), (191,0), (0,191), (191,191)는 모두 완전히 투명해야 합니다. 한 모서리라도 불투명한 부분이 있으면 거부하는지 확인합니다. [해당 검사](src/element_frames.py#L100)
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · [src/element_visuals.py](src/element_visuals.py)
-
-이미 만든 입체 원자 그림의 투명한 모양을 유지하면서 디자인 색만 덧입힙니다.
-
-**맡은 일과 결과**
-
-- 확인할 동작: 그림에서 원래 투명했던 부분은 계속 투명하게 두고, 원래 보이던 모양의 밝고 어두운 부분에만 색을 부드럽게 입힙니다. 이 겹치기 방식을 SourceAtop이라고 합니다. 예를 들어 둥근 모형에 색을 입혀도 바깥의 투명 배경이 네모난 색판으로 바뀌지 않습니다. [구현 이름 colorize_atom](src/element_visuals.py#L5)
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · [src/elements.py](src/elements.py)
-
-한국 날짜의 1일부터 31일까지에 대응하는 원소 이름과 디자인 색을 고릅니다. 예를 들어 자정이나 절전 복귀 후 다시 날짜를 읽어 그날의 원소를 고릅니다.
-
-**맡은 일과 결과**
-
-- 확인할 동작: 매 호출 실제 날짜를 다시 읽어 자정·절전 복귀·시계 되돌림을 반영하는지 확인합니다. [구현 이름 daily_element](src/elements.py#L43)
-
-**선택값과 제한값**
-
-- 준비·대조할 값: 한국 표준시인 UTC보다 9시간 빠른 시간대인지 확인하는지 확인합니다. [KST](src/elements.py#L5) 원래 선언을 함께 대조합니다: `정의=timezone(timedelta(hours=9))`
-
-- 준비·대조할 값: 색은 원소에서 받은 디자인 영감이며 실제 원소색·불꽃색·전자 배치를 재현하지 않는다는 안내인지 확인하는지 확인합니다. [PALETTE_NOTE](src/elements.py#L8) 원래 선언을 함께 대조합니다: `정의='원소에서 영감받은 디자인 색이며 실제 원소·불꽃색이나 전자배치 재현이 아닙니다.'`
-
-- 준비·대조할 값: 원소 번호·기호·이름·색·강조색을 차례로 묶은 목록인지 확인하는지 확인합니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하는지 확인합니다. [ELEMENTS](src/elements.py#L39) 원래 선언을 함께 대조합니다: `정의=tuple(Element(index,symbol,name,color,accent)                  for index,(symbol,name,color,accent) in enumerate(_ROWS,1))`
-
-**받지 않는 입력과 실패 처리**
-
-- 오류를 만났을 때 대조: 날짜·시각에 시간대 정보와 실제 시차가 모두 있어야 합니다. 어느 쪽이라도 없으면 한국 날짜로 해석할 수 없어 거부하는지 확인합니다. [해당 검사](src/elements.py#L46)
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · [src/frame_pacing.py](src/frame_pacing.py)
-
-회전 속도와 다음 그림을 보여 줄 시간을 계산하는지 확인합니다. 모형 속도를 바꾸어도 실제 시계·날짜의 진행 속도는 바꾸지 않습니다.
-
-**맡은 일과 결과**
-
-- 확인할 동작: 유한한 0.25~3배 숫자만 받아 참/거짓 두 가지 값과 잘못된 설정을 거부하는지 확인합니다. [구현 이름 validate_motion_speed](src/frame_pacing.py#L7)
-
-- 확인할 동작: 모형이 움직이는 데 쓰는 시간만 속도 배율에 따라 이어 계산하는지 확인합니다. 예를 들어 속도를 바꾸기 전까지 움직인 양을 보존한 다음 새 속도로 이어 갑니다. 실제 날짜와 시계는 이 계산에 따라 바뀌지 않습니다. [구현 이름 MotionClock](src/frame_pacing.py#L20)
-
-**받지 않는 입력과 실패 처리**
-
-- 오류를 만났을 때 대조: 회전 속도는 0.25~3배의 유한한 숫자여야 합니다. [해당 검사](src/frame_pacing.py#L9)
-
-- 오류를 만났을 때 대조: 회전 속도는 0.25~3배의 유한한 숫자여야 합니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻하는지 확인합니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/frame_pacing.py#L15)
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · [src/i18n.py](src/i18n.py)
-
-앱이 만든 문구의 한국어·영어 표시를 관리하는지 확인합니다. 실제 기록 문장은 앱 번역문과 구분해 보존하는지 확인합니다.
-
-**맡은 일과 결과**
-
-- 확인할 동작: 명시한 앱 문구만 번역하고 전달된 값은 번역하지 않습니다. [구현 이름 translate](src/i18n.py#L51)
-
-- 확인할 동작: 생성 당시 정적인 앱 문구만 기록하여 사용자 원문과 구분하는지 확인합니다. [구현 이름 remember_translations](src/i18n.py#L63)
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · [src/motion_label.py](src/motion_label.py)
-
-움직이는 그림을 화면에 붙이는 부분인지 확인하는지 확인합니다. 그림이 보이는지와 필요한 크기를 재생 쪽에 전달하는지 확인합니다.
-
-**맡은 일과 결과**
-
-- 확인할 동작: 최신 이미지 한 개를 보관하고 크기·DPR 변경 때만 기본 크기 힌트를 갱신하는지 확인합니다. [구현 이름 MotionImageLabel](src/motion_label.py#L6)
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · [src/notifier.py](src/notifier.py)
-
-세션 경로와 상태 버전을 먼저 확인합니다. 새 변경 알림과 이미 보낸 첫 배정 이유 보강을 구분하고 상태 오류 때 파일을 보존합니다. 구형 상태의 명시적 재기준선과 백업 동일성도 대조합니다.
-
-**맡은 일과 결과**
-
-- 확인할 동작: 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도하는지 확인합니다. [구현 이름 atomic_json](src/notifier.py#L33)
-
-- 확인할 동작: 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. [구현 이름 source_datetime](src/notifier.py#L63)
-
-- 확인할 동작: 원본 시각이 있는 복제 기록만 제외하며 기준선 재생의 순서는 복원하는지 확인합니다. [구현 이름 duplicate_record](src/notifier.py#L212)
-
-- 확인할 동작: 현재 채팅의 공식 기록에 직접 적힌 설정 항목만 읽습니다. 앱이 직접 남긴는 앱이 직접 남긴 항목이라는 뜻인지 확인하는지 확인합니다. 누가 바꿨는지, 서버에서 어떤 모델이 실행됐는지는 그 설정만으로 추측하지 않습니다. [구현 이름 settings_record](src/notifier.py#L223)
-
-- 확인할 동작: 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. [구현 이름 lookup_parent_reason](src/notifier.py#L376)
-
-- 확인할 동작: 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강하는지 확인합니다. [구현 이름 enrich_event](src/notifier.py#L423)
-
-- 확인할 동작: 이미 읽은 과거 범위에서 작업의 식별 정보만 다시 연결하는지 확인합니다. 대화 본문을 새로 읽어 저장하는 기능이 아니며 각 파일을 읽는 기존 양의 제한도 유지하는지 확인합니다. [구현 이름 replay_activity_prefix](src/notifier.py#L445)
-
-**선택값과 제한값**
-
-- 준비·대조할 값: 읽을 Codex 기록 폴더를 고르는 옵션인지 확인하는지 확인합니다. 경로를 입력하는 옵션인지 확인하는지 확인합니다. 기본은 현재 사용자 홈의 .codex/sessions 폴더인지 확인하는지 확인합니다. [--sessions](src/notifier.py#L739) 원래 선언을 함께 대조합니다: `type=Path; default=Path.home() / '.codex/sessions'`
-
-- 준비·대조할 값: 감시기의 작업 자료 폴더를 고르는 옵션; 기본은 프로젝트 아래 work인지 확인하는지 확인합니다. 경로를 입력하는 옵션인지 확인하는지 확인합니다. [--work](src/notifier.py#L740) 원래 선언을 함께 대조합니다: `type=Path; default=ROOT / 'work'`
-
-- 준비·대조할 값: 이 소스 파일을 기준으로 두 단계 위의 프로젝트 폴더인지 확인하는지 확인합니다. [ROOT](src/notifier.py#L18) 원래 선언을 함께 대조합니다: `정의=Path(__file__).resolve().parents[1]`
-
-- 준비·대조할 값: Windows가 앱을 구분하는 고정 이름는 **'Yunseok.Codex.ModelChangeNotifier'**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [APP_ID](src/notifier.py#L19) 원래 선언을 함께 대조합니다: `정의='Yunseok.Codex.ModelChangeNotifier'`
-
-- 준비·대조할 값: 한 번에 나누어 읽는 기록의 바이트 수는 **512 * 1024**인지 확인하는지 확인합니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식인지 확인하는지 확인합니다. [READ_BYTES](src/notifier.py#L20) 원래 선언을 함께 대조합니다: `정의=512 * 1024`
-
-- 준비·대조할 값: 기록 하나를 읽는 최대 바이트 수는 **2 * 1024 * 1024**인지 확인하는지 확인합니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식인지 확인하는지 확인합니다. [MAX_RECORD](src/notifier.py#L21) 원래 선언을 함께 대조합니다: `정의=2 * 1024 * 1024`
-
-- 준비·대조할 값: 한 번의 감시에서 다룰 파일 수의 상한는 **4096**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_FILES](src/notifier.py#L22) 원래 선언을 함께 대조합니다: `정의=4096`
-
-- 준비·대조할 값: 로그 파일 크기의 바이트 상한는 **2 * 1024 * 1024**인지 확인하는지 확인합니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식인지 확인하는지 확인합니다. [LOG_BYTES](src/notifier.py#L23) 원래 선언을 함께 대조합니다: `정의=2 * 1024 * 1024`
-
-- 준비·대조할 값: 한 감시 주기에서 읽는 전체 바이트 수 상한는 **8 * 1024 * 1024**인지 확인하는지 확인합니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식인지 확인하는지 확인합니다. [POLL_READ_BYTES](src/notifier.py#L24) 원래 선언을 함께 대조합니다: `정의=8 * 1024 * 1024`
-
-- 준비·대조할 값: 아직 전달이 끝나지 않은 알림 수의 상한는 **256**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_PENDING](src/notifier.py#L25) 원래 선언을 함께 대조합니다: `정의=256`
-
-- 준비·대조할 값: 감시를 다시 확인하는 초 단위 간격는 **0.2**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [POLL_INTERVAL_SECONDS](src/notifier.py#L26) 원래 선언을 함께 대조합니다: `정의=0.2`
-
-**받지 않는 입력과 실패 처리**
-
-- 오류를 만났을 때 대조: 상태 파일이 16 MiB 상한을 초과했습니다. 원본 보존 후 점검이 필요하는지 확인합니다. 파일 크기는 16MiB 이하여야 합니다. [해당 검사](src/notifier.py#L90)
-
-- 오류를 만났을 때 대조: 저장 상태의 버전이 2 또는 3이 아니면 요청과 관측이 섞인 구형 자료로 봅니다. 원본을 보존하고 사용자가 명시한 새 기준선 절차가 필요하는지 확인합니다. [해당 검사](src/notifier.py#L94)
-
-- 오류를 만났을 때 대조: 저장 상태의 files와 models는 모두 이름과 값의 사전 자료여야 합니다. 하나라도 다른 형식이면 원본을 빈 상태로 초기화하지 않고 오류로 둡니다. [해당 검사](src/notifier.py#L96)
-
-- 오류를 만났을 때 대조: 명시 배정 상태 구조 오류인지 확인하는지 확인합니다. 자동 초기화하지 않습니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 합니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/notifier.py#L98)
-
-- 오류를 만났을 때 대조: 채팅 선택 설정 상태 구조 오류인지 확인하는지 확인합니다. 자동 초기화하지 않습니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 합니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/notifier.py#L117)
-
-- 오류를 만났을 때 대조: 새로 만든 이행 백업의 전체 바이트가 원본과 같아야 합니다. 다르면 자동 덮어쓰기를 중단하는지 확인합니다. [해당 검사](src/notifier.py#L105)
-
-- 오류를 만났을 때 대조: 파일을 읽은 시작·끝 위치는 참/거짓을 제외한 0 이상의 정수여야 합니다. 음수·문자열·참/거짓을 파일 위치로 사용하지 않습니다. [해당 검사](src/notifier.py#L112)
-
-- 오류를 만났을 때 대조: 새로 만든 이행 백업의 전체 바이트가 원본과 같아야 합니다. 다르면 자동 덮어쓰기를 중단하는지 확인합니다. [해당 검사](src/notifier.py#L123)
-
-- 오류를 만났을 때 대조: 파일을 읽은 시작·끝 위치는 참/거짓을 제외한 0 이상의 정수여야 합니다. 음수·문자열·참/거짓을 파일 위치로 사용하지 않습니다. [해당 검사](src/notifier.py#L131)
-
-- 오류를 만났을 때 대조: 항목 이름과 값으로 구성된 JSON 자료가 아닌지 확인하는지 확인합니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 합니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/notifier.py#L523)
-
-- 오류를 만났을 때 대조: 명시 알림 파일 상한 초과 파일 크기는 20,000바이트 이하여야 합니다. [해당 검사](src/notifier.py#L603)
-
-- 오류를 만났을 때 대조: 항목 이름과 값으로 구성된 JSON 자료가 아닌지 확인하는지 확인합니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 합니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/notifier.py#L467)
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · [src/theme.py](src/theme.py)
-
-파일 선택창·버튼·기본 기호의 색과 문구·배치를 맞춥니다. 긴 한글 버튼이나 파일 이름이 들어갈 공간도 다룹니다.
-
-**맡은 일과 결과**
-
-- 확인할 동작: 파일·삼각형 표면으로 만든 입체 모형지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. [구현 이름 MonochromeStyle](src/theme.py#L53)
-
-- 확인할 동작: 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역하는지 확인합니다. [구현 이름 KoreanDialogs](src/theme.py#L78)
-
-- 확인할 동작: 앱 파일 선택창의 이름 열과 한글 버튼에 충분한 공간을 확보하는지 확인합니다. [구현 이름 DialogLayout](src/theme.py#L94)
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · [src/typography.py](src/typography.py)
-
-화면 글꼴 파일을 앱에 등록하는지 확인합니다. 필수 글꼴이 없거나 등록되지 않으면 시작 오류로 알리며 성공한 것처럼 숨기지 않습니다.
-
-**맡은 일과 결과**
-
-- 확인할 동작: 필수 파일이나 Qt 등록 실패를 숨기지 않고 시작 오류로 전달하는지 확인합니다. [구현 이름 register_fonts](src/typography.py#L8)
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · [src/usage.py](src/usage.py)
-
-Codex의 읽기 전용 계정 조회로 사용 한도 응답을 읽습니다. 예를 들어 자료가 없다는 상태를 잔량 0으로 바꾸지 않습니다.
-
-**맡은 일과 결과**
-
-- 확인할 동작: 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. [구현 이름 number](src/usage.py#L16)
-
-- 확인할 동작: 계정에서 여러 사용 한도 구간을 보내 주면 그 공식 구간을 먼저 사용하는지 확인합니다. 버킷은 서로 다른 기간의 한도 묶음이라는 뜻인지 확인하는지 확인합니다. 기간이나 수치가 응답에 없으면 임의로 채우지 않습니다. [구현 이름 normalize_limits](src/usage.py#L35)
-
-- 확인할 동작: 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. [구현 이름 discover_codex](src/usage.py#L69)
-
-**선택값과 제한값**
-
-- 준비·대조할 값: 응답을 읽는 최대 바이트 수는 **1024 * 1024**인지 확인하는지 확인합니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식인지 확인하는지 확인합니다. [MAX_BYTES](src/usage.py#L12) 원래 선언을 함께 대조합니다: `정의=1024 * 1024`
-
-- 준비·대조할 값: 한국 표준시인 UTC보다 9시간 빠른 시간대인지 확인하는지 확인합니다. [KST](src/usage.py#L13) 원래 선언을 함께 대조합니다: `정의=timezone(timedelta(hours=9))`
-
-**받지 않는 입력과 실패 처리**
-
-- 오류를 만났을 때 대조: 객체가 아닌 응답 자료는 항목 이름과 값의 쌍으로 구성되어야 합니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/usage.py#L226)
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · [src/usage_frames.py](src/usage_frames.py)
-
-360개 프레임 팩의 지문·목록·해제 크기와 재생 시각을 확인합니다. 그림 읽기 오류와 계정 조회 오류를 나누고 닫힌 재생기를 다시 사용하지 않습니다.
-
-**맡은 일과 결과**
-
-- 확인할 동작: 조형 표시 오류를 호출자에게 전달하며 계정 조회 흐름과 분리하는지 확인합니다. [구현 이름 UsageAssetError](src/usage_frames.py#L27)
-
-- 확인할 동작: 시작 시 전체 무결성을 검사하고 해제된 화면용 이미지 객체(QImage)는 최대16장만 보존하는지 확인합니다. [구현 이름 UsageFrames](src/usage_frames.py#L50)
-
-- 확인할 동작: 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리하는지 확인합니다. [구현 이름 close_usage_frames](src/usage_frames.py#L183)
-
-- 확인할 동작: 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유하는지 확인합니다. [구현 이름 preflight_usage_frames](src/usage_frames.py#L194)
-
-- 확인할 동작: 공유 팩의 한 그림 한 장을 반환하며 계정 조회 상태에는 관여하지 않습니다. [구현 이름 get_usage_frame](src/usage_frames.py#L207)
-
-**선택값과 제한값**
-
-- 준비·대조할 값: 압축 묶음에 있어야 하는 그림의 정확한 장수는 **360**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_COUNT](src/usage_frames.py#L16) 원래 선언을 함께 대조합니다: `정의=360`
-
-- 준비·대조할 값: 그림 한 변의 픽셀 수는 **384**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_SIZE](src/usage_frames.py#L17) 원래 선언을 함께 대조합니다: `정의=384`
-
-- 준비·대조할 값: 초당 그림 수의 설정값는 **30**인지 확인하는지 확인합니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [FPS](src/usage_frames.py#L18) 원래 선언을 함께 대조합니다: `정의=30`
-
-- 준비·대조할 값: 한 재생 주기의 초 단위 길이는 **12**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [PERIOD_SECONDS](src/usage_frames.py#L19) 원래 선언을 함께 대조합니다: `정의=12`
-
-- 준비·대조할 값: 풀어 놓은 그림을 메모리에 보관하는 최대 장수는 **16**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [CACHE_LIMIT](src/usage_frames.py#L20) 원래 선언을 함께 대조합니다: `정의=16`
-
-- 준비·대조할 값: 압축 파일 자체를 읽을 수 있는 최대 바이트 수는 **128 * 1024 * 1024**인지 확인하는지 확인합니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식인지 확인하는지 확인합니다. [MAX_ARCHIVE_BYTES](src/usage_frames.py#L21) 원래 선언을 함께 대조합니다: `정의=128 * 1024 * 1024`
-
-- 준비·대조할 값: 개별 그림 한 장의 최대 바이트 수는 **1024 * 1024**인지 확인하는지 확인합니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식인지 확인하는지 확인합니다. [MAX_FRAME_BYTES](src/usage_frames.py#L22) 원래 선언을 함께 대조합니다: `정의=1024 * 1024`
-
-- 준비·대조할 값: 그림들을 풀어 읽은 크기 합계의 최대 바이트 수는 **256 * 1024 * 1024**인지 확인하는지 확인합니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식인지 확인하는지 확인합니다. [MAX_TOTAL_BYTES](src/usage_frames.py#L23) 원래 선언을 함께 대조합니다: `정의=256 * 1024 * 1024`
-
-- 준비·대조할 값: 자산 명세 문서의 최대 바이트 수는 **64 * 1024**인지 확인하는지 확인합니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식인지 확인하는지 확인합니다. [MAX_MANIFEST_BYTES](src/usage_frames.py#L24) 원래 선언을 함께 대조합니다: `정의=64 * 1024`
-
-**받지 않는 입력과 실패 처리**
-
-- 오류를 만났을 때 대조: 명세 문서에 같은 항목 이름이 두 번 나오면 어느 값을 믿어야 할지 모호하므로 거부하는지 확인합니다. [해당 검사](src/usage_frames.py#L44)
-
-- 오류를 만났을 때 대조: 대시보드 조형 자산 자산의 파일명·크기·지문을 적은 명세 문서 크기가 허용 범위를 벗어났습니다. 파일 크기는 이 모듈의 MAX_MANIFEST_BYTES 이하여야 합니다. 빈 파일도 받지 않습니다. [해당 검사](src/usage_frames.py#L69)
-
-- 오류를 만났을 때 대조: 대시보드 조형 자산 자산의 파일명·크기·지문을 적은 명세 문서는 객체여야 합니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 합니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/usage_frames.py#L75)
-
-- 오류를 만났을 때 대조: 파일 내용 지문은 문자열이며 64개의 16진수 문자로 이루어져야 합니다. 여기서 16진수 문자는 0~9와 a~f인지 확인하는지 확인합니다. 이 검사에서는 소문자만 허용하는지 확인합니다. 숫자·잘못된 길이·다른 문자는 지문으로 받지 않습니다. [해당 검사](src/usage_frames.py#L85)
-
-- 오류를 만났을 때 대조: 대시보드 조형 그림 한 장 ZIP 크기가 허용 범위를 벗어났습니다. 파일 크기는 이 모듈의 MAX_ARCHIVE_BYTES 이하여야 합니다. 빈 파일도 받지 않습니다. [해당 검사](src/usage_frames.py#L87)
-
-- 오류를 만났을 때 대조: 압축 파일의 전체 내용을 읽어 계산한 SHA-256 지문이 명세 지문과 같아야 합니다. 다른 파일이나 내용 변경을 감지하면 재생하지 않습니다. [해당 검사](src/usage_frames.py#L94)
-
-- 오류를 만났을 때 대조: 압축 묶음 안의 파일 수는 정확히 360개이고 파일 이름의 전체 목록도 예상 목록과 정확히 같아야 합니다. 이름 누락·추가·다른 이름은 같은 장수여도 거부하는지 확인합니다. [해당 검사](src/usage_frames.py#L100)
-
-- 오류를 만났을 때 대조: 압축을 풀어 읽는 개별 파일 크기를 모두 더한 값이 이 모듈의 MAX_TOTAL_BYTES 이하여야 합니다. 압축 파일 자체가 작아도 풀린 합계가 더 크면 거부하는지 확인합니다. [해당 검사](src/usage_frames.py#L102)
-
-- 오류를 만났을 때 대조: 검증 때와 현재 파일의 식별 정보가 달라지면 실행 중 자산 변경으로 처리하는지 확인합니다. 앱을 다시 시작해 검증해야 합니다. [해당 검사](src/usage_frames.py#L133)
-
-- 오류를 만났을 때 대조: 조형 재생 시각은 유한한 숫자여야 합니다. [해당 검사](src/usage_frames.py#L138)
-
-- 오류를 만났을 때 대조: 대시보드 조형 그림 한 장의 재생 시각이 유한한 숫자가 아닌지 확인하는지 확인합니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻하는지 확인합니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/usage_frames.py#L144)
-
-- 오류를 만났을 때 대조: 조형 재생기가 닫혔습니다. [해당 검사](src/usage_frames.py#L149)
-
-- 오류를 만났을 때 대조: 압축 묶음 안의 항목은 폴더가 아닌 파일이고 암호화되지 않아야 합니다. 허용한 무압축 또는 DEFLATE 압축이어야 하며 크기는 0보다 크고 개별 그림 상한 이하여야 합니다. 이 중 하나라도 맞지 않으면 거부하는지 확인합니다. [해당 검사](src/usage_frames.py#L105)
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · [src/usage_widgets.py](src/usage_widgets.py)
-
-계정 한도 화면에 날짜 조형을 표시하는 연결 부분인지 확인하는지 확인합니다. 계정 조회 수치 자체를 만드는 부분과 구분하는지 확인합니다.
-
-**맡은 일과 결과**
-
-- 확인할 동작: 사용 한도 화면에서만 날짜별 입체 이미지를 갱신하는지 확인합니다. [구현 이름 CalendarHero](src/usage_widgets.py#L9)
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · [src/visuals.py](src/visuals.py)
-
-원소 번호·계정 비율 라벨을 구별하고 작은 창에서 긴 이름 줄바꿈과 정보 영역 분리를 확인합니다. 캐시 재사용은 한 위젯의 전체 표시 입력이 같을 때만 가능합니다.
-
-**맡은 일과 결과**
-
-- 확인할 동작: X·Y·Z 순서로 회전하며 깊이 좌표를 보존하는지 확인합니다. [구현 이름 rotate_point](src/visuals.py#L12)
-
-- 확인할 동작: 모든 고리를 화면의 같은 축으로 돌리지 않고 각 고리가 가진 회전축을 중심으로 돌립니다. 로드리게스 식은 어느 방향의 축이든 그 축을 기준으로 입체 점을 돌리는 계산식인지 확인하는지 확인합니다. 예를 들어 기울어진 고리는 그 기울어진 축을 유지하며 돕니다. [구현 이름 axis_rotate](src/visuals.py#L40)
-
-- 확인할 동작: 제작 자산의 파일명·크기·지문을 적은 명세 문서와 일치하는 기하 검증용 메타인지 확인하는지 확인합니다. GUI 드로잉에는 쓰지 않습니다. [구현 이름 orbit_segments](src/visuals.py#L63)
-
-- 확인할 동작: 읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다. [구현 이름 status_label](src/visuals.py#L80)
-
-- 확인할 동작: 원자번호와 계정 퍼센트를 서로 다른 명시적 라벨로 구분하는지 확인합니다. [구현 이름 element_labels](src/visuals.py#L85)
-
-- 확인할 동작: 숫자와 채움에 같은 실제 비율을 쓰며 최소 채움 폭을 강제하지 않습니다. [구현 이름 usage_bar](src/visuals.py#L99)
-
-- 확인할 동작: 원소별 실제 제작 그림 한 장을 읽습니다. 이전 형상으로 대체하지 않습니다. [구현 이름 _frame_for_element](src/visuals.py#L111)
-
-- 확인할 동작: 달력 조형·날짜 도크·실제 잔량을 분리하고 명시한 원소 미리보기도 보존하는지 확인합니다. [구현 이름 draw_orbit](src/visuals.py#L117)
-
-- 확인할 동작: 이름을 화면 픽셀 크기로 줄 바꿈하고 조형·잔량 영역을 분리하는지 확인합니다. [구현 이름 desktop_widget_layout](src/visuals.py#L176)
-
-- 확인할 동작: 위젯의 조형과 글자를 별개 영역에 그려 작은 글자 축소를 막습니다. [구현 이름 draw_desktop_orbit](src/visuals.py#L212)
-
-- 확인할 동작: 움직이는 그래픽 장치(GPU) 이미지와 분리한 도크·시계·지역·기온·잔량을 그립니다. [구현 이름 _draw_desktop_information](src/visuals.py#L227)
-
-- 확인할 동작: 한 위젯의 완전 입력이 같을 때만 단일 투명 정보 레이어를 재사용하는지 확인합니다. [구현 이름 DesktopOverlayCache](src/visuals.py#L278)
-
-**선택값과 제한값**
-
-- 준비·대조할 값: 조형 움직임 한 주기의 길이는 **18**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MOTION_PERIOD](src/visuals.py#L27) 원래 선언을 함께 대조합니다: `정의=18`
-
-- 준비·대조할 값: 각 고리의 회전 횟수와 방향는 **(1, -2, 3)**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [RING_TURNS](src/visuals.py#L28) 원래 선언을 함께 대조합니다: `정의=(1, -2, 3)`
-
-- 준비·대조할 값: 각 고리 축이 향하는 방향 각도는 **(8., 128., 248.)**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [RING_AZIMUTHS](src/visuals.py#L29) 원래 선언을 함께 대조합니다: `정의=(8., 128., 248.)`
-
-- 준비·대조할 값: 각 고리 회전축의 기울기 각도는 **(42., 46., 49.)**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [RING_AXIS_TILTS](src/visuals.py#L30) 원래 선언을 함께 대조합니다: `정의=(42., 46., 49.)`
-
-- 준비·대조할 값: 각 고리 반지름는 **(45., 51., 57.)**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [RING_RADII](src/visuals.py#L35) 원래 선언을 함께 대조합니다: `정의=(45., 51., 57.)`
-
-- 준비·대조할 값: 각 고리의 초기 기울기와 방향을 라디안이라는 각도 단위로 묶은 값인지 확인하는지 확인합니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하는지 확인합니다. [BASE_ANGLES](src/visuals.py#L36) 원래 선언을 함께 대조합니다: `정의=tuple((math.radians(tilt), 0., math.radians(azimuth))                     for tilt, azimuth in zip((52., 58., 62.), RING_AZIMUTHS))`
-
-- 준비·대조할 값: 원자 그림을 배치할 사각형 영역인지 확인하는지 확인합니다. 왼쪽 위치 -48, 위쪽 위치 -74, 가로 길이 96, 세로 길이 96인지 확인하는지 확인합니다. QRectF는 이 네 값으로 사각형을 나타내는 형식이며 음수 위치는 기준점의 왼쪽·위쪽인지 확인하는지 확인합니다. [ATOM_RECT](src/visuals.py#L92) 원래 선언을 함께 대조합니다: `정의=QRectF(-48,-74,96,96)`
-
-- 준비·대조할 값: 날짜 등 도크 정보를 배치할 사각형 영역인지 확인하는지 확인합니다. 왼쪽 위치 -68, 위쪽 위치 25, 가로 길이 136, 세로 길이 27인지 확인하는지 확인합니다. QRectF는 이 네 값으로 사각형을 나타내는 형식이며 음수 위치는 기준점의 왼쪽·위쪽인지 확인하는지 확인합니다. [DOCK_RECT](src/visuals.py#L93) 원래 선언을 함께 대조합니다: `정의=QRectF(-68,25,136,27)`
-
-- 준비·대조할 값: 한도 정보를 배치할 사각형 영역인지 확인하는지 확인합니다. 왼쪽 위치 -68, 위쪽 위치 56, 가로 길이 136, 세로 길이 16인지 확인하는지 확인합니다. QRectF는 이 네 값으로 사각형을 나타내는 형식이며 음수 위치는 기준점의 왼쪽·위쪽인지 확인하는지 확인합니다. [USAGE_RECT](src/visuals.py#L94) 원래 선언을 함께 대조합니다: `정의=QRectF(-68,56,136,16)`
-
-- 준비·대조할 값: 한도 막대의 바탕 사각형 영역인지 확인하는지 확인합니다. 왼쪽 위치 -61, 위쪽 위치 62, 가로 길이 62, 세로 길이 4인지 확인하는지 확인합니다. QRectF는 이 네 값으로 사각형을 나타내는 형식이며 음수 위치는 기준점의 왼쪽·위쪽인지 확인하는지 확인합니다. [USAGE_TRACK_RECT](src/visuals.py#L95) 원래 선언을 함께 대조합니다: `정의=QRectF(-61,62,62,4)`
-
-- 준비·대조할 값: 기능 기호를 그릴 픽셀 크기는 **24**인지 확인하는지 확인합니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [SYMBOL_PIXELS](src/visuals.py#L96) 원래 선언을 함께 대조합니다: `정의=24`
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · [src/weather.py](src/weather.py)
-
-지역 이름을 정리하고 인터넷에서 날씨를 조회하는지 확인합니다. 예를 들어 자동 위치를 한국어 이름과 연결할 때 다른 국가의 동명 도시를 받아들이지 않도록 확인하는지 확인합니다.
-
-**맡은 일과 결과**
-
-- 확인할 동작: 검색 전 임시 표시에는 검증된 국내 사전 또는 실제 원문 지명을 사용하는지 확인합니다. [구현 이름 localized_region](src/weather.py#L27)
-
-- 확인할 동작: 동일 국가이면서 IP 추정 좌표에서30km 이내인 가장 가까운 검색 결과만 수락하는지 확인합니다. [구현 이름 select_geocoded_region](src/weather.py#L67)
-
-**선택값과 제한값**
-
-- 준비·대조할 값: US·JP·CN·GB·DE·FR·CA·AU·SG·TW를 미국·일본·중국·영국·독일·프랑스·캐나다·호주·싱가포르·대만으로 표시하는 사전인지 확인하는지 확인합니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하는지 확인합니다. [_COUNTRIES](src/weather.py#L23) 원래 선언을 함께 대조합니다: `정의={'US': '미국', 'JP': '일본', 'CN': '중국', 'GB': '영국', 'DE': '독일',               'FR': '프랑스', 'CA': '캐나다', 'AU': '호주', 'SG': '싱가포르', 'TW': '대만'}`
-
-**받지 않는 입력과 실패 처리**
-
-- 오류를 만났을 때 대조: 언어값은 한국어 ko 또는 영어 en만 허용하는지 확인합니다. 다른 언어 이름은 이 경로에서 거부하는지 확인합니다. [해당 검사](src/weather.py#L29)
-
-- 오류를 만났을 때 대조: 언어값은 한국어 ko 또는 영어 en만 허용하는지 확인합니다. 다른 언어 이름은 이 경로에서 거부하는지 확인합니다. [해당 검사](src/weather.py#L111)
-
-- 오류를 만났을 때 대조: 언어값은 한국어 ko 또는 영어 en만 허용하는지 확인합니다. 다른 언어 이름은 이 경로에서 거부하는지 확인합니다. [해당 검사](src/weather.py#L155)
-
-- 오류를 만났을 때 대조: 위도는 -90~90, 경도는 -180~180 범위의 유효한 숫자여야 합니다. 어느 좌표라도 잘못되면 그 위치로 날씨를 조회하지 않습니다. [해당 검사](src/weather.py#L249)
-
-- 오류를 만났을 때 대조: 기온은 -100~70 범위의 유효한 숫자만 받습니다. 범위 밖 값이나 잘못된 형식은 정상 기온으로 표시하지 않습니다. [해당 검사](src/weather.py#L321)
-
-- 오류를 만났을 때 대조: 날씨 제공 시각은 0 이상이고 현재 시각에서 300초를 더한 값 이하여야 합니다. 지나치게 미래이거나 잘못된 시각은 받지 않습니다. [해당 검사](src/weather.py#L325)
-
-- 오류를 만났을 때 대조: 응답 형식 자료는 항목 이름과 값의 쌍으로 구성되어야 합니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/weather.py#L232)
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · 처리 결과와 출력 읽기
-
-실행·대조 순서: 표시된 설정·요청과 실제로 관측한 실행은 다른 근거입니다. 예를 들어 모델을 지정했다는 기록만으로 서버에서 그 모델이 실행됐다고 결론내리지 않습니다.
-
-변경 전·후 모델과 추론 강도, 공개된 이유, 관측 시각과 근거 수준을 함께 읽습니다. 기록되지 않은 값은 미확인으로 남깁니다. 로컬 기록은 서버 모델 신원 증명이 아닙니다.
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · 제약과 문제 해결
-
-- 대조 항목 알림이 나타나지 않음: 감시하는 sessions 경로·새 한 줄에 기록 하나를 담는 JSONL 파일 기록·중복 실행 잠금·알림 설정을 확인합니다. 최초 기준선 읽기와 새 변경 감지는 다릅니다.
-- 대조 항목 자산 또는 글꼴 오류: 이 차수에서 참조하는 assets와 라이선스를 준비합니다. 소스 이력에는 과거 대용량 그림 한 장 자산이 없을 수 있습니다.
-- 대조 항목 이유 또는 이전값이 없음: 원문 기록에 해당 필드가 있는지 확인합니다. 누락된 동기를 추정해서 채우지 않습니다.
-
-### LEVEL 3 · 26차 추가 해설 · LEVEL 3 · 직전 자료와 전체 비교
-
-실행·대조 순서: diff는 두 자료에서 달라진 줄 전체를 보여 주는 파일입니다. +는 추가, -는 삭제를 뜻하며 주석·공백·줄바꿈도 변경에 포함됩니다. SHA-256은 파일 내용의 지문이고, 큰 그림·실행 파일은 크기와 지문으로 같음을 대조합니다. 지문이 있다는 것만으로 실행에 성공한 것은 아닙니다.
-
-25차에서 26차로 이어지는 실제 파일 비교입니다.
-
-[전체 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff)
-
-추가·수정·삭제, 주석·공백·개행과 바이너리 크기·해시는 연결된 원래 비교 자료에서 확인합니다.
-
-
-파일별 비교·크기·해시 자세히 보기
-
-텍스트는 엄격 UTF-8로 판정하며 [전체 텍스트 차이](직전차수.diff)에는 주석과 공백을 포함합니다. 파일별 바이트 수와 SHA-256 및 바이너리 여부는 [비교 명세](공개파일_비교.json)에 기록합니다.
-
-- **검증:** 이 폴더의 diff는 소스 바이트 비교입니다. 이후 로컬 원본 검증 자료를 대조해 작성한 [공개 검증 요약](../../docs/공개검증_26차.md)을 함께 제공합니다. 비공개 원본 로그는 공개하지 않으며 소스 비교 자체를 실행 결과로 해석하지 않습니다.
-
-- **수정** `src/app.py`: 이전 110155바이트, SHA-256 `bb0421143d08d6930d62f19252819ca26a91444466002c1a559b0dc87895ac3b`; 현재 116115바이트, SHA-256 `ccb4c5771ab1a01e416e81dcc3678629cd5a5a2613e50d5e7c4a3e4263da964f`.
-
-- **수정** `src/calendar_motion.py`: 이전 15710바이트, SHA-256 `fcd254efc4bf9e4a15eb9a1d75177323d34763716cea207e2bd95348b93463a0`; 현재 16207바이트, SHA-256 `ddb3e8afdf5f46f7bb8f997e75c39234550f28bade6223e19f81e37579765791`.
-
-- **수정** `src/frame_pacing.py`: 이전 2625바이트, SHA-256 `6ca862a2eaa6707665f19514315de584424ab66017eff8f7898e3a4f6c6a9cb5`; 현재 3692바이트, SHA-256 `09cd3768e4baa326bb0e08e4d7fd8130f05526024686b88f8ef2f9b0366b1bb1`.
-
-- **수정** `src/i18n.py`: 이전 19942바이트, SHA-256 `2dbea990824fb7107019228d5ecf6a75d7ce1a7062d0984f2a00908c7e26cec1`; 현재 20538바이트, SHA-256 `091208c023ccecdefd7957dcc3bacd8acc5c44324dd587ac36986ac3dc81106a`.
-
-- **추가** `src/motion_label.py`: 이전 없음; 현재 2380바이트, SHA-256 `f76a05b63a676282ff4816c25ce0d7bc4aa01396889559c76021d5f858a0c60d`.
-
-- **수정** `src/usage_widgets.py`: 이전 2471바이트, SHA-256 `a5e8de93da797f5f269551061d30878d8c0f86cae8824e89ba052bd6b28aeee2`; 현재 2516바이트, SHA-256 `9ad1be24d27cbf072db6892a2bc3c431304002f90f9a9d46d59494a91b74814c`.
-
-- **수정** `src/visuals.py`: 이전 13297바이트, SHA-256 `d4bb20ebbfa421b5f05a482aedbb0b2202b7f7ffc2e6f7e22916ace3d0d72e1d`; 현재 15915바이트, SHA-256 `13a8d20b188ac2e82bc57771263dd6c2bef7cb3ab96ef259d51fd73fa380a57a`.
-
-[실행 소스 전체 Git 비교](직전차수.diff)와 [실제 바이트 명세](공개파일_비교.json)는 Python뿐 아니라 존재하는 보조 PowerShell과 의존성 목록을 포함합니다. `git -c core.autocrlf=false apply --reverse --binary -p1`로 현재 소스 사본에서 직전 소스의 파일 부재·신규·삭제 상태까지 복원해 원문 바이트를 대조했습니다. 부가 자료는 이 소스 비교에 섞지 않고 위 명세로 구분합니다.
-
-
-
-[프로젝트](../../README.md) · [전체 차수](../../docs/REVISION_INDEX.md) · [원본 자료](.) · [← 이전: 25차](../25/README.md#reading-level-3) · [다음: 27차 →](../27/README.md#reading-level-3)
+[level-326차-추가-해설level-3실제-자료-구성](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_02.md#level-326차-추가-해설level-3실제-자료-구성)
 
 <a id="reading-level-4"></a>
-## LEVEL 4 - Advanced
 
-### LEVEL 4 · 설계 의도와 검토 경계
+[reading-level-4](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#reading-level-4)
 
-상세창 슬라이더와 위젯 메뉴에서 회전 속도를 조절하고 저장합니다. 모션 배율과 실제 시계·날짜·날씨·계정 한도 갱신은 별개입니다.
+<a id="level-326차-추가-해설level-3주요-모듈과-코드-읽기"></a>
 
-상세창 슬라이더와 위젯 메뉴에서 회전 속도를 조절하고 저장합니다. 모션 배율과 실제 시계·날짜·날씨·계정 한도 갱신은 별개입니다.
+[level-326차-추가-해설level-3주요-모듈과-코드-읽기](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3주요-모듈과-코드-읽기)
 
-로컬 세션 기록에서 모델·추론 강도의 변경과 명시된 배정을 구분합니다. 감시기는 외부 통신 없이 로컬 자료를 읽습니다.
+<a id="level-326차-추가-해설level-3설치-환경과-실행사용법"></a>
 
-공개 협업 호출과 소유자가 확인된 native 활동을 연결합니다.
+[level-326차-추가-해설level-3설치-환경과-실행사용법](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3설치-환경과-실행사용법)
 
-검증된 금속 원자 프레임을 추출 없이 읽는 제한 메모리 재생기입니다.
+<a id="level-326차-추가-해설level-3사용하는-사람에게-달라진-점"></a>
 
-같은 실제3D 자산을 공유하는 정적 마크와 가시성 기반 내부 모션입니다.
+[level-326차-추가-해설level-3사용하는-사람에게-달라진-점](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3사용하는-사람에게-달라진-점)
 
-2026~2099년의 날짜별 조형 규칙입니다. 외부 데이터와 계정 정보를 사용하지 않습니다.
+<a id="level-326차-추가-해설level-3이-보관-본의-의존성-목록"></a>
 
-실제 대상 이름과 조형 특징을 연결하는 편집 사전입니다.
+[level-326차-추가-해설level-3이-보관-본의-의존성-목록](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3이-보관-본의-의존성-목록)
 
-한 GPU 작업 스레드와 최대 네 이미지로 날짜별 모션을 공유합니다.
+<a id="level-326차-추가-해설level-3소스에서-제공하는-cli-옵션"></a>
 
-현재 날짜의 실제 메시를 소유 스레드의 오프스크린 GPU에서 렌더합니다.
+[level-326차-추가-해설level-3소스에서-제공하는-cli-옵션](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3소스에서-제공하는-cli-옵션)
 
-한국 날짜의1~31일에 대응하는 원소와 디자인 영감 팔레트입니다.
+<a id="level-326차-추가-해설level-3srcactivitypysrcactivitypy"></a>
 
-오늘 원소 하나의 압축 프레임만 여는 제한 메모리 재생기입니다.
+[level-326차-추가-해설level-3srcactivitypysrcactivitypy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3srcactivitypysrcactivitypy)
 
-원본3D 자산을 변경하지 않는 제한 메모리 Qt 색 합성입니다.
+<a id="level-326차-추가-해설level-3srcapppysrcapppy"></a>
 
-프로세스 전용 고해상도 대기로 전역 타이머 설정 없이 프레임을 조율합니다.
+[level-326차-추가-해설level-3srcapppysrcapppy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3srcapppysrcapppy)
 
-앱이 소유한 문구만 번역하며 이벤트 원문은 호출자가 그대로 보존합니다.
+<a id="level-326차-추가-해설level-3srcatom_framespysrcatom_framespy"></a>
 
-Codex App Server의 `account/rateLimits/read`를 읽기 전용으로 조회합니다. 표시값은 남은 토큰 개수가 아니라 계정 사용 한도 비율입니다.
+[level-326차-추가-해설level-3srcatom_framespysrcatom_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3srcatom_framespysrcatom_framespy)
 
-지역·기온 조회 모듈은 네트워크를 사용합니다. 로컬 감시기의 외부 통신 여부와 앱 전체의 날씨 조회를 구분합니다.
+<a id="level-326차-추가-해설level-3srcbrandpysrcbrandpy"></a>
 
-### LEVEL 4 · 이 차수 구현의 실제 근거
+[level-326차-추가-해설level-3srcbrandpysrcbrandpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3srcbrandpysrcbrandpy)
 
-| 파일 | 역할·구성 |
-| --- | --- |
-| [src/app.py](src/app.py) | Codex Orbit: 독립 회전 위젯과 로컬 변경 기록·사용 한도. |
-| [src/notifier.py](src/notifier.py) | 현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다. |
-| [src/activity.py](src/activity.py) | 공개 협업 호출과 소유자가 확인된 native 활동을 연결합니다. |
-| [src/atom_frames.py](src/atom_frames.py) | 검증된 금속 원자 프레임을 추출 없이 읽는 제한 메모리 재생기입니다. |
-| [src/brand.py](src/brand.py) | 같은 실제3D 자산을 공유하는 정적 마크와 가시성 기반 내부 모션입니다. |
-| [src/calendar_art.py](src/calendar_art.py) | 2026~2099년의 날짜별 조형 규칙입니다. 외부 데이터와 계정 정보를 사용하지 않습니다. |
-| [src/calendar_catalog.py](src/calendar_catalog.py) | 실제 대상 이름과 조형 특징을 연결하는 편집 사전입니다. |
-| [src/calendar_motion.py](src/calendar_motion.py) | 한 GPU 작업 스레드와 최대 네 이미지로 날짜별 모션을 공유합니다. |
-| [src/calendar_renderer.py](src/calendar_renderer.py) | 현재 날짜의 실제 메시를 소유 스레드의 오프스크린 GPU에서 렌더합니다. |
+<a id="level-326차-추가-해설level-3srccalendar_artpysrccalendar_artpy"></a>
 
-| 단계 | 내용 |
-| --- | --- |
-| 입력 | 현재 사용자 Codex의 로컬 JSONL과 이 차수의 앱 설정 |
-| 처리 | 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시 |
-| 출력 | 알림·변경 이력·로컬 진단 기록 |
+[level-326차-추가-해설level-3srccalendar_artpysrccalendar_artpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3srccalendar_artpysrccalendar_artpy)
 
+<a id="level-326차-추가-해설level-3srccalendar_catalogpysrccalendar_catalogpy"></a>
 
-### LEVEL 4 · 조건·변경·결과를 함께 검토하기
+[level-326차-추가-해설level-3srccalendar_catalogpysrccalendar_catalogpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3srccalendar_catalogpysrccalendar_catalogpy)
 
-Windows와 해당 폴더의 requirements.txt를 기준으로 Python 의존성을 준비합니다. history는 공개 소스 보존본이며 현재 루트 assets가 과거 모든 차수의 자산과 호환된다는 뜻은 아닙니다. 날짜별 실제 메시 렌더에는 ModernGL과 OpenGL 3.3을 지원하는 그래픽 드라이버가 필요합니다.
+<a id="level-326차-추가-해설level-3srccalendar_motionpysrccalendar_motionpy"></a>
 
-자산과 의존성을 준비한 이 차수 폴더에서 `python src/app.py`를 실행합니다. history 소스만으로 과거 배포 EXE와 동일한 화면·자산이 모두 복원되지는 않습니다.
+[level-326차-추가-해설level-3srccalendar_motionpysrccalendar_motionpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3srccalendar_motionpysrccalendar_motionpy)
 
-#### LEVEL 4 · 이 차수 원래 안내의 세부 조건
+<a id="level-326차-추가-해설level-3srccalendar_rendererpysrccalendar_rendererpy"></a>
 
-#### LEVEL 4 · 사용하는 사람에게 달라진 점
+[level-326차-추가-해설level-3srccalendar_rendererpysrccalendar_rendererpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3srccalendar_rendererpysrccalendar_rendererpy)
 
-상세창 슬라이더와 위젯 우클릭 메뉴에서 회전 속도를 0.25~3배로 선택하고 1배로 복원할 수 있습니다. 선택값은 저장되어 다음 실행에도 적용됩니다. 속도를 바꿔도 조형의 회전 각도를 이어서 재생하며 날짜·시계·기온·계정 조회 간격은 그대로입니다. 저장이 실패하면 이전 배율로 복원하고 선택한 한국어·영어로 오류를 안내합니다. 정적 정보와 움직이는 조형을 나누어 갱신하는 변경도 포함합니다.
+<a id="level-326차-추가-해설level-3srccorepysrccorepy"></a>
 
-[26차 검증 요약](../../docs/%EA%B3%B5%EA%B0%9C%EA%B2%80%EC%A6%9D_26%EC%B0%A8.md)에서 개발 전체·공개본·중앙 소스 검사와 배포 실행 결과를 구분합니다. 고정 240fps는 달성하지 못했으며 추가 달성 작업은 제외됐습니다. 26차 변경 기록의 실측 생성 약 227~230fps, 고유 Qt 그리기 약 214~229fps를 모니터 표시율로 해석하지 않습니다.
+[level-326차-추가-해설level-3srccorepysrccorepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3srccorepysrccorepy)
 
-#### LEVEL 4 · 이 보관본의 의존성 목록
+<a id="level-326차-추가-해설level-3srcelement_framespysrcelement_framespy"></a>
 
-[requirements.txt](requirements.txt)의 실제 항목입니다. 외부 실행 도구와 GPU 드라이버는 별도로 준비합니다.
+[level-326차-추가-해설level-3srcelement_framespysrcelement_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3srcelement_framespysrcelement_framespy)
 
-```text
-PySide6-Essentials==6.12.0
-PyInstaller==6.22.3
-moderngl==5.13.0
-glcontext==3.1.0
-numpy==2.5.4
-Pillow==13.0.0
-```
+<a id="level-326차-추가-해설level-3srcelement_visualspysrcelement_visualspy"></a>
 
-#### LEVEL 4 · 소스에서 제공하는 CLI 옵션
+[level-326차-추가-해설level-3srcelement_visualspysrcelement_visualspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3srcelement_visualspysrcelement_visualspy)
 
-**진입 소스:** [app.py](src/app.py)
+<a id="level-326차-추가-해설level-3srcelementspysrcelementspy"></a>
 
-**정의된 옵션 이름:** `--data-dir`, `--sessions`, `--smoke-test`, `--usage-smoke-test`, `--smoke-report`, `--show-details`, `--show-event`
+[level-326차-추가-해설level-3srcelementspysrcelementspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3srcelementspysrcelementspy)
 
-**진입 소스:** [notifier.py](src/notifier.py)
+<a id="level-326차-추가-해설level-3srcframe_pacingpysrcframe_pacingpy"></a>
 
-**정의된 옵션 이름:** `--sessions`, `--work`
+[level-326차-추가-해설level-3srcframe_pacingpysrcframe_pacingpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3srcframe_pacingpysrcframe_pacingpy)
 
+<a id="level-326차-추가-해설level-3srci18npysrci18npy"></a>
 
-각 옵션의 기본값·필수값·부작용은 해당 main과 인자 정의를 함께 확인합니다.
+[level-326차-추가-해설level-3srci18npysrci18npy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3srci18npysrci18npy)
 
+<a id="level-326차-추가-해설level-3srcmotion_labelpysrcmotion_labelpy"></a>
 
-<details>
-<summary>함수 역할·기본값·입력 거부 조건의 세부 참조</summary>
+[level-326차-추가-해설level-3srcmotion_labelpysrcmotion_labelpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3srcmotion_labelpysrcmotion_labelpy)
 
-다음 항목은 이 자료의 Python 소스에 명시된 선언입니다. 전체 분기와 호출 순서는 각 행의 코드 위치에서 이어서 읽을 수 있습니다.
+<a id="level-326차-추가-해설level-3srcnotifierpysrcnotifierpy"></a>
 
-#### LEVEL 4 · [src/activity.py](src/activity.py)
+[level-326차-추가-해설level-3srcnotifierpysrcnotifierpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3srcnotifierpysrcnotifierpy)
 
-| 정의 | 역할 |
-| --- | --- |
-| [`safe_public_text`](src/activity.py#L15) | 보호문·비공개 표식·긴 인코딩 덩어리는 해석하거나 노출하지 않습니다. |
-| [`configuration`](src/activity.py#L76) | 원본 시각이 있는 자기 관측만 전역 256개로 제한해 보존합니다. |
-| [`defer`](src/activity.py#L160) | 원본 본문 없이 검증에 필요한 native 필드만 전역 32개까지 기다립니다. |
-| [`observe`](src/activity.py#L273) | 그 활동의 첫 관측만 보강하며 이후 모델 변경은 별도 감지를 유지합니다. |
+<a id="level-326차-추가-해설level-3srcthemepysrcthemepy"></a>
 
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`MAX_ACTIVITY_EVENTS`](src/activity.py#L7) | `정의=128` |
-| [`MAX_ACTIVITY_SEEN`](src/activity.py#L8) | `정의=8192` |
-| [`MAX_ACTIVITY_CALLS`](src/activity.py#L9) | `정의=32` |
-| [`MAX_PUBLIC_CALLS`](src/activity.py#L10) | `정의=128` |
-| [`MAX_DEFERRED_ACTIVITIES`](src/activity.py#L11) | `정의=32` |
-| [`MAX_CONFIGURATION_SNAPSHOTS`](src/activity.py#L12) | `정의=256` |
+[level-326차-추가-해설level-3srcthemepysrcthemepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3srcthemepysrcthemepy)
 
-**거부 조건:** [`not isinstance(self.data['calls'], dict) or not isinstance(self.data['deferred'], list)`](src/activity.py#L66)
+<a id="level-326차-추가-해설level-3srctypographypysrctypographypy"></a>
 
-**오류 메시지:** 활동 호출/지연 상태 구조 오류입니다. 원본을 자동 초기화하지 않습니다.
+[level-326차-추가-해설level-3srctypographypysrctypographypy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3srctypographypysrctypographypy)
 
-**거부 조건:** [`not isinstance(self.data['configurations'], list)`](src/activity.py#L68)
+<a id="level-326차-추가-해설level-3srcusagepysrcusagepy"></a>
 
-**오류 메시지:** 활동 관측 시각 구조 오류입니다. 원본을 자동 초기화하지 않습니다.
+[level-326차-추가-해설level-3srcusagepysrcusagepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3srcusagepysrcusagepy)
 
+<a id="level-326차-추가-해설level-3srcusage_framespysrcusage_framespy"></a>
 
-#### LEVEL 4 · [src/app.py](src/app.py)
+[level-326차-추가-해설level-3srcusage_framespysrcusage_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3srcusage_framespysrcusage_framespy)
 
-| 정의 | 역할 |
-| --- | --- |
-| [`validated_motion_speed`](src/app.py#L42) | 설정과 UI의 속도는 유한한 실제 숫자 범위로 제한합니다. |
-| [`_application_gui_root`](src/app.py#L49) | Python 순환 수집과 무관하게 살아 있는 GUI 소유자를 앱에 보관합니다. |
-| [`operation_record`](src/app.py#L67) | 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다. |
-| [`previous_field`](src/app.py#L106) | 이전 기록 전체 부재와 개별 필드 미기록을 구분하고 관측값만 표시합니다. |
-| [`short_reason`](src/app.py#L130) | 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. |
-| [`public_text`](src/app.py#L182) | 공개 문장만 표시하며 보호된 도구 페이로드를 해석하거나 노출하지 않습니다. |
-| [`selection_explanation`](src/app.py#L203) | 공개된 작업 목적을 모델 선택 이유로 바꾸어 말하지 않습니다. |
-| [`NoticeDelivery`](src/app.py#L309) | Qt 예약 호출을 포함한 미처리 전달 수를 스레드 사이에서 제한합니다. |
-| [`NoticeTicket`](src/app.py#L334) | 중복 반환과 종료 뒤 도착한 신호도 같은 한도를 다시 늘리지 않습니다. |
-| [`DiagnosticLabel`](src/app.py#L918) | 오류가 있을 때 변경 기록 안에 원문을 보여 주는 읽기 전용 라벨입니다. |
-| [`QuitGuard`](src/app.py#L1394) | 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다. |
-| [`usage_smoke_state`](src/app.py#L1956) | 지연된 신호 인자 대신 최신 스냅샷과 현재 레이아웃의 실제 표시를 대조합니다. |
-| [`motion_smoke_stage`](src/app.py#L1980) | 실제 GPU 렌더 수를 기준으로 준비·비교 단계를 판정합니다. |
-| [`_content_fit_signature`](src/app.py#L759) | 말줄임 전 제목과 실제 높이에 영향을 주는 표시 조건만 비교합니다. |
-| [`promote_first_observation`](src/app.py#L1363) | 실제 첫 관측 한 행만 안정된 활동 ID로 보강하며 다른 변경은 보존합니다. |
-| [`change_motion_speed`](src/app.py#L1484) | 사용자 조작의 실패는 실제 속도를 복원한 뒤 상세창에서 안내합니다. |
-| [`_finish_closed_gui`](src/app.py#L1948) | 외부 QThread 참조를 무효화하지 않고 종료된 감시기와 GUI 소유자를 해제합니다. |
+<a id="level-326차-추가-해설level-3srcusage_widgetspysrcusage_widgetspy"></a>
 
-**설정·옵션:** [`--data-dir`](src/app.py#L1996)
+[level-326차-추가-해설level-3srcusage_widgetspysrcusage_widgetspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3srcusage_widgetspysrcusage_widgetspy)
 
-**코드의 선언:** `type=Path; default=Path(os.environ.get('LOCALAPPDATA', Path.home())) / 'CodexOrbit'`
+<a id="level-326차-추가-해설level-3srcvisualspysrcvisualspy"></a>
 
-**설정·옵션:** [`--sessions`](src/app.py#L1997)
+[level-326차-추가-해설level-3srcvisualspysrcvisualspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3srcvisualspysrcvisualspy)
 
-**코드의 선언:** `type=Path`
+<a id="level-326차-추가-해설level-3srcweatherpysrcweatherpy"></a>
 
-**설정·옵션:** [`--smoke-test`](src/app.py#L1998)
+[level-326차-추가-해설level-3srcweatherpysrcweatherpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3srcweatherpysrcweatherpy)
 
-**코드의 선언:** `action='store_true'`
+<a id="level-326차-추가-해설level-3처리-결과와-출력-읽기"></a>
 
-**설정·옵션:** [`--usage-smoke-test`](src/app.py#L1999)
+[level-326차-추가-해설level-3처리-결과와-출력-읽기](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3처리-결과와-출력-읽기)
 
-**코드의 선언:** `action='store_true'; help='실제 계정 잔량과 표시를 조회한 뒤 종료'`
+<a id="level-326차-추가-해설level-3제약과-문제-해결"></a>
 
-**설정·옵션:** [`--smoke-report`](src/app.py#L2000)
+[level-326차-추가-해설level-3제약과-문제-해결](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3제약과-문제-해결)
 
-**코드의 선언:** `type=Path`
+<a id="level-326차-추가-해설level-3직전-자료와-전체-비교"></a>
 
-**설정·옵션:** [`--show-details`](src/app.py#L2001)
+[level-326차-추가-해설level-3직전-자료와-전체-비교](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-326차-추가-해설level-3직전-자료와-전체-비교)
 
-**코드의 선언:** `action='store_true'`
+<a id="level-4---advanced"></a>
 
-**설정·옵션:** [`--show-event`](src/app.py#L2002)
+[level-4---advanced](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4---advanced)
 
-**코드의 선언:** `help='기존 이력의 이벤트 ID 또는 대상 ID를 다시 표시'`
+<a id="level-4--설계-의도와-검토-경계"></a>
 
-**설정·옵션:** [`EMPTY_HISTORY_GUIDANCE`](src/app.py#L39)
+[level-4--설계-의도와-검토-경계](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--설계-의도와-검토-경계)
 
-**코드의 선언:** `정의='변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'`
+<a id="level-4--이-차수-구현의-실제-근거"></a>
 
-**설정·옵션:** [`ROLE_LABELS`](src/app.py#L116)
+[level-4--이-차수-구현의-실제-근거](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--이-차수-구현의-실제-근거)
 
-**코드의 선언:** `정의={'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}`
+<a id="level-4--조건변경결과를-함께-검토하기"></a>
 
+[level-4--조건변경결과를-함께-검토하기](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--조건변경결과를-함께-검토하기)
 
-**거부 조건:** [`application is None or QThread.currentThread() != application.thread()`](src/app.py#L52)
+<a id="level-4--이-차수-원래-안내의-세부-조건"></a>
 
-**오류 메시지:** GUI 소유자는 QApplication의 메인 스레드에서 생성해야 합니다.
+[level-4--이-차수-원래-안내의-세부-조건](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--이-차수-원래-안내의-세부-조건)
 
-**거부 조건:** [`QThread.currentThread() != application.thread()`](src/app.py#L1523)
+<a id="level-4--사용하는-사람에게-달라진-점"></a>
 
-**오류 메시지:** 언어는 GUI 메인 스레드에서만 변경할 수 있습니다.
+[level-4--사용하는-사람에게-달라진-점](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--사용하는-사람에게-달라진-점)
 
-**거부 조건:** [`not lock.tryLock(100)`](src/app.py#L2024)
+<a id="level-4--이-보관본의-의존성-목록"></a>
 
-**오류 메시지:** 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다.
+[level-4--이-보관본의-의존성-목록](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--이-보관본의-의존성-목록)
 
-**거부 조건:** [`not isinstance(value, dict)`](src/app.py#L295)
+<a id="level-4--소스에서-제공하는-cli-옵션"></a>
 
-**오류 메시지:** 앱 설정은 JSON 객체여야 합니다.
+[level-4--소스에서-제공하는-cli-옵션](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--소스에서-제공하는-cli-옵션)
 
-**거부 조건:** [`self.closed or len(self.tickets) &gt;= MAX_PENDING`](src/app.py#L318)
+<a id="level-4--srcactivitypysrcactivitypy"></a>
 
-**오류 메시지:** 알림 전달 대기 한도 또는 종료 상태: 다음 감시 주기에 재시도합니다.
+[level-4--srcactivitypysrcactivitypy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--srcactivitypysrcactivitypy)
 
+<a id="level-4--srcapppysrcapppy"></a>
 
-#### LEVEL 4 · [src/atom_frames.py](src/atom_frames.py)
+[level-4--srcapppysrcapppy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--srcapppysrcapppy)
 
-| 정의 | 역할 |
-| --- | --- |
-| [`AtomAssetError`](src/atom_frames.py#L27) | 필수 시각 자산 오류를 시작 실패 경로에 전달합니다. |
-| [`AtomFrames`](src/atom_frames.py#L50) | 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대24장만 보존합니다. |
-| [`close_runtime_frames`](src/atom_frames.py#L172) | 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
-| [`get_atom_frames`](src/atom_frames.py#L183) | 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
+<a id="level-4--srcatom_framespysrcatom_framespy"></a>
 
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FRAME_COUNT`](src/atom_frames.py#L16) | `정의=540` |
-| [`FRAME_SIZE`](src/atom_frames.py#L17) | `정의=296` |
-| [`FPS`](src/atom_frames.py#L18) | `정의=30` |
-| [`PERIOD_SECONDS`](src/atom_frames.py#L19) | `정의=18` |
-| [`CACHE_LIMIT`](src/atom_frames.py#L20) | `정의=24` |
-| [`MAX_ARCHIVE_BYTES`](src/atom_frames.py#L21) | `정의=128 * 1024 * 1024` |
-| [`MAX_FRAME_BYTES`](src/atom_frames.py#L22) | `정의=1024 * 1024` |
-| [`MAX_TOTAL_BYTES`](src/atom_frames.py#L23) | `정의=256 * 1024 * 1024` |
-| [`MAX_MANIFEST_BYTES`](src/atom_frames.py#L24) | `정의=64 * 1024` |
+[level-4--srcatom_framespysrcatom_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--srcatom_framespysrcatom_framespy)
 
-**거부 조건:** [`key in value`](src/atom_frames.py#L44)
+<a id="level-4--srcbrandpysrcbrandpy"></a>
 
-**오류 메시지:** 원자 자산 매니페스트에 중복 필드가 있습니다.
+[level-4--srcbrandpysrcbrandpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--srcbrandpysrcbrandpy)
 
-**거부 조건:** [`not 0 &lt; manifest_path.stat().st_size &lt;= MAX_MANIFEST_BYTES`](src/atom_frames.py#L69)
+<a id="level-4--srccalendar_artpysrccalendar_artpy"></a>
 
-**오류 메시지:** 원자 자산 매니페스트 크기가 허용 범위를 벗어났습니다.
+[level-4--srccalendar_artpysrccalendar_artpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--srccalendar_artpysrccalendar_artpy)
 
-**거부 조건:** [`not isinstance(self.manifest, dict)`](src/atom_frames.py#L75)
+<a id="level-4--srccalendar_catalogpysrccalendar_catalogpy"></a>
 
-**오류 메시지:** 원자 자산 매니페스트는 객체여야 합니다.
+[level-4--srccalendar_catalogpysrccalendar_catalogpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--srccalendar_catalogpysrccalendar_catalogpy)
 
-**거부 조건:** [`not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None`](src/atom_frames.py#L85)
+<a id="level-4--srccalendar_motionpysrccalendar_motionpy"></a>
 
-**오류 메시지:** 원자 프레임 ZIP의 SHA256 형식이 잘못됐습니다.
+[level-4--srccalendar_motionpysrccalendar_motionpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--srccalendar_motionpysrccalendar_motionpy)
 
-**거부 조건:** [`not 0 &lt; archive_path.stat().st_size &lt;= MAX_ARCHIVE_BYTES`](src/atom_frames.py#L87)
+<a id="level-4--srccalendar_rendererpysrccalendar_rendererpy"></a>
 
-**오류 메시지:** 원자 프레임 ZIP 크기가 허용 범위를 벗어났습니다.
+[level-4--srccalendar_rendererpysrccalendar_rendererpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--srccalendar_rendererpysrccalendar_rendererpy)
 
-**거부 조건:** [`hasher.hexdigest() != digest`](src/atom_frames.py#L94)
+<a id="level-4--srccorepysrccorepy"></a>
 
-**오류 메시지:** 원자 프레임 ZIP의 SHA256이 일치하지 않습니다.
+[level-4--srccorepysrccorepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--srccorepysrccorepy)
 
-**거부 조건:** [`len(members) != FRAME_COUNT or {item.filename for item in members} != names`](src/atom_frames.py#L100)
+<a id="level-4--srcelement_framespysrcelement_framespy"></a>
 
-**오류 메시지:** 원자 프레임 ZIP의 정확한540개 이름·목록이 일치하지 않습니다.
+[level-4--srcelement_framespysrcelement_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--srcelement_framespysrcelement_framespy)
 
-**거부 조건:** [`sum(item.file_size for item in members) &gt; MAX_TOTAL_BYTES`](src/atom_frames.py#L102)
+<a id="level-4--srcelement_visualspysrcelement_visualspy"></a>
 
-**오류 메시지:** 원자 프레임 전체 읽기 상한을 초과했습니다.
+[level-4--srcelement_visualspysrcelement_visualspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--srcelement_visualspysrcelement_visualspy)
 
-**거부 조건:** [`actual != self.identities`](src/atom_frames.py#L133)
+<a id="level-4--srcelementspysrcelementspy"></a>
 
-**오류 메시지:** 검증 뒤 원자 자산이 변경됐습니다. 앱을 다시 실행해 주세요.
+[level-4--srcelementspysrcelementspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--srcelementspysrcelementspy)
 
-**거부 조건:** [`isinstance(elapsed, bool) or not isinstance(elapsed, (int, float)) or not math.isfinite(elapsed)`](src/atom_frames.py#L138)
+<a id="level-4--srcframe_pacingpysrcframe_pacingpy"></a>
 
-**오류 메시지:** 원자 프레임의 재생 시각이 유한한 숫자가 아닙니다.
+[level-4--srcframe_pacingpysrcframe_pacingpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--srcframe_pacingpysrcframe_pacingpy)
 
-**거부 조건:** [`item.is_dir() or item.flag_bits & 1 or item.compress_type not in                     (zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED) or                     not 0 &lt; item.file_size &lt;= MAX_FRAME_BYTES`](src/atom_frames.py#L105)
+<a id="level-4--srci18npysrci18npy"></a>
 
-**오류 메시지:** 원자 프레임 멤버의 형식·크기가 허용 범위를 벗어났습니다.
+[level-4--srci18npysrci18npy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--srci18npysrci18npy)
 
+<a id="level-4--srcmotion_labelpysrcmotion_labelpy"></a>
 
-#### LEVEL 4 · [src/brand.py](src/brand.py)
+[level-4--srcmotion_labelpysrcmotion_labelpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--srcmotion_labelpysrcmotion_labelpy)
 
-| 정의 | 역할 |
-| --- | --- |
-| [`motion_brand_source`](src/brand.py#L32) | 원소 프레임의 실제 크기에 비례해 여백만 줄이며 영역 밖을 복사하지 않습니다. |
-| [`BrandClock`](src/brand.py#L40) | 보이는 로고만 단일 시계에서 같은 프레임으로 갱신합니다. |
-| [`AnimatedBrand`](src/brand.py#L106) | 닫힘·숨김 이벤트에 맞춰 재생 구독을 끝내는 실제3D 로고입니다. |
-| [`validate_symbols`](src/brand.py#L137) | 실제 메시에서 제작한 고정 기호 일곱 개를 창 생성 전에 검증합니다. |
-| [`symbol_image`](src/brand.py#L181) | 실제 메시 렌더만 축소하고 새로운 도형이나 글자를 덧그리지 않습니다. |
-| [`with_symbol`](src/brand.py#L209) | 원문 QLabel을 유지하며 기능 의미를 읽기 쉬운 기호로 보조합니다. |
+<a id="level-4--srcnotifierpysrcnotifierpy"></a>
 
-**설정·옵션:** [`SYMBOL_NAMES`](src/brand.py#L133)
+[level-4--srcnotifierpysrcnotifierpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--srcnotifierpysrcnotifierpy)
 
-**코드의 선언:** `정의=('model', 'reasoning', 'time', 'reason', 'usage', 'refresh', 'history')`
+<a id="level-4--srcthemepysrcthemepy"></a>
 
+[level-4--srcthemepysrcthemepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--srcthemepysrcthemepy)
 
-**거부 조건:** [`not 1 &lt;= size &lt;= 512`](src/brand.py#L22)
+<a id="level-4--srctypographypysrctypographypy"></a>
 
-**오류 메시지:** 브랜드 이미지 크기는1~512px여야 합니다.
+[level-4--srctypographypysrctypographypy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--srctypographypysrctypographypy)
 
-**거부 조건:** [`name not in SYMBOL_NAMES or not 1 &lt;= size &lt;= 96`](src/brand.py#L184)
+<a id="level-4--srcusagepysrcusagepy"></a>
 
-**오류 메시지:** 3D 기능 기호의 종류나 크기가 올바르지 않습니다.
+[level-4--srcusagepysrcusagepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--srcusagepysrcusagepy)
 
-**거부 조건:** [`not 0 &lt; path.stat().st_size &lt;= 65536`](src/brand.py#L142)
+<a id="level-4--srcusage_framespysrcusage_framespy"></a>
 
-**오류 메시지:** 3D 기능 기호 매니페스트 크기 오류입니다.
+[level-4--srcusage_framespysrcusage_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--srcusage_framespysrcusage_framespy)
 
-**거부 조건:** [`type(metadata.get('schema_version')) is not int or metadata['schema_version'] != 1`](src/brand.py#L145)
+<a id="level-4--srcusage_widgetspysrcusage_widgetspy"></a>
 
-**오류 메시지:** 3D 기능 기호 매니페스트 버전 오류입니다.
+[level-4--srcusage_widgetspysrcusage_widgetspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--srcusage_widgetspysrcusage_widgetspy)
 
-**거부 조건:** [`not isinstance(files, dict) or set(files) != set(SYMBOL_NAMES)`](src/brand.py#L148)
+<a id="level-4--srcvisualspysrcvisualspy"></a>
 
-**오류 메시지:** 3D 기능 기호 일곱 개 목록이 일치하지 않습니다.
+[level-4--srcvisualspysrcvisualspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--srcvisualspysrcvisualspy)
 
-**거부 조건:** [`not isinstance(record, dict) or record.get('filename') != name+'.png'`](src/brand.py#L153)
+<a id="level-4--srcweatherpysrcweatherpy"></a>
 
-**오류 메시지:** 3D 기능 기호의 고정 파일 이름이 일치하지 않습니다.
+[level-4--srcweatherpysrcweatherpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--srcweatherpysrcweatherpy)
 
-**거부 조건:** [`not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None`](src/brand.py#L156)
+<a id="level-4--재현과-전체-비교"></a>
 
-**오류 메시지:** 3D 기능 기호의 SHA256 형식 오류입니다.
+[level-4--재현과-전체-비교](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-4--재현과-전체-비교)
 
-**거부 조건:** [`not 0 &lt; path.stat().st_size &lt;= 262144`](src/brand.py#L159)
+<a id="level-426차의-구체적인-기능과-확인"></a>
 
-**오류 메시지:** 3D 기능 기호 읽기 크기 상한 오류입니다.
+[level-426차의-구체적인-기능과-확인](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-426차의-구체적인-기능과-확인)
 
+<a id="level-426차-추가-해설level-4목적과-이-차수의-역할"></a>
 
-#### LEVEL 4 · [src/calendar_art.py](src/calendar_art.py)
+[level-426차-추가-해설level-4목적과-이-차수의-역할](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-426차-추가-해설level-4목적과-이-차수의-역할)
 
-| 정의 | 역할 |
-| --- | --- |
-| [`current_date`](src/calendar_art.py#L33) | 호스트의 현지 시간대와 무관하게 한국 날짜를 사용합니다. |
-| [`_month_palette`](src/calendar_art.py#L50) | 반올림 충돌만 가장 가까운 미사용 RGB로 옮기고 월별 결과를 불변 보관합니다. |
-| [`design_for_date`](src/calendar_art.py#L78) | 유효한 날짜만 허용하며 지원 범위 밖을 다른 날짜로 몰래 대체하지 않습니다. |
-| [`all_designs`](src/calendar_art.py#L95) | 현재 모델만 렌더하며 이 반복자는 작은 카탈로그를 작성할 때만 사용합니다. |
+<a id="level-426차-추가-해설level-4핵심-기능과-보존-범위"></a>
 
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FIRST_DATE`](src/calendar_art.py#L10) | `정의=date(2026,1,1)` |
-| [`LAST_DATE`](src/calendar_art.py#L11) | `정의=date(2099,12,31)` |
-| [`KST`](src/calendar_art.py#L12) | `정의=timezone(timedelta(hours=9))` |
-| [`THEMES`](src/calendar_art.py#L13) | `정의=tuple(row.title for row in all_collections())` |
+[level-426차-추가-해설level-4핵심-기능과-보존-범위](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-426차-추가-해설level-4핵심-기능과-보존-범위)
 
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`type(value) is not date`](src/calendar_art.py#L80) | 조형 날짜는 datetime.date여야 합니다. |
-| [`not FIRST_DATE &lt;= value &lt;= LAST_DATE`](src/calendar_art.py#L82) | 날짜별 조형 지원 범위는 2026-01-01부터 2099-12-31까지입니다. |
+<a id="level-426차-추가-해설level-4입력처리출력"></a>
 
-#### LEVEL 4 · [src/calendar_catalog.py](src/calendar_catalog.py)
+[level-426차-추가-해설level-4입력처리출력](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-426차-추가-해설level-4입력처리출력)
 
-| 정의 | 역할 |
-| --- | --- |
-| [`joining_particle`](src/calendar_catalog.py#L208) | 마지막 한글 음절의 받침에 맞춰 대상 이름을 연결합니다. |
+<a id="level-426차-추가-해설level-4화면과-사용-흐름"></a>
 
-**설정·옵션:** [`POOLS`](src/calendar_catalog.py#L166)
+[level-426차-추가-해설level-4화면과-사용-흐름](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-426차-추가-해설level-4화면과-사용-흐름)
 
-**코드의 선언:** `정의={'꽃': _objects(_FLOWERS,'꽃'), '열매': _objects(_FRUITS,'열매'),          '잎': _objects(_LEAVES,'잎'), '악기': _objects(_MUSIC,'악기')}`
+<a id="level-426차-추가-해설level-4실제-자료-구성"></a>
 
-**설정·옵션:** [`OBJECTS`](src/calendar_catalog.py#L168)
+[level-426차-추가-해설level-4실제-자료-구성](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-426차-추가-해설level-4실제-자료-구성)
 
-**코드의 선언:** `정의={obj.key:obj for pool in POOLS.values() for obj in pool}`
+<a id="level-426차-추가-해설level-4주요-모듈과-코드-읽기"></a>
 
-**설정·옵션:** [`COMPOSITION_NAMES`](src/calendar_catalog.py#L193)
+[level-426차-추가-해설level-4주요-모듈과-코드-읽기](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-426차-추가-해설level-4주요-모듈과-코드-읽기)
 
-**코드의 선언:** `정의={'bouquet':'꽃다발형','diagonal':'대각선형','shelter':'감싸는 형태',                      'stage':'연주대형','triangle':'삼각형 정물','fan':'부채형'}`
+<a id="level-426차-추가-해설level-4설치-환경과-실행사용법"></a>
 
+[level-426차-추가-해설level-4설치-환경과-실행사용법](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-426차-추가-해설level-4설치-환경과-실행사용법)
 
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`not 0 &lt;= index &lt; 888 or not 1 &lt;= month &lt;= 12`](src/calendar_catalog.py#L217) | 연월 컬렉션은 2026년 1월부터 2099년 12월까지입니다. |
+<a id="level-426차-추가-해설level-4사용하는-사람에게-달라진-점"></a>
 
-#### LEVEL 4 · [src/calendar_motion.py](src/calendar_motion.py)
+[level-426차-추가-해설level-4사용하는-사람에게-달라진-점](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-426차-추가-해설level-4사용하는-사람에게-달라진-점)
 
-| 정의 | 역할 |
-| --- | --- |
-| [`next_frame_deadline`](src/calendar_motion.py#L21) | 정상 슬롯을 유지하고 늦은 프레임은 추가 대기나 누적 추격 없이 이어갑니다. |
-| [`fallback_image`](src/calendar_motion.py#L26) | GPU 준비·실패 때만 쓰는 월 주제의 정적 평면 표식입니다. 3D 성공으로 가장하지 않습니다. |
-| [`_Worker`](src/calendar_motion.py#L60) | Qt 객체나 UI를 조작하지 않고 복사된 최신 이미지 하나만 전달합니다. |
-| [`prepare_calendar_motion`](src/calendar_motion.py#L232) | 창 표시 전에 같은 작업자의 첫 실제 프레임을 최대 5초 준비합니다. |
-| [`set_calendar_motion_speed`](src/calendar_motion.py#L262) | 현재 위상을 유지하고 이후 모션의 배율만 바꿉니다. 실제 시계와 날짜는 바꾸지 않습니다. |
-| [`set_calendar_motion_size`](src/calendar_motion.py#L268) | 현재 보이는 각 소유자의 실제 픽셀 요구 중 최대 크기만 전달합니다. |
-| [`record_calendar_presentation`](src/calendar_motion.py#L276) | Qt 그리기 경로가 실제로 소비한 서로 다른 프레임만 셉니다. |
-| [`get_calendar_error`](src/calendar_motion.py#L285) | 제품은 이 문자열을 상태나 툴팁에 표시해 대체 표식과 실제 3D를 구분할 수 있습니다. |
+<a id="level-426차-추가-해설level-4이-보관-본의-의존성-목록"></a>
 
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FPS`](src/calendar_motion.py#L15) | `정의=240` |
-| [`SIZE`](src/calendar_motion.py#L16) | `정의=384` |
-| [`RENDER_SIZE`](src/calendar_motion.py#L17) | `정의=(3840, 2160)` |
+[level-426차-추가-해설level-4이-보관-본의-의존성-목록](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-426차-추가-해설level-4이-보관-본의-의존성-목록)
 
-**거부 조건:** [`app is None or QThread.currentThread()!=app.thread()`](src/calendar_motion.py#L211)
+<a id="level-426차-추가-해설level-4소스에서-제공하는-cli-옵션"></a>
 
-**오류 메시지:** 날짜별 모션 API는 Qt 메인 스레드에서 호출해야 합니다.
+[level-426차-추가-해설level-4소스에서-제공하는-cli-옵션](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-426차-추가-해설level-4소스에서-제공하는-cli-옵션)
 
-**거부 조건:** [`type(timeout_seconds) not in (int,float) or not 0 &lt; timeout_seconds &lt;= 5`](src/calendar_motion.py#L234)
+<a id="level-426차-추가-해설level-4srcactivitypysrcactivitypy"></a>
 
-**오류 메시지:** 3D 준비 제한은 0초 초과 5초 이하여야 합니다.
+[level-426차-추가-해설level-4srcactivitypysrcactivitypy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-426차-추가-해설level-4srcactivitypysrcactivitypy)
 
-**거부 조건:** [`type(visible) is not bool`](src/calendar_motion.py#L258)
+<a id="level-426차-추가-해설level-4srcapppysrcapppy"></a>
 
-**오류 메시지:** 표시 상태는 bool이어야 합니다.
+[level-426차-추가-해설level-4srcapppysrcapppy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-426차-추가-해설level-4srcapppysrcapppy)
 
-**거부 조건:** [`type(size) is not int or not 32&lt;=size&lt;=2160`](src/calendar_motion.py#L270)
+<a id="level-426차-추가-해설level-4srcatom_framespysrcatom_framespy"></a>
 
-**오류 메시지:** 전달 크기는32~2160 정수여야 합니다.
-
-**거부 조건:** [`self.closed`](src/calendar_motion.py#L167)
-
-**오류 메시지:** 날짜별 모션 서비스가 닫혔습니다.
-
-**거부 조건:** [`self.closed`](src/calendar_motion.py#L180)
-
-**오류 메시지:** 날짜별 모션 서비스가 닫혔습니다.
-
-**거부 조건:** [`type(elapsed) not in (int,float)`](src/calendar_motion.py#L181)
-
-**오류 메시지:** 재생 시각은 유한한 숫자여야 합니다.
-
-**거부 조건:** [`not valid`](src/calendar_motion.py#L184)
-
-**오류 메시지:** 재생 시각은 유한한 숫자여야 합니다.
-
-**거부 조건:** [`_retiring.worker.isRunning()`](src/calendar_motion.py#L221)
-
-**오류 메시지:** 이전 GPU 작업 스레드가 종료 중입니다.
-
-
-#### LEVEL 4 · [src/calendar_renderer.py](src/calendar_renderer.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`rotation`](src/calendar_renderer.py#L24) | 정규화된 실제 3D축을 중심으로 로드리게스 회전행렬을 만듭니다. |
-| [`finish`](src/calendar_renderer.py#L48) | 표면 법선과 삼각형 winding을 일치시킵니다. |
-| [`box`](src/calendar_renderer.py#L58) | 육면체 면을 실제 둥근 모서리와 구면 꼭짓점으로 투영합니다. |
-| [`lathe`](src/calendar_renderer.py#L84) | 회전체의 실제 앞뒤·옆면을 만들며 다각 단면은 평면 법선을 보존합니다. |
-| [`tube`](src/calendar_renderer.py#L104) | 3D 경로를 따라 원형 단면을 운반합니다. 코일은 실제 깊이를 가집니다. |
-| [`_object_geometry`](src/calendar_renderer.py#L145) | 대상 이름에 연결된 주요 구조를 실제 삼각형 부품으로 구성합니다. |
-| [`_ring_geometry`](src/calendar_renderer.py#L323) | 날짜와 무관한 세 링만 읽기 전용 배열로 한 번 생성합니다. |
-| [`build_geometry`](src/calendar_renderer.py#L334) | 날짜별 주연과 서로 다른 두 월 모티프를 명시적 대상 사전에서 렌더합니다. |
-| [`CalendarRenderer`](src/calendar_renderer.py#L378) | 컨텍스트를 만든 스레드에서만 사용하고 현재 날짜의 버퍼만 보유합니다. |
-| [`render_date`](src/calendar_renderer.py#L489) | 미리보기와 직접 검증용 동기 렌더입니다. 앱은 공유 작업 스레드를 사용합니다. |
-| [`set_output_size`](src/calendar_renderer.py#L425) | 원본 타깃은 유지하고 중앙 정사각형의 GPU 전달 크기만 변경합니다. |
-| [`render_original`](src/calendar_renderer.py#L470) | 검증·내보내기 때만 실제 직사각형 원본 전체를 CPU로 읽습니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`PERIOD`](src/calendar_renderer.py#L132) | `정의=12.0` |
-| [`SIZE`](src/calendar_renderer.py#L133) | `정의=384` |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`subject.recipe!=design.shape_recipe`](src/calendar_renderer.py#L338) | 대상과 형상 규칙이 일치하지 않습니다. |
-| [`type(elapsed) not in (int,float)`](src/calendar_renderer.py#L364) | 모션 시각은 유한한 숫자여야 합니다. |
-| [`not valid`](src/calendar_renderer.py#L367) | 모션 시각은 유한한 숫자여야 합니다. |
-| [`threading.get_ident()!=self.thread_id`](src/calendar_renderer.py#L423) | GPU 컨텍스트는 생성 스레드에서만 사용할 수 있습니다. |
-| [`type(size) is not int or not 32&lt;=size&lt;=2160`](src/calendar_renderer.py#L428) | 전달 크기는32~2160 정수여야 합니다. |
-
-#### LEVEL 4 · [src/core.py](src/core.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`read_jsonl_tail`](src/core.py#L19) | 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
-| [`title_catalog`](src/core.py#L56) | 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
-| [`resolve_title`](src/core.py#L86) | 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
-| [`safe_path`](src/core.py#L110) | 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`MAX_TEXT_BYTES`](src/core.py#L10) | `정의=2 * 1024 * 1024` |
-| [`BEGIN`](src/core.py#L11) | `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
-| [`END`](src/core.py#L12) | `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
-
-**거부 조건:** [`path.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L125)
-
-**오류 메시지:** 문서가 2 MiB 상한을 초과했습니다.
-
-**거부 조건:** [`not isinstance(cache, dict) or not isinstance(cache.get('titles'), dict)`](src/core.py#L65)
-
-**오류 메시지:** 제목 캐시 구조가 올바르지 않습니다.
-
-**거부 조건:** [`target.name.lower() != 'agents.md'`](src/core.py#L136)
-
-**오류 메시지:** 적용 대상은 AGENTS.md 파일이어야 합니다.
-
-**거부 조건:** [`not target.parent.is_dir()`](src/core.py#L138)
-
-**오류 메시지:** 대상 폴더가 존재하지 않습니다.
-
-**거부 조건:** [`target.exists() and (not target.is_file() or target.stat().st_size &gt; MAX_TEXT_BYTES)`](src/core.py#L140)
-
-**오류 메시지:** 대상은 2 MiB 이하의 일반 파일이어야 합니다.
-
-**거부 조건:** [`not content.strip() or len(added) &gt; MAX_TEXT_BYTES`](src/core.py#L147)
-
-**오류 메시지:** 빈 지침 또는 2 MiB 초과 지침은 적용할 수 없습니다.
-
-**거부 조건:** [`BEGIN in added or END in added`](src/core.py#L149)
-
-**오류 메시지:** 지침 내용에 앱 관리구역 표식을 넣을 수 없습니다.
-
-**거부 조건:** [`len(result) &gt; MAX_TEXT_BYTES`](src/core.py#L163)
-
-**오류 메시지:** 적용 결과가 2 MiB 상한을 초과합니다.
-
-**거부 조건:** [`target.exists() != existed or digest(target.read_bytes() if existed else b'') != expected`](src/core.py#L170)
-
-**오류 메시지:** 대상 파일이 미리보기/적용 이후 변경되었습니다. 새 미리보기가 필요합니다.
-
-**거부 조건:** [`digest(plan['original']) != plan['before_hash'] or digest(plan['applied_bytes']) != plan['after_hash']`](src/core.py#L190)
-
-**오류 메시지:** 미리보기 데이터가 변경되었습니다.
-
-**거부 조건:** [`backup.parent != safe_path(self.data_dir / 'backups') or not backup.is_file() or backup.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L210)
-
-**오류 메시지:** 유효한 앱 원문 백업이 아닙니다.
-
-**거부 조건:** [`digest(raw) != receipt['before_hash']`](src/core.py#L213)
-
-**오류 메시지:** 백업 해시가 일치하지 않습니다.
-
-**거부 조건:** [`not isinstance(row, dict)`](src/core.py#L41)
-
-**오류 메시지:** JSON 객체가 아닙니다.
-
-**거부 조건:** [`original.count(BEGIN) != 1 or original.count(END) != 1 or original.index(BEGIN) &gt;= original.index(END)`](src/core.py#L156)
-
-**오류 메시지:** 기존 관리구역 표식이 손상되었거나 중복되었습니다.
-
-
-#### LEVEL 4 · [src/element_frames.py](src/element_frames.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`ElementAssetError`](src/element_frames.py#L24) | 필수 원소 자산 실패를 숨기지 않고 앱의 시작·표시 오류로 전달합니다. |
-| [`preflight_element_frames`](src/element_frames.py#L132) | 활성 원소의 해시·목록·첫 프레임을 확인합니다.31개를 적재하지 않습니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`CACHE_LIMIT`](src/element_frames.py#L15) | `정의=24` |
-| [`FRAME_SIZE`](src/element_frames.py#L16) | `정의=192` |
-| [`FRAME_COUNT`](src/element_frames.py#L17) | `정의=540` |
-| [`FPS`](src/element_frames.py#L18) | `정의=30` |
-| [`PERIOD_SECONDS`](src/element_frames.py#L19) | `정의=18` |
-| [`MAX_ARCHIVE_BYTES`](src/element_frames.py#L20) | `정의=64*1024*1024` |
-| [`MAX_FRAME_BYTES`](src/element_frames.py#L21) | `정의=512*1024` |
-
-**거부 조건:** [`type(number) is not int or not 1&lt;=number&lt;=31`](src/element_frames.py#L34)
-
-**오류 메시지:** 원소 번호는1~31 정수여야 합니다.
-
-**거부 조건:** [`not 0&lt;manifest.stat().st_size&lt;=64*1024`](src/element_frames.py#L65)
-
-**오류 메시지:** 원소 매니페스트 크기 오류
-
-**거부 조건:** [`not isinstance(self.manifest,dict)`](src/element_frames.py#L69)
-
-**오류 메시지:** 원소 매니페스트는 객체여야 합니다.
-
-**거부 조건:** [`not isinstance(digest,str) or not re.fullmatch('[0-9a-f]{64}',digest)`](src/element_frames.py#L74)
-
-**오류 메시지:** 원소 해시 형식 오류
-
-**거부 조건:** [`not 0&lt;archive.stat().st_size&lt;=MAX_ARCHIVE_BYTES`](src/element_frames.py#L75)
-
-**오류 메시지:** 원소 압축파일 크기 초과
-
-**거부 조건:** [`hasher.hexdigest()!=digest`](src/element_frames.py#L78)
-
-**오류 메시지:** 원소 ZIP 해시 불일치
-
-**거부 조건:** [`len(members)!=540 or {m.filename for m in members}!={f'frame_{i:04d}.png' for i in range(540)}`](src/element_frames.py#L80)
-
-**오류 메시지:** 원소 ZIP 정확한540프레임 목록 불일치
-
-**거부 조건:** [`sum(m.file_size for m in members)&gt;128*1024*1024`](src/element_frames.py#L82)
-
-**오류 메시지:** 원소 해제 크기 초과
-
-**거부 조건:** [`actual!=self.identities`](src/element_frames.py#L91)
-
-**오류 메시지:** 실행 중 원소 자산이 변경됐습니다.
-
-**거부 조건:** [`isinstance(elapsed,bool) or not isinstance(elapsed,(int,float)) or not math.isfinite(elapsed)`](src/element_frames.py#L106)
-
-**오류 메시지:** 원소 재생 시각은 유한한 숫자여야 합니다.
-
-**거부 조건:** [`self.archive is None`](src/element_frames.py#L107)
-
-**오류 메시지:** 원소 재생기가 닫혔습니다.
-
-**거부 조건:** [`member.is_dir() or member.flag_bits&1 or member.compress_type not in (zipfile.ZIP_STORED,zipfile.ZIP_DEFLATED)                     or not 0&lt;member.file_size&lt;=MAX_FRAME_BYTES`](src/element_frames.py#L84)
-
-**오류 메시지:** 원소 ZIP 멤버 형식 오류
-
-**거부 조건:** [`len(data)&gt;MAX_FRAME_BYTES or len(data)&lt;33 or data[:8]!=b'\x89PNG\r\n\x1a\n' or data[12:16]!=b'IHDR'                     or struct.unpack('&gt;II',data[16:24])!=(192,192) or data[24:26]!=bytes((8,6))`](src/element_frames.py#L96)
-
-**오류 메시지:** 원소 PNG 형식 오류
-
-**거부 조건:** [`image.isNull() or image.size().width()!=192 or image.height()!=192 or not image.hasAlphaChannel()`](src/element_frames.py#L99)
-
-**오류 메시지:** 원소 PNG 디코딩 오류
-
-**거부 조건:** [`any(image.pixelColor(x,y).alpha() for x,y in ((0,0),(191,0),(0,191),(191,191)))`](src/element_frames.py#L100)
-
-**오류 메시지:** 원소 PNG 투명 모서리 오류
-
-
-#### LEVEL 4 · [src/element_visuals.py](src/element_visuals.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`colorize_atom`](src/element_visuals.py#L5) | SourceAtop은 원본 알파를 유지하며 명암에 부드러운 영감색을 더합니다. |
-
-#### LEVEL 4 · [src/elements.py](src/elements.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`daily_element`](src/elements.py#L43) | 매 호출 실제 날짜를 다시 읽어 자정·절전 복귀·시계 되돌림을 반영합니다. |
-
-**설정·옵션:** [`KST`](src/elements.py#L5)
-
-**코드의 선언:** `정의=timezone(timedelta(hours=9))`
-
-**설정·옵션:** [`PALETTE_NOTE`](src/elements.py#L8)
-
-**코드의 선언:** `정의='원소에서 영감받은 디자인 색이며 실제 원소·불꽃색이나 전자배치 재현이 아닙니다.'`
-
-**설정·옵션:** [`ELEMENTS`](src/elements.py#L39)
-
-**코드의 선언:** `정의=tuple(Element(index,symbol,name,color,accent)                  for index,(symbol,name,color,accent) in enumerate(_ROWS,1))`
-
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`value.tzinfo is None or value.utcoffset() is None`](src/elements.py#L46) | 원소 날짜에는 시간대가 있는 datetime이 필요합니다. |
-
-#### LEVEL 4 · [src/frame_pacing.py](src/frame_pacing.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`validate_motion_speed`](src/frame_pacing.py#L7) | 유한한 0.25~3배 숫자만 받아 bool과 잘못된 설정을 거부합니다. |
-| [`MotionClock`](src/frame_pacing.py#L20) | 실제 날짜·시계와 분리하여 배율별 경과 시간을 연속 적분합니다. |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`type(value) not in (int, float)`](src/frame_pacing.py#L9) | 회전 속도는 0.25~3배의 유한한 숫자여야 합니다. |
-| [`not valid`](src/frame_pacing.py#L15) | 회전 속도는 0.25~3배의 유한한 숫자여야 합니다. |
-
-#### LEVEL 4 · [src/i18n.py](src/i18n.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`translate`](src/i18n.py#L51) | 명시한 앱 문구만 번역하고 전달된 값은 번역하지 않습니다. |
-| [`remember_translations`](src/i18n.py#L63) | 생성 당시 정적인 앱 문구만 기록하여 사용자 원문과 구분합니다. |
-
-#### LEVEL 4 · [src/motion_label.py](src/motion_label.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`MotionImageLabel`](src/motion_label.py#L6) | 최신 이미지 한 개를 보관하고 크기·DPR 변경 때만 기본 크기 힌트를 갱신합니다. |
-
-#### LEVEL 4 · [src/notifier.py](src/notifier.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`atomic_json`](src/notifier.py#L33) | 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도합니다. |
-| [`source_datetime`](src/notifier.py#L63) | 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. |
-| [`duplicate_record`](src/notifier.py#L212) | 원본 시각이 있는 복제 기록만 제외하며 기준선 재생의 순서는 복원합니다. |
-| [`settings_record`](src/notifier.py#L223) | 자기 채팅의 native 설정 필드만 관측하며 변경 주체와 실행 모델은 추정하지 않습니다. |
-| [`lookup_parent_reason`](src/notifier.py#L376) | 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. |
-| [`enrich_event`](src/notifier.py#L423) | 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
-| [`replay_activity_prefix`](src/notifier.py#L445) | 고정된 과거 소비 구간의 활동 메타만 파일별 기존 예산 안에서 복원합니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`--sessions`](src/notifier.py#L739) | `type=Path; default=Path.home() / '.codex/sessions'` |
-| [`--work`](src/notifier.py#L740) | `type=Path; default=ROOT / 'work'` |
-| [`ROOT`](src/notifier.py#L18) | `정의=Path(__file__).resolve().parents[1]` |
-| [`APP_ID`](src/notifier.py#L19) | `정의='Yunseok.Codex.ModelChangeNotifier'` |
-| [`READ_BYTES`](src/notifier.py#L20) | `정의=512 * 1024` |
-| [`MAX_RECORD`](src/notifier.py#L21) | `정의=2 * 1024 * 1024` |
-| [`MAX_FILES`](src/notifier.py#L22) | `정의=4096` |
-| [`LOG_BYTES`](src/notifier.py#L23) | `정의=2 * 1024 * 1024` |
-| [`POLL_READ_BYTES`](src/notifier.py#L24) | `정의=8 * 1024 * 1024` |
-| [`MAX_PENDING`](src/notifier.py#L25) | `정의=256` |
-| [`POLL_INTERVAL_SECONDS`](src/notifier.py#L26) | `정의=0.2` |
-
-**거부 조건:** [`self.state_path.stat().st_size &gt; 16 * 1024 * 1024`](src/notifier.py#L90)
-
-**오류 메시지:** 상태 파일이 16 MiB 상한을 초과했습니다. 원본 보존 후 점검이 필요합니다.
-
-**거부 조건:** [`self.state.get('schema_version') not in (2, 3)`](src/notifier.py#L94)
-
-**오류 메시지:** 구형 상태는 요청과 관측이 혼합되어 있습니다. 원본 보존 후 명시적 재기준선이 필요합니다.
-
-**거부 조건:** [`not isinstance(self.state.get('files'), dict) or not isinstance(self.state.get('models'), dict)`](src/notifier.py#L96)
-
-**오류 메시지:** 상태 파일 구조 오류입니다. 자동 초기화하지 않습니다.
-
-**거부 조건:** [`not isinstance(self.state.get('declarations'), dict)`](src/notifier.py#L98)
-
-**오류 메시지:** 명시 배정 상태 구조 오류입니다. 자동 초기화하지 않습니다.
-
-**거부 조건:** [`not isinstance(self.state.get('settings'), dict)`](src/notifier.py#L117)
-
-**오류 메시지:** 채팅 선택 설정 상태 구조 오류입니다. 자동 초기화하지 않습니다.
-
-**거부 조건:** [`backup.read_bytes() != original`](src/notifier.py#L105)
-
-**오류 메시지:** 이전 상태 백업이 원본과 다릅니다. 자동 덮어쓰기하지 않습니다.
-
-**거부 조건:** [`any(isinstance(v, bool) or not isinstance(v, int) or v &lt; 0 for v in (offset, end))`](src/notifier.py#L112)
-
-**오류 메시지:** 이전 상태의 파일 위치가 올바르지 않습니다. 자동 초기화하지 않습니다.
-
-**거부 조건:** [`backup.read_bytes() != original`](src/notifier.py#L123)
-
-**오류 메시지:** 활동 이행 백업이 원본과 다릅니다. 자동 덮어쓰기하지 않습니다.
-
-**거부 조건:** [`isinstance(end, bool) or not isinstance(end, int) or end &lt; 0`](src/notifier.py#L131)
-
-**오류 메시지:** 활동 기준선의 파일 위치가 올바르지 않습니다.
-
-**거부 조건:** [`not isinstance(record, dict)`](src/notifier.py#L523)
-
-**오류 메시지:** JSON 객체가 아닙니다.
-
-**거부 조건:** [`path.stat().st_size &gt; 20000`](src/notifier.py#L603)
-
-**오류 메시지:** 명시 알림 파일 상한 초과
-
-**거부 조건:** [`not isinstance(record, dict)`](src/notifier.py#L467)
-
-**오류 메시지:** JSON 객체가 아닙니다.
-
-
-#### LEVEL 4 · [src/theme.py](src/theme.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`MonochromeStyle`](src/theme.py#L53) | 파일·메시지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. |
-| [`KoreanDialogs`](src/theme.py#L78) | 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역합니다. |
-| [`DialogLayout`](src/theme.py#L94) | 앱 파일 선택창의 이름 열과 한글 버튼에 충분한 공간을 확보합니다. |
-
-#### LEVEL 4 · [src/typography.py](src/typography.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`register_fonts`](src/typography.py#L8) | 필수 파일이나 Qt 등록 실패를 숨기지 않고 시작 오류로 전달합니다. |
-
-#### LEVEL 4 · [src/usage.py](src/usage.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`number`](src/usage.py#L16) | 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
-| [`normalize_limits`](src/usage.py#L35) | 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
-| [`discover_codex`](src/usage.py#L69) | 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`MAX_BYTES`](src/usage.py#L12) | `정의=1024 * 1024` |
-| [`KST`](src/usage.py#L13) | `정의=timezone(timedelta(hours=9))` |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`not isinstance(message, dict)`](src/usage.py#L226) | 객체가 아닌 응답 |
-
-#### LEVEL 4 · [src/usage_frames.py](src/usage_frames.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`UsageAssetError`](src/usage_frames.py#L27) | 조형 표시 오류를 호출자에게 전달하며 계정 조회 흐름과 분리합니다. |
-| [`UsageFrames`](src/usage_frames.py#L50) | 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대16장만 보존합니다. |
-| [`close_usage_frames`](src/usage_frames.py#L183) | 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
-| [`preflight_usage_frames`](src/usage_frames.py#L194) | 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
-| [`get_usage_frame`](src/usage_frames.py#L207) | 공유 팩의 한 프레임을 반환하며 계정 조회 상태에는 관여하지 않습니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FRAME_COUNT`](src/usage_frames.py#L16) | `정의=360` |
-| [`FRAME_SIZE`](src/usage_frames.py#L17) | `정의=384` |
-| [`FPS`](src/usage_frames.py#L18) | `정의=30` |
-| [`PERIOD_SECONDS`](src/usage_frames.py#L19) | `정의=12` |
-| [`CACHE_LIMIT`](src/usage_frames.py#L20) | `정의=16` |
-| [`MAX_ARCHIVE_BYTES`](src/usage_frames.py#L21) | `정의=128 * 1024 * 1024` |
-| [`MAX_FRAME_BYTES`](src/usage_frames.py#L22) | `정의=1024 * 1024` |
-| [`MAX_TOTAL_BYTES`](src/usage_frames.py#L23) | `정의=256 * 1024 * 1024` |
-| [`MAX_MANIFEST_BYTES`](src/usage_frames.py#L24) | `정의=64 * 1024` |
-
-**거부 조건:** [`key in value`](src/usage_frames.py#L44)
-
-**오류 메시지:** 대시보드 조형 자산 매니페스트에 중복 필드가 있습니다.
-
-**거부 조건:** [`not 0 &lt; manifest_path.stat().st_size &lt;= MAX_MANIFEST_BYTES`](src/usage_frames.py#L69)
-
-**오류 메시지:** 대시보드 조형 자산 매니페스트 크기가 허용 범위를 벗어났습니다.
-
-**거부 조건:** [`not isinstance(self.manifest, dict)`](src/usage_frames.py#L75)
-
-**오류 메시지:** 대시보드 조형 자산 매니페스트는 객체여야 합니다.
-
-**거부 조건:** [`not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None`](src/usage_frames.py#L85)
-
-**오류 메시지:** 대시보드 조형 프레임 ZIP의 SHA256 형식이 잘못됐습니다.
-
-**거부 조건:** [`not 0 &lt; archive_path.stat().st_size &lt;= MAX_ARCHIVE_BYTES`](src/usage_frames.py#L87)
-
-**오류 메시지:** 대시보드 조형 프레임 ZIP 크기가 허용 범위를 벗어났습니다.
-
-**거부 조건:** [`hasher.hexdigest() != digest`](src/usage_frames.py#L94)
-
-**오류 메시지:** 대시보드 조형 프레임 ZIP의 SHA256이 일치하지 않습니다.
-
-**거부 조건:** [`len(members) != FRAME_COUNT or {item.filename for item in members} != names`](src/usage_frames.py#L100)
-
-**오류 메시지:** 대시보드 조형 프레임 ZIP의 정확한360개 이름·목록이 일치하지 않습니다.
-
-**거부 조건:** [`sum(item.file_size for item in members) &gt; MAX_TOTAL_BYTES`](src/usage_frames.py#L102)
-
-**오류 메시지:** 대시보드 조형 프레임 전체 읽기 상한을 초과했습니다.
-
-**거부 조건:** [`actual != self.identities`](src/usage_frames.py#L133)
-
-**오류 메시지:** 검증 뒤 대시보드 조형 자산이 변경됐습니다. 앱을 다시 실행해 주세요.
-
-**거부 조건:** [`type(elapsed) not in (int, float)`](src/usage_frames.py#L138)
-
-**오류 메시지:** 조형 재생 시각은 유한한 숫자여야 합니다.
-
-**거부 조건:** [`not finite`](src/usage_frames.py#L144)
-
-**오류 메시지:** 대시보드 조형 프레임의 재생 시각이 유한한 숫자가 아닙니다.
-
-**거부 조건:** [`self.archive is None`](src/usage_frames.py#L149)
-
-**오류 메시지:** 조형 재생기가 닫혔습니다.
-
-**거부 조건:** [`item.is_dir() or item.flag_bits & 1 or item.compress_type not in                     (zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED) or                     not 0 &lt; item.file_size &lt;= MAX_FRAME_BYTES`](src/usage_frames.py#L105)
-
-**오류 메시지:** 대시보드 조형 프레임 멤버의 형식·크기가 허용 범위를 벗어났습니다.
-
-
-#### LEVEL 4 · [src/usage_widgets.py](src/usage_widgets.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`CalendarHero`](src/usage_widgets.py#L9) | 사용 한도 화면에서만 날짜별 입체 이미지를 갱신합니다. |
-
-#### LEVEL 4 · [src/visuals.py](src/visuals.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`rotate_point`](src/visuals.py#L12) | X·Y·Z 순서로 회전하며 깊이 좌표를 보존합니다. |
-| [`axis_rotate`](src/visuals.py#L40) | 로드리게스 식으로 고유 축 주위를 회전하며 공통 Z 변환을 쓰지 않습니다. |
-| [`orbit_segments`](src/visuals.py#L63) | 제작 매니페스트와 일치하는 기하 검증용 메타입니다. GUI 드로잉에는 쓰지 않습니다. |
-| [`status_label`](src/visuals.py#L80) | 읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다. |
-| [`element_labels`](src/visuals.py#L85) | 원자번호와 계정 퍼센트를 서로 다른 명시적 라벨로 구분합니다. |
-| [`usage_bar`](src/visuals.py#L99) | 숫자와 채움에 같은 실제 비율을 쓰며 최소 채움 폭을 강제하지 않습니다. |
-| [`_frame_for_element`](src/visuals.py#L111) | 원소별 실제 제작 프레임을 읽습니다. 이전 형상으로 대체하지 않습니다. |
-| [`draw_orbit`](src/visuals.py#L117) | 달력 조형·날짜 도크·실제 잔량을 분리하고 명시한 원소 미리보기도 보존합니다. |
-| [`desktop_widget_layout`](src/visuals.py#L176) | 이름을 화면 픽셀 크기로 줄 바꿈하고 조형·잔량 영역을 분리합니다. |
-| [`draw_desktop_orbit`](src/visuals.py#L212) | 위젯의 조형과 글자를 별개 영역에 그려 작은 글자 축소를 막습니다. |
-| [`_draw_desktop_information`](src/visuals.py#L227) | 움직이는 GPU 이미지와 분리한 도크·시계·지역·기온·잔량을 그립니다. |
-| [`DesktopOverlayCache`](src/visuals.py#L278) | 한 위젯의 완전 입력이 같을 때만 단일 투명 정보 레이어를 재사용합니다. |
-
-**설정·옵션:** [`MOTION_PERIOD`](src/visuals.py#L27)
-
-**코드의 선언:** `정의=18`
-
-**설정·옵션:** [`RING_TURNS`](src/visuals.py#L28)
-
-**코드의 선언:** `정의=(1, -2, 3)`
-
-**설정·옵션:** [`RING_AZIMUTHS`](src/visuals.py#L29)
-
-**코드의 선언:** `정의=(8., 128., 248.)`
-
-**설정·옵션:** [`RING_AXIS_TILTS`](src/visuals.py#L30)
-
-**코드의 선언:** `정의=(42., 46., 49.)`
-
-**설정·옵션:** [`RING_RADII`](src/visuals.py#L35)
-
-**코드의 선언:** `정의=(45., 51., 57.)`
-
-**설정·옵션:** [`BASE_ANGLES`](src/visuals.py#L36)
-
-**코드의 선언:** `정의=tuple((math.radians(tilt), 0., math.radians(azimuth))                     for tilt, azimuth in zip((52., 58., 62.), RING_AZIMUTHS))`
-
-**설정·옵션:** [`ATOM_RECT`](src/visuals.py#L92)
-
-**코드의 선언:** `정의=QRectF(-48,-74,96,96)`
-
-**설정·옵션:** [`DOCK_RECT`](src/visuals.py#L93)
-
-**코드의 선언:** `정의=QRectF(-68,25,136,27)`
-
-**설정·옵션:** [`USAGE_RECT`](src/visuals.py#L94)
-
-**코드의 선언:** `정의=QRectF(-68,56,136,16)`
-
-**설정·옵션:** [`USAGE_TRACK_RECT`](src/visuals.py#L95)
-
-**코드의 선언:** `정의=QRectF(-61,62,62,4)`
-
-**설정·옵션:** [`SYMBOL_PIXELS`](src/visuals.py#L96)
-
-**코드의 선언:** `정의=24`
-
-
-#### LEVEL 4 · [src/weather.py](src/weather.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`localized_region`](src/weather.py#L27) | 검색 전 임시 표시에는 검증된 국내 사전 또는 실제 원문 지명을 사용합니다. |
-| [`select_geocoded_region`](src/weather.py#L67) | 동일 국가이면서 IP 추정 좌표에서30km 이내인 가장 가까운 검색 결과만 수락합니다. |
-
-**설정·옵션:** [`_COUNTRIES`](src/weather.py#L23)
-
-**코드의 선언:** `정의={'US': '미국', 'JP': '일본', 'CN': '중국', 'GB': '영국', 'DE': '독일',               'FR': '프랑스', 'CA': '캐나다', 'AU': '호주', 'SG': '싱가포르', 'TW': '대만'}`
-
-
-**거부 조건:** [`language not in ('ko', 'en')`](src/weather.py#L29)
-
-**오류 메시지:** 지원 언어는 ko 또는 en입니다.
-
-**거부 조건:** [`language not in ('ko', 'en')`](src/weather.py#L111)
-
-**오류 메시지:** 지원 언어는 ko 또는 en입니다.
-
-**거부 조건:** [`language not in ('ko', 'en')`](src/weather.py#L155)
-
-**오류 메시지:** 지원 언어는 ko 또는 en입니다.
-
-**거부 조건:** [`not self._valid_number(latitude, -90, 90) or not self._valid_number(longitude, -180, 180)`](src/weather.py#L249)
-
-**오류 메시지:** 위치 범위
-
-**거부 조건:** [`not self._valid_number(temperature, -100, 70)`](src/weather.py#L321)
-
-**오류 메시지:** 기온 범위
-
-**거부 조건:** [`not self._valid_number(observed, 0, now + 300)`](src/weather.py#L325)
-
-**오류 메시지:** 기온 제공 시각
-
-**거부 조건:** [`not isinstance(data, dict)`](src/weather.py#L232)
-
-**오류 메시지:** 응답 형식
-
-
-</details>
-
-변경 전·후 모델과 추론 강도, 공개된 이유, 관측 시각과 근거 수준을 함께 읽습니다. 기록되지 않은 값은 미확인으로 남깁니다. 로컬 기록은 서버 모델 신원 증명이 아닙니다.
-
-**상황:** 알림이 나타나지 않음
-
-**확인할 내용:** 감시하는 sessions 경로·새 JSONL 기록·중복 실행 잠금·알림 설정을 확인합니다. 최초 기준선 읽기와 새 변경 감지는 다릅니다.
-
-**상황:** 자산 또는 글꼴 오류
-
-**확인할 내용:** 이 차수에서 참조하는 assets와 라이선스를 준비합니다. 소스 이력에는 과거 대용량 프레임 자산이 없을 수 있습니다.
-
-**상황:** 이유 또는 이전값이 없음
-
-**확인할 내용:** 원문 기록에 해당 필드가 있는지 확인합니다. 누락된 동기를 추정해서 채우지 않습니다.
-
-
-### LEVEL 4 · 재현과 전체 비교
-
-1. 이 차수의 소스·requirements와 필요한 자산을 한 작업 폴더에 준비합니다.
-2. 앱을 열고 위젯·상세창에서 감시 경로와 표시되는 기록을 확인합니다.
-3. 새 변경이 기록되면 이전·이후 값과 이유를 비교하고, 기록 종류와 근거 수준을 함께 읽습니다.
-4. 설정·이력은 개인 운영자료로 관리하고 다른 사용자에게 공유하기 전에 내용을 확인합니다.
-
-위 구성요소의 입력·출력과 실패 조건을 같은 차수 소스에 연결해 검토합니다. 전체 비교는 추가·수정·삭제와 원래 보관 범위를 구분하는 근거입니다.
-
-[자료 폴더](.) · [직전 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [이 차수의 원래 전체 상세](#reading-level-5)
-
-
-### LEVEL 4 · 26차의 구체적인 기능과 확인
-
-회전 속도는 상세창 슬라이더·위젯 메뉴에서 변경·저장하며 모션 위상과 배율의 처리와 실제 시계·날짜·날씨·한도 갱신을 구분합니다. 날짜별 2026~2099 규칙과 편집 사전은 실제 대상과 메시를 연결하며 단일 GPU 작업 스레드의 최대 네 이미지를 공유합니다. 오늘 원소의 압축 프레임과 원본 비파괴 Qt 색 합성, 가시성 기반 자산 공유도 유지합니다.
-
-프레임 조율은 프로세스 전용 고해상도 대기를 사용하고 전역 타이머 설정을 바꾸지 않습니다. i18n은 앱 소유 문구를 번역하며 이벤트 원문은 보존합니다. 로컬 JSONL 감시는 외부 통신을 하지 않지만 지역·기온과 읽기 전용 한도 조회는 별도 네트워크·서버 경계를 갖습니다.
-
-Windows·차수별 의존성·자산·ModernGL·OpenGL 3.3이 필요합니다. 25차 대비 실제 파일 변경·설정과 크기·SHA는 보존된 전체 diff와 명세를 확인합니다. 당시 실행 결과 미보존과 현재 자산의 과거 호환 미보장을 유지합니다.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · 목적과 이 차수의 역할
-
-상세창 슬라이더와 위젯 메뉴에서 회전 속도를 조절하고 저장합니다. 모션 배율과 실제 시계·날짜·날씨·계정 한도 갱신은 별개입니다.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · 핵심 기능과 보존 범위
-
-- 검토 항목 1: 상세창 슬라이더와 위젯 메뉴에서 회전 속도를 조절하고 저장합니다. 모션 배율과 실제 시계·날짜·날씨·계정 한도 갱신은 별개입니다.
-- 검토 항목 2: 로컬 세션 기록에서 모델·추론 강도의 변경과 명시된 배정을 구분합니다. 감시기는 외부 통신 없이 로컬 자료를 읽습니다.
-- 검토 항목 3: 공개 협업 호출과 소유자가 확인된 앱이 직접 남긴 활동을 연결합니다.
-- 검토 항목 4: 검증된 금속 원자 그림 한 장을 추출 없이 읽는 제한 메모리 재생기입니다.
-- 검토 항목 5: 같은 실제3D 자산을 공유하는 정적 마크와 가시성 기반 내부 모션입니다.
-- 검토 항목 6: 2026~2099년의 날짜별 조형 규칙입니다. 외부 데이터와 계정 정보를 사용하지 않습니다.
-- 검토 항목 7: 실제 대상 이름과 조형 특징을 연결하는 편집 사전입니다.
-- 검토 항목 8: 한 그래픽 장치(GPU) 작업 프로그램 내부의 작업 흐름와 최대 네 이미지로 날짜별 모션을 공유합니다.
-- 검토 항목 9: 현재 날짜의 실제 삼각형 표면으로 만든 입체 모형를 소유 프로그램 내부의 작업 흐름의 화면 밖 전용 공간의 그래픽 장치(GPU)에서 렌더합니다.
-- 검토 항목 10: 한국 날짜의1~31일에 대응하는 원소와 디자인 영감 팔레트입니다.
-- 검토 항목 11: 오늘 원소 하나의 압축 그림 한 장만 여는 제한 메모리 재생기입니다.
-- 검토 항목 12: 원본3D 자산을 변경하지 않는 제한 메모리 Qt 색 합성입니다.
-- 검토 항목 13: 프로세스 전용 고해상도 대기로 전역 타이머 설정 없이 그림 한 장을 조율합니다.
-- 검토 항목 14: 앱의 메뉴·설명처럼 앱이 만든 글만 언어를 바꿉니다. 실제 기록에 적힌 문장은 원문 그대로 보존해야 하며 번역한 앱 문구로 바꾸지 않습니다.
-- 검토 항목 15: Codex App Server의 `account/rateLimits/read`를 읽기 전용으로 조회합니다. 표시값은 남은 토큰 개수가 아니라 계정 사용 한도 비율입니다.
-- 검토 항목 16: 지역·기온 조회 모듈은 네트워크를 사용합니다. 로컬 감시기의 외부 통신 여부와 앱 전체의 날씨 조회를 구분합니다.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · 입력·처리·출력
-
-검토 시 구분: 입력은 읽어 올 자료, 처리는 자료에서 변화와 이유를 찾는 과정, 출력은 사용자가 볼 알림·이력입니다. 기록에 없는 이전값이나 이유를 결과에 덧붙이지 않습니다.
-
-- 검토 항목 입력: 현재 사용자 Codex의 로컬 한 줄에 기록 하나를 담는 JSONL 파일과 이 차수의 앱 설정
-- 검토 항목 처리: 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시
-- 검토 항목 출력: 알림·변경 이력·로컬 진단 기록
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · 화면과 사용 흐름
-
-1. 이 차수의 소스·requirements와 필요한 자산을 한 작업 폴더에 준비합니다.
-2. 앱을 열고 위젯·상세창에서 감시 경로와 표시되는 기록을 확인합니다.
-3. 새 변경이 기록되면 이전·이후 값과 이유를 비교하고, 기록 종류와 근거 수준을 함께 읽습니다.
-4. 설정·이력은 개인 운영자료로 관리하고 다른 사용자에게 공유하기 전에 내용을 확인합니다.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · 실제 자료 구성
-
-검토 시 구분: 설명 문서와 실행 소스, 목록 자료의 역할을 나누어 읽습니다. 보존 목록의 제외 항목은 누락을 숨긴 것이 아니라 공개하지 않은 범위와 이유를 표시한 것입니다.
-
-- 검토 항목 [src/](src): 앱을 구성하는 소스 파일이 들어 있는 폴더입니다.
-- 검토 항목 [README.md](README.md#reading-level-4): 사람이 읽는 설명 문서입니다.
-- 검토 항목 [requirements.txt](requirements.txt): 실행에 필요한 외부 도구와 버전을 적은 일반 텍스트입니다.
-- 검토 항목 [공개파일_비교.json](%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json): 파일 목록·지문·보존 범위를 이름과 값으로 담은 자료입니다.
-- 검토 항목 [보존자료.md](%EB%B3%B4%EC%A1%B4%EC%9E%90%EB%A3%8C.md): 사람이 읽는 설명 문서입니다.
-- 검토 항목 [부가자료_보존.json](%EB%B6%80%EA%B0%80%EC%9E%90%EB%A3%8C_%EB%B3%B4%EC%A1%B4.json): 파일 목록·지문·보존 범위를 이름과 값으로 담은 자료입니다.
-- 검토 항목 [직전차수.diff](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff): 직전 자료와 달라진 줄을 추가·삭제 표시로 기록한 전체 비교 파일입니다.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · 주요 모듈과 코드 읽기
-
-검토 시 구분: 모듈은 기능별로 나눈 소스 파일입니다. 같은 파일 이름이 여러 차수에 있어도 내용이 같다고 가정하지 않고 해당 차수의 링크를 엽니다.
-
-- 검토 항목 [src/app.py](src/app.py): Codex Orbit: 독립 회전 위젯과 로컬 변경 기록·사용 한도.
-- 검토 항목 [src/notifier.py](src/notifier.py): 현재 사용자 로컬 한 줄에 기록 하나를 담는 JSONL 파일을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다.
-- 검토 항목 [src/activity.py](src/activity.py): 공개 협업 호출과 소유자가 확인된 앱이 직접 남긴 활동을 연결합니다.
-- 검토 항목 [src/atom_frames.py](src/atom_frames.py): 검증된 금속 원자 그림 한 장을 추출 없이 읽는 제한 메모리 재생기입니다.
-- 검토 항목 [src/brand.py](src/brand.py): 같은 실제3D 자산을 공유하는 정적 마크와 가시성 기반 내부 모션입니다.
-- 검토 항목 [src/calendar_art.py](src/calendar_art.py): 2026~2099년의 날짜별 조형 규칙입니다. 외부 데이터와 계정 정보를 사용하지 않습니다.
-- 검토 항목 [src/calendar_catalog.py](src/calendar_catalog.py): 실제 대상 이름과 조형 특징을 연결하는 편집 사전입니다.
-- 검토 항목 [src/calendar_motion.py](src/calendar_motion.py): 한 그래픽 장치(GPU) 작업 프로그램 내부의 작업 흐름와 최대 네 이미지로 날짜별 모션을 공유합니다.
-- 검토 항목 [src/calendar_renderer.py](src/calendar_renderer.py): 현재 날짜의 실제 삼각형 표면으로 만든 입체 모형를 소유 프로그램 내부의 작업 흐름의 화면 밖 전용 공간의 그래픽 장치(GPU)에서 렌더합니다.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · 설치 환경과 실행·사용법
-
-검토 시 구분: 실행 소스가 있는 차수는 그 차수의 외부 도구 목록과 그림·글꼴 자료를 함께 준비합니다. 소스가 확인되지 않은 문서 차수에는 실행 명령을 만들어 적용하지 않습니다.
-
-Windows와 해당 폴더의 requirements.txt를 기준으로 Python 의존성을 준비합니다. history는 공개 소스 보존본이며 현재 루트 assets가 과거 모든 차수의 자산과 호환된다는 뜻은 아닙니다. 날짜별 실제 삼각형 표면으로 만든 입체 모형 렌더에는 ModernGL과 OpenGL 3.3을 지원하는 그래픽 드라이버가 필요합니다.
-
-자산과 의존성을 준비한 이 차수 폴더에서 `python src/app.py`를 실행합니다. history 소스만으로 과거 배포 EXE와 동일한 화면·자산이 모두 복원되지는 않습니다.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · 사용하는 사람에게 달라진 점
-
-상세창 슬라이더와 위젯 우클릭 메뉴에서 회전 속도를 0.25~3배로 선택하고 1배로 복원할 수 있습니다. 선택값은 저장되어 다음 실행에도 적용됩니다. 속도를 바꿔도 조형의 회전 각도를 이어서 재생하며 날짜·시계·기온·계정 조회 간격은 그대로입니다. 저장이 실패하면 이전 배율로 복원하고 선택한 한국어·영어로 오류를 안내합니다. 정적 정보와 움직이는 조형을 나누어 갱신하는 변경도 포함합니다.
-
-[26차 검증 요약](../../docs/%EA%B3%B5%EA%B0%9C%EA%B2%80%EC%A6%9D_26%EC%B0%A8.md)에서 개발 전체·공개본·중앙 소스 검사와 배포 실행 결과를 구분합니다. 고정 240fps는 달성하지 못했으며 추가 달성 작업은 제외됐습니다. 26차 변경 기록의 실측 생성 약 227~230fps, 고유 Qt 그리기 약 214~229fps를 모니터 표시율로 해석하지 않습니다.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · 이 보관본의 의존성 목록
-
-검토 시 구분: 의존성은 이 앱이 불러 쓰는 외부 도구입니다. >=는 적힌 버전 이상이라는 뜻이며 버전 숫자와 앱의 성능 수치를 구분합니다.
-
-[requirements.txt](requirements.txt)의 실제 항목입니다. 외부 실행 도구와 그래픽 장치(GPU) 드라이버는 별도로 준비합니다.
-
-```text
-PySide6-Essentials==6.12.0
-PyInstaller==6.22.3
-moderngl==5.13.0
-glcontext==3.1.0
-numpy==2.5.4
-Pillow==13.0.0
-```
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · 소스에서 제공하는 CLI 옵션
-
-검토 시 구분: CLI 옵션은 프로그램을 시작할 때 뒤에 붙이는 선택 항목입니다. Path는 파일·폴더 경로, store_true는 옵션 이름을 붙이면 켜지는 스위치입니다. --sessions 뒤에는 읽을 기록 폴더를, --data-dir 뒤에는 설정·이력 폴더를 지정합니다.
-
-- 검토 항목 [app.py](src/app.py): `--data-dir`, `--sessions`, `--smoke-test`, `--usage-smoke-test`, `--smoke-report`, `--show-details`, `--show-event`
-- 검토 항목 [notifier.py](src/notifier.py): `--sessions`, `--work`
-
-각 옵션의 기본값·필수값·부작용은 해당 main과 인자 정의를 함께 확인합니다.
-
-
-
-함수 역할·기본값·입력 거부 조건의 세부 참조
-
-다음 항목은 이 자료의 Python 소스에 명시된 선언입니다. 전체 분기와 호출 순서는 각 행의 코드 위치에서 이어서 읽을 수 있습니다.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · [src/activity.py](src/activity.py)
-
-배정 요청과 런타임 관측의 혼합을 피하는 데이터 연결 경계입니다. 전역 상한은 작업 수에 비례한 무제한 증가를 막고 잘못된 상태를 초기화하지 않는 실패 정책을 유지합니다.
-
-**맡은 일과 결과**
-
-- 책임과 출력: 보호문·비공개 표식·긴 인코딩 덩어리는 해석하거나 노출하지 않습니다. [구현 이름 safe_public_text](src/activity.py#L15)
-
-- 책임과 출력: 원래 기록 시각이 있는 해당 작업 자신의 관측만 보존하도록 책임을 둡니다. 여러 작업을 모두 합쳐 최대 256개이며 작업마다 256개씩 늘리는 제한이 아닙니다. [구현 이름 configuration](src/activity.py#L76)
-
-- 책임과 출력: 연결 확인에 필요한 앱 기록 항목만 남겨 나중 대조를 기다립니다. 대화 본문은 보관하지 않으며 모든 작업을 합쳐 대기 자료를 최대 32개로 제한하도록 책임을 둡니다. [구현 이름 defer](src/activity.py#L160)
-
-- 책임과 출력: 그 작업을 처음 발견한 기록만 추가 정보로 보완하도록 책임을 둡니다. 예를 들어 첫 배정 이유가 늦게 확인되면 처음 행을 보완하며, 뒤에 실제로 바뀐 모델 기록은 별도의 변화로 남깁니다. [구현 이름 observe](src/activity.py#L273)
-
-**선택값과 제한값**
-
-- 선언과 자원 경계: 보존할 활동 이벤트 수 상한는 **128**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_ACTIVITY_EVENTS](src/activity.py#L7) 원래 선언을 함께 대조합니다: `정의=128`
-
-- 선언과 자원 경계: 이미 본 활동 식별자의 수 상한는 **8192**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_ACTIVITY_SEEN](src/activity.py#L8) 원래 선언을 함께 대조합니다: `정의=8192`
-
-- 선언과 자원 경계: 추적할 활동 호출 수 상한는 **32**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_ACTIVITY_CALLS](src/activity.py#L9) 원래 선언을 함께 대조합니다: `정의=32`
-
-- 선언과 자원 경계: 공개 호출 수 상한는 **128**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_PUBLIC_CALLS](src/activity.py#L10) 원래 선언을 함께 대조합니다: `정의=128`
-
-- 선언과 자원 경계: 연결 확인을 기다리는 활동 수의 전체 상한는 **32**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_DEFERRED_ACTIVITIES](src/activity.py#L11) 원래 선언을 함께 대조합니다: `정의=32`
-
-- 선언과 자원 경계: 시각이 있는 설정 관측 수의 전체 상한는 **256**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_CONFIGURATION_SNAPSHOTS](src/activity.py#L12) 원래 선언을 함께 대조합니다: `정의=256`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 분기: 활동 호출은 이름과 값의 사전 자료, 연결 대기는 순서 있는 목록이어야 하도록 책임을 둡니다. 어느 한쪽이라도 다른 형식이면 원본을 지우지 않고 오류로 남깁니다. [해당 검사](src/activity.py#L66) 검사식: `not isinstance(self.data['calls'], dict) or not isinstance(self.data['deferred'], list)`.
-
-- 실패 분기: 시각이 있는 설정 관측은 순서 있는 목록이어야 하도록 책임을 둡니다. 다른 형식이면 원본을 빈 값으로 바꾸어 숨기지 않습니다. [해당 검사](src/activity.py#L68) 검사식: `not isinstance(self.data['configurations'], list)`.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · [src/app.py](src/app.py)
-
-GUI 소유 수명과 비동기 감시 수명을 분리합니다. 전달 티켓의 단일 반환과 종료 후 신호를 고려하며 고정 폭의 줄바꿈 높이를 실제 표시 조건으로 계산합니다. 선언된 설정과 관측된 실행은 UI에서도 합치지 않습니다.
-
-**맡은 일과 결과**
-
-- 책임과 출력: 설정과 UI의 속도는 유한한 실제 숫자 범위로 제한하도록 책임을 둡니다. [구현 이름 validated_motion_speed](src/app.py#L42)
-
-- 책임과 출력: Python이 더 쓰지 않는 객체를 정리하는 동안에도 살아 있어야 할 창의 관리자를 앱이 계속 보관하도록 책임을 둡니다. 창이 보이는데 관리 객체만 먼저 사라지는 일을 막기 위한 수명 관리입니다. [구현 이름 _application_gui_root](src/app.py#L49)
-
-- 책임과 출력: 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록하도록 책임을 둡니다. [구현 이름 operation_record](src/app.py#L67)
-
-- 책임과 출력: 이전 기록 전체 부재와 개별 필드 미기록을 구분하고 관측값만 표시하도록 책임을 둡니다. [구현 이름 previous_field](src/app.py#L106)
-
-- 책임과 출력: 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. [구현 이름 short_reason](src/app.py#L130)
-
-- 책임과 출력: 공개 문장만 표시하며 보호된 도구 페이로드를 해석하거나 노출하지 않습니다. [구현 이름 public_text](src/app.py#L182)
-
-- 책임과 출력: 공개된 작업 목적을 모델 선택 이유로 바꾸어 말하지 않습니다. [구현 이름 selection_explanation](src/app.py#L203)
-
-- 책임과 출력: Qt 예약 호출을 포함한 미처리 전달 수를 프로그램 내부의 작업 흐름 사이에서 제한하도록 책임을 둡니다. [구현 이름 NoticeDelivery](src/app.py#L309)
-
-- 책임과 출력: 중복 반환과 종료 뒤 도착한 신호도 같은 한도를 다시 늘리지 않습니다. [구현 이름 NoticeTicket](src/app.py#L334)
-
-- 책임과 출력: 오류가 있을 때 변경 기록 안에 원문을 보여 주는 읽기 전용 라벨입니다. [구현 이름 DiagnosticLabel](src/app.py#L918)
-
-- 책임과 출력: 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리하도록 책임을 둡니다. [구현 이름 QuitGuard](src/app.py#L1394)
-
-- 책임과 출력: 지연된 신호 인자 대신 최신 그 시점의 복사본과 현재 레이아웃의 실제 표시를 대조하도록 책임을 둡니다. [구현 이름 usage_smoke_state](src/app.py#L1956)
-
-- 책임과 출력: 실제 그래픽 장치(GPU) 렌더 수를 기준으로 준비·비교 단계를 판정하도록 책임을 둡니다. [구현 이름 motion_smoke_stage](src/app.py#L1980)
-
-- 책임과 출력: 말줄임 전 제목과 실제 높이에 영향을 주는 표시 조건만 비교하도록 책임을 둡니다. [구현 이름 _content_fit_signature](src/app.py#L759)
-
-- 책임과 출력: 실제 첫 관측 한 행만 안정된 활동 ID로 보강하며 다른 변경은 보존하도록 책임을 둡니다. [구현 이름 promote_first_observation](src/app.py#L1363)
-
-- 책임과 출력: 사용자 조작의 실패는 실제 속도를 복원한 뒤 상세창에서 안내하도록 책임을 둡니다. [구현 이름 change_motion_speed](src/app.py#L1484)
-
-- 책임과 출력: 외부 QThread 참조를 무효화하지 않고 종료된 감시기와 GUI 소유자를 해제하도록 책임을 둡니다. [구현 이름 _finish_closed_gui](src/app.py#L1948)
-
-**선택값과 제한값**
-
-- 선언과 자원 경계: 개인 설정·이력 저장 폴더를 고르는 옵션; 미지정 시 현재 사용자의 LOCALAPPDATA 아래 CodexOrbit, 그 환경값이 없으면 사용자 홈 아래 CodexOrbit입니다. 경로를 입력하는 옵션입니다. [--data-dir](src/app.py#L1996) 원래 선언을 함께 대조합니다: `type=Path; default=Path(os.environ.get('LOCALAPPDATA', Path.home())) / 'CodexOrbit'`
-
-- 선언과 자원 경계: 읽을 Codex 기록 폴더를 고르는 옵션입니다. 경로를 입력하는 옵션입니다. [--sessions](src/app.py#L1997) 원래 선언을 함께 대조합니다: `type=Path`
-
-- 선언과 자원 경계: 앱 시작 확인 모드를 켜는 옵션입니다. 값을 뒤에 쓰지 않고 이름만 붙여 켭니다. [--smoke-test](src/app.py#L1998) 원래 선언을 함께 대조합니다: `action='store_true'`
-
-- 선언과 자원 경계: 실제 계정 한도와 표시를 조회한 뒤 종료하는 확인 옵션입니다. 값을 뒤에 쓰지 않고 이름만 붙여 켭니다. [--usage-smoke-test](src/app.py#L1999) 원래 선언을 함께 대조합니다: `action='store_true'; help='실제 계정 잔량과 표시를 조회한 뒤 종료'`
-
-- 선언과 자원 경계: 시작 확인 결과를 저장할 파일 경로 옵션입니다. 경로를 입력하는 옵션입니다. [--smoke-report](src/app.py#L2000) 원래 선언을 함께 대조합니다: `type=Path`
-
-- 선언과 자원 경계: 시작할 때 상세창을 여는 옵션입니다. 값을 뒤에 쓰지 않고 이름만 붙여 켭니다. [--show-details](src/app.py#L2001) 원래 선언을 함께 대조합니다: `action='store_true'`
-
-- 선언과 자원 경계: 기존 이벤트 ID 또는 대상 ID를 지정해 그 이력을 다시 표시하는 옵션입니다. 뒤에 해당 식별자를 입력하도록 책임을 둡니다. [--show-event](src/app.py#L2002) 원래 선언을 함께 대조합니다: `help='기존 이력의 이벤트 ID 또는 대상 ID를 다시 표시'`
-
-- 선언과 자원 경계: 이력이 없을 때 첫 실행은 기준선이며 새 변화를 기다린다고 알려 주는 문구는 **'변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [EMPTY_HISTORY_GUIDANCE](src/app.py#L39) 원래 선언을 함께 대조합니다: `정의='변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'`
-
-- 선언과 자원 경계: 부모 조율·작업 분류·간단한 수정·구현·심층 검토·독립 검증·판단 재검토 역할의 표시 이름 대응표입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하도록 책임을 둡니다. [ROLE_LABELS](src/app.py#L116) 원래 선언을 함께 대조합니다: `정의={'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 분기: GUI 소유자는 QApplication의 메인 프로그램 내부의 작업 흐름에서 생성해야 하도록 책임을 둡니다. 화면·언어 변경은 화면을 담당하는 작업 흐름에서, 그래픽 작업 공간은 그것을 만든 작업 흐름에서만 다루어야 하도록 책임을 둡니다. [해당 검사](src/app.py#L52) 검사식: `application is None or QThread.currentThread() != application.thread()`.
-
-- 실패 분기: 언어는 GUI 메인 프로그램 내부의 작업 흐름에서만 변경할 수 있습니다. 화면·언어 변경은 화면을 담당하는 작업 흐름에서, 그래픽 작업 공간은 그것을 만든 작업 흐름에서만 다루어야 하도록 책임을 둡니다. [해당 검사](src/app.py#L1523) 검사식: `QThread.currentThread() != application.thread()`.
-
-- 실패 분기: 같은 자료 폴더를 다른 실행본이 쓰고 있거나 잠금 파일에 접근하지 못하면 시작을 멈춥니다. 두 앱이 같은 설정·이력을 동시에 덮어쓰게 하지 않습니다. [해당 검사](src/app.py#L2024) 검사식: `not lock.tryLock(100)`.
-
-- 실패 분기: 앱 설정은 항목 이름과 값으로 구성된 JSON 자료여야 하도록 책임을 둡니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 하도록 책임을 둡니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/app.py#L295) 검사식: `not isinstance(value, dict)`.
-
-- 실패 분기: 알림 전달 대기 한도 또는 종료 상태: 다음 감시 주기에 재시도하도록 책임을 둡니다. [해당 검사](src/app.py#L318) 검사식: `self.closed or len(self.tickets) &gt;= MAX_PENDING`.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · [src/atom_frames.py](src/atom_frames.py)
-
-팩의 검증 후 변경 감지와 제한 캐시를 함께 둡니다. 압축 크기뿐 아니라 전체 해제 크기·개별 멤버 형식도 제한하고 공유 ZIP 수명은 중복 close를 허용하는 종료 경계로 관리합니다.
-
-**맡은 일과 결과**
-
-- 책임과 출력: 필수 시각 자산 오류를 시작 실패 경로에 전달하도록 책임을 둡니다. [구현 이름 AtomAssetError](src/atom_frames.py#L27)
-
-- 책임과 출력: 시작 시 전체 무결성을 검사하고 해제된 화면용 이미지 객체(QImage)는 최대24장만 보존하도록 책임을 둡니다. [구현 이름 AtomFrames](src/atom_frames.py#L50)
-
-- 책임과 출력: 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리하도록 책임을 둡니다. [구현 이름 close_runtime_frames](src/atom_frames.py#L172)
-
-- 책임과 출력: 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유하도록 책임을 둡니다. [구현 이름 get_atom_frames](src/atom_frames.py#L183)
-
-**선택값과 제한값**
-
-- 선언과 자원 경계: 압축 묶음에 있어야 하는 그림의 정확한 장수는 **540**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_COUNT](src/atom_frames.py#L16) 원래 선언을 함께 대조합니다: `정의=540`
-
-- 선언과 자원 경계: 그림 한 변의 픽셀 수는 **296**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_SIZE](src/atom_frames.py#L17) 원래 선언을 함께 대조합니다: `정의=296`
-
-- 선언과 자원 경계: 초당 그림 수의 설정값는 **30**입니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [FPS](src/atom_frames.py#L18) 원래 선언을 함께 대조합니다: `정의=30`
-
-- 선언과 자원 경계: 한 재생 주기의 초 단위 길이는 **18**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [PERIOD_SECONDS](src/atom_frames.py#L19) 원래 선언을 함께 대조합니다: `정의=18`
-
-- 선언과 자원 경계: 풀어 놓은 그림을 메모리에 보관하는 최대 장수는 **24**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [CACHE_LIMIT](src/atom_frames.py#L20) 원래 선언을 함께 대조합니다: `정의=24`
-
-- 선언과 자원 경계: 압축 파일 자체를 읽을 수 있는 최대 바이트 수는 **128 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_ARCHIVE_BYTES](src/atom_frames.py#L21) 원래 선언을 함께 대조합니다: `정의=128 * 1024 * 1024`
-
-- 선언과 자원 경계: 개별 그림 한 장의 최대 바이트 수는 **1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_FRAME_BYTES](src/atom_frames.py#L22) 원래 선언을 함께 대조합니다: `정의=1024 * 1024`
-
-- 선언과 자원 경계: 그림들을 풀어 읽은 크기 합계의 최대 바이트 수는 **256 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_TOTAL_BYTES](src/atom_frames.py#L23) 원래 선언을 함께 대조합니다: `정의=256 * 1024 * 1024`
-
-- 선언과 자원 경계: 자산 명세 문서의 최대 바이트 수는 **64 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_MANIFEST_BYTES](src/atom_frames.py#L24) 원래 선언을 함께 대조합니다: `정의=64 * 1024`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 분기: 명세 문서에 같은 항목 이름이 두 번 나오면 어느 값을 믿어야 할지 모호하므로 거부하도록 책임을 둡니다. [해당 검사](src/atom_frames.py#L44) 검사식: `key in value`.
-
-- 실패 분기: 원자 자산 자산의 파일명·크기·지문을 적은 명세 문서 크기가 허용 범위를 벗어났습니다. 파일 크기는 이 모듈의 MAX_MANIFEST_BYTES 이하여야 하도록 책임을 둡니다. 빈 파일도 받지 않습니다. [해당 검사](src/atom_frames.py#L69) 검사식: `not 0 &lt; manifest_path.stat().st_size &lt;= MAX_MANIFEST_BYTES`.
-
-- 실패 분기: 원자 자산 자산의 파일명·크기·지문을 적은 명세 문서는 객체여야 하도록 책임을 둡니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 하도록 책임을 둡니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/atom_frames.py#L75) 검사식: `not isinstance(self.manifest, dict)`.
-
-- 실패 분기: 파일 내용 지문은 문자열이며 64개의 16진수 문자로 이루어져야 하도록 책임을 둡니다. 여기서 16진수 문자는 0~9와 a~f입니다. 이 검사에서는 소문자만 허용하도록 책임을 둡니다. 숫자·잘못된 길이·다른 문자는 지문으로 받지 않습니다. [해당 검사](src/atom_frames.py#L85) 검사식: `not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None`.
-
-- 실패 분기: 원자 그림 한 장 ZIP 크기가 허용 범위를 벗어났습니다. 파일 크기는 이 모듈의 MAX_ARCHIVE_BYTES 이하여야 하도록 책임을 둡니다. 빈 파일도 받지 않습니다. [해당 검사](src/atom_frames.py#L87) 검사식: `not 0 &lt; archive_path.stat().st_size &lt;= MAX_ARCHIVE_BYTES`.
-
-- 실패 분기: 압축 파일의 전체 내용을 읽어 계산한 SHA-256 지문이 명세 지문과 같아야 하도록 책임을 둡니다. 다른 파일이나 내용 변경을 감지하면 재생하지 않습니다. [해당 검사](src/atom_frames.py#L94) 검사식: `hasher.hexdigest() != digest`.
-
-- 실패 분기: 압축 묶음 안의 파일 수는 정확히 540개이고 파일 이름의 전체 목록도 예상 목록과 정확히 같아야 하도록 책임을 둡니다. 이름 누락·추가·다른 이름은 같은 장수여도 거부하도록 책임을 둡니다. [해당 검사](src/atom_frames.py#L100) 검사식: `len(members) != FRAME_COUNT or {item.filename for item in members} != names`.
-
-- 실패 분기: 압축을 풀어 읽는 개별 파일 크기를 모두 더한 값이 이 모듈의 MAX_TOTAL_BYTES 이하여야 하도록 책임을 둡니다. 압축 파일 자체가 작아도 풀린 합계가 더 크면 거부하도록 책임을 둡니다. [해당 검사](src/atom_frames.py#L102) 검사식: `sum(item.file_size for item in members) &gt; MAX_TOTAL_BYTES`.
-
-- 실패 분기: 검증 때와 현재 파일의 식별 정보가 달라지면 실행 중 자산 변경으로 처리하도록 책임을 둡니다. 앱을 다시 시작해 검증해야 하도록 책임을 둡니다. [해당 검사](src/atom_frames.py#L133) 검사식: `actual != self.identities`.
-
-- 실패 분기: 원자 그림 한 장의 재생 시각이 유한한 숫자가 아닙니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻하도록 책임을 둡니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/atom_frames.py#L138) 검사식: `isinstance(elapsed, bool) or not isinstance(elapsed, (int, float)) or not math.isfinite(elapsed)`.
-
-- 실패 분기: 압축 묶음 안의 항목은 폴더가 아닌 파일이고 암호화되지 않아야 하도록 책임을 둡니다. 허용한 무압축 또는 DEFLATE 압축이어야 하며 크기는 0보다 크고 개별 그림 상한 이하여야 하도록 책임을 둡니다. 이 중 하나라도 맞지 않으면 거부하도록 책임을 둡니다. [해당 검사](src/atom_frames.py#L105) 검사식: `item.is_dir() or item.flag_bits & 1 or item.compress_type not in                     (zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED) or                     not 0 &lt; item.file_size &lt;= MAX_FRAME_BYTES`.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · [src/brand.py](src/brand.py)
-
-여러 창의 로고와 기능 기호를 같은 제작 자료로 표시하는 부분입니다. 창을 숨기면 보이지 않는 로고의 재생 구독을 끝냅니다.
-
-**맡은 일과 결과**
-
-- 책임과 출력: 원소 그림 한 장의 실제 크기에 비례해 여백만 줄이며 영역 밖을 복사하지 않습니다. [구현 이름 motion_brand_source](src/brand.py#L32)
-
-- 책임과 출력: 보이는 로고만 단일 시계에서 같은 그림 한 장으로 갱신하도록 책임을 둡니다. [구현 이름 BrandClock](src/brand.py#L40)
-
-- 책임과 출력: 닫힘·숨김 이벤트에 맞춰 재생 구독을 끝내는 실제3D 로고입니다. [구현 이름 AnimatedBrand](src/brand.py#L106)
-
-- 책임과 출력: 실제 삼각형 표면으로 만든 입체 모형에서 제작한 고정 기호 일곱 개를 창 생성 전에 검증하도록 책임을 둡니다. [구현 이름 validate_symbols](src/brand.py#L137)
-
-- 책임과 출력: 실제 삼각형 표면으로 만든 입체 모형 렌더만 축소하고 새로운 도형이나 글자를 덧그리지 않습니다. [구현 이름 symbol_image](src/brand.py#L181)
-
-- 책임과 출력: 원문 글자 표시 부품(QLabel)을 유지하며 기능 의미를 읽기 쉬운 기호로 보조하도록 책임을 둡니다. [구현 이름 with_symbol](src/brand.py#L209)
-
-**선택값과 제한값**
-
-- 선언과 자원 경계: 모델·추론·시간·이유·한도·새로고침·이력의 일곱 기능 기호 이름는 **('model', 'reasoning', 'time', 'reason', 'usage', 'refresh', 'history')**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [SYMBOL_NAMES](src/brand.py#L133) 원래 선언을 함께 대조합니다: `정의=('model', 'reasoning', 'time', 'reason', 'usage', 'refresh', 'history')`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 분기: 브랜드 그림 한 변의 크기는 1~512픽셀이어야 하도록 책임을 둡니다. 이 범위를 벗어나면 그림을 만들지 않습니다. [해당 검사](src/brand.py#L22) 검사식: `not 1 &lt;= size &lt;= 512`.
-
-- 실패 분기: 기능 기호는 모델·추론·시간·이유·한도·새로고침·이력의 일곱 종류 중 하나이고 크기는 1~96픽셀이어야 하도록 책임을 둡니다. 종류나 크기 중 하나라도 맞지 않으면 거부하도록 책임을 둡니다. [해당 검사](src/brand.py#L184) 검사식: `name not in SYMBOL_NAMES or not 1 &lt;= size &lt;= 96`.
-
-- 실패 분기: 3D 기능 기호 자산의 파일명·크기·지문을 적은 명세 문서 크기 오류입니다. 파일 크기는 65,536바이트 이하여야 하도록 책임을 둡니다. 빈 파일도 받지 않습니다. [해당 검사](src/brand.py#L142) 검사식: `not 0 &lt; path.stat().st_size &lt;= 65536`.
-
-- 실패 분기: 명세 버전은 참/거짓이 아닌 정수 1이어야 하도록 책임을 둡니다. 다른 버전이나 참 값을 1처럼 받아들이지 않습니다. [해당 검사](src/brand.py#L145) 검사식: `type(metadata.get('schema_version')) is not int or metadata['schema_version'] != 1`.
-
-- 실패 분기: 기호 파일 목록은 이름과 값의 사전이고 일곱 기능 기호의 이름과 정확히 같아야 하도록 책임을 둡니다. 빠진 기호나 추가된 기호가 있어도 거부하도록 책임을 둡니다. [해당 검사](src/brand.py#L148) 검사식: `not isinstance(files, dict) or set(files) != set(SYMBOL_NAMES)`.
-
-- 실패 분기: 각 기호 정보는 이름과 값의 사전이고 파일명은 해당 기호 이름에 .png를 붙인 고정 이름이어야 하도록 책임을 둡니다. [해당 검사](src/brand.py#L153) 검사식: `not isinstance(record, dict) or record.get('filename') != name+'.png'`.
-
-- 실패 분기: 파일 내용 지문은 문자열이며 64개의 16진수 문자로 이루어져야 하도록 책임을 둡니다. 여기서 16진수 문자는 0~9와 a~f입니다. 이 검사에서는 소문자만 허용하도록 책임을 둡니다. 숫자·잘못된 길이·다른 문자는 지문으로 받지 않습니다. [해당 검사](src/brand.py#L156) 검사식: `not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None`.
-
-- 실패 분기: 3D 기능 기호 읽기 크기 상한 오류입니다. 파일 크기는 262,144바이트 이하여야 하도록 책임을 둡니다. 빈 파일도 받지 않습니다. [해당 검사](src/brand.py#L159) 검사식: `not 0 &lt; path.stat().st_size &lt;= 262144`.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · [src/calendar_art.py](src/calendar_art.py)
-
-날짜→불변 월 팔레트→대상 규칙 경계를 유지합니다. RGB 반올림 충돌을 가장 가까운 미사용 색으로만 조정하며 현재 모델 렌더와 전체 작은 카탈로그 열거를 분리합니다.
-
-**맡은 일과 결과**
-
-- 책임과 출력: 호스트의 현지 시간대와 무관하게 한국 날짜를 사용하도록 책임을 둡니다. [구현 이름 current_date](src/calendar_art.py#L33)
-
-- 책임과 출력: 반올림 충돌만 가장 가까운 미사용 빨강·초록·파랑의 색값(RGB)로 옮기고 월별 결과를 내용이 고정된 보관하도록 책임을 둡니다. [구현 이름 _month_palette](src/calendar_art.py#L50)
-
-- 책임과 출력: 유효한 날짜만 허용하며 지원 범위 밖을 다른 날짜로 몰래 대체하지 않습니다. [구현 이름 design_for_date](src/calendar_art.py#L78)
-
-- 책임과 출력: 현재 모델만 렌더하며 이 반복자는 작은 카탈로그를 작성할 때만 사용하도록 책임을 둡니다. [구현 이름 all_designs](src/calendar_art.py#L95)
-
-**선택값과 제한값**
-
-- 선언과 자원 경계: 조형을 지원하는 첫 날짜는 2026-1-1입니다. [FIRST_DATE](src/calendar_art.py#L10) 원래 선언을 함께 대조합니다: `정의=date(2026,1,1)`
-
-- 선언과 자원 경계: 조형을 지원하는 마지막 날짜는 2099-12-31입니다. [LAST_DATE](src/calendar_art.py#L11) 원래 선언을 함께 대조합니다: `정의=date(2099,12,31)`
-
-- 선언과 자원 경계: 한국 표준시인 UTC보다 9시간 빠른 시간대입니다. [KST](src/calendar_art.py#L12) 원래 선언을 함께 대조합니다: `정의=timezone(timedelta(hours=9))`
-
-- 선언과 자원 경계: 연월별 조형 모음에서 가져온 주제 이름 목록입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하도록 책임을 둡니다. [THEMES](src/calendar_art.py#L13) 원래 선언을 함께 대조합니다: `정의=tuple(row.title for row in all_collections())`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 분기: 날짜 입력은 날짜 전용 값이어야 하도록 책임을 둡니다. 날짜처럼 보이는 문장이나 날짜·시각이 합쳐진 다른 형식을 대신 받지 않습니다. [해당 검사](src/calendar_art.py#L80) 검사식: `type(value) is not date`.
-
-- 실패 분기: 지원 날짜는 2026-01-01부터 2099-12-31까지 양 끝을 포함하도록 책임을 둡니다. 이보다 이르거나 늦은 날짜를 다른 날짜로 바꾸지 않고 오류로 알립니다. [해당 검사](src/calendar_art.py#L82) 검사식: `not FIRST_DATE &lt;= value &lt;= LAST_DATE`.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · [src/calendar_catalog.py](src/calendar_catalog.py)
-
-대상 key→recipe 연결과 구성 이름은 렌더러의 입력 계약입니다. 연월 범위 검증은 카탈로그 인덱스 오류를 막으며 표시 이름의 조사 선택과 기하 규칙을 분리합니다.
-
-**맡은 일과 결과**
-
-- 책임과 출력: 마지막 한글 음절의 받침에 맞춰 대상 이름을 연결하도록 책임을 둡니다. [구현 이름 joining_particle](src/calendar_catalog.py#L208)
-
-**선택값과 제한값**
-
-- 선언과 자원 경계: 꽃·열매·잎·악기별 대상 모음입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하도록 책임을 둡니다. [POOLS](src/calendar_catalog.py#L166) 원래 선언을 함께 대조합니다: `정의={'꽃': _objects(_FLOWERS,'꽃'), '열매': _objects(_FRUITS,'열매'),          '잎': _objects(_LEAVES,'잎'), '악기': _objects(_MUSIC,'악기')}`
-
-- 선언과 자원 경계: 대상 고유 이름으로 조형 대상을 찾는 사전입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하도록 책임을 둡니다. [OBJECTS](src/calendar_catalog.py#L168) 원래 선언을 함께 대조합니다: `정의={obj.key:obj for pool in POOLS.values() for obj in pool}`
-
-- 선언과 자원 경계: 꽃다발형·대각선형·감싸는 형태·연주대형·삼각형 정물·부채형의 표시 이름 대응표입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하도록 책임을 둡니다. [COMPOSITION_NAMES](src/calendar_catalog.py#L193) 원래 선언을 함께 대조합니다: `정의={'bouquet':'꽃다발형','diagonal':'대각선형','shelter':'감싸는 형태',                      'stage':'연주대형','triangle':'삼각형 정물','fan':'부채형'}`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 분기: 연월 색인은 0~887, 월은 1~12여야 하도록 책임을 둡니다. 둘 중 하나라도 범위를 벗어나면 지원 연월 모음으로 사용하지 않습니다. [해당 검사](src/calendar_catalog.py#L217) 검사식: `not 0 &lt;= index &lt; 888 or not 1 &lt;= month &lt;= 12`.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · [src/calendar_motion.py](src/calendar_motion.py)
-
-한 작업자의 최신 이미지와 독립 스냅샷을 공유하는 생산자·소비자 경계입니다. 메인 스레드 API·이전 작업 종료·크기 상한을 검사하며 생성 수와 실제 소비 수를 다른 지표로 둡니다.
-
-**맡은 일과 결과**
-
-- 책임과 출력: 정상 슬롯을 유지하고 늦은 그림 한 장은 추가 대기나 누적 추격 없이 이어갑니다. [구현 이름 next_frame_deadline](src/calendar_motion.py#L21)
-
-- 책임과 출력: 그래픽 장치(GPU) 준비·실패 때만 쓰는 월 주제의 정적 평면 표식입니다. 3D 성공으로 가장하지 않습니다. [구현 이름 fallback_image](src/calendar_motion.py#L26)
-
-- 책임과 출력: 그림을 계산하는 별도 작업은 화면 버튼이나 창을 직접 건드리지 않습니다. 가장 최근에 만든 그림 하나를 복사해 화면 담당 작업에 전달하도록 책임을 둡니다. Qt는 창과 버튼을 만드는 도구 이름입니다. [구현 이름 _Worker](src/calendar_motion.py#L60)
-
-- 책임과 출력: 창 표시 전에 같은 작업자의 첫 실제 그림 한 장을 최대 5초 준비하도록 책임을 둡니다. [구현 이름 prepare_calendar_motion](src/calendar_motion.py#L232)
-
-- 책임과 출력: 지금 회전한 위치를 유지한 채 앞으로 도는 속도만 바꿉니다. 예를 들어 회전 중 속도를 올려도 모형이 시작 위치로 튀지 않습니다. 바탕화면 시계와 날짜가 더 빠르게 흐르는 것은 아닙니다. [구현 이름 set_calendar_motion_speed](src/calendar_motion.py#L262)
-
-- 책임과 출력: 현재 보이는 각 소유자의 실제 픽셀 요구 중 최대 크기만 전달하도록 책임을 둡니다. [구현 이름 set_calendar_motion_size](src/calendar_motion.py#L268)
-
-- 책임과 출력: Qt 그리기 경로가 실제로 소비한 서로 다른 그림 한 장만 셉니다. [구현 이름 record_calendar_presentation](src/calendar_motion.py#L276)
-
-- 책임과 출력: 제품은 이 문자열을 상태나 툴팁에 표시해 대체 표식과 실제 3D를 구분할 수 있습니다. [구현 이름 get_calendar_error](src/calendar_motion.py#L285)
-
-**선택값과 제한값**
-
-- 선언과 자원 경계: 초당 그림 수의 설정값는 **240**입니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [FPS](src/calendar_motion.py#L15) 원래 선언을 함께 대조합니다: `정의=240`
-
-- 선언과 자원 경계: 공유 그림의 기본 크기는 **384**입니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [SIZE](src/calendar_motion.py#L16) 원래 선언을 함께 대조합니다: `정의=384`
-
-- 선언과 자원 경계: 그래픽 장치에서 그릴 원본 가로·세로 픽셀 크기는 **(3840, 2160)**입니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [RENDER_SIZE](src/calendar_motion.py#L17) 원래 선언을 함께 대조합니다: `정의=(3840, 2160)`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 분기: 날짜별 모션 API는 Qt 메인 프로그램 내부의 작업 흐름에서 호출해야 하도록 책임을 둡니다. 화면·언어 변경은 화면을 담당하는 작업 흐름에서, 그래픽 작업 공간은 그것을 만든 작업 흐름에서만 다루어야 하도록 책임을 둡니다. [해당 검사](src/calendar_motion.py#L211) 검사식: `app is None or QThread.currentThread()!=app.thread()`.
-
-- 실패 분기: 기다릴 시간은 참/거짓을 제외한 실제 숫자로 0초보다 크고 5초 이하여야 하도록 책임을 둡니다. 숫자가 아닌 입력이나 범위 밖 값은 거부하도록 책임을 둡니다. [해당 검사](src/calendar_motion.py#L234) 검사식: `type(timeout_seconds) not in (int,float) or not 0 &lt; timeout_seconds &lt;= 5`.
-
-- 실패 분기: 화면에 보이는지의 값은 참 또는 거짓이어야 하도록 책임을 둡니다. 0·1·문자열을 대신 받지 않습니다. [해당 검사](src/calendar_motion.py#L258) 검사식: `type(visible) is not bool`.
-
-- 실패 분기: 전달할 그림 크기는 참/거짓을 제외한 정수로 32~2160 범위여야 하도록 책임을 둡니다. 예를 들어 소수나 범위를 벗어난 크기는 거부하도록 책임을 둡니다. [해당 검사](src/calendar_motion.py#L270) 검사식: `type(size) is not int or not 32&lt;=size&lt;=2160`.
-
-- 실패 분기: 날짜별 모션 서비스가 닫혔습니다. [해당 검사](src/calendar_motion.py#L167) 검사식: `self.closed`.
-
-- 실패 분기: 날짜별 모션 서비스가 닫혔습니다. [해당 검사](src/calendar_motion.py#L180) 검사식: `self.closed`.
-
-- 실패 분기: 재생 시각은 유한한 숫자여야 하도록 책임을 둡니다. [해당 검사](src/calendar_motion.py#L181) 검사식: `type(elapsed) not in (int,float)`.
-
-- 실패 분기: 재생 시각은 유한한 숫자여야 하도록 책임을 둡니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻하도록 책임을 둡니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/calendar_motion.py#L184) 검사식: `not valid`.
-
-- 실패 분기: 이전 그래픽 장치(GPU) 작업 프로그램 내부의 작업 흐름가 종료 중입니다. [해당 검사](src/calendar_motion.py#L221) 검사식: `_retiring.worker.isRunning()`.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · [src/calendar_renderer.py](src/calendar_renderer.py)
-
-기하 구성과 GPU 컨텍스트 소유권을 분리합니다. 표면 법선·winding·깊이와 중앙 정사각 전달 크기를 보존하며 전체 CPU readback은 검증·내보내기에 한정합니다. 관측소도 같은 컨텍스트와 깊이 버퍼를 사용합니다.
-
-**맡은 일과 결과**
-
-- 책임과 출력: 입체 회전축의 방향을 길이 1의 기준으로 맞춘 뒤, 그 축 주위를 돌리는 계산표를 만듭니다. 로드리게스 회전행렬은 이 계산표의 이름입니다. 축의 길이가 커졌다고 모형 크기까지 커지는 계산을 피하도록 책임을 둡니다. [구현 이름 rotation](src/calendar_renderer.py#L24)
-
-- 책임과 출력: 입체 표면을 이루는 삼각형의 꼭짓점 순서와 바깥을 향하는 방향을 맞춥니다. 법선은 표면의 바깥 방향, winding은 꼭짓점을 도는 순서입니다. 두 방향이 맞아야 앞면과 조명을 같은 기준으로 계산하도록 책임을 둡니다. [구현 이름 finish](src/calendar_renderer.py#L48)
-
-- 책임과 출력: 육면체 면을 실제 둥근 모서리와 구면 꼭짓점으로 투영하도록 책임을 둡니다. [구현 이름 box](src/calendar_renderer.py#L58)
-
-- 책임과 출력: 단면을 축 주위로 돌려 앞면·뒷면·옆면이 있는 입체를 만듭니다. 단면이 각진 다각형이면 각 면의 바깥 방향도 평평한 면에 맞춥니다. 단순한 앞면 그림을 입체처럼 표시하는 방식과 구별됩니다. [구현 이름 lathe](src/calendar_renderer.py#L84)
-
-- 책임과 출력: 3D 경로를 따라 원형 단면을 운반하도록 책임을 둡니다. 코일은 실제 깊이를 가집니다. [구현 이름 tube](src/calendar_renderer.py#L104)
-
-- 책임과 출력: 대상 이름에 연결된 주요 구조를 실제 삼각형 부품으로 구성하도록 책임을 둡니다. [구현 이름 _object_geometry](src/calendar_renderer.py#L145)
-
-- 책임과 출력: 날짜와 무관한 세 링만 읽기 전용 배열로 한 번 생성하도록 책임을 둡니다. [구현 이름 _ring_geometry](src/calendar_renderer.py#L323)
-
-- 책임과 출력: 날짜별 주연과 서로 다른 두 월 모티프를 명시적 대상 사전에서 렌더하도록 책임을 둡니다. [구현 이름 build_geometry](src/calendar_renderer.py#L334)
-
-- 책임과 출력: 그래픽 작업 공간를 만든 프로그램 내부의 작업 흐름에서만 사용하고 현재 날짜의 버퍼만 보유하도록 책임을 둡니다. [구현 이름 CalendarRenderer](src/calendar_renderer.py#L378)
-
-- 책임과 출력: 미리보기와 직접 검증용 동기 렌더입니다. 앱은 공유 작업 프로그램 내부의 작업 흐름를 사용하도록 책임을 둡니다. [구현 이름 render_date](src/calendar_renderer.py#L489)
-
-- 책임과 출력: 원본 타깃은 유지하고 중앙 정사각형의 그래픽 장치(GPU) 전달 크기만 변경하도록 책임을 둡니다. [구현 이름 set_output_size](src/calendar_renderer.py#L425)
-
-- 책임과 출력: 검증·내보내기 때만 실제 직사각형 원본 전체를 중앙 처리 장치(CPU)로 읽습니다. [구현 이름 render_original](src/calendar_renderer.py#L470)
-
-**선택값과 제한값**
-
-- 선언과 자원 경계: 입체 조형의 회전 주기는 **12.0**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [PERIOD](src/calendar_renderer.py#L132) 원래 선언을 함께 대조합니다: `정의=12.0`
-
-- 선언과 자원 경계: 공유 그림의 기본 크기는 **384**입니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [SIZE](src/calendar_renderer.py#L133) 원래 선언을 함께 대조합니다: `정의=384`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 분기: 대상 사전의 형상 규칙과 선택된 디자인의 규칙이 같아야 하도록 책임을 둡니다. 이름과 모형 구성이 다른 자료는 렌더하지 않습니다. [해당 검사](src/calendar_renderer.py#L338) 검사식: `subject.recipe!=design.shape_recipe`.
-
-- 실패 분기: 모션 시각은 유한한 숫자여야 하도록 책임을 둡니다. [해당 검사](src/calendar_renderer.py#L364) 검사식: `type(elapsed) not in (int,float)`.
-
-- 실패 분기: 모션 시각은 유한한 숫자여야 하도록 책임을 둡니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻하도록 책임을 둡니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/calendar_renderer.py#L367) 검사식: `not valid`.
-
-- 실패 분기: 그래픽 장치(GPU) 그래픽 작업 공간는 생성 프로그램 내부의 작업 흐름에서만 사용할 수 있습니다. 화면·언어 변경은 화면을 담당하는 작업 흐름에서, 그래픽 작업 공간은 그것을 만든 작업 흐름에서만 다루어야 하도록 책임을 둡니다. [해당 검사](src/calendar_renderer.py#L423) 검사식: `threading.get_ident()!=self.thread_id`.
-
-- 실패 분기: 전달할 그림 크기는 참/거짓을 제외한 정수로 32~2160 범위여야 하도록 책임을 둡니다. 예를 들어 소수나 범위를 벗어난 크기는 거부하도록 책임을 둡니다. [해당 검사](src/calendar_renderer.py#L428) 검사식: `type(size) is not int or not 32&lt;=size&lt;=2160`.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · [src/core.py](src/core.py)
-
-경로의 상위 연결점 검증과 적용 직전 내용 지문 검사를 결합한 문서 변경 경계입니다. 읽기 경계의 불완전 JSONL은 기록으로 승격하지 않으며 적용·복원은 서로 다른 지문 근거를 사용합니다.
-
-**맡은 일과 결과**
-
-- 책임과 출력: 기록 파일에서 실제 줄바꿈 문자(LF)가 있는 자리만 한 기록의 경계로 봅니다. 읽기 범위의 맨 앞이나 맨 뒤에서 잘린 기록은 완성된 기록처럼 읽지 않습니다. 예를 들어 한 기록 안에 줄바꿈처럼 보이는 특수 문자가 있어도 기록 두 개로 나누지 않습니다. [구현 이름 read_jsonl_tail](src/core.py#L19)
-
-- 책임과 출력: 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존하도록 책임을 둡니다. [구현 이름 title_catalog](src/core.py#L56)
-
-- 책임과 출력: 자식 작업은 실제 부모 채팅 제목과 작업명을 분리하도록 책임을 둡니다. [구현 이름 resolve_title](src/core.py#L86)
-
-- 책임과 출력: 지침을 넣을 파일뿐 아니라 그 파일까지 거치는 상위 폴더도 확인하도록 책임을 둡니다. 바로가기처럼 다른 위치로 연결된 파일·폴더(링크 또는 Windows 재분석 지점)가 있으면 적용을 멈춥니다. 예를 들어 선택한 폴더가 다른 폴더로 연결돼 있으면 그곳의 파일을 대신 고치지 않습니다. [구현 이름 safe_path](src/core.py#L110)
-
-**선택값과 제한값**
-
-- 선언과 자원 경계: 지침 문서의 최대 바이트 수는 **2 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_TEXT_BYTES](src/core.py#L10) 원래 선언을 함께 대조합니다: `정의=2 * 1024 * 1024`
-
-- 선언과 자원 경계: 앱이 관리하는 지침 구역의 시작 표식는 **b'<!-- CODEX-ORBIT:BEGIN -->'**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [BEGIN](src/core.py#L11) 원래 선언을 함께 대조합니다: `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'`
-
-- 선언과 자원 경계: 앱이 관리하는 지침 구역의 끝 표식는 **b'<!-- CODEX-ORBIT:END -->'**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [END](src/core.py#L12) 원래 선언을 함께 대조합니다: `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 분기: 문서가 2 MiB 상한을 초과했습니다. 파일 크기는 2MiB 이하여야 하도록 책임을 둡니다. [해당 검사](src/core.py#L125) 검사식: `path.stat().st_size &gt; MAX_TEXT_BYTES`.
-
-- 실패 분기: 제목 보관 자료와 그 안의 titles 항목은 모두 이름과 값의 사전 자료여야 하도록 책임을 둡니다. 어느 쪽이라도 목록·문자열 등 다른 형식이면 거부하도록 책임을 둡니다. [해당 검사](src/core.py#L65) 검사식: `not isinstance(cache, dict) or not isinstance(cache.get('titles'), dict)`.
-
-- 실패 분기: 대상 파일명은 대소문자를 무시했을 때 AGENTS.md여야 하도록 책임을 둡니다. 다른 이름의 문서에는 적용하지 않습니다. [해당 검사](src/core.py#L136) 검사식: `target.name.lower() != 'agents.md'`.
-
-- 실패 분기: 대상 문서의 바로 위 폴더가 실제로 있어야 하도록 책임을 둡니다. 없는 폴더에 문서를 새로 만들며 적용하지 않습니다. [해당 검사](src/core.py#L138) 검사식: `not target.parent.is_dir()`.
-
-- 실패 분기: 대상이 이미 있으면 일반 파일이며 2MiB 이하여야 하도록 책임을 둡니다. 폴더 등 다른 종류이거나 더 크면 적용하지 않습니다. [해당 검사](src/core.py#L140) 검사식: `target.exists() and (not target.is_file() or target.stat().st_size &gt; MAX_TEXT_BYTES)`.
-
-- 실패 분기: 공백을 제외한 지침 내용이 있어야 하며 추가할 바이트는 2MiB 이하여야 하도록 책임을 둡니다. 빈 내용이나 더 큰 내용은 거부하도록 책임을 둡니다. [해당 검사](src/core.py#L147) 검사식: `not content.strip() or len(added) &gt; MAX_TEXT_BYTES`.
-
-- 실패 분기: 넣을 지침 안에 앱 관리 구역의 시작 또는 끝 표식이 하나라도 있으면 거부하도록 책임을 둡니다. 구역 경계를 내용이 대신 만들어서는 안 됩니다. [해당 검사](src/core.py#L149) 검사식: `BEGIN in added or END in added`.
-
-- 실패 분기: 적용 결과가 2 MiB 상한을 초과하도록 책임을 둡니다. [해당 검사](src/core.py#L163) 검사식: `len(result) &gt; MAX_TEXT_BYTES`.
-
-- 실패 분기: 미리보기 때 파일이 있었는지와 지금 존재하는지가 같아야 하고, 현재 내용의 지문도 예상 지문과 같아야 하도록 책임을 둡니다. 새 파일 생성·삭제·내용 변경 중 하나라도 있으면 새 미리보기가 필요하도록 책임을 둡니다. [해당 검사](src/core.py#L170) 검사식: `target.exists() != existed or digest(target.read_bytes() if existed else b'') != expected`.
-
-- 실패 분기: 미리보기에 보관한 원문과 적용 예정 내용 각각의 지문이 처음 값과 같아야 하도록 책임을 둡니다. 둘 중 하나라도 바뀌면 적용하지 않습니다. [해당 검사](src/core.py#L190) 검사식: `digest(plan['original']) != plan['before_hash'] or digest(plan['applied_bytes']) != plan['after_hash']`.
-
-- 실패 분기: 백업은 앱 데이터의 backups 폴더 바로 안에 있는 일반 파일이며 2MiB 이하여야 하도록 책임을 둡니다. 다른 위치나 잘못된 종류·큰 파일은 복원에 쓰지 않습니다. [해당 검사](src/core.py#L210) 검사식: `backup.parent != safe_path(self.data_dir / 'backups') or not backup.is_file() or backup.stat().st_size &gt; MAX_TEXT_BYTES`.
-
-- 실패 분기: 백업 내용의 지문이 적용 전 원문의 지문과 같아야 하도록 책임을 둡니다. 다르면 원래 문서로 확인할 수 없어 복원하지 않습니다. [해당 검사](src/core.py#L213) 검사식: `digest(raw) != receipt['before_hash']`.
-
-- 실패 분기: 항목 이름과 값으로 구성된 JSON 자료가 아닙니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 하도록 책임을 둡니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/core.py#L41) 검사식: `not isinstance(row, dict)`.
-
-- 실패 분기: 이미 있는 관리 구역의 시작 표식과 끝 표식은 각각 정확히 하나이며 시작이 끝보다 앞에 있어야 하도록 책임을 둡니다. 중복·누락·순서 뒤집힘은 거부하도록 책임을 둡니다. [해당 검사](src/core.py#L156) 검사식: `original.count(BEGIN) != 1 or original.count(END) != 1 or original.index(BEGIN) &gt;= original.index(END)`.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · [src/element_frames.py](src/element_frames.py)
-
-활성 자산만 열어 메모리를 제한하고 캐시 한도와 압축 멤버·해제 크기·디코딩 검증을 결합합니다. 검증 후 파일 정체성 변경도 실패로 전파하며 이전 원소 형상으로 대체하지 않습니다.
-
-**맡은 일과 결과**
-
-- 책임과 출력: 필수 원소 자산 실패를 숨기지 않고 앱의 시작·표시 오류로 전달하도록 책임을 둡니다. [구현 이름 ElementAssetError](src/element_frames.py#L24)
-
-- 책임과 출력: 활성 원소의 해시·목록·첫 그림 한 장을 확인하도록 책임을 둡니다.31개를 적재하지 않습니다. [구현 이름 preflight_element_frames](src/element_frames.py#L132)
-
-**선택값과 제한값**
-
-- 선언과 자원 경계: 풀어 놓은 그림을 메모리에 보관하는 최대 장수는 **24**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [CACHE_LIMIT](src/element_frames.py#L15) 원래 선언을 함께 대조합니다: `정의=24`
-
-- 선언과 자원 경계: 그림 한 변의 픽셀 수는 **192**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_SIZE](src/element_frames.py#L16) 원래 선언을 함께 대조합니다: `정의=192`
-
-- 선언과 자원 경계: 압축 묶음에 있어야 하는 그림의 정확한 장수는 **540**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_COUNT](src/element_frames.py#L17) 원래 선언을 함께 대조합니다: `정의=540`
-
-- 선언과 자원 경계: 초당 그림 수의 설정값는 **30**입니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [FPS](src/element_frames.py#L18) 원래 선언을 함께 대조합니다: `정의=30`
-
-- 선언과 자원 경계: 한 재생 주기의 초 단위 길이는 **18**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [PERIOD_SECONDS](src/element_frames.py#L19) 원래 선언을 함께 대조합니다: `정의=18`
-
-- 선언과 자원 경계: 압축 파일 자체를 읽을 수 있는 최대 바이트 수는 **64*1024*1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_ARCHIVE_BYTES](src/element_frames.py#L20) 원래 선언을 함께 대조합니다: `정의=64*1024*1024`
-
-- 선언과 자원 경계: 개별 그림 한 장의 최대 바이트 수는 **512*1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_FRAME_BYTES](src/element_frames.py#L21) 원래 선언을 함께 대조합니다: `정의=512*1024`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 분기: 원소 번호는 참/거짓이 아닌 정수 1~31이어야 하도록 책임을 둡니다. 0·32·소수·문자열 등은 받지 않습니다. [해당 검사](src/element_frames.py#L34) 검사식: `type(number) is not int or not 1&lt;=number&lt;=31`.
-
-- 실패 분기: 원소 자산의 파일명·크기·지문을 적은 명세 문서 크기 오류 파일 크기는 65,536바이트 이하여야 하도록 책임을 둡니다. 빈 파일도 받지 않습니다. [해당 검사](src/element_frames.py#L65) 검사식: `not 0&lt;manifest.stat().st_size&lt;=64*1024`.
-
-- 실패 분기: 원소 자산의 파일명·크기·지문을 적은 명세 문서는 객체여야 하도록 책임을 둡니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 하도록 책임을 둡니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/element_frames.py#L69) 검사식: `not isinstance(self.manifest,dict)`.
-
-- 실패 분기: 파일 내용 지문은 문자열이며 64개의 16진수 문자로 이루어져야 하도록 책임을 둡니다. 여기서 16진수 문자는 0~9와 a~f입니다. 이 검사에서는 소문자만 허용하도록 책임을 둡니다. 숫자·잘못된 길이·다른 문자는 지문으로 받지 않습니다. [해당 검사](src/element_frames.py#L74) 검사식: `not isinstance(digest,str) or not re.fullmatch('[0-9a-f]{64}',digest)`.
-
-- 실패 분기: 원소 압축파일 크기 초과 파일 크기는 이 모듈의 MAX_ARCHIVE_BYTES 이하여야 하도록 책임을 둡니다. 빈 파일도 받지 않습니다. [해당 검사](src/element_frames.py#L75) 검사식: `not 0&lt;archive.stat().st_size&lt;=MAX_ARCHIVE_BYTES`.
-
-- 실패 분기: 압축 파일의 전체 내용을 읽어 계산한 SHA-256 지문이 명세 지문과 같아야 하도록 책임을 둡니다. 다른 파일이나 내용 변경을 감지하면 재생하지 않습니다. [해당 검사](src/element_frames.py#L78) 검사식: `hasher.hexdigest()!=digest`.
-
-- 실패 분기: 압축 묶음 안의 파일 수는 정확히 540개이고 파일 이름의 전체 목록도 예상 목록과 정확히 같아야 하도록 책임을 둡니다. 이름 누락·추가·다른 이름은 같은 장수여도 거부하도록 책임을 둡니다. frame_0000.png부터 frame_0539.png까지의 고정 이름입니다. [해당 검사](src/element_frames.py#L80) 검사식: `len(members)!=540 or {m.filename for m in members}!={f'frame_{i:04d}.png' for i in range(540)}`.
-
-- 실패 분기: 압축을 풀어 읽는 개별 파일 크기를 모두 더한 값이 128×1024×1024바이트 이하여야 하도록 책임을 둡니다. 압축 파일 자체가 작아도 풀린 합계가 더 크면 거부하도록 책임을 둡니다. [해당 검사](src/element_frames.py#L82) 검사식: `sum(m.file_size for m in members)&gt;128*1024*1024`.
-
-- 실패 분기: 검증 때와 현재 파일의 식별 정보가 달라지면 실행 중 자산 변경으로 처리하도록 책임을 둡니다. 앱을 다시 시작해 검증해야 하도록 책임을 둡니다. [해당 검사](src/element_frames.py#L91) 검사식: `actual!=self.identities`.
-
-- 실패 분기: 원소 재생 시각은 유한한 숫자여야 하도록 책임을 둡니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻하도록 책임을 둡니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/element_frames.py#L106) 검사식: `isinstance(elapsed,bool) or not isinstance(elapsed,(int,float)) or not math.isfinite(elapsed)`.
-
-- 실패 분기: 원소 재생기가 닫혔습니다. [해당 검사](src/element_frames.py#L107) 검사식: `self.archive is None`.
-
-- 실패 분기: 압축 묶음 안의 항목은 폴더가 아닌 파일이고 암호화되지 않아야 하도록 책임을 둡니다. 허용한 무압축 또는 DEFLATE 압축이어야 하며 크기는 0보다 크고 개별 그림 상한 이하여야 하도록 책임을 둡니다. 이 중 하나라도 맞지 않으면 거부하도록 책임을 둡니다. [해당 검사](src/element_frames.py#L84) 검사식: `member.is_dir() or member.flag_bits&1 or member.compress_type not in (zipfile.ZIP_STORED,zipfile.ZIP_DEFLATED)                     or not 0&lt;member.file_size&lt;=MAX_FRAME_BYTES`.
-
-- 실패 분기: 읽은 그림은 개별 크기 상한 이하이면서 최소 33바이트여야 하도록 책임을 둡니다. PNG 시작 표식과 IHDR 머리말, 192×192 크기, 8비트 RGBA 형식을 모두 확인하도록 책임을 둡니다. 하나라도 다르면 그림을 받지 않습니다. [해당 검사](src/element_frames.py#L96) 검사식: `len(data)&gt;MAX_FRAME_BYTES or len(data)&lt;33 or data[:8]!=b'\x89PNG\r\n\x1a\n' or data[12:16]!=b'IHDR'                     or struct.unpack('&gt;II',data[16:24])!=(192,192) or data[24:26]!=bytes((8,6))`.
-
-- 실패 분기: 그림을 실제 이미지로 읽을 수 있어야 하며 가로와 세로가 각각 192이고 투명도 정보가 있어야 하도록 책임을 둡니다. 이 조건을 하나라도 만족하지 못하면 거부하도록 책임을 둡니다. [해당 검사](src/element_frames.py#L99) 검사식: `image.isNull() or image.size().width()!=192 or image.height()!=192 or not image.hasAlphaChannel()`.
-
-- 실패 분기: 192×192 그림의 네 모서리 (0,0), (191,0), (0,191), (191,191)는 모두 완전히 투명해야 하도록 책임을 둡니다. 한 모서리라도 불투명한 부분이 있으면 거부하도록 책임을 둡니다. [해당 검사](src/element_frames.py#L100) 검사식: `any(image.pixelColor(x,y).alpha() for x,y in ((0,0),(191,0),(0,191),(191,191)))`.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · [src/element_visuals.py](src/element_visuals.py)
-
-이미 만든 입체 원자 그림의 투명한 모양을 유지하면서 디자인 색만 덧입힙니다.
-
-**맡은 일과 결과**
-
-- 책임과 출력: 그림에서 원래 투명했던 부분은 계속 투명하게 두고, 원래 보이던 모양의 밝고 어두운 부분에만 색을 부드럽게 입힙니다. 이 겹치기 방식을 SourceAtop이라고 하도록 책임을 둡니다. 예를 들어 둥근 모형에 색을 입혀도 바깥의 투명 배경이 네모난 색판으로 바뀌지 않습니다. [구현 이름 colorize_atom](src/element_visuals.py#L5)
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · [src/elements.py](src/elements.py)
-
-한국 날짜의 1일부터 31일까지에 대응하는 원소 이름과 디자인 색을 고릅니다. 예를 들어 자정이나 절전 복귀 후 다시 날짜를 읽어 그날의 원소를 고릅니다.
-
-**맡은 일과 결과**
-
-- 책임과 출력: 매 호출 실제 날짜를 다시 읽어 자정·절전 복귀·시계 되돌림을 반영하도록 책임을 둡니다. [구현 이름 daily_element](src/elements.py#L43)
-
-**선택값과 제한값**
-
-- 선언과 자원 경계: 한국 표준시인 UTC보다 9시간 빠른 시간대입니다. [KST](src/elements.py#L5) 원래 선언을 함께 대조합니다: `정의=timezone(timedelta(hours=9))`
-
-- 선언과 자원 경계: 색은 원소에서 받은 디자인 영감이며 실제 원소색·불꽃색·전자 배치를 재현하지 않는다는 안내입니다. [PALETTE_NOTE](src/elements.py#L8) 원래 선언을 함께 대조합니다: `정의='원소에서 영감받은 디자인 색이며 실제 원소·불꽃색이나 전자배치 재현이 아닙니다.'`
-
-- 선언과 자원 경계: 원소 번호·기호·이름·색·강조색을 차례로 묶은 목록입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하도록 책임을 둡니다. [ELEMENTS](src/elements.py#L39) 원래 선언을 함께 대조합니다: `정의=tuple(Element(index,symbol,name,color,accent)                  for index,(symbol,name,color,accent) in enumerate(_ROWS,1))`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 분기: 날짜·시각에 시간대 정보와 실제 시차가 모두 있어야 하도록 책임을 둡니다. 어느 쪽이라도 없으면 한국 날짜로 해석할 수 없어 거부하도록 책임을 둡니다. [해당 검사](src/elements.py#L46) 검사식: `value.tzinfo is None or value.utcoffset() is None`.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · [src/frame_pacing.py](src/frame_pacing.py)
-
-회전 속도와 다음 그림을 보여 줄 시간을 계산하도록 책임을 둡니다. 모형 속도를 바꾸어도 실제 시계·날짜의 진행 속도는 바꾸지 않습니다.
-
-**맡은 일과 결과**
-
-- 책임과 출력: 유한한 0.25~3배 숫자만 받아 참/거짓 두 가지 값과 잘못된 설정을 거부하도록 책임을 둡니다. [구현 이름 validate_motion_speed](src/frame_pacing.py#L7)
-
-- 책임과 출력: 모형이 움직이는 데 쓰는 시간만 속도 배율에 따라 이어 계산하도록 책임을 둡니다. 예를 들어 속도를 바꾸기 전까지 움직인 양을 보존한 다음 새 속도로 이어 갑니다. 실제 날짜와 시계는 이 계산에 따라 바뀌지 않습니다. [구현 이름 MotionClock](src/frame_pacing.py#L20)
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 분기: 회전 속도는 0.25~3배의 유한한 숫자여야 하도록 책임을 둡니다. [해당 검사](src/frame_pacing.py#L9) 검사식: `type(value) not in (int, float)`.
-
-- 실패 분기: 회전 속도는 0.25~3배의 유한한 숫자여야 하도록 책임을 둡니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻하도록 책임을 둡니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/frame_pacing.py#L15) 검사식: `not valid`.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · [src/i18n.py](src/i18n.py)
-
-앱이 만든 문구의 한국어·영어 표시를 관리하도록 책임을 둡니다. 실제 기록 문장은 앱 번역문과 구분해 보존하도록 책임을 둡니다.
-
-**맡은 일과 결과**
-
-- 책임과 출력: 명시한 앱 문구만 번역하고 전달된 값은 번역하지 않습니다. [구현 이름 translate](src/i18n.py#L51)
-
-- 책임과 출력: 생성 당시 정적인 앱 문구만 기록하여 사용자 원문과 구분하도록 책임을 둡니다. [구현 이름 remember_translations](src/i18n.py#L63)
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · [src/motion_label.py](src/motion_label.py)
-
-움직이는 그림을 화면에 붙이는 부분입니다. 그림이 보이는지와 필요한 크기를 재생 쪽에 전달하도록 책임을 둡니다.
-
-**맡은 일과 결과**
-
-- 책임과 출력: 최신 이미지 한 개를 보관하고 크기·DPR 변경 때만 기본 크기 힌트를 갱신하도록 책임을 둡니다. [구현 이름 MotionImageLabel](src/motion_label.py#L6)
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · [src/notifier.py](src/notifier.py)
-
-읽기 예산·파일 위치·대기 상한이 감시 자원을 제한합니다. 과거 이유 검색은 순차 오프셋을 움직이지 않고 이력 보강은 중복 알림을 만들지 않습니다. 형식 오류·이행 백업 불일치는 자동 초기화로 숨기지 않습니다.
-
-**맡은 일과 결과**
-
-- 책임과 출력: 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도하도록 책임을 둡니다. [구현 이름 atomic_json](src/notifier.py#L33)
-
-- 책임과 출력: 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. [구현 이름 source_datetime](src/notifier.py#L63)
-
-- 책임과 출력: 원본 시각이 있는 복제 기록만 제외하며 기준선 재생의 순서는 복원하도록 책임을 둡니다. [구현 이름 duplicate_record](src/notifier.py#L212)
-
-- 책임과 출력: 현재 채팅의 공식 기록에 직접 적힌 설정 항목만 읽습니다. 앱이 직접 남긴는 앱이 직접 남긴 항목이라는 뜻입니다. 누가 바꿨는지, 서버에서 어떤 모델이 실행됐는지는 그 설정만으로 추측하지 않습니다. [구현 이름 settings_record](src/notifier.py#L223)
-
-- 책임과 출력: 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. [구현 이름 lookup_parent_reason](src/notifier.py#L376)
-
-- 책임과 출력: 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강하도록 책임을 둡니다. [구현 이름 enrich_event](src/notifier.py#L423)
-
-- 책임과 출력: 이미 읽은 과거 범위에서 작업의 식별 정보만 다시 연결하도록 책임을 둡니다. 대화 본문을 새로 읽어 저장하는 기능이 아니며 각 파일을 읽는 기존 양의 제한도 유지하도록 책임을 둡니다. [구현 이름 replay_activity_prefix](src/notifier.py#L445)
-
-**선택값과 제한값**
-
-- 선언과 자원 경계: 읽을 Codex 기록 폴더를 고르는 옵션입니다. 경로를 입력하는 옵션입니다. 기본은 현재 사용자 홈의 .codex/sessions 폴더입니다. [--sessions](src/notifier.py#L739) 원래 선언을 함께 대조합니다: `type=Path; default=Path.home() / '.codex/sessions'`
-
-- 선언과 자원 경계: 감시기의 작업 자료 폴더를 고르는 옵션; 기본은 프로젝트 아래 work입니다. 경로를 입력하는 옵션입니다. [--work](src/notifier.py#L740) 원래 선언을 함께 대조합니다: `type=Path; default=ROOT / 'work'`
-
-- 선언과 자원 경계: 이 소스 파일을 기준으로 두 단계 위의 프로젝트 폴더입니다. [ROOT](src/notifier.py#L18) 원래 선언을 함께 대조합니다: `정의=Path(__file__).resolve().parents[1]`
-
-- 선언과 자원 경계: Windows가 앱을 구분하는 고정 이름는 **'Yunseok.Codex.ModelChangeNotifier'**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [APP_ID](src/notifier.py#L19) 원래 선언을 함께 대조합니다: `정의='Yunseok.Codex.ModelChangeNotifier'`
-
-- 선언과 자원 경계: 한 번에 나누어 읽는 기록의 바이트 수는 **512 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [READ_BYTES](src/notifier.py#L20) 원래 선언을 함께 대조합니다: `정의=512 * 1024`
-
-- 선언과 자원 경계: 기록 하나를 읽는 최대 바이트 수는 **2 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_RECORD](src/notifier.py#L21) 원래 선언을 함께 대조합니다: `정의=2 * 1024 * 1024`
-
-- 선언과 자원 경계: 한 번의 감시에서 다룰 파일 수의 상한는 **4096**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_FILES](src/notifier.py#L22) 원래 선언을 함께 대조합니다: `정의=4096`
-
-- 선언과 자원 경계: 로그 파일 크기의 바이트 상한는 **2 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [LOG_BYTES](src/notifier.py#L23) 원래 선언을 함께 대조합니다: `정의=2 * 1024 * 1024`
-
-- 선언과 자원 경계: 한 감시 주기에서 읽는 전체 바이트 수 상한는 **8 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [POLL_READ_BYTES](src/notifier.py#L24) 원래 선언을 함께 대조합니다: `정의=8 * 1024 * 1024`
-
-- 선언과 자원 경계: 아직 전달이 끝나지 않은 알림 수의 상한는 **256**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MAX_PENDING](src/notifier.py#L25) 원래 선언을 함께 대조합니다: `정의=256`
-
-- 선언과 자원 경계: 감시를 다시 확인하는 초 단위 간격는 **0.2**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [POLL_INTERVAL_SECONDS](src/notifier.py#L26) 원래 선언을 함께 대조합니다: `정의=0.2`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 분기: 상태 파일이 16 MiB 상한을 초과했습니다. 원본 보존 후 점검이 필요하도록 책임을 둡니다. 파일 크기는 16MiB 이하여야 하도록 책임을 둡니다. [해당 검사](src/notifier.py#L90) 검사식: `self.state_path.stat().st_size &gt; 16 * 1024 * 1024`.
-
-- 실패 분기: 저장 상태의 버전이 2 또는 3이 아니면 요청과 관측이 섞인 구형 자료로 봅니다. 원본을 보존하고 사용자가 명시한 새 기준선 절차가 필요하도록 책임을 둡니다. [해당 검사](src/notifier.py#L94) 검사식: `self.state.get('schema_version') not in (2, 3)`.
-
-- 실패 분기: 저장 상태의 files와 models는 모두 이름과 값의 사전 자료여야 하도록 책임을 둡니다. 하나라도 다른 형식이면 원본을 빈 상태로 초기화하지 않고 오류로 둡니다. [해당 검사](src/notifier.py#L96) 검사식: `not isinstance(self.state.get('files'), dict) or not isinstance(self.state.get('models'), dict)`.
-
-- 실패 분기: 명시 배정 상태 구조 오류입니다. 자동 초기화하지 않습니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 하도록 책임을 둡니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/notifier.py#L98) 검사식: `not isinstance(self.state.get('declarations'), dict)`.
-
-- 실패 분기: 채팅 선택 설정 상태 구조 오류입니다. 자동 초기화하지 않습니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 하도록 책임을 둡니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/notifier.py#L117) 검사식: `not isinstance(self.state.get('settings'), dict)`.
-
-- 실패 분기: 새로 만든 이행 백업의 전체 바이트가 원본과 같아야 하도록 책임을 둡니다. 다르면 자동 덮어쓰기를 중단하도록 책임을 둡니다. [해당 검사](src/notifier.py#L105) 검사식: `backup.read_bytes() != original`.
-
-- 실패 분기: 파일을 읽은 시작·끝 위치는 참/거짓을 제외한 0 이상의 정수여야 하도록 책임을 둡니다. 음수·문자열·참/거짓을 파일 위치로 사용하지 않습니다. [해당 검사](src/notifier.py#L112) 검사식: `any(isinstance(v, bool) or not isinstance(v, int) or v &lt; 0 for v in (offset, end))`.
-
-- 실패 분기: 새로 만든 이행 백업의 전체 바이트가 원본과 같아야 하도록 책임을 둡니다. 다르면 자동 덮어쓰기를 중단하도록 책임을 둡니다. [해당 검사](src/notifier.py#L123) 검사식: `backup.read_bytes() != original`.
-
-- 실패 분기: 파일을 읽은 시작·끝 위치는 참/거짓을 제외한 0 이상의 정수여야 하도록 책임을 둡니다. 음수·문자열·참/거짓을 파일 위치로 사용하지 않습니다. [해당 검사](src/notifier.py#L131) 검사식: `isinstance(end, bool) or not isinstance(end, int) or end &lt; 0`.
-
-- 실패 분기: 항목 이름과 값으로 구성된 JSON 자료가 아닙니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 하도록 책임을 둡니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/notifier.py#L523) 검사식: `not isinstance(record, dict)`.
-
-- 실패 분기: 명시 알림 파일 상한 초과 파일 크기는 20,000바이트 이하여야 하도록 책임을 둡니다. [해당 검사](src/notifier.py#L603) 검사식: `path.stat().st_size &gt; 20000`.
-
-- 실패 분기: 항목 이름과 값으로 구성된 JSON 자료가 아닙니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 하도록 책임을 둡니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/notifier.py#L467) 검사식: `not isinstance(record, dict)`.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · [src/theme.py](src/theme.py)
-
-파일 선택창·버튼·기본 기호의 색과 문구·배치를 맞춥니다. 긴 한글 버튼이나 파일 이름이 들어갈 공간도 다룹니다.
-
-**맡은 일과 결과**
-
-- 책임과 출력: 파일·삼각형 표면으로 만든 입체 모형지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. [구현 이름 MonochromeStyle](src/theme.py#L53)
-
-- 책임과 출력: 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역하도록 책임을 둡니다. [구현 이름 KoreanDialogs](src/theme.py#L78)
-
-- 책임과 출력: 앱 파일 선택창의 이름 열과 한글 버튼에 충분한 공간을 확보하도록 책임을 둡니다. [구현 이름 DialogLayout](src/theme.py#L94)
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · [src/typography.py](src/typography.py)
-
-화면 글꼴 파일을 앱에 등록하도록 책임을 둡니다. 필수 글꼴이 없거나 등록되지 않으면 시작 오류로 알리며 성공한 것처럼 숨기지 않습니다.
-
-**맡은 일과 결과**
-
-- 책임과 출력: 필수 파일이나 Qt 등록 실패를 숨기지 않고 시작 오류로 전달하도록 책임을 둡니다. [구현 이름 register_fonts](src/typography.py#L8)
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · [src/usage.py](src/usage.py)
-
-Codex의 읽기 전용 계정 조회로 사용 한도 응답을 읽습니다. 예를 들어 자료가 없다는 상태를 잔량 0으로 바꾸지 않습니다.
-
-**맡은 일과 결과**
-
-- 책임과 출력: 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. [구현 이름 number](src/usage.py#L16)
-
-- 책임과 출력: 계정에서 여러 사용 한도 구간을 보내 주면 그 공식 구간을 먼저 사용하도록 책임을 둡니다. 버킷은 서로 다른 기간의 한도 묶음이라는 뜻입니다. 기간이나 수치가 응답에 없으면 임의로 채우지 않습니다. [구현 이름 normalize_limits](src/usage.py#L35)
-
-- 책임과 출력: 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. [구현 이름 discover_codex](src/usage.py#L69)
-
-**선택값과 제한값**
-
-- 선언과 자원 경계: 응답을 읽는 최대 바이트 수는 **1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_BYTES](src/usage.py#L12) 원래 선언을 함께 대조합니다: `정의=1024 * 1024`
-
-- 선언과 자원 경계: 한국 표준시인 UTC보다 9시간 빠른 시간대입니다. [KST](src/usage.py#L13) 원래 선언을 함께 대조합니다: `정의=timezone(timedelta(hours=9))`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 분기: 객체가 아닌 응답 자료는 항목 이름과 값의 쌍으로 구성되어야 하도록 책임을 둡니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/usage.py#L226) 검사식: `not isinstance(message, dict)`.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · [src/usage_frames.py](src/usage_frames.py)
-
-표시 자산 공급자는 계정 조회 상태를 소유하지 않습니다. 공유 팩의 전체 검증·최대16장 디코드 캐시·중복 종료 안전성을 유지하여 표현 실패가 계정 상태를 오염시키지 않게 합니다.
-
-**맡은 일과 결과**
-
-- 책임과 출력: 조형 표시 오류를 호출자에게 전달하며 계정 조회 흐름과 분리하도록 책임을 둡니다. [구현 이름 UsageAssetError](src/usage_frames.py#L27)
-
-- 책임과 출력: 시작 시 전체 무결성을 검사하고 해제된 화면용 이미지 객체(QImage)는 최대16장만 보존하도록 책임을 둡니다. [구현 이름 UsageFrames](src/usage_frames.py#L50)
-
-- 책임과 출력: 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리하도록 책임을 둡니다. [구현 이름 close_usage_frames](src/usage_frames.py#L183)
-
-- 책임과 출력: 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유하도록 책임을 둡니다. [구현 이름 preflight_usage_frames](src/usage_frames.py#L194)
-
-- 책임과 출력: 공유 팩의 한 그림 한 장을 반환하며 계정 조회 상태에는 관여하지 않습니다. [구현 이름 get_usage_frame](src/usage_frames.py#L207)
-
-**선택값과 제한값**
-
-- 선언과 자원 경계: 압축 묶음에 있어야 하는 그림의 정확한 장수는 **360**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_COUNT](src/usage_frames.py#L16) 원래 선언을 함께 대조합니다: `정의=360`
-
-- 선언과 자원 경계: 그림 한 변의 픽셀 수는 **384**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [FRAME_SIZE](src/usage_frames.py#L17) 원래 선언을 함께 대조합니다: `정의=384`
-
-- 선언과 자원 경계: 초당 그림 수의 설정값는 **30**입니다. 이는 처리 상한 설정이며 이 수치의 실제 성능 달성을 뜻하지 않습니다. [FPS](src/usage_frames.py#L18) 원래 선언을 함께 대조합니다: `정의=30`
-
-- 선언과 자원 경계: 한 재생 주기의 초 단위 길이는 **12**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [PERIOD_SECONDS](src/usage_frames.py#L19) 원래 선언을 함께 대조합니다: `정의=12`
-
-- 선언과 자원 경계: 풀어 놓은 그림을 메모리에 보관하는 최대 장수는 **16**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [CACHE_LIMIT](src/usage_frames.py#L20) 원래 선언을 함께 대조합니다: `정의=16`
-
-- 선언과 자원 경계: 압축 파일 자체를 읽을 수 있는 최대 바이트 수는 **128 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_ARCHIVE_BYTES](src/usage_frames.py#L21) 원래 선언을 함께 대조합니다: `정의=128 * 1024 * 1024`
-
-- 선언과 자원 경계: 개별 그림 한 장의 최대 바이트 수는 **1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_FRAME_BYTES](src/usage_frames.py#L22) 원래 선언을 함께 대조합니다: `정의=1024 * 1024`
-
-- 선언과 자원 경계: 그림들을 풀어 읽은 크기 합계의 최대 바이트 수는 **256 * 1024 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_TOTAL_BYTES](src/usage_frames.py#L23) 원래 선언을 함께 대조합니다: `정의=256 * 1024 * 1024`
-
-- 선언과 자원 경계: 자산 명세 문서의 최대 바이트 수는 **64 * 1024**입니다. 바이트는 파일·메모리 크기를 세는 단위이고, 곱셈 표기는 그 크기를 계산하는 식입니다. [MAX_MANIFEST_BYTES](src/usage_frames.py#L24) 원래 선언을 함께 대조합니다: `정의=64 * 1024`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 분기: 명세 문서에 같은 항목 이름이 두 번 나오면 어느 값을 믿어야 할지 모호하므로 거부하도록 책임을 둡니다. [해당 검사](src/usage_frames.py#L44) 검사식: `key in value`.
-
-- 실패 분기: 대시보드 조형 자산 자산의 파일명·크기·지문을 적은 명세 문서 크기가 허용 범위를 벗어났습니다. 파일 크기는 이 모듈의 MAX_MANIFEST_BYTES 이하여야 하도록 책임을 둡니다. 빈 파일도 받지 않습니다. [해당 검사](src/usage_frames.py#L69) 검사식: `not 0 &lt; manifest_path.stat().st_size &lt;= MAX_MANIFEST_BYTES`.
-
-- 실패 분기: 대시보드 조형 자산 자산의 파일명·크기·지문을 적은 명세 문서는 객체여야 하도록 책임을 둡니다. 자료는 항목 이름과 값의 쌍으로 구성되어야 하도록 책임을 둡니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/usage_frames.py#L75) 검사식: `not isinstance(self.manifest, dict)`.
-
-- 실패 분기: 파일 내용 지문은 문자열이며 64개의 16진수 문자로 이루어져야 하도록 책임을 둡니다. 여기서 16진수 문자는 0~9와 a~f입니다. 이 검사에서는 소문자만 허용하도록 책임을 둡니다. 숫자·잘못된 길이·다른 문자는 지문으로 받지 않습니다. [해당 검사](src/usage_frames.py#L85) 검사식: `not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None`.
-
-- 실패 분기: 대시보드 조형 그림 한 장 ZIP 크기가 허용 범위를 벗어났습니다. 파일 크기는 이 모듈의 MAX_ARCHIVE_BYTES 이하여야 하도록 책임을 둡니다. 빈 파일도 받지 않습니다. [해당 검사](src/usage_frames.py#L87) 검사식: `not 0 &lt; archive_path.stat().st_size &lt;= MAX_ARCHIVE_BYTES`.
-
-- 실패 분기: 압축 파일의 전체 내용을 읽어 계산한 SHA-256 지문이 명세 지문과 같아야 하도록 책임을 둡니다. 다른 파일이나 내용 변경을 감지하면 재생하지 않습니다. [해당 검사](src/usage_frames.py#L94) 검사식: `hasher.hexdigest() != digest`.
-
-- 실패 분기: 압축 묶음 안의 파일 수는 정확히 360개이고 파일 이름의 전체 목록도 예상 목록과 정확히 같아야 하도록 책임을 둡니다. 이름 누락·추가·다른 이름은 같은 장수여도 거부하도록 책임을 둡니다. [해당 검사](src/usage_frames.py#L100) 검사식: `len(members) != FRAME_COUNT or {item.filename for item in members} != names`.
-
-- 실패 분기: 압축을 풀어 읽는 개별 파일 크기를 모두 더한 값이 이 모듈의 MAX_TOTAL_BYTES 이하여야 하도록 책임을 둡니다. 압축 파일 자체가 작아도 풀린 합계가 더 크면 거부하도록 책임을 둡니다. [해당 검사](src/usage_frames.py#L102) 검사식: `sum(item.file_size for item in members) &gt; MAX_TOTAL_BYTES`.
-
-- 실패 분기: 검증 때와 현재 파일의 식별 정보가 달라지면 실행 중 자산 변경으로 처리하도록 책임을 둡니다. 앱을 다시 시작해 검증해야 하도록 책임을 둡니다. [해당 검사](src/usage_frames.py#L133) 검사식: `actual != self.identities`.
-
-- 실패 분기: 조형 재생 시각은 유한한 숫자여야 하도록 책임을 둡니다. [해당 검사](src/usage_frames.py#L138) 검사식: `type(elapsed) not in (int, float)`.
-
-- 실패 분기: 대시보드 조형 그림 한 장의 재생 시각이 유한한 숫자가 아닙니다. 여기서 유한한 숫자는 무한대나 계산 불능 값이 아닌 실제 수를 뜻하도록 책임을 둡니다. 숫자처럼 보이는 문자열이나 참/거짓을 숫자로 대신 받지 않습니다. [해당 검사](src/usage_frames.py#L144) 검사식: `not finite`.
-
-- 실패 분기: 조형 재생기가 닫혔습니다. [해당 검사](src/usage_frames.py#L149) 검사식: `self.archive is None`.
-
-- 실패 분기: 압축 묶음 안의 항목은 폴더가 아닌 파일이고 암호화되지 않아야 하도록 책임을 둡니다. 허용한 무압축 또는 DEFLATE 압축이어야 하며 크기는 0보다 크고 개별 그림 상한 이하여야 하도록 책임을 둡니다. 이 중 하나라도 맞지 않으면 거부하도록 책임을 둡니다. [해당 검사](src/usage_frames.py#L105) 검사식: `item.is_dir() or item.flag_bits & 1 or item.compress_type not in                     (zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED) or                     not 0 &lt; item.file_size &lt;= MAX_FRAME_BYTES`.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · [src/usage_widgets.py](src/usage_widgets.py)
-
-계정 한도 화면에 날짜 조형을 표시하는 연결 부분입니다. 계정 조회 수치 자체를 만드는 부분과 구분하도록 책임을 둡니다.
-
-**맡은 일과 결과**
-
-- 책임과 출력: 사용 한도 화면에서만 날짜별 입체 이미지를 갱신하도록 책임을 둡니다. [구현 이름 CalendarHero](src/usage_widgets.py#L9)
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · [src/visuals.py](src/visuals.py)
-
-기하 검증 메타는 GUI 드로잉과 구별합니다. GPU 이미지와 투명 정보 레이어를 분리하고 픽셀 기반 레이아웃 및 완전 입력 캐시를 유지합니다. 최소 막대 채움 폭으로 실제 비율을 왜곡하지 않습니다.
-
-**맡은 일과 결과**
-
-- 책임과 출력: X·Y·Z 순서로 회전하며 깊이 좌표를 보존하도록 책임을 둡니다. [구현 이름 rotate_point](src/visuals.py#L12)
-
-- 책임과 출력: 모든 고리를 화면의 같은 축으로 돌리지 않고 각 고리가 가진 회전축을 중심으로 돌립니다. 로드리게스 식은 어느 방향의 축이든 그 축을 기준으로 입체 점을 돌리는 계산식입니다. 예를 들어 기울어진 고리는 그 기울어진 축을 유지하며 돕니다. [구현 이름 axis_rotate](src/visuals.py#L40)
-
-- 책임과 출력: 제작 자산의 파일명·크기·지문을 적은 명세 문서와 일치하는 기하 검증용 메타입니다. GUI 드로잉에는 쓰지 않습니다. [구현 이름 orbit_segments](src/visuals.py#L63)
-
-- 책임과 출력: 읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다. [구현 이름 status_label](src/visuals.py#L80)
-
-- 책임과 출력: 원자번호와 계정 퍼센트를 서로 다른 명시적 라벨로 구분하도록 책임을 둡니다. [구현 이름 element_labels](src/visuals.py#L85)
-
-- 책임과 출력: 숫자와 채움에 같은 실제 비율을 쓰며 최소 채움 폭을 강제하지 않습니다. [구현 이름 usage_bar](src/visuals.py#L99)
-
-- 책임과 출력: 원소별 실제 제작 그림 한 장을 읽습니다. 이전 형상으로 대체하지 않습니다. [구현 이름 _frame_for_element](src/visuals.py#L111)
-
-- 책임과 출력: 달력 조형·날짜 도크·실제 잔량을 분리하고 명시한 원소 미리보기도 보존하도록 책임을 둡니다. [구현 이름 draw_orbit](src/visuals.py#L117)
-
-- 책임과 출력: 이름을 화면 픽셀 크기로 줄 바꿈하고 조형·잔량 영역을 분리하도록 책임을 둡니다. [구현 이름 desktop_widget_layout](src/visuals.py#L176)
-
-- 책임과 출력: 위젯의 조형과 글자를 별개 영역에 그려 작은 글자 축소를 막습니다. [구현 이름 draw_desktop_orbit](src/visuals.py#L212)
-
-- 책임과 출력: 움직이는 그래픽 장치(GPU) 이미지와 분리한 도크·시계·지역·기온·잔량을 그립니다. [구현 이름 _draw_desktop_information](src/visuals.py#L227)
-
-- 책임과 출력: 한 위젯의 완전 입력이 같을 때만 단일 투명 정보 레이어를 재사용하도록 책임을 둡니다. [구현 이름 DesktopOverlayCache](src/visuals.py#L278)
-
-**선택값과 제한값**
-
-- 선언과 자원 경계: 조형 움직임 한 주기의 길이는 **18**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [MOTION_PERIOD](src/visuals.py#L27) 원래 선언을 함께 대조합니다: `정의=18`
-
-- 선언과 자원 경계: 각 고리의 회전 횟수와 방향는 **(1, -2, 3)**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [RING_TURNS](src/visuals.py#L28) 원래 선언을 함께 대조합니다: `정의=(1, -2, 3)`
-
-- 선언과 자원 경계: 각 고리 축이 향하는 방향 각도는 **(8., 128., 248.)**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [RING_AZIMUTHS](src/visuals.py#L29) 원래 선언을 함께 대조합니다: `정의=(8., 128., 248.)`
-
-- 선언과 자원 경계: 각 고리 회전축의 기울기 각도는 **(42., 46., 49.)**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [RING_AXIS_TILTS](src/visuals.py#L30) 원래 선언을 함께 대조합니다: `정의=(42., 46., 49.)`
-
-- 선언과 자원 경계: 각 고리 반지름는 **(45., 51., 57.)**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [RING_RADII](src/visuals.py#L35) 원래 선언을 함께 대조합니다: `정의=(45., 51., 57.)`
-
-- 선언과 자원 경계: 각 고리의 초기 기울기와 방향을 라디안이라는 각도 단위로 묶은 값입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하도록 책임을 둡니다. [BASE_ANGLES](src/visuals.py#L36) 원래 선언을 함께 대조합니다: `정의=tuple((math.radians(tilt), 0., math.radians(azimuth))                     for tilt, azimuth in zip((52., 58., 62.), RING_AZIMUTHS))`
-
-- 선언과 자원 경계: 원자 그림을 배치할 사각형 영역입니다. 왼쪽 위치 -48, 위쪽 위치 -74, 가로 길이 96, 세로 길이 96입니다. QRectF는 이 네 값으로 사각형을 나타내는 형식이며 음수 위치는 기준점의 왼쪽·위쪽입니다. [ATOM_RECT](src/visuals.py#L92) 원래 선언을 함께 대조합니다: `정의=QRectF(-48,-74,96,96)`
-
-- 선언과 자원 경계: 날짜 등 도크 정보를 배치할 사각형 영역입니다. 왼쪽 위치 -68, 위쪽 위치 25, 가로 길이 136, 세로 길이 27입니다. QRectF는 이 네 값으로 사각형을 나타내는 형식이며 음수 위치는 기준점의 왼쪽·위쪽입니다. [DOCK_RECT](src/visuals.py#L93) 원래 선언을 함께 대조합니다: `정의=QRectF(-68,25,136,27)`
-
-- 선언과 자원 경계: 한도 정보를 배치할 사각형 영역입니다. 왼쪽 위치 -68, 위쪽 위치 56, 가로 길이 136, 세로 길이 16입니다. QRectF는 이 네 값으로 사각형을 나타내는 형식이며 음수 위치는 기준점의 왼쪽·위쪽입니다. [USAGE_RECT](src/visuals.py#L94) 원래 선언을 함께 대조합니다: `정의=QRectF(-68,56,136,16)`
-
-- 선언과 자원 경계: 한도 막대의 바탕 사각형 영역입니다. 왼쪽 위치 -61, 위쪽 위치 62, 가로 길이 62, 세로 길이 4입니다. QRectF는 이 네 값으로 사각형을 나타내는 형식이며 음수 위치는 기준점의 왼쪽·위쪽입니다. [USAGE_TRACK_RECT](src/visuals.py#L95) 원래 선언을 함께 대조합니다: `정의=QRectF(-61,62,62,4)`
-
-- 선언과 자원 경계: 기능 기호를 그릴 픽셀 크기는 **24**입니다. 이 값의 단위와 역할을 다른 모듈의 같은 이름과 혼동하지 않습니다. [SYMBOL_PIXELS](src/visuals.py#L96) 원래 선언을 함께 대조합니다: `정의=24`
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · [src/weather.py](src/weather.py)
-
-지역 이름을 정리하고 인터넷에서 날씨를 조회하도록 책임을 둡니다. 예를 들어 자동 위치를 한국어 이름과 연결할 때 다른 국가의 동명 도시를 받아들이지 않도록 확인하도록 책임을 둡니다.
-
-**맡은 일과 결과**
-
-- 책임과 출력: 검색 전 임시 표시에는 검증된 국내 사전 또는 실제 원문 지명을 사용하도록 책임을 둡니다. [구현 이름 localized_region](src/weather.py#L27)
-
-- 책임과 출력: 동일 국가이면서 IP 추정 좌표에서30km 이내인 가장 가까운 검색 결과만 수락하도록 책임을 둡니다. [구현 이름 select_geocoded_region](src/weather.py#L67)
-
-**선택값과 제한값**
-
-- 선언과 자원 경계: US·JP·CN·GB·DE·FR·CA·AU·SG·TW를 미국·일본·중국·영국·독일·프랑스·캐나다·호주·싱가포르·대만으로 표시하는 사전입니다. 정확한 문자 범위·이름 대응·수식은 이 항목의 소스 링크와 LEVEL 5에 보존하도록 책임을 둡니다. [_COUNTRIES](src/weather.py#L23) 원래 선언을 함께 대조합니다: `정의={'US': '미국', 'JP': '일본', 'CN': '중국', 'GB': '영국', 'DE': '독일',               'FR': '프랑스', 'CA': '캐나다', 'AU': '호주', 'SG': '싱가포르', 'TW': '대만'}`
-
-**받지 않는 입력과 실패 처리**
-
-- 실패 분기: 언어값은 한국어 ko 또는 영어 en만 허용하도록 책임을 둡니다. 다른 언어 이름은 이 경로에서 거부하도록 책임을 둡니다. [해당 검사](src/weather.py#L29) 검사식: `language not in ('ko', 'en')`.
-
-- 실패 분기: 언어값은 한국어 ko 또는 영어 en만 허용하도록 책임을 둡니다. 다른 언어 이름은 이 경로에서 거부하도록 책임을 둡니다. [해당 검사](src/weather.py#L111) 검사식: `language not in ('ko', 'en')`.
-
-- 실패 분기: 언어값은 한국어 ko 또는 영어 en만 허용하도록 책임을 둡니다. 다른 언어 이름은 이 경로에서 거부하도록 책임을 둡니다. [해당 검사](src/weather.py#L155) 검사식: `language not in ('ko', 'en')`.
-
-- 실패 분기: 위도는 -90~90, 경도는 -180~180 범위의 유효한 숫자여야 하도록 책임을 둡니다. 어느 좌표라도 잘못되면 그 위치로 날씨를 조회하지 않습니다. [해당 검사](src/weather.py#L249) 검사식: `not self._valid_number(latitude, -90, 90) or not self._valid_number(longitude, -180, 180)`.
-
-- 실패 분기: 기온은 -100~70 범위의 유효한 숫자만 받습니다. 범위 밖 값이나 잘못된 형식은 정상 기온으로 표시하지 않습니다. [해당 검사](src/weather.py#L321) 검사식: `not self._valid_number(temperature, -100, 70)`.
-
-- 실패 분기: 날씨 제공 시각은 0 이상이고 현재 시각에서 300초를 더한 값 이하여야 하도록 책임을 둡니다. 지나치게 미래이거나 잘못된 시각은 받지 않습니다. [해당 검사](src/weather.py#L325) 검사식: `not self._valid_number(observed, 0, now + 300)`.
-
-- 실패 분기: 응답 형식 자료는 항목 이름과 값의 쌍으로 구성되어야 하도록 책임을 둡니다. 순서 있는 목록·단순 문장·숫자를 같은 자료로 받아들이지 않습니다. [해당 검사](src/weather.py#L232) 검사식: `not isinstance(data, dict)`.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · 처리 결과와 출력 읽기
-
-검토 시 구분: 표시된 설정·요청과 실제로 관측한 실행은 다른 근거입니다. 예를 들어 모델을 지정했다는 기록만으로 서버에서 그 모델이 실행됐다고 결론내리지 않습니다.
-
-변경 전·후 모델과 추론 강도, 공개된 이유, 관측 시각과 근거 수준을 함께 읽습니다. 기록되지 않은 값은 미확인으로 남깁니다. 로컬 기록은 서버 모델 신원 증명이 아닙니다.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · 제약과 문제 해결
-
-- 검토 항목 알림이 나타나지 않음: 감시하는 sessions 경로·새 한 줄에 기록 하나를 담는 JSONL 파일 기록·중복 실행 잠금·알림 설정을 확인합니다. 최초 기준선 읽기와 새 변경 감지는 다릅니다.
-- 검토 항목 자산 또는 글꼴 오류: 이 차수에서 참조하는 assets와 라이선스를 준비합니다. 소스 이력에는 과거 대용량 그림 한 장 자산이 없을 수 있습니다.
-- 검토 항목 이유 또는 이전값이 없음: 원문 기록에 해당 필드가 있는지 확인합니다. 누락된 동기를 추정해서 채우지 않습니다.
-
-### LEVEL 4 · 26차 추가 해설 · LEVEL 4 · 직전 자료와 전체 비교
-
-검토 시 구분: diff는 두 자료에서 달라진 줄 전체를 보여 주는 파일입니다. +는 추가, -는 삭제를 뜻하며 주석·공백·줄바꿈도 변경에 포함됩니다. SHA-256은 파일 내용의 지문이고, 큰 그림·실행 파일은 크기와 지문으로 같음을 대조합니다. 지문이 있다는 것만으로 실행에 성공한 것은 아닙니다.
-
-25차에서 26차로 이어지는 실제 파일 비교입니다.
-
-[전체 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff)
-
-추가·수정·삭제, 주석·공백·개행과 바이너리 크기·해시는 연결된 원래 비교 자료에서 확인합니다.
-
-
-파일별 비교·크기·해시 자세히 보기
-
-텍스트는 엄격 UTF-8로 판정하며 [전체 텍스트 차이](직전차수.diff)에는 주석과 공백을 포함합니다. 파일별 바이트 수와 SHA-256 및 바이너리 여부는 [비교 명세](공개파일_비교.json)에 기록합니다.
-
-- **검증:** 이 폴더의 diff는 소스 바이트 비교입니다. 이후 로컬 원본 검증 자료를 대조해 작성한 [공개 검증 요약](../../docs/공개검증_26차.md)을 함께 제공합니다. 비공개 원본 로그는 공개하지 않으며 소스 비교 자체를 실행 결과로 해석하지 않습니다.
-
-- **수정** `src/app.py`: 이전 110155바이트, SHA-256 `bb0421143d08d6930d62f19252819ca26a91444466002c1a559b0dc87895ac3b`; 현재 116115바이트, SHA-256 `ccb4c5771ab1a01e416e81dcc3678629cd5a5a2613e50d5e7c4a3e4263da964f`.
-
-- **수정** `src/calendar_motion.py`: 이전 15710바이트, SHA-256 `fcd254efc4bf9e4a15eb9a1d75177323d34763716cea207e2bd95348b93463a0`; 현재 16207바이트, SHA-256 `ddb3e8afdf5f46f7bb8f997e75c39234550f28bade6223e19f81e37579765791`.
-
-- **수정** `src/frame_pacing.py`: 이전 2625바이트, SHA-256 `6ca862a2eaa6707665f19514315de584424ab66017eff8f7898e3a4f6c6a9cb5`; 현재 3692바이트, SHA-256 `09cd3768e4baa326bb0e08e4d7fd8130f05526024686b88f8ef2f9b0366b1bb1`.
-
-- **수정** `src/i18n.py`: 이전 19942바이트, SHA-256 `2dbea990824fb7107019228d5ecf6a75d7ce1a7062d0984f2a00908c7e26cec1`; 현재 20538바이트, SHA-256 `091208c023ccecdefd7957dcc3bacd8acc5c44324dd587ac36986ac3dc81106a`.
-
-- **추가** `src/motion_label.py`: 이전 없음; 현재 2380바이트, SHA-256 `f76a05b63a676282ff4816c25ce0d7bc4aa01396889559c76021d5f858a0c60d`.
-
-- **수정** `src/usage_widgets.py`: 이전 2471바이트, SHA-256 `a5e8de93da797f5f269551061d30878d8c0f86cae8824e89ba052bd6b28aeee2`; 현재 2516바이트, SHA-256 `9ad1be24d27cbf072db6892a2bc3c431304002f90f9a9d46d59494a91b74814c`.
-
-- **수정** `src/visuals.py`: 이전 13297바이트, SHA-256 `d4bb20ebbfa421b5f05a482aedbb0b2202b7f7ffc2e6f7e22916ace3d0d72e1d`; 현재 15915바이트, SHA-256 `13a8d20b188ac2e82bc57771263dd6c2bef7cb3ab96ef259d51fd73fa380a57a`.
-
-[실행 소스 전체 Git 비교](직전차수.diff)와 [실제 바이트 명세](공개파일_비교.json)는 Python뿐 아니라 존재하는 보조 PowerShell과 의존성 목록을 포함합니다. `git -c core.autocrlf=false apply --reverse --binary -p1`로 현재 소스 사본에서 직전 소스의 파일 부재·신규·삭제 상태까지 복원해 원문 바이트를 대조했습니다. 부가 자료는 이 소스 비교에 섞지 않고 위 명세로 구분합니다.
-
-
-
-[프로젝트](../../README.md) · [전체 차수](../../docs/REVISION_INDEX.md) · [원본 자료](.) · [← 이전: 25차](../25/README.md#reading-level-4) · [다음: 27차 →](../27/README.md#reading-level-4)
+[level-426차-추가-해설level-4srcatom_framespysrcatom_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_03.md#level-426차-추가-해설level-4srcatom_framespysrcatom_framespy)
 
 <a id="reading-level-5"></a>
-## LEVEL 5 - Expert
 
+[reading-level-5](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#reading-level-5)
 
-### LEVEL 5 · 26차의 구체적인 기능과 확인
+<a id="-목적과-이-차수의-역할"></a>
 
-26차의 대상은 상세창 슬라이더와 위젯 메뉴의 회전 속도 조절·설정 저장입니다. 모션 배율과 실제 시계·날짜·날씨·계정 한도 갱신은 별도이며, 확인되지 않은 실제 갱신 주기 변화를 주장하지 않습니다. 2026~2099년 날짜 규칙·실제 대상 편집 사전·단일 GPU 스레드의 최대 네 이미지·오프스크린 실제 메시 렌더 및 날짜별 압축 프레임을 보존합니다.
+[-목적과-이-차수의-역할](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#-목적과-이-차수의-역할)
 
-감시기는 로컬 JSONL에서 모델·강도 변화와 명시 배정을 읽고 외부 통신을 하지 않습니다. 지역·기온은 네트워크를 쓰며 `account/rateLimits/read`는 별도 읽기 전용 한도 비율입니다. 앱 문구 번역과 이벤트 원문 보존, 프로세스 전용 고해상도 프레임 대기와 전역 타이머 비변경을 구분합니다.
+<a id="features"></a>
 
-해당 Windows 환경·의존성·자산·ModernGL·OpenGL 3.3을 조건으로 하며 과거 이력 소스만으로 당시 EXE와 전체 자산의 동일 복원을 보장하지 않습니다. 25차 대비 전체 diff의 주석·공백·개행, 파일별 크기·SHA, 당시 실행 결과 미보존을 함께 검토합니다.
+[features](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#features)
 
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · 목적과 이 차수의 역할
+<a id="-핵심-기능과-보존-범위"></a>
 
-상세창 슬라이더와 위젯 메뉴에서 회전 속도를 조절하고 저장합니다. 모션 배율과 실제 시계·날짜·날씨·계정 한도 갱신은 별개입니다.
+[-핵심-기능과-보존-범위](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#-핵심-기능과-보존-범위)
 
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · 핵심 기능과 보존 범위
+<a id="-입력처리출력"></a>
 
-| 항목 | 확인 내용 |
-| --- | --- |
-| 1 | 상세창 슬라이더와 위젯 메뉴에서 회전 속도를 조절하고 저장합니다. 모션 배율과 실제 시계·날짜·날씨·계정 한도 갱신은 별개입니다. |
-| 2 | 로컬 세션 기록에서 모델·추론 강도의 변경과 명시된 배정을 구분합니다. 감시기는 외부 통신 없이 로컬 자료를 읽습니다. |
-| 3 | 공개 협업 호출과 소유자가 확인된 native 활동을 연결합니다. |
-| 4 | 검증된 금속 원자 프레임을 추출 없이 읽는 제한 메모리 재생기입니다. |
-| 5 | 같은 실제3D 자산을 공유하는 정적 마크와 가시성 기반 내부 모션입니다. |
-| 6 | 2026~2099년의 날짜별 조형 규칙입니다. 외부 데이터와 계정 정보를 사용하지 않습니다. |
-| 7 | 실제 대상 이름과 조형 특징을 연결하는 편집 사전입니다. |
-| 8 | 한 GPU 작업 스레드와 최대 네 이미지로 날짜별 모션을 공유합니다. |
-| 9 | 현재 날짜의 실제 메시를 소유 스레드의 오프스크린 GPU에서 렌더합니다. |
-| 10 | 한국 날짜의1~31일에 대응하는 원소와 디자인 영감 팔레트입니다. |
-| 11 | 오늘 원소 하나의 압축 프레임만 여는 제한 메모리 재생기입니다. |
-| 12 | 원본3D 자산을 변경하지 않는 제한 메모리 Qt 색 합성입니다. |
-| 13 | 프로세스 전용 고해상도 대기로 전역 타이머 설정 없이 프레임을 조율합니다. |
-| 14 | 앱이 소유한 문구만 번역하며 이벤트 원문은 호출자가 그대로 보존합니다. |
-| 15 | Codex App Server의 `account/rateLimits/read`를 읽기 전용으로 조회합니다. 표시값은 남은 토큰 개수가 아니라 계정 사용 한도 비율입니다. |
-| 16 | 지역·기온 조회 모듈은 네트워크를 사용합니다. 로컬 감시기의 외부 통신 여부와 앱 전체의 날씨 조회를 구분합니다. |
+[-입력처리출력](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#-입력처리출력)
 
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · 입력·처리·출력
+<a id="usage"></a>
 
-| 단계 | 내용 |
-| --- | --- |
-| 입력 | 현재 사용자 Codex의 로컬 JSONL과 이 차수의 앱 설정 |
-| 처리 | 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시 |
-| 출력 | 알림·변경 이력·로컬 진단 기록 |
+[usage](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#usage)
 
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · 화면과 사용 흐름
+<a id="️-화면과-사용-흐름"></a>
 
-1. 이 차수의 소스·requirements와 필요한 자산을 한 작업 폴더에 준비합니다.
-2. 앱을 열고 위젯·상세창에서 감시 경로와 표시되는 기록을 확인합니다.
-3. 새 변경이 기록되면 이전·이후 값과 이유를 비교하고, 기록 종류와 근거 수준을 함께 읽습니다.
-4. 설정·이력은 개인 운영자료로 관리하고 다른 사용자에게 공유하기 전에 내용을 확인합니다.
+[️-화면과-사용-흐름](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#️-화면과-사용-흐름)
 
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · 실제 자료 구성
+<a id="structure"></a>
 
-| 경로 | 자료 종류 |
-| --- | --- |
-| [src/](src) | 하위 자료 폴더 |
-| [README.md](README.md) | MD 파일 |
-| [requirements.txt](requirements.txt) | TXT 파일 |
-| [공개파일_비교.json](%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) | JSON 파일 |
-| [보존자료.md](%EB%B3%B4%EC%A1%B4%EC%9E%90%EB%A3%8C.md) | MD 파일 |
-| [부가자료_보존.json](%EB%B6%80%EA%B0%80%EC%9E%90%EB%A3%8C_%EB%B3%B4%EC%A1%B4.json) | JSON 파일 |
-| [직전차수.diff](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) | DIFF 파일 |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · 주요 모듈과 코드 읽기
-
-| 파일 | 역할·구성 |
-| --- | --- |
-| [src/app.py](src/app.py) | Codex Orbit: 독립 회전 위젯과 로컬 변경 기록·사용 한도. |
-| [src/notifier.py](src/notifier.py) | 현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다. |
-| [src/activity.py](src/activity.py) | 공개 협업 호출과 소유자가 확인된 native 활동을 연결합니다. |
-| [src/atom_frames.py](src/atom_frames.py) | 검증된 금속 원자 프레임을 추출 없이 읽는 제한 메모리 재생기입니다. |
-| [src/brand.py](src/brand.py) | 같은 실제3D 자산을 공유하는 정적 마크와 가시성 기반 내부 모션입니다. |
-| [src/calendar_art.py](src/calendar_art.py) | 2026~2099년의 날짜별 조형 규칙입니다. 외부 데이터와 계정 정보를 사용하지 않습니다. |
-| [src/calendar_catalog.py](src/calendar_catalog.py) | 실제 대상 이름과 조형 특징을 연결하는 편집 사전입니다. |
-| [src/calendar_motion.py](src/calendar_motion.py) | 한 GPU 작업 스레드와 최대 네 이미지로 날짜별 모션을 공유합니다. |
-| [src/calendar_renderer.py](src/calendar_renderer.py) | 현재 날짜의 실제 메시를 소유 스레드의 오프스크린 GPU에서 렌더합니다. |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · 설치 환경과 실행·사용법
-
-Windows와 해당 폴더의 requirements.txt를 기준으로 Python 의존성을 준비합니다. history는 공개 소스 보존본이며 현재 루트 assets가 과거 모든 차수의 자산과 호환된다는 뜻은 아닙니다. 날짜별 실제 메시 렌더에는 ModernGL과 OpenGL 3.3을 지원하는 그래픽 드라이버가 필요합니다.
-
-자산과 의존성을 준비한 이 차수 폴더에서 `python src/app.py`를 실행합니다. history 소스만으로 과거 배포 EXE와 동일한 화면·자산이 모두 복원되지는 않습니다.
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · 사용하는 사람에게 달라진 점
-
-상세창 슬라이더와 위젯 우클릭 메뉴에서 회전 속도를 0.25~3배로 선택하고 1배로 복원할 수 있습니다. 선택값은 저장되어 다음 실행에도 적용됩니다. 속도를 바꿔도 조형의 회전 각도를 이어서 재생하며 날짜·시계·기온·계정 조회 간격은 그대로입니다. 저장이 실패하면 이전 배율로 복원하고 선택한 한국어·영어로 오류를 안내합니다. 정적 정보와 움직이는 조형을 나누어 갱신하는 변경도 포함합니다.
-
-[26차 검증 요약](../../docs/%EA%B3%B5%EA%B0%9C%EA%B2%80%EC%A6%9D_26%EC%B0%A8.md)에서 개발 전체·공개본·중앙 소스 검사와 배포 실행 결과를 구분합니다. 고정 240fps는 달성하지 못했으며 추가 달성 작업은 제외됐습니다. 26차 변경 기록의 실측 생성 약 227~230fps, 고유 Qt 그리기 약 214~229fps를 모니터 표시율로 해석하지 않습니다.
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · 이 보관본의 의존성 목록
-
-[requirements.txt](requirements.txt)의 실제 항목입니다. 외부 실행 도구와 GPU 드라이버는 별도로 준비합니다.
-
-```text
-PySide6-Essentials==6.12.0
-PyInstaller==6.22.3
-moderngl==5.13.0
-glcontext==3.1.0
-numpy==2.5.4
-Pillow==13.0.0
-```
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · 소스에서 제공하는 CLI 옵션
-
-| 진입 소스 | 옵션 |
-| --- | --- |
-| [app.py](src/app.py) | `--data-dir`, `--sessions`, `--smoke-test`, `--usage-smoke-test`, `--smoke-report`, `--show-details`, `--show-event` |
-| [notifier.py](src/notifier.py) | `--sessions`, `--work` |
-
-각 옵션의 기본값·필수값·부작용은 해당 main과 인자 정의를 함께 확인합니다.
-
-
-
-함수 역할·기본값·입력 거부 조건의 세부 참조
-
-다음 항목은 이 자료의 Python 소스에 명시된 선언입니다. 전체 분기와 호출 순서는 각 행의 코드 위치에서 이어서 읽을 수 있습니다.
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · [src/activity.py](src/activity.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`safe_public_text`](src/activity.py#L15) | 보호문·비공개 표식·긴 인코딩 덩어리는 해석하거나 노출하지 않습니다. |
-| [`configuration`](src/activity.py#L76) | 원본 시각이 있는 자기 관측만 전역 256개로 제한해 보존합니다. |
-| [`defer`](src/activity.py#L160) | 원본 본문 없이 검증에 필요한 native 필드만 전역 32개까지 기다립니다. |
-| [`observe`](src/activity.py#L273) | 그 활동의 첫 관측만 보강하며 이후 모델 변경은 별도 감지를 유지합니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`MAX_ACTIVITY_EVENTS`](src/activity.py#L7) | `정의=128` |
-| [`MAX_ACTIVITY_SEEN`](src/activity.py#L8) | `정의=8192` |
-| [`MAX_ACTIVITY_CALLS`](src/activity.py#L9) | `정의=32` |
-| [`MAX_PUBLIC_CALLS`](src/activity.py#L10) | `정의=128` |
-| [`MAX_DEFERRED_ACTIVITIES`](src/activity.py#L11) | `정의=32` |
-| [`MAX_CONFIGURATION_SNAPSHOTS`](src/activity.py#L12) | `정의=256` |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`not isinstance(self.data['calls'], dict) or not isinstance(self.data['deferred'], list)`](src/activity.py#L66) | 활동 호출/지연 상태 구조 오류입니다. 원본을 자동 초기화하지 않습니다. |
-| [`not isinstance(self.data['configurations'], list)`](src/activity.py#L68) | 활동 관측 시각 구조 오류입니다. 원본을 자동 초기화하지 않습니다. |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · [src/app.py](src/app.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`validated_motion_speed`](src/app.py#L42) | 설정과 UI의 속도는 유한한 실제 숫자 범위로 제한합니다. |
-| [`_application_gui_root`](src/app.py#L49) | Python 순환 수집과 무관하게 살아 있는 GUI 소유자를 앱에 보관합니다. |
-| [`operation_record`](src/app.py#L67) | 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다. |
-| [`previous_field`](src/app.py#L106) | 이전 기록 전체 부재와 개별 필드 미기록을 구분하고 관측값만 표시합니다. |
-| [`short_reason`](src/app.py#L130) | 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. |
-| [`public_text`](src/app.py#L182) | 공개 문장만 표시하며 보호된 도구 페이로드를 해석하거나 노출하지 않습니다. |
-| [`selection_explanation`](src/app.py#L203) | 공개된 작업 목적을 모델 선택 이유로 바꾸어 말하지 않습니다. |
-| [`NoticeDelivery`](src/app.py#L309) | Qt 예약 호출을 포함한 미처리 전달 수를 스레드 사이에서 제한합니다. |
-| [`NoticeTicket`](src/app.py#L334) | 중복 반환과 종료 뒤 도착한 신호도 같은 한도를 다시 늘리지 않습니다. |
-| [`DiagnosticLabel`](src/app.py#L918) | 오류가 있을 때 변경 기록 안에 원문을 보여 주는 읽기 전용 라벨입니다. |
-| [`QuitGuard`](src/app.py#L1394) | 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다. |
-| [`usage_smoke_state`](src/app.py#L1956) | 지연된 신호 인자 대신 최신 스냅샷과 현재 레이아웃의 실제 표시를 대조합니다. |
-| [`motion_smoke_stage`](src/app.py#L1980) | 실제 GPU 렌더 수를 기준으로 준비·비교 단계를 판정합니다. |
-| [`_content_fit_signature`](src/app.py#L759) | 말줄임 전 제목과 실제 높이에 영향을 주는 표시 조건만 비교합니다. |
-| [`promote_first_observation`](src/app.py#L1363) | 실제 첫 관측 한 행만 안정된 활동 ID로 보강하며 다른 변경은 보존합니다. |
-| [`change_motion_speed`](src/app.py#L1484) | 사용자 조작의 실패는 실제 속도를 복원한 뒤 상세창에서 안내합니다. |
-| [`_finish_closed_gui`](src/app.py#L1948) | 외부 QThread 참조를 무효화하지 않고 종료된 감시기와 GUI 소유자를 해제합니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`--data-dir`](src/app.py#L1996) | `type=Path; default=Path(os.environ.get('LOCALAPPDATA', Path.home())) / 'CodexOrbit'` |
-| [`--sessions`](src/app.py#L1997) | `type=Path` |
-| [`--smoke-test`](src/app.py#L1998) | `action='store_true'` |
-| [`--usage-smoke-test`](src/app.py#L1999) | `action='store_true'; help='실제 계정 잔량과 표시를 조회한 뒤 종료'` |
-| [`--smoke-report`](src/app.py#L2000) | `type=Path` |
-| [`--show-details`](src/app.py#L2001) | `action='store_true'` |
-| [`--show-event`](src/app.py#L2002) | `help='기존 이력의 이벤트 ID 또는 대상 ID를 다시 표시'` |
-| [`EMPTY_HISTORY_GUIDANCE`](src/app.py#L39) | `정의='변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'` |
-| [`ROLE_LABELS`](src/app.py#L116) | `정의={'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}` |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`application is None or QThread.currentThread() != application.thread()`](src/app.py#L52) | GUI 소유자는 QApplication의 메인 스레드에서 생성해야 합니다. |
-| [`QThread.currentThread() != application.thread()`](src/app.py#L1523) | 언어는 GUI 메인 스레드에서만 변경할 수 있습니다. |
-| [`not lock.tryLock(100)`](src/app.py#L2024) | 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다. |
-| [`not isinstance(value, dict)`](src/app.py#L295) | 앱 설정은 JSON 객체여야 합니다. |
-| [`self.closed or len(self.tickets) &gt;= MAX_PENDING`](src/app.py#L318) | 알림 전달 대기 한도 또는 종료 상태: 다음 감시 주기에 재시도합니다. |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · [src/atom_frames.py](src/atom_frames.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`AtomAssetError`](src/atom_frames.py#L27) | 필수 시각 자산 오류를 시작 실패 경로에 전달합니다. |
-| [`AtomFrames`](src/atom_frames.py#L50) | 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대24장만 보존합니다. |
-| [`close_runtime_frames`](src/atom_frames.py#L172) | 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
-| [`get_atom_frames`](src/atom_frames.py#L183) | 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FRAME_COUNT`](src/atom_frames.py#L16) | `정의=540` |
-| [`FRAME_SIZE`](src/atom_frames.py#L17) | `정의=296` |
-| [`FPS`](src/atom_frames.py#L18) | `정의=30` |
-| [`PERIOD_SECONDS`](src/atom_frames.py#L19) | `정의=18` |
-| [`CACHE_LIMIT`](src/atom_frames.py#L20) | `정의=24` |
-| [`MAX_ARCHIVE_BYTES`](src/atom_frames.py#L21) | `정의=128 * 1024 * 1024` |
-| [`MAX_FRAME_BYTES`](src/atom_frames.py#L22) | `정의=1024 * 1024` |
-| [`MAX_TOTAL_BYTES`](src/atom_frames.py#L23) | `정의=256 * 1024 * 1024` |
-| [`MAX_MANIFEST_BYTES`](src/atom_frames.py#L24) | `정의=64 * 1024` |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`key in value`](src/atom_frames.py#L44) | 원자 자산 매니페스트에 중복 필드가 있습니다. |
-| [`not 0 &lt; manifest_path.stat().st_size &lt;= MAX_MANIFEST_BYTES`](src/atom_frames.py#L69) | 원자 자산 매니페스트 크기가 허용 범위를 벗어났습니다. |
-| [`not isinstance(self.manifest, dict)`](src/atom_frames.py#L75) | 원자 자산 매니페스트는 객체여야 합니다. |
-| [`not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None`](src/atom_frames.py#L85) | 원자 프레임 ZIP의 SHA256 형식이 잘못됐습니다. |
-| [`not 0 &lt; archive_path.stat().st_size &lt;= MAX_ARCHIVE_BYTES`](src/atom_frames.py#L87) | 원자 프레임 ZIP 크기가 허용 범위를 벗어났습니다. |
-| [`hasher.hexdigest() != digest`](src/atom_frames.py#L94) | 원자 프레임 ZIP의 SHA256이 일치하지 않습니다. |
-| [`len(members) != FRAME_COUNT or {item.filename for item in members} != names`](src/atom_frames.py#L100) | 원자 프레임 ZIP의 정확한540개 이름·목록이 일치하지 않습니다. |
-| [`sum(item.file_size for item in members) &gt; MAX_TOTAL_BYTES`](src/atom_frames.py#L102) | 원자 프레임 전체 읽기 상한을 초과했습니다. |
-| [`actual != self.identities`](src/atom_frames.py#L133) | 검증 뒤 원자 자산이 변경됐습니다. 앱을 다시 실행해 주세요. |
-| [`isinstance(elapsed, bool) or not isinstance(elapsed, (int, float)) or not math.isfinite(elapsed)`](src/atom_frames.py#L138) | 원자 프레임의 재생 시각이 유한한 숫자가 아닙니다. |
-| [`item.is_dir() or item.flag_bits & 1 or item.compress_type not in                     (zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED) or                     not 0 &lt; item.file_size &lt;= MAX_FRAME_BYTES`](src/atom_frames.py#L105) | 원자 프레임 멤버의 형식·크기가 허용 범위를 벗어났습니다. |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · [src/brand.py](src/brand.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`motion_brand_source`](src/brand.py#L32) | 원소 프레임의 실제 크기에 비례해 여백만 줄이며 영역 밖을 복사하지 않습니다. |
-| [`BrandClock`](src/brand.py#L40) | 보이는 로고만 단일 시계에서 같은 프레임으로 갱신합니다. |
-| [`AnimatedBrand`](src/brand.py#L106) | 닫힘·숨김 이벤트에 맞춰 재생 구독을 끝내는 실제3D 로고입니다. |
-| [`validate_symbols`](src/brand.py#L137) | 실제 메시에서 제작한 고정 기호 일곱 개를 창 생성 전에 검증합니다. |
-| [`symbol_image`](src/brand.py#L181) | 실제 메시 렌더만 축소하고 새로운 도형이나 글자를 덧그리지 않습니다. |
-| [`with_symbol`](src/brand.py#L209) | 원문 QLabel을 유지하며 기능 의미를 읽기 쉬운 기호로 보조합니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`SYMBOL_NAMES`](src/brand.py#L133) | `정의=('model', 'reasoning', 'time', 'reason', 'usage', 'refresh', 'history')` |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`not 1 &lt;= size &lt;= 512`](src/brand.py#L22) | 브랜드 이미지 크기는1~512px여야 합니다. |
-| [`name not in SYMBOL_NAMES or not 1 &lt;= size &lt;= 96`](src/brand.py#L184) | 3D 기능 기호의 종류나 크기가 올바르지 않습니다. |
-| [`not 0 &lt; path.stat().st_size &lt;= 65536`](src/brand.py#L142) | 3D 기능 기호 매니페스트 크기 오류입니다. |
-| [`type(metadata.get('schema_version')) is not int or metadata['schema_version'] != 1`](src/brand.py#L145) | 3D 기능 기호 매니페스트 버전 오류입니다. |
-| [`not isinstance(files, dict) or set(files) != set(SYMBOL_NAMES)`](src/brand.py#L148) | 3D 기능 기호 일곱 개 목록이 일치하지 않습니다. |
-| [`not isinstance(record, dict) or record.get('filename') != name+'.png'`](src/brand.py#L153) | 3D 기능 기호의 고정 파일 이름이 일치하지 않습니다. |
-| [`not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None`](src/brand.py#L156) | 3D 기능 기호의 SHA256 형식 오류입니다. |
-| [`not 0 &lt; path.stat().st_size &lt;= 262144`](src/brand.py#L159) | 3D 기능 기호 읽기 크기 상한 오류입니다. |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · [src/calendar_art.py](src/calendar_art.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`current_date`](src/calendar_art.py#L33) | 호스트의 현지 시간대와 무관하게 한국 날짜를 사용합니다. |
-| [`_month_palette`](src/calendar_art.py#L50) | 반올림 충돌만 가장 가까운 미사용 RGB로 옮기고 월별 결과를 불변 보관합니다. |
-| [`design_for_date`](src/calendar_art.py#L78) | 유효한 날짜만 허용하며 지원 범위 밖을 다른 날짜로 몰래 대체하지 않습니다. |
-| [`all_designs`](src/calendar_art.py#L95) | 현재 모델만 렌더하며 이 반복자는 작은 카탈로그를 작성할 때만 사용합니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FIRST_DATE`](src/calendar_art.py#L10) | `정의=date(2026,1,1)` |
-| [`LAST_DATE`](src/calendar_art.py#L11) | `정의=date(2099,12,31)` |
-| [`KST`](src/calendar_art.py#L12) | `정의=timezone(timedelta(hours=9))` |
-| [`THEMES`](src/calendar_art.py#L13) | `정의=tuple(row.title for row in all_collections())` |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`type(value) is not date`](src/calendar_art.py#L80) | 조형 날짜는 datetime.date여야 합니다. |
-| [`not FIRST_DATE &lt;= value &lt;= LAST_DATE`](src/calendar_art.py#L82) | 날짜별 조형 지원 범위는 2026-01-01부터 2099-12-31까지입니다. |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · [src/calendar_catalog.py](src/calendar_catalog.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`joining_particle`](src/calendar_catalog.py#L208) | 마지막 한글 음절의 받침에 맞춰 대상 이름을 연결합니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`POOLS`](src/calendar_catalog.py#L166) | `정의={'꽃': _objects(_FLOWERS,'꽃'), '열매': _objects(_FRUITS,'열매'),          '잎': _objects(_LEAVES,'잎'), '악기': _objects(_MUSIC,'악기')}` |
-| [`OBJECTS`](src/calendar_catalog.py#L168) | `정의={obj.key:obj for pool in POOLS.values() for obj in pool}` |
-| [`COMPOSITION_NAMES`](src/calendar_catalog.py#L193) | `정의={'bouquet':'꽃다발형','diagonal':'대각선형','shelter':'감싸는 형태',                      'stage':'연주대형','triangle':'삼각형 정물','fan':'부채형'}` |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`not 0 &lt;= index &lt; 888 or not 1 &lt;= month &lt;= 12`](src/calendar_catalog.py#L217) | 연월 컬렉션은 2026년 1월부터 2099년 12월까지입니다. |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · [src/calendar_motion.py](src/calendar_motion.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`next_frame_deadline`](src/calendar_motion.py#L21) | 정상 슬롯을 유지하고 늦은 프레임은 추가 대기나 누적 추격 없이 이어갑니다. |
-| [`fallback_image`](src/calendar_motion.py#L26) | GPU 준비·실패 때만 쓰는 월 주제의 정적 평면 표식입니다. 3D 성공으로 가장하지 않습니다. |
-| [`_Worker`](src/calendar_motion.py#L60) | Qt 객체나 UI를 조작하지 않고 복사된 최신 이미지 하나만 전달합니다. |
-| [`prepare_calendar_motion`](src/calendar_motion.py#L232) | 창 표시 전에 같은 작업자의 첫 실제 프레임을 최대 5초 준비합니다. |
-| [`set_calendar_motion_speed`](src/calendar_motion.py#L262) | 현재 위상을 유지하고 이후 모션의 배율만 바꿉니다. 실제 시계와 날짜는 바꾸지 않습니다. |
-| [`set_calendar_motion_size`](src/calendar_motion.py#L268) | 현재 보이는 각 소유자의 실제 픽셀 요구 중 최대 크기만 전달합니다. |
-| [`record_calendar_presentation`](src/calendar_motion.py#L276) | Qt 그리기 경로가 실제로 소비한 서로 다른 프레임만 셉니다. |
-| [`get_calendar_error`](src/calendar_motion.py#L285) | 제품은 이 문자열을 상태나 툴팁에 표시해 대체 표식과 실제 3D를 구분할 수 있습니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FPS`](src/calendar_motion.py#L15) | `정의=240` |
-| [`SIZE`](src/calendar_motion.py#L16) | `정의=384` |
-| [`RENDER_SIZE`](src/calendar_motion.py#L17) | `정의=(3840, 2160)` |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`app is None or QThread.currentThread()!=app.thread()`](src/calendar_motion.py#L211) | 날짜별 모션 API는 Qt 메인 스레드에서 호출해야 합니다. |
-| [`type(timeout_seconds) not in (int,float) or not 0 &lt; timeout_seconds &lt;= 5`](src/calendar_motion.py#L234) | 3D 준비 제한은 0초 초과 5초 이하여야 합니다. |
-| [`type(visible) is not bool`](src/calendar_motion.py#L258) | 표시 상태는 bool이어야 합니다. |
-| [`type(size) is not int or not 32&lt;=size&lt;=2160`](src/calendar_motion.py#L270) | 전달 크기는32~2160 정수여야 합니다. |
-| [`self.closed`](src/calendar_motion.py#L167) | 날짜별 모션 서비스가 닫혔습니다. |
-| [`self.closed`](src/calendar_motion.py#L180) | 날짜별 모션 서비스가 닫혔습니다. |
-| [`type(elapsed) not in (int,float)`](src/calendar_motion.py#L181) | 재생 시각은 유한한 숫자여야 합니다. |
-| [`not valid`](src/calendar_motion.py#L184) | 재생 시각은 유한한 숫자여야 합니다. |
-| [`_retiring.worker.isRunning()`](src/calendar_motion.py#L221) | 이전 GPU 작업 스레드가 종료 중입니다. |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · [src/calendar_renderer.py](src/calendar_renderer.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`rotation`](src/calendar_renderer.py#L24) | 정규화된 실제 3D축을 중심으로 로드리게스 회전행렬을 만듭니다. |
-| [`finish`](src/calendar_renderer.py#L48) | 표면 법선과 삼각형 winding을 일치시킵니다. |
-| [`box`](src/calendar_renderer.py#L58) | 육면체 면을 실제 둥근 모서리와 구면 꼭짓점으로 투영합니다. |
-| [`lathe`](src/calendar_renderer.py#L84) | 회전체의 실제 앞뒤·옆면을 만들며 다각 단면은 평면 법선을 보존합니다. |
-| [`tube`](src/calendar_renderer.py#L104) | 3D 경로를 따라 원형 단면을 운반합니다. 코일은 실제 깊이를 가집니다. |
-| [`_object_geometry`](src/calendar_renderer.py#L145) | 대상 이름에 연결된 주요 구조를 실제 삼각형 부품으로 구성합니다. |
-| [`_ring_geometry`](src/calendar_renderer.py#L323) | 날짜와 무관한 세 링만 읽기 전용 배열로 한 번 생성합니다. |
-| [`build_geometry`](src/calendar_renderer.py#L334) | 날짜별 주연과 서로 다른 두 월 모티프를 명시적 대상 사전에서 렌더합니다. |
-| [`CalendarRenderer`](src/calendar_renderer.py#L378) | 컨텍스트를 만든 스레드에서만 사용하고 현재 날짜의 버퍼만 보유합니다. |
-| [`render_date`](src/calendar_renderer.py#L489) | 미리보기와 직접 검증용 동기 렌더입니다. 앱은 공유 작업 스레드를 사용합니다. |
-| [`set_output_size`](src/calendar_renderer.py#L425) | 원본 타깃은 유지하고 중앙 정사각형의 GPU 전달 크기만 변경합니다. |
-| [`render_original`](src/calendar_renderer.py#L470) | 검증·내보내기 때만 실제 직사각형 원본 전체를 CPU로 읽습니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`PERIOD`](src/calendar_renderer.py#L132) | `정의=12.0` |
-| [`SIZE`](src/calendar_renderer.py#L133) | `정의=384` |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`subject.recipe!=design.shape_recipe`](src/calendar_renderer.py#L338) | 대상과 형상 규칙이 일치하지 않습니다. |
-| [`type(elapsed) not in (int,float)`](src/calendar_renderer.py#L364) | 모션 시각은 유한한 숫자여야 합니다. |
-| [`not valid`](src/calendar_renderer.py#L367) | 모션 시각은 유한한 숫자여야 합니다. |
-| [`threading.get_ident()!=self.thread_id`](src/calendar_renderer.py#L423) | GPU 컨텍스트는 생성 스레드에서만 사용할 수 있습니다. |
-| [`type(size) is not int or not 32&lt;=size&lt;=2160`](src/calendar_renderer.py#L428) | 전달 크기는32~2160 정수여야 합니다. |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · [src/core.py](src/core.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`read_jsonl_tail`](src/core.py#L19) | 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
-| [`title_catalog`](src/core.py#L56) | 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
-| [`resolve_title`](src/core.py#L86) | 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
-| [`safe_path`](src/core.py#L110) | 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`MAX_TEXT_BYTES`](src/core.py#L10) | `정의=2 * 1024 * 1024` |
-| [`BEGIN`](src/core.py#L11) | `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
-| [`END`](src/core.py#L12) | `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`path.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L125) | 문서가 2 MiB 상한을 초과했습니다. |
-| [`not isinstance(cache, dict) or not isinstance(cache.get('titles'), dict)`](src/core.py#L65) | 제목 캐시 구조가 올바르지 않습니다. |
-| [`target.name.lower() != 'agents.md'`](src/core.py#L136) | 적용 대상은 AGENTS.md 파일이어야 합니다. |
-| [`not target.parent.is_dir()`](src/core.py#L138) | 대상 폴더가 존재하지 않습니다. |
-| [`target.exists() and (not target.is_file() or target.stat().st_size &gt; MAX_TEXT_BYTES)`](src/core.py#L140) | 대상은 2 MiB 이하의 일반 파일이어야 합니다. |
-| [`not content.strip() or len(added) &gt; MAX_TEXT_BYTES`](src/core.py#L147) | 빈 지침 또는 2 MiB 초과 지침은 적용할 수 없습니다. |
-| [`BEGIN in added or END in added`](src/core.py#L149) | 지침 내용에 앱 관리구역 표식을 넣을 수 없습니다. |
-| [`len(result) &gt; MAX_TEXT_BYTES`](src/core.py#L163) | 적용 결과가 2 MiB 상한을 초과합니다. |
-| [`target.exists() != existed or digest(target.read_bytes() if existed else b'') != expected`](src/core.py#L170) | 대상 파일이 미리보기/적용 이후 변경되었습니다. 새 미리보기가 필요합니다. |
-| [`digest(plan['original']) != plan['before_hash'] or digest(plan['applied_bytes']) != plan['after_hash']`](src/core.py#L190) | 미리보기 데이터가 변경되었습니다. |
-| [`backup.parent != safe_path(self.data_dir / 'backups') or not backup.is_file() or backup.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L210) | 유효한 앱 원문 백업이 아닙니다. |
-| [`digest(raw) != receipt['before_hash']`](src/core.py#L213) | 백업 해시가 일치하지 않습니다. |
-| [`not isinstance(row, dict)`](src/core.py#L41) | JSON 객체가 아닙니다. |
-| [`original.count(BEGIN) != 1 or original.count(END) != 1 or original.index(BEGIN) &gt;= original.index(END)`](src/core.py#L156) | 기존 관리구역 표식이 손상되었거나 중복되었습니다. |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · [src/element_frames.py](src/element_frames.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`ElementAssetError`](src/element_frames.py#L24) | 필수 원소 자산 실패를 숨기지 않고 앱의 시작·표시 오류로 전달합니다. |
-| [`preflight_element_frames`](src/element_frames.py#L132) | 활성 원소의 해시·목록·첫 프레임을 확인합니다.31개를 적재하지 않습니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`CACHE_LIMIT`](src/element_frames.py#L15) | `정의=24` |
-| [`FRAME_SIZE`](src/element_frames.py#L16) | `정의=192` |
-| [`FRAME_COUNT`](src/element_frames.py#L17) | `정의=540` |
-| [`FPS`](src/element_frames.py#L18) | `정의=30` |
-| [`PERIOD_SECONDS`](src/element_frames.py#L19) | `정의=18` |
-| [`MAX_ARCHIVE_BYTES`](src/element_frames.py#L20) | `정의=64*1024*1024` |
-| [`MAX_FRAME_BYTES`](src/element_frames.py#L21) | `정의=512*1024` |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`type(number) is not int or not 1&lt;=number&lt;=31`](src/element_frames.py#L34) | 원소 번호는1~31 정수여야 합니다. |
-| [`not 0&lt;manifest.stat().st_size&lt;=64*1024`](src/element_frames.py#L65) | 원소 매니페스트 크기 오류 |
-| [`not isinstance(self.manifest,dict)`](src/element_frames.py#L69) | 원소 매니페스트는 객체여야 합니다. |
-| [`not isinstance(digest,str) or not re.fullmatch('[0-9a-f]{64}',digest)`](src/element_frames.py#L74) | 원소 해시 형식 오류 |
-| [`not 0&lt;archive.stat().st_size&lt;=MAX_ARCHIVE_BYTES`](src/element_frames.py#L75) | 원소 압축파일 크기 초과 |
-| [`hasher.hexdigest()!=digest`](src/element_frames.py#L78) | 원소 ZIP 해시 불일치 |
-| [`len(members)!=540 or {m.filename for m in members}!={f'frame_{i:04d}.png' for i in range(540)}`](src/element_frames.py#L80) | 원소 ZIP 정확한540프레임 목록 불일치 |
-| [`sum(m.file_size for m in members)&gt;128*1024*1024`](src/element_frames.py#L82) | 원소 해제 크기 초과 |
-| [`actual!=self.identities`](src/element_frames.py#L91) | 실행 중 원소 자산이 변경됐습니다. |
-| [`isinstance(elapsed,bool) or not isinstance(elapsed,(int,float)) or not math.isfinite(elapsed)`](src/element_frames.py#L106) | 원소 재생 시각은 유한한 숫자여야 합니다. |
-| [`self.archive is None`](src/element_frames.py#L107) | 원소 재생기가 닫혔습니다. |
-| [`member.is_dir() or member.flag_bits&1 or member.compress_type not in (zipfile.ZIP_STORED,zipfile.ZIP_DEFLATED)                     or not 0&lt;member.file_size&lt;=MAX_FRAME_BYTES`](src/element_frames.py#L84) | 원소 ZIP 멤버 형식 오류 |
-| [`len(data)&gt;MAX_FRAME_BYTES or len(data)&lt;33 or data[:8]!=b'\x89PNG\r\n\x1a\n' or data[12:16]!=b'IHDR'                     or struct.unpack('&gt;II',data[16:24])!=(192,192) or data[24:26]!=bytes((8,6))`](src/element_frames.py#L96) | 원소 PNG 형식 오류 |
-| [`image.isNull() or image.size().width()!=192 or image.height()!=192 or not image.hasAlphaChannel()`](src/element_frames.py#L99) | 원소 PNG 디코딩 오류 |
-| [`any(image.pixelColor(x,y).alpha() for x,y in ((0,0),(191,0),(0,191),(191,191)))`](src/element_frames.py#L100) | 원소 PNG 투명 모서리 오류 |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · [src/element_visuals.py](src/element_visuals.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`colorize_atom`](src/element_visuals.py#L5) | SourceAtop은 원본 알파를 유지하며 명암에 부드러운 영감색을 더합니다. |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · [src/elements.py](src/elements.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`daily_element`](src/elements.py#L43) | 매 호출 실제 날짜를 다시 읽어 자정·절전 복귀·시계 되돌림을 반영합니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`KST`](src/elements.py#L5) | `정의=timezone(timedelta(hours=9))` |
-| [`PALETTE_NOTE`](src/elements.py#L8) | `정의='원소에서 영감받은 디자인 색이며 실제 원소·불꽃색이나 전자배치 재현이 아닙니다.'` |
-| [`ELEMENTS`](src/elements.py#L39) | `정의=tuple(Element(index,symbol,name,color,accent)                  for index,(symbol,name,color,accent) in enumerate(_ROWS,1))` |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`value.tzinfo is None or value.utcoffset() is None`](src/elements.py#L46) | 원소 날짜에는 시간대가 있는 datetime이 필요합니다. |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · [src/frame_pacing.py](src/frame_pacing.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`validate_motion_speed`](src/frame_pacing.py#L7) | 유한한 0.25~3배 숫자만 받아 bool과 잘못된 설정을 거부합니다. |
-| [`MotionClock`](src/frame_pacing.py#L20) | 실제 날짜·시계와 분리하여 배율별 경과 시간을 연속 적분합니다. |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`type(value) not in (int, float)`](src/frame_pacing.py#L9) | 회전 속도는 0.25~3배의 유한한 숫자여야 합니다. |
-| [`not valid`](src/frame_pacing.py#L15) | 회전 속도는 0.25~3배의 유한한 숫자여야 합니다. |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · [src/i18n.py](src/i18n.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`translate`](src/i18n.py#L51) | 명시한 앱 문구만 번역하고 전달된 값은 번역하지 않습니다. |
-| [`remember_translations`](src/i18n.py#L63) | 생성 당시 정적인 앱 문구만 기록하여 사용자 원문과 구분합니다. |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · [src/motion_label.py](src/motion_label.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`MotionImageLabel`](src/motion_label.py#L6) | 최신 이미지 한 개를 보관하고 크기·DPR 변경 때만 기본 크기 힌트를 갱신합니다. |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · [src/notifier.py](src/notifier.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`atomic_json`](src/notifier.py#L33) | 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도합니다. |
-| [`source_datetime`](src/notifier.py#L63) | 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. |
-| [`duplicate_record`](src/notifier.py#L212) | 원본 시각이 있는 복제 기록만 제외하며 기준선 재생의 순서는 복원합니다. |
-| [`settings_record`](src/notifier.py#L223) | 자기 채팅의 native 설정 필드만 관측하며 변경 주체와 실행 모델은 추정하지 않습니다. |
-| [`lookup_parent_reason`](src/notifier.py#L376) | 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. |
-| [`enrich_event`](src/notifier.py#L423) | 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
-| [`replay_activity_prefix`](src/notifier.py#L445) | 고정된 과거 소비 구간의 활동 메타만 파일별 기존 예산 안에서 복원합니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`--sessions`](src/notifier.py#L739) | `type=Path; default=Path.home() / '.codex/sessions'` |
-| [`--work`](src/notifier.py#L740) | `type=Path; default=ROOT / 'work'` |
-| [`ROOT`](src/notifier.py#L18) | `정의=Path(__file__).resolve().parents[1]` |
-| [`APP_ID`](src/notifier.py#L19) | `정의='Yunseok.Codex.ModelChangeNotifier'` |
-| [`READ_BYTES`](src/notifier.py#L20) | `정의=512 * 1024` |
-| [`MAX_RECORD`](src/notifier.py#L21) | `정의=2 * 1024 * 1024` |
-| [`MAX_FILES`](src/notifier.py#L22) | `정의=4096` |
-| [`LOG_BYTES`](src/notifier.py#L23) | `정의=2 * 1024 * 1024` |
-| [`POLL_READ_BYTES`](src/notifier.py#L24) | `정의=8 * 1024 * 1024` |
-| [`MAX_PENDING`](src/notifier.py#L25) | `정의=256` |
-| [`POLL_INTERVAL_SECONDS`](src/notifier.py#L26) | `정의=0.2` |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`self.state_path.stat().st_size &gt; 16 * 1024 * 1024`](src/notifier.py#L90) | 상태 파일이 16 MiB 상한을 초과했습니다. 원본 보존 후 점검이 필요합니다. |
-| [`self.state.get('schema_version') not in (2, 3)`](src/notifier.py#L94) | 구형 상태는 요청과 관측이 혼합되어 있습니다. 원본 보존 후 명시적 재기준선이 필요합니다. |
-| [`not isinstance(self.state.get('files'), dict) or not isinstance(self.state.get('models'), dict)`](src/notifier.py#L96) | 상태 파일 구조 오류입니다. 자동 초기화하지 않습니다. |
-| [`not isinstance(self.state.get('declarations'), dict)`](src/notifier.py#L98) | 명시 배정 상태 구조 오류입니다. 자동 초기화하지 않습니다. |
-| [`not isinstance(self.state.get('settings'), dict)`](src/notifier.py#L117) | 채팅 선택 설정 상태 구조 오류입니다. 자동 초기화하지 않습니다. |
-| [`backup.read_bytes() != original`](src/notifier.py#L105) | 이전 상태 백업이 원본과 다릅니다. 자동 덮어쓰기하지 않습니다. |
-| [`any(isinstance(v, bool) or not isinstance(v, int) or v &lt; 0 for v in (offset, end))`](src/notifier.py#L112) | 이전 상태의 파일 위치가 올바르지 않습니다. 자동 초기화하지 않습니다. |
-| [`backup.read_bytes() != original`](src/notifier.py#L123) | 활동 이행 백업이 원본과 다릅니다. 자동 덮어쓰기하지 않습니다. |
-| [`isinstance(end, bool) or not isinstance(end, int) or end &lt; 0`](src/notifier.py#L131) | 활동 기준선의 파일 위치가 올바르지 않습니다. |
-| [`not isinstance(record, dict)`](src/notifier.py#L523) | JSON 객체가 아닙니다. |
-| [`path.stat().st_size &gt; 20000`](src/notifier.py#L603) | 명시 알림 파일 상한 초과 |
-| [`not isinstance(record, dict)`](src/notifier.py#L467) | JSON 객체가 아닙니다. |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · [src/theme.py](src/theme.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`MonochromeStyle`](src/theme.py#L53) | 파일·메시지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. |
-| [`KoreanDialogs`](src/theme.py#L78) | 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역합니다. |
-| [`DialogLayout`](src/theme.py#L94) | 앱 파일 선택창의 이름 열과 한글 버튼에 충분한 공간을 확보합니다. |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · [src/typography.py](src/typography.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`register_fonts`](src/typography.py#L8) | 필수 파일이나 Qt 등록 실패를 숨기지 않고 시작 오류로 전달합니다. |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · [src/usage.py](src/usage.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`number`](src/usage.py#L16) | 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
-| [`normalize_limits`](src/usage.py#L35) | 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
-| [`discover_codex`](src/usage.py#L69) | 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`MAX_BYTES`](src/usage.py#L12) | `정의=1024 * 1024` |
-| [`KST`](src/usage.py#L13) | `정의=timezone(timedelta(hours=9))` |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`not isinstance(message, dict)`](src/usage.py#L226) | 객체가 아닌 응답 |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · [src/usage_frames.py](src/usage_frames.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`UsageAssetError`](src/usage_frames.py#L27) | 조형 표시 오류를 호출자에게 전달하며 계정 조회 흐름과 분리합니다. |
-| [`UsageFrames`](src/usage_frames.py#L50) | 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대16장만 보존합니다. |
-| [`close_usage_frames`](src/usage_frames.py#L183) | 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
-| [`preflight_usage_frames`](src/usage_frames.py#L194) | 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
-| [`get_usage_frame`](src/usage_frames.py#L207) | 공유 팩의 한 프레임을 반환하며 계정 조회 상태에는 관여하지 않습니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FRAME_COUNT`](src/usage_frames.py#L16) | `정의=360` |
-| [`FRAME_SIZE`](src/usage_frames.py#L17) | `정의=384` |
-| [`FPS`](src/usage_frames.py#L18) | `정의=30` |
-| [`PERIOD_SECONDS`](src/usage_frames.py#L19) | `정의=12` |
-| [`CACHE_LIMIT`](src/usage_frames.py#L20) | `정의=16` |
-| [`MAX_ARCHIVE_BYTES`](src/usage_frames.py#L21) | `정의=128 * 1024 * 1024` |
-| [`MAX_FRAME_BYTES`](src/usage_frames.py#L22) | `정의=1024 * 1024` |
-| [`MAX_TOTAL_BYTES`](src/usage_frames.py#L23) | `정의=256 * 1024 * 1024` |
-| [`MAX_MANIFEST_BYTES`](src/usage_frames.py#L24) | `정의=64 * 1024` |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`key in value`](src/usage_frames.py#L44) | 대시보드 조형 자산 매니페스트에 중복 필드가 있습니다. |
-| [`not 0 &lt; manifest_path.stat().st_size &lt;= MAX_MANIFEST_BYTES`](src/usage_frames.py#L69) | 대시보드 조형 자산 매니페스트 크기가 허용 범위를 벗어났습니다. |
-| [`not isinstance(self.manifest, dict)`](src/usage_frames.py#L75) | 대시보드 조형 자산 매니페스트는 객체여야 합니다. |
-| [`not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None`](src/usage_frames.py#L85) | 대시보드 조형 프레임 ZIP의 SHA256 형식이 잘못됐습니다. |
-| [`not 0 &lt; archive_path.stat().st_size &lt;= MAX_ARCHIVE_BYTES`](src/usage_frames.py#L87) | 대시보드 조형 프레임 ZIP 크기가 허용 범위를 벗어났습니다. |
-| [`hasher.hexdigest() != digest`](src/usage_frames.py#L94) | 대시보드 조형 프레임 ZIP의 SHA256이 일치하지 않습니다. |
-| [`len(members) != FRAME_COUNT or {item.filename for item in members} != names`](src/usage_frames.py#L100) | 대시보드 조형 프레임 ZIP의 정확한360개 이름·목록이 일치하지 않습니다. |
-| [`sum(item.file_size for item in members) &gt; MAX_TOTAL_BYTES`](src/usage_frames.py#L102) | 대시보드 조형 프레임 전체 읽기 상한을 초과했습니다. |
-| [`actual != self.identities`](src/usage_frames.py#L133) | 검증 뒤 대시보드 조형 자산이 변경됐습니다. 앱을 다시 실행해 주세요. |
-| [`type(elapsed) not in (int, float)`](src/usage_frames.py#L138) | 조형 재생 시각은 유한한 숫자여야 합니다. |
-| [`not finite`](src/usage_frames.py#L144) | 대시보드 조형 프레임의 재생 시각이 유한한 숫자가 아닙니다. |
-| [`self.archive is None`](src/usage_frames.py#L149) | 조형 재생기가 닫혔습니다. |
-| [`item.is_dir() or item.flag_bits & 1 or item.compress_type not in                     (zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED) or                     not 0 &lt; item.file_size &lt;= MAX_FRAME_BYTES`](src/usage_frames.py#L105) | 대시보드 조형 프레임 멤버의 형식·크기가 허용 범위를 벗어났습니다. |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · [src/usage_widgets.py](src/usage_widgets.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`CalendarHero`](src/usage_widgets.py#L9) | 사용 한도 화면에서만 날짜별 입체 이미지를 갱신합니다. |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · [src/visuals.py](src/visuals.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`rotate_point`](src/visuals.py#L12) | X·Y·Z 순서로 회전하며 깊이 좌표를 보존합니다. |
-| [`axis_rotate`](src/visuals.py#L40) | 로드리게스 식으로 고유 축 주위를 회전하며 공통 Z 변환을 쓰지 않습니다. |
-| [`orbit_segments`](src/visuals.py#L63) | 제작 매니페스트와 일치하는 기하 검증용 메타입니다. GUI 드로잉에는 쓰지 않습니다. |
-| [`status_label`](src/visuals.py#L80) | 읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다. |
-| [`element_labels`](src/visuals.py#L85) | 원자번호와 계정 퍼센트를 서로 다른 명시적 라벨로 구분합니다. |
-| [`usage_bar`](src/visuals.py#L99) | 숫자와 채움에 같은 실제 비율을 쓰며 최소 채움 폭을 강제하지 않습니다. |
-| [`_frame_for_element`](src/visuals.py#L111) | 원소별 실제 제작 프레임을 읽습니다. 이전 형상으로 대체하지 않습니다. |
-| [`draw_orbit`](src/visuals.py#L117) | 달력 조형·날짜 도크·실제 잔량을 분리하고 명시한 원소 미리보기도 보존합니다. |
-| [`desktop_widget_layout`](src/visuals.py#L176) | 이름을 화면 픽셀 크기로 줄 바꿈하고 조형·잔량 영역을 분리합니다. |
-| [`draw_desktop_orbit`](src/visuals.py#L212) | 위젯의 조형과 글자를 별개 영역에 그려 작은 글자 축소를 막습니다. |
-| [`_draw_desktop_information`](src/visuals.py#L227) | 움직이는 GPU 이미지와 분리한 도크·시계·지역·기온·잔량을 그립니다. |
-| [`DesktopOverlayCache`](src/visuals.py#L278) | 한 위젯의 완전 입력이 같을 때만 단일 투명 정보 레이어를 재사용합니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`MOTION_PERIOD`](src/visuals.py#L27) | `정의=18` |
-| [`RING_TURNS`](src/visuals.py#L28) | `정의=(1, -2, 3)` |
-| [`RING_AZIMUTHS`](src/visuals.py#L29) | `정의=(8., 128., 248.)` |
-| [`RING_AXIS_TILTS`](src/visuals.py#L30) | `정의=(42., 46., 49.)` |
-| [`RING_RADII`](src/visuals.py#L35) | `정의=(45., 51., 57.)` |
-| [`BASE_ANGLES`](src/visuals.py#L36) | `정의=tuple((math.radians(tilt), 0., math.radians(azimuth))                     for tilt, azimuth in zip((52., 58., 62.), RING_AZIMUTHS))` |
-| [`ATOM_RECT`](src/visuals.py#L92) | `정의=QRectF(-48,-74,96,96)` |
-| [`DOCK_RECT`](src/visuals.py#L93) | `정의=QRectF(-68,25,136,27)` |
-| [`USAGE_RECT`](src/visuals.py#L94) | `정의=QRectF(-68,56,136,16)` |
-| [`USAGE_TRACK_RECT`](src/visuals.py#L95) | `정의=QRectF(-61,62,62,4)` |
-| [`SYMBOL_PIXELS`](src/visuals.py#L96) | `정의=24` |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · [src/weather.py](src/weather.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`localized_region`](src/weather.py#L27) | 검색 전 임시 표시에는 검증된 국내 사전 또는 실제 원문 지명을 사용합니다. |
-| [`select_geocoded_region`](src/weather.py#L67) | 동일 국가이면서 IP 추정 좌표에서30km 이내인 가장 가까운 검색 결과만 수락합니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`_COUNTRIES`](src/weather.py#L23) | `정의={'US': '미국', 'JP': '일본', 'CN': '중국', 'GB': '영국', 'DE': '독일',               'FR': '프랑스', 'CA': '캐나다', 'AU': '호주', 'SG': '싱가포르', 'TW': '대만'}` |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`language not in ('ko', 'en')`](src/weather.py#L29) | 지원 언어는 ko 또는 en입니다. |
-| [`language not in ('ko', 'en')`](src/weather.py#L111) | 지원 언어는 ko 또는 en입니다. |
-| [`language not in ('ko', 'en')`](src/weather.py#L155) | 지원 언어는 ko 또는 en입니다. |
-| [`not self._valid_number(latitude, -90, 90) or not self._valid_number(longitude, -180, 180)`](src/weather.py#L249) | 위치 범위 |
-| [`not self._valid_number(temperature, -100, 70)`](src/weather.py#L321) | 기온 범위 |
-| [`not self._valid_number(observed, 0, now + 300)`](src/weather.py#L325) | 기온 제공 시각 |
-| [`not isinstance(data, dict)`](src/weather.py#L232) | 응답 형식 |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · 처리 결과와 출력 읽기
-
-변경 전·후 모델과 추론 강도, 공개된 이유, 관측 시각과 근거 수준을 함께 읽습니다. 기록되지 않은 값은 미확인으로 남깁니다. 로컬 기록은 서버 모델 신원 증명이 아닙니다.
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · 제약과 문제 해결
-
-| 상황 | 확인할 내용 |
-| --- | --- |
-| 알림이 나타나지 않음 | 감시하는 sessions 경로·새 JSONL 기록·중복 실행 잠금·알림 설정을 확인합니다. 최초 기준선 읽기와 새 변경 감지는 다릅니다. |
-| 자산 또는 글꼴 오류 | 이 차수에서 참조하는 assets와 라이선스를 준비합니다. 소스 이력에는 과거 대용량 프레임 자산이 없을 수 있습니다. |
-| 이유 또는 이전값이 없음 | 원문 기록에 해당 필드가 있는지 확인합니다. 누락된 동기를 추정해서 채우지 않습니다. |
-
-### LEVEL 5 · 26차 추가 해설 · LEVEL 5 · 직전 자료와 전체 비교
-
-25차에서 26차로 이어지는 실제 파일 비교입니다.
-
-[전체 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff)
-
-추가·수정·삭제, 주석·공백·개행과 바이너리 크기·해시는 연결된 원래 비교 자료에서 확인합니다.
-
-
-파일별 비교·크기·해시 자세히 보기
-
-텍스트는 엄격 UTF-8로 판정하며 [전체 텍스트 차이](직전차수.diff)에는 주석과 공백을 포함합니다. 파일별 바이트 수와 SHA-256 및 바이너리 여부는 [비교 명세](공개파일_비교.json)에 기록합니다.
-
-- **검증:** 이 폴더의 diff는 소스 바이트 비교입니다. 이후 로컬 원본 검증 자료를 대조해 작성한 [공개 검증 요약](../../docs/공개검증_26차.md)을 함께 제공합니다. 비공개 원본 로그는 공개하지 않으며 소스 비교 자체를 실행 결과로 해석하지 않습니다.
-
-- **수정** `src/app.py`: 이전 110155바이트, SHA-256 `bb0421143d08d6930d62f19252819ca26a91444466002c1a559b0dc87895ac3b`; 현재 116115바이트, SHA-256 `ccb4c5771ab1a01e416e81dcc3678629cd5a5a2613e50d5e7c4a3e4263da964f`.
-
-- **수정** `src/calendar_motion.py`: 이전 15710바이트, SHA-256 `fcd254efc4bf9e4a15eb9a1d75177323d34763716cea207e2bd95348b93463a0`; 현재 16207바이트, SHA-256 `ddb3e8afdf5f46f7bb8f997e75c39234550f28bade6223e19f81e37579765791`.
-
-- **수정** `src/frame_pacing.py`: 이전 2625바이트, SHA-256 `6ca862a2eaa6707665f19514315de584424ab66017eff8f7898e3a4f6c6a9cb5`; 현재 3692바이트, SHA-256 `09cd3768e4baa326bb0e08e4d7fd8130f05526024686b88f8ef2f9b0366b1bb1`.
-
-- **수정** `src/i18n.py`: 이전 19942바이트, SHA-256 `2dbea990824fb7107019228d5ecf6a75d7ce1a7062d0984f2a00908c7e26cec1`; 현재 20538바이트, SHA-256 `091208c023ccecdefd7957dcc3bacd8acc5c44324dd587ac36986ac3dc81106a`.
-
-- **추가** `src/motion_label.py`: 이전 없음; 현재 2380바이트, SHA-256 `f76a05b63a676282ff4816c25ce0d7bc4aa01396889559c76021d5f858a0c60d`.
-
-- **수정** `src/usage_widgets.py`: 이전 2471바이트, SHA-256 `a5e8de93da797f5f269551061d30878d8c0f86cae8824e89ba052bd6b28aeee2`; 현재 2516바이트, SHA-256 `9ad1be24d27cbf072db6892a2bc3c431304002f90f9a9d46d59494a91b74814c`.
-
-- **수정** `src/visuals.py`: 이전 13297바이트, SHA-256 `d4bb20ebbfa421b5f05a482aedbb0b2202b7f7ffc2e6f7e22916ace3d0d72e1d`; 현재 15915바이트, SHA-256 `13a8d20b188ac2e82bc57771263dd6c2bef7cb3ab96ef259d51fd73fa380a57a`.
-
-[실행 소스 전체 Git 비교](직전차수.diff)와 [실제 바이트 명세](공개파일_비교.json)는 Python뿐 아니라 존재하는 보조 PowerShell과 의존성 목록을 포함합니다. `git -c core.autocrlf=false apply --reverse --binary -p1`로 현재 소스 사본에서 직전 소스의 파일 부재·신규·삭제 상태까지 복원해 원문 바이트를 대조했습니다. 부가 자료는 이 소스 비교에 섞지 않고 위 명세로 구분합니다.
-
-
-
-[프로젝트](../../README.md) · [전체 차수](../../docs/REVISION_INDEX.md) · [원본 자료](.) · [← 이전: 25차](../25/README.md) · [다음: 27차 →](../27/README.md)
-
-
-기존의 전체 설명·표·코드·함수 참조·파일별 비교는 아래에 그대로 이어집니다. [자료 폴더](.) · [직전 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [이 차수의 원래 전체 상세](#reading-level-5)
-<!-- reading-levels:end -->
-
-
-
-[프로젝트](../../README.md) · [전체 차수](../../docs/REVISION_INDEX.md) · [원본 자료](.) · [← 이전: 25차](../25/README.md) · [다음: 27차 →](../27/README.md)
-
-<a name="-목적과-이-차수의-역할"></a>
-## 목적과 이 차수의 역할
-
-상세창 슬라이더와 위젯 메뉴에서 회전 속도를 조절하고 저장합니다. 모션 배율과 실제 시계·날짜·날씨·계정 한도 갱신은 별개입니다.
-
-<a name="features"></a>
-
-<a name="-핵심-기능과-보존-범위"></a>
-## 핵심 기능과 보존 범위
-
-**항목:** 1
-
-**이 차수에서 확인할 내용:** 상세창 슬라이더와 위젯 메뉴에서 회전 속도를 조절하고 저장합니다. 모션 배율과 실제 시계·날짜·날씨·계정 한도 갱신은 별개입니다.
-
-**항목:** 2
-
-**이 차수에서 확인할 내용:** 로컬 세션 기록에서 모델·추론 강도의 변경과 명시된 배정을 구분합니다. 감시기는 외부 통신 없이 로컬 자료를 읽습니다.
-
-**항목:** 3
-
-**이 차수에서 확인할 내용:** 공개 협업 호출과 소유자가 확인된 native 활동을 연결합니다.
-
-**항목:** 4
-
-**이 차수에서 확인할 내용:** 검증된 금속 원자 프레임을 추출 없이 읽는 제한 메모리 재생기입니다.
-
-**항목:** 5
-
-**이 차수에서 확인할 내용:** 같은 실제3D 자산을 공유하는 정적 마크와 가시성 기반 내부 모션입니다.
-
-**항목:** 6
-
-**이 차수에서 확인할 내용:** 2026~2099년의 날짜별 조형 규칙입니다. 외부 데이터와 계정 정보를 사용하지 않습니다.
-
-**항목:** 7
-
-**이 차수에서 확인할 내용:** 실제 대상 이름과 조형 특징을 연결하는 편집 사전입니다.
-
-**항목:** 8
-
-**이 차수에서 확인할 내용:** 한 GPU 작업 스레드와 최대 네 이미지로 날짜별 모션을 공유합니다.
-
-**항목:** 9
-
-**이 차수에서 확인할 내용:** 현재 날짜의 실제 메시를 소유 스레드의 오프스크린 GPU에서 렌더합니다.
-
-**항목:** 10
-
-**이 차수에서 확인할 내용:** 한국 날짜의1~31일에 대응하는 원소와 디자인 영감 팔레트입니다.
-
-**항목:** 11
-
-**이 차수에서 확인할 내용:** 오늘 원소 하나의 압축 프레임만 여는 제한 메모리 재생기입니다.
-
-**항목:** 12
-
-**이 차수에서 확인할 내용:** 원본3D 자산을 변경하지 않는 제한 메모리 Qt 색 합성입니다.
-
-**항목:** 13
-
-**이 차수에서 확인할 내용:** 프로세스 전용 고해상도 대기로 전역 타이머 설정 없이 프레임을 조율합니다.
-
-**항목:** 14
-
-**이 차수에서 확인할 내용:** 앱이 소유한 문구만 번역하며 이벤트 원문은 호출자가 그대로 보존합니다.
-
-**항목:** 15
-
-**이 차수에서 확인할 내용:** Codex App Server의 `account/rateLimits/read`를 읽기 전용으로 조회합니다. 표시값은 남은 토큰 개수가 아니라 계정 사용 한도 비율입니다.
-
-**항목:** 16
-
-**이 차수에서 확인할 내용:** 지역·기온 조회 모듈은 네트워크를 사용합니다. 로컬 감시기의 외부 통신 여부와 앱 전체의 날씨 조회를 구분합니다.
-
-
-<a name="-입력처리출력"></a>
-## 입력·처리·출력
-
-| 단계 | 내용 |
-| --- | --- |
-| 입력 | 현재 사용자 Codex의 로컬 JSONL과 이 차수의 앱 설정 |
-| 처리 | 변경 감시 → 공개 이유·전후 모델 정리 → 알림·상세창 표시 |
-| 출력 | 알림·변경 이력·로컬 진단 기록 |
-
-
-<a name="usage"></a>
-
-<a name="️-화면과-사용-흐름"></a>
-## 화면과 사용 흐름
-
-1. 이 차수의 소스·requirements와 필요한 자산을 한 작업 폴더에 준비합니다.
-2. 앱을 열고 위젯·상세창에서 감시 경로와 표시되는 기록을 확인합니다.
-3. 새 변경이 기록되면 이전·이후 값과 이유를 비교하고, 기록 종류와 근거 수준을 함께 읽습니다.
-4. 설정·이력은 개인 운영자료로 관리하고 다른 사용자에게 공유하기 전에 내용을 확인합니다.
-
-<a name="structure"></a>
-
-<a name="-실제-자료-구성"></a>
-## 실제 자료 구성
-
-| 경로 | 자료 종류 |
-| --- | --- |
-| [src/](src) | 하위 자료 폴더 |
-| [README.md](README.md) | MD 파일 |
-| [requirements.txt](requirements.txt) | TXT 파일 |
-| [공개파일_비교.json](%EA%B3%B5%EA%B0%9C%ED%8C%8C%EC%9D%BC_%EB%B9%84%EA%B5%90.json) | JSON 파일 |
-| [보존자료.md](%EB%B3%B4%EC%A1%B4%EC%9E%90%EB%A3%8C.md) | MD 파일 |
-| [부가자료_보존.json](%EB%B6%80%EA%B0%80%EC%9E%90%EB%A3%8C_%EB%B3%B4%EC%A1%B4.json) | JSON 파일 |
-| [직전차수.diff](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) | DIFF 파일 |
-
-<a name="-주요-모듈과-코드-읽기"></a>
-## 주요 모듈과 코드 읽기
-
-| 파일 | 역할·구성 |
-| --- | --- |
-| [src/app.py](src/app.py) | Codex Orbit: 독립 회전 위젯과 로컬 변경 기록·사용 한도. |
-| [src/notifier.py](src/notifier.py) | 현재 사용자 로컬 JSONL을 읽는 모델 변경 감시기. 외부 통신은 하지 않습니다. |
-| [src/activity.py](src/activity.py) | 공개 협업 호출과 소유자가 확인된 native 활동을 연결합니다. |
-| [src/atom_frames.py](src/atom_frames.py) | 검증된 금속 원자 프레임을 추출 없이 읽는 제한 메모리 재생기입니다. |
-| [src/brand.py](src/brand.py) | 같은 실제3D 자산을 공유하는 정적 마크와 가시성 기반 내부 모션입니다. |
-| [src/calendar_art.py](src/calendar_art.py) | 2026~2099년의 날짜별 조형 규칙입니다. 외부 데이터와 계정 정보를 사용하지 않습니다. |
-| [src/calendar_catalog.py](src/calendar_catalog.py) | 실제 대상 이름과 조형 특징을 연결하는 편집 사전입니다. |
-| [src/calendar_motion.py](src/calendar_motion.py) | 한 GPU 작업 스레드와 최대 네 이미지로 날짜별 모션을 공유합니다. |
-| [src/calendar_renderer.py](src/calendar_renderer.py) | 현재 날짜의 실제 메시를 소유 스레드의 오프스크린 GPU에서 렌더합니다. |
-
-<a name="setup"></a>
-
-<a name="-설치-환경과-실행사용법"></a>
-## 설치 환경과 실행·사용법
-
-Windows와 해당 폴더의 requirements.txt를 기준으로 Python 의존성을 준비합니다. history는 공개 소스 보존본이며 현재 루트 assets가 과거 모든 차수의 자산과 호환된다는 뜻은 아닙니다. 날짜별 실제 메시 렌더에는 ModernGL과 OpenGL 3.3을 지원하는 그래픽 드라이버가 필요합니다.
-
-자산과 의존성을 준비한 이 차수 폴더에서 `python src/app.py`를 실행합니다. history 소스만으로 과거 배포 EXE와 동일한 화면·자산이 모두 복원되지는 않습니다.
-
-<a name="-이-차수-원래-안내의-세부-조건"></a>
-### 이 차수 원래 안내의 세부 조건
-
-### 사용하는 사람에게 달라진 점
-
-상세창 슬라이더와 위젯 우클릭 메뉴에서 회전 속도를 0.25~3배로 선택하고 1배로 복원할 수 있습니다. 선택값은 저장되어 다음 실행에도 적용됩니다. 속도를 바꿔도 조형의 회전 각도를 이어서 재생하며 날짜·시계·기온·계정 조회 간격은 그대로입니다. 저장이 실패하면 이전 배율로 복원하고 선택한 한국어·영어로 오류를 안내합니다. 정적 정보와 움직이는 조형을 나누어 갱신하는 변경도 포함합니다.
-
-[26차 검증 요약](../../docs/%EA%B3%B5%EA%B0%9C%EA%B2%80%EC%A6%9D_26%EC%B0%A8.md)에서 개발 전체·공개본·중앙 소스 검사와 배포 실행 결과를 구분합니다. 고정 240fps는 달성하지 못했으며 추가 달성 작업은 제외됐습니다. 26차 변경 기록의 실측 생성 약 227~230fps, 고유 Qt 그리기 약 214~229fps를 모니터 표시율로 해석하지 않습니다.
-
-<a name="-이-보관본의-의존성-목록"></a>
-### 이 보관본의 의존성 목록
-
-[requirements.txt](requirements.txt)의 실제 항목입니다. 외부 실행 도구와 GPU 드라이버는 별도로 준비합니다.
-
-```text
-PySide6-Essentials==6.12.0
-PyInstaller==6.22.3
-moderngl==5.13.0
-glcontext==3.1.0
-numpy==2.5.4
-Pillow==13.0.0
-```
-
-<a name="️-소스에서-제공하는-cli-옵션"></a>
-### 소스에서 제공하는 CLI 옵션
-
-**진입 소스:** [app.py](src/app.py)
+[structure](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#structure)
 
-**정의된 옵션 이름:** `--data-dir`, `--sessions`, `--smoke-test`, `--usage-smoke-test`, `--smoke-report`, `--show-details`, `--show-event`
+<a id="-실제-자료-구성"></a>
 
-**진입 소스:** [notifier.py](src/notifier.py)
+[-실제-자료-구성](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#-실제-자료-구성)
 
-**정의된 옵션 이름:** `--sessions`, `--work`
+<a id="-주요-모듈과-코드-읽기"></a>
 
+[-주요-모듈과-코드-읽기](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#-주요-모듈과-코드-읽기)
 
-각 옵션의 기본값·필수값·부작용은 해당 main과 인자 정의를 함께 확인합니다.
+<a id="setup"></a>
 
+[setup](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#setup)
 
-<details>
-<summary>함수 역할·기본값·입력 거부 조건의 세부 참조</summary>
+<a id="-설치-환경과-실행사용법"></a>
 
-다음 항목은 이 자료의 Python 소스에 명시된 선언입니다. 전체 분기와 호출 순서는 각 행의 코드 위치에서 이어서 읽을 수 있습니다.
+[-설치-환경과-실행사용법](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#-설치-환경과-실행사용법)
 
-### [src/activity.py](src/activity.py)
+<a id="-이-차수-원래-안내의-세부-조건"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`safe_public_text`](src/activity.py#L15) | 보호문·비공개 표식·긴 인코딩 덩어리는 해석하거나 노출하지 않습니다. |
-| [`configuration`](src/activity.py#L76) | 원본 시각이 있는 자기 관측만 전역 256개로 제한해 보존합니다. |
-| [`defer`](src/activity.py#L160) | 원본 본문 없이 검증에 필요한 native 필드만 전역 32개까지 기다립니다. |
-| [`observe`](src/activity.py#L273) | 그 활동의 첫 관측만 보강하며 이후 모델 변경은 별도 감지를 유지합니다. |
+[-이-차수-원래-안내의-세부-조건](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#-이-차수-원래-안내의-세부-조건)
 
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`MAX_ACTIVITY_EVENTS`](src/activity.py#L7) | `정의=128` |
-| [`MAX_ACTIVITY_SEEN`](src/activity.py#L8) | `정의=8192` |
-| [`MAX_ACTIVITY_CALLS`](src/activity.py#L9) | `정의=32` |
-| [`MAX_PUBLIC_CALLS`](src/activity.py#L10) | `정의=128` |
-| [`MAX_DEFERRED_ACTIVITIES`](src/activity.py#L11) | `정의=32` |
-| [`MAX_CONFIGURATION_SNAPSHOTS`](src/activity.py#L12) | `정의=256` |
+<a id="-이-보관본의-의존성-목록"></a>
 
-**거부 조건:** [`not isinstance(self.data['calls'], dict) or not isinstance(self.data['deferred'], list)`](src/activity.py#L66)
+[-이-보관본의-의존성-목록](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#-이-보관본의-의존성-목록)
 
-**오류 메시지:** 활동 호출/지연 상태 구조 오류입니다. 원본을 자동 초기화하지 않습니다.
+<a id="️-소스에서-제공하는-cli-옵션"></a>
 
-**거부 조건:** [`not isinstance(self.data['configurations'], list)`](src/activity.py#L68)
+[️-소스에서-제공하는-cli-옵션](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#️-소스에서-제공하는-cli-옵션)
 
-**오류 메시지:** 활동 관측 시각 구조 오류입니다. 원본을 자동 초기화하지 않습니다.
+<a id="level-426차-추가-해설level-4srcbrandpysrcbrandpy"></a>
 
+[level-426차-추가-해설level-4srcbrandpysrcbrandpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-426차-추가-해설level-4srcbrandpysrcbrandpy)
 
-### [src/app.py](src/app.py)
+<a id="level-426차-추가-해설level-4srccalendar_artpysrccalendar_artpy"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`validated_motion_speed`](src/app.py#L42) | 설정과 UI의 속도는 유한한 실제 숫자 범위로 제한합니다. |
-| [`_application_gui_root`](src/app.py#L49) | Python 순환 수집과 무관하게 살아 있는 GUI 소유자를 앱에 보관합니다. |
-| [`operation_record`](src/app.py#L67) | 대화 본문 없이 시작·감시 단계와 실제 프로세스 경로를 기록합니다. |
-| [`previous_field`](src/app.py#L106) | 이전 기록 전체 부재와 개별 필드 미기록을 구분하고 관측값만 표시합니다. |
-| [`short_reason`](src/app.py#L130) | 명시 이유와 배정·선택 목적 문장을 우선 발췌하며 추정 요약은 만들지 않습니다. |
-| [`public_text`](src/app.py#L182) | 공개 문장만 표시하며 보호된 도구 페이로드를 해석하거나 노출하지 않습니다. |
-| [`selection_explanation`](src/app.py#L203) | 공개된 작업 목적을 모델 선택 이유로 바꾸어 말하지 않습니다. |
-| [`NoticeDelivery`](src/app.py#L309) | Qt 예약 호출을 포함한 미처리 전달 수를 스레드 사이에서 제한합니다. |
-| [`NoticeTicket`](src/app.py#L334) | 중복 반환과 종료 뒤 도착한 신호도 같은 한도를 다시 늘리지 않습니다. |
-| [`DiagnosticLabel`](src/app.py#L918) | 오류가 있을 때 변경 기록 안에 원문을 보여 주는 읽기 전용 라벨입니다. |
-| [`QuitGuard`](src/app.py#L1394) | 직접 앱 종료 요청도 감시 작업자의 비동기 정리 뒤에 처리합니다. |
-| [`usage_smoke_state`](src/app.py#L1956) | 지연된 신호 인자 대신 최신 스냅샷과 현재 레이아웃의 실제 표시를 대조합니다. |
-| [`motion_smoke_stage`](src/app.py#L1980) | 실제 GPU 렌더 수를 기준으로 준비·비교 단계를 판정합니다. |
-| [`_content_fit_signature`](src/app.py#L759) | 말줄임 전 제목과 실제 높이에 영향을 주는 표시 조건만 비교합니다. |
-| [`promote_first_observation`](src/app.py#L1363) | 실제 첫 관측 한 행만 안정된 활동 ID로 보강하며 다른 변경은 보존합니다. |
-| [`change_motion_speed`](src/app.py#L1484) | 사용자 조작의 실패는 실제 속도를 복원한 뒤 상세창에서 안내합니다. |
-| [`_finish_closed_gui`](src/app.py#L1948) | 외부 QThread 참조를 무효화하지 않고 종료된 감시기와 GUI 소유자를 해제합니다. |
+[level-426차-추가-해설level-4srccalendar_artpysrccalendar_artpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-426차-추가-해설level-4srccalendar_artpysrccalendar_artpy)
 
-**설정·옵션:** [`--data-dir`](src/app.py#L1996)
+<a id="level-426차-추가-해설level-4srccalendar_catalogpysrccalendar_catalogpy"></a>
 
-**코드의 선언:** `type=Path; default=Path(os.environ.get('LOCALAPPDATA', Path.home())) / 'CodexOrbit'`
+[level-426차-추가-해설level-4srccalendar_catalogpysrccalendar_catalogpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-426차-추가-해설level-4srccalendar_catalogpysrccalendar_catalogpy)
 
-**설정·옵션:** [`--sessions`](src/app.py#L1997)
+<a id="level-426차-추가-해설level-4srccalendar_motionpysrccalendar_motionpy"></a>
 
-**코드의 선언:** `type=Path`
+[level-426차-추가-해설level-4srccalendar_motionpysrccalendar_motionpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-426차-추가-해설level-4srccalendar_motionpysrccalendar_motionpy)
 
-**설정·옵션:** [`--smoke-test`](src/app.py#L1998)
+<a id="level-426차-추가-해설level-4srccalendar_rendererpysrccalendar_rendererpy"></a>
 
-**코드의 선언:** `action='store_true'`
+[level-426차-추가-해설level-4srccalendar_rendererpysrccalendar_rendererpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-426차-추가-해설level-4srccalendar_rendererpysrccalendar_rendererpy)
 
-**설정·옵션:** [`--usage-smoke-test`](src/app.py#L1999)
+<a id="level-426차-추가-해설level-4srccorepysrccorepy"></a>
 
-**코드의 선언:** `action='store_true'; help='실제 계정 잔량과 표시를 조회한 뒤 종료'`
+[level-426차-추가-해설level-4srccorepysrccorepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-426차-추가-해설level-4srccorepysrccorepy)
 
-**설정·옵션:** [`--smoke-report`](src/app.py#L2000)
+<a id="level-426차-추가-해설level-4srcelement_framespysrcelement_framespy"></a>
 
-**코드의 선언:** `type=Path`
+[level-426차-추가-해설level-4srcelement_framespysrcelement_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-426차-추가-해설level-4srcelement_framespysrcelement_framespy)
 
-**설정·옵션:** [`--show-details`](src/app.py#L2001)
+<a id="level-426차-추가-해설level-4srcelement_visualspysrcelement_visualspy"></a>
 
-**코드의 선언:** `action='store_true'`
+[level-426차-추가-해설level-4srcelement_visualspysrcelement_visualspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-426차-추가-해설level-4srcelement_visualspysrcelement_visualspy)
 
-**설정·옵션:** [`--show-event`](src/app.py#L2002)
+<a id="level-426차-추가-해설level-4srcelementspysrcelementspy"></a>
 
-**코드의 선언:** `help='기존 이력의 이벤트 ID 또는 대상 ID를 다시 표시'`
+[level-426차-추가-해설level-4srcelementspysrcelementspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-426차-추가-해설level-4srcelementspysrcelementspy)
 
-**설정·옵션:** [`EMPTY_HISTORY_GUIDANCE`](src/app.py#L39)
+<a id="level-426차-추가-해설level-4srcframe_pacingpysrcframe_pacingpy"></a>
 
-**코드의 선언:** `정의='변경을 감지하면 이곳에서 전후 값과 공개 이유를 확인할 수 있습니다.\n첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'`
+[level-426차-추가-해설level-4srcframe_pacingpysrcframe_pacingpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-426차-추가-해설level-4srcframe_pacingpysrcframe_pacingpy)
 
-**설정·옵션:** [`ROLE_LABELS`](src/app.py#L116)
+<a id="level-426차-추가-해설level-4srci18npysrci18npy"></a>
 
-**코드의 선언:** `정의={'main': '부모 조율', 'triage': '작업 분류', 'quick': '간단한 수정',                'build': '구현', 'deep': '심층 검토·구현', 'verifier': '독립 검증', 'escalate': '판단 재검토·수리'}`
+[level-426차-추가-해설level-4srci18npysrci18npy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-426차-추가-해설level-4srci18npysrci18npy)
 
+<a id="level-426차-추가-해설level-4srcmotion_labelpysrcmotion_labelpy"></a>
 
-**거부 조건:** [`application is None or QThread.currentThread() != application.thread()`](src/app.py#L52)
+[level-426차-추가-해설level-4srcmotion_labelpysrcmotion_labelpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-426차-추가-해설level-4srcmotion_labelpysrcmotion_labelpy)
 
-**오류 메시지:** GUI 소유자는 QApplication의 메인 스레드에서 생성해야 합니다.
+<a id="level-426차-추가-해설level-4srcnotifierpysrcnotifierpy"></a>
 
-**거부 조건:** [`QThread.currentThread() != application.thread()`](src/app.py#L1523)
+[level-426차-추가-해설level-4srcnotifierpysrcnotifierpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-426차-추가-해설level-4srcnotifierpysrcnotifierpy)
 
-**오류 메시지:** 언어는 GUI 메인 스레드에서만 변경할 수 있습니다.
+<a id="level-426차-추가-해설level-4srcthemepysrcthemepy"></a>
 
-**거부 조건:** [`not lock.tryLock(100)`](src/app.py#L2024)
+[level-426차-추가-해설level-4srcthemepysrcthemepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-426차-추가-해설level-4srcthemepysrcthemepy)
 
-**오류 메시지:** 같은 데이터 폴더의 Codex Orbit가 이미 실행 중이거나 잠금 파일에 접근할 수 없습니다.
+<a id="level-426차-추가-해설level-4srctypographypysrctypographypy"></a>
 
-**거부 조건:** [`not isinstance(value, dict)`](src/app.py#L295)
+[level-426차-추가-해설level-4srctypographypysrctypographypy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-426차-추가-해설level-4srctypographypysrctypographypy)
 
-**오류 메시지:** 앱 설정은 JSON 객체여야 합니다.
+<a id="level-426차-추가-해설level-4srcusagepysrcusagepy"></a>
 
-**거부 조건:** [`self.closed or len(self.tickets) &gt;= MAX_PENDING`](src/app.py#L318)
+[level-426차-추가-해설level-4srcusagepysrcusagepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-426차-추가-해설level-4srcusagepysrcusagepy)
 
-**오류 메시지:** 알림 전달 대기 한도 또는 종료 상태: 다음 감시 주기에 재시도합니다.
+<a id="level-426차-추가-해설level-4srcusage_framespysrcusage_framespy"></a>
 
+[level-426차-추가-해설level-4srcusage_framespysrcusage_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-426차-추가-해설level-4srcusage_framespysrcusage_framespy)
 
-### [src/atom_frames.py](src/atom_frames.py)
+<a id="level-426차-추가-해설level-4srcusage_widgetspysrcusage_widgetspy"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`AtomAssetError`](src/atom_frames.py#L27) | 필수 시각 자산 오류를 시작 실패 경로에 전달합니다. |
-| [`AtomFrames`](src/atom_frames.py#L50) | 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대24장만 보존합니다. |
-| [`close_runtime_frames`](src/atom_frames.py#L172) | 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
-| [`get_atom_frames`](src/atom_frames.py#L183) | 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
+[level-426차-추가-해설level-4srcusage_widgetspysrcusage_widgetspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-426차-추가-해설level-4srcusage_widgetspysrcusage_widgetspy)
 
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FRAME_COUNT`](src/atom_frames.py#L16) | `정의=540` |
-| [`FRAME_SIZE`](src/atom_frames.py#L17) | `정의=296` |
-| [`FPS`](src/atom_frames.py#L18) | `정의=30` |
-| [`PERIOD_SECONDS`](src/atom_frames.py#L19) | `정의=18` |
-| [`CACHE_LIMIT`](src/atom_frames.py#L20) | `정의=24` |
-| [`MAX_ARCHIVE_BYTES`](src/atom_frames.py#L21) | `정의=128 * 1024 * 1024` |
-| [`MAX_FRAME_BYTES`](src/atom_frames.py#L22) | `정의=1024 * 1024` |
-| [`MAX_TOTAL_BYTES`](src/atom_frames.py#L23) | `정의=256 * 1024 * 1024` |
-| [`MAX_MANIFEST_BYTES`](src/atom_frames.py#L24) | `정의=64 * 1024` |
+<a id="level-426차-추가-해설level-4srcvisualspysrcvisualspy"></a>
 
-**거부 조건:** [`key in value`](src/atom_frames.py#L44)
+[level-426차-추가-해설level-4srcvisualspysrcvisualspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-426차-추가-해설level-4srcvisualspysrcvisualspy)
 
-**오류 메시지:** 원자 자산 매니페스트에 중복 필드가 있습니다.
+<a id="level-426차-추가-해설level-4srcweatherpysrcweatherpy"></a>
 
-**거부 조건:** [`not 0 &lt; manifest_path.stat().st_size &lt;= MAX_MANIFEST_BYTES`](src/atom_frames.py#L69)
+[level-426차-추가-해설level-4srcweatherpysrcweatherpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-426차-추가-해설level-4srcweatherpysrcweatherpy)
 
-**오류 메시지:** 원자 자산 매니페스트 크기가 허용 범위를 벗어났습니다.
+<a id="level-426차-추가-해설level-4처리-결과와-출력-읽기"></a>
 
-**거부 조건:** [`not isinstance(self.manifest, dict)`](src/atom_frames.py#L75)
+[level-426차-추가-해설level-4처리-결과와-출력-읽기](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-426차-추가-해설level-4처리-결과와-출력-읽기)
 
-**오류 메시지:** 원자 자산 매니페스트는 객체여야 합니다.
+<a id="level-426차-추가-해설level-4제약과-문제-해결"></a>
 
-**거부 조건:** [`not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None`](src/atom_frames.py#L85)
+[level-426차-추가-해설level-4제약과-문제-해결](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-426차-추가-해설level-4제약과-문제-해결)
 
-**오류 메시지:** 원자 프레임 ZIP의 SHA256 형식이 잘못됐습니다.
+<a id="level-426차-추가-해설level-4직전-자료와-전체-비교"></a>
 
-**거부 조건:** [`not 0 &lt; archive_path.stat().st_size &lt;= MAX_ARCHIVE_BYTES`](src/atom_frames.py#L87)
+[level-426차-추가-해설level-4직전-자료와-전체-비교](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-426차-추가-해설level-4직전-자료와-전체-비교)
 
-**오류 메시지:** 원자 프레임 ZIP 크기가 허용 범위를 벗어났습니다.
+<a id="level-5---expert"></a>
 
-**거부 조건:** [`hasher.hexdigest() != digest`](src/atom_frames.py#L94)
+[level-5---expert](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-5---expert)
 
-**오류 메시지:** 원자 프레임 ZIP의 SHA256이 일치하지 않습니다.
+<a id="level-526차의-구체적인-기능과-확인"></a>
 
-**거부 조건:** [`len(members) != FRAME_COUNT or {item.filename for item in members} != names`](src/atom_frames.py#L100)
+[level-526차의-구체적인-기능과-확인](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차의-구체적인-기능과-확인)
 
-**오류 메시지:** 원자 프레임 ZIP의 정확한540개 이름·목록이 일치하지 않습니다.
+<a id="level-526차-추가-해설level-5목적과-이-차수의-역할"></a>
 
-**거부 조건:** [`sum(item.file_size for item in members) &gt; MAX_TOTAL_BYTES`](src/atom_frames.py#L102)
+[level-526차-추가-해설level-5목적과-이-차수의-역할](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5목적과-이-차수의-역할)
 
-**오류 메시지:** 원자 프레임 전체 읽기 상한을 초과했습니다.
+<a id="level-526차-추가-해설level-5핵심-기능과-보존-범위"></a>
 
-**거부 조건:** [`actual != self.identities`](src/atom_frames.py#L133)
+[level-526차-추가-해설level-5핵심-기능과-보존-범위](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5핵심-기능과-보존-범위)
 
-**오류 메시지:** 검증 뒤 원자 자산이 변경됐습니다. 앱을 다시 실행해 주세요.
+<a id="level-526차-추가-해설level-5입력처리출력"></a>
 
-**거부 조건:** [`isinstance(elapsed, bool) or not isinstance(elapsed, (int, float)) or not math.isfinite(elapsed)`](src/atom_frames.py#L138)
+[level-526차-추가-해설level-5입력처리출력](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5입력처리출력)
 
-**오류 메시지:** 원자 프레임의 재생 시각이 유한한 숫자가 아닙니다.
+<a id="level-526차-추가-해설level-5화면과-사용-흐름"></a>
 
-**거부 조건:** [`item.is_dir() or item.flag_bits & 1 or item.compress_type not in                     (zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED) or                     not 0 &lt; item.file_size &lt;= MAX_FRAME_BYTES`](src/atom_frames.py#L105)
+[level-526차-추가-해설level-5화면과-사용-흐름](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5화면과-사용-흐름)
 
-**오류 메시지:** 원자 프레임 멤버의 형식·크기가 허용 범위를 벗어났습니다.
+<a id="level-526차-추가-해설level-5실제-자료-구성"></a>
 
+[level-526차-추가-해설level-5실제-자료-구성](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5실제-자료-구성)
 
-### [src/brand.py](src/brand.py)
+<a id="level-526차-추가-해설level-5주요-모듈과-코드-읽기"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`motion_brand_source`](src/brand.py#L32) | 원소 프레임의 실제 크기에 비례해 여백만 줄이며 영역 밖을 복사하지 않습니다. |
-| [`BrandClock`](src/brand.py#L40) | 보이는 로고만 단일 시계에서 같은 프레임으로 갱신합니다. |
-| [`AnimatedBrand`](src/brand.py#L106) | 닫힘·숨김 이벤트에 맞춰 재생 구독을 끝내는 실제3D 로고입니다. |
-| [`validate_symbols`](src/brand.py#L137) | 실제 메시에서 제작한 고정 기호 일곱 개를 창 생성 전에 검증합니다. |
-| [`symbol_image`](src/brand.py#L181) | 실제 메시 렌더만 축소하고 새로운 도형이나 글자를 덧그리지 않습니다. |
-| [`with_symbol`](src/brand.py#L209) | 원문 QLabel을 유지하며 기능 의미를 읽기 쉬운 기호로 보조합니다. |
+[level-526차-추가-해설level-5주요-모듈과-코드-읽기](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5주요-모듈과-코드-읽기)
 
-**설정·옵션:** [`SYMBOL_NAMES`](src/brand.py#L133)
+<a id="level-526차-추가-해설level-5설치-환경과-실행사용법"></a>
 
-**코드의 선언:** `정의=('model', 'reasoning', 'time', 'reason', 'usage', 'refresh', 'history')`
+[level-526차-추가-해설level-5설치-환경과-실행사용법](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5설치-환경과-실행사용법)
 
+<a id="level-526차-추가-해설level-5사용하는-사람에게-달라진-점"></a>
 
-**거부 조건:** [`not 1 &lt;= size &lt;= 512`](src/brand.py#L22)
+[level-526차-추가-해설level-5사용하는-사람에게-달라진-점](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5사용하는-사람에게-달라진-점)
 
-**오류 메시지:** 브랜드 이미지 크기는1~512px여야 합니다.
+<a id="level-526차-추가-해설level-5이-보관-본의-의존성-목록"></a>
 
-**거부 조건:** [`name not in SYMBOL_NAMES or not 1 &lt;= size &lt;= 96`](src/brand.py#L184)
+[level-526차-추가-해설level-5이-보관-본의-의존성-목록](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5이-보관-본의-의존성-목록)
 
-**오류 메시지:** 3D 기능 기호의 종류나 크기가 올바르지 않습니다.
+<a id="level-526차-추가-해설level-5소스에서-제공하는-cli-옵션"></a>
 
-**거부 조건:** [`not 0 &lt; path.stat().st_size &lt;= 65536`](src/brand.py#L142)
+[level-526차-추가-해설level-5소스에서-제공하는-cli-옵션](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5소스에서-제공하는-cli-옵션)
 
-**오류 메시지:** 3D 기능 기호 매니페스트 크기 오류입니다.
+<a id="level-526차-추가-해설level-5srcactivitypysrcactivitypy"></a>
 
-**거부 조건:** [`type(metadata.get('schema_version')) is not int or metadata['schema_version'] != 1`](src/brand.py#L145)
+[level-526차-추가-해설level-5srcactivitypysrcactivitypy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5srcactivitypysrcactivitypy)
 
-**오류 메시지:** 3D 기능 기호 매니페스트 버전 오류입니다.
+<a id="level-526차-추가-해설level-5srcapppysrcapppy"></a>
 
-**거부 조건:** [`not isinstance(files, dict) or set(files) != set(SYMBOL_NAMES)`](src/brand.py#L148)
+[level-526차-추가-해설level-5srcapppysrcapppy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5srcapppysrcapppy)
 
-**오류 메시지:** 3D 기능 기호 일곱 개 목록이 일치하지 않습니다.
+<a id="level-526차-추가-해설level-5srcatom_framespysrcatom_framespy"></a>
 
-**거부 조건:** [`not isinstance(record, dict) or record.get('filename') != name+'.png'`](src/brand.py#L153)
+[level-526차-추가-해설level-5srcatom_framespysrcatom_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5srcatom_framespysrcatom_framespy)
 
-**오류 메시지:** 3D 기능 기호의 고정 파일 이름이 일치하지 않습니다.
+<a id="level-526차-추가-해설level-5srcbrandpysrcbrandpy"></a>
 
-**거부 조건:** [`not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None`](src/brand.py#L156)
+[level-526차-추가-해설level-5srcbrandpysrcbrandpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5srcbrandpysrcbrandpy)
 
-**오류 메시지:** 3D 기능 기호의 SHA256 형식 오류입니다.
+<a id="level-526차-추가-해설level-5srccalendar_artpysrccalendar_artpy"></a>
 
-**거부 조건:** [`not 0 &lt; path.stat().st_size &lt;= 262144`](src/brand.py#L159)
+[level-526차-추가-해설level-5srccalendar_artpysrccalendar_artpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5srccalendar_artpysrccalendar_artpy)
 
-**오류 메시지:** 3D 기능 기호 읽기 크기 상한 오류입니다.
+<a id="level-526차-추가-해설level-5srccalendar_catalogpysrccalendar_catalogpy"></a>
 
+[level-526차-추가-해설level-5srccalendar_catalogpysrccalendar_catalogpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5srccalendar_catalogpysrccalendar_catalogpy)
 
-### [src/calendar_art.py](src/calendar_art.py)
+<a id="level-526차-추가-해설level-5srccalendar_motionpysrccalendar_motionpy"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`current_date`](src/calendar_art.py#L33) | 호스트의 현지 시간대와 무관하게 한국 날짜를 사용합니다. |
-| [`_month_palette`](src/calendar_art.py#L50) | 반올림 충돌만 가장 가까운 미사용 RGB로 옮기고 월별 결과를 불변 보관합니다. |
-| [`design_for_date`](src/calendar_art.py#L78) | 유효한 날짜만 허용하며 지원 범위 밖을 다른 날짜로 몰래 대체하지 않습니다. |
-| [`all_designs`](src/calendar_art.py#L95) | 현재 모델만 렌더하며 이 반복자는 작은 카탈로그를 작성할 때만 사용합니다. |
+[level-526차-추가-해설level-5srccalendar_motionpysrccalendar_motionpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5srccalendar_motionpysrccalendar_motionpy)
 
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FIRST_DATE`](src/calendar_art.py#L10) | `정의=date(2026,1,1)` |
-| [`LAST_DATE`](src/calendar_art.py#L11) | `정의=date(2099,12,31)` |
-| [`KST`](src/calendar_art.py#L12) | `정의=timezone(timedelta(hours=9))` |
-| [`THEMES`](src/calendar_art.py#L13) | `정의=tuple(row.title for row in all_collections())` |
+<a id="level-526차-추가-해설level-5srccalendar_rendererpysrccalendar_rendererpy"></a>
 
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`type(value) is not date`](src/calendar_art.py#L80) | 조형 날짜는 datetime.date여야 합니다. |
-| [`not FIRST_DATE &lt;= value &lt;= LAST_DATE`](src/calendar_art.py#L82) | 날짜별 조형 지원 범위는 2026-01-01부터 2099-12-31까지입니다. |
+[level-526차-추가-해설level-5srccalendar_rendererpysrccalendar_rendererpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5srccalendar_rendererpysrccalendar_rendererpy)
 
-### [src/calendar_catalog.py](src/calendar_catalog.py)
+<a id="level-526차-추가-해설level-5srccorepysrccorepy"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`joining_particle`](src/calendar_catalog.py#L208) | 마지막 한글 음절의 받침에 맞춰 대상 이름을 연결합니다. |
+[level-526차-추가-해설level-5srccorepysrccorepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5srccorepysrccorepy)
 
-**설정·옵션:** [`POOLS`](src/calendar_catalog.py#L166)
+<a id="level-526차-추가-해설level-5srcelement_framespysrcelement_framespy"></a>
 
-**코드의 선언:** `정의={'꽃': _objects(_FLOWERS,'꽃'), '열매': _objects(_FRUITS,'열매'),          '잎': _objects(_LEAVES,'잎'), '악기': _objects(_MUSIC,'악기')}`
+[level-526차-추가-해설level-5srcelement_framespysrcelement_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5srcelement_framespysrcelement_framespy)
 
-**설정·옵션:** [`OBJECTS`](src/calendar_catalog.py#L168)
+<a id="level-526차-추가-해설level-5srcelement_visualspysrcelement_visualspy"></a>
 
-**코드의 선언:** `정의={obj.key:obj for pool in POOLS.values() for obj in pool}`
+[level-526차-추가-해설level-5srcelement_visualspysrcelement_visualspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5srcelement_visualspysrcelement_visualspy)
 
-**설정·옵션:** [`COMPOSITION_NAMES`](src/calendar_catalog.py#L193)
+<a id="level-526차-추가-해설level-5srcelementspysrcelementspy"></a>
 
-**코드의 선언:** `정의={'bouquet':'꽃다발형','diagonal':'대각선형','shelter':'감싸는 형태',                      'stage':'연주대형','triangle':'삼각형 정물','fan':'부채형'}`
+[level-526차-추가-해설level-5srcelementspysrcelementspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5srcelementspysrcelementspy)
 
+<a id="level-526차-추가-해설level-5srcframe_pacingpysrcframe_pacingpy"></a>
 
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`not 0 &lt;= index &lt; 888 or not 1 &lt;= month &lt;= 12`](src/calendar_catalog.py#L217) | 연월 컬렉션은 2026년 1월부터 2099년 12월까지입니다. |
+[level-526차-추가-해설level-5srcframe_pacingpysrcframe_pacingpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5srcframe_pacingpysrcframe_pacingpy)
 
-### [src/calendar_motion.py](src/calendar_motion.py)
+<a id="level-526차-추가-해설level-5srci18npysrci18npy"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`next_frame_deadline`](src/calendar_motion.py#L21) | 정상 슬롯을 유지하고 늦은 프레임은 추가 대기나 누적 추격 없이 이어갑니다. |
-| [`fallback_image`](src/calendar_motion.py#L26) | GPU 준비·실패 때만 쓰는 월 주제의 정적 평면 표식입니다. 3D 성공으로 가장하지 않습니다. |
-| [`_Worker`](src/calendar_motion.py#L60) | Qt 객체나 UI를 조작하지 않고 복사된 최신 이미지 하나만 전달합니다. |
-| [`prepare_calendar_motion`](src/calendar_motion.py#L232) | 창 표시 전에 같은 작업자의 첫 실제 프레임을 최대 5초 준비합니다. |
-| [`set_calendar_motion_speed`](src/calendar_motion.py#L262) | 현재 위상을 유지하고 이후 모션의 배율만 바꿉니다. 실제 시계와 날짜는 바꾸지 않습니다. |
-| [`set_calendar_motion_size`](src/calendar_motion.py#L268) | 현재 보이는 각 소유자의 실제 픽셀 요구 중 최대 크기만 전달합니다. |
-| [`record_calendar_presentation`](src/calendar_motion.py#L276) | Qt 그리기 경로가 실제로 소비한 서로 다른 프레임만 셉니다. |
-| [`get_calendar_error`](src/calendar_motion.py#L285) | 제품은 이 문자열을 상태나 툴팁에 표시해 대체 표식과 실제 3D를 구분할 수 있습니다. |
+[level-526차-추가-해설level-5srci18npysrci18npy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5srci18npysrci18npy)
 
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FPS`](src/calendar_motion.py#L15) | `정의=240` |
-| [`SIZE`](src/calendar_motion.py#L16) | `정의=384` |
-| [`RENDER_SIZE`](src/calendar_motion.py#L17) | `정의=(3840, 2160)` |
+<a id="level-526차-추가-해설level-5srcmotion_labelpysrcmotion_labelpy"></a>
 
-**거부 조건:** [`app is None or QThread.currentThread()!=app.thread()`](src/calendar_motion.py#L211)
+[level-526차-추가-해설level-5srcmotion_labelpysrcmotion_labelpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5srcmotion_labelpysrcmotion_labelpy)
 
-**오류 메시지:** 날짜별 모션 API는 Qt 메인 스레드에서 호출해야 합니다.
+<a id="level-526차-추가-해설level-5srcnotifierpysrcnotifierpy"></a>
 
-**거부 조건:** [`type(timeout_seconds) not in (int,float) or not 0 &lt; timeout_seconds &lt;= 5`](src/calendar_motion.py#L234)
+[level-526차-추가-해설level-5srcnotifierpysrcnotifierpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5srcnotifierpysrcnotifierpy)
 
-**오류 메시지:** 3D 준비 제한은 0초 초과 5초 이하여야 합니다.
+<a id="level-526차-추가-해설level-5srcthemepysrcthemepy"></a>
 
-**거부 조건:** [`type(visible) is not bool`](src/calendar_motion.py#L258)
+[level-526차-추가-해설level-5srcthemepysrcthemepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5srcthemepysrcthemepy)
 
-**오류 메시지:** 표시 상태는 bool이어야 합니다.
+<a id="level-526차-추가-해설level-5srctypographypysrctypographypy"></a>
 
-**거부 조건:** [`type(size) is not int or not 32&lt;=size&lt;=2160`](src/calendar_motion.py#L270)
+[level-526차-추가-해설level-5srctypographypysrctypographypy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5srctypographypysrctypographypy)
 
-**오류 메시지:** 전달 크기는32~2160 정수여야 합니다.
+<a id="level-526차-추가-해설level-5srcusagepysrcusagepy"></a>
 
-**거부 조건:** [`self.closed`](src/calendar_motion.py#L167)
+[level-526차-추가-해설level-5srcusagepysrcusagepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5srcusagepysrcusagepy)
 
-**오류 메시지:** 날짜별 모션 서비스가 닫혔습니다.
+<a id="level-526차-추가-해설level-5srcusage_framespysrcusage_framespy"></a>
 
-**거부 조건:** [`self.closed`](src/calendar_motion.py#L180)
+[level-526차-추가-해설level-5srcusage_framespysrcusage_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5srcusage_framespysrcusage_framespy)
 
-**오류 메시지:** 날짜별 모션 서비스가 닫혔습니다.
+<a id="level-526차-추가-해설level-5srcusage_widgetspysrcusage_widgetspy"></a>
 
-**거부 조건:** [`type(elapsed) not in (int,float)`](src/calendar_motion.py#L181)
+[level-526차-추가-해설level-5srcusage_widgetspysrcusage_widgetspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5srcusage_widgetspysrcusage_widgetspy)
 
-**오류 메시지:** 재생 시각은 유한한 숫자여야 합니다.
+<a id="level-526차-추가-해설level-5srcvisualspysrcvisualspy"></a>
 
-**거부 조건:** [`not valid`](src/calendar_motion.py#L184)
+[level-526차-추가-해설level-5srcvisualspysrcvisualspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5srcvisualspysrcvisualspy)
 
-**오류 메시지:** 재생 시각은 유한한 숫자여야 합니다.
+<a id="level-526차-추가-해설level-5srcweatherpysrcweatherpy"></a>
 
-**거부 조건:** [`_retiring.worker.isRunning()`](src/calendar_motion.py#L221)
+[level-526차-추가-해설level-5srcweatherpysrcweatherpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5srcweatherpysrcweatherpy)
 
-**오류 메시지:** 이전 GPU 작업 스레드가 종료 중입니다.
+<a id="level-526차-추가-해설level-5처리-결과와-출력-읽기"></a>
 
+[level-526차-추가-해설level-5처리-결과와-출력-읽기](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5처리-결과와-출력-읽기)
 
-### [src/calendar_renderer.py](src/calendar_renderer.py)
+<a id="level-526차-추가-해설level-5제약과-문제-해결"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`rotation`](src/calendar_renderer.py#L24) | 정규화된 실제 3D축을 중심으로 로드리게스 회전행렬을 만듭니다. |
-| [`finish`](src/calendar_renderer.py#L48) | 표면 법선과 삼각형 winding을 일치시킵니다. |
-| [`box`](src/calendar_renderer.py#L58) | 육면체 면을 실제 둥근 모서리와 구면 꼭짓점으로 투영합니다. |
-| [`lathe`](src/calendar_renderer.py#L84) | 회전체의 실제 앞뒤·옆면을 만들며 다각 단면은 평면 법선을 보존합니다. |
-| [`tube`](src/calendar_renderer.py#L104) | 3D 경로를 따라 원형 단면을 운반합니다. 코일은 실제 깊이를 가집니다. |
-| [`_object_geometry`](src/calendar_renderer.py#L145) | 대상 이름에 연결된 주요 구조를 실제 삼각형 부품으로 구성합니다. |
-| [`_ring_geometry`](src/calendar_renderer.py#L323) | 날짜와 무관한 세 링만 읽기 전용 배열로 한 번 생성합니다. |
-| [`build_geometry`](src/calendar_renderer.py#L334) | 날짜별 주연과 서로 다른 두 월 모티프를 명시적 대상 사전에서 렌더합니다. |
-| [`CalendarRenderer`](src/calendar_renderer.py#L378) | 컨텍스트를 만든 스레드에서만 사용하고 현재 날짜의 버퍼만 보유합니다. |
-| [`render_date`](src/calendar_renderer.py#L489) | 미리보기와 직접 검증용 동기 렌더입니다. 앱은 공유 작업 스레드를 사용합니다. |
-| [`set_output_size`](src/calendar_renderer.py#L425) | 원본 타깃은 유지하고 중앙 정사각형의 GPU 전달 크기만 변경합니다. |
-| [`render_original`](src/calendar_renderer.py#L470) | 검증·내보내기 때만 실제 직사각형 원본 전체를 CPU로 읽습니다. |
+[level-526차-추가-해설level-5제약과-문제-해결](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5제약과-문제-해결)
 
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`PERIOD`](src/calendar_renderer.py#L132) | `정의=12.0` |
-| [`SIZE`](src/calendar_renderer.py#L133) | `정의=384` |
+<a id="level-526차-추가-해설level-5직전-자료와-전체-비교"></a>
 
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`subject.recipe!=design.shape_recipe`](src/calendar_renderer.py#L338) | 대상과 형상 규칙이 일치하지 않습니다. |
-| [`type(elapsed) not in (int,float)`](src/calendar_renderer.py#L364) | 모션 시각은 유한한 숫자여야 합니다. |
-| [`not valid`](src/calendar_renderer.py#L367) | 모션 시각은 유한한 숫자여야 합니다. |
-| [`threading.get_ident()!=self.thread_id`](src/calendar_renderer.py#L423) | GPU 컨텍스트는 생성 스레드에서만 사용할 수 있습니다. |
-| [`type(size) is not int or not 32&lt;=size&lt;=2160`](src/calendar_renderer.py#L428) | 전달 크기는32~2160 정수여야 합니다. |
+[level-526차-추가-해설level-5직전-자료와-전체-비교](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#level-526차-추가-해설level-5직전-자료와-전체-비교)
 
-### [src/core.py](src/core.py)
+<a id="목적과-이-차수의-역할"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`read_jsonl_tail`](src/core.py#L19) | 물리적 LF만 나누며 잘린 앞/뒤 조각은 레코드로 해석하지 않습니다. |
-| [`title_catalog`](src/core.py#L56) | 공식 앱에서 확인해 저장한 제목과 로컬 색인의 출처를 보존합니다. |
-| [`resolve_title`](src/core.py#L86) | 자식 작업은 실제 부모 채팅 제목과 작업명을 분리합니다. |
-| [`safe_path`](src/core.py#L110) | 적용 파일과 모든 기존 조상 경로의 링크/재분석 지점을 거부합니다. |
+[목적과-이-차수의-역할](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#목적과-이-차수의-역할)
 
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`MAX_TEXT_BYTES`](src/core.py#L10) | `정의=2 * 1024 * 1024` |
-| [`BEGIN`](src/core.py#L11) | `정의=b'&lt;!-- CODEX-ORBIT:BEGIN --&gt;'` |
-| [`END`](src/core.py#L12) | `정의=b'&lt;!-- CODEX-ORBIT:END --&gt;'` |
+<a id="핵심-기능과-보존-범위"></a>
 
-**거부 조건:** [`path.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L125)
+[핵심-기능과-보존-범위](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#핵심-기능과-보존-범위)
 
-**오류 메시지:** 문서가 2 MiB 상한을 초과했습니다.
+<a id="입력처리출력"></a>
 
-**거부 조건:** [`not isinstance(cache, dict) or not isinstance(cache.get('titles'), dict)`](src/core.py#L65)
+[입력처리출력](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#입력처리출력)
 
-**오류 메시지:** 제목 캐시 구조가 올바르지 않습니다.
+<a id="화면과-사용-흐름"></a>
 
-**거부 조건:** [`target.name.lower() != 'agents.md'`](src/core.py#L136)
+[화면과-사용-흐름](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#화면과-사용-흐름)
 
-**오류 메시지:** 적용 대상은 AGENTS.md 파일이어야 합니다.
+<a id="실제-자료-구성"></a>
 
-**거부 조건:** [`not target.parent.is_dir()`](src/core.py#L138)
+[실제-자료-구성](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#실제-자료-구성)
 
-**오류 메시지:** 대상 폴더가 존재하지 않습니다.
+<a id="주요-모듈과-코드-읽기"></a>
 
-**거부 조건:** [`target.exists() and (not target.is_file() or target.stat().st_size &gt; MAX_TEXT_BYTES)`](src/core.py#L140)
+[주요-모듈과-코드-읽기](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#주요-모듈과-코드-읽기)
 
-**오류 메시지:** 대상은 2 MiB 이하의 일반 파일이어야 합니다.
+<a id="설치-환경과-실행사용법"></a>
 
-**거부 조건:** [`not content.strip() or len(added) &gt; MAX_TEXT_BYTES`](src/core.py#L147)
+[설치-환경과-실행사용법](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#설치-환경과-실행사용법)
 
-**오류 메시지:** 빈 지침 또는 2 MiB 초과 지침은 적용할 수 없습니다.
+<a id="이-차수-원래-안내의-세부-조건"></a>
 
-**거부 조건:** [`BEGIN in added or END in added`](src/core.py#L149)
+[이-차수-원래-안내의-세부-조건](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#이-차수-원래-안내의-세부-조건)
 
-**오류 메시지:** 지침 내용에 앱 관리구역 표식을 넣을 수 없습니다.
+<a id="사용하는-사람에게-달라진-점"></a>
 
-**거부 조건:** [`len(result) &gt; MAX_TEXT_BYTES`](src/core.py#L163)
+[사용하는-사람에게-달라진-점](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#사용하는-사람에게-달라진-점)
 
-**오류 메시지:** 적용 결과가 2 MiB 상한을 초과합니다.
+<a id="이-보관본의-의존성-목록"></a>
 
-**거부 조건:** [`target.exists() != existed or digest(target.read_bytes() if existed else b'') != expected`](src/core.py#L170)
+[이-보관본의-의존성-목록](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#이-보관본의-의존성-목록)
 
-**오류 메시지:** 대상 파일이 미리보기/적용 이후 변경되었습니다. 새 미리보기가 필요합니다.
+<a id="소스에서-제공하는-cli-옵션"></a>
 
-**거부 조건:** [`digest(plan['original']) != plan['before_hash'] or digest(plan['applied_bytes']) != plan['after_hash']`](src/core.py#L190)
+[소스에서-제공하는-cli-옵션](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#소스에서-제공하는-cli-옵션)
 
-**오류 메시지:** 미리보기 데이터가 변경되었습니다.
+<a id="srcactivitypysrcactivitypy"></a>
 
-**거부 조건:** [`backup.parent != safe_path(self.data_dir / 'backups') or not backup.is_file() or backup.stat().st_size &gt; MAX_TEXT_BYTES`](src/core.py#L210)
+[srcactivitypysrcactivitypy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#srcactivitypysrcactivitypy)
 
-**오류 메시지:** 유효한 앱 원문 백업이 아닙니다.
+<a id="srcapppysrcapppy"></a>
 
-**거부 조건:** [`digest(raw) != receipt['before_hash']`](src/core.py#L213)
+[srcapppysrcapppy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#srcapppysrcapppy)
 
-**오류 메시지:** 백업 해시가 일치하지 않습니다.
+<a id="srcatom_framespysrcatom_framespy"></a>
 
-**거부 조건:** [`not isinstance(row, dict)`](src/core.py#L41)
+[srcatom_framespysrcatom_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#srcatom_framespysrcatom_framespy)
 
-**오류 메시지:** JSON 객체가 아닙니다.
+<a id="srcbrandpysrcbrandpy"></a>
 
-**거부 조건:** [`original.count(BEGIN) != 1 or original.count(END) != 1 or original.index(BEGIN) &gt;= original.index(END)`](src/core.py#L156)
+[srcbrandpysrcbrandpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#srcbrandpysrcbrandpy)
 
-**오류 메시지:** 기존 관리구역 표식이 손상되었거나 중복되었습니다.
+<a id="srccalendar_artpysrccalendar_artpy"></a>
 
+[srccalendar_artpysrccalendar_artpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#srccalendar_artpysrccalendar_artpy)
 
-### [src/element_frames.py](src/element_frames.py)
+<a id="srccalendar_catalogpysrccalendar_catalogpy"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`ElementAssetError`](src/element_frames.py#L24) | 필수 원소 자산 실패를 숨기지 않고 앱의 시작·표시 오류로 전달합니다. |
-| [`preflight_element_frames`](src/element_frames.py#L132) | 활성 원소의 해시·목록·첫 프레임을 확인합니다.31개를 적재하지 않습니다. |
+[srccalendar_catalogpysrccalendar_catalogpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#srccalendar_catalogpysrccalendar_catalogpy)
 
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`CACHE_LIMIT`](src/element_frames.py#L15) | `정의=24` |
-| [`FRAME_SIZE`](src/element_frames.py#L16) | `정의=192` |
-| [`FRAME_COUNT`](src/element_frames.py#L17) | `정의=540` |
-| [`FPS`](src/element_frames.py#L18) | `정의=30` |
-| [`PERIOD_SECONDS`](src/element_frames.py#L19) | `정의=18` |
-| [`MAX_ARCHIVE_BYTES`](src/element_frames.py#L20) | `정의=64*1024*1024` |
-| [`MAX_FRAME_BYTES`](src/element_frames.py#L21) | `정의=512*1024` |
+<a id="srccalendar_motionpysrccalendar_motionpy"></a>
 
-**거부 조건:** [`type(number) is not int or not 1&lt;=number&lt;=31`](src/element_frames.py#L34)
+[srccalendar_motionpysrccalendar_motionpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#srccalendar_motionpysrccalendar_motionpy)
 
-**오류 메시지:** 원소 번호는1~31 정수여야 합니다.
+<a id="srccalendar_rendererpysrccalendar_rendererpy"></a>
 
-**거부 조건:** [`not 0&lt;manifest.stat().st_size&lt;=64*1024`](src/element_frames.py#L65)
+[srccalendar_rendererpysrccalendar_rendererpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#srccalendar_rendererpysrccalendar_rendererpy)
 
-**오류 메시지:** 원소 매니페스트 크기 오류
+<a id="srccorepysrccorepy"></a>
 
-**거부 조건:** [`not isinstance(self.manifest,dict)`](src/element_frames.py#L69)
+[srccorepysrccorepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#srccorepysrccorepy)
 
-**오류 메시지:** 원소 매니페스트는 객체여야 합니다.
+<a id="srcelement_framespysrcelement_framespy"></a>
 
-**거부 조건:** [`not isinstance(digest,str) or not re.fullmatch('[0-9a-f]{64}',digest)`](src/element_frames.py#L74)
+[srcelement_framespysrcelement_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#srcelement_framespysrcelement_framespy)
 
-**오류 메시지:** 원소 해시 형식 오류
+<a id="srcelement_visualspysrcelement_visualspy"></a>
 
-**거부 조건:** [`not 0&lt;archive.stat().st_size&lt;=MAX_ARCHIVE_BYTES`](src/element_frames.py#L75)
+[srcelement_visualspysrcelement_visualspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#srcelement_visualspysrcelement_visualspy)
 
-**오류 메시지:** 원소 압축파일 크기 초과
+<a id="srcelementspysrcelementspy"></a>
 
-**거부 조건:** [`hasher.hexdigest()!=digest`](src/element_frames.py#L78)
+[srcelementspysrcelementspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#srcelementspysrcelementspy)
 
-**오류 메시지:** 원소 ZIP 해시 불일치
+<a id="srcframe_pacingpysrcframe_pacingpy"></a>
 
-**거부 조건:** [`len(members)!=540 or {m.filename for m in members}!={f'frame_{i:04d}.png' for i in range(540)}`](src/element_frames.py#L80)
+[srcframe_pacingpysrcframe_pacingpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#srcframe_pacingpysrcframe_pacingpy)
 
-**오류 메시지:** 원소 ZIP 정확한540프레임 목록 불일치
+<a id="srci18npysrci18npy"></a>
 
-**거부 조건:** [`sum(m.file_size for m in members)&gt;128*1024*1024`](src/element_frames.py#L82)
+[srci18npysrci18npy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#srci18npysrci18npy)
 
-**오류 메시지:** 원소 해제 크기 초과
+<a id="srcmotion_labelpysrcmotion_labelpy"></a>
 
-**거부 조건:** [`actual!=self.identities`](src/element_frames.py#L91)
+[srcmotion_labelpysrcmotion_labelpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#srcmotion_labelpysrcmotion_labelpy)
 
-**오류 메시지:** 실행 중 원소 자산이 변경됐습니다.
+<a id="srcnotifierpysrcnotifierpy"></a>
 
-**거부 조건:** [`isinstance(elapsed,bool) or not isinstance(elapsed,(int,float)) or not math.isfinite(elapsed)`](src/element_frames.py#L106)
+[srcnotifierpysrcnotifierpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_04.md#srcnotifierpysrcnotifierpy)
 
-**오류 메시지:** 원소 재생 시각은 유한한 숫자여야 합니다.
+<a id="results"></a>
 
-**거부 조건:** [`self.archive is None`](src/element_frames.py#L107)
+[results](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_05.md#results)
 
-**오류 메시지:** 원소 재생기가 닫혔습니다.
+<a id="-처리-결과와-출력-읽기"></a>
 
-**거부 조건:** [`member.is_dir() or member.flag_bits&1 or member.compress_type not in (zipfile.ZIP_STORED,zipfile.ZIP_DEFLATED)                     or not 0&lt;member.file_size&lt;=MAX_FRAME_BYTES`](src/element_frames.py#L84)
+[-처리-결과와-출력-읽기](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_05.md#-처리-결과와-출력-읽기)
 
-**오류 메시지:** 원소 ZIP 멤버 형식 오류
+<a id="️-제약과-문제-해결"></a>
 
-**거부 조건:** [`len(data)&gt;MAX_FRAME_BYTES or len(data)&lt;33 or data[:8]!=b'\x89PNG\r\n\x1a\n' or data[12:16]!=b'IHDR'                     or struct.unpack('&gt;II',data[16:24])!=(192,192) or data[24:26]!=bytes((8,6))`](src/element_frames.py#L96)
+[️-제약과-문제-해결](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_05.md#️-제약과-문제-해결)
 
-**오류 메시지:** 원소 PNG 형식 오류
+<a id="changes"></a>
 
-**거부 조건:** [`image.isNull() or image.size().width()!=192 or image.height()!=192 or not image.hasAlphaChannel()`](src/element_frames.py#L99)
+[changes](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_05.md#changes)
 
-**오류 메시지:** 원소 PNG 디코딩 오류
+<a id="-직전-자료와-전체-비교"></a>
 
-**거부 조건:** [`any(image.pixelColor(x,y).alpha() for x,y in ((0,0),(191,0),(0,191),(191,191)))`](src/element_frames.py#L100)
+[-직전-자료와-전체-비교](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_05.md#-직전-자료와-전체-비교)
 
-**오류 메시지:** 원소 PNG 투명 모서리 오류
+<a id="srcthemepysrcthemepy"></a>
 
+[srcthemepysrcthemepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_05.md#srcthemepysrcthemepy)
 
-### [src/element_visuals.py](src/element_visuals.py)
+<a id="srctypographypysrctypographypy"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`colorize_atom`](src/element_visuals.py#L5) | SourceAtop은 원본 알파를 유지하며 명암에 부드러운 영감색을 더합니다. |
+[srctypographypysrctypographypy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_05.md#srctypographypysrctypographypy)
 
-### [src/elements.py](src/elements.py)
+<a id="srcusagepysrcusagepy"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`daily_element`](src/elements.py#L43) | 매 호출 실제 날짜를 다시 읽어 자정·절전 복귀·시계 되돌림을 반영합니다. |
+[srcusagepysrcusagepy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_05.md#srcusagepysrcusagepy)
 
-**설정·옵션:** [`KST`](src/elements.py#L5)
+<a id="srcusage_framespysrcusage_framespy"></a>
 
-**코드의 선언:** `정의=timezone(timedelta(hours=9))`
+[srcusage_framespysrcusage_framespy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_05.md#srcusage_framespysrcusage_framespy)
 
-**설정·옵션:** [`PALETTE_NOTE`](src/elements.py#L8)
+<a id="srcusage_widgetspysrcusage_widgetspy"></a>
 
-**코드의 선언:** `정의='원소에서 영감받은 디자인 색이며 실제 원소·불꽃색이나 전자배치 재현이 아닙니다.'`
+[srcusage_widgetspysrcusage_widgetspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_05.md#srcusage_widgetspysrcusage_widgetspy)
 
-**설정·옵션:** [`ELEMENTS`](src/elements.py#L39)
+<a id="srcvisualspysrcvisualspy"></a>
 
-**코드의 선언:** `정의=tuple(Element(index,symbol,name,color,accent)                  for index,(symbol,name,color,accent) in enumerate(_ROWS,1))`
+[srcvisualspysrcvisualspy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_05.md#srcvisualspysrcvisualspy)
 
+<a id="srcweatherpysrcweatherpy"></a>
 
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`value.tzinfo is None or value.utcoffset() is None`](src/elements.py#L46) | 원소 날짜에는 시간대가 있는 datetime이 필요합니다. |
+[srcweatherpysrcweatherpy](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_05.md#srcweatherpysrcweatherpy)
 
-### [src/frame_pacing.py](src/frame_pacing.py)
+<a id="처리-결과와-출력-읽기"></a>
 
-| 정의 | 역할 |
-| --- | --- |
-| [`validate_motion_speed`](src/frame_pacing.py#L7) | 유한한 0.25~3배 숫자만 받아 bool과 잘못된 설정을 거부합니다. |
-| [`MotionClock`](src/frame_pacing.py#L20) | 실제 날짜·시계와 분리하여 배율별 경과 시간을 연속 적분합니다. |
+[처리-결과와-출력-읽기](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_05.md#처리-결과와-출력-읽기)
 
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`type(value) not in (int, float)`](src/frame_pacing.py#L9) | 회전 속도는 0.25~3배의 유한한 숫자여야 합니다. |
-| [`not valid`](src/frame_pacing.py#L15) | 회전 속도는 0.25~3배의 유한한 숫자여야 합니다. |
+<a id="제약과-문제-해결"></a>
 
-### [src/i18n.py](src/i18n.py)
+[제약과-문제-해결](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_05.md#제약과-문제-해결)
 
-| 정의 | 역할 |
-| --- | --- |
-| [`translate`](src/i18n.py#L51) | 명시한 앱 문구만 번역하고 전달된 값은 번역하지 않습니다. |
-| [`remember_translations`](src/i18n.py#L63) | 생성 당시 정적인 앱 문구만 기록하여 사용자 원문과 구분합니다. |
+<a id="직전-자료와-전체-비교"></a>
 
-### [src/motion_label.py](src/motion_label.py)
+[직전-자료와-전체-비교](../../docs/%EC%83%81%EC%84%B8%EC%9E%90%EB%A3%8C/README_e26d7749/%EB%B3%B8%EB%AC%B8_05.md#직전-자료와-전체-비교)
 
-| 정의 | 역할 |
-| --- | --- |
-| [`MotionImageLabel`](src/motion_label.py#L6) | 최신 이미지 한 개를 보관하고 크기·DPR 변경 때만 기본 크기 힌트를 갱신합니다. |
-
-### [src/notifier.py](src/notifier.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`atomic_json`](src/notifier.py#L33) | 같은 폴더의 독립 임시 파일로 교체하며 Windows의 짧은 공유 경합만 재시도합니다. |
-| [`source_datetime`](src/notifier.py#L63) | 시간대가 있는 유효한 원본 시각만 비교하며 없는 시각은 추정하지 않습니다. |
-| [`duplicate_record`](src/notifier.py#L212) | 원본 시각이 있는 복제 기록만 제외하며 기준선 재생의 순서는 복원합니다. |
-| [`settings_record`](src/notifier.py#L223) | 자기 채팅의 native 설정 필드만 관측하며 변경 주체와 실행 모델은 추정하지 않습니다. |
-| [`lookup_parent_reason`](src/notifier.py#L376) | 큰 부모 기록의 최근 공개 호출만 제한해서 읽으며 순차 감시 위치는 바꾸지 않습니다. |
-| [`enrich_event`](src/notifier.py#L423) | 이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다. |
-| [`replay_activity_prefix`](src/notifier.py#L445) | 고정된 과거 소비 구간의 활동 메타만 파일별 기존 예산 안에서 복원합니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`--sessions`](src/notifier.py#L739) | `type=Path; default=Path.home() / '.codex/sessions'` |
-| [`--work`](src/notifier.py#L740) | `type=Path; default=ROOT / 'work'` |
-| [`ROOT`](src/notifier.py#L18) | `정의=Path(__file__).resolve().parents[1]` |
-| [`APP_ID`](src/notifier.py#L19) | `정의='Yunseok.Codex.ModelChangeNotifier'` |
-| [`READ_BYTES`](src/notifier.py#L20) | `정의=512 * 1024` |
-| [`MAX_RECORD`](src/notifier.py#L21) | `정의=2 * 1024 * 1024` |
-| [`MAX_FILES`](src/notifier.py#L22) | `정의=4096` |
-| [`LOG_BYTES`](src/notifier.py#L23) | `정의=2 * 1024 * 1024` |
-| [`POLL_READ_BYTES`](src/notifier.py#L24) | `정의=8 * 1024 * 1024` |
-| [`MAX_PENDING`](src/notifier.py#L25) | `정의=256` |
-| [`POLL_INTERVAL_SECONDS`](src/notifier.py#L26) | `정의=0.2` |
-
-**거부 조건:** [`self.state_path.stat().st_size &gt; 16 * 1024 * 1024`](src/notifier.py#L90)
-
-**오류 메시지:** 상태 파일이 16 MiB 상한을 초과했습니다. 원본 보존 후 점검이 필요합니다.
-
-**거부 조건:** [`self.state.get('schema_version') not in (2, 3)`](src/notifier.py#L94)
-
-**오류 메시지:** 구형 상태는 요청과 관측이 혼합되어 있습니다. 원본 보존 후 명시적 재기준선이 필요합니다.
-
-**거부 조건:** [`not isinstance(self.state.get('files'), dict) or not isinstance(self.state.get('models'), dict)`](src/notifier.py#L96)
-
-**오류 메시지:** 상태 파일 구조 오류입니다. 자동 초기화하지 않습니다.
-
-**거부 조건:** [`not isinstance(self.state.get('declarations'), dict)`](src/notifier.py#L98)
-
-**오류 메시지:** 명시 배정 상태 구조 오류입니다. 자동 초기화하지 않습니다.
-
-**거부 조건:** [`not isinstance(self.state.get('settings'), dict)`](src/notifier.py#L117)
-
-**오류 메시지:** 채팅 선택 설정 상태 구조 오류입니다. 자동 초기화하지 않습니다.
-
-**거부 조건:** [`backup.read_bytes() != original`](src/notifier.py#L105)
-
-**오류 메시지:** 이전 상태 백업이 원본과 다릅니다. 자동 덮어쓰기하지 않습니다.
-
-**거부 조건:** [`any(isinstance(v, bool) or not isinstance(v, int) or v &lt; 0 for v in (offset, end))`](src/notifier.py#L112)
-
-**오류 메시지:** 이전 상태의 파일 위치가 올바르지 않습니다. 자동 초기화하지 않습니다.
-
-**거부 조건:** [`backup.read_bytes() != original`](src/notifier.py#L123)
-
-**오류 메시지:** 활동 이행 백업이 원본과 다릅니다. 자동 덮어쓰기하지 않습니다.
-
-**거부 조건:** [`isinstance(end, bool) or not isinstance(end, int) or end &lt; 0`](src/notifier.py#L131)
-
-**오류 메시지:** 활동 기준선의 파일 위치가 올바르지 않습니다.
-
-**거부 조건:** [`not isinstance(record, dict)`](src/notifier.py#L523)
-
-**오류 메시지:** JSON 객체가 아닙니다.
-
-**거부 조건:** [`path.stat().st_size &gt; 20000`](src/notifier.py#L603)
-
-**오류 메시지:** 명시 알림 파일 상한 초과
-
-**거부 조건:** [`not isinstance(record, dict)`](src/notifier.py#L467)
-
-**오류 메시지:** JSON 객체가 아닙니다.
-
-
-### [src/theme.py](src/theme.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`MonochromeStyle`](src/theme.py#L53) | 파일·메시지 등의 표준 아이콘도 앱 안에서는 무채색으로 만듭니다. |
-| [`KoreanDialogs`](src/theme.py#L78) | 별도 Qt 번역 패키지가 없는 배포에서도 기본 파일 선택 문구를 번역합니다. |
-| [`DialogLayout`](src/theme.py#L94) | 앱 파일 선택창의 이름 열과 한글 버튼에 충분한 공간을 확보합니다. |
-
-### [src/typography.py](src/typography.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`register_fonts`](src/typography.py#L8) | 필수 파일이나 Qt 등록 실패를 숨기지 않고 시작 오류로 전달합니다. |
-
-### [src/usage.py](src/usage.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`number`](src/usage.py#L16) | 불리언·문자열·비유한 숫자를 한도 수치로 해석하지 않습니다. |
-| [`normalize_limits`](src/usage.py#L35) | 공식 복수 버킷을 우선하며 없는 기간/수치는 만들어 넣지 않습니다. |
-| [`discover_codex`](src/usage.py#L69) | 사용자 선택, PATH, 공식 데스크톱 번들 위치 순으로 EXE만 찾습니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`MAX_BYTES`](src/usage.py#L12) | `정의=1024 * 1024` |
-| [`KST`](src/usage.py#L13) | `정의=timezone(timedelta(hours=9))` |
-
-| 거부 조건 | 오류 메시지 |
-| --- | --- |
-| [`not isinstance(message, dict)`](src/usage.py#L226) | 객체가 아닌 응답 |
-
-### [src/usage_frames.py](src/usage_frames.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`UsageAssetError`](src/usage_frames.py#L27) | 조형 표시 오류를 호출자에게 전달하며 계정 조회 흐름과 분리합니다. |
-| [`UsageFrames`](src/usage_frames.py#L50) | 시작 시 전체 무결성을 검사하고 해제된 QImage는 최대16장만 보존합니다. |
-| [`close_usage_frames`](src/usage_frames.py#L183) | 프로세스 공유 ZIP을 한 번 닫으며 중복 종료 호출도 안전하게 처리합니다. |
-| [`preflight_usage_frames`](src/usage_frames.py#L194) | 제품의 고정 경로는 프로세스에서 한 번 검증하고 모든 창이 공유합니다. |
-| [`get_usage_frame`](src/usage_frames.py#L207) | 공유 팩의 한 프레임을 반환하며 계정 조회 상태에는 관여하지 않습니다. |
-
-| 설정·옵션 | 선언 |
-| --- | --- |
-| [`FRAME_COUNT`](src/usage_frames.py#L16) | `정의=360` |
-| [`FRAME_SIZE`](src/usage_frames.py#L17) | `정의=384` |
-| [`FPS`](src/usage_frames.py#L18) | `정의=30` |
-| [`PERIOD_SECONDS`](src/usage_frames.py#L19) | `정의=12` |
-| [`CACHE_LIMIT`](src/usage_frames.py#L20) | `정의=16` |
-| [`MAX_ARCHIVE_BYTES`](src/usage_frames.py#L21) | `정의=128 * 1024 * 1024` |
-| [`MAX_FRAME_BYTES`](src/usage_frames.py#L22) | `정의=1024 * 1024` |
-| [`MAX_TOTAL_BYTES`](src/usage_frames.py#L23) | `정의=256 * 1024 * 1024` |
-| [`MAX_MANIFEST_BYTES`](src/usage_frames.py#L24) | `정의=64 * 1024` |
-
-**거부 조건:** [`key in value`](src/usage_frames.py#L44)
-
-**오류 메시지:** 대시보드 조형 자산 매니페스트에 중복 필드가 있습니다.
-
-**거부 조건:** [`not 0 &lt; manifest_path.stat().st_size &lt;= MAX_MANIFEST_BYTES`](src/usage_frames.py#L69)
-
-**오류 메시지:** 대시보드 조형 자산 매니페스트 크기가 허용 범위를 벗어났습니다.
-
-**거부 조건:** [`not isinstance(self.manifest, dict)`](src/usage_frames.py#L75)
-
-**오류 메시지:** 대시보드 조형 자산 매니페스트는 객체여야 합니다.
-
-**거부 조건:** [`not isinstance(digest, str) or re.fullmatch('[0-9a-f]{64}', digest) is None`](src/usage_frames.py#L85)
-
-**오류 메시지:** 대시보드 조형 프레임 ZIP의 SHA256 형식이 잘못됐습니다.
-
-**거부 조건:** [`not 0 &lt; archive_path.stat().st_size &lt;= MAX_ARCHIVE_BYTES`](src/usage_frames.py#L87)
-
-**오류 메시지:** 대시보드 조형 프레임 ZIP 크기가 허용 범위를 벗어났습니다.
-
-**거부 조건:** [`hasher.hexdigest() != digest`](src/usage_frames.py#L94)
-
-**오류 메시지:** 대시보드 조형 프레임 ZIP의 SHA256이 일치하지 않습니다.
-
-**거부 조건:** [`len(members) != FRAME_COUNT or {item.filename for item in members} != names`](src/usage_frames.py#L100)
-
-**오류 메시지:** 대시보드 조형 프레임 ZIP의 정확한360개 이름·목록이 일치하지 않습니다.
-
-**거부 조건:** [`sum(item.file_size for item in members) &gt; MAX_TOTAL_BYTES`](src/usage_frames.py#L102)
-
-**오류 메시지:** 대시보드 조형 프레임 전체 읽기 상한을 초과했습니다.
-
-**거부 조건:** [`actual != self.identities`](src/usage_frames.py#L133)
-
-**오류 메시지:** 검증 뒤 대시보드 조형 자산이 변경됐습니다. 앱을 다시 실행해 주세요.
-
-**거부 조건:** [`type(elapsed) not in (int, float)`](src/usage_frames.py#L138)
-
-**오류 메시지:** 조형 재생 시각은 유한한 숫자여야 합니다.
-
-**거부 조건:** [`not finite`](src/usage_frames.py#L144)
-
-**오류 메시지:** 대시보드 조형 프레임의 재생 시각이 유한한 숫자가 아닙니다.
-
-**거부 조건:** [`self.archive is None`](src/usage_frames.py#L149)
-
-**오류 메시지:** 조형 재생기가 닫혔습니다.
-
-**거부 조건:** [`item.is_dir() or item.flag_bits & 1 or item.compress_type not in                     (zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED) or                     not 0 &lt; item.file_size &lt;= MAX_FRAME_BYTES`](src/usage_frames.py#L105)
-
-**오류 메시지:** 대시보드 조형 프레임 멤버의 형식·크기가 허용 범위를 벗어났습니다.
-
-
-### [src/usage_widgets.py](src/usage_widgets.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`CalendarHero`](src/usage_widgets.py#L9) | 사용 한도 화면에서만 날짜별 입체 이미지를 갱신합니다. |
-
-### [src/visuals.py](src/visuals.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`rotate_point`](src/visuals.py#L12) | X·Y·Z 순서로 회전하며 깊이 좌표를 보존합니다. |
-| [`axis_rotate`](src/visuals.py#L40) | 로드리게스 식으로 고유 축 주위를 회전하며 공통 Z 변환을 쓰지 않습니다. |
-| [`orbit_segments`](src/visuals.py#L63) | 제작 매니페스트와 일치하는 기하 검증용 메타입니다. GUI 드로잉에는 쓰지 않습니다. |
-| [`status_label`](src/visuals.py#L80) | 읽지 않은 변경을 우선 표시하며 감시 상태는 실제 플래그에서만 읽습니다. |
-| [`element_labels`](src/visuals.py#L85) | 원자번호와 계정 퍼센트를 서로 다른 명시적 라벨로 구분합니다. |
-| [`usage_bar`](src/visuals.py#L99) | 숫자와 채움에 같은 실제 비율을 쓰며 최소 채움 폭을 강제하지 않습니다. |
-| [`_frame_for_element`](src/visuals.py#L111) | 원소별 실제 제작 프레임을 읽습니다. 이전 형상으로 대체하지 않습니다. |
-| [`draw_orbit`](src/visuals.py#L117) | 달력 조형·날짜 도크·실제 잔량을 분리하고 명시한 원소 미리보기도 보존합니다. |
-| [`desktop_widget_layout`](src/visuals.py#L176) | 이름을 화면 픽셀 크기로 줄 바꿈하고 조형·잔량 영역을 분리합니다. |
-| [`draw_desktop_orbit`](src/visuals.py#L212) | 위젯의 조형과 글자를 별개 영역에 그려 작은 글자 축소를 막습니다. |
-| [`_draw_desktop_information`](src/visuals.py#L227) | 움직이는 GPU 이미지와 분리한 도크·시계·지역·기온·잔량을 그립니다. |
-| [`DesktopOverlayCache`](src/visuals.py#L278) | 한 위젯의 완전 입력이 같을 때만 단일 투명 정보 레이어를 재사용합니다. |
-
-**설정·옵션:** [`MOTION_PERIOD`](src/visuals.py#L27)
-
-**코드의 선언:** `정의=18`
-
-**설정·옵션:** [`RING_TURNS`](src/visuals.py#L28)
-
-**코드의 선언:** `정의=(1, -2, 3)`
-
-**설정·옵션:** [`RING_AZIMUTHS`](src/visuals.py#L29)
-
-**코드의 선언:** `정의=(8., 128., 248.)`
-
-**설정·옵션:** [`RING_AXIS_TILTS`](src/visuals.py#L30)
-
-**코드의 선언:** `정의=(42., 46., 49.)`
-
-**설정·옵션:** [`RING_RADII`](src/visuals.py#L35)
-
-**코드의 선언:** `정의=(45., 51., 57.)`
-
-**설정·옵션:** [`BASE_ANGLES`](src/visuals.py#L36)
-
-**코드의 선언:** `정의=tuple((math.radians(tilt), 0., math.radians(azimuth))                     for tilt, azimuth in zip((52., 58., 62.), RING_AZIMUTHS))`
-
-**설정·옵션:** [`ATOM_RECT`](src/visuals.py#L92)
-
-**코드의 선언:** `정의=QRectF(-48,-74,96,96)`
-
-**설정·옵션:** [`DOCK_RECT`](src/visuals.py#L93)
-
-**코드의 선언:** `정의=QRectF(-68,25,136,27)`
-
-**설정·옵션:** [`USAGE_RECT`](src/visuals.py#L94)
-
-**코드의 선언:** `정의=QRectF(-68,56,136,16)`
-
-**설정·옵션:** [`USAGE_TRACK_RECT`](src/visuals.py#L95)
-
-**코드의 선언:** `정의=QRectF(-61,62,62,4)`
-
-**설정·옵션:** [`SYMBOL_PIXELS`](src/visuals.py#L96)
-
-**코드의 선언:** `정의=24`
-
-
-### [src/weather.py](src/weather.py)
-
-| 정의 | 역할 |
-| --- | --- |
-| [`localized_region`](src/weather.py#L27) | 검색 전 임시 표시에는 검증된 국내 사전 또는 실제 원문 지명을 사용합니다. |
-| [`select_geocoded_region`](src/weather.py#L67) | 동일 국가이면서 IP 추정 좌표에서30km 이내인 가장 가까운 검색 결과만 수락합니다. |
-
-**설정·옵션:** [`_COUNTRIES`](src/weather.py#L23)
-
-**코드의 선언:** `정의={'US': '미국', 'JP': '일본', 'CN': '중국', 'GB': '영국', 'DE': '독일',               'FR': '프랑스', 'CA': '캐나다', 'AU': '호주', 'SG': '싱가포르', 'TW': '대만'}`
-
-
-**거부 조건:** [`language not in ('ko', 'en')`](src/weather.py#L29)
-
-**오류 메시지:** 지원 언어는 ko 또는 en입니다.
-
-**거부 조건:** [`language not in ('ko', 'en')`](src/weather.py#L111)
-
-**오류 메시지:** 지원 언어는 ko 또는 en입니다.
-
-**거부 조건:** [`language not in ('ko', 'en')`](src/weather.py#L155)
-
-**오류 메시지:** 지원 언어는 ko 또는 en입니다.
-
-**거부 조건:** [`not self._valid_number(latitude, -90, 90) or not self._valid_number(longitude, -180, 180)`](src/weather.py#L249)
-
-**오류 메시지:** 위치 범위
-
-**거부 조건:** [`not self._valid_number(temperature, -100, 70)`](src/weather.py#L321)
-
-**오류 메시지:** 기온 범위
-
-**거부 조건:** [`not self._valid_number(observed, 0, now + 300)`](src/weather.py#L325)
-
-**오류 메시지:** 기온 제공 시각
-
-**거부 조건:** [`not isinstance(data, dict)`](src/weather.py#L232)
-
-**오류 메시지:** 응답 형식
-
-
-</details>
-
-<a name="results"></a>
-
-<a name="-처리-결과와-출력-읽기"></a>
-## 처리 결과와 출력 읽기
-
-변경 전·후 모델과 추론 강도, 공개된 이유, 관측 시각과 근거 수준을 함께 읽습니다. 기록되지 않은 값은 미확인으로 남깁니다. 로컬 기록은 서버 모델 신원 증명이 아닙니다.
-
-<a name="️-제약과-문제-해결"></a>
-## 제약과 문제 해결
-
-**상황:** 알림이 나타나지 않음
-
-**확인할 내용:** 감시하는 sessions 경로·새 JSONL 기록·중복 실행 잠금·알림 설정을 확인합니다. 최초 기준선 읽기와 새 변경 감지는 다릅니다.
-
-**상황:** 자산 또는 글꼴 오류
-
-**확인할 내용:** 이 차수에서 참조하는 assets와 라이선스를 준비합니다. 소스 이력에는 과거 대용량 프레임 자산이 없을 수 있습니다.
-
-**상황:** 이유 또는 이전값이 없음
-
-**확인할 내용:** 원문 기록에 해당 필드가 있는지 확인합니다. 누락된 동기를 추정해서 채우지 않습니다.
-
-
-<a name="changes"></a>
-
-<a name="-직전-자료와-전체-비교"></a>
-## 직전 자료와 전체 비교
-
-25차에서 26차로 이어지는 실제 파일 비교입니다.
-
-[전체 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff)
-
-추가·수정·삭제, 주석·공백·개행과 바이너리 크기·해시는 연결된 원래 비교 자료에서 확인합니다.
-
-<details>
-<summary>파일별 비교·크기·해시 자세히 보기</summary>
-
-텍스트는 엄격 UTF-8로 판정하며 [전체 텍스트 차이](직전차수.diff)에는 주석과 공백을 포함합니다. 파일별 바이트 수와 SHA-256 및 바이너리 여부는 [비교 명세](공개파일_비교.json)에 기록합니다.
-
-- **검증:** 이 폴더의 diff는 소스 바이트 비교입니다. 이후 로컬 원본 검증 자료를 대조해 작성한 [공개 검증 요약](../../docs/공개검증_26차.md)을 함께 제공합니다. 비공개 원본 로그는 공개하지 않으며 소스 비교 자체를 실행 결과로 해석하지 않습니다.
-
-- **수정** `src/app.py`: 이전 110155바이트, SHA-256 `bb0421143d08d6930d62f19252819ca26a91444466002c1a559b0dc87895ac3b`; 현재 116115바이트, SHA-256 `ccb4c5771ab1a01e416e81dcc3678629cd5a5a2613e50d5e7c4a3e4263da964f`.
-
-- **수정** `src/calendar_motion.py`: 이전 15710바이트, SHA-256 `fcd254efc4bf9e4a15eb9a1d75177323d34763716cea207e2bd95348b93463a0`; 현재 16207바이트, SHA-256 `ddb3e8afdf5f46f7bb8f997e75c39234550f28bade6223e19f81e37579765791`.
-
-- **수정** `src/frame_pacing.py`: 이전 2625바이트, SHA-256 `6ca862a2eaa6707665f19514315de584424ab66017eff8f7898e3a4f6c6a9cb5`; 현재 3692바이트, SHA-256 `09cd3768e4baa326bb0e08e4d7fd8130f05526024686b88f8ef2f9b0366b1bb1`.
-
-- **수정** `src/i18n.py`: 이전 19942바이트, SHA-256 `2dbea990824fb7107019228d5ecf6a75d7ce1a7062d0984f2a00908c7e26cec1`; 현재 20538바이트, SHA-256 `091208c023ccecdefd7957dcc3bacd8acc5c44324dd587ac36986ac3dc81106a`.
-
-- **추가** `src/motion_label.py`: 이전 없음; 현재 2380바이트, SHA-256 `f76a05b63a676282ff4816c25ce0d7bc4aa01396889559c76021d5f858a0c60d`.
-
-- **수정** `src/usage_widgets.py`: 이전 2471바이트, SHA-256 `a5e8de93da797f5f269551061d30878d8c0f86cae8824e89ba052bd6b28aeee2`; 현재 2516바이트, SHA-256 `9ad1be24d27cbf072db6892a2bc3c431304002f90f9a9d46d59494a91b74814c`.
-
-- **수정** `src/visuals.py`: 이전 13297바이트, SHA-256 `d4bb20ebbfa421b5f05a482aedbb0b2202b7f7ffc2e6f7e22916ace3d0d72e1d`; 현재 15915바이트, SHA-256 `13a8d20b188ac2e82bc57771263dd6c2bef7cb3ab96ef259d51fd73fa380a57a`.
-
-[실행 소스 전체 Git 비교](직전차수.diff)와 [실제 바이트 명세](공개파일_비교.json)는 Python뿐 아니라 존재하는 보조 PowerShell과 의존성 목록을 포함합니다. `git -c core.autocrlf=false apply --reverse --binary -p1`로 현재 소스 사본에서 직전 소스의 파일 부재·신규·삭제 상태까지 복원해 원문 바이트를 대조했습니다. 부가 자료는 이 소스 비교에 섞지 않고 위 명세로 구분합니다.
-
-</details>
-
-[프로젝트](../../README.md) · [전체 차수](../../docs/REVISION_INDEX.md) · [원본 자료](.) · [← 이전: 25차](../25/README.md) · [다음: 27차 →](../27/README.md)
