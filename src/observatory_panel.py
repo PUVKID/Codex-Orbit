@@ -61,7 +61,6 @@ def style_notice(notice):
     for label in notice.findChildren(QLabel):
         css=label.property('orbit_style_source') or label.styleSheet()
         import re
-        css=re.sub(r'color:#[0-9a-fA-F]{3,8}', 'color:#23433f',css)
         css=css.replace('background:#385064','background:#d4f3e7')
         set_ui_style(label,css.replace('font-weight:600','font-weight:700').replace('font-weight:500','font-weight:700'))
 

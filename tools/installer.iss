@@ -6,7 +6,7 @@
 SourceDir={#OrbitSourceDir}
 AppId=CodexOrbit.Desktop
 AppName=Codex Orbit
-AppVersion=3.9.0
+AppVersion=3.10.0
 AppPublisher=Codex Orbit
 DefaultDirName={localappdata}\Programs\CodexOrbit
 DefaultGroupName=Codex Orbit

@@ -1,0 +1,167 @@
+{
+  "base": "f7aa57e85491288b75e848ee00a8d02a68f7db44",
+  "files": [
+    {
+      "path": "src/app.py",
+      "change": "수정",
+      "bytes": 161172,
+      "sha256": "a3742252cdade07bee8dc8924d85877c13e39b44a96162f65dd3bb196c70525b"
+    },
+    {
+      "path": "src/i18n.py",
+      "change": "수정",
+      "bytes": 31230,
+      "sha256": "af4583c20c415dfed6bda0ca7b0dd15b7e0cb3a65d89ebc3b27ec4cfecbd9694"
+    },
+    {
+      "path": "src/observatory_panel.py",
+      "change": "수정",
+      "bytes": 40448,
+      "sha256": "5b228fe2a85bbfc32f0a1ff9da9ff185b36bebd50c6a2d233dda37641c6f711b"
+    },
+    {
+      "path": "src/update_widgets.py",
+      "change": "수정",
+      "bytes": 10670,
+      "sha256": "5edf25757b05e463d6c86437c3c11ff529fcd9e687bd6a0f66cb7ef72319f5ca"
+    },
+    {
+      "path": "tools/build40.py",
+      "change": "추가",
+      "bytes": 2875,
+      "sha256": "533d6825a66149420a154cfe66df4920c7cf17f3052705b6f38547314d7d19d6"
+    },
+    {
+      "path": "tools/orbit40.spec",
+      "change": "추가",
+      "bytes": 1301,
+      "sha256": "8a25bafa2f0ee067022d50b2e21bba1dc1016375c92ca568ecd6b5bb72eba73e"
+    },
+    {
+      "path": "tools/installer.iss",
+      "change": "수정",
+      "bytes": 3851,
+      "sha256": "75326e3df1610caa1175e1a9530159a0ca1882efd724ae7748259d866c2dc930"
+    },
+    {
+      "path": "docs/40차_이모지와알림.md",
+      "change": "추가",
+      "bytes": 1452,
+      "sha256": "7c4e48762ddd6e5ebb0868527155a7a6e3e6ed5decba110e5c1ea5421e24b474"
+    },
+    {
+      "path": "README.md",
+      "change": "수정",
+      "bytes": 33177,
+      "sha256": "c5f2e93b28420f70a5d8a2e2507b44235f1dcf507cf98fe7fa6285e7fcf88488"
+    },
+    {
+      "path": "README.en.md",
+      "change": "수정",
+      "bytes": 21398,
+      "sha256": "38ebfa3faa707bc27f256413559b736e90a0eecad46a821054591c9c76950002"
+    },
+    {
+      "path": "docs/REVISION_INDEX.md",
+      "change": "수정",
+      "bytes": 12350,
+      "sha256": "ee9f313377ad23b610b68f4d302c3b0e593bc4a34c380f6dd347444a1bd2f33b"
+    },
+    {
+      "path": "history/40차/문서원문/사용법.md.txt",
+      "change": "추가",
+      "bytes": 18099,
+      "sha256": "db92b77ca155889f90d2ff7e5b935c69a56d5887a92a4a76cafd12594f19e2fd"
+    },
+    {
+      "path": "assets/사용법.md",
+      "change": "수정",
+      "bytes": 17556,
+      "sha256": "52cebf1fbf3c185041d8dc5c0b4f24c1df38fefc2ef868374f50b6b67855c69d"
+    },
+    {
+      "path": "docs/읽기안내/레벨1.md",
+      "change": "수정",
+      "bytes": 106953,
+      "sha256": "3355af8c3fa0e5831ede1b3fe86c845890c9712540a4849bada55ffe5b8f56c9"
+    },
+    {
+      "path": "docs/읽기안내/레벨2.md",
+      "change": "수정",
+      "bytes": 110860,
+      "sha256": "383b633a0a832d4018dc5f44c37e2d72d3ed1a27383bc82c10686538af71a58c"
+    },
+    {
+      "path": "docs/읽기안내/레벨3.md",
+      "change": "수정",
+      "bytes": 122174,
+      "sha256": "54392adf5c8a866ddb208d129334ddc07af58805dcb22d1cfb3cb277778f346a"
+    },
+    {
+      "path": "docs/읽기안내/레벨4.md",
+      "change": "수정",
+      "bytes": 108400,
+      "sha256": "600881d707f406e5eb432a86e25cda94437a9a130cd6edb74e174ac7ca513a73"
+    },
+    {
+      "path": "docs/읽기안내/레벨5.md",
+      "change": "수정",
+      "bytes": 124639,
+      "sha256": "f5ee1c4e213415c9e199362becbee78fd983a4392fbeb9c8d2ac3b2754203837"
+    },
+    {
+      "path": "history/40차/README.md",
+      "change": "추가",
+      "bytes": 9655,
+      "sha256": "969315f7870b621bca4dfb0153e08b37a2c43b2d4ab883b2668788b68725c132"
+    },
+    {
+      "path": "docs/DOWNLOADS.md",
+      "change": "수정",
+      "bytes": 11472,
+      "sha256": "b4444edcf66dd771658ea6aa6099dfd7f501549d1a9d1450e13b2d8c53e37a11"
+    },
+    {
+      "path": "변경기록_40차.md",
+      "change": "추가",
+      "bytes": 1375,
+      "sha256": "da421371ba8111bedf2b0a8b336fb55e0ae55147f102c5a62ea6da692588abd8"
+    },
+    {
+      "path": "history/40차/직전차수.diff",
+      "change": "추가",
+      "bytes": 96288,
+      "sha256": "442978dd50eda3d1c998679cc88712c927ea8bad1daf03311030a14e104da710"
+    },
+    {
+      "path": "history/40차/비교01.md",
+      "change": "추가",
+      "bytes": 70684,
+      "sha256": "d9e0e8fc6dbfd673a2fb958ff661a135d4fc55aa70289a05a0534ca9f8958b26"
+    },
+    {
+      "path": "history/40차/비교02.md",
+      "change": "추가",
+      "bytes": 26917,
+      "sha256": "d41bb39e502ef6afaea21cf9a95b19a544322e168955e0ad6aec73bee87f72ff"
+    },
+    {
+      "path": "history/40차/비교.md",
+      "change": "추가",
+      "bytes": 218,
+      "sha256": "4869853a382477868efe26c098cbdef6a6fa3b4395399c4202c3405a84310a8a"
+    }
+  ],
+  "binaries": [
+    {
+      "name": "CodexOrbit.exe",
+      "bytes": 105737688,
+      "sha256": "1bd988c29f0f8eed7add73e04b4c66c7f87876c2298116702119c8485135a929"
+    },
+    {
+      "name": "CodexOrbit-Setup.exe",
+      "bytes": 107821732,
+      "sha256": "4dcfb233648053e4a89e61684931e1b9b54dbde7aef2b10d45e0220edbf8334f"
+    }
+  ]
+}
