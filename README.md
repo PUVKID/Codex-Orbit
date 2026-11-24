@@ -33,7 +33,7 @@
 
 선택 화면 없이 **바탕화면 바로가기를 자동 생성**하고 완료 화면의 실행 체크 박스를 제거한 차수입니다.
 
-앱 EXE·150% 설정은 같은 버전 그대로입니다. [현재 다운로드](docs/DOWNLOADS.md)에서 새 Setup과 교체 전 35차해 시를 구분합니다.
+앱 EXE·150% 설정은 같은 버전 그대로입니다. [현재 다운로드](docs/DOWNLOADS.md)에서 새 Setup과 교체 전 35차 해시를 구분합니다.
 
 [LEVEL 1](history/36차/README.md#reading-level-1) · [LEVEL 2](history/36차/README.md#reading-level-2) · [LEVEL 3](history/36차/README.md#reading-level-3) · [LEVEL 4](history/36차/README.md#reading-level-4) · [LEVEL 5](history/36차/README.md#reading-level-5)
 
@@ -87,11 +87,6 @@ OS의 모든 정지를 기한 안에 해결한다는 보장은 아닙니다.
 [34차 상세](history/34차/README.md) · [33차 진행 자료](history/33차/README.md) · [변경 기록](변경기록_34차.md) · [기능 범위](docs/2026-11-13_34차_픽셀3D_명세.md) · [GPU 프로세스 격리](docs/34차_그래픽프로세스격리.md)
 
 연도·월·일에 맞춘 3D 테마를 기본으로 보여 주는 Windows 바탕화면 앱입니다. 관측소는 명시적으로 선택해 사용할 수 있습니다.
-
-로컬 기록에서 확인한 모델·추론 강도 변화와 작업 상태를 보여 주며, 실제 계정 사용 한도 비율·시계·기온을 함께 확인할 수 있습니다.
-
-[English](README.en.md) · [다운로드](docs/DOWNLOADS.md) · [사용법](docs/사용법.md) · [검증 범위](docs/공개검증_34차.md) · [변경 기록](변경기록_34차.md) · [권리·공개 범위](공개범위.md)
-
 
 로컬 기록에서 확인한 모델·추론 강도 변화와 작업 상태를 보여 주며, 실제 계정 사용 한도 비율·시계·기온을 함께 확인할 수 있습니다.
 
