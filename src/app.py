@@ -439,6 +439,7 @@ class Monitor(QThread):
                     remaining += max(0, watcher.state.get('activity_replay_remaining_bytes', 0))
                     status = {'time': stamp(), 'state': '기준선 준비 중' if remaining else '감시 중', 'sessions': str(self.sessions),
                               'files': len(watcher.state['files']), 'pending': len(watcher.state['pending']),
+                              'chats': len(watcher.state['models']),
                               'baseline_remaining_bytes': remaining,
                               'diagnostics': diagnostics, 'read_problems': problems,
                               'recent_errors': list(self.recent_errors)}
@@ -594,6 +595,8 @@ class OrbitWidget(QWidget):
     def refresh_tooltip(self):
         self.setToolTip(self.usage_tooltip + '\n' + self.weather_tooltip +
                         t('\n감시 상태: ') + status_label(self.healthy, self.unread))
+        if hasattr(self, 'health37'):
+            self.setToolTip(self.toolTip() + '\n' + self.health37['label'])
 
     def paintEvent(self, _):
         self.refresh_tooltip()
@@ -616,6 +619,14 @@ class OrbitWidget(QWidget):
                                self.usage_fraction, self.usage_state, self.clock_text(), self.weather_text, self.location_text,
                                cache=self._desktop_overlay_cache,text_scale=self.settings.values.get('text_scale',100)/100,weather_extras=self.weather_extras)
             record_calendar_presentation(self,source)
+            health = getattr(self, 'health37', None)
+            if health:
+                painter.save()
+                painter.setPen(Qt.PenStyle.NoPen)
+                painter.setBrush(QColor({'ok': '#32b781', 'error': '#e26868', 'delayed': '#d7a34b',
+                                        'waiting': '#7699b8', 'off': '#7c8790'}.get(health['kind'], '#7c8790')))
+                painter.drawEllipse(8, 8, 9, 9)
+                painter.restore()
             from theme import colors
             painter.setPen(QColor(colors()['muted']))
             painter.drawLine(self.width()-4, self.height()//2-12, self.width()-4, self.height()//2+12)
@@ -1011,7 +1022,7 @@ class Notice(QFrame):
         self.appearance.start()
         self.timer.stop()
         if timeout_ms != 0:
-            self.timer.start(max(30000, min(300000, int(timeout_ms))))
+            self.timer.start(max(5000, min(120000, int(timeout_ms))))
 
     def update_event(self, event, replay=None):
         # 제목 보강과 동일 ID 갱신은 다른 카드나 남은 표시 시간을 바꾸지 않습니다.
@@ -1812,6 +1823,8 @@ class Controller(QObject):
         # Qt 수신자 문맥에 수명을 결합해 종료된 Python 객체로 예약 신호가 전달되지 않게 합니다.
         super().__init__(_application_gui_root())
         self.settings = settings
+        from operations37 import NotificationPolicy
+        self.workspace_policy = NotificationPolicy(settings)
         self.country_estimated = False
         if settings.values.get('theme_country_mode') == 'auto' and settings.values.get('weather_location'):
             city = normalize_city(settings.values['weather_location'])
@@ -1890,6 +1903,47 @@ class Controller(QObject):
             self.usage.start()
         if start_weather:
             self.weather.start()
+        from operations37 import install_workspace
+        install_workspace(self)
+
+    def retry_monitor37(self):
+        """사용자 재연결은 기존 작업자의 정상 종료를 기다린 뒤 이어갑니다."""
+        try:
+            self.monitor_retries = 0
+            self.start_monitor()
+        except Exception as error:
+            QMessageBox.warning(self.window, t('감시 시작 실패'), str(error))
+
+    def dismiss_unpinned37(self):
+        for notice in list(self.notices.values()):
+            if not notice.pinned:
+                notice.dismiss()
+
+    def preview_notice37(self, kind):
+        """가상 카드는 감시·기록·실제 알림 표시 로그에 넣지 않습니다."""
+        from operations37 import tr
+        if kind not in ('model', 'effort', 'activity'):
+            raise ValueError('지원하지 않는 미리보기입니다.')
+        old = getattr(self, 'preview_card37', None)
+        if old is not None and isValid(old):
+            old.hide(); old.deleteLater()
+        before = {'model': 'gpt-6.1-sol', 'effort': 'medium'}
+        after = dict(before)
+        if kind == 'model':
+            after['model'] = 'gpt-6.1-terra'
+        elif kind == 'effort':
+            after['effort'] = 'high'
+        event = {'id': 'preview37', 'target': 'preview37', 'kind': 'activity' if kind == 'activity' else 'settings',
+                 'chat_name': tr('미리보기 · 실제 변경이 아닙니다', 'Preview · Not a real change'),
+                 'title': 'Preview', 'before': before, 'after': after, 'time': stamp(),
+                 'reason': tr('알림 모양을 확인하는 가상 예시입니다.', 'A sample for checking the notification layout.'),
+                 'activity_type': 'resumed', 'task_summary': tr('알림 미리보기', 'Notification preview')}
+        card = Notice(lambda *_: None, self.gui_owner)
+        card.broadcast_mode = False
+        card.apply_text_scale(self.settings.values.get('text_scale', 100) / 100)
+        card.display(event, self.orbit, self.workspace_policy.options['notice_duration_seconds'] * 1000)
+        card.detail_hint.setText(tr('🧪 가상 예시 · 변경 기록에 저장하지 않습니다', '🧪 Sample · Not saved to activity'))
+        self.preview_card37 = card
 
     @Slot(float)
     def change_motion_speed(self, value):
@@ -1964,6 +2018,8 @@ class Controller(QObject):
         from observatory_panel import mask_details
         mask_details(self.window)
         self.orbit.update()
+        from operations37 import refresh_workspace
+        refresh_workspace(self, translate=True)
 
     def show_weather_location(self):
         dialog = getattr(self, 'location_dialog', None)
@@ -2277,7 +2333,7 @@ class Controller(QObject):
             from observatory_panel import mask_details
             mask_details(self.window)
         self.orbit.unread = True
-        if self.settings.values.get('popup', True):
+        if self.settings.values.get('popup', True) and self.workspace_policy.allows(event):
             self.enqueue_notice(event)
 
     def update_notice_count(self):
@@ -2348,7 +2404,11 @@ class Controller(QObject):
         self.notice.apply_text_scale(self.settings.values.get('text_scale',100)/100)
         self.notice.bookmark_callback = lambda key: self.features.set_bookmark(key, key not in self.features.bookmarks)
         self.notice.completed.connect(self.remove_notice)
-        self.notice.display(event, self.orbit, self.settings.values.get('notice_timeout_ms', 30000), replay=replay)
+        self.notice.display(event, self.orbit, self.workspace_policy.options['notice_duration_seconds'] * 1000, replay=replay)
+        if event.get('kind') == 'activity' and self.workspace_policy.options['compact_activity']:
+            self.notice.layout().setContentsMargins(14, 10, 14, 10)
+            self.notice.layout().setSpacing(3)
+            self.notice.fit_content()
         after = event.get('after') or {}
         value = {'event': 'display_requested', 'time': stamp(), 'id': event.get('id'),
                  'target': event.get('target'), 'model': after.get('model'), 'effort': after.get('effort'),
@@ -2414,6 +2474,8 @@ class Controller(QObject):
         self.last_monitor_status = dict(value)
         self.orbit.healthy = value.get('state') == '감시 중'
         self.orbit29.health(value)
+        from operations37 import refresh_workspace
+        refresh_workspace(self)
         self.window.summary.setText('● ' + t(value.get('state', '')) + '  ·  ' + kst_label(value.get('time')))
         self.window.diagnostics.setPlainText(json.dumps(value, ensure_ascii=False, indent=2))
         if self.settings.values.get('broadcast_mode'):self.window.diagnostics.hide()
@@ -2565,11 +2627,16 @@ def main():
     parser.add_argument('--sessions', type=Path)
     parser.add_argument('--ui-smoke-test', action='store_true', help='새 격리 폴더에서 합성 화면 조작 검사 후 종료')
     parser.add_argument('--smoke-test', action='store_true')
+    parser.add_argument('--workspace-smoke-test', action='store_true', help='새 알림 센터의 격리된 합성 화면 연결 검사')
     parser.add_argument('--usage-smoke-test', action='store_true', help='실제 계정 잔량과 표시를 조회한 뒤 종료')
     parser.add_argument('--smoke-report', type=Path)
     parser.add_argument('--show-details', action='store_true')
     parser.add_argument('--show-event', help='기존 이력의 이벤트 ID 또는 대상 ID를 다시 표시')
     args = parser.parse_args()
+    if args.workspace_smoke_test:
+        if '--data-dir' not in sys.argv[1:] or (args.data_dir.exists() and any(args.data_dir.iterdir())):
+            parser.error('새 알림 센터 검사는 명시한 빈 격리 데이터 폴더가 필요합니다.')
+        args.smoke_test = True
     if args.ui_smoke_test:
         from ui_smoke32 import run_ui_smoke
         return run_ui_smoke(args, sys.argv[1:])
@@ -2669,7 +2736,9 @@ def main():
         from calendar_motion import calendar_motion_status
         first = None
         baseline_count = None
-        deadline = time.monotonic() + 5.0
+        # 실제 첫 프레임과 프레임 변화를 요구하되 초기화와 프레임 교환의 서로 다른 총기한을 따릅니다.
+        from calendar_gpu_process import INITIALIZE_TIMEOUT_SECONDS, FRAME_TIMEOUT_SECONDS
+        deadline = time.monotonic() + 2 * INITIALIZE_TIMEOUT_SECONDS + 2 * FRAME_TIMEOUT_SECONDS
         smoke_timer = QTimer()
         smoke_timer.setInterval(33)
         def finish():
@@ -2699,6 +2768,13 @@ def main():
                       'font_families': families, 'time': stamp(), 'frozen': bool(getattr(sys, 'frozen', False)),
                       'language': get_language(),
                       'detail_tabs': [controller.window.tabs.tabText(index) for index in range(controller.window.tabs.count())]}
+            if args.workspace_smoke_test:
+                try:
+                    from ui_workspace_smoke37 import check_workspace
+                    report['workspace37'] = check_workspace(controller, args.smoke_report.parent)
+                except Exception as error:
+                    report['ok'] = False
+                    report['workspace_error'] = str(error)
             if args.smoke_report:
                 args.smoke_report.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
             if sys.stdout:

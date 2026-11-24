@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import re
 import shutil
+import stat
 import subprocess
 import sys
 import tempfile
@@ -177,6 +178,71 @@ def _write_json(path, value):
         Path(temporary).unlink(missing_ok=True)
 
 
+_RESULT_ERRORS = frozenset(('apply_failed', 'smoke_failed', 'restart_failed',
+                            'rollback_failed', 'rollback_restart_failed'))
+
+
+def _result_path(data_directory):
+    """결과 파일과 상위 경로의 링크·Windows 재분석 지점을 거부합니다."""
+    path = Path(data_directory).absolute() / 'update-result.json'
+    for part in (path, *path.parents):
+        try:
+            info = part.lstat()
+        except FileNotFoundError:
+            continue
+        if stat.S_ISLNK(info.st_mode) or getattr(info, 'st_file_attributes', 0) & 0x400:
+            raise UpdateError('업데이트 결과 경로의 폴더 연결은 허용하지 않습니다.')
+    return path
+
+
+def _validated_result(value):
+    if not isinstance(value, dict) or set(value) - {'status', 'time', 'version', 'error'}:
+        raise UpdateError('업데이트 결과 필드가 올바르지 않습니다.')
+    if value.get('status') not in ('updated', 'rolled_back', 'failed'):
+        raise UpdateError('업데이트 결과 상태가 올바르지 않습니다.')
+    _version(value.get('version'))
+    stamp = value.get('time')
+    if not isinstance(stamp, str) or len(stamp) > 40:
+        raise UpdateError('업데이트 결과 시각이 올바르지 않습니다.')
+    parsed = datetime.fromisoformat(stamp)
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
+        raise UpdateError('업데이트 결과 시각에 시간대가 필요합니다.')
+    if 'error' in value and value['error'] not in _RESULT_ERRORS:
+        raise UpdateError('허용되지 않은 업데이트 오류 코드입니다.')
+    if (value['status'] == 'updated') != ('error' not in value):
+        raise UpdateError('업데이트 결과 상태와 오류가 일치하지 않습니다.')
+    return dict(value)
+
+
+def read_update_result(data_directory):
+    """16 KiB 이하의 허용된 결과 요약만 반환하고 손상·링크 파일은 무시합니다."""
+    try:
+        path = _result_path(data_directory)
+        flags = os.O_RDONLY | getattr(os, 'O_BINARY', 0) | getattr(os, 'O_NOFOLLOW', 0)
+        descriptor = os.open(path, flags)
+        with os.fdopen(descriptor, 'rb') as stream:
+            if not stat.S_ISREG(os.fstat(stream.fileno()).st_mode):
+                return {}
+            body = stream.read(16385)
+        if len(body) > 16384:
+            return {}
+        return _validated_result(json.loads(body.decode('utf-8')))
+    except (OSError, ValueError, TypeError, OverflowError):
+        return {}
+
+
+def _record_update_result(data_directory, version, status, error=None):
+    # 기록 오류는 설치·복구 또는 원래 예외를 가로막지 않습니다.
+    try:
+        value = {'status': status, 'time': datetime.now(timezone.utc).isoformat(), 'version': version}
+        if error is not None:
+            value['error'] = error
+        _write_json(_result_path(data_directory), _validated_result(value))
+    except Exception:
+        return False
+    return True
+
+
 def _replace_file(source, destination):
     """Windows의 짧은 공유 경합만 유한하게 재시도하고 다른 오류는 그대로 전달합니다."""
     delays = (.02, .04, .08, .12)
@@ -192,7 +258,7 @@ def _replace_file(source, destination):
 
 class SafeUpdater:
     def __init__(self, data_directory, executable=None):
-        self.data_directory = Path(data_directory).resolve()
+        self.data_directory = Path(data_directory).absolute()
         self.executable = Path(executable or sys.executable).resolve()
 
     def check(self, current_version):
@@ -222,17 +288,24 @@ class SafeUpdater:
         _description(value)
         return value
 
-    def stage(self, release):
+    def stage(self, release, progress=None):
         version, digest, size = _description(release)
         tag = release.get('tag')
         if release.get('available') is not True or tag not in (version, 'v' + version):
             raise UpdateError('확인된 새 정식 릴리스만 준비할 수 있습니다.')
         url = _asset_url(release.get('asset_url'), tag)
-        body = fetch_bytes(url, size)
-        if len(body) != size or hashlib.sha256(body).hexdigest() != digest or not body.startswith(b'MZ'):
-            raise UpdateError('다운로드 EXE의 크기·SHA256·파일 형식이 일치하지 않습니다.')
         folder = _stage_root() / (version + '-' + digest[:12])
         folder.mkdir(parents=True, exist_ok=True)
+        # 실제 준비 경로의 볼륨에서 다운로드·복사·백업과 여유분을 확인합니다.
+        if shutil.disk_usage(folder).free < size * 3 + 64 * 1024 * 1024:
+            raise UpdateError('업데이트 준비 공간이 부족합니다. 디스크 여유 공간을 확보해 주세요.')
+        if progress:
+            progress('download')
+        body = fetch_bytes(url, size)
+        if progress:
+            progress('verify')
+        if len(body) != size or hashlib.sha256(body).hexdigest() != digest or not body.startswith(b'MZ'):
+            raise UpdateError('다운로드 EXE의 크기·SHA256·파일 형식이 일치하지 않습니다.')
         destination = folder / 'CodexOrbit.update.exe'
         handle, temporary = tempfile.mkstemp(prefix='.download-', suffix='.exe', dir=folder)
         try:
@@ -337,12 +410,13 @@ def apply_update_plan(plan_path, *, wait_for_parent=None, smoke=None, restart=No
     pid = value.get('parent_pid')
     if type(pid) is not int or pid <= 0 or pid == os.getpid():
         raise UpdateError('교체 대상 앱의 프로세스 ID가 올바르지 않습니다.')
-    data_directory = Path(value.get('data_directory', '')).resolve()
+    data_directory = Path(value.get('data_directory', '')).absolute()
     backup, candidate = staged.parent / 'previous.exe', executable.with_name('CodexOrbit.pending.exe')
     if backup.exists() or candidate.exists():
         raise UpdateError('이전 교체 자료가 남아 있어 자동으로 덮어쓰지 않습니다.')
     wait_for_parent, smoke, restart = wait_for_parent or _wait_for_parent, smoke or _smoke, restart or _restart
     moved = False
+    error_code = 'apply_failed'
     try:
         wait_for_parent(pid)
         # 같은 설치 폴더에 먼저 복사하여 마지막 교체를 같은 볼륨의 원자 이동으로 만듭니다.
@@ -352,21 +426,34 @@ def apply_update_plan(plan_path, *, wait_for_parent=None, smoke=None, restart=No
         _replace_file(executable, backup)
         moved = True
         _replace_file(candidate, executable)
+        error_code = 'smoke_failed'
         if smoke(executable, staged.parent) is not True:
             raise UpdateError('새 실행 파일의 시작 검사가 실패했습니다.')
+        error_code = 'restart_failed'
         if restart(executable, data_directory) is not True:
             raise UpdateError('새 실행 파일의 재시작이 실패했습니다.')
         result = {'updated': True, 'rolled_back': False, 'version': value['staged']['version']}
+        _record_update_result(data_directory, value['staged']['version'], 'updated')
     except Exception as error:
         if not moved:
+            _record_update_result(data_directory, value['staged']['version'], 'failed', error_code)
             raise
-        _replace_file(backup, executable)
-        recovered = restart(executable, data_directory)
-        result = {'updated': False, 'rolled_back': True, 'error': str(error), 'rollback_restarted': recovered is True}
+        try:
+            _replace_file(backup, executable)
+        except Exception as recovery_error:
+            _record_update_result(data_directory, value['staged']['version'], 'failed', 'rollback_failed')
+            raise error from recovery_error
+        try:
+            recovered = restart(executable, data_directory) is True
+        except Exception:
+            recovered = False
+        result = {'updated': False, 'rolled_back': True, 'error': str(error), 'rollback_restarted': recovered}
+        _record_update_result(data_directory, value['staged']['version'],
+                              'rolled_back' if recovered else 'failed',
+                              error_code if recovered else 'rollback_restart_failed')
     finally:
         candidate.unlink(missing_ok=True)
         (_stage_root() / 'apply.lock').unlink(missing_ok=True)
-    _write_json(staged.parent / 'update-result.json', result)
     return result
 
 

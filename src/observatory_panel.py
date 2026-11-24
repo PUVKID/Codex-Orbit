@@ -378,6 +378,9 @@ class OrbitExperience:
         if key=='text_scale':self.apply_text_size();c.orbit._request_motion_size()
         if key=='edge_docking' and not value:self.expand()
         self.update_labels();self.feed_scene()
+        if hasattr(c, 'workspace_panel'):
+            from operations37 import refresh_workspace
+            refresh_workspace(c, translate=True)
     def apply_text_size(self):
         c=self.controller;scale=c.settings.values.get('text_scale',100)/100
         from theme import unscaled_font_size
@@ -398,7 +401,7 @@ class OrbitExperience:
         c=self.controller
         if not isinstance(event.get('target'),str) or not event['target'].strip():return
         c.features.ingest(event);self.snapshot_cache=c.features.snapshot();self.panel.refresh();self.transition=0.;self.transition_started=time.monotonic();self.timer.start();self.feed_scene()
-        if c.settings.values.get('notification_sound',False):
+        if c.settings.values.get('notification_sound',False) and c.workspace_policy.allows(event, count=False):
             # 자산이 없는 환경에서도 운영체제의 짧은 신호음을 사용합니다.
             import winsound
             flags={'settings':winsound.MB_OK,'activity':winsound.MB_ICONASTERISK,'lifecycle':winsound.MB_ICONEXCLAMATION}

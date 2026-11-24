@@ -304,13 +304,29 @@ class CalendarMotion(QObject):
         self.worker.configure(value=value,elapsed=elapsed)
         with self.worker.condition:
             image=self.worker.latest if self.worker.latest_date==actual and self.worker.latest_country==country and self.worker.latest_utc_offset==utc_offset and self.worker.latest_city_ref==city_ref else None
+            failed=bool(self.worker.error)
         if image is not None:return QImage(image)
         from calendar_city import city_key
         identity=(actual,country,city_key(city_ref),catalog_revision)
         if self.fallback_date!=identity:
             self.fallback=(fallback_image(actual,country,city_ref) if city_ref is not None else fallback_image(actual,country))
             self.fallback_date=identity
-        return QImage(self.fallback)
+        image=QImage(self.fallback)
+        # 정적 월 그림과 실제 준비·실패 상태를 구분하며 원래 그림은 유지합니다.
+        from i18n import get_language
+        from typography import app_font
+        from PySide6.QtGui import QGuiApplication
+        english=get_language()=='en'
+        label=('3D unavailable' if english else '3D 표시 오류') if failed else ('Preparing 3D' if english else '3D 준비 중')
+        painter=QPainter(image);painter.setFont(app_font(13))
+        palette=QGuiApplication.palette()
+        painter.setPen(Qt.PenStyle.NoPen);painter.setBrush(palette.window())
+        rect=QRectF(10,SIZE-31,SIZE-20,23)
+        painter.drawRoundedRect(rect,5,5);painter.setPen(palette.windowText().color())
+        painter.drawText(rect,Qt.AlignmentFlag.AlignCenter,label);painter.end()
+        image.setText('calendar_fallback_state','error' if failed else 'preparing')
+        image.setText('calendar_fallback_label',label)
+        return image
 
     def close(self,timeout_ms=2000):
         deadline=time.monotonic()+max(0,timeout_ms)/1000
@@ -368,13 +384,14 @@ def prepare_calendar_motion(timeout_seconds=5.0):
                 if remaining<=0:break
                 worker.condition.wait(remaining)
             ready=worker.latest_date==value and worker.latest is not None and not worker.error
-            error=worker.error or ('' if ready else '날짜별 3D 첫 프레임이 준비 제한 안에 도착하지 않았습니다.')
+            error=worker.error
             result={'ready':ready,'error':error,'renderer':worker.renderer_name,
-                    'render_count':worker.render_count,'date':str(worker.latest_date)}
+                    'render_count':worker.render_count,'date':str(worker.latest_date),
+                    'state':'error' if error else 'ready' if ready else 'preparing'}
         finally:
             worker.requested_date=previous_date
             worker.visible=bool(service.owners);worker.condition.notify_all()
-    if not ready and not worker.error:_logger.error(error)
+    if not ready and not error:_logger.info('날짜별 3D를 백그라운드에서 준비 중입니다.')
     return result
 
 
@@ -479,7 +496,11 @@ def calendar_motion_status():
     with _service.worker.condition:
         scene=_service.worker.scene
         paused,reduced,fps=_service.worker._render_options()
+        gpu_status=dict(_service.worker.gpu_status)
+        if isinstance(_service.worker.renderer,ProcessCalendarRenderer):
+            gpu_status.update(_service.worker.renderer.progress_status())
         return {'running':_service.worker.isRunning(),'owners':len(_service.owners),
+                'state':'error' if _service.worker.error else 'ready' if _service.worker.latest is not None else 'preparing',
                 'images':int(_service.worker.latest is not None)+int(_service.fallback is not None),
                 'render_count':_service.worker.render_count,'date':str(_service.worker.latest_date),
                 'country':_service.worker.country,'rendered_country':_service.worker.latest_country,
@@ -500,7 +521,7 @@ def calendar_motion_status():
                 'pacing_clock':'perf_counter','pacing_backend':_service.worker.pacing_backend,
                 'pacing_warning':_service.worker.pacing_warning,
                 'first_render_at':_service.worker.first_render_at,'last_render_at':_service.worker.last_render_at,
-                'renderer':_service.worker.renderer_name,'gpu_process':dict(_service.worker.gpu_status),'error':_service.worker.error}
+                'renderer':_service.worker.renderer_name,'gpu_process':gpu_status,'error':_service.worker.error}
 
 
 def close_calendar_motion():

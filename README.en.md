@@ -1,6 +1,7 @@
 <a name="-codex-orbit-320"></a>
 <a id="codex-orbit-340"></a>
-# Codex Orbit 3.5.0
+<a id="codex-orbit-350"></a>
+# Codex Orbit 3.7.0
 
 <!-- user-levels:start -->
 **수준별 전체 안내:** [LEVEL 1 - Beginner](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A81.md) · [LEVEL 2 - Explorer](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A82.md) · [LEVEL 3 - Practitioner](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A83.md) · [LEVEL 4 - Advanced](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A84.md) · [LEVEL 5 - Expert](docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A85.md)
@@ -20,6 +21,24 @@ Daily subjects use pixel rendering of actual 3D meshes with a full vertical-axis
 
 
 <!-- user-levels:end -->
+
+## 37차 · 알림 센터와 감시 상태·업데이트 안내
+
+**3.7.0**은 관측 기록을 찾아보는 알림 센터, 감시 상태와 알림 표시 조절, 공식 업데이트 안내를 연결한 차수입니다. 시스템·라이트·다크와 날짜별 과일·꽃 픽셀 입체 조형은 유지합니다. 실제 기록과 미리보기, 구현된 기능과 아직 확인하지 않은 실행 범위를 구분합니다.
+
+| 영역 | 연결한 기능 |
+| --- | --- |
+| 알림 센터 | 검색·필터·묶음·요약·복사·CSV/JSON과 프라이버시 가림 |
+| 감시·알림 | 상태·재연결·조회 시각, 집중·음소거·표시 설정과 기록 없는 미리보기 |
+| 업데이트 | 공식 출처·공간·검증·단계·최근 결과와 실패 안내 |
+
+[50개 항목과 제약](docs/37차_50개개선.md) · [현재 다운로드](docs/DOWNLOADS.md) · [실제 최소 확인 범위](docs/37차_최소검사.md) · [전체 비교 목차](history/37차/비교/README.md)
+
+[LEVEL 1](history/37차/README.md#reading-level-1) · [LEVEL 2](history/37차/README.md#reading-level-2) · [LEVEL 3](history/37차/README.md#reading-level-3) · [LEVEL 4](history/37차/README.md#reading-level-4) · [LEVEL 5](history/37차/README.md#reading-level-5)
+
+관련 순수 기능 **21개**의 기존 통과 근거를 재사용합니다. 배포 파일과 GUI 연결의 실제 확인 범위는 [37차 최소 검사](docs/37차_최소검사.md)에서 구분합니다.
+
+지역 표시는 국가·시도·도시명과 식별자 정합성을 강화했습니다. 자동 위치는 연결망의 추정값이며 실제 기기 위치의 정확도를 보장하지 않습니다. [지역 표시 정합성](docs/37차_지역정합.md)
 
 ## 36차 · 설치 선택 항목 정리
 
@@ -109,6 +128,7 @@ Missing display-mode settings now select the calendar. Model events preserve the
 | 34차 | 픽셀 입체 조형과 도시 행사 | **자료 폴더:** [자료 폴더](history/34차) · **상세 설명:** [상세 설명](history/34차/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/34차_전체변경.diff) |
 | 35차 | 개발자용 색상과 조명 | **자료 폴더:** [자료 폴더](history/35차) · **상세 설명:** [상세 설명](history/35차/README.md) · **직전 비교·범위:** [전체 비교·범위](docs/35차_전체변경.diff) |
 | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](history/36차) · **상세 설명:** [상세 설명](history/36차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/36차/직전차수.diff) |
+| 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](history/37차) · **상세 설명:** [상세 설명](history/37차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/37차/비교/README.md) |
 | 최종 | Codex Orbit · 최종 | **폴더:** [폴더](docs/최종/) · **설명:** [설명](docs/최종/README.md) · **직전 차수와 실제 비교:** [비교 대상 없는 근거](docs/최종/README.md) |
 
 Historical sources and supporting documents/assets are preserved with full comparisons, byte counts and SHA-256. [Archive manifests](docs/ARCHIVE_FILES.md) distinguish original copies, privacy edits and exclusions. Design images use synthetic examples. No private full-source ZIP, personal conversations, operating memories or credentials are published. Existing legal notices are preserved; no new license is assigned. This software work has no manuscript requiring a paper PDF.
@@ -123,3 +143,6 @@ Actual Qt screens using synthetic events and example values; no private chats or
 ![Synthetic Qt example](docs/images/history-29.png)
 
 ![Synthetic Qt example](docs/images/widget-29.png)
+
+
+**37차 픽셀 모션 수리:** 날짜별 대상 133종과 도시 행사 형상 8종의 회전을 확인했습니다. [실제 확인 범위와 장면 준비 수리](docs/37차_3D초기화.md)를 함께 읽어 주세요.

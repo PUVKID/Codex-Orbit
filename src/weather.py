@@ -65,8 +65,23 @@ def localized_region(data, language='ko'):
     return label or original, original
 
 
+def _region_identity(value, code):
+    """확인된 시도 별칭만 대응하며 서로 다른 행정구역을 거리로 합치지 않습니다."""
+    if not isinstance(value, str):
+        return ''
+    key = ' '.join(value.casefold().split())
+    if code == 'KR':
+        if value in _KOREAN_REGIONS.values():
+            return value
+        for suffix in (' special self-governing province', ' special self-governing city',
+                       ' metropolitan city', ' province', ' special city', '-do', '-si'):
+            key = key.removesuffix(suffix)
+        return _KOREAN_REGIONS.get(key, key)
+    return key
+
+
 def _selected_geocoded_region(location, data):
-    """동일 국가이면서 IP 추정 좌표에서30km 이내인 가장 가까운 검색 결과만 수락합니다."""
+    """동일 국가·확인된 시도와 30km 거리 조건을 만족하는 후보만 반환합니다."""
     rows = data.get('results')
     if not isinstance(rows, list) or len(rows) > 10:
         return None
@@ -82,9 +97,17 @@ def _selected_geocoded_region(location, data):
     for row in rows:
         if not isinstance(row, dict) or row.get('country_code') != code:
             continue
+        expected_region = _region_identity(location.get('region'), code)
+        if expected_region and expected_region != _region_identity(row.get('admin1'), code):
+            continue
         lat, lon = row.get('latitude'), row.get('longitude')
         name = row.get('name')
         if not isinstance(name, str) or not name.strip() or not valid(lat, -90, 90) or not valid(lon, -180, 180):
+            continue
+        expected_name = location.get('city')
+        # 영문 이름이 모두 있는 경우에는 가까운 다른 도시를 번역 후보로 사용하지 않습니다.
+        if (isinstance(expected_name, str) and expected_name and expected_name.isascii() and name.isascii()
+                and ' '.join(expected_name.casefold().split()) != ' '.join(name.casefold().split())):
             continue
         delta_lat, delta_lon = math.radians(lat-latitude), math.radians(lon-longitude)
         arc = math.sin(delta_lat/2)**2 + math.cos(math.radians(lat))*math.cos(math.radians(latitude))*math.sin(delta_lon/2)**2
@@ -179,6 +202,8 @@ def normalize_city(value):
         result[key] = float(number)
     if type(value.get('id')) is int and value['id'] > 0:
         result['id'] = value['id']
+    if type(value.get('admin1_id')) is int and value['admin1_id'] > 0:
+        result['admin1_id'] = value['admin1_id']
     display = value.get('display_name')
     if display is not None:
         if not isinstance(display, str) or len(display) > 640 or any(not c.isprintable() for c in display):
@@ -667,39 +692,46 @@ class WeatherClient(QObject):
     def _geocode_done(self, data):
         if self.closed or self._location is None:
             return
-        label = select_geocoded_region(self._location, data)
+        selected = _selected_geocoded_region(self._location, data)
         self._stage = ''
-        if label:
-            self._region = label
-            self._region_source = 'Open-Meteo Geocoding · GeoNames'
-            key = self._cache_key()
-            self._city_ref = select_geocoded_city_ref(self._location,data)
-            self._region_cache[key] = (label, self._region_source, self._city_ref)
-            self._region_cache.move_to_end(key)
-            while len(self._region_cache) > 16:
-                self._region_cache.popitem(last=False)
-            self._publish(region=label, region_source=self._region_source, city_ref=self._city_ref, busy=False)
-            # 표시 번역과 도시 신원은 분리하고 같은 식별자의 영문명만 추가 확인합니다.
-            selected=_selected_geocoded_region(self._location,data)
-            identifier=selected[2].get('id') if selected else None
-            if (self._city_ref is None and self.language!='en' and self._location.get('city','').isascii()
-                    and type(identifier) is int and identifier>0):
+        if selected:
+            ref = select_geocoded_city_ref(self._location, data)
+            if ref is not None:
+                self._accept_geocoded_region(selected[1], ref)
+                return
+            identifier = selected[2].get('id')
+            if (self.language != 'en' and self._location.get('city', '').isascii()
+                    and type(identifier) is int and identifier > 0):
+                # 번역 후보를 먼저 표시하지 않고 같은 도시·시도 ID의 영문 응답을 기다립니다.
                 query=urlencode({'name':self._location['city'],'count':10,'language':'en','countryCode':self._location['country_code']})
                 self._stage='geocode_identity'
                 self._get('https://geocoding-api.open-meteo.com/v1/search?'+query,
-                          self._guard(lambda rows:self._identity_done(rows,identifier)))
-        else:
-            self._publish(region=self._region, region_source='ipwho.is · 지명 검색 미일치 · 원문 보존', busy=False)
+                          self._guard(lambda rows:self._identity_done(rows,identifier,selected)))
+                return
+        self._publish(region=self._region, region_source='ipwho.is · 지명 검색 미일치 · 원문 보존', busy=False)
 
-    def _identity_done(self,data,expected_id):
+    def _accept_geocoded_region(self, label, ref):
+        self._region = label
+        self._region_source = 'Open-Meteo Geocoding · GeoNames'
+        self._city_ref = ref
+        key = self._cache_key()
+        self._region_cache[key] = (label, self._region_source, ref)
+        self._region_cache.move_to_end(key)
+        while len(self._region_cache) > 16:
+            self._region_cache.popitem(last=False)
+        self._publish(region=label, region_source=self._region_source, city_ref=ref, busy=False)
+
+    def _identity_done(self,data,expected_id,localized=None):
         ref=select_geocoded_city_ref(self._location,data)
+        selected = _selected_geocoded_region(self._location, data)
         self._stage=''
-        if ref is None or ref['geonames_id']!=expected_id:
+        admin_id = localized[2].get('admin1_id') if localized else None
+        same_admin = (admin_id is None or (type(admin_id) is int and admin_id > 0
+                       and selected is not None and selected[2].get('admin1_id') == admin_id))
+        if ref is None or ref['geonames_id']!=expected_id or not same_admin:
             self._publish(city_ref=None,busy=False)
             return
-        self._city_ref=ref
-        self._region_cache[self._cache_key()]=(self._region,self._region_source,ref)
-        self._publish(city_ref=ref,busy=False)
+        self._accept_geocoded_region(localized[1] if localized else self._region, ref)
 
     def _request_failed(self, message):
         if self._stage == 'geocode_identity':

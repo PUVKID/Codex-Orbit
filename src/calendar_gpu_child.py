@@ -50,6 +50,13 @@ def serve(channel, parent_pid, renderer_factory=_renderer_factory):
         nonlocal stage
         stage = value
         channel.respond(last_id, {'status': 'busy', 'stage': stage})
+    initialization_checks = 0
+    def initialization_check():
+        nonlocal initialization_checks
+        check()
+        initialization_checks += 1
+        # 실제 생성자의 취소 확인 지점만 알리며 총 단계나 완료율은 추정하지 않습니다.
+        progress('초기화 체크 ' + str(initialization_checks))
     try:
         check()
         while not stopped():
@@ -64,12 +71,15 @@ def serve(channel, parent_pid, renderer_factory=_renderer_factory):
                 size = payload['size']
                 if isinstance(size, list): size = tuple(size)
                 progress('가져오기·생성')
-                renderer = renderer_factory(size, check_cancelled=check)
+                renderer = renderer_factory(size, check_cancelled=initialization_check)
                 check()
                 channel.respond(last_id, {'status': 'ready', 'stage': '준비', 'identity': None,
                     'catalog_revision': None, 'parent_pid': parent_pid, 'child_pid': os.getpid(),
                     'renderer': bounded_text(renderer.ctx.info.get('GL_RENDERER', '확인 불가'), 1024)})
                 continue
+            preparing = kind in ('prepare_calendar', 'prepare_observatory')
+            if preparing:
+                kind = kind.removeprefix('prepare_')
             if kind not in ('calendar', 'observatory'): raise GpuProtocolError('GPU 요청 종류 오류')
             expected = ({'kind', 'date', 'elapsed', 'country', 'city_ref', 'identity', 'output_size', 'catalog'}
                         if kind == 'calendar' else {'kind', 'scene', 'elapsed', 'identity', 'output_size', 'catalog'})
@@ -82,7 +92,7 @@ def serve(channel, parent_pid, renderer_factory=_renderer_factory):
             size = payload['output_size']
             if type(size) is not int or not 32 <= size <= 2160: raise GpuProtocolError('GPU 전달 크기 오류')
             catalog = _catalog(payload['catalog'], catalog)
-            check(); progress('렌더'); renderer.set_output_size(size)
+            check(); progress('장면 준비' if preparing else '렌더'); renderer.set_output_size(size)
             if kind == 'calendar':
                 from calendar_city import normalize_calendar_city
                 from calendar_specials import normalize_country
@@ -96,6 +106,12 @@ def serve(channel, parent_pid, renderer_factory=_renderer_factory):
                 if payload['identity'] != {'mode': 'observatory'}: raise GpuProtocolError('GPU 관측소 문맥 오류')
                 image = renderer.render_observatory(normalize_scene(payload['scene']), elapsed)
             if image.isNull(): raise GpuProtocolError('GPU 렌더가 빈 영상을 반환했습니다.')
+            if preparing:
+                check()
+                channel.respond(last_id, {'status': 'prepared', 'stage': '장면 준비 완료',
+                    'identity': payload['identity'], 'catalog_revision': catalog['revision'],
+                    'renderer': bounded_text(renderer.ctx.info.get('GL_RENDERER', '확인 불가'), 1024)})
+                continue
             check(); progress('출력 복사')
             from PySide6.QtGui import QImage
             image = image.convertToFormat(QImage.Format.Format_RGBA8888)

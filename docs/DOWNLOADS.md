@@ -1,4 +1,22 @@
-# 3.5.0 정식 다운로드
+# 3.7.0 정식 다운로드
+
+<!-- user-levels:start -->
+[LEVEL 1](읽기안내/레벨1.md) · [LEVEL 2](읽기안내/레벨2.md) · [LEVEL 3](읽기안내/레벨3.md) · [LEVEL 4](읽기안내/레벨4.md) · [LEVEL 5](읽기안내/레벨5.md)
+<!-- user-levels:end -->
+
+[37차 상세](../history/37차/README.md#reading-level-1) · [실제 확인 범위](37차_최소검사.md) · [전체 비교 목차](../history/37차/비교/README.md)
+
+| 파일 | 바이트 | SHA-256 |
+| --- | --- | --- |
+| [CodexOrbit.exe](https://github.com/PUVKID/Codex-Orbit/releases/download/v3.7.0/CodexOrbit.exe) | 105729329 | `f42daa7fd2b3c48c367dd7ee8199ff412dc364ddc7dde2381de7cae453a2ad16` |
+| [CodexOrbit-Setup.exe](https://github.com/PUVKID/Codex-Orbit/releases/download/v3.7.0/CodexOrbit-Setup.exe) | 107810991 | `725b76f29fadae473ee1cc469d30dbebb592374c2ce7cad156e05a311b42d936` |
+
+위 값은 37차 3.7.0의 실제 생성 메타입니다. 아래 3.5.0과 36차 Setup 기록은 이전 버전의 값입니다.
+
+<details>
+<summary>이전 3.5.0과 36차 설치 파일 기록</summary>
+
+## 3.5.0 정식 다운로드
 
 [35차 상세](../history/35차/README.md#reading-level-1) · [최소 검사 상태](35차_최소검사.md) · [사용법](사용법.md)
 
@@ -132,3 +150,5 @@ Windows 10/11 x64용 단일 실행본과 현재 사용자 설치본입니다. [R
 
 
 공개 소스는 저장소와 GitHub의 Source code ZIP에서 받습니다. 비공개 전체 개발 ZIP·개인 위치·운영 원문은 공개 첨부에 넣지 않습니다.
+
+</details>

@@ -1,0 +1,675 @@
++                with patch.object(ipc.time, 'monotonic', side_effect=lambda: clock[0]):
++                    with self.assertRaisesRegex(RuntimeError, '응답 제한'):
++                        proxy._exchange({'kind': kind})
++                self.assertEqual(proxy.channel.deadline, budget)
++                self.assertEqual(clock[0], budget)
++
++    def test_warmup_is_preparing_without_false_error(self):
++        from types import SimpleNamespace
++        import calendar_motion as motion
++        class Condition:
++            def __enter__(self):
++                return self
++            def __exit__(self, *args):
++                pass
++            def notify_all(self):
++                pass
++            def wait(self, remaining):
++                self.waited = remaining
++                clock[0] = remaining
++        clock = [0.0]
++        condition = Condition()
++        worker = SimpleNamespace(condition=condition, requested_date=None, visible=False,
++            latest_date=None, latest=None, error='', stopping=False, renderer_name='', render_count=0)
++        service = SimpleNamespace(worker=worker, owners={})
++        with patch.object(motion, '_get_service', return_value=service), patch.object(motion.time, 'monotonic', side_effect=lambda: clock[0]), patch.object(motion._logger, 'error') as log:
++            result = motion.prepare_calendar_motion()
++        self.assertEqual(condition.waited, 5.0)
++        self.assertEqual(result['state'], 'preparing')
++        self.assertEqual(result['error'], '')
++        self.assertFalse(result['ready'])
++        log.assert_not_called()
++
++    def test_live_initialization_status_uses_only_memory_snapshot(self):
++        from PySide6.QtWidgets import QApplication
++        import calendar_motion as motion
++        app = QApplication.instance() or QApplication([])
++        service = motion.CalendarMotion(renderer_factory=lambda *args, **kwargs: None)
++        proxy = ipc.ProcessCalendarRenderer(32)
++        proxy.initializing = True
++        proxy.started_at = time.monotonic()
++        proxy.stage = '초기화 체크 4'
++        service.worker.renderer = proxy
++        try:
++            with patch.object(motion, '_service', service), patch.object(proxy, 'status', side_effect=AssertionError('UI에서 OS 상태 조회')):
++                status = motion.calendar_motion_status()
++            self.assertEqual(status['state'], 'preparing')
++            self.assertTrue(status['gpu_process']['initializing'])
++            self.assertEqual(status['gpu_process']['stage'], '초기화 체크 4')
++            self.assertEqual(status['error'], '')
++        finally:
++            self.assertTrue(service.close())
++
++    def test_fallback_markers_distinguish_preparing_error_and_language(self):
++        from datetime import date
++        from PySide6.QtWidgets import QApplication
++        from i18n import get_language, set_language
++        import calendar_motion as motion
++        app = QApplication.instance() or QApplication([])
++        class Renderer:
++            pass
++        service = motion.CalendarMotion(renderer_factory=Renderer)
++        previous = get_language()
++        try:
++            for language, error, expected in (('ko', '', '3D 준비 중'), ('en', '', 'Preparing 3D'),
++                                               ('ko', '합성 오류', '3D 표시 오류'), ('en', 'synthetic error', '3D unavailable')):
++                set_language(language)
++                service.worker.error = error
++                image = service.frame(value=date(2026, 11, 20))
++                self.assertEqual(image.text('calendar_fallback_label'), expected)
++                self.assertEqual(image.text('calendar_fallback_state'), 'error' if error else 'preparing')
++                self.assertFalse(image.isNull())
++        finally:
++            set_language(previous)
++            self.assertTrue(service.close())
++
++
++if __name__ == '__main__':
++    if len(sys.argv) == 4 and sys.argv[1] == '--startup-child':
++        raise SystemExit(controlled_child(*sys.argv[2:]))
++    unittest.main()
+diff --git a/tests/test_operations37.py b/tests/test_operations37.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..e57b38db7d85fec97860a17d7e64cf0a476b7078
+--- /dev/null
++++ b/tests/test_operations37.py
+@@ -0,0 +1,60 @@
++"""알림 표시 정책의 만료·저장 실패와 관측 상태를 최소 확인합니다."""
++import sys
++from pathlib import Path
++sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
++import unittest
++from types import SimpleNamespace
++from operations37 import NotificationPolicy, health_snapshot
++
++
++class PolicyTests(unittest.TestCase):
++    def make(self):
++        settings = SimpleNamespace(values={}, save=lambda: None)
++        now = [1000]
++        return settings, now, NotificationPolicy(settings, lambda: now[0])
++
++    def test_focus_expires_without_replaying_or_mutating_event(self):
++        settings, now, policy = self.make()
++        event = {'target': 'chat', 'kind': 'settings', 'after': {'model': 'sol'}}
++        policy.focus(15)
++        self.assertFalse(policy.allows(event))
++        now[0] += 901
++        self.assertTrue(policy.allows(event))
++        self.assertEqual(event['after'], {'model': 'sol'})
++        self.assertEqual(policy.suppressed, 1)
++
++    def test_mute_is_per_chat_and_activity_filter_keeps_model_notice(self):
++        _, now, policy = self.make()
++        policy.mute_target('a')
++        self.assertFalse(policy.allows({'target': 'a'}))
++        self.assertTrue(policy.allows({'target': 'b'}))
++        policy.clear_mutes()
++        policy.set_options(activity_popup=False)
++        self.assertFalse(policy.allows({'target': 'a', 'kind': 'activity'}))
++        self.assertTrue(policy.allows({'target': 'a', 'kind': 'settings'}))
++
++    def test_save_failure_preserves_settings_and_options(self):
++        settings, _, policy = self.make()
++        settings.values['existing'] = 'keep'
++        def fail():
++            raise OSError('synthetic save failure')
++        settings.save = fail
++        with self.assertRaises(OSError):
++            policy.set_options(visible_limit=3)
++        self.assertEqual(settings.values, {'existing': 'keep'})
++        self.assertEqual(policy.options['visible_limit'], 8)
++        with self.assertRaises(ValueError):
++            policy.set_options(visible_limit=9)
++
++    def test_running_without_progress_is_not_reported_healthy(self):
++        c = SimpleNamespace(last_monitor_status={'state': '감시 중', 'files': 3, 'chats': 2},
++            monitor_enabled=True, monitor_restart_pending=False,
++            monitor=SimpleNamespace(isRunning=lambda: True), last_monitor_progress=10, monitor_retries=1)
++        self.assertEqual(health_snapshot(c, 15)['kind'], 'ok')
++        self.assertEqual(health_snapshot(c, 40)['kind'], 'delayed')
++        c.monitor = None
++        self.assertEqual(health_snapshot(c, 40)['kind'], 'error')
++
++
++if __name__ == '__main__':
++    unittest.main()
+diff --git a/tests/test_scene_preparation37.py b/tests/test_scene_preparation37.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..0c0e7d3e06a4818f68fadbfb95875d115106c2d8
+--- /dev/null
++++ b/tests/test_scene_preparation37.py
+@@ -0,0 +1,74 @@
++"""느린 장면 준비가 회전 프레임 기한과 섞이지 않는지 확인합니다."""
++from datetime import date
++from pathlib import Path
++import sys, unittest
++from unittest.mock import patch
++sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
++from calendar_gpu_process import ProcessCalendarRenderer
++from observatory_scene import normalize_scene
++
++
++class ScenePreparationTests(unittest.TestCase):
++    def renderer(self):
++        r = ProcessCalendarRenderer(64)
++        r._start = lambda: None
++        r._catalog = lambda: {'data_dir': None, 'revision': 'a' * 64}
++        r.calls = []
++        def exchange(payload):
++            r.calls.append(payload['kind'])
++            if payload['kind'].startswith('prepare_'):
++                self.assertTrue(r.initializing)
++                return {'status': 'prepared'}, b'', 0, 0
++            side=r.output_size
++            return {'status': 'frame', 'catalog_revision': 'a' * 64}, bytes([25, 50, 75, 255]) * side * side, side, side
++        r._exchange = exchange
++        return r
++
++    def test_rotation_reuses_prepared_scene(self):
++        r = self.renderer()
++        for t in (0, .65):
++            self.assertFalse(r.render(date(2026, 11, 25), t).isNull())
++        self.assertEqual(r.calls, ['prepare_calendar', 'calendar', 'calendar'])
++
++    def test_date_region_and_catalog_each_prepare_again(self):
++        r = self.renderer()
++        r.render(date(2026, 11, 25))
++        r.render(date(2026, 11, 26))
++        r.render(date(2026, 11, 26), country='US')
++        r._catalog = lambda: {'data_dir': None, 'revision': 'b' * 64}
++        r.render(date(2026, 11, 26), country='US')
++        self.assertEqual(r.calls.count('prepare_calendar'), 4)
++
++    def test_observatory_pointer_does_not_rebuild_but_geometry_does(self):
++        r = self.renderer()
++        scene = normalize_scene({'model': 'gpt-6.1-sol', 'effort': 'medium'})
++        r.render_observatory(scene)
++        scene['pointer'] = [.2, .3]
++        r.render_observatory(scene, .65)
++        scene['model'] = 'gpt-6-astra'
++        r.render_observatory(scene, 1)
++        self.assertEqual(r.calls, ['prepare_observatory', 'observatory', 'observatory', 'prepare_observatory', 'observatory'])
++
++    def test_failed_preparation_is_not_cached_or_reported_as_a_frame(self):
++        r = self.renderer()
++        exchange = r._exchange
++        with patch.object(r, '_exchange', side_effect=RuntimeError('제어 장면 준비 실패')):
++            with self.assertRaisesRegex(RuntimeError, '준비 실패'):
++                r.render(date(2026, 11, 25))
++        self.assertFalse(r.initializing)
++        self.assertIsNone(r.first_frame_at)
++        r._exchange = exchange
++        r.render(date(2026, 11, 25))
++        self.assertEqual(r.calls, ['prepare_calendar', 'calendar'])
++
++    def test_output_resize_prepares_once_and_preserves_requested_size(self):
++        r=self.renderer()
++        r.render(date(2026,11,25))
++        r.set_output_size(96)
++        self.assertEqual(r.render(date(2026,11,25)).width(),96)
++        self.assertEqual(r.render(date(2026,11,25),.65).width(),96)
++        self.assertEqual(r.calls,['prepare_calendar','calendar','prepare_calendar','calendar','calendar'])
++
++
++if __name__ == '__main__':
++    unittest.main()
+diff --git a/tests/test_update37.py b/tests/test_update37.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bdd57e72dc1ab4caadb7efb670a371311c8d5a38
+--- /dev/null
++++ b/tests/test_update37.py
+@@ -0,0 +1,146 @@
++"""37차 변경 경로만 합성 자료로 검사하며 실제 설치·네트워크는 사용하지 않습니다."""
++import json
++import sys
++import unittest
++from pathlib import Path
++from types import SimpleNamespace
++from unittest.mock import patch
++
++sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
++sys.path.insert(0, str(Path(__file__).resolve().parent))
++from test_safe_update29 import SafeUpdateTests
++import safe_update as update
++
++
++class Update37Tests(unittest.TestCase):
++    setUp = SafeUpdateTests.setUp
++    metadata = SafeUpdateTests.metadata
++    checked = SafeUpdateTests.checked
++    staged = SafeUpdateTests.staged
++    plan = SafeUpdateTests.plan
++    assert_personal_data_preserved = SafeUpdateTests.assert_personal_data_preserved
++
++    def test_disk_requirement_uses_staging_volume_before_network(self):
++        release = self.checked()
++        required = release['size'] * 3 + 64 * 1024 * 1024
++        with patch('safe_update.shutil.disk_usage', return_value=SimpleNamespace(free=required - 1)) as disk, \
++             patch('safe_update.fetch_bytes') as fetch:
++            with self.assertRaises(update.UpdateError):
++                self.updater.stage(release)
++            fetch.assert_not_called()
++            self.assertTrue(Path(disk.call_args.args[0]).is_relative_to(update._stage_root()))
++        phases = []
++        with patch('safe_update.shutil.disk_usage', return_value=SimpleNamespace(free=required)), \
++             patch('safe_update.fetch_bytes', return_value=self.body):
++            self.updater.stage(release, progress=phases.append)
++        self.assertEqual(phases, ['download', 'verify'])
++        self.assert_personal_data_preserved()
++
++    def test_receipt_allowed_fields_and_bounded_reader(self):
++        self.assertTrue(update._record_update_result(self.data, '3.7.0', 'updated'))
++        self.assertEqual(set(update.read_update_result(self.data)), {'status', 'time', 'version'})
++        path = self.data / 'update-result.json'
++        good = json.loads(path.read_text(encoding='utf-8'))
++        for bad in ({**good, 'path': 'private'}, {**good, 'error': 'secret'},
++                    {**good, 'time': 'yesterday'}, {**good, 'version': '../private'}):
++            path.write_text(json.dumps(bad), encoding='utf-8')
++            self.assertEqual(update.read_update_result(self.data), {})
++        path.write_bytes(b' ' * 16385)
++        self.assertEqual(update.read_update_result(self.data), {})
++
++    def test_receipt_reparse_point_is_rejected_without_following(self):
++        update._record_update_result(self.data, '3.7.0', 'updated')
++        plan = self.plan()
++        original = Path.lstat
++        def attributes(path):
++            info = original(path)
++            if path == self.data:
++                return SimpleNamespace(st_mode=info.st_mode, st_file_attributes=0x400)
++            return info
++        with patch.object(Path, 'lstat', attributes):
++            self.assertEqual(update.read_update_result(self.data), {})
++            self.assertFalse(update._record_update_result(self.data, '3.7.0', 'failed', 'apply_failed'))
++            with patch('safe_update._write_json') as writer:
++                result = update.apply_update_plan(plan, wait_for_parent=lambda pid: None,
++                                                 smoke=lambda *args: False, restart=lambda *args: True)
++                self.assertTrue(result['rollback_restarted'])
++                writer.assert_not_called()
++        self.assertEqual(self.updater.data_directory, self.data.absolute())
++
++    def test_rollback_receipt_distinguishes_recovered_start(self):
++        result = update.apply_update_plan(self.plan(), wait_for_parent=lambda pid: None,
++                                         smoke=lambda *args: False, restart=lambda *args: True)
++        self.assertTrue(result['rollback_restarted'])
++        receipt = update.read_update_result(self.data)
++        self.assertEqual((receipt['status'], receipt['error']), ('rolled_back', 'smoke_failed'))
++        self.assertEqual(self.exe.read_bytes(), self.old)
++        self.assert_personal_data_preserved()
++
++    def test_rollback_start_failure_is_not_successful_recovery(self):
++        result = update.apply_update_plan(self.plan(), wait_for_parent=lambda pid: None,
++                                         smoke=lambda *args: False, restart=lambda *args: False)
++        self.assertFalse(result['rollback_restarted'])
++        receipt = update.read_update_result(self.data)
++        self.assertEqual((receipt['status'], receipt['error']), ('failed', 'rollback_restart_failed'))
++        self.assertEqual(self.exe.read_bytes(), self.old)
++
++    def test_receipt_write_failure_never_blocks_rollback_or_masks_original(self):
++        plan = self.plan()
++        with patch('safe_update._write_json', side_effect=OSError('제어된 기록 실패')):
++            result = update.apply_update_plan(plan, wait_for_parent=lambda pid: None,
++                                             smoke=lambda *args: False, restart=lambda *args: True)
++        self.assertTrue(result['rollback_restarted'])
++        self.assertEqual(self.exe.read_bytes(), self.old)
++        (plan.parent / 'previous.exe').unlink(missing_ok=True)
++        error = OSError('원래 부모 대기 실패')
++        def fail(pid):
++            raise error
++        with patch('safe_update._write_json', side_effect=OSError('제어된 기록 실패')):
++            with self.assertRaises(OSError) as raised:
++                update.apply_update_plan(plan, wait_for_parent=fail)
++        self.assertIs(raised.exception, error)
++
++    def test_dialog_version_plaintext_result_and_verified_copy(self):
++        from PySide6.QtWidgets import QApplication, QWidget
++        from PySide6.QtCore import QEvent
++        import update_widgets as widgets
++        app = QApplication.instance() or QApplication([])
++        window = QWidget()
++        controller = SimpleNamespace(window=window, settings=SimpleNamespace(directory=self.data), request_quit=lambda: None)
++        update._record_update_result(self.data, '3.7.0', 'failed', 'restart_failed')
++        dialog = widgets.UpdateDialog(controller)
++        self.assertEqual(widgets.VERSION, '3.7.0')
++        self.assertIn('3.7.0', dialog.label.text())
++        self.assertFalse(dialog.copy_button.isVisible())
++        with patch.object(widgets.QDesktopServices, 'openUrl') as open_url:
++            dialog.open_release()
++            self.assertEqual(open_url.call_args.args[0].toString(), widgets.RELEASES_URL)
++        dialog.release = self.checked()
++        dialog.retranslate()
++        self.assertIn('MB', dialog.label.text())
++        dialog.stage_kind = 'stage'
++        dialog.handle_result(self.staged(), None)
++        dialog.copy_sha()
++        self.assertEqual(app.clipboard().text(), dialog.staged['sha256'])
++        dialog.error_text = '<b>원문</b>'
++        dialog.retranslate()
++        dialog.details_button.setChecked(True)
++        self.assertEqual(dialog.error_details.toPlainText(), '<b>원문</b>')
++        dialog.busy = True
++        event = QEvent(QEvent.Type.Close)
++        dialog.closeEvent(event)
++        self.assertFalse(event.isAccepted())
++        dialog.busy = False
++        dialog.close()
++        reopened = widgets.UpdateDialog(controller)
++        self.assertEqual(reopened.recent_result['status'], 'failed')
++        self.assert_personal_data_preserved()
++        reopened.close()
++        window.close()
++
++
++# 원래 검사 클래스를 이 모듈의 unittest 수집 대상에서 제외합니다.
++del SafeUpdateTests
++
++if __name__ == '__main__':
++    unittest.main()
+diff --git a/tests/test_weather37.py b/tests/test_weather37.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..3b4f92e882dfbe20a41fe6fa3ed3a44857dca0a7
+--- /dev/null
++++ b/tests/test_weather37.py
+@@ -0,0 +1,69 @@
++"""합성 응답으로 자동 지역의 도시·행정구역 정합성만 검사합니다."""
++import os
++import unittest
++from unittest.mock import patch
++
++os.environ.setdefault('QT_QPA_PLATFORM', 'offscreen')
++from PySide6.QtCore import QCoreApplication
++from weather import WeatherClient, select_geocoded_region
++
++APP = QCoreApplication.instance() or QCoreApplication([])
++
++
++class WeatherRegion37Tests(unittest.TestCase):
++    def setUp(self):
++        # 공개 도시 중심점과 식별자를 사용하며 사용자 IP·위치는 읽지 않습니다.
++        self.location = dict(city='Suwon', region='Gyeonggi-do', country_code='KR',
++                             latitude=37.27818, longitude=127.03164)
++        self.english = dict(id=1835553, name='Suwon', admin1='Gyeonggi-do', admin1_id=1841610,
++                            country='South Korea', country_code='KR', latitude=37.27818, longitude=127.03164)
++        self.localized = dict(self.english, name='수원시', admin1='경기도', country='대한민국')
++
++    def client(self):
++        client = WeatherClient(language='ko')
++        self.addCleanup(client.close)
++        client._location = dict(self.location)
++        client._region = 'IP original'
++        client.snapshot['region'] = 'IP original'
++        patcher = patch.object(client, '_get')
++        patcher.start()
++        self.addCleanup(patcher.stop)
++        return client
++
++    def test_nearby_candidate_with_other_administration_is_rejected(self):
++        wrong = dict(self.localized, id=12010348, admin1='충청남도', admin1_id=1845105)
++        self.assertIsNone(select_geocoded_region(self.location, dict(results=[wrong])))
++        self.assertEqual(select_geocoded_region(self.location, dict(results=[wrong, self.localized])),
++                         '수원시 · 경기도 · 대한민국')
++
++    def test_distant_homonym_is_not_substituted_for_suwon_city(self):
++        village = dict(self.localized, id=11906993, name='수원', admin1='전라북도',
++                       admin1_id=1845789, latitude=35.35881, longitude=126.53487)
++        self.assertIsNone(select_geocoded_region(self.location, dict(results=[village])))
++        self.assertEqual(select_geocoded_region(self.location, dict(results=[village, self.localized])),
++                         '수원시 · 경기도 · 대한민국')
++
++    def test_translation_is_published_only_after_same_city_and_admin_ids(self):
++        client = self.client()
++        client._geocode_done(dict(results=[self.localized]))
++        self.assertEqual(client.snapshot['region'], 'IP original')
++        _, callback = client._get.call_args.args
++        callback(dict(results=[self.english]))
++        self.assertEqual(client.snapshot['region'], '수원시 · 경기도 · 대한민국')
++        self.assertEqual(client.snapshot['city_ref']['geonames_id'], 1835553)
++
++    def test_mismatched_identity_or_admin_keeps_original_ip_label(self):
++        for row in (dict(self.english, id=12010348),
++                    dict(self.english, admin1_id=1845105),
++                    dict(self.english, name='Different City')):
++            with self.subTest(row=row):
++                client = self.client()
++                client._geocode_done(dict(results=[self.localized]))
++                _, callback = client._get.call_args.args
++                callback(dict(results=[row]))
++                self.assertEqual(client.snapshot['region'], 'IP original')
++                self.assertIsNone(client.snapshot['city_ref'])
++
++
++if __name__ == '__main__':
++    unittest.main()
+diff --git a/tests/test_workspace37.py b/tests/test_workspace37.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..cc15c88c683f96ac345d9124b820dd88c9653ad8
+--- /dev/null
++++ b/tests/test_workspace37.py
+@@ -0,0 +1,70 @@
++"""개인 기록을 읽지 않는 37차 알림센터 핵심 검사입니다."""
++import csv
++from datetime import datetime, timezone
++import io
++import unittest
++
++from workspace37 import csv_text, export_rows, filter_events, group_events, summary_text
++
++
++class WorkspaceTests(unittest.TestCase):
++    def setUp(self):
++        self.now = datetime(2026, 11, 20, 12, tzinfo=timezone.utc)
++        self.events = [
++            {'id': 'a', 'target': 'chat-a', 'title': 'Alpha', 'time': '2026-11-20T10:00:00Z',
++             'before': {'model': 'old', 'effort': 'low'}, 'after': {'model': 'new', 'effort': 'low'},
++             'reason': 'clear reason', 'task_summary': 'synthetic work', 'messages': 'NEVER_EXPORT', 'location': 'NEVER_EXPORT'},
++            {'id': 'b', 'target': 'chat-a', 'title': 'Alpha', 'time': '2026-11-18T10:00:00Z',
++             'before': {'model': 'new', 'effort': 'low'}, 'after': {'model': 'new', 'effort': 'high'}},
++            {'id': 'c', 'target': 'chat-b', 'title': 'Beta', 'time': '2026-11-01T10:00:00Z',
++             'kind': 'activity', 'activity_type': 'resumed'},
++            {'id': 'd', 'target': 'chat-b', 'title': 'Unknown date'}]
++
++    def test_search_across_title_model_reason_task(self):
++        for term in ('ALPHA', 'old', 'clear reason', 'synthetic work'):
++            self.assertIn('a', [row['id'] for row in filter_events(self.events, query=term)])
++        self.assertEqual(filter_events(self.events, query='missing'), [])
++
++    def test_changed_fields_and_resume_are_independent(self):
++        for kind, identity in (('model', 'a'), ('effort', 'b'), ('resumed', 'c')):
++            self.assertEqual([row['id'] for row in filter_events(self.events, kind=kind)], [identity])
++
++    def test_period_and_preference_filters(self):
++        self.assertEqual([row['id'] for row in filter_events(self.events, period='today', now=self.now)], ['a'])
++        self.assertEqual([row['id'] for row in filter_events(self.events, period='week', now=self.now)], ['a', 'b'])
++        self.assertEqual([row['id'] for row in filter_events(self.events, bookmarked=True, bookmarks={'b'})], ['b'])
++        self.assertEqual([row['id'] for row in filter_events(self.events, pinned=True, pins={'chat-a'})], ['a', 'b'])
++
++    def test_order_and_group_preserve_original_states(self):
++        rows = filter_events(self.events[:3], oldest=True)
++        self.assertEqual([row['id'] for row in rows], ['c', 'b', 'a'])
++        grouped = group_events(rows)
++        self.assertEqual([row['id'] for row in grouped['chat-a']], ['b', 'a'])
++        grouped['chat-a'][0]['after']['effort'] = 'changed copy'
++        self.assertEqual(self.events[1]['after']['effort'], 'high')
++
++    def test_export_whitelist_and_private_summary(self):
++        regular = str(export_rows(self.events))
++        self.assertNotIn('NEVER_EXPORT', regular)
++        self.assertNotIn('chat-a', regular)
++        private = str(export_rows(self.events, private=True)) + summary_text(self.events[0], private=True)
++        for secret in ('Alpha', 'clear reason', 'synthetic work', 'NEVER_EXPORT'):
++            self.assertNotIn(secret, private)
++        self.assertIn('old', private)
++
++    def test_csv_blocks_formula_prefixes_and_remains_parseable(self):
++        for value in ('=1+1', '+1', '-1', '@SUM(1)', '\tvalue', '\rvalue', '\nvalue', '  =1'):
++            event = {'title': value, 'reason': '한글, "줄"\n둘'}
++            row = next(csv.DictReader(io.StringIO(csv_text([event]), newline='')))
++            self.assertEqual(row['title'], "'" + value)
++            self.assertEqual(row['reason'], event['reason'])
++
++    def test_privacy_csv_masks_without_mutating_source(self):
++        private = csv_text(self.events, True)
++        self.assertNotIn('Alpha', private)
++        self.assertNotIn('clear reason', private)
++        self.assertEqual(self.events[0]['title'], 'Alpha')
++
++
++if __name__ == '__main__':
++    unittest.main()
+diff --git a/tools/build37.py b/tools/build37.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..bbaf9f846260da720a7e8261c6a10b48251cfaef
+--- /dev/null
++++ b/tools/build37.py
+@@ -0,0 +1,58 @@
++"""이미 수행한 관련 검사를 반복하지 않고 37차 납품 파일을 빌드합니다."""
++import argparse
++import hashlib
++import json
++import os
++from pathlib import Path
++import shutil
++import sys
++import tempfile
++import zipfile
++
++from build_distribution import ROOT, copy_runtime_assets, run
++
++p = argparse.ArgumentParser()
++p.add_argument('--runtime-assets', type=Path)
++p.add_argument('--compiler', type=Path, required=True)
++a = p.parse_args()
++(ROOT / 'work').mkdir(exist_ok=True)
++release = ROOT / '배포'; release.mkdir(exist_ok=True)
++os.environ['PYINSTALLER_CONFIG_DIR'] = str(ROOT / 'work/pyinstaller-cache')
++os.environ['PYTHONUTF8'] = '1'
++os.environ['PYTHONIOENCODING'] = 'utf-8'
++runtime = a.runtime_assets
++if runtime is None:
++    runtime = Path(tempfile.mkdtemp(prefix='runtime-assets-', dir=ROOT / 'work'))
++    copy_runtime_assets(ROOT / 'assets', runtime)
++assert runtime.is_dir() and not runtime.is_symlink()
++run([sys.executable, '-m', 'PyInstaller', '--noconfirm', '--onefile', '--windowed',
++     '--name', 'CodexOrbit', '--icon', str(ROOT / 'assets/Orbit.ico'),
++     '--distpath', str(release), '--workpath', str(ROOT / 'work/pyinstaller'),
++     '--specpath', str(ROOT / 'work'), '--add-data', str(runtime) + ';assets',
++     '--collect-all', 'moderngl', '--collect-all', 'glcontext',
++     '--paths', str(ROOT / 'src'), str(ROOT / 'src/orbit_entry.py')], 'build-exe37-final', 1800)
++for source, name in [('assets/사용법.md', '사용법.md'), ('assets/기본_지침.md', '기본_지침.md'),
++                     ('README.md', '배포안내.md'), ('README.en.md', 'Usage.en.md'),
++                     ('assets/calendar-art/themes.md', '연도별_월_테마.md'),
++                     ('assets/calendar-art/themes.csv', '연도별_월_테마.csv'),
++                     ('docs/연도별_월별_테마_전체.md', '연도별_월별_테마_전체.md'),
++                     ('docs/연도별_월별_테마_전체.csv', '연도별_월별_테마_전체.csv')]:
++    shutil.copy2(ROOT / source, release / name)
++# 이전부터 사용하는 라이선스 묶음은 내용 변경 없이 재사용합니다.
++for name in ('라이선스.zip',):
++    source = ROOT / 'assets' / name
++    shutil.copy2(source, release / name)
++    target = release / '라이선스'; target.mkdir(exist_ok=True)
++    with zipfile.ZipFile(source) as archive:
++        for entry in archive.infolist():
++            destination = (target / entry.filename).resolve()
++            assert destination.is_relative_to(target.resolve())
++        archive.extractall(target)
++run([str(a.compiler), str(ROOT / 'tools/installer.iss')], 'build-installer37', 300)
++rows = []
++for name in ('CodexOrbit.exe', 'CodexOrbit-Setup.exe'):
++    path = release / name
++    rows.append({'name': name, 'path': str(path), 'bytes': path.stat().st_size,
++                 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()})
++(ROOT / 'evidence/배포37_메타.json').write_text(json.dumps(rows, ensure_ascii=False, indent=2), encoding='utf-8')
++print(json.dumps(rows, ensure_ascii=False), flush=True)
+diff --git a/tools/installer.iss b/tools/installer.iss
+index c568f9e819e2c8b4015b730c141e48ea443cb661..7c9fa16a561bc927cbeb3725c60487571099f8f7 100644
+--- a/tools/installer.iss
++++ b/tools/installer.iss
+@@ -6,7 +6,7 @@
+ SourceDir={#OrbitSourceDir}
+ AppId=CodexOrbit.Desktop
+ AppName=Codex Orbit
+-AppVersion=3.5.0
++AppVersion=3.7.0
+ AppPublisher=Codex Orbit
+ DefaultDirName={localappdata}\Programs\CodexOrbit
+ DefaultGroupName=Codex Orbit
+diff --git a/변경기록_37차.md b/변경기록_37차.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..b32936a0ffc5e984635dcebe7ed0fd35994e6a27
+--- /dev/null
++++ b/변경기록_37차.md
+@@ -0,0 +1,63 @@
++# 37차 · 알림 센터와 감시 상태·업데이트 안내
++
++제품 버전은 **3.7.0**입니다. 알림 센터 탐색·복사·내보내기, 감시 상태와 표시 정책, 공식 업데이트 안내를 기존 앱에 연결했습니다. 세부 50개 항목은 유지·보완과 새 연결을 구분합니다.
++
++| 파일 | 변경 |
++| --- | --- |
++| `README.en.md` | 수정 |
++| `README.md` | 수정 |
++| `assets/라이선스.zip` | 추가 |
++| `assets/사용법.md` | 수정 |
++| `docs/37차_3D초기화.md` | 추가 |
++| `docs/37차_50개개선.md` | 추가 |
++| `docs/37차_색상편집창.md` | 추가 |
++| `docs/37차_설계와계획.md` | 추가 |
++| `docs/37차_알림센터.md` | 추가 |
++| `docs/37차_업데이트.md` | 추가 |
++| `docs/37차_지역정합.md` | 추가 |
++| `docs/37차_최소검사.md` | 추가 |
++| `docs/DOWNLOADS.md` | 수정 |
++| `docs/REVISION_INDEX.md` | 수정 |
++| `docs/읽기안내/레벨1.md` | 수정 |
++| `docs/읽기안내/레벨2.md` | 수정 |
++| `docs/읽기안내/레벨3.md` | 수정 |
++| `docs/읽기안내/레벨4.md` | 수정 |
++| `docs/읽기안내/레벨5.md` | 수정 |
++| `history/37차/README.md` | 추가 |
++| `history/37차/문서원문/1f2fdee02ae254b780a5709c954634b6f98b75bca8de336000e6ab840a30d22f.md.txt` | 추가 |
++| `history/37차/문서원문/36b448b68cbc59e2793f3b1fb7933181433e4971197014ed401cdd49580dd665.md.txt` | 추가 |
++| `history/37차/문서원문/61163a6e641f233fed014e650ea06f9b9777ae894f96940c2ad347cb261cdcef.md.txt` | 추가 |
++| `history/37차/문서원문/76842a94fdfa2ca86f36578a1debdb1c612a69eba2e3ef2bbbe2be17c7cc13d8.md.txt` | 추가 |
++| `history/37차/문서원문/7abd00fb8f82d247ea24f28964557163b942908e519653b9c794d7cba772bab1.md.txt` | 추가 |
++| `history/37차/문서원문/83656acde5e103a8aa8bed0109eab6c349824a734c031dce17a5652c1cb35eb2.md.txt` | 추가 |
++| `history/37차/문서원문/f319961df2f6e9666407e5d84befac388aa42c87ff18edf6cb01bcfdc58871d9.md.txt` | 추가 |
++| `history/37차/변경원문.json` | 추가 |
++| `history/37차/비교/README.md` | 추가 |
++| `history/37차/직전차수.diff` | 추가 |
++| `src/app.py` | 수정 |
++| `src/appearance35.py` | 수정 |
++| `src/calendar_gpu_child.py` | 수정 |
++| `src/calendar_gpu_process.py` | 수정 |
++| `src/calendar_motion.py` | 수정 |
++| `src/observatory_panel.py` | 수정 |
++| `src/operations37.py` | 추가 |
++| `src/safe_update.py` | 수정 |
++| `src/ui_workspace_smoke37.py` | 추가 |
++| `src/update_widgets.py` | 수정 |
++| `src/weather.py` | 수정 |
++| `src/workspace37.py` | 추가 |
++| `tests/test_appearance35.py` | 수정 |
++| `tests/test_gpu_process34.py` | 수정 |
++| `tests/test_gpu_startup37.py` | 추가 |
++| `tests/test_operations37.py` | 추가 |
++| `tests/test_scene_preparation37.py` | 추가 |
++| `tests/test_update37.py` | 추가 |
++| `tests/test_weather37.py` | 추가 |
++| `tests/test_workspace37.py` | 추가 |
++| `tools/build37.py` | 추가 |
++| `tools/installer.iss` | 수정 |
++| `변경기록_37차.md` | 추가 |
++
++비교 기준은 `614bbb760caad413bbfe10f6c9bd8674bcd4d5eb`입니다. [전체 비교 목차](history/37차/비교/README.md)에서 웹 열람 조각·원문·이전/다음을 연결합니다. 전체 diff 자신과 비교 폴더의 파생 파일은 자기참조를 피하기 위해 full diff에서 제외하고 실제 게시 파일 명세에는 모두 기록합니다. 분할 원문은 순서대로 재결합해 한 번만 바이트·SHA-256을 확인합니다.
++
++[37차 상세](history/37차/README.md#reading-level-1) · [실제 최소 확인](docs/37차_최소검사.md) · [현재 다운로드](docs/DOWNLOADS.md)

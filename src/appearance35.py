@@ -5,10 +5,10 @@
 """
 import re
 
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QColor, QFont
+from PySide6.QtCore import Qt, QRectF
+from PySide6.QtGui import QColor, QFont, QPainter, QPainterPath, QPen
 from PySide6.QtWidgets import (
-    QDialog, QFormLayout, QFrame, QGraphicsDropShadowEffect,
+    QDialog, QFormLayout, QFrame,
     QHBoxLayout, QLabel, QLineEdit, QPushButton, QScrollArea, QSlider,
     QVBoxLayout, QWidget, QColorDialog,
 )
@@ -137,6 +137,43 @@ def palette_for(mode, config):
     )
 
 
+class AmbientPreviewCard(QFrame):
+    """자식 위젯 전체를 오프스크린 합성하지 않고 카드 안쪽에 조명을 그립니다."""
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._ambient_color = QColor('#000000')
+        self._ambient_strength = 0
+
+    def set_ambient(self, color, strength):
+        self._ambient_color = QColor(color)
+        self._ambient_strength = strength
+        self.update()
+
+    def paintEvent(self, event):
+        super().paintEvent(event)
+        if not self._ambient_strength:
+            return
+        painter = QPainter(self)
+        try:
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+            boundary = QRectF(self.rect()).adjusted(1, 1, -1, -1)
+            clip = QPainterPath()
+            clip.addRoundedRect(boundary, 8, 8)
+            painter.setClipPath(clip)
+            # 레이아웃 여백 안의 7개 선만 그려 글자·본문 배경은 유지합니다.
+            for step in range(7):
+                color = QColor(self._ambient_color)
+                color.setAlpha(round(42 * self._ambient_strength / 100 * (1 - step / 7) ** 2))
+                painter.setPen(QPen(color, 1.6))
+                inset = 1.5 + step
+                area = QRectF(self.rect()).adjusted(inset, inset, -inset, -inset)
+                radius = max(1, 9 - inset)
+                painter.drawRoundedRect(area, radius, radius)
+        finally:
+            painter.end()
+
+
 class AppearanceDialog(QDialog):
     """전역 테마를 변경하지 않고 독립 미리보기와 적용 콜백을 제공합니다."""
 
@@ -229,7 +266,7 @@ class AppearanceDialog(QDialog):
         self.preview.setObjectName('appearancePreview')
         preview_layout = QVBoxLayout(self.preview)
         preview_layout.setContentsMargins(18, 18, 18, 18)
-        self.preview_card = QFrame()
+        self.preview_card = AmbientPreviewCard()
         self.preview_card.setObjectName('appearanceCard')
         card = QVBoxLayout(self.preview_card)
         self.preview_title = QLabel(self.tr_text('오늘의 작업', 'Today’s work'))
@@ -348,15 +385,7 @@ class AppearanceDialog(QDialog):
             '#appearancePreview #previewSelected {background:' + colors['selected'] + ';color:' + colors['text'] + ';}'
             '#appearancePreview #previewDisabled {background:' + colors['raised'] + ';color:' + colors['disabled'] + ';}'
         )
-        self.preview_card.setGraphicsEffect(None)
-        if colors['glow']:
-            effect = QGraphicsDropShadowEffect(self.preview_card)
-            light = QColor(colors['accent_raw'])
-            light.setAlpha(round(140 * colors['glow'] / 100))
-            effect.setColor(light)
-            effect.setOffset(0, 0)
-            effect.setBlurRadius(24)
-            self.preview_card.setGraphicsEffect(effect)
+        self.preview_card.set_ambient(colors['accent_raw'], colors['glow'])
 
     def apply_candidate(self):
         try:

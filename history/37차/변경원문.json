@@ -1,0 +1,433 @@
+{
+  "product_version": "3.7.0",
+  "sources": [
+    {
+      "source_path": "src/app.py",
+      "source_meta": {
+        "bytes": 153782,
+        "sha256": "b67477eb737a5bd3e32cc12d7efc1a6c5a1d1b4d7baf68b8f8a5370d5f8d4db2"
+      },
+      "published_path": "src/app.py",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 153782,
+        "sha256": "b67477eb737a5bd3e32cc12d7efc1a6c5a1d1b4d7baf68b8f8a5370d5f8d4db2"
+      }
+    },
+    {
+      "source_path": "src/observatory_panel.py",
+      "source_meta": {
+        "bytes": 40517,
+        "sha256": "ec770a51d1d440a2a150be34d4f3cad53388f4604cd7ace276d37a22189a3bae"
+      },
+      "published_path": "src/observatory_panel.py",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 40517,
+        "sha256": "ec770a51d1d440a2a150be34d4f3cad53388f4604cd7ace276d37a22189a3bae"
+      }
+    },
+    {
+      "source_path": "src/operations37.py",
+      "source_meta": {
+        "bytes": 9576,
+        "sha256": "ebb024382ed00faad3d77a6e4092bc1b60d67f20628f03f3617f3b71f78ce607"
+      },
+      "published_path": "src/operations37.py",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 9576,
+        "sha256": "ebb024382ed00faad3d77a6e4092bc1b60d67f20628f03f3617f3b71f78ce607"
+      }
+    },
+    {
+      "source_path": "src/workspace37.py",
+      "source_meta": {
+        "bytes": 18344,
+        "sha256": "3f8938d1d429ba52ff30ef9d4d59fbc543af14031238be47304079eeb9e56e9b"
+      },
+      "published_path": "src/workspace37.py",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 18344,
+        "sha256": "3f8938d1d429ba52ff30ef9d4d59fbc543af14031238be47304079eeb9e56e9b"
+      }
+    },
+    {
+      "source_path": "src/safe_update.py",
+      "source_meta": {
+        "bytes": 22372,
+        "sha256": "bbb6120d4e58f1906abcd49fda2e9789e5d8a90039963c3eb6d5a28b7ad8e25a"
+      },
+      "published_path": "src/safe_update.py",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 22372,
+        "sha256": "bbb6120d4e58f1906abcd49fda2e9789e5d8a90039963c3eb6d5a28b7ad8e25a"
+      }
+    },
+    {
+      "source_path": "src/update_widgets.py",
+      "source_meta": {
+        "bytes": 10461,
+        "sha256": "0fd0650e1727ec25424c0ece3894905ee88c7ee9a06a17b456a8b3705ae72841"
+      },
+      "published_path": "src/update_widgets.py",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 10461,
+        "sha256": "0fd0650e1727ec25424c0ece3894905ee88c7ee9a06a17b456a8b3705ae72841"
+      }
+    },
+    {
+      "source_path": "src/ui_workspace_smoke37.py",
+      "source_meta": {
+        "bytes": 3199,
+        "sha256": "4333ba8703000da16760a5524c122f6f62fe907c2e65b4a013feadfae283c2d9"
+      },
+      "published_path": "src/ui_workspace_smoke37.py",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 3199,
+        "sha256": "4333ba8703000da16760a5524c122f6f62fe907c2e65b4a013feadfae283c2d9"
+      }
+    },
+    {
+      "source_path": "tests/test_operations37.py",
+      "source_meta": {
+        "bytes": 2634,
+        "sha256": "518dd6d4aa6905a17dcddb6ae59893abb74277bd8dc63a1fe16890980fdc6a5a"
+      },
+      "published_path": "tests/test_operations37.py",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 2634,
+        "sha256": "518dd6d4aa6905a17dcddb6ae59893abb74277bd8dc63a1fe16890980fdc6a5a"
+      }
+    },
+    {
+      "source_path": "tests/test_workspace37.py",
+      "source_meta": {
+        "bytes": 3875,
+        "sha256": "385ce07ad9b38c28e946ac842511e0537b7428bc068fc05a3b668a17178e3ca0"
+      },
+      "published_path": "tests/test_workspace37.py",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 3875,
+        "sha256": "385ce07ad9b38c28e946ac842511e0537b7428bc068fc05a3b668a17178e3ca0"
+      }
+    },
+    {
+      "source_path": "tests/test_update37.py",
+      "source_meta": {
+        "bytes": 7531,
+        "sha256": "6c0654a55d38d6d69339f4233d502bb89a8029940e117127dbfe7cee3612d921"
+      },
+      "published_path": "tests/test_update37.py",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 7531,
+        "sha256": "6c0654a55d38d6d69339f4233d502bb89a8029940e117127dbfe7cee3612d921"
+      }
+    },
+    {
+      "source_path": "tools/build37.py",
+      "source_meta": {
+        "bytes": 3040,
+        "sha256": "82d42644a3a33302566ebc3adef42ddb718b5f5f2496a9fcca683ae2f9f7c92a"
+      },
+      "published_path": "tools/build37.py",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 3040,
+        "sha256": "82d42644a3a33302566ebc3adef42ddb718b5f5f2496a9fcca683ae2f9f7c92a"
+      }
+    },
+    {
+      "source_path": "tools/installer.iss",
+      "source_meta": {
+        "bytes": 3853,
+        "sha256": "cca0e947a48186bb4620dab79041c0312627efeb4122587ce2e20b5d35b75496"
+      },
+      "published_path": "tools/installer.iss",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 3853,
+        "sha256": "cca0e947a48186bb4620dab79041c0312627efeb4122587ce2e20b5d35b75496"
+      }
+    },
+    {
+      "source_path": "assets/라이선스.zip",
+      "source_meta": {
+        "bytes": 104618,
+        "sha256": "4d5769795a8f9215af329e08b036ac43fb9132ac2bed65a5202006b6bed6ac5b"
+      },
+      "published_path": "assets/라이선스.zip",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 104618,
+        "sha256": "4d5769795a8f9215af329e08b036ac43fb9132ac2bed65a5202006b6bed6ac5b"
+      }
+    },
+    {
+      "source_path": "docs/37차_설계와계획.md",
+      "source_meta": {
+        "bytes": 2785,
+        "sha256": "1f2fdee02ae254b780a5709c954634b6f98b75bca8de336000e6ab840a30d22f"
+      },
+      "published_path": "docs/37차_설계와계획.md",
+      "unchanged": false,
+      "original_public_path": "history/37차/문서원문/1f2fdee02ae254b780a5709c954634b6f98b75bca8de336000e6ab840a30d22f.md.txt",
+      "published_meta": {
+        "bytes": 3239,
+        "sha256": "21f97d2ad90600d13488809fc905636de39dbec54640daa1f8074f1e69d57b79"
+      }
+    },
+    {
+      "source_path": "docs/37차_50개개선.md",
+      "source_meta": {
+        "bytes": 11423,
+        "sha256": "7abd00fb8f82d247ea24f28964557163b942908e519653b9c794d7cba772bab1"
+      },
+      "published_path": "docs/37차_50개개선.md",
+      "unchanged": false,
+      "original_public_path": "history/37차/문서원문/7abd00fb8f82d247ea24f28964557163b942908e519653b9c794d7cba772bab1.md.txt",
+      "published_meta": {
+        "bytes": 11914,
+        "sha256": "342da6e0488f935948dc455b1edfd910b409728c0221992db22de2459620c50f"
+      }
+    },
+    {
+      "source_path": "docs/37차_알림센터.md",
+      "source_meta": {
+        "bytes": 3471,
+        "sha256": "36b448b68cbc59e2793f3b1fb7933181433e4971197014ed401cdd49580dd665"
+      },
+      "published_path": "docs/37차_알림센터.md",
+      "unchanged": false,
+      "original_public_path": "history/37차/문서원문/36b448b68cbc59e2793f3b1fb7933181433e4971197014ed401cdd49580dd665.md.txt",
+      "published_meta": {
+        "bytes": 3925,
+        "sha256": "854b3b7643f50b6a810c11c5c098fd5e726ce6e001dc7e325a209ac80831b3e4"
+      }
+    },
+    {
+      "source_path": "docs/37차_업데이트.md",
+      "source_meta": {
+        "bytes": 5511,
+        "sha256": "83656acde5e103a8aa8bed0109eab6c349824a734c031dce17a5652c1cb35eb2"
+      },
+      "published_path": "docs/37차_업데이트.md",
+      "unchanged": false,
+      "original_public_path": "history/37차/문서원문/83656acde5e103a8aa8bed0109eab6c349824a734c031dce17a5652c1cb35eb2.md.txt",
+      "published_meta": {
+        "bytes": 5965,
+        "sha256": "6c16c7534763a101cce401ee9baba2b5579a8974eca5c9cf7ed0813a32e23891"
+      }
+    },
+    {
+      "source_path": "src/weather.py",
+      "source_meta": {
+        "bytes": 42215,
+        "sha256": "d11fa7894161fdd628689387baf4c543d0ea932dd204c8defee0553640a72b65"
+      },
+      "published_path": "src/weather.py",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 42215,
+        "sha256": "d11fa7894161fdd628689387baf4c543d0ea932dd204c8defee0553640a72b65"
+      }
+    },
+    {
+      "source_path": "tests/test_weather37.py",
+      "source_meta": {
+        "bytes": 3511,
+        "sha256": "2fea978bbdb26a5ccf35bc90fbd2925bac7ec364b04543fa31c096dfbab89762"
+      },
+      "published_path": "tests/test_weather37.py",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 3511,
+        "sha256": "2fea978bbdb26a5ccf35bc90fbd2925bac7ec364b04543fa31c096dfbab89762"
+      }
+    },
+    {
+      "source_path": "docs/37차_지역정합.md",
+      "source_meta": {
+        "bytes": 3995,
+        "sha256": "61163a6e641f233fed014e650ea06f9b9777ae894f96940c2ad347cb261cdcef"
+      },
+      "published_path": "docs/37차_지역정합.md",
+      "unchanged": false,
+      "original_public_path": "history/37차/문서원문/61163a6e641f233fed014e650ea06f9b9777ae894f96940c2ad347cb261cdcef.md.txt",
+      "published_meta": {
+        "bytes": 4449,
+        "sha256": "bacd46ab03baa6b4a0bc4972b29cc59726b02d9b1dcf8d4eb28b1cf28a8da6e8"
+      }
+    },
+    {
+      "source_path": "assets/사용법.md",
+      "source_meta": {
+        "bytes": 15076,
+        "sha256": "4f0b8b0a11ab30002b29c46bd48ac1d3b2384ed66eee2d59635154bc50e1171a"
+      },
+      "published_path": "assets/사용법.md",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 15159,
+        "sha256": "3ae229f6543eb7f5a5f14f3dffe291faaaaf86a7a9ff44b5338c46ab0663e2eb"
+      }
+    },
+    {
+      "source_path": "src/calendar_gpu_process.py",
+      "source_meta": {
+        "bytes": 22565,
+        "sha256": "5db8df8e82634ffaa181b6391f7354df4087573fe456e44d0e54951d55c5652b"
+      },
+      "published_path": "src/calendar_gpu_process.py",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 22565,
+        "sha256": "5db8df8e82634ffaa181b6391f7354df4087573fe456e44d0e54951d55c5652b"
+      }
+    },
+    {
+      "source_path": "src/calendar_gpu_child.py",
+      "source_meta": {
+        "bytes": 9093,
+        "sha256": "0f3e1d8e22e04cc30a828c6f7ea6123a2bca393e6fbce230518322dafc7c15ba"
+      },
+      "published_path": "src/calendar_gpu_child.py",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 9093,
+        "sha256": "0f3e1d8e22e04cc30a828c6f7ea6123a2bca393e6fbce230518322dafc7c15ba"
+      }
+    },
+    {
+      "source_path": "src/calendar_motion.py",
+      "source_meta": {
+        "bytes": 30536,
+        "sha256": "8630e881cba9c4b21fa79b0ad3f4f884efddc6700a99080b5e16f5fd21241e83"
+      },
+      "published_path": "src/calendar_motion.py",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 30536,
+        "sha256": "8630e881cba9c4b21fa79b0ad3f4f884efddc6700a99080b5e16f5fd21241e83"
+      }
+    },
+    {
+      "source_path": "src/appearance35.py",
+      "source_meta": {
+        "bytes": 18711,
+        "sha256": "bee706c18780bf56330a4b74059e2e7c4396209a2a8892eaf16623fc71446662"
+      },
+      "published_path": "src/appearance35.py",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 18711,
+        "sha256": "bee706c18780bf56330a4b74059e2e7c4396209a2a8892eaf16623fc71446662"
+      }
+    },
+    {
+      "source_path": "tests/test_gpu_startup37.py",
+      "source_meta": {
+        "bytes": 8604,
+        "sha256": "72a7aaf7abd5efae9aea4120b4466d7f1205ad76517aea912679e517828d20e7"
+      },
+      "published_path": "tests/test_gpu_startup37.py",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 8604,
+        "sha256": "72a7aaf7abd5efae9aea4120b4466d7f1205ad76517aea912679e517828d20e7"
+      }
+    },
+    {
+      "source_path": "tests/test_gpu_process34.py",
+      "source_meta": {
+        "bytes": 23380,
+        "sha256": "5c6920637fb3cc209c73be616727a2b20bd57ae02193e156fe35fb6e36851e8f"
+      },
+      "published_path": "tests/test_gpu_process34.py",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 23380,
+        "sha256": "5c6920637fb3cc209c73be616727a2b20bd57ae02193e156fe35fb6e36851e8f"
+      }
+    },
+    {
+      "source_path": "tests/test_appearance35.py",
+      "source_meta": {
+        "bytes": 10569,
+        "sha256": "7fd92c6ad57e8a51c52c99c6cab81faf235aff50ca04c8aadc69d7d62c71e266"
+      },
+      "published_path": "tests/test_appearance35.py",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 10569,
+        "sha256": "7fd92c6ad57e8a51c52c99c6cab81faf235aff50ca04c8aadc69d7d62c71e266"
+      }
+    },
+    {
+      "source_path": "tests/test_scene_preparation37.py",
+      "source_meta": {
+        "bytes": 3232,
+        "sha256": "3afeb964559639bbd2ad9716a96c5732184f8bfa9672ce5477809462f88a2916"
+      },
+      "published_path": "tests/test_scene_preparation37.py",
+      "unchanged": false,
+      "published_meta": {
+        "bytes": 3232,
+        "sha256": "3afeb964559639bbd2ad9716a96c5732184f8bfa9672ce5477809462f88a2916"
+      }
+    },
+    {
+      "source_path": "docs/37차_3D초기화.md",
+      "source_meta": {
+        "bytes": 7508,
+        "sha256": "f319961df2f6e9666407e5d84befac388aa42c87ff18edf6cb01bcfdc58871d9"
+      },
+      "published_path": "docs/37차_3D초기화.md",
+      "unchanged": false,
+      "original_public_path": "history/37차/문서원문/f319961df2f6e9666407e5d84befac388aa42c87ff18edf6cb01bcfdc58871d9.md.txt",
+      "published_meta": {
+        "bytes": 7962,
+        "sha256": "70927acff6055fa18e1eed8dada75238e4a0ee441ca661a35913a3196035c481"
+      }
+    },
+    {
+      "source_path": "docs/37차_색상편집창.md",
+      "source_meta": {
+        "bytes": 4040,
+        "sha256": "76842a94fdfa2ca86f36578a1debdb1c612a69eba2e3ef2bbbe2be17c7cc13d8"
+      },
+      "published_path": "docs/37차_색상편집창.md",
+      "unchanged": false,
+      "original_public_path": "history/37차/문서원문/76842a94fdfa2ca86f36578a1debdb1c612a69eba2e3ef2bbbe2be17c7cc13d8.md.txt",
+      "published_meta": {
+        "bytes": 4494,
+        "sha256": "5653aea3018b73e9d6a20e4617a8e65f7874e74b2d1a60dc19ef8e64ec60b4b8"
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "CodexOrbit.exe",
+      "bytes": 105729329,
+      "sha256": "f42daa7fd2b3c48c367dd7ee8199ff412dc364ddc7dde2381de7cae453a2ad16"
+    },
+    {
+      "name": "CodexOrbit-Setup.exe",
+      "bytes": 107810991,
+      "sha256": "725b76f29fadae473ee1cc469d30dbebb592374c2ce7cad156e05a311b42d936"
+    }
+  ],
+  "diff_excludes": [
+    "history/37차/직전차수.diff",
+    "history/37차/비교/**"
+  ],
+  "excluded": "개인 운영 기억·evidence·AGENTS·이동 기록·계정·인증·개인 경로·대화",
+  "verification_scope": "기존 관련 검사 재사용; 실제 GUI 관측과 미실시 범위는 최소 검사 문서"
+}

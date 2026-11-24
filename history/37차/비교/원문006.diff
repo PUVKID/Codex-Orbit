@@ -1,0 +1,1426 @@
++from copy import deepcopy
++import math
++import time
++
++from i18n import get_language
++
++
++def tr(ko, en):
++    return en if get_language() == 'en' else ko
++
++
++class NotificationPolicy:
++    """집중·음소거는 표시만 조절하고 모든 원래 기록은 계속 수집합니다."""
++    def __init__(self, settings, clock=time.time):
++        self.settings, self.clock = settings, clock
++        value = settings.values.get('workspace37', {})
++        self.options = {'notice_duration_seconds': 30, 'visible_limit': 8,
++                        'activity_popup': True, 'compact_activity': True, 'sound': False}
++        if isinstance(value, dict):
++            try:
++                self.options.update(self._validated({k: v for k, v in value.items() if k in self.options}))
++            except ValueError:
++                # 원본 설정은 유지하고 잘못된 새 옵션만 기본 표시로 사용합니다.
++                pass
++        self.options['sound'] = bool(settings.values.get('notification_sound', self.options['sound']))
++        self.focus_until = 0
++        self.mutes = {}
++        self.suppressed = 0
++
++    @staticmethod
++    def _validated(changes):
++        for key, value in changes.items():
++            if key in ('notice_duration_seconds', 'visible_limit'):
++                lower, upper = (5, 120) if key == 'notice_duration_seconds' else (1, 8)
++                if type(value) is not int or not lower <= value <= upper:
++                    raise ValueError('알림 시간은 5~120초, 표시 수는 1~8개여야 합니다.')
++            elif key in ('activity_popup', 'compact_activity', 'sound'):
++                if type(value) is not bool:
++                    raise ValueError('알림 선택값은 켜짐 또는 꺼짐이어야 합니다.')
++            else:
++                raise ValueError('지원하지 않는 알림 설정입니다.')
++        return changes
++
++    def set_options(self, **changes):
++        candidate = {**self.options, **self._validated(changes)}
++        before = deepcopy(self.settings.values)
++        self.settings.values.update(workspace37=candidate,
++                                    notice_timeout_ms=candidate['notice_duration_seconds'] * 1000,
++                                    notification_sound=candidate['sound'])
++        try:
++            self.settings.save()
++        except Exception:
++            self.settings.values.clear()
++            self.settings.values.update(before)
++            raise
++        self.options = candidate
++
++    def focus(self, minutes):
++        if minutes not in (15, 30, 60):
++            raise ValueError('집중 시간은 15분, 30분, 60분 중에서 고르세요.')
++        self.focus_until = self.clock() + minutes * 60
++
++    def resume(self):
++        self.focus_until = 0
++
++    def mute_target(self, target, minutes=30):
++        if not isinstance(target, str) or not target or len(target) > 256 or minutes != 30:
++            raise ValueError('선택한 채팅을 30분 동안 조용히 표시할 수 있습니다.')
++        self.mutes = {k: v for k, v in self.mutes.items() if v > self.clock()}
++        if len(self.mutes) >= 64 and target not in self.mutes:
++            raise ValueError('음소거한 채팅이 너무 많습니다. 먼저 음소거를 해제하세요.')
++        self.mutes[target] = self.clock() + minutes * 60
++
++    def clear_mutes(self):
++        self.mutes.clear()
++
++    def allows(self, event, count=True):
++        now = self.clock()
++        allowed = not (self.focus_until > now or self.mutes.get(event.get('target'), 0) > now)
++        if event.get('kind') == 'activity' and not self.options['activity_popup']:
++            allowed = False
++        if not allowed and count:
++            self.suppressed += 1
++        return allowed
++
++    def summary(self):
++        now = self.clock()
++        minutes = max(0, math.ceil((self.focus_until - now) / 60))
++        muted = sum(value > now for value in self.mutes.values())
++        return (tr(f'집중 모드 {minutes}분 남음', f'Focus: {minutes} min left') if minutes else
++                tr('알림 받는 중', 'Notifications on')) + tr(
++                    f' · 음소거 {muted}개 · 조용히 기록 {self.suppressed}건',
++                    f' · {muted} muted · {self.suppressed} recorded quietly')
++
++
++def health_snapshot(controller, now=None):
++    """실제 진행·작업자 수명으로만 상태를 정하며 채팅 수를 추정하지 않습니다."""
++    now = time.monotonic() if now is None else now
++    status = controller.last_monitor_status or {}
++    age = max(0, int(now - controller.last_monitor_progress))
++    if not controller.monitor_enabled:
++        kind, label = 'off', tr('감시 꺼짐', 'Monitor off')
++    elif controller.monitor_restart_pending:
++        kind, label = 'waiting', tr('재연결 중', 'Reconnecting')
++    elif controller.monitor is None or not controller.monitor.isRunning():
++        kind, label = 'error', tr('감시 중단', 'Monitor stopped')
++    elif age > 20:
++        kind, label = 'delayed', tr('감시 지연', 'Monitor delayed')
++    elif status.get('state') == '감시 중':
++        kind, label = 'ok', tr('감시 정상', 'Monitor active')
++    elif status.get('state') == '기준선 준비 중':
++        kind, label = 'waiting', tr('기존 기록 준비 중', 'Preparing existing records')
++    elif status:
++        kind, label = 'error', tr('감시 확인 필요', 'Monitor needs attention')
++    else:
++        kind, label = 'waiting', tr('첫 확인 대기', 'Waiting for first check')
++    files = status.get('files')
++    count = str(files) if type(files) is int and files >= 0 else '—'
++    latest = status.get('time')
++    return {'kind': kind, 'label': label, 'age': age, 'files': count,
++            'chats': str(status['chats']) if type(status.get('chats')) is int else '—',
++            'checked': latest, 'retries': controller.monitor_retries}
++
++
++def freshness(value):
++    checked = value.get('checked_at')
++    if type(checked) not in (int, float) or not math.isfinite(checked):
++        return tr('아직 확인하지 못함', 'Not checked yet')
++    clock = time.strftime('%H:%M:%S', time.localtime(checked))
++    return clock + (tr(' · 이전 정보', ' · Earlier data') if value.get('stale') else '')
++
++
++def install_workspace(controller):
++    from PySide6.QtCore import Qt, QTimer
++    from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QPushButton, QVBoxLayout
++    from workspace37 import WorkspacePanel
++    c = controller
++    strip = QFrame(); strip.setObjectName('controlsBar')
++    row = QHBoxLayout(strip); row.setContentsMargins(12, 8, 12, 8)
++    c.health_label37 = QLabel(); c.health_label37.setWordWrap(True)
++    c.health_label37.setTextFormat(Qt.TextFormat.PlainText)
++    row.addWidget(c.health_label37, 1)
++    c.retry_button37 = QPushButton(); row.addWidget(c.retry_button37)
++    c.retry_button37.clicked.connect(c.retry_monitor37)
++    c.window.layout().insertWidget(2, strip)
++    c.workspace_panel = WorkspacePanel(c)
++    c.workspace_page37 = c.orbit29.stack.addWidget(c.workspace_panel)
++    c.workspace_button37 = QPushButton(); c.workspace_button37.setCheckable(True)
++    nav = c.orbit29.observatory_button.parentWidget().layout()
++    nav.insertWidget(3, c.workspace_button37)
++    def open_workspace():
++        c.orbit29.stack.setCurrentIndex(c.workspace_page37)
++        c.workspace_panel.refresh()
++    c.workspace_button37.clicked.connect(open_workspace)
++    c.workspace_timer37 = QTimer(c.gui_owner); c.workspace_timer37.setInterval(2000)
++    c.workspace_timer37.timeout.connect(lambda: refresh_workspace(c))
++    c.workspace_timer37.start()
++    c.orbit29.stack.currentChanged.connect(lambda _: refresh_workspace(c))
++    refresh_workspace(c, translate=True)
++
++
++def refresh_workspace(c, translate=False):
++    if c.closing or not hasattr(c, 'health_label37'):
++        return
++    health = health_snapshot(c)
++    c.orbit.health37 = health
++    c.max_visible_notices = c.workspace_policy.options['visible_limit']
++    c.workspace_policy.options['sound'] = bool(c.settings.values.get('notification_sound', False))
++    c.workspace_button37.setText(tr('알림 센터', 'Notification center'))
++    c.workspace_button37.setChecked(c.orbit29.stack.currentIndex() == c.workspace_page37)
++    if c.workspace_button37.isChecked():
++        for button in c.orbit29.nav_buttons:
++            button.setChecked(False)
++    c.retry_button37.setText(tr('감시 다시 연결', 'Reconnect monitor'))
++    c.retry_button37.setEnabled(not c.monitor_restart_pending)
++    privacy = c.settings.values.get('broadcast_mode', False)
++    source = tr('프라이버시 모드에서 경로 숨김', 'Path hidden in privacy mode') if privacy else c.settings.values['sessions']
++    info = health['label'] + tr(f" · 최근 진행 {health['age']}초 전 · 복구 {health['retries']}회 · 관측 파일 {health['files']}개",
++                              f" · Last progress {health['age']}s ago · {health['retries']} retries · {health['files']} observed files")
++    c.health_label37.setText(info)
++    c.health_label37.setToolTip(str(source) + '\n' + c.workspace_policy.summary() + '\n' +
++        tr('관측된 채팅 ', 'Observed chats ') + health['chats'] + '\n' +
++        tr('잔량 조회 ', 'Usage checked ') + freshness(c.usage.snapshot) + '\n' +
++        tr('날씨 조회 ', 'Weather checked ') + freshness(c.weather.snapshot))
++    if c.workspace_panel.isVisible():
++        if translate:
++            c.workspace_panel.retranslate()
++        c.workspace_panel.refresh()
++    c.orbit.update()
+diff --git a/src/safe_update.py b/src/safe_update.py
+index 281a0e234a82f79419d0664ba815b5e78092554a..1b14f59e3905246c47ab39d05870bcf3e29767dd 100644
+--- a/src/safe_update.py
++++ b/src/safe_update.py
+@@ -7,6 +7,7 @@ import os
+ from pathlib import Path
+ import re
+ import shutil
++import stat
+ import subprocess
+ import sys
+ import tempfile
+@@ -177,6 +178,71 @@ def _write_json(path, value):
+         Path(temporary).unlink(missing_ok=True)
+ 
+ 
++_RESULT_ERRORS = frozenset(('apply_failed', 'smoke_failed', 'restart_failed',
++                            'rollback_failed', 'rollback_restart_failed'))
++
++
++def _result_path(data_directory):
++    """결과 파일과 상위 경로의 링크·Windows 재분석 지점을 거부합니다."""
++    path = Path(data_directory).absolute() / 'update-result.json'
++    for part in (path, *path.parents):
++        try:
++            info = part.lstat()
++        except FileNotFoundError:
++            continue
++        if stat.S_ISLNK(info.st_mode) or getattr(info, 'st_file_attributes', 0) & 0x400:
++            raise UpdateError('업데이트 결과 경로의 폴더 연결은 허용하지 않습니다.')
++    return path
++
++
++def _validated_result(value):
++    if not isinstance(value, dict) or set(value) - {'status', 'time', 'version', 'error'}:
++        raise UpdateError('업데이트 결과 필드가 올바르지 않습니다.')
++    if value.get('status') not in ('updated', 'rolled_back', 'failed'):
++        raise UpdateError('업데이트 결과 상태가 올바르지 않습니다.')
++    _version(value.get('version'))
++    stamp = value.get('time')
++    if not isinstance(stamp, str) or len(stamp) > 40:
++        raise UpdateError('업데이트 결과 시각이 올바르지 않습니다.')
++    parsed = datetime.fromisoformat(stamp)
++    if parsed.tzinfo is None or parsed.utcoffset() is None:
++        raise UpdateError('업데이트 결과 시각에 시간대가 필요합니다.')
++    if 'error' in value and value['error'] not in _RESULT_ERRORS:
++        raise UpdateError('허용되지 않은 업데이트 오류 코드입니다.')
++    if (value['status'] == 'updated') != ('error' not in value):
++        raise UpdateError('업데이트 결과 상태와 오류가 일치하지 않습니다.')
++    return dict(value)
++
++
++def read_update_result(data_directory):
++    """16 KiB 이하의 허용된 결과 요약만 반환하고 손상·링크 파일은 무시합니다."""
++    try:
++        path = _result_path(data_directory)
++        flags = os.O_RDONLY | getattr(os, 'O_BINARY', 0) | getattr(os, 'O_NOFOLLOW', 0)
++        descriptor = os.open(path, flags)
++        with os.fdopen(descriptor, 'rb') as stream:
++            if not stat.S_ISREG(os.fstat(stream.fileno()).st_mode):
++                return {}
++            body = stream.read(16385)
++        if len(body) > 16384:
++            return {}
++        return _validated_result(json.loads(body.decode('utf-8')))
++    except (OSError, ValueError, TypeError, OverflowError):
++        return {}
++
++
++def _record_update_result(data_directory, version, status, error=None):
++    # 기록 오류는 설치·복구 또는 원래 예외를 가로막지 않습니다.
++    try:
++        value = {'status': status, 'time': datetime.now(timezone.utc).isoformat(), 'version': version}
++        if error is not None:
++            value['error'] = error
++        _write_json(_result_path(data_directory), _validated_result(value))
++    except Exception:
++        return False
++    return True
++
++
+ def _replace_file(source, destination):
+     """Windows의 짧은 공유 경합만 유한하게 재시도하고 다른 오류는 그대로 전달합니다."""
+     delays = (.02, .04, .08, .12)
+@@ -192,7 +258,7 @@ def _replace_file(source, destination):
+ 
+ class SafeUpdater:
+     def __init__(self, data_directory, executable=None):
+-        self.data_directory = Path(data_directory).resolve()
++        self.data_directory = Path(data_directory).absolute()
+         self.executable = Path(executable or sys.executable).resolve()
+ 
+     def check(self, current_version):
+@@ -222,17 +288,24 @@ class SafeUpdater:
+         _description(value)
+         return value
+ 
+-    def stage(self, release):
++    def stage(self, release, progress=None):
+         version, digest, size = _description(release)
+         tag = release.get('tag')
+         if release.get('available') is not True or tag not in (version, 'v' + version):
+             raise UpdateError('확인된 새 정식 릴리스만 준비할 수 있습니다.')
+         url = _asset_url(release.get('asset_url'), tag)
++        folder = _stage_root() / (version + '-' + digest[:12])
++        folder.mkdir(parents=True, exist_ok=True)
++        # 실제 준비 경로의 볼륨에서 다운로드·복사·백업과 여유분을 확인합니다.
++        if shutil.disk_usage(folder).free < size * 3 + 64 * 1024 * 1024:
++            raise UpdateError('업데이트 준비 공간이 부족합니다. 디스크 여유 공간을 확보해 주세요.')
++        if progress:
++            progress('download')
+         body = fetch_bytes(url, size)
++        if progress:
++            progress('verify')
+         if len(body) != size or hashlib.sha256(body).hexdigest() != digest or not body.startswith(b'MZ'):
+             raise UpdateError('다운로드 EXE의 크기·SHA256·파일 형식이 일치하지 않습니다.')
+-        folder = _stage_root() / (version + '-' + digest[:12])
+-        folder.mkdir(parents=True, exist_ok=True)
+         destination = folder / 'CodexOrbit.update.exe'
+         handle, temporary = tempfile.mkstemp(prefix='.download-', suffix='.exe', dir=folder)
+         try:
+@@ -337,12 +410,13 @@ def apply_update_plan(plan_path, *, wait_for_parent=None, smoke=None, restart=No
+     pid = value.get('parent_pid')
+     if type(pid) is not int or pid <= 0 or pid == os.getpid():
+         raise UpdateError('교체 대상 앱의 프로세스 ID가 올바르지 않습니다.')
+-    data_directory = Path(value.get('data_directory', '')).resolve()
++    data_directory = Path(value.get('data_directory', '')).absolute()
+     backup, candidate = staged.parent / 'previous.exe', executable.with_name('CodexOrbit.pending.exe')
+     if backup.exists() or candidate.exists():
+         raise UpdateError('이전 교체 자료가 남아 있어 자동으로 덮어쓰지 않습니다.')
+     wait_for_parent, smoke, restart = wait_for_parent or _wait_for_parent, smoke or _smoke, restart or _restart
+     moved = False
++    error_code = 'apply_failed'
+     try:
+         wait_for_parent(pid)
+         # 같은 설치 폴더에 먼저 복사하여 마지막 교체를 같은 볼륨의 원자 이동으로 만듭니다.
+@@ -352,21 +426,34 @@ def apply_update_plan(plan_path, *, wait_for_parent=None, smoke=None, restart=No
+         _replace_file(executable, backup)
+         moved = True
+         _replace_file(candidate, executable)
++        error_code = 'smoke_failed'
+         if smoke(executable, staged.parent) is not True:
+             raise UpdateError('새 실행 파일의 시작 검사가 실패했습니다.')
++        error_code = 'restart_failed'
+         if restart(executable, data_directory) is not True:
+             raise UpdateError('새 실행 파일의 재시작이 실패했습니다.')
+         result = {'updated': True, 'rolled_back': False, 'version': value['staged']['version']}
++        _record_update_result(data_directory, value['staged']['version'], 'updated')
+     except Exception as error:
+         if not moved:
++            _record_update_result(data_directory, value['staged']['version'], 'failed', error_code)
+             raise
+-        _replace_file(backup, executable)
+-        recovered = restart(executable, data_directory)
+-        result = {'updated': False, 'rolled_back': True, 'error': str(error), 'rollback_restarted': recovered is True}
++        try:
++            _replace_file(backup, executable)
++        except Exception as recovery_error:
++            _record_update_result(data_directory, value['staged']['version'], 'failed', 'rollback_failed')
++            raise error from recovery_error
++        try:
++            recovered = restart(executable, data_directory) is True
++        except Exception:
++            recovered = False
++        result = {'updated': False, 'rolled_back': True, 'error': str(error), 'rollback_restarted': recovered}
++        _record_update_result(data_directory, value['staged']['version'],
++                              'rolled_back' if recovered else 'failed',
++                              error_code if recovered else 'rollback_restart_failed')
+     finally:
+         candidate.unlink(missing_ok=True)
+         (_stage_root() / 'apply.lock').unlink(missing_ok=True)
+-    _write_json(staged.parent / 'update-result.json', result)
+     return result
+ 
+ 
+diff --git a/src/ui_workspace_smoke37.py b/src/ui_workspace_smoke37.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..b8dc7c717e7f68c009129b0aa679753b6444d4c2
+--- /dev/null
++++ b/src/ui_workspace_smoke37.py
+@@ -0,0 +1,68 @@
++"""격리된 합성 데이터로 새 알림 센터와 두 테마의 연결만 확인합니다."""
++from pathlib import Path
++from PySide6.QtCore import Qt
++from PySide6.QtTest import QTest
++from PySide6.QtWidgets import QApplication
++
++
++def check_workspace(controller, folder):
++    from app import stamp
++    from theme import apply_theme
++    from update_widgets import UpdateDialog
++    c = controller
++    folder = Path(folder)
++    c.settings.values['popup'] = False
++    c.settings.values['notification_sound'] = False
++    original_count = len(c.features.snapshot()['events'])
++    c.receive({'id': 'test37-model', 'target': 'synthetic37', 'kind': 'settings', 'time': stamp(),
++               'chat_name': '검사용 채팅 · 실제 채팅 아님',
++               'before': {'model': 'gpt-6.1-sol', 'effort': 'medium'},
++               'after': {'model': 'gpt-6.1-terra', 'effort': 'high'},
++               'reason': '화면 연결을 확인하는 합성 기록입니다.'})
++    c.window.resize(1120, 820)
++    c.window.show()
++    QTest.mouseClick(c.workspace_button37, Qt.MouseButton.LeftButton)
++    panel = c.workspace_panel
++    assert c.orbit29.stack.currentWidget() is panel
++    assert len(panel._rows) == original_count + 1
++    QTest.mouseClick(panel.search, Qt.MouseButton.LeftButton)
++    panel.search.setText('없는 검색어')
++    assert not panel._rows and panel.count.text()
++    panel.search.clear()
++    assert len(panel._rows) == original_count + 1
++    panel._copy()
++    assert '검사용 채팅' in QApplication.clipboard().text()
++    c.orbit29.option('broadcast_mode', True)
++    panel._copy()
++    assert '검사용 채팅' not in QApplication.clipboard().text()
++    c.orbit29.option('broadcast_mode', False)
++    before_preview = len(c.features.snapshot()['events'])
++    c.preview_notice37('effort')
++    assert len(c.features.snapshot()['events']) == before_preview
++    assert '미리보기' in c.preview_card37.title.text()
++    c.preview_card37.grab().save(str(folder / '미리보기37.png'))
++    c.preview_card37.hide()
++    for mode in ('light', 'dark'):
++        c.orbit29.option('ui_theme', mode)
++        QApplication.processEvents()
++        assert c.settings.values['ui_theme'] == mode
++        assert c.window.grab().save(str(folder / ('알림센터37_' + mode + '.png')))
++        panel.tabs.setCurrentIndex(1)
++        QApplication.processEvents()
++        assert c.window.grab().save(str(folder / ('알림설정37_' + mode + '.png')))
++        panel.tabs.setCurrentIndex(0)
++    dialog = UpdateDialog(c)
++    assert '3.7.0' in dialog.label.text()
++    dialog.error_text = '<b>합성 오류 원문</b>'
++    dialog.retranslate()
++    dialog.details_button.setChecked(True)
++    assert dialog.error_details.toPlainText() == '<b>합성 오류 원문</b>'
++    assert dialog.label.textFormat() == Qt.TextFormat.PlainText
++    dialog.show()
++    QApplication.processEvents()
++    assert dialog.grab().save(str(folder / '업데이트37.png'))
++    dialog.close()
++    panel.tabs.setCurrentIndex(0)
++    return {'new_workspace_connected': True, 'themes': ['light', 'dark'],
++            'privacy_copy_masked': True, 'preview_not_recorded': True,
++            'update_dialog_connected': True, 'synthetic_only': True}
+diff --git a/src/update_widgets.py b/src/update_widgets.py
+index 1cae4059dfb62782364416d2b1d21a66f0ef31b6..1e0052b5dabae56dac1e5bce3913a90962609e74 100644
+--- a/src/update_widgets.py
++++ b/src/update_widgets.py
+@@ -1,87 +1,206 @@
+-"""공식 릴리스 확인과 검증된 업데이트 준비 화면입니다."""
+-import os,sys,threading
+-from pathlib import Path
+-from PySide6.QtCore import QObject,Signal,Qt
+-from PySide6.QtWidgets import QDialog,QVBoxLayout,QLabel,QPushButton
+-from shiboken6 import isValid
+-from observatory_panel import tr
+-
+-VERSION='3.5.0'
+-
+-class UpdateBridge(QObject):
+-    result=Signal(object,object)
+-
+-class UpdateDialog(QDialog):
+-    def __init__(self,controller):
+-        super().__init__(controller.window);self.controller=controller;self.release=None;self.staged=None;self.busy=False;self.latest=False;self.error_text=None
+-        from safe_update import SafeUpdater
+-        self.updater=SafeUpdater(controller.settings.directory)
+-        self.setWindowTitle(tr('공식 업데이트','Official update'));self.resize(540,260)
+-        layout=QVBoxLayout(self);self.label=QLabel(tr('현재 버전 3.5.0 · 공식 저장소의 릴리스만 확인합니다.','Version 3.5.0 · Only releases from the official repository are checked.'));self.label.setWordWrap(True);self.label.setTextFormat(Qt.TextFormat.PlainText);layout.addWidget(self.label)
+-        self.action=QPushButton(tr('새 버전 확인','Check for update'));self.action.clicked.connect(self.next_step);layout.addWidget(self.action)
+-        self.close_button=QPushButton(tr('닫기','Close'));self.close_button.clicked.connect(self.close);layout.addWidget(self.close_button)
+-        self.bridge=UpdateBridge(self);self.bridge.result.connect(self.done)
+-        self.stage_kind=None
+-        self.retranslate()
+-    def next_step(self):
+-        if self.busy:return
+-        if self.staged:
+-            try:
+-                self.updater.apply(self.staged,parent_pid=os.getpid())
+-            except Exception as error:self.label.setText(tr('업데이트를 시작하지 못했습니다: ','Could not start the update: ')+str(error));return
+-            self.accept();self.controller.request_quit();return
+-        self.busy=True;self.error_text=None;self.retranslate();self.action.setEnabled(False)
+-        function=(lambda:self.updater.stage(self.release)) if self.release else (lambda:self.updater.check(VERSION))
+-        self.stage_kind='stage' if self.release else 'check';bridge=self.bridge
+-        def work():
+-            try:value=function();error=None
+-            except Exception as problem:value=None;error=str(problem)
+-            if isValid(bridge):
+-                try:bridge.result.emit(value,error)
+-                except RuntimeError:pass
+-        threading.Thread(target=work,name='orbit-update-check',daemon=True).start()
+-    def done(self,value,error):
+-        self.busy=False;self.action.setEnabled(True)
+-        if error:self.error_text=str(error);self.retranslate();return
+-        if self.stage_kind=='check':
+-            if not value.get('available'):
+-                self.latest=True;self.retranslate();return
+-            self.release=value
+-            self.label.setText(tr('새 버전: ','New version: ')+str(value['version'])+'\n'+tr('공식 릴리스에서 내려받고 SHA-256을 검증합니다. 개인 설정과 MD는 보존합니다.','Download from the official release and verify SHA-256. Your settings and MD files are preserved.'))
+-            self.action.setText(tr('검증하여 준비','Download and verify'))
+-        else:
+-            self.staged=value
+-            self.label.setText(tr('다운로드 검증 완료. 재시작 검사에 실패하면 이전 실행 파일을 복구합니다.','Download verified. The previous executable is restored if the restart check fails.')+'\nSHA-256: '+str(value['sha256']))
+-            self.action.setText(tr('설치하고 재시작','Install and restart'))
+-            if not getattr(sys,'frozen',False):
+-                self.action.setEnabled(False);self.label.setText(self.label.text()+'\n'+tr('소스 실행 중입니다. 배포 EXE에서 설치할 수 있습니다.','Running from source. Install from the distributed EXE.'))
+-
+-
+-    def retranslate(self):
+-        self.setWindowTitle(tr('공식 업데이트','Official update'))
+-        self.close_button.setText(tr('닫기','Close'))
+-        self.action.setEnabled(not self.busy)
+-        if self.error_text:
+-            self.label.setText(tr('확인 실패: ','Check failed: ')+self.error_text)
+-            self.action.setText(tr('다시 시도','Retry'))
+-        elif self.busy:
+-            self.label.setText(tr('공식 릴리스를 확인하고 있습니다. 잠시만 기다려 주세요.','Checking the official release. Please wait.'))
+-            self.action.setText(tr('확인 중','Checking'))
+-        elif self.staged:
+-            self.label.setText(tr('검증 완료. 재시작 검사에 실패하면 이전 실행 파일을 복구합니다.','Verified. The previous executable is restored if the restart check fails.')+'\nSHA-256: '+str(self.staged['sha256']))
+-            self.action.setText(tr('설치하고 재시작','Install and restart'))
+-            if not getattr(sys,'frozen',False):
+-                self.action.setEnabled(False);self.label.setText(self.label.text()+'\n'+tr('소스 실행 중입니다. 배포 EXE에서 설치할 수 있습니다.','Running from source. Install from the distributed EXE.'))
+-        elif self.release:
+-            self.label.setText(tr('새 버전: ','New version: ')+str(self.release['version'])+'\n'+tr('공식 릴리스에서 내려받아 SHA-256을 검증합니다. 개인 설정과 MD는 보존합니다.','Download from the official release and verify SHA-256. Your settings and MD are preserved.'))
+-            self.action.setText(tr('검증하여 준비','Download and verify'))
+-        elif self.latest:
+-            self.label.setText(tr('현재 버전이 최신 공개 버전입니다.','The current version is up to date.'));self.action.setText(tr('다시 확인','Check again'))
+-        else:
+-            self.label.setText(tr('현재 버전 3.5.0 · 공식 저장소의 릴리스만 확인합니다.','Version 3.5.0 · Only releases from the official repository are checked.'));self.action.setText(tr('새 버전 확인','Check for update'))
+-
+-
+-def show_update(controller):
+-    dialog=getattr(controller,'update_dialog29',None)
+-    if dialog is None or not isValid(dialog):dialog=UpdateDialog(controller);controller.update_dialog29=dialog
+-    dialog.show();dialog.raise_();dialog.activateWindow()
++"""공식 릴리스 확인·검증·설치 준비와 최소 결과 요약 화면입니다."""
++import os
++import sys
++import threading
++from PySide6.QtCore import QObject, Signal, Qt, QUrl
++from PySide6.QtGui import QDesktopServices, QGuiApplication
++from PySide6.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QPlainTextEdit
++from shiboken6 import isValid
++from observatory_panel import tr
++from safe_update import SafeUpdater, REPOSITORY, read_update_result
++
++VERSION = '3.7.0'
++RELEASES_URL = REPOSITORY + '/releases'
++
++
++class UpdateBridge(QObject):
++    result = Signal(object, object)
++    phase = Signal(str)
++
++
++class UpdateDialog(QDialog):
++    def __init__(self, controller):
++        super().__init__(controller.window)
++        self.controller = controller
++        self.release = self.staged = None
++        self.busy = self.latest = False
++        self.error_text = None
++        self.stage_kind = None
++        self.phase = 'check'
++        self.updater = SafeUpdater(controller.settings.directory)
++        self.recent_result = read_update_result(controller.settings.directory)
++        self.resize(580, 340)
++        layout = QVBoxLayout(self)
++        self.label = QLabel()
++        self.label.setWordWrap(True)
++        self.label.setTextFormat(Qt.TextFormat.PlainText)
++        layout.addWidget(self.label)
++        self.recent_label = QLabel()
++        self.recent_label.setWordWrap(True)
++        self.recent_label.setTextFormat(Qt.TextFormat.PlainText)
++        layout.addWidget(self.recent_label)
++        self.release_button = QPushButton()
++        self.release_button.clicked.connect(self.open_release)
++        layout.addWidget(self.release_button)
++        self.copy_button = QPushButton()
++        self.copy_button.clicked.connect(self.copy_sha)
++        layout.addWidget(self.copy_button)
++        self.action = QPushButton()
++        self.action.clicked.connect(self.next_step)
++        layout.addWidget(self.action)
++        self.details_button = QPushButton()
++        self.details_button.setCheckable(True)
++        layout.addWidget(self.details_button)
++        self.error_details = QPlainTextEdit()
++        self.error_details.setReadOnly(True)
++        self.error_details.setMaximumHeight(130)
++        self.details_button.toggled.connect(self.error_details.setVisible)
++        layout.addWidget(self.error_details)
++        self.close_button = QPushButton()
++        self.close_button.clicked.connect(self.close)
++        layout.addWidget(self.close_button)
++        self.bridge = UpdateBridge(self)
++        self.bridge.result.connect(self.handle_result)
++        self.bridge.phase.connect(self.set_phase)
++        self.retranslate()
++
++    def open_release(self):
++        # 메타데이터나 오류 원문의 URL을 실행하지 않습니다.
++        QDesktopServices.openUrl(QUrl(RELEASES_URL))
++
++    def copy_sha(self):
++        if self.staged and not self.busy:
++            QGuiApplication.clipboard().setText(self.staged['sha256'])
++
++    def closeEvent(self, event):
++        if self.busy:
++            event.ignore()
++        else:
++            super().closeEvent(event)
++
++    def reject(self):
++        if not self.busy:
++            super().reject()
++
++    def set_phase(self, phase):
++        if self.busy and phase in ('download', 'verify'):
++            self.phase = phase
++            self.retranslate()
++
++    def next_step(self):
++        if self.busy:
++            return
++        if self.staged:
++            try:
++                self.updater.apply(self.staged, parent_pid=os.getpid())
++            except Exception as error:
++                self.error_text = str(error)
++                self.retranslate()
++                return
++            self.accept()
++            self.controller.request_quit()
++            return
++        self.busy = True
++        self.error_text = None
++        self.stage_kind = 'stage' if self.release else 'check'
++        self.phase = 'download' if self.release else 'check'
++        self.retranslate()
++        # 작업 스레드는 대화상자를 소유하거나 UI에 직접 접근하지 않습니다.
++        updater, release, bridge = self.updater, self.release, self.bridge
++        def emit_phase(phase):
++            if isValid(bridge):
++                try:
++                    bridge.phase.emit(phase)
++                except RuntimeError:
++                    pass
++        def work():
++            try:
++                value = updater.stage(release, progress=emit_phase) if release else updater.check(VERSION)
++                error = None
++            except Exception as problem:
++                value, error = None, str(problem)
++            if isValid(bridge):
++                try:
++                    bridge.result.emit(value, error)
++                except RuntimeError:
++                    pass
++        threading.Thread(target=work, name='orbit-update-check', daemon=True).start()
++
++    def handle_result(self, value, error):
++        self.busy = False
++        if error:
++            self.error_text = str(error)
++        elif self.stage_kind == 'check':
++            self.latest = not value.get('available')
++            if not self.latest:
++                self.release = value
++        else:
++            self.staged = value
++        self.retranslate()
++
++    def retranslate(self):
++        self.setWindowTitle(tr('공식 업데이트', 'Official update'))
++        self.close_button.setText(tr('닫기', 'Close'))
++        self.close_button.setEnabled(not self.busy)
++        self.release_button.setText(tr('공식 릴리스 페이지 열기', 'Open official releases'))
++        self.copy_button.setText(tr('검증된 SHA-256 복사', 'Copy verified SHA-256'))
++        self.copy_button.setVisible(self.staged is not None)
++        self.copy_button.setEnabled(self.staged is not None and not self.busy)
++        self.details_button.setText(tr('오류 원문 펼치기', 'Show original error'))
++        self.details_button.setVisible(bool(self.error_text))
++        self.error_details.setPlainText(self.error_text or '')
++        self.error_details.setVisible(bool(self.error_text) and self.details_button.isChecked())
++        self.action.setEnabled(not self.busy)
++        recent = self.recent_result
++        if recent:
++            labels = {'updated': tr('업데이트 성공', 'Update successful'),
++                      'rolled_back': tr('이전 버전 복구·시작 완료', 'Previous version restored and started'),
++                      'failed': tr('업데이트 실패', 'Update failed')}
++            self.recent_label.setText(tr('최근 결과: ', 'Last result: ') + labels[recent['status']] +
++                                      ' · ' + recent['version'] + ' · ' + recent['time'] +
++                                      (' · ' + recent['error'] if 'error' in recent else ''))
++        self.recent_label.setVisible(bool(recent))
++        if self.busy:
++            labels = {'check': tr('확인 단계 · 공식 릴리스 정보를 확인합니다.', 'Checking · Reading official release information.'),
++                      'download': tr('다운로드 단계 · 여유 공간 확인 후 내려받습니다.', 'Download · Checking free space and downloading.'),
++                      'verify': tr('검증 단계 · 크기·SHA-256·EXE 형식을 검사합니다.', 'Verification · Checking size, SHA-256 and EXE format.')}
++            text = labels[self.phase]
++            self.action.setText(tr('작업 중', 'Working'))
++        elif self.error_text:
++            text = tr('업데이트를 진행하지 못했습니다. 연결과 디스크 공간을 확인하고 다시 시도해 주세요. 오류 원문에서 상세 원인을 확인할 수 있습니다.',
++                      'The update could not proceed. Check your connection and disk space, then retry. Expand the original error for details.')
++            self.action.setText(tr('다시 시도', 'Retry'))
++        elif self.staged:
++            text = tr('설치 준비 완료 · 다운로드 검증을 마쳤습니다.', 'Ready to install · Download verification completed.')
++            text += '\nSHA-256: ' + self.staged['sha256']
++            text += '\n' + tr('설치 직전에 기존 실행 파일 1개를 백업합니다. 개인 설정과 MD는 유지합니다. 새 실행 파일의 시작 검사나 재시작이 실패하면 이전 실행 파일을 복구하고 시작을 시도합니다.',
++                               'One existing executable will be backed up immediately before installation. Settings and MD files are retained. If the new executable fails its startup check or restart, the previous executable is restored and a restart is attempted.')
++            self.action.setText(tr('설치하고 재시작', 'Install and restart'))
++        elif self.release:
++            size = self.release['size'] / (1024 * 1024)
++            required = (self.release['size'] * 3 + 64 * 1024 * 1024) / (1024 * 1024)
++            text = tr('새 버전: ', 'New version: ') + self.release['version']
++            text += '\n' + tr('다운로드 크기: ', 'Download size: ') + f'{size:.2f} MB (1 MB = 1,048,576 bytes)'
++            text += '\n' + tr('준비 경로 필요 여유 공간: ', 'Required free space on the staging volume: ') + f'{required:.2f} MB'
++            text += '\n' + tr('공식 릴리스에서 내려받은 뒤 크기와 SHA-256을 검증합니다.', 'Size and SHA-256 are verified after downloading the official release.')
++            self.action.setText(tr('다운로드하고 검증', 'Download and verify'))
++        elif self.latest:
++            text = tr('현재 버전이 최신 공개 버전입니다.', 'The current version is up to date.')
++            self.action.setText(tr('다시 확인', 'Check again'))
++        else:
++            text = tr('현재 버전 3.7.0 · 공식 저장소의 릴리스만 확인합니다.', 'Version 3.7.0 · Only releases from the official repository are checked.')
++            self.action.setText(tr('새 버전 확인', 'Check for update'))
++        if self.staged and not getattr(sys, 'frozen', False):
++            self.action.setEnabled(False)
++            text += '\n' + tr('소스 실행 중입니다. 배포 EXE에서 설치할 수 있습니다.', 'Running from source. Install from the distributed EXE.')
++        self.label.setText(text)
++
++
++def show_update(controller):
++    dialog = getattr(controller, 'update_dialog29', None)
++    if dialog is None or not isValid(dialog):
++        dialog = UpdateDialog(controller)
++        controller.update_dialog29 = dialog
++    dialog.show()
++    dialog.raise_()
++    dialog.activateWindow()
+diff --git a/src/weather.py b/src/weather.py
+index c6cbb18f02f8d01909655fb1d38861a91c06824f..a938de782ca0fe3f04fe174a0e8d6d61664a3317 100644
+--- a/src/weather.py
++++ b/src/weather.py
+@@ -65,8 +65,23 @@ def localized_region(data, language='ko'):
+     return label or original, original
+ 
+ 
++def _region_identity(value, code):
++    """확인된 시도 별칭만 대응하며 서로 다른 행정구역을 거리로 합치지 않습니다."""
++    if not isinstance(value, str):
++        return ''
++    key = ' '.join(value.casefold().split())
++    if code == 'KR':
++        if value in _KOREAN_REGIONS.values():
++            return value
++        for suffix in (' special self-governing province', ' special self-governing city',
++                       ' metropolitan city', ' province', ' special city', '-do', '-si'):
++            key = key.removesuffix(suffix)
++        return _KOREAN_REGIONS.get(key, key)
++    return key
++
++
+ def _selected_geocoded_region(location, data):
+-    """동일 국가이면서 IP 추정 좌표에서30km 이내인 가장 가까운 검색 결과만 수락합니다."""
++    """동일 국가·확인된 시도와 30km 거리 조건을 만족하는 후보만 반환합니다."""
+     rows = data.get('results')
+     if not isinstance(rows, list) or len(rows) > 10:
+         return None
+@@ -82,10 +97,18 @@ def _selected_geocoded_region(location, data):
+     for row in rows:
+         if not isinstance(row, dict) or row.get('country_code') != code:
+             continue
++        expected_region = _region_identity(location.get('region'), code)
++        if expected_region and expected_region != _region_identity(row.get('admin1'), code):
++            continue
+         lat, lon = row.get('latitude'), row.get('longitude')
+         name = row.get('name')
+         if not isinstance(name, str) or not name.strip() or not valid(lat, -90, 90) or not valid(lon, -180, 180):
+             continue
++        expected_name = location.get('city')
++        # 영문 이름이 모두 있는 경우에는 가까운 다른 도시를 번역 후보로 사용하지 않습니다.
++        if (isinstance(expected_name, str) and expected_name and expected_name.isascii() and name.isascii()
++                and ' '.join(expected_name.casefold().split()) != ' '.join(name.casefold().split())):
++            continue
+         delta_lat, delta_lon = math.radians(lat-latitude), math.radians(lon-longitude)
+         arc = math.sin(delta_lat/2)**2 + math.cos(math.radians(lat))*math.cos(math.radians(latitude))*math.sin(delta_lon/2)**2
+         distance = 6371 * 2 * math.asin(math.sqrt(min(1, max(0, arc))))
+@@ -179,6 +202,8 @@ def normalize_city(value):
+         result[key] = float(number)
+     if type(value.get('id')) is int and value['id'] > 0:
+         result['id'] = value['id']
++    if type(value.get('admin1_id')) is int and value['admin1_id'] > 0:
++        result['admin1_id'] = value['admin1_id']
+     display = value.get('display_name')
+     if display is not None:
+         if not isinstance(display, str) or len(display) > 640 or any(not c.isprintable() for c in display):
+@@ -667,39 +692,46 @@ class WeatherClient(QObject):
+     def _geocode_done(self, data):
+         if self.closed or self._location is None:
+             return
+-        label = select_geocoded_region(self._location, data)
++        selected = _selected_geocoded_region(self._location, data)
+         self._stage = ''
+-        if label:
+-            self._region = label
+-            self._region_source = 'Open-Meteo Geocoding · GeoNames'
+-            key = self._cache_key()
+-            self._city_ref = select_geocoded_city_ref(self._location,data)
+-            self._region_cache[key] = (label, self._region_source, self._city_ref)
+-            self._region_cache.move_to_end(key)
+-            while len(self._region_cache) > 16:
+-                self._region_cache.popitem(last=False)
+-            self._publish(region=label, region_source=self._region_source, city_ref=self._city_ref, busy=False)
+-            # 표시 번역과 도시 신원은 분리하고 같은 식별자의 영문명만 추가 확인합니다.
+-            selected=_selected_geocoded_region(self._location,data)
+-            identifier=selected[2].get('id') if selected else None
+-            if (self._city_ref is None and self.language!='en' and self._location.get('city','').isascii()
+-                    and type(identifier) is int and identifier>0):
++        if selected:
++            ref = select_geocoded_city_ref(self._location, data)
++            if ref is not None:
++                self._accept_geocoded_region(selected[1], ref)
++                return
++            identifier = selected[2].get('id')
++            if (self.language != 'en' and self._location.get('city', '').isascii()
++                    and type(identifier) is int and identifier > 0):
++                # 번역 후보를 먼저 표시하지 않고 같은 도시·시도 ID의 영문 응답을 기다립니다.
+                 query=urlencode({'name':self._location['city'],'count':10,'language':'en','countryCode':self._location['country_code']})
+                 self._stage='geocode_identity'
+                 self._get('https://geocoding-api.open-meteo.com/v1/search?'+query,
+-                          self._guard(lambda rows:self._identity_done(rows,identifier)))
+-        else:
+-            self._publish(region=self._region, region_source='ipwho.is · 지명 검색 미일치 · 원문 보존', busy=False)
++                          self._guard(lambda rows:self._identity_done(rows,identifier,selected)))
++                return
++        self._publish(region=self._region, region_source='ipwho.is · 지명 검색 미일치 · 원문 보존', busy=False)
++
++    def _accept_geocoded_region(self, label, ref):
++        self._region = label
++        self._region_source = 'Open-Meteo Geocoding · GeoNames'
++        self._city_ref = ref
++        key = self._cache_key()
++        self._region_cache[key] = (label, self._region_source, ref)
++        self._region_cache.move_to_end(key)
++        while len(self._region_cache) > 16:
++            self._region_cache.popitem(last=False)
++        self._publish(region=label, region_source=self._region_source, city_ref=ref, busy=False)
+ 
+-    def _identity_done(self,data,expected_id):
++    def _identity_done(self,data,expected_id,localized=None):
+         ref=select_geocoded_city_ref(self._location,data)
++        selected = _selected_geocoded_region(self._location, data)
+         self._stage=''
+-        if ref is None or ref['geonames_id']!=expected_id:
++        admin_id = localized[2].get('admin1_id') if localized else None
++        same_admin = (admin_id is None or (type(admin_id) is int and admin_id > 0
++                       and selected is not None and selected[2].get('admin1_id') == admin_id))
++        if ref is None or ref['geonames_id']!=expected_id or not same_admin:
+             self._publish(city_ref=None,busy=False)
+             return
+-        self._city_ref=ref
+-        self._region_cache[self._cache_key()]=(self._region,self._region_source,ref)
+-        self._publish(city_ref=ref,busy=False)
++        self._accept_geocoded_region(localized[1] if localized else self._region, ref)
+ 
+     def _request_failed(self, message):
+         if self._stage == 'geocode_identity':
+diff --git a/src/workspace37.py b/src/workspace37.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..90de645ba9bdac78a982538a072e97bc395a0dba
+--- /dev/null
++++ b/src/workspace37.py
+@@ -0,0 +1,352 @@
++"""37차 알림센터: 관측 기록 사본을 탐색하고 허용 필드만 내보냅니다."""
++from collections import OrderedDict
++from copy import deepcopy
++import csv
++from datetime import datetime, timedelta
++import io
++import json
++
++from PySide6.QtCore import Qt
++from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFileDialog,
++    QFormLayout, QHBoxLayout, QLabel, QLineEdit, QListWidget, QListWidgetItem,
++    QMessageBox, QPushButton, QScrollArea, QSpinBox, QTabWidget, QVBoxLayout, QWidget)
++from i18n import get_language
++from orbit_features import changed_fields
++from ui_layout import OrbitComboBox as QComboBox, ResponsiveRow
++
++
++def tr(ko, en):
++    return en if get_language() == 'en' else ko
++
++
++def event_time(event):
++    for key in ('source_time', 'time'):
++        try:
++            value = datetime.fromisoformat(str(event.get(key, '')).replace('Z', '+00:00'))
++            if value.tzinfo is not None:
++                return value.astimezone()
++        except (ValueError, TypeError, OverflowError):
++            pass
++    return None
++
++
++def title(event):
++    return str(event.get('chat_name') or event.get('chat_title') or event.get('title') or tr('제목 미확인', 'Title unavailable'))
++
++
++def filter_events(events, query='', kind='all', period='all', bookmarked=False,
++                  pinned=False, bookmarks=(), pins=(), oldest=False, now=None):
++    """원문 전후값을 비교하며 시간 미확인 기록은 날짜 필터에서 제외합니다."""
++    now = now or datetime.now().astimezone()
++    query = query.casefold().strip()
++    result = []
++    for event in events:
++        fields = changed_fields(event)
++        if kind in ('model', 'effort') and kind not in fields:
++            continue
++        if kind == 'resumed' and event.get('activity_type') != 'resumed':
++            continue
++        if bookmarked and event.get('id') not in bookmarks:
++            continue
++        if pinned and event.get('target') not in pins:
++            continue
++        stamp = event_time(event)
++        if period == 'today' and (stamp is None or stamp.date() != now.date()):
++            continue
++        if period == 'week' and (stamp is None or not now - timedelta(days=7) <= stamp <= now):
++            continue
++        searchable = [title(event), event.get('reason', ''), event.get('task_summary', ''), event.get('task_name', '')]
++        for state in ('before', 'after'):
++            value = event.get(state)
++            if isinstance(value, dict):
++                searchable.extend((value.get('model', ''), value.get('effort', '')))
++        if query and query not in ' '.join(map(str, searchable)).casefold():
++            continue
++        result.append(deepcopy(event))
++    result.sort(key=lambda event: event_time(event).timestamp() if event_time(event) else float('-inf'), reverse=not oldest)
++    return result
++
++
++def group_events(events):
++    """그룹에는 개수와 원본 기록만 보관하고 전후값을 합성하지 않습니다."""
++    groups = OrderedDict()
++    for event in events:
++        groups.setdefault(event.get('target', ''), []).append(deepcopy(event))
++    return groups
++
++
++EXPORT_FIELDS = ('time', 'kind', 'title', 'previous_model', 'model', 'previous_effort', 'effort', 'reason', 'task')
++
++
++def export_rows(events, private=False):
++    """대화 본문·위치·경로·식별자는 출력 필드에 포함하지 않습니다."""
++    rows = []
++    for event in events:
++        before = event.get('before') if isinstance(event.get('before'), dict) else {}
++        after = event.get('after') if isinstance(event.get('after'), dict) else {}
++        row = dict(zip(EXPORT_FIELDS, (event.get('source_time') or event.get('time', ''),
++            event.get('kind', ''), title(event), before.get('model', ''), after.get('model', ''),
++            before.get('effort', ''), after.get('effort', ''), event.get('reason', ''),
++            event.get('task_summary') or event.get('task_name', ''))))
++        if private:
++            for key in ('title', 'reason', 'task'):
++                row[key] = tr('비공개', 'Private')
++        rows.append({key: str(value) if value is not None else '' for key, value in row.items()})
++    return rows
++
++
++def csv_text(events, private=False):
++    output = io.StringIO(newline='')
++    writer = csv.DictWriter(output, fieldnames=EXPORT_FIELDS)
++    writer.writeheader()
++    for row in export_rows(events, private):
++        # 공백 뒤 수식과 탭·개행 시작도 스프레드시트 실행에서 차단합니다.
++        writer.writerow({key: "'" + value if value.startswith(('\t', '\r', '\n')) or value.lstrip().startswith(('=', '+', '-', '@')) else value
++                         for key, value in row.items()})
++    return output.getvalue()
++
++
++def summary_text(event, private=False):
++    row = export_rows([event], private)[0]
++    labels = (('시각', 'Time'), ('종류', 'Kind'), ('채팅 제목', 'Chat title'),
++              ('이전 모델', 'Previous model'), ('현재 모델', 'Current model'),
++              ('이전 추론 강도', 'Previous effort'), ('현재 추론 강도', 'Current effort'),
++              ('이유 원문', 'Original reason'), ('작업', 'Task'))
++    missing = tr('확인 불가', 'Unavailable')
++    return '\n'.join(f'{tr(*label)}: {row[key] or missing}' for key, label in zip(EXPORT_FIELDS, labels))
++
++
++class WorkspacePanel(QWidget):
++    def __init__(self, controller, parent=None):
++        super().__init__(parent)
++        self.controller = controller
++        self._rows = []
++        self._texts = []
++        outer = QVBoxLayout(self)
++        scroll = QScrollArea(self)
++        scroll.setWidgetResizable(True)
++        outer.addWidget(scroll)
++        body = QWidget()
++        scroll.setWidget(body)
++        layout = QVBoxLayout(body)
++        self.tabs = QTabWidget()
++        layout.addWidget(self.tabs)
++        history = QWidget()
++        settings = QWidget()
++        self.tabs.addTab(history, '')
++        self.tabs.addTab(settings, '')
++        history_layout = QVBoxLayout(history)
++        self.search = QLineEdit()
++        history_layout.addWidget(self.search)
++        self.search.textChanged.connect(self.refresh)
++        self._button(history_layout, '검색 초기화', 'Reset search', self._reset)
++        self.kind = QComboBox()
++        self.period = QComboBox()
++        self.order = QComboBox()
++        for combo in (self.kind, self.period, self.order):
++            combo.currentIndexChanged.connect(self.refresh)
++        history_layout.addWidget(ResponsiveRow([self.kind, self.period, self.order]))
++        self.bookmarked = self._check(history_layout, '보관 기록만', 'Bookmarked records', self.refresh)
++        self.pinned = self._check(history_layout, '관심 채팅만', 'Pinned chats', self.refresh)
++        self.grouped = self._check(history_layout, '채팅별 묶음', 'Group by chat', self.refresh)
++        history_layout.addWidget(ResponsiveRow([self.bookmarked, self.pinned, self.grouped]))
++        self.count = QLabel()
++        history_layout.addWidget(self.count)
++        self.records = QListWidget()
++        self.records.setMinimumHeight(240)
++        history_layout.addWidget(self.records)
++        self.records.currentItemChanged.connect(self._select)
++        self.detail = QLabel()
++        self.detail.setTextFormat(Qt.TextFormat.PlainText)
++        self.detail.setWordWrap(True)
++        self.detail.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
++        history_layout.addWidget(self.detail)
++        self.selection_buttons = []
++        for ko, en, call in (
++            ('선택 요약 복사', 'Copy selected summary', self._copy),
++            ('알림 다시 보기', 'Replay notification', lambda: self._event_action('replay_event')),
++            ('원래 상세 열기', 'Open original details', lambda: self._event_action('show')),
++            ('선택 채팅 30분 무음', 'Mute selected chat for 30 minutes', self._mute)):
++            self.selection_buttons.append(self._button(history_layout, ko, en, call))
++        history_layout.addWidget(ResponsiveRow(self.selection_buttons))
++        self._button(history_layout, '현재 결과 CSV 저장', 'Save filtered CSV', lambda: self._export('csv'))
++        self._button(history_layout, '현재 결과 JSON 저장', 'Save filtered JSON', lambda: self._export('json'))
++        policy_layout = QVBoxLayout(settings)
++        form = QFormLayout()
++        policy_layout.addLayout(form)
++        self.option_controls = {}
++        for key, low, high, ko, en in (
++            ('notice_duration_seconds', 5, 120, '알림 표시 시간(초)', 'Notification duration (seconds)'),
++            ('visible_limit', 1, 8, '동시 표시 개수', 'Visible notification limit')):
++            spin = QSpinBox()
++            spin.setRange(low, high)
++            label = QLabel()
++            self._texts.append((label, ko, en))
++            form.addRow(label, spin)
++            spin.valueChanged.connect(lambda value, name=key: self._set_option(name, value))
++            self.option_controls[key] = spin
++        for key, ko, en in (('activity_popup', '작업 알림 표시', 'Show activity notifications'),
++                            ('compact_activity', '작업 알림 간결하게', 'Compact activity notifications'),
++                            ('sound', '알림음', 'Notification sound')):
++            self.option_controls[key] = self._check(policy_layout, ko, en, lambda value, name=key: self._set_option(name, value))
++        for minutes in (15, 30, 60):
++            self._button(policy_layout, f'{minutes}분 집중', f'Focus for {minutes} minutes', lambda checked=False, value=minutes: self._policy('focus', value))
++        self._button(policy_layout, '알림 다시 받기', 'Resume notifications', lambda: self._policy('resume'))
++        self._button(policy_layout, '모든 무음 해제', 'Clear all chat mutes', lambda: self._policy('clear_mutes'))
++        for kind, ko, en in (('model', '모델 알림 미리보기', 'Preview model notification'),
++                             ('effort', '추론 알림 미리보기', 'Preview effort notification'),
++                             ('activity', '작업 알림 미리보기', 'Preview activity notification')):
++            self._button(policy_layout, ko, en, lambda checked=False, value=kind: controller.preview_notice37(value))
++        self._button(policy_layout, '고정하지 않은 알림 모두 닫기', 'Dismiss all unpinned notifications', controller.dismiss_unpinned37)
++        self.policy_summary = QLabel()
++        self.policy_summary.setTextFormat(Qt.TextFormat.PlainText)
++        self.policy_summary.setWordWrap(True)
++        policy_layout.addWidget(self.policy_summary)
++        policy_layout.addStretch()
++        self.retranslate()
++
++    def _button(self, layout, ko, en, callback):
++        button = QPushButton()
++        self._texts.append((button, ko, en))
++        button.clicked.connect(callback)
++        layout.addWidget(button)
++        return button
++
++    def _check(self, layout, ko, en, callback):
++        check = QCheckBox()
++        self._texts.append((check, ko, en))
++        check.toggled.connect(callback)
++        layout.addWidget(check)
++        return check
++
++    def _private(self):
++        return bool(self.controller.settings.values.get('broadcast_mode', False))
++
++    def _reset(self):
++        self.search.clear()
++        for combo in (self.kind, self.period, self.order):
++            combo.setCurrentIndex(0)
++        for check in (self.bookmarked, self.pinned):
++            check.setChecked(False)
++        self.refresh()
++
++    def refresh(self, *unused):
++        current = self.records.currentItem()
++        identity = current.data(Qt.ItemDataRole.UserRole) if current else None
++        features = self.controller.features
++        events = features.snapshot()['events']
++        signature = (self.search.text(), self.kind.currentData(), self.period.currentData(),
++                     self.bookmarked.isChecked(), self.pinned.isChecked(), self.grouped.isChecked(),
++                     self.order.currentData(), self._private(), get_language(), tuple(sorted(features.pins)),
++                     tuple(sorted(features.bookmarks)), json.dumps(events, sort_keys=True, ensure_ascii=False, default=str))
++        if getattr(self, '_history_signature37', None) == signature:
++            self._sync_policy()
++            return
++        self._history_signature37 = signature
++        self._rows = filter_events(events, self.search.text(), self.kind.currentData() or 'all',
++            self.period.currentData() or 'all', self.bookmarked.isChecked(), self.pinned.isChecked(),
++            features.bookmarks, features.pins, self.order.currentData() == 'oldest')[:500]
++        self.records.blockSignals(True)
++        self.records.clear()
++        groups = group_events(self._rows) if self.grouped.isChecked() else {'': self._rows}
++        chosen = None
++        for target, rows in groups.items():
++            if self.grouped.isChecked():
++                header = QListWidgetItem(f'{tr("비공개", "Private") if self._private() else title(rows[0])} · {len(rows)} {tr("건", "records")}')
++                header.setFlags(Qt.ItemFlag.NoItemFlags)
++                # 그룹 헤더는 별도 항목을 늘리지 않고 첫 기록의 표시 접두사로 사용합니다.
++                prefix = header.text() + '\n'
++            else:
++                prefix = ''
++            for index, event in enumerate(rows):
++                row = export_rows([event], self._private())[0]
++                item = QListWidgetItem((prefix if index == 0 else '') + f'{row["time"]} · {row["title"]}\n{row["previous_model"] or "?"} → {row["model"] or "?"} · {row["previous_effort"] or "?"} → {row["effort"] or "?"}')
++                item.setData(Qt.ItemDataRole.UserRole, event.get('id'))
++                self.records.addItem(item)
++                if event.get('id') == identity:
++                    chosen = item
++        self.records.setCurrentItem(chosen or self.records.item(0))
++        self.records.blockSignals(False)
++        self.count.setText(f'{len(self._rows)} {tr("건", "records")}' + ('' if self._rows else ' · ' + tr('검색 결과가 없습니다. 필터를 바꿔 주세요.', 'No results. Change the filters.')))
++        self._select()
++        self._sync_policy()
++
++    def _selected(self):
++        item = self.records.currentItem()
++        identity = item.data(Qt.ItemDataRole.UserRole) if item else None
++        return next((event for event in self._rows if event.get('id') == identity), None)
++
++    def _select(self, *unused):
++        event = self._selected()
++        self.detail.setText(summary_text(event, self._private()) if event else tr('기록을 선택하면 전체 요약이 표시됩니다.', 'Select a record to see its full summary.'))
++        for button in self.selection_buttons:
++            button.setEnabled(event is not None)
++
++    def _copy(self):
++        event = self._selected()
++        if event:
++            QApplication.clipboard().setText(summary_text(event, self._private()))
++
++    def _event_action(self, method):
++        event = self._selected()
++        if event:
++            getattr(self.controller, method)(event['id'])
++
++    def _sync_policy(self):
++        policy = self.controller.workspace_policy
++        for key, control in self.option_controls.items():
++            control.blockSignals(True)
++            value = policy.options.get(key, 5 if key == 'notice_duration_seconds' else 1 if key == 'visible_limit' else False)
++            control.setChecked(bool(value)) if isinstance(control, QCheckBox) else control.setValue(value)
++            control.blockSignals(False)
++        self.policy_summary.setText(str(policy.summary()))
++
++    def _error(self, error):
++        box = QMessageBox(QMessageBox.Icon.Warning, tr('저장 실패', 'Save failed'), tr('변경을 저장하지 못했습니다. 현재 설정을 복원합니다.', 'Could not save the change. Restoring current settings.'), parent=self)
++        box.setTextFormat(Qt.TextFormat.PlainText)
++        box.exec()
++
++    def _set_option(self, key, value):
++        self._policy('set_options', **{key: value})
++
++    def _policy(self, method, *args, **kwargs):
++        try:
++            getattr(self.controller.workspace_policy, method)(*args, **kwargs)
++        except (OSError, ValueError, TypeError, RuntimeError) as error:
++            self._error(error)
++        self._sync_policy()
++
++    def _mute(self):
++        event = self._selected()
++        if event:
++            self._policy('mute_target', event['target'], minutes=30)
++
++    def _export(self, kind):
++        path, _ = QFileDialog.getSaveFileName(self, tr('현재 필터 결과 저장', 'Save filtered records'),
++            f'orbit-records.{kind}', f'{kind.upper()} (*.{kind})', options=QFileDialog.Option.DontUseNativeDialog)
++        if not path:
++            return
++        try:
++            text = csv_text(self._rows, self._private()) if kind == 'csv' else json.dumps(export_rows(self._rows, self._private()), ensure_ascii=False, indent=2)
++            with open(path, 'w', encoding='utf-8', newline='') as stream:
++                stream.write(text)
++        except (OSError, ValueError, TypeError) as error:
++            self._error(error)
++
++    def retranslate(self):
++        for widget, ko, en in self._texts:
++            widget.setText(tr(ko, en))
++        self.tabs.setTabText(0, tr('기록 탐색', 'History explorer'))
++        self.tabs.setTabText(1, tr('알림 설정', 'Notification settings'))
++        self.search.setPlaceholderText(tr('제목·모델·이유·작업 통합 검색', 'Search title, model, reason and task'))
++        for combo, values in ((self.kind, [('all', '모든 종류', 'All kinds'), ('model', '모델 변경', 'Model changes'), ('effort', '추론 강도 변경', 'Effort changes'), ('resumed', '작업 재개', 'Resumed tasks')]),
++                              (self.period, [('all', '전체 기간', 'All dates'), ('today', '오늘', 'Today'), ('week', '최근 7일', 'Last 7 days')]),
++                              (self.order, [('newest', '최신순', 'Newest first'), ('oldest', '오래된순', 'Oldest first')])):
++            selected = combo.currentData()
++            combo.blockSignals(True)
++            combo.clear()
++            for value, ko, en in values:
++                combo.addItem(tr(ko, en), value)
++            combo.setCurrentIndex(max(0, combo.findData(selected)))
++            combo.blockSignals(False)
++        self.refresh()
+diff --git a/tests/test_appearance35.py b/tests/test_appearance35.py
+index 60037ef088f00bdb858642499e0d19e1915d2a3f..767d7e61c04d4b47f3013395e5b641125f8f9062 100644
+--- a/tests/test_appearance35.py
++++ b/tests/test_appearance35.py
+@@ -167,6 +167,29 @@ class DialogTests(unittest.TestCase):
+         self.assertEqual(dialog.candidate(), DEFAULTS)
+         self.assertEqual(calls, [])
+ 
++    def test_ambient_changes_pixels_without_effect_or_layout_change(self):
++        dialog = AppearanceDialog(None, lambda value: None)
++        dialog.show()
++        self.app.processEvents()
++        dialog.glow_slider.setValue(0)
++        self.app.processEvents()
++        geometry = dialog.preview_card.geometry()
++        size = dialog.size()
++        unlit = dialog.preview_card.grab().toImage()
++        dialog.glow_slider.setValue(100)
++        self.app.processEvents()
++        lit = dialog.preview_card.grab().toImage()
++        self.assertIsNone(dialog.preview_card.graphicsEffect())
++        self.assertEqual(dialog.preview_card.geometry(), geometry)
++        self.assertEqual(dialog.size(), size)
++        self.assertEqual(unlit.size(), lit.size())
++        self.assertNotEqual(unlit, lit, '조명 강도가 실제 카드 픽셀에 반영돼야 합니다.')
++        center = unlit.rect().center()
++        self.assertEqual(unlit.pixel(center), lit.pixel(center), '카드 안쪽 본문은 조명을 덧칠하지 않습니다.')
++        dialog.glow_slider.setValue(0)
++        self.app.processEvents()
++        self.assertEqual(dialog.preview_card.grab().toImage(), unlit)
++
+     def test_color_picker_uses_qt_dialog_and_rejects_cancel(self):
+         dialog = AppearanceDialog(None, lambda value: None)
+         before = dialog.fields['accent'].text()
+diff --git a/tests/test_gpu_process34.py b/tests/test_gpu_process34.py
+index e8f75e1274b2b3c0f634d6343dd846fcaa652ee9..0d231f7c09403a520170459ec5d7f3bc78c7ad49 100644
+--- a/tests/test_gpu_process34.py
++++ b/tests/test_gpu_process34.py
+@@ -154,7 +154,7 @@ class IpcProcessTests(unittest.TestCase):
+ 
+     def test_native_hang_create_render_close_is_reaped_within_original_two_seconds(self):
+         import functools,time
+-        for stage in ('create','render','close'):
++        for stage in ('create','prepare','render','close'):
+             with self.subTest(stage=stage):
+                 service=motion.CalendarMotion(renderer_factory=functools.partial(
+                     __import__('calendar_gpu_process').ProcessCalendarRenderer,
+@@ -162,7 +162,7 @@ class IpcProcessTests(unittest.TestCase):
+                 worker=service.worker
+                 worker.configure(visible=True,value=date(2028,2,29),elapsed=0)
+                 deadline=time.monotonic()+5
+-                expected={'create':'가져오기·생성','render':'렌더','close':'프레임'}[stage]
++                expected={'create':'가져오기·생성','prepare':'장면 준비','render':'렌더','close':'프레임'}[stage]
+                 try:
+                     while time.monotonic()<deadline:
+                         proxy=worker.renderer
+@@ -323,14 +323,14 @@ class ProtocolTests(unittest.TestCase):
+                 if self.calls>20:raise AssertionError('시간 제한을 건너뛰며 busy를 계속 소비했습니다.')
+                 return {'status':'busy','stage':'제어 busy'},b'',0,0
+         proxy.channel=BusyChannel()
+-        # 시계를 제어해 5초 기준 자체는 유지하고 busy 분기의 시간 검사만 분리합니다.
+-        with patch.object(ipc.time,'monotonic',side_effect=range(100)):
++        # 초기화의 제품 예산은 120초이며 이 검사는 예산만 5초로 축약해 busy의 무한 연장 금지를 확인합니다.
++        with patch.object(ipc, 'INITIALIZE_TIMEOUT_SECONDS', 5.0), patch.object(ipc.time,'monotonic',side_effect=range(100)):
+             with self.assertRaisesRegex(RuntimeError,'응답 제한'):
+                 proxy._exchange({'kind':'initialize'})
+ 
+     def test_initialize_requires_ready_and_render_requires_frame(self):
+         import calendar_gpu_process as ipc
+-        for kind,status in (('initialize','frame'),('calendar','ready'),('observatory','ready')):
++        for kind,status in (('initialize','frame'),('calendar','ready'),('observatory','ready'),('prepare_calendar','frame'),('prepare_observatory','ready')):
+             with self.subTest(kind=kind,status=status):
+                 proxy=ipc.ProcessCalendarRenderer(32)
+                 class Channel:
+@@ -392,9 +392,12 @@ def controlled_child(mode,generation,parent_pid):
+             if mode=='create':native_hang()
+             self.ctx=type('Context',(),{'info':{'GL_RENDERER':'제어 IPC'}})()
+             self.size=384
++            self.render_calls=0
+         def set_output_size(self,size):self.size=size
+         def render(self,value,elapsed,country='KR',city_ref=None):
+-            if mode=='render':native_hang()
++            self.render_calls+=1
++            if mode=='prepare':native_hang()
++            if mode=='render' and self.render_calls>1:native_hang()
+             if mode=='crash':os._exit(77)
+             if mode=='error':raise RuntimeError('제어된 자식 렌더 오류')
+             if mode=='null':return QImage()
+diff --git a/tests/test_gpu_startup37.py b/tests/test_gpu_startup37.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..812073e11890b939917364a8bed4039d4477d715
+--- /dev/null
++++ b/tests/test_gpu_startup37.py
+@@ -0,0 +1,190 @@
++"""실제 GPU와 구분한 제어 IPC로 초기화 예산·진행·취소를 검사합니다."""
++import os
++from pathlib import Path
++import sys
++import threading
++import time
++import unittest
++from unittest.mock import patch
++
++os.environ.setdefault('QT_QPA_PLATFORM', 'offscreen')
++sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
++import calendar_gpu_process as ipc
++
++
++def controlled_child(generation, parent_pid):
++    from calendar_gpu_child import serve
++    channel = ipc.SharedChannel(generation)
++    class Renderer:
++        def __init__(self, size, check_cancelled=None):
++            # 실제 여섯 초를 기다리며 제품의 초기화 취소 확인 경로를 그대로 호출합니다.
++            end = time.monotonic() + 6.0
++            while time.monotonic() < end:
++                check_cancelled()
++                time.sleep(.1)
++            check_cancelled()
++            self.ctx = type('Context', (), {'info': {'GL_RENDERER': '합성 초기화 IPC'}})()
++        def close(self):
++            pass
++    try:
++        return serve(channel, int(parent_pid), Renderer)
++    finally:
++        channel.close()
++
++
++class Startup37Tests(unittest.TestCase):
++    def proxy(self):
++        def command(generation, parent_pid):
++            return [ipc.source_child_executable(), '-B', '-X', 'utf8', str(Path(__file__).resolve()),
++                    '--startup-child', generation, str(parent_pid)]
++        return ipc.ProcessCalendarRenderer(32, command_factory=command)
++
++    def test_six_second_initialize_reports_real_checkpoints_and_reclaims_job(self):
++        proxy = self.proxy()
++        observed = []
++        stop = threading.Event()
++        def observe():
++            while not stop.wait(.02):
++                observed.append(proxy.progress_status())
++        thread = threading.Thread(target=observe)
++        thread.start()
++        started = time.monotonic()
++        try:
++            proxy._start()
++            self.assertGreaterEqual(time.monotonic() - started, 6.0)
++            self.assertEqual(proxy.stage, '준비')
++            self.assertFalse(proxy.progress_status()['initializing'])
++            self.assertTrue(any(row['initializing'] and row['stage'].startswith('초기화 체크 ') for row in observed))
++            self.assertEqual(proxy.ctx.info['GL_RENDERER'], '합성 초기화 IPC')
++        finally:
++            stop.set()
++            thread.join(1)
++            self.assertTrue(proxy.close())
++        self.assertEqual(proxy.owner.active_processes(), 0)
++        self.assertTrue(proxy.channel.closed)
++
++    def test_initialization_cancellation_does_not_wait_for_startup_budget(self):
++        proxy = self.proxy()
++        observed = threading.Event()
++        stopping = threading.Event()
++        def cancel_when_started():
++            while not stopping.wait(.01):
++                if proxy.progress_status()['stage'].startswith('초기화 체크 '):
++                    proxy.request_stop()
++                    observed.set()
++                    return
++        thread = threading.Thread(target=cancel_when_started)
++        thread.start()
++        try:
++            with self.assertRaises(ipc.GpuCancelled):
++                proxy._start()
++            self.assertTrue(observed.wait(1))
++            started = time.monotonic()
++            self.assertTrue(proxy.close())
++            self.assertLess(time.monotonic() - started, 2.0)
++        finally:
++            stopping.set()
++            thread.join(1)
++            if not proxy.closed:
++                proxy.close()
++        self.assertEqual(proxy.owner.active_processes(), 0)
++        self.assertTrue(proxy.channel.closed)
++
++    def test_absolute_initialize_and_frame_deadlines_do_not_extend_on_busy(self):
++        for kind, budget, busy in (('initialize', 120.0, False), ('initialize', 120.0, True),
++                                   ('calendar', 5.0, True)):
++            with self.subTest(kind=kind, busy=busy):
++                clock = [0.0]
++                proxy = ipc.ProcessCalendarRenderer(32)
++                class Channel:
++                    def send_request(self, request_id, payload, deadline, cancel):
++                        self.deadline = deadline
++                    def event(self, name, milliseconds=0):
++                        if milliseconds:
++                            clock[0] += .5
++                        return busy
++                    def read_response(self, *args):
++                        clock[0] += .5
++                        return {'status': 'busy', 'stage': '합성 진행'}, b'', 0, 0
++                proxy.channel = Channel()
++                proxy.owner = type('Owner', (), {'poll': lambda self: None})()

@@ -154,7 +154,7 @@ class IpcProcessTests(unittest.TestCase):
 
     def test_native_hang_create_render_close_is_reaped_within_original_two_seconds(self):
         import functools,time
-        for stage in ('create','render','close'):
+        for stage in ('create','prepare','render','close'):
             with self.subTest(stage=stage):
                 service=motion.CalendarMotion(renderer_factory=functools.partial(
                     __import__('calendar_gpu_process').ProcessCalendarRenderer,
@@ -162,7 +162,7 @@ class IpcProcessTests(unittest.TestCase):
                 worker=service.worker
                 worker.configure(visible=True,value=date(2028,2,29),elapsed=0)
                 deadline=time.monotonic()+5
-                expected={'create':'가져오기·생성','render':'렌더','close':'프레임'}[stage]
+                expected={'create':'가져오기·생성','prepare':'장면 준비','render':'렌더','close':'프레임'}[stage]
                 try:
                     while time.monotonic()<deadline:
                         proxy=worker.renderer
@@ -323,14 +323,14 @@ class ProtocolTests(unittest.TestCase):
                 if self.calls>20:raise AssertionError('시간 제한을 건너뛰며 busy를 계속 소비했습니다.')
                 return {'status':'busy','stage':'제어 busy'},b'',0,0
         proxy.channel=BusyChannel()
-        # 시계를 제어해 5초 기준 자체는 유지하고 busy 분기의 시간 검사만 분리합니다.
-        with patch.object(ipc.time,'monotonic',side_effect=range(100)):
+        # 초기화의 제품 예산은 120초이며 이 검사는 예산만 5초로 축약해 busy의 무한 연장 금지를 확인합니다.
+        with patch.object(ipc, 'INITIALIZE_TIMEOUT_SECONDS', 5.0), patch.object(ipc.time,'monotonic',side_effect=range(100)):
             with self.assertRaisesRegex(RuntimeError,'응답 제한'):
                 proxy._exchange({'kind':'initialize'})
 
     def test_initialize_requires_ready_and_render_requires_frame(self):
         import calendar_gpu_process as ipc
-        for kind,status in (('initialize','frame'),('calendar','ready'),('observatory','ready')):
+        for kind,status in (('initialize','frame'),('calendar','ready'),('observatory','ready'),('prepare_calendar','frame'),('prepare_observatory','ready')):
             with self.subTest(kind=kind,status=status):
                 proxy=ipc.ProcessCalendarRenderer(32)
                 class Channel:
@@ -392,9 +392,12 @@ def controlled_child(mode,generation,parent_pid):
             if mode=='create':native_hang()
             self.ctx=type('Context',(),{'info':{'GL_RENDERER':'제어 IPC'}})()
             self.size=384
+            self.render_calls=0
         def set_output_size(self,size):self.size=size
         def render(self,value,elapsed,country='KR',city_ref=None):
-            if mode=='render':native_hang()
+            self.render_calls+=1
+            if mode=='prepare':native_hang()
+            if mode=='render' and self.render_calls>1:native_hang()
             if mode=='crash':os._exit(77)
             if mode=='error':raise RuntimeError('제어된 자식 렌더 오류')
             if mode=='null':return QImage()

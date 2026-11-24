@@ -17,6 +17,9 @@ import uuid
 from calendar_gpu_windows import kernel, require, UserSecurity, OwnedGpuProcess
 
 PROTOCOL = 1
+# 첫 임포트·재질 준비 예산과 준비 이후 프레임 응답 예산을 분리합니다.
+INITIALIZE_TIMEOUT_SECONDS = 120.0
+FRAME_TIMEOUT_SECONDS = 5.0
 REQUEST_LIMIT = 65536
 RESPONSE_LIMIT = 16384
 PIXEL_LIMIT = 2160 * 2160 * 4
@@ -224,6 +227,7 @@ class ProcessCalendarRenderer:
         self.request_id = 0; self.stopping = threading.Event(); self.close_deadline = None
         self.closed = False; self.stage = '생성 전'; self.last_error = ''; self.catalog_context = None
         self.started_at = None; self.first_frame_at = None
+        self.initializing = False
         self._thread_id = threading.get_ident()
         self._lifecycle_lock=threading.Lock()
 
@@ -267,12 +271,19 @@ class ProcessCalendarRenderer:
         self.owner.start(self.command_factory(self.generation, os.getpid()), Path(__file__).resolve().parent)
         if self.stopping.is_set(): self.channel.signal('stop')
         dimensions = list(self.size) if type(self.size) is tuple else self.size
-        self._exchange({'kind': 'initialize', 'size': dimensions, 'parent_pid': os.getpid()})
+        self.initializing = True
+        try:
+            self._exchange({'kind': 'initialize', 'size': dimensions, 'parent_pid': os.getpid()})
+        finally:
+            self.initializing = False
 
     def _exchange(self, payload):
         if threading.get_ident() != self._thread_id: raise RuntimeError('GPU 대리 호출은 생성 작업 스레드에서만 허용됩니다.')
         if self._cancel(): raise GpuCancelled()
-        deadline = time.monotonic() + 5.0
+        # busy 진행 응답은 이 절대 총기한을 새로 시작하거나 연장하지 않습니다.
+        preparing = payload.get('kind') in ('initialize', 'prepare_calendar', 'prepare_observatory')
+        timeout = INITIALIZE_TIMEOUT_SECONDS if preparing else FRAME_TIMEOUT_SECONDS
+        deadline = time.monotonic() + timeout
         self.request_id += 1; request_id = self.request_id
         self.channel.send_request(request_id, payload, deadline, self._cancel)
         while True:
@@ -285,7 +296,8 @@ class ProcessCalendarRenderer:
                 if meta.get('status') == 'error':
                     self.last_error = bounded_text(meta.get('error', 'GPU 오류 원문 없음'))
                     raise RuntimeError('GPU 자식 ' + str(self.stage) + ': ' + self.last_error)
-                expected='ready' if payload.get('kind')=='initialize' else 'frame'
+                expected = ('ready' if payload.get('kind') == 'initialize' else
+                            'prepared' if payload.get('kind') in ('prepare_calendar', 'prepare_observatory') else 'frame')
                 if meta.get('status')!=expected:raise GpuProtocolError('GPU 요청 종류와 응답 상태 불일치')
                 if meta.get('identity') != payload.get('identity'): raise GpuProtocolError('GPU 응답 날짜·지역 문맥 불일치')
                 if meta.get('catalog_revision') != payload.get('catalog', {}).get('revision'):
@@ -314,6 +326,20 @@ class ProcessCalendarRenderer:
     def _render(self, payload):
         self._start()
         payload['output_size'] = self.output_size; payload['catalog'] = self._catalog()
+        # 날짜·재질·관측소 형상이 바뀔 때의 준비는 회전 중 프레임 응답과 분리합니다.
+        context = {key: value for key, value in payload.items() if key != 'elapsed'}
+        if payload['kind'] == 'observatory':
+            scene = payload['scene']
+            context['scene'] = {key: scene[key] for key in ('model', 'effort', 'usage_fraction', 'agents')}
+        scene_key = encode_control(context, REQUEST_LIMIT)
+        if getattr(self, '_prepared_scene_key', None) != scene_key:
+            prepare = dict(payload, kind='prepare_' + payload['kind'])
+            self.initializing = True
+            try:
+                self._exchange(prepare)
+            finally:
+                self.initializing = False
+            self._prepared_scene_key = scene_key
         meta, raw, width, height = self._exchange(payload)
         if meta['status'] != 'frame' or width != self.output_size: raise GpuProtocolError('GPU 프레임 응답 누락·크기 불일치')
         from PySide6.QtGui import QImage
@@ -361,3 +387,9 @@ class ProcessCalendarRenderer:
                 'stage': self.stage, 'catalog_revision': self.catalog_context,
                 'shared_bytes': MAP_SIZE if self.channel is not None and not self.channel.closed else 0,
                 'started_at': self.started_at, 'first_frame_at': self.first_frame_at}
+
+    def progress_status(self):
+        """UI는 OS 핸들 조회 없이 감독 스레드가 받은 실제 준비 단계를 읽습니다."""
+        return {'stage': self.stage, 'initializing': self.initializing,
+                'startup_elapsed_seconds': (max(0.0, time.monotonic() - self.started_at)
+                                            if self.initializing and self.started_at is not None else None)}
