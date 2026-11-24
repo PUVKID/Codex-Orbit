@@ -5,6 +5,7 @@ _language = 'ko'
 
 # 이 사전의 키는 앱 표시 문구이며 사용자 기록을 검색·치환하지 않습니다.
 _EN = {
+'고정':'Pin', '기록 보관':'Save record', '자세히 보기':'View details',
 '축제 목록 {items}개 항목 · 발표 일정 {events}개':'Festival catalog: {items} items · {events} announced schedules',
 '시리즈':'Series',
 '개최 회차':'Edition',

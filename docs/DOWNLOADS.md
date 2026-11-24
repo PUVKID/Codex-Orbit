@@ -1,3 +1,15 @@
+# 3.9.0 정식 다운로드
+
+[39차 상세](../history/39차/README.md) · [사용 방법](39차_알림아이콘.md)
+
+| 파일 | 바이트 | SHA-256 |
+| --- | --- | --- |
+| [CodexOrbit.exe](https://github.com/PUVKID/Codex-Orbit/releases/download/v3.9.0/CodexOrbit.exe) | 105736344 | `3bde9f28146b62bbd9e091340c3b123bc12fb7295fd0026e24bac732c3ac0e34` |
+| [CodexOrbit-Setup.exe](https://github.com/PUVKID/Codex-Orbit/releases/download/v3.9.0/CodexOrbit-Setup.exe) | 107815887 | `9a09d8fa31c79e464009a54edaab50a3937913ef54c6b28e249e3bb058eb4659` |
+
+<details>
+<summary>이전 배포 기록</summary>
+
 # 3.8.0 정식 다운로드
 
 [38차 상세](../history/38차/README.md) · [사용 방법](38차_알림가독성.md)
@@ -161,6 +173,8 @@ Windows 10/11 x64용 단일 실행 본과 현재 사용자 설치 본입니다. 
 
 
 공개 소스는 저장소와 GitHub의 Source code ZIP에서 받습니다. 비공개 전체 개발 ZIP·개인 위치·운영 원문은 공개 첨부에 넣지 않습니다.
+
+</details>
 
 </details>
 

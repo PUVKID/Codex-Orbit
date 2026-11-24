@@ -1,4 +1,8 @@
 <a name="-codex-orbit-320"></a>
+
+## Revision 39 · Clear notification icons
+
+**3.9.0** uses drawn model, reasoning and action icons instead of font-dependent emoji. Exact previous/current values and original public explanations remain available. [Revision 39](history/39차/README.md)
 <a id="codex-orbit-340"></a>
 <a id="codex-orbit-350"></a>
 <a id="codex-orbit-370"></a>
@@ -245,6 +249,7 @@ The existing yearly, monthly and daily theme code and assets remain unchanged. [
 | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](history/36차) · **상세 설명:** [상세 설명](history/36차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/36차/직전차수.diff) |
 | 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](history/37차) · **상세 설명:** [상세 설명](history/37차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/37차/비교/README.md) |
 | 38차 | 알림 가독성·연도 포함 날짜 | **자료 폴더:** [자료 폴더](history/38차) · **상세 설명:** [상세 설명](history/38차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/38차/비교.md) |
+| 39차 | 그림 아이콘·선명한 변경 알림 | **자료 폴더:** [자료 폴더](history/39차) · **상세 설명:** [상세 설명](history/39차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/39차/비교.md) |
 | 최종 | Codex Orbit · 최종 | **폴더:** [폴더](docs/최종/) · **설명:** [설명](docs/최종/README.md) · **직전 차수와 실제 비교:** [비교 대상 없는 근거](docs/최종/README.md) |
 
 Historical sources and supporting documents/assets are preserved with full comparisons, byte counts and SHA-256. [Archive manifests](docs/ARCHIVE_FILES.md) distinguish original copies, privacy edits and exclusions.

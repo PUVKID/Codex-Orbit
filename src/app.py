@@ -18,7 +18,7 @@ from notice_format import (friendly_effort, previous_field, short_reason, public
                            public_reason_original, notice_model_label, notice_previous_model,
                            notice_reason, notice_reason_original, notice_reason_caption)
 from PySide6.QtCore import QEvent, QObject, QLockFile, Qt, QSize, QThread, QTimer, Signal, Slot, QPropertyAnimation, QEasingCurve
-from PySide6.QtGui import QIcon, QPainter, QPixmap, QColor, QImage
+from PySide6.QtGui import QIcon, QPainter, QPixmap, QColor, QImage, QPen, QPainterPath
 from PySide6.QtWidgets import (QApplication, QDialog,
                              QFrame, QGridLayout, QHBoxLayout, QLabel, QComboBox,
                              QListWidget, QListWidgetItem, QMenu, QMessageBox,
@@ -739,6 +739,65 @@ class OrbitWidget(QWidget):
         return menu
 
 
+def notice_plain(value):
+    """알림 장식 문자만 그림으로 분리하며 저장 원문은 그대로 둡니다."""
+    return re.sub(r'[\U0001f000-\U0001faff\u2600-\u27ff\ufe0f\u200d]', '', str(value)).strip()
+
+
+def notice_symbol(kind, size=20):
+    """글꼴 설치 여부와 관계없이 동일하게 보이는 고해상도 알림 아이콘입니다."""
+    image=QPixmap(size*3,size*3);image.fill(Qt.GlobalColor.transparent)
+    painter=QPainter(image);painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+    painter.scale(size*3/24,size*3/24)
+    color=QColor({'sol':'#d6a73e','astra':'#a18be5','terra':'#57b8af','luna':'#90a9d7'}.get(kind,'#759e91'))
+    painter.setPen(QPen(color,1.9,Qt.PenStyle.SolidLine,Qt.PenCapStyle.RoundCap,Qt.PenJoinStyle.RoundJoin))
+    if kind.startswith('effort:'):
+        count={'none':0,'minimal':1,'low':2,'medium':3,'high':4,'xhigh':5,'ultra':6}.get(kind[7:],-1)
+        for i in range(6):
+            painter.setPen(Qt.PenStyle.NoPen);painter.setBrush(QColor('#56af93') if i<count else QColor('#7d8c88'))
+            painter.setOpacity(1 if i<count else .24);painter.drawRoundedRect(2+i*3.5,18-i*2,2.4,4+i*2,1,1)
+        if count<0:
+            painter.setOpacity(1);painter.setPen(QPen(color,1.9));painter.drawLine(3,3,21,21)
+    elif kind=='sol':
+        painter.drawEllipse(7,7,10,10)
+        for i in range(8):
+            a=i*math.pi/4;painter.drawLine(round(12+8*math.cos(a)),round(12+8*math.sin(a)),round(12+10*math.cos(a)),round(12+10*math.sin(a)))
+    elif kind=='astra':
+        path=QPainterPath();path.moveTo(12,2)
+        for x,y in [(15,9),(22,12),(15,15),(12,22),(9,15),(2,12),(9,9),(12,2)]:path.lineTo(x,y)
+        painter.drawPath(path)
+    elif kind=='terra':
+        painter.drawEllipse(3,3,18,18);painter.drawEllipse(8,3,8,18);painter.drawLine(3,12,21,12)
+    elif kind=='luna':
+        path=QPainterPath();path.moveTo(16,3);path.cubicTo(-2,1,-2,23,16,21);path.cubicTo(5,17,5,7,16,3);painter.drawPath(path)
+    elif kind=='close':painter.drawLine(6,6,18,18);painter.drawLine(18,6,6,18)
+    elif kind=='pin':
+        painter.drawLine(8,4,16,4);painter.drawLine(9,4,9,10);painter.drawLine(15,4,15,10)
+        painter.drawLine(9,10,6,14);painter.drawLine(6,14,18,14);painter.drawLine(18,14,15,10);painter.drawLine(12,14,12,21)
+    elif kind=='bookmark':
+        path=QPainterPath();path.moveTo(6,3);path.lineTo(18,3);path.lineTo(18,21);path.lineTo(12,17);path.lineTo(6,21);path.closeSubpath();painter.drawPath(path)
+    elif kind=='arrow':painter.drawLine(3,12,21,12);painter.drawLine(16,7,21,12);painter.drawLine(16,17,21,12)
+    else:
+        painter.drawRoundedRect(4,4,16,16,4,4);painter.drawLine(8,9,16,9);painter.drawLine(8,14,14,14)
+    painter.end();image.setDevicePixelRatio(3)
+    return image
+
+
+class NoticeValue(QLabel):
+    """값과 독립된 그림을 함께 그려 글자 누락과 아이콘 겹침을 방지합니다."""
+    def __init__(self, text=''):
+        super().__init__(text);self.symbol_kind='';self.setContentsMargins(26,0,0,0);self.setMinimumHeight(24)
+
+    def set_symbol(self, kind):
+        self.symbol_kind=kind;self.update()
+
+    def paintEvent(self, event):
+        super().paintEvent(event)
+        if self.symbol_kind:
+            side=round(20*float(self.property('orbit_text_scale31') or 1))
+            painter=QPainter(self);painter.drawPixmap(2,max(0,(self.height()-side)//2),notice_symbol(self.symbol_kind,side));painter.end()
+
+
 class Notice(QFrame):
     completed = Signal(str)
 
@@ -752,7 +811,7 @@ class Notice(QFrame):
         self.setFixedWidth(500)
         layout = QVBoxLayout(self)
         layout.setContentsMargins(18, 14, 18, 14)
-        layout.setSpacing(5)
+        layout.setSpacing(8)
         self.title = QLabel(t('모델 · 추론 강도 변경'))
         self.text = QLabel()
         self.title.setTextFormat(Qt.TextFormat.PlainText)
@@ -768,15 +827,17 @@ class Notice(QFrame):
         set_ui_style(self.title_marker,'font-size:16px;')
         heading.addWidget(self.title_marker, 0, Qt.AlignmentFlag.AlignTop)
         heading.addWidget(self.title, 1)
-        close = QPushButton(t('✕ 닫기'))
+        close = QPushButton(t('닫기'))
         self.close_button = close
+        close.setIcon(QIcon(notice_symbol('close',16)))
         close.setToolTip(t('알림 닫기 · 이력은 유지됩니다'))
         set_ui_style(close,'padding:0;font-size:12px;min-height:28px;max-height:28px;border-width:1px;')
         close.setFixedSize(64, 30)
         close.clicked.connect(self.dismiss)
         heading.addWidget(close, 0, Qt.AlignmentFlag.AlignTop)
         layout.addLayout(heading)
-        self.category = QLabel()
+        self.category = NoticeValue()
+        self.category.set_symbol('activity')
         set_ui_style(self.category,'font-size:13px;color:#355c50;padding:2px 0;')
         self.category.setWordWrap(True)
         self.category.setTextFormat(Qt.TextFormat.PlainText)
@@ -794,13 +855,14 @@ class Notice(QFrame):
         values.setContentsMargins(10,10,10,10)
         values.setHorizontalSpacing(8)
         values.setVerticalSpacing(8)
-        self.model_previous = QLabel()
-        self.model_current = QLabel()
-        self.effort_previous = QLabel()
-        self.effort_current = QLabel()
+        self.model_previous = NoticeValue()
+        self.model_current = NoticeValue()
+        self.effort_previous = NoticeValue()
+        self.effort_current = NoticeValue()
         self.notice_after_heading = QLabel(t('변경 후'))
-        for column, text in ((1, '⬅️ ' + t('이전')), (2, '→'), (3, '➡️ ' + t('현재'))):
+        for column, text in ((1, t('이전')), (2, ''), (3, t('현재'))):
             label = self.notice_after_heading if column == 3 else QLabel(text)
+            if column==2:label.setPixmap(notice_symbol('arrow',16))
             set_ui_style(label,'font-size:12px;color:#355c50;')
             values.addWidget(label, 0, column)
         self.comparison_labels=[]
@@ -835,7 +897,7 @@ class Notice(QFrame):
         self.selection_reason.setWordWrap(True)
         self.selection_reason.setTextFormat(Qt.TextFormat.PlainText)
         self.selection_reason.hide()
-        hint = QLabel(t('🔎 자세히 보기'))
+        hint = QLabel(t('자세히 보기'))
         self.detail_hint = hint
         set_ui_style(hint,'font-size:12px;color:#193c36;')
         self.reason_disclosure = QPushButton(t('설명 더 보기'))
@@ -862,14 +924,16 @@ class Notice(QFrame):
         self.timer.setSingleShot(True)
         self.timer.timeout.connect(self.dismiss)
         self.pinned = False
-        self.hold = QPushButton(t('📌 고정'))
+        self.hold = QPushButton(t('고정'))
+        self.hold.setIcon(QIcon(notice_symbol('pin',18)))
         self.hold.setCheckable(True)
         self.hold.toggled.connect(self.set_pinned)
         actions = QHBoxLayout()
         actions.setSpacing(8)
         actions.addWidget(self.hold)
         self.bookmark_callback = lambda key: None
-        self.bookmark_button = QPushButton(t('☆ 기록 보관'))
+        self.bookmark_button = QPushButton(t('기록 보관'))
+        self.bookmark_button.setIcon(QIcon(notice_symbol('bookmark',18)))
         self.bookmark_button.clicked.connect(lambda: self.bookmark_callback(self.event_id))
         actions.addWidget(self.bookmark_button)
         layout.addLayout(actions)
@@ -886,6 +950,8 @@ class Notice(QFrame):
         for widget,base in zip(widgets,bases):
             widget.setFont(app_font(round(base*scale)))
             widget.setProperty('orbit_text_scale31',scale)
+            if isinstance(widget,NoticeValue):
+                widget.setContentsMargins(round(26*scale),0,0,0);widget.setMinimumHeight(round(24*scale))
             source = widget.property('orbit_style_source')
             set_ui_style(widget,widget.styleSheet() if source is None else source)
         height=round(30*scale)
@@ -1076,26 +1142,30 @@ class Notice(QFrame):
         if event.get('kind') == 'activity' and before is not None and before == after:
             category += ' · ' + t('설정 유지')
         icon = '📋' if event.get('kind') == 'activity' and event.get('activity_type') == 'assigned' else '▶️' if event.get('kind') == 'activity' else '⚙️' if event.get('kind') == 'settings' else '🔄'
-        self.category.setText(('🔁 ' + t('기록 다시 보기 · ') if self.replay else '') + icon + ' ' + t(category))
+        self.category.setText((t('기록 다시 보기 · ') if self.replay else '') + notice_plain(t(category)))
         set_ui_style(self.category,'font-size:13px;padding:2px 0;color:'+event_accent(event)+';')
         self.task_value.setText(task_explanation(event, 100))
         self.task_value.setToolTip(task_explanation(event, 2000))
         self.selection_reason.setText(selection_explanation(event))
         after_map = after or {}
-        self.notice_after_heading.setText('➡️ ' + t('현재'))
+        self.notice_after_heading.setText(t('현재'))
         for label, caption in ((self.model_previous, '이전 모델'), (self.model_current, '현재 모델'), (self.effort_previous, '이전 추론 강도'), (self.effort_current, '현재 추론 강도')):
             label.setAccessibleName(t(caption))
-        self.model_previous.setText(notice_previous_model(before))
-        self.model_current.setText(notice_model_label(after_map.get('model')))
-        self.effort_previous.setText(previous_field(before, 'effort'))
-        self.effort_current.setText(friendly_effort(after_map.get('effort')))
+        self.model_previous.setText(notice_plain(notice_previous_model(before)))
+        self.model_current.setText(notice_plain(notice_model_label(after_map.get('model'))))
+        self.effort_previous.setText(notice_plain(previous_field(before, 'effort')))
+        self.effort_current.setText(notice_plain(friendly_effort(after_map.get('effort'))))
+        for value,model_label,effort_label in ((before or {},self.model_previous,self.effort_previous),(after_map,self.model_current,self.effort_current)):
+            family=re.fullmatch(r'gpt-\d+(?:\.\d+)?-(sol|astra|terra|luna)',str(value.get('model') or ''))
+            model_label.set_symbol(family.group(1) if family else 'model')
+            effort_label.set_symbol('effort:'+str(value.get('effort') or 'unknown'))
         for key, labels in (('model', (self.model_previous, self.model_current)), ('effort', (self.effort_previous, self.effort_current))):
             changed = event.get('kind') != 'activity' and before is not None and before.get(key) and after_map.get(key) and before.get(key) != after_map.get(key)
             for index,label in enumerate(labels):
                 size=16 if key=='model' else 14
                 set_ui_style(label,f'font-size:{size}px;font-weight:700;color:#355c50;padding:5px;' + ('background:#d4f3e7;border-radius:6px;' if changed and index==1 else ''))
         self.after_value.setText((t('현재 설정 · ') if event.get('kind') == 'activity' else t('→ 변경 후 · ')) + (self.setting_label(after).replace('\n',' · ') if after is not None else t('확인 불가')))
-        self.text.setText(notice_reason_caption(event) + notice_reason(event, 140, max_sentences=1))
+        self.text.setText(notice_plain(notice_reason_caption(event)) + ' ' + notice_reason(event, 140, max_sentences=1))
         self.reason_original.setPlainText(notice_reason_original(event))
         self.reason_disclosure.setText(t('설명 접기') if self.reason_disclosure.isChecked() else t('설명 더 보기'))
         self.text.setToolTip(notice_reason_original(event))
@@ -1972,7 +2042,7 @@ class Controller(QObject):
         card.broadcast_mode = False
         card.apply_text_scale(self.settings.values.get('text_scale', 100) / 100)
         card.display(event, self.orbit, self.workspace_policy.options['notice_duration_seconds'] * 1000)
-        card.detail_hint.setText(tr('🧪 가상 예시 · 변경 기록에 저장하지 않습니다', '🧪 Sample · Not saved to activity'))
+        card.detail_hint.setText(tr('가상 예시 · 변경 기록에 저장하지 않습니다', 'Sample · Not saved to activity'))
         self.preview_card37 = card
 
     @Slot(float)
