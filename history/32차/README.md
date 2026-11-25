@@ -1,9 +1,12 @@
 # 32차·지역 검색과 날짜별 입체 조형
 
 <!-- reading-levels:start -->
-[LEVEL 1 - Beginner](#reading-level-1) · [LEVEL 2 - Explorer](#reading-level-2) · [LEVEL 3 - Practitioner](#reading-level-3) · [LEVEL 4 - Advanced](#reading-level-4) · [LEVEL 5 - Expert](#reading-level-5)
+[LEVEL 1 - Beginner](#user-content-reading-level-1) · [LEVEL 2 - Explorer](#user-content-reading-level-2) · [LEVEL 3 - Practitioner](#user-content-reading-level-3) · [LEVEL 4 - Advanced](#user-content-reading-level-4) · [LEVEL 5 - Expert](#user-content-reading-level-5)
 
 프로젝트 전체의 설명은 [LEVEL 1 - Beginner](../../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A81.md)부터 [LEVEL 5 - Expert](../../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A85.md)까지 같은 범위로 연결됩니다.
+
+<details open>
+<summary>LEVEL 1 · Beginner — 목적과 동작부터</summary>
 
 <a id="reading-level-1"></a>
 ## LEVEL 1 - Beginner
@@ -46,7 +49,7 @@ IP 자동 위치는 추정이며 미래 법 개정이나 모든 도시 축제의
 
 날짜별 조형은 절차적으로 생성하며 모든 날짜에 별도 수작업 모델 파일이 있다는 뜻이 아닙니다.
 
-[이 차수의 원래 전체 상세](#reading-level-5) · [같은 수준 프로젝트 안내](../../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A81.md)
+[이 차수의 원래 전체 상세](#user-content-reading-level-5) · [같은 수준 프로젝트 안내](../../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A81.md)
 
 
 ### LEVEL 1·32차의 구체적인 기능과 확인
@@ -71,6 +74,12 @@ IP 자동 위치는 추정이며 미래 법 개정이나 모든 도시 축제의
 동일한 큰 자료를 두 번 쌓지 않으며 변하지 않은 자료와 전체 소스도 해당 태그에서 확인할 수 있습니다.
 
 날짜별 조형은 절차적으로 생성하며 모든 날짜에 별도 수작업 모델 파일이 있다는 뜻이 아닙니다.
+
+
+</details>
+
+<details>
+<summary>LEVEL 2 · Explorer — 구성과 연결 원리</summary>
 
 <a id="reading-level-2"></a>
 ## LEVEL 2 - Explorer
@@ -109,7 +118,7 @@ IP 자동 위치는 추정이며 미래 법 개정이나 모든 도시 축제의
 
 날짜별 조형은 절차적으로 생성하며 모든 날짜에 별도 수작업 모델 파일이 있다는 뜻이 아닙니다.
 
-[이 차수의 원래 전체 상세](#reading-level-5) · [같은 수준 프로젝트 안내](../../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A82.md)
+[이 차수의 원래 전체 상세](#user-content-reading-level-5) · [같은 수준 프로젝트 안내](../../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A82.md)
 
 
 ### LEVEL 2·32차의 구체적인 기능과 확인
@@ -134,6 +143,12 @@ IP 자동 위치는 추정이며 미래 법 개정이나 모든 도시 축제의
 동일한 큰 자료를 두 번 쌓지 않으며 변하지 않은 자료와 전체 소스도 해당 태그에서 확인할 수 있습니다.
 
 날짜별 조형은 절차적으로 생성하며 모든 날짜에 별도 수작업 모델 파일이 있다는 뜻이 아닙니다.
+
+
+</details>
+
+<details>
+<summary>LEVEL 3 · Practitioner — 준비·실행·결과 확인</summary>
 
 <a id="reading-level-3"></a>
 ## LEVEL 3 - Practitioner
@@ -170,7 +185,7 @@ IP 자동 위치는 추정이며 미래 법 개정이나 모든 도시 축제의
 
 날짜별 조형은 절차적으로 생성하며 모든 날짜에 별도 수작업 모델 파일이 있다는 뜻이 아닙니다.
 
-[이 차수의 원래 전체 상세](#reading-level-5) · [같은 수준 프로젝트 안내](../../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A83.md)
+[이 차수의 원래 전체 상세](#user-content-reading-level-5) · [같은 수준 프로젝트 안내](../../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A83.md)
 
 
 ### LEVEL 3·32차의 구체적인 기능과 확인
@@ -195,6 +210,12 @@ IP 자동 위치는 추정이며 미래 법 개정이나 모든 도시 축제의
 동일한 큰 자료를 두 번 쌓지 않으며 변하지 않은 자료와 전체 소스도 해당 태그에서 확인할 수 있습니다.
 
 날짜별 조형은 절차적으로 생성하며 모든 날짜에 별도 수작업 모델 파일이 있다는 뜻이 아닙니다.
+
+
+</details>
+
+<details>
+<summary>LEVEL 4 · Advanced — 구현·설계·실패 처리</summary>
 
 <a id="reading-level-4"></a>
 ## LEVEL 4 - Advanced
@@ -235,7 +256,7 @@ IP 위치 추정과 사용자 선택 위치, 전후 모델/강도 관측과 화�
 
 날짜별 조형은 절차적으로 생성하며 모든 날짜에 별도 수작업 모델 파일이 있다는 뜻이 아닙니다.
 
-[이 차수의 원래 전체 상세](#reading-level-5) · [같은 수준 프로젝트 안내](../../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A84.md)
+[이 차수의 원래 전체 상세](#user-content-reading-level-5) · [같은 수준 프로젝트 안내](../../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A84.md)
 
 
 ### LEVEL 4·32차의 구체적인 기능과 확인
@@ -260,6 +281,12 @@ IP 위치 추정과 사용자 선택 위치, 전후 모델/강도 관측과 화�
 동일한 큰 자료를 두 번 쌓지 않으며 변하지 않은 자료와 전체 소스도 해당 태그에서 확인할 수 있습니다.
 
 날짜별 조형은 절차적으로 생성하며 모든 날짜에 별도 수작업 모델 파일이 있다는 뜻이 아닙니다.
+
+
+</details>
+
+<details>
+<summary>LEVEL 5 · Expert — 근거·프로토콜·한계 검토</summary>
 
 <a id="reading-level-5"></a>
 ## LEVEL 5 - Expert
@@ -297,7 +324,7 @@ IP 위치 추정과 사용자 선택 위치, 전후 모델/강도 관측과 화�
 날짜별 조형은 절차적으로 생성하며 모든 날짜에 별도 수작업 모델 파일이 있다는 뜻이 아닙니다.
 
 
-기존의 전체 설명·표·코드·함수 참조·파일별 비교는 아래에 그대로 이어집니다. [자료 폴더](.) · [직전 비교·자료 범위](../../docs/32%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) · [이 차수의 원래 전체 상세](#reading-level-5)
+기존의 전체 설명·표·코드·함수 참조·파일별 비교는 아래에 그대로 이어집니다. [자료 폴더](.) · [직전 비교·자료 범위](../../docs/32%EC%B0%A8_%EC%A0%84%EC%B2%B4%EB%B3%80%EA%B2%BD-%EC%97%B4%EB%9E%8C.md) · [이 차수의 원래 전체 상세](#user-content-reading-level-5)
 <!-- reading-levels:end -->
 
 
@@ -315,3 +342,6 @@ IP 위치 추정과 사용자 선택 위치, 전후 모델/강도 관측과 화�
 동일한 큰 자료를 두 번 쌓지 않으며 변하지 않은 자료와 전체 소스도 해당 태그에서 확인할 수 있습니다.
 
 날짜별 조형은 절차적으로 생성하며 모든 날짜에 별도 수작업 모델 파일이 있다는 뜻이 아닙니다.
+
+</details>
+

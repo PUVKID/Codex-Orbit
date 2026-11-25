@@ -11,9 +11,12 @@
 
 </div>
 <!-- reading-levels:start -->
-[LEVEL 1 - Beginner](#reading-level-1) · [LEVEL 2 - Explorer](#reading-level-2) · [LEVEL 3 - Practitioner](#reading-level-3) · [LEVEL 4 - Advanced](#reading-level-4) · [LEVEL 5 - Expert](#reading-level-5)
+[LEVEL 1 - Beginner](#user-content-reading-level-1) · [LEVEL 2 - Explorer](#user-content-reading-level-2) · [LEVEL 3 - Practitioner](#user-content-reading-level-3) · [LEVEL 4 - Advanced](#user-content-reading-level-4) · [LEVEL 5 - Expert](#user-content-reading-level-5)
 
 프로젝트 전체의 설명은 [LEVEL 1 - Beginner](../%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A81.md)부터 [LEVEL 5 - Expert](../%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A85.md)까지 같은 범위로 연결됩니다.
+
+<details open>
+<summary>LEVEL 1 · Beginner — 목적과 동작부터</summary>
 
 <a id="reading-level-1"></a>
 ## LEVEL 1 - Beginner
@@ -60,7 +63,7 @@
 | 앱 소스를 찾을 수 없음 | 이 차수는 공개 소스 부재 상태를 안내합니다.<br>인접 차수 소스를 같은 버전으로 바꾸어 표시하지 않습니다. |
 
 
-[자료 폴더](.) · [직전 비교·자료 범위](README.md) · [이 차수의 원래 전체 상세](#reading-level-5)
+[자료 폴더](.) · [직전 비교·자료 범위](README.md) · [이 차수의 원래 전체 상세](#user-content-reading-level-5)
 
 
 ### LEVEL 1 · 최종의 구체적인 기능과 확인
@@ -96,7 +99,7 @@
 
 읽는 예: 설명 문서와 실행 소스, 목록 자료의 역할을 나누어 읽습니다. 보존 목록의 제외 항목은 누락을 숨긴 것이 아니라 공개하지 않은 범위와 이유를 표시한 것입니다.
 
-- 항목 [README.md](README.md#reading-level-1): 사람이 읽는 설명 문서입니다.
+- 항목 [README.md](README.md#user-content-reading-level-1): 사람이 읽는 설명 문서입니다.
 - 항목 [보존자료.md](%EB%B3%B4%EC%A1%B4%EC%9E%90%EB%A3%8C.md): 사람이 읽는 설명 문서입니다.
 - 항목 [부가자료_보존.json](%EB%B6%80%EA%B0%80%EC%9E%90%EB%A3%8C_%EB%B3%B4%EC%A1%B4.json): 파일 목록·지문·보존 범위를 이름과 값으로 담은 자료입니다.
 
@@ -127,6 +130,12 @@
 **비교 대상 없음.** 이 문서는 자료 상태 안내이며 독립 소스의 직전 비교를 제공하지 않습니다.
 
 추가·수정·삭제, 주석·공백·개행과 바이너리 크기·해시는 연결된 원래 비교 자료에서 확인합니다.
+
+
+</details>
+
+<details>
+<summary>LEVEL 2 · Explorer — 구성과 연결 원리</summary>
 
 <a id="reading-level-2"></a>
 ## LEVEL 2 - Explorer
@@ -175,7 +184,7 @@
 | 앱 소스를 찾을 수 없음 | 이 차수는 공개 소스 부재 상태를 안내합니다.<br>인접 차수 소스를 같은 버전으로 바꾸어 표시하지 않습니다. |
 
 
-[자료 폴더](.) · [직전 비교·자료 범위](README.md) · [이 차수의 원래 전체 상세](#reading-level-5)
+[자료 폴더](.) · [직전 비교·자료 범위](README.md) · [이 차수의 원래 전체 상세](#user-content-reading-level-5)
 
 
 ### LEVEL 2 · 최종의 구체적인 기능과 확인
@@ -211,7 +220,7 @@
 
 원리 연결: 설명 문서와 실행 소스, 목록 자료의 역할을 나누어 읽습니다. 보존 목록의 제외 항목은 누락을 숨긴 것이 아니라 공개하지 않은 범위와 이유를 표시한 것입니다.
 
-- 구성 관계 [README.md](README.md#reading-level-2): 사람이 읽는 설명 문서입니다.
+- 구성 관계 [README.md](README.md#user-content-reading-level-2): 사람이 읽는 설명 문서입니다.
 - 구성 관계 [보존자료.md](%EB%B3%B4%EC%A1%B4%EC%9E%90%EB%A3%8C.md): 사람이 읽는 설명 문서입니다.
 - 구성 관계 [부가자료_보존.json](%EB%B6%80%EA%B0%80%EC%9E%90%EB%A3%8C_%EB%B3%B4%EC%A1%B4.json): 파일 목록·지문·보존 범위를 이름과 값으로 담은 자료입니다.
 
@@ -242,6 +251,12 @@
 **비교 대상 없음.** 이 문서는 자료 상태 안내이며 독립 소스의 직전 비교를 제공하지 않습니다.
 
 추가·수정·삭제, 주석·공백·개행과 바이너리 크기·해시는 연결된 원래 비교 자료에서 확인합니다.
+
+
+</details>
+
+<details>
+<summary>LEVEL 3 · Practitioner — 준비·실행·결과 확인</summary>
 
 <a id="reading-level-3"></a>
 ## LEVEL 3 - Practitioner
@@ -288,7 +303,7 @@
 
 보존 문서는 당시 내용이며 현재 안 내는 저장소 첫 화면을 사용하십시오.
 
-[자료 폴더](.) · [직전 비교·자료 범위](README.md) · [이 차수의 원래 전체 상세](#reading-level-5)
+[자료 폴더](.) · [직전 비교·자료 범위](README.md) · [이 차수의 원래 전체 상세](#user-content-reading-level-5)
 
 
 ### LEVEL 3 · 최종의 구체적인 기능과 확인
@@ -324,7 +339,7 @@
 
 실행·대조 순서: 설명 문서와 실행 소스, 목록 자료의 역할을 나누어 읽습니다. 보존 목록의 제외 항목은 누락을 숨긴 것이 아니라 공개하지 않은 범위와 이유를 표시한 것입니다.
 
-- 대조 항목 [README.md](README.md#reading-level-3): 사람이 읽는 설명 문서입니다.
+- 대조 항목 [README.md](README.md#user-content-reading-level-3): 사람이 읽는 설명 문서입니다.
 - 대조 항목 [보존자료.md](%EB%B3%B4%EC%A1%B4%EC%9E%90%EB%A3%8C.md): 사람이 읽는 설명 문서입니다.
 - 대조 항목 [부가자료_보존.json](%EB%B6%80%EA%B0%80%EC%9E%90%EB%A3%8C_%EB%B3%B4%EC%A1%B4.json): 파일 목록·지문·보존 범위를 이름과 값으로 담은 자료입니다.
 
@@ -355,6 +370,12 @@
 **비교 대상 없음.** 이 문서는 자료 상태 안내이며 독립 소스의 직전 비교를 제공하지 않습니다.
 
 추가·수정·삭제, 주석·공백·개행과 바이너리 크기·해시는 연결된 원래 비교 자료에서 확인합니다.
+
+
+</details>
+
+<details>
+<summary>LEVEL 4 · Advanced — 구현·설계·실패 처리</summary>
 
 <a id="reading-level-4"></a>
 ## LEVEL 4 - Advanced
@@ -407,7 +428,7 @@
 
 위 구성요소의 입력·출력과 실패 조건을 같은 차수 소스에 연결해 검토합니다. 전체 비교는 추가·수정·삭제와 원래 보관 범위를 구분하는 근거입니다.
 
-[자료 폴더](.) · [직전 비교·자료 범위](README.md) · [이 차수의 원래 전체 상세](#reading-level-5)
+[자료 폴더](.) · [직전 비교·자료 범위](README.md) · [이 차수의 원래 전체 상세](#user-content-reading-level-5)
 
 
 ### LEVEL 4 · 최종의 구체적인 기능과 확인
@@ -443,7 +464,7 @@
 
 검토 시 구분: 설명 문서와 실행 소스, 목록 자료의 역할을 나누어 읽습니다. 보존 목록의 제외 항목은 누락을 숨긴 것이 아니라 공개하지 않은 범위와 이유를 표시한 것입니다.
 
-- 검토 항목 [README.md](README.md#reading-level-4): 사람이 읽는 설명 문서입니다.
+- 검토 항목 [README.md](README.md#user-content-reading-level-4): 사람이 읽는 설명 문서입니다.
 - 검토 항목 [보존자료.md](%EB%B3%B4%EC%A1%B4%EC%9E%90%EB%A3%8C.md): 사람이 읽는 설명 문서입니다.
 - 검토 항목 [부가자료_보존.json](%EB%B6%80%EA%B0%80%EC%9E%90%EB%A3%8C_%EB%B3%B4%EC%A1%B4.json): 파일 목록·지문·보존 범위를 이름과 값으로 담은 자료입니다.
 
@@ -474,6 +495,12 @@
 **비교 대상 없음.** 이 문서는 자료 상태 안내이며 독립 소스의 직전 비교를 제공하지 않습니다.
 
 추가·수정·삭제, 주석·공백·개행과 바이너리 크기·해시는 연결된 원래 비교 자료에서 확인합니다.
+
+
+</details>
+
+<details>
+<summary>LEVEL 5 · Expert — 근거·프로토콜·한계 검토</summary>
 
 <a id="reading-level-5"></a>
 ## LEVEL 5 - Expert
@@ -549,7 +576,7 @@ README는 상태 설명이며 보존 목록과 원본/공개 SHA·정제·제외
 추가·수정·삭제, 주석·공백·개행과 바이너리 크기·해시는 연결된 원래 비교 자료에서 확인합니다.
 
 
-기존의 전체 설명·표·코드·함수 참조·파일별 비교는 아래에 그대로 이어집니다. [자료 폴더](.) · [직전 비교·자료 범위](README.md) · [이 차수의 원래 전체 상세](#reading-level-5)
+기존의 전체 설명·표·코드·함수 참조·파일별 비교는 아래에 그대로 이어집니다. [자료 폴더](.) · [직전 비교·자료 범위](README.md) · [이 차수의 원래 전체 상세](#user-content-reading-level-5)
 <!-- reading-levels:end -->
 
 
@@ -644,3 +671,6 @@ README는 상태 설명이며 보존 목록과 원본/공개 SHA·정제·제외
 [전체 비교·자료 범위](README.md)
 
 추가·수정·삭제, 주석·공백·개행과 바이너리 크기·해시는 연결된 원래 비교 자료에서 확인합니다.
+
+</details>
+

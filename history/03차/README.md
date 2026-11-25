@@ -11,9 +11,12 @@
 
 </div>
 <!-- reading-levels:start -->
-[LEVEL 1 - Beginner](#reading-level-1) · [LEVEL 2 - Explorer](#reading-level-2) · [LEVEL 3 - Practitioner](#reading-level-3) · [LEVEL 4 - Advanced](#reading-level-4) · [LEVEL 5 - Expert](#reading-level-5)
+[LEVEL 1 - Beginner](#user-content-reading-level-1) · [LEVEL 2 - Explorer](#user-content-reading-level-2) · [LEVEL 3 - Practitioner](#user-content-reading-level-3) · [LEVEL 4 - Advanced](#user-content-reading-level-4) · [LEVEL 5 - Expert](#user-content-reading-level-5)
 
 프로젝트 전체의 설명은 [LEVEL 1 - Beginner](../../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A81.md)부터 [LEVEL 5 - Expert](../../docs/%EC%9D%BD%EA%B8%B0%EC%95%88%EB%82%B4/%EB%A0%88%EB%B2%A85.md)까지 같은 범위로 연결됩니다.
+
+<details open>
+<summary>LEVEL 1 · Beginner — 목적과 동작부터</summary>
 
 <a id="reading-level-1"></a>
 ## LEVEL 1 - Beginner
@@ -254,7 +257,7 @@ PyInstaller==6.22.3
 **확인할 내용:** 원문 기록에 해당 필드가 있는지 확인합니다. 누락된 동기를 추정해서 채우지 않습니다.
 
 
-[자료 폴더](.) · [직전 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [이 차수의 원래 전체 상세](#reading-level-5)
+[자료 폴더](.) · [직전 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [이 차수의 원래 전체 상세](#user-content-reading-level-5)
 
 
 ### LEVEL 1·3차의 구체적인 기능과 확인
@@ -281,7 +284,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [src/](src): 관련 파일을 모아 둔 폴더.
 
-- [README.md](README.md#reading-level-1): 설명을 읽는 Markdown 문서.
+- [README.md](README.md#user-content-reading-level-1): 설명을 읽는 Markdown 문서.
 
 - [requirements.txt](requirements.txt): 문자로 적은 목록 파일.
 
@@ -639,6 +642,12 @@ Python 외에 존재하는 보조 PowerShell·의존성 목록도 비교에 포�
 
 [부가자료 원문 안내](보존자료.md)와 [부가자료 보존 명세](부가자료_보존.json)는 실행 소스 비교와 역할을 나눠 읽습니다.
 
+
+</details>
+
+<details>
+<summary>LEVEL 2 · Explorer — 구성과 연결 원리</summary>
+
 <a id="reading-level-2"></a>
 ## LEVEL 2 - Explorer
 
@@ -879,7 +888,7 @@ PyInstaller==6.22.3
 **확인할 내용:** 원문 기록에 해당 필드가 있는지 확인합니다. 누락된 동기를 추정해서 채우지 않습니다.
 
 
-[자료 폴더](.) · [직전 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [이 차수의 원래 전체 상세](#reading-level-5)
+[자료 폴더](.) · [직전 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [이 차수의 원래 전체 상세](#user-content-reading-level-5)
 
 
 ### LEVEL 2·3차의 구체적인 기능과 확인
@@ -900,7 +909,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [src/](src): 관련 파일을 모아 둔 폴더.
 
-- [README.md](README.md#reading-level-2): 설명을 읽는 Markdown 문서.
+- [README.md](README.md#user-content-reading-level-2): 설명을 읽는 Markdown 문서.
 
 - [requirements.txt](requirements.txt): 문자로 적은 목록 파일.
 
@@ -1201,6 +1210,12 @@ Python 외에 존재하는 보조 PowerShell·의존성 목록도 비교에 포�
 
 - [src/notifier.py](src/notifier.py): 순차 감시의 읽기 위치, 복제 판별, 부모 이유 보조 조회가 연결됩니다. 뒤늦은 보강이 새 알림·새 모델 변경으로 바뀌지 않는 점이 중요합니다.
 
+
+</details>
+
+<details>
+<summary>LEVEL 3 · Practitioner — 준비·실행·결과 확인</summary>
+
 <a id="reading-level-3"></a>
 ## LEVEL 3 - Practitioner
 
@@ -1439,7 +1454,7 @@ PyInstaller==6.22.3
 
 로컬 세션 기록에서 모델·추론 강도의 변경과 명시된 배정을 구분합니다. 감시기는 외부 통신 없이 로컬 자료를 읽습니다.
 
-[자료 폴더](.) · [직전 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [이 차수의 원래 전체 상세](#reading-level-5)
+[자료 폴더](.) · [직전 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [이 차수의 원래 전체 상세](#user-content-reading-level-5)
 
 
 ### LEVEL 3·3차의 구체적인 기능과 확인
@@ -1460,7 +1475,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [src/](src): 관련 파일을 모아 둔 폴더.
 
-- [README.md](README.md#reading-level-3): 설명을 읽는 Markdown 문서.
+- [README.md](README.md#user-content-reading-level-3): 설명을 읽는 Markdown 문서.
 
 - [requirements.txt](requirements.txt): 문자로 적은 목록 파일.
 
@@ -1855,6 +1870,12 @@ Python 외에 존재하는 보조 PowerShell·의존성 목록도 비교에 포�
 
 - [src/notifier.py](src/notifier.py): 기준선·새 사건·같은 사건 보강을 다른 입력 사례로 준비합니다. 원본 시각이 있는지, 원문 읽기 위치가 유지되는지, 기존 이력에 이유만 붙는지 대조합니다.
 
+
+</details>
+
+<details>
+<summary>LEVEL 4 · Advanced — 구현·설계·실패 처리</summary>
+
 <a id="reading-level-4"></a>
 ## LEVEL 4 - Advanced
 
@@ -2101,7 +2122,7 @@ PyInstaller==6.22.3
 
 위 구성요소의 입력·출력과 실패 조건을 같은 차수 소스에 연결해 검토합니다. 전체 비교는 추가·수정·삭제와 원래 보관 범위를 구분하는 근거입니다.
 
-[자료 폴더](.) · [직전 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [이 차수의 원래 전체 상세](#reading-level-5)
+[자료 폴더](.) · [직전 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [이 차수의 원래 전체 상세](#user-content-reading-level-5)
 
 
 ### LEVEL 4·3차의 구체적인 기능과 확인
@@ -2122,7 +2143,7 @@ Windows에서 이 차수의 [requirements.txt](requirements.txt)에 맞는 Pytho
 
 - [src/](src): 관련 파일을 모아 둔 폴더.
 
-- [README.md](README.md#reading-level-4): 설명을 읽는 Markdown 문서.
+- [README.md](README.md#user-content-reading-level-4): 설명을 읽는 Markdown 문서.
 
 - [requirements.txt](requirements.txt): 문자로 적은 목록 파일.
 
@@ -2411,6 +2432,12 @@ Python 외에 존재하는 보조 PowerShell·의존성 목록도 비교에 포�
 
 - [src/notifier.py](src/notifier.py): 상태 저장과 파일 읽기 위치 변경은 과거 사건 재생·누락·중복에 영향을 줄 수 있습니다. 보조 조회가 순차 위치를 이동하지 않는 경계와 손상 상태의 원본 보존이 핵심입니다.
 
+
+</details>
+
+<details>
+<summary>LEVEL 5 · Expert — 근거·프로토콜·한계 검토</summary>
+
 <a id="reading-level-5"></a>
 ## LEVEL 5 - Expert
 
@@ -2600,7 +2627,7 @@ Python 외에 존재하는 보조 PowerShell·의존성 목록도 비교에 포�
 [부가자료 원문 안내](보존자료.md)와 [부가자료 보존 명세](부가자료_보존.json)는 실행 소스 비교와 역할을 나눠 읽습니다.
 
 
-기존의 전체 설명·표·코드·함수 참조·파일별 비교는 아래에 그대로 이어집니다. [자료 폴더](.) · [직전 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [이 차수의 원래 전체 상세](#reading-level-5)
+기존의 전체 설명·표·코드·함수 참조·파일별 비교는 아래에 그대로 이어집니다. [자료 폴더](.) · [직전 비교·자료 범위](%EC%A7%81%EC%A0%84%EC%B0%A8%EC%88%98.diff) · [이 차수의 원래 전체 상세](#user-content-reading-level-5)
 <!-- reading-levels:end -->
 
 
@@ -2924,3 +2951,6 @@ PyInstaller==6.22.3
 </details>
 
 [프로젝트](../../README.md) · [전체 차수](../../docs/REVISION_INDEX.md) · [원본 자료](.) · [← 이전: 2차](../02%EC%B0%A8/README.md) · [다음: 4차 →](../04%EC%B0%A8/README.md)
+
+</details>
+

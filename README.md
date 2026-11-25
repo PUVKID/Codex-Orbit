@@ -1,35 +1,9 @@
 <a name="-codex-orbit-320"></a>
-
-
-## 40차 · 이모지와 알림 가독성
-
-3.10.0은 종류별 이모지와 모델·추론 강도의 이모지를 다시 표시합니다. 이전·현재 값을 나란히 비교하고, 변경 이유를 별도 영역에서 읽습니다.
-
-| 영역 | 변경 |
-| --- | --- |
-| 이모지 | 🔄·⚙️·📋·▶️를 알림 종류에 맞게 표시 |
-| 값 | 모델·추론 이모지와 정확한 이전·현재 값 보존 |
-| 이유 | 구분된 설명 영역과 전체 공개 원문 |
-| 조작 | 기록 열기·📌 고정·⭐ 보관 |
-
-[40차 상세](history/40차/README.md) · [사용 방법](docs/40차_이모지와알림.md) · [다운로드](docs/DOWNLOADS.md)
-
-## 39차 · 선명한 변경 알림
-
-**3.9.0**은 알림의 장식을 직접 그린 그림으로 표시합니다. 채팅 제목, 이전·현재 모델과 추론 강도, 짧은 이유 순서로 읽으며 **바뀐 현재 값만 강조**합니다.
-
-| 영역 | 변경 |
-| --- | --- |
-| 모델 | 태양·별·지구·달 그림과 정확한 ID |
-| 추론 | 6칸 막대와 쉬운 이름·원래 강도 |
-| 확대 | 글자와 그림 크기·여백·행 높이를 함께 조정 |
-| 조작 | 고정·보관·닫기의 그림 아이콘 |
-
-[39차 상세](history/39차/README.md) · [사용 방법](docs/39차_알림아이콘.md) · [다운로드](docs/DOWNLOADS.md)
 <a id="codex-orbit-340"></a>
 <a id="codex-orbit-350"></a>
 <a id="codex-orbit-370"></a>
-# Codex Orbit 3.8.0
+<a id="codex-orbit-380"></a>
+# Codex Orbit
 
 연도·월·일에 맞춘 3D 테마를 기본으로 보여 주는 Windows 바탕화면 앱입니다. 관측소는 명시적으로 선택해 사용할 수 있습니다.
 
@@ -56,6 +30,32 @@
 모든 안내는 같은 프로젝트와 전체 차수를 다룹니다. 기존 상세 본문은 아래에 계속 보존합니다.
 <!-- project-levels:end -->
 
+## 40차 · 이모지와 알림 가독성
+
+**3.10.0**은 종류별 이모지와 모델·추론 강도의 이모지를 다시 표시합니다. 이전·현재 값을 나란히 비교하고, 변경 이유를 별도 영역에서 읽습니다.
+
+| 영역 | 변경 |
+| --- | --- |
+| 이모지 | 🔄·⚙️·📋·▶️를 알림 종류에 맞게 표시 |
+| 값 | 모델·추론 이모지와 정확한 이전·현재 값 보존 |
+| 이유 | 구분된 설명 영역과 전체 공개 원문 |
+| 조작 | 기록 열기·📌 고정·⭐ 보관 |
+
+[40차 상세](history/40차/README.md) · [사용 방법](docs/40차_이모지와알림.md) · [다운로드](docs/DOWNLOADS.md)
+
+## 39차 · 선명한 변경 알림
+
+**3.9.0**은 알림의 장식을 직접 그린 그림으로 표시합니다. 채팅 제목, 이전·현재 모델과 추론 강도, 짧은 이유 순서로 읽으며 **바뀐 현재 값만 강조**합니다.
+
+| 영역 | 변경 |
+| --- | --- |
+| 모델 | 태양·별·지구·달 그림과 정확한 ID |
+| 추론 | 6칸 막대와 쉬운 이름·원래 강도 |
+| 확대 | 글자와 그림 크기·여백·행 높이를 함께 조정 |
+| 조작 | 고정·보관·닫기의 그림 아이콘 |
+
+[39차 상세](history/39차/README.md) · [사용 방법](docs/39차_알림아이콘.md) · [다운로드](docs/DOWNLOADS.md)
+
 ## 38차 · 알림 가독성과 연도 포함 날짜
 
 **3.8.0**은 채팅 제목과 전후 값을 더 쉽게 비교하도록 알림 배치를 정리합니다. 이유는 한 문장으로 먼저 보여 주고 긴 공개 원문은 스크롤 창에서 읽습니다. 날짜는 **2026/11/25** 형식입니다.
@@ -67,6 +67,9 @@
 | 날짜 | 연/월/일·좁은 폭에서 시간 분리 |
 
 [38차 상세](history/38차/README.md) · [변경과 조작](docs/38차_알림가독성.md) · [다운로드](docs/DOWNLOADS.md)
+
+<details>
+<summary>31~37차 기능·배포와 화면 기록</summary>
 
 ## 37차 · 알림 센터와 감시 상태·업데이트 안내
 
@@ -80,7 +83,7 @@
 
 [50개 항목과 제약](docs/37차_50개개선.md) · [현재 다운로드](docs/DOWNLOADS.md) · [실제 최소 확인 범위](docs/37차_최소검사.md) · [전체 비교 목차](history/37차/비교/README.md)
 
-[LEVEL 1](history/37차/README.md#reading-level-1) · [LEVEL 2](history/37차/README.md#reading-level-2) · [LEVEL 3](history/37차/README.md#reading-level-3) · [LEVEL 4](history/37차/README.md#reading-level-4) · [LEVEL 5](history/37차/README.md#reading-level-5)
+[LEVEL 1](history/37차/README.md#user-content-reading-level-1) · [LEVEL 2](history/37차/README.md#user-content-reading-level-2) · [LEVEL 3](history/37차/README.md#user-content-reading-level-3) · [LEVEL 4](history/37차/README.md#user-content-reading-level-4) · [LEVEL 5](history/37차/README.md#user-content-reading-level-5)
 
 관련 순수 기능 **21개**의 기존 통과 근거를 재사용합니다. 배포 파일과 GUI 연결의 실제 확인 범위는 [37차 최소 검사](docs/37차_최소검사.md)에서 구분합니다.
 
@@ -94,7 +97,7 @@
 
 앱 EXE·150% 설정은 같은 버전 그대로입니다. [현재 다운로드](docs/DOWNLOADS.md)에서 새 Setup과 교체 전 35차 해시를 구분합니다.
 
-[LEVEL 1](history/36차/README.md#reading-level-1) · [LEVEL 2](history/36차/README.md#reading-level-2) · [LEVEL 3](history/36차/README.md#reading-level-3) · [LEVEL 4](history/36차/README.md#reading-level-4) · [LEVEL 5](history/36차/README.md#reading-level-5)
+[LEVEL 1](history/36차/README.md#user-content-reading-level-1) · [LEVEL 2](history/36차/README.md#user-content-reading-level-2) · [LEVEL 3](history/36차/README.md#user-content-reading-level-3) · [LEVEL 4](history/36차/README.md#user-content-reading-level-4) · [LEVEL 5](history/36차/README.md#user-content-reading-level-5)
 
 ## 35차·색상과 조명
 
@@ -192,6 +195,9 @@ OS의 모든 정지를 기한 안에 해결한다는 보장은 아닙니다.
 
 [31차 상세](history/31차/README.md) · [변경 기록](변경기록_32차.md)
 
+
+</details>
+
 <a name="implementation-details"></a>
 
 <a name="-감시표시저장업데이트의-연결"></a>
@@ -261,7 +267,7 @@ OS의 모든 정지를 기한 안에 해결한다는 보장은 아닙니다.
 ## 모든 차수와 실제 자료
 
 <details>
-<summary><strong>모든 차수와 실제 자료 자세히 보기</strong></summary>
+<summary>모든 차수와 실제 자료 자세히 보기</summary>
 
 
 [전체 목차](docs/REVISION_INDEX.md) · [차수별 보조 자료·시안·제외 대응](docs/ARCHIVE_FILES.md)
@@ -308,8 +314,8 @@ OS의 모든 정지를 기한 안에 해결한다는 보장은 아닙니다.
 | 36차 | 설치 선택 항목 정리 | **자료 폴더:** [자료 폴더](history/36차) · **상세 설명:** [상세 설명](history/36차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/36차/직전차수.diff) |
 | 37차 | 알림 센터·감시 상태·업데이트 안내 | **자료 폴더:** [자료 폴더](history/37차) · **상세 설명:** [상세 설명](history/37차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/37차/비교/README.md) |
 | 38차 | 알림 가독성·연도 포함 날짜 | **자료 폴더:** [자료 폴더](history/38차) · **상세 설명:** [상세 설명](history/38차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/38차/비교.md) |
-| 39차 | 그림 아이콘·선명한 변경 알림 | **자료 폴더:** [자료 폴더](history/39차) · **상세 설명:** [상세 설명](history/39차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/39차/비교.md) |
-| 40차 | 이모지 복원·읽기 쉬운 변경 이유 | **자료 폴더:** [자료 폴더](history/40차) · **상세 설명:** [상세 설명](history/40차/README.md) · **직전 비교·범위:** [전체 비교·범위](history/40차/비교.md) |
+| 39차 | 그림 아이콘·선명한 변경 알림 | 자료 폴더: [자료 폴더](history/39차) · 상세 설명: [상세 설명](history/39차/README.md) · 직전 비교·범위: [전체 비교·범위](history/39차/비교.md) |
+| 40차 | 이모지 복원·읽기 쉬운 변경 이유 | 자료 폴더: [자료 폴더](history/40차) · 상세 설명: [상세 설명](history/40차/README.md) · 직전 비교·범위: [전체 비교·범위](history/40차/비교.md) |
 <!-- 차수표 끝 -->
 
 원본 소스 비교에는 주석·공백·개행과 신규·삭제 상태를 포함합니다. 20차는 실행 소스 없이 38개 시 안, 21차는 110개 시안을 보존합니다. 최종 폴더의 개인 운영 검증 원문은 공개하지 않습니다. 역사 자료 2,281개 항목의 보존·정제·제외 사유와 원본/공개 SHA를 차수별로 연결했습니다.

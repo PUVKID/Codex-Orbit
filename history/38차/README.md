@@ -4,6 +4,18 @@
 
 [전체 비교](직전차수.diff) · [비교 웹 보기](비교.md) · [사용 방법](../../docs/38차_알림가독성.md)
 
+
+| 읽기 수준 | 설명의 초점 |
+| --- | --- |
+| [LEVEL 1 · Beginner](#user-content-reading-level-1) | 목적과 동작부터 |
+| [LEVEL 2 · Explorer](#user-content-reading-level-2) | 구성과 연결 원리 |
+| [LEVEL 3 · Practitioner](#user-content-reading-level-3) | 준비·실행·결과 확인 |
+| [LEVEL 4 · Advanced](#user-content-reading-level-4) | 구현·설계·실패 처리 |
+| [LEVEL 5 · Expert](#user-content-reading-level-5) | 근거·프로토콜·한계 검토 |
+
+<details open>
+<summary>LEVEL 1 · Beginner — 목적과 동작부터</summary>
+
 <a id="reading-level-1"></a>
 ## LEVEL 1 - Beginner
 
@@ -36,7 +48,13 @@
 
 **이유가 기록되지 않았다면 확인 불가로 표시합니다.** 쉬운 설명을 만들기 위해 새로운 원인을 지어내지 않습니다.
 
-[같은 수준 프로젝트](../../docs/읽기안내/레벨1.md) · [직전37차 같은 수준](../37차/README.md#reading-level-1)
+[같은 수준 프로젝트](../../docs/읽기안내/레벨1.md) · [직전37차 같은 수준](../37차/README.md#user-content-reading-level-1)
+
+
+</details>
+
+<details>
+<summary>LEVEL 2 · Explorer — 구성과 연결 원리</summary>
 
 <a id="reading-level-2"></a>
 ## LEVEL 2 - Explorer
@@ -70,7 +88,13 @@
 
 **이유가 기록되지 않았다면 확인 불가로 표시합니다.** 쉬운 설명을 만들기 위해 새로운 원인을 지어내지 않습니다.
 
-[같은 수준 프로젝트](../../docs/읽기안내/레벨2.md) · [직전37차 같은 수준](../37차/README.md#reading-level-2)
+[같은 수준 프로젝트](../../docs/읽기안내/레벨2.md) · [직전37차 같은 수준](../37차/README.md#user-content-reading-level-2)
+
+
+</details>
+
+<details>
+<summary>LEVEL 3 · Practitioner — 준비·실행·결과 확인</summary>
 
 <a id="reading-level-3"></a>
 ## LEVEL 3 - Practitioner
@@ -104,7 +128,13 @@
 
 **이유가 기록되지 않았다면 확인 불가로 표시합니다.** 쉬운 설명을 만들기 위해 새로운 원인을 지어내지 않습니다.
 
-[같은 수준 프로젝트](../../docs/읽기안내/레벨3.md) · [직전37차 같은 수준](../37차/README.md#reading-level-3)
+[같은 수준 프로젝트](../../docs/읽기안내/레벨3.md) · [직전37차 같은 수준](../37차/README.md#user-content-reading-level-3)
+
+
+</details>
+
+<details>
+<summary>LEVEL 4 · Advanced — 구현·설계·실패 처리</summary>
 
 <a id="reading-level-4"></a>
 ## LEVEL 4 - Advanced
@@ -138,7 +168,13 @@
 
 **이유가 기록되지 않았다면 확인 불가로 표시합니다.** 쉬운 설명을 만들기 위해 새로운 원인을 지어내지 않습니다.
 
-[같은 수준 프로젝트](../../docs/읽기안내/레벨4.md) · [직전37차 같은 수준](../37차/README.md#reading-level-4)
+[같은 수준 프로젝트](../../docs/읽기안내/레벨4.md) · [직전37차 같은 수준](../37차/README.md#user-content-reading-level-4)
+
+
+</details>
+
+<details>
+<summary>LEVEL 5 · Expert — 근거·프로토콜·한계 검토</summary>
 
 <a id="reading-level-5"></a>
 ## LEVEL 5 - Expert
@@ -172,4 +208,7 @@
 
 **이유가 기록되지 않았다면 확인 불가로 표시합니다.** 쉬운 설명을 만들기 위해 새로운 원인을 지어내지 않습니다.
 
-[같은 수준 프로젝트](../../docs/읽기안내/레벨5.md) · [직전37차 같은 수준](../37차/README.md#reading-level-5)
+[같은 수준 프로젝트](../../docs/읽기안내/레벨5.md) · [직전37차 같은 수준](../37차/README.md#user-content-reading-level-5)
+
+</details>
+
