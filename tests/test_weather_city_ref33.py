@@ -38,7 +38,7 @@ class WeatherCityRef33Tests(unittest.TestCase):
         self.assertIn('language=en',url);self.assertIn('countryCode=US',url)
         label=client.snapshot['region'];callback(dict(results=[CITY]))
         self.assertEqual(client.snapshot['city_ref']['geonames_id'],123)
-        self.assertEqual(client.snapshot['region'],label)
+        self.assertEqual(client.snapshot['region'],'합성시 · Example State · Example')
         client._city_ref=None;client._geocode_done(dict(results=[localized]))
         _,callback=client._get.call_args.args;callback(dict(results=[dict(CITY,id=456)]))
         self.assertIsNone(client.snapshot['city_ref'])

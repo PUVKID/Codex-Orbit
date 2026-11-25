@@ -1997,7 +1997,8 @@ class Controller(QObject):
         self.usage = UsageClient(settings.values.get('codex_exe', ''), self.gui_owner)
         self.usage.changed.connect(self.update_usage)
         self.update_usage(self.usage.snapshot)
-        self.weather = WeatherClient(self.gui_owner, language=get_language(), location_override=settings.values.get('weather_location'))
+        self.weather = WeatherClient(self.gui_owner, language=get_language(), location_override=settings.values.get('weather_location'),
+                                     auto_correction=settings.values.get('weather_auto_correction'))
         self.weather.changed.connect(self.update_weather)
         self._apply_theme_country(settings.values.get('theme_country','KR'), estimated=False)
         self.update_weather(self.weather.snapshot)

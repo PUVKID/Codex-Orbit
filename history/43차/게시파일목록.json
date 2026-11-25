@@ -1,0 +1,197 @@
+{
+  "base": "e17ee954845e810c11b711a8ff294fd2b3e41e6c",
+  "files": [
+    {
+      "path": "src/app.py",
+      "change": "수정",
+      "bytes": 162145,
+      "sha256": "4fb8135d3f8b3f0f5d2ecbe0b787098bf3f6dc2013eefdc60e1ce59d18ea35da"
+    },
+    {
+      "path": "src/update_widgets.py",
+      "change": "수정",
+      "bytes": 10670,
+      "sha256": "39b9375b3be5592d514bc67559792ce6a2ced2cb7ebae94bbce44ee8e1e82129"
+    },
+    {
+      "path": "src/weather.py",
+      "change": "수정",
+      "bytes": 45225,
+      "sha256": "ed051cd4f7bd2a8857d394e8afbde822c832ea4ab7169490673619e29bf1c7b6"
+    },
+    {
+      "path": "src/weather_native.py",
+      "change": "추가",
+      "bytes": 1500,
+      "sha256": "48836c264506d275b73eb9a4381d405d129e64a699f2205292e4f183accd45a4"
+    },
+    {
+      "path": "tools/build43.py",
+      "change": "추가",
+      "bytes": 3413,
+      "sha256": "2e6a5465edaa4c6595f2cf6356ee463e929929b4c9d32424617fa7f44c9a5b6b"
+    },
+    {
+      "path": "tools/orbit43.spec",
+      "change": "추가",
+      "bytes": 1370,
+      "sha256": "a21800375b3a03e7b1de7752f042e60baa359d1b4e2c35ff2bfbd71f6aa8a728"
+    },
+    {
+      "path": "tools/installer.iss",
+      "change": "수정",
+      "bytes": 3851,
+      "sha256": "dd5441810f9b4d699e01da5ee8cfb1f4ae41886be34986cda0fbf5e7305c9ed9"
+    },
+    {
+      "path": "native/weather_guard/Cargo.toml",
+      "change": "추가",
+      "bytes": 151,
+      "sha256": "371dfc58caadff6a6d403cab708aabee738c02d856064e48866557b58789fd18"
+    },
+    {
+      "path": "native/weather_guard/Cargo.lock",
+      "change": "추가",
+      "bytes": 164,
+      "sha256": "60e3eb8c0f475789fd962f913a3c4c3860e9a778af7d2662d87807b6fbd22ed6"
+    },
+    {
+      "path": "native/weather_guard/src/lib.rs",
+      "change": "추가",
+      "bytes": 1200,
+      "sha256": "17ec3633d31db2d17a5d9d080746e5605ff6505758a1aa71f1c9206db6b4fd18"
+    },
+    {
+      "path": "tests/test_weather43.py",
+      "change": "추가",
+      "bytes": 3784,
+      "sha256": "0a1953cc80c9a46286a18e3d36a97f0091a7678349cbc9488447efa108b1e274"
+    },
+    {
+      "path": "tests/test_weather_city_ref33.py",
+      "change": "수정",
+      "bytes": 3558,
+      "sha256": "5028536478bb9e6f367b7a1577a43bb1982000d838396036aa6912990dc4c5f3"
+    },
+    {
+      "path": "docs/43차_날씨와위치.md",
+      "change": "추가",
+      "bytes": 4957,
+      "sha256": "08e8913298c79e6224698167c4c4a87bb026397e16532aceb749bc4e2d547b39"
+    },
+    {
+      "path": "README.md",
+      "change": "수정",
+      "bytes": 34827,
+      "sha256": "5b97707ebb170b9f89c147eb91087311410a5afd62fdcfb0bc6447b8ecffc322"
+    },
+    {
+      "path": "README.en.md",
+      "change": "수정",
+      "bytes": 22012,
+      "sha256": "929e860a6ec402e04f53538ff3415f86308ed5378befb243e868d8be307ce1d8"
+    },
+    {
+      "path": "docs/REVISION_INDEX.md",
+      "change": "수정",
+      "bytes": 12469,
+      "sha256": "504f95fc6305c9612e6f61de6fe353ffe2ab8c41f926b48bd217531b8f6296dc"
+    },
+    {
+      "path": "assets/사용법.md",
+      "change": "수정",
+      "bytes": 18845,
+      "sha256": "f5273225188d625c9afe51af1067b64abd8a44689e11255822395d7998284014"
+    },
+    {
+      "path": "history/43차/문서원문/사용법.md.txt",
+      "change": "추가",
+      "bytes": 20372,
+      "sha256": "bfa6e0ff611a13b44422779e5a1647dc0db9d27c864bb3399d9c3116537491d1"
+    },
+    {
+      "path": "docs/읽기안내/레벨1.md",
+      "change": "수정",
+      "bytes": 117299,
+      "sha256": "be361b8f076b0e262dd3b8eaedc5e85e6578105f78089add0cfbf2282dc4c998"
+    },
+    {
+      "path": "docs/읽기안내/레벨2.md",
+      "change": "수정",
+      "bytes": 120833,
+      "sha256": "ab227db710803325000ef561609c9517d52142be2ee6bec18be15437029639da"
+    },
+    {
+      "path": "docs/읽기안내/레벨3.md",
+      "change": "수정",
+      "bytes": 132857,
+      "sha256": "dba42fb6d367d657ad63f1e570f32147218be98785bf3c61a897d81a8134256b"
+    },
+    {
+      "path": "docs/읽기안내/레벨4.md",
+      "change": "수정",
+      "bytes": 118669,
+      "sha256": "15009e020a40551fefeff9c7428a8dee525ae3004d5e9a46615ed7fc3be35a8b"
+    },
+    {
+      "path": "docs/읽기안내/레벨5.md",
+      "change": "수정",
+      "bytes": 135745,
+      "sha256": "8a152e4d57966efca66bc34ac4a35043b9c833e0dd13eae9c2a12e578c17379d"
+    },
+    {
+      "path": "history/43차/README.md",
+      "change": "추가",
+      "bytes": 15205,
+      "sha256": "49fee2d7a71f8f0f66c168ea6b45a834af3bca9cb42d3163766dadd4d368bf00"
+    },
+    {
+      "path": "docs/DOWNLOADS.md",
+      "change": "수정",
+      "bytes": 12702,
+      "sha256": "783dbb77242fd3e56365e7aa99b18c34ed85144a237e63c195b09667bfe0c7e4"
+    },
+    {
+      "path": "변경기록_43차.md",
+      "change": "추가",
+      "bytes": 1634,
+      "sha256": "6a960e7fb6d790d52ab1aad74d5f9cf69f1dd1b09d142940d0dfcef3bf0d6965"
+    },
+    {
+      "path": "history/43차/직전차수.diff",
+      "change": "추가",
+      "bytes": 119492,
+      "sha256": "8e557f320d1b165f3f3129d3e44c4f7647751f0aa9784c73b479b7f56da562e2"
+    },
+    {
+      "path": "history/43차/비교01.md",
+      "change": "추가",
+      "bytes": 70727,
+      "sha256": "b4c3b0c79e8d91fe7e9b4d0e27fd93c55fa5e3afe9ec93e6412a3886f253b525"
+    },
+    {
+      "path": "history/43차/비교02.md",
+      "change": "추가",
+      "bytes": 50354,
+      "sha256": "e708120fdd1e2c0a0bd8830c0b6b4429e240c12d55e40f4294248d93d828c3d9"
+    },
+    {
+      "path": "history/43차/비교.md",
+      "change": "추가",
+      "bytes": 218,
+      "sha256": "d5c029e5c720e8991c45b18c2e386bb596dc441890aa6905345ff20a62371c89"
+    }
+  ],
+  "binaries": [
+    {
+      "name": "CodexOrbit.exe",
+      "bytes": 105747032,
+      "sha256": "74d7b12bddda15f1f38aff17836619d3c736f81ff48edc1ba1547fda7e2b7085"
+    },
+    {
+      "name": "CodexOrbit-Setup.exe",
+      "bytes": 107830480,
+      "sha256": "9218ce58c2156d1348083c21e128321737804b7beb06f931325488334d80104b"
+    }
+  ]
+}

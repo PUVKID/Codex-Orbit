@@ -1,11 +1,15 @@
 """네트워크로 대략적인 지역과 현재 기온을 비동기 조회합니다."""
 import json
 import math
+import hashlib
+import ipaddress
 import re
 import time
 from datetime import datetime, timedelta, timezone
 from collections import OrderedDict
 from urllib.parse import urlencode
+
+from weather_native import validate_weather_grid
 
 from PySide6.QtCore import QObject, QTimer, QUrl, Signal
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
@@ -434,17 +438,43 @@ class PlaceSearchClient(CitySearchClient):
         self._pending_key = None
 
 
+def network_key(value):
+    """현재 연결 비교용 단방향 식별값만 보존하고 원본 IP는 저장하지 않습니다."""
+    try:
+        canonical = str(ipaddress.ip_address(value))
+    except (ValueError, TypeError):
+        return ''
+    return hashlib.sha256(('CodexOrbit-location-v1:' + canonical).encode('ascii')).hexdigest()
+
+
+def normalize_auto_correction(value):
+    if not isinstance(value, dict) or value.get('source') != 'user_confirmed':
+        return None
+    key = value.get('network_key')
+    if not isinstance(key, str) or not re.fullmatch('[0-9a-f]{64}', key):
+        return None
+    try:
+        city = normalize_city(value.get('city'))
+    except (ValueError, TypeError):
+        return None
+    return dict(city=city, network_key=key, source='user_confirmed') if city else None
+
+
 class WeatherClient(QObject):
     changed = Signal(dict)
     LIMIT = 65536
     TIMEOUT_MS = 8000
-    INTERVAL_MS = 300000
+    INTERVAL_MS = 60000
+    LOCATION_INTERVAL_SECONDS = 300
 
-    def __init__(self, parent=None, language='ko', location_override=None):
+    def __init__(self, parent=None, language='ko', location_override=None, auto_correction=None):
         super().__init__(parent)
         if language not in ('ko', 'en'):
             raise ValueError('지원 언어는 ko 또는 en입니다.')
         self.language = language
+        self.auto_correction = normalize_auto_correction(auto_correction)
+        self._correction_active = False
+        self._location_checked_at = None
         self.manager = QNetworkAccessManager(self)
         self.poll_timer = QTimer(self)
         self.poll_timer.setInterval(self.INTERVAL_MS)
@@ -497,6 +527,8 @@ class WeatherClient(QObject):
         self._generation += 1
         self._abort_request()
         self.location_override = city
+        self._location_checked_at = None
+        self._correction_active = False
         self._location = None
         self._city_ref = None
         self._region = self._region_original = ''
@@ -545,7 +577,7 @@ class WeatherClient(QObject):
             return
         if self._location is not None:
             self._region, self._region_original = localized_region(self._location, language)
-            self._region_source = 'ipwho.is · 원문 또는 국내 사전'
+            self._region_source = ('사용자 확인 도시 · 현재 연결 보정' if self._correction_active else 'ipwho.is · 원문 또는 국내 사전')
             self._publish(region=self._region, region_original=self._region_original,
                           language=language, region_source=self._region_source, busy=False)
             if was_busy or self.snapshot['temperature'] is None:
@@ -577,6 +609,10 @@ class WeatherClient(QObject):
         self._generation += 1
         if self.location_override is not None:
             self._configure_override()
+            self._request_weather()
+            return True
+        if (self._location is not None and self._location_checked_at is not None
+                and 0 <= time.monotonic() - self._location_checked_at < self.LOCATION_INTERVAL_SECONDS):
             self._request_weather()
             return True
         self._stage = 'location'
@@ -636,6 +672,11 @@ class WeatherClient(QObject):
         if not self._valid_number(latitude, -90, 90) or not self._valid_number(longitude, -180, 180):
             raise ValueError('위치 범위')
         previous_location = self._location
+        self._location_checked_at = time.monotonic()
+        correction = self.auto_correction
+        self._correction_active = bool(correction and
+            correction['network_key'] == network_key(data.get('ip')) and
+            correction['city']['country_code'] == (data.get('country_code', '').upper() if isinstance(data.get('country_code'), str) else ''))
         # IP 자체는 복사하지 않으며 좌표는 현재 요청 문맥과 유한 메모리 캐시에만 둡니다.
         self._location = {key: data[key] for key in ('city', 'region', 'country', 'country_code', 'latitude', 'longitude') if key in data}
         for key in ('city', 'region', 'country', 'country_code'):
@@ -644,6 +685,12 @@ class WeatherClient(QObject):
         self._location['country_code'] = self._location['country_code'].upper()
         self._region, self._region_original = localized_region(self._location, self.language)
         self._region_source = 'ipwho.is · 원문 또는 국내 사전'
+        if self._correction_active:
+            city = correction['city']
+            self._location = dict(city=city['name'], region=city['admin1'], country=city['country'],
+                                  country_code=city['country_code'], latitude=city['latitude'], longitude=city['longitude'])
+            self._region, self._region_original = localized_region(self._location, self.language)
+            self._region_source = '사용자 확인 도시 · 현재 연결 보정'
         fields = ('latitude', 'longitude', 'country_code', 'city', 'region')
         changed_location = previous_location is None or any(previous_location.get(key) != self._location.get(key) for key in fields)
         cleared = {}
@@ -653,6 +700,12 @@ class WeatherClient(QObject):
             self._city_ref = None
             cleared = dict(city_ref=None, temperature=None, humidity=None, precipitation=None, precipitation_interval_seconds=None, weather_code=None, sunrise=None, sunset=None,
                            timezone='', utc_offset_seconds=None, checked_at=None, observed_at=None, stale=True)
+        if self._correction_active:
+            identifier = correction['city'].get('id')
+            self._city_ref = (dict(provider='geonames', geonames_id=identifier, country_code=self._location['country_code'],
+                                   confidence='selected', provenance='사용자 확인 · Open-Meteo / GeoNames')
+                              if type(identifier) is int and identifier > 0 else None)
+            cleared['city_ref'] = self._city_ref
         self._publish(country_code=self._location['country_code'] if re.fullmatch('[A-Z]{2}', self._location['country_code']) else '',
                       region=self._region, region_original=self._region_original, region_source=self._region_source,
                       location_mode='automatic', **cleared)
@@ -672,7 +725,7 @@ class WeatherClient(QObject):
             round(self._location['latitude'], 2), round(self._location['longitude'], 2), self.language)
 
     def _lookup_region(self):
-        if self.closed or self._location is None or self.location_override is not None:
+        if self.closed or self._location is None or self.location_override is not None or self._correction_active:
             return
         key = self._cache_key()
         if key in self._region_cache:
@@ -748,6 +801,8 @@ class WeatherClient(QObject):
         if self.closed:
             return
         current = data.get('current')
+        if self._location is not None:
+            validate_weather_grid(self._location, data)
         temperature = current.get('temperature_2m') if isinstance(current, dict) else None
         if not self._valid_number(temperature, -100, 70):
             raise ValueError('기온 범위')

@@ -9,7 +9,7 @@ from shiboken6 import isValid
 from observatory_panel import tr
 from safe_update import SafeUpdater, REPOSITORY, read_update_result
 
-VERSION = '3.11.0'
+VERSION = '3.12.0'
 RELEASES_URL = REPOSITORY + '/releases'
 
 
@@ -188,7 +188,7 @@ class UpdateDialog(QDialog):
             text = tr('현재 버전이 최신 공개 버전입니다.', 'The current version is up to date.')
             self.action.setText(tr('다시 확인', 'Check again'))
         else:
-            text = tr('현재 버전 3.11.0 · 공식 저장소의 릴리스만 확인합니다.', 'Version 3.11.0 · Only releases from the official repository are checked.')
+            text = tr('현재 버전 3.12.0 · 공식 저장소의 릴리스만 확인합니다.', 'Version 3.12.0 · Only releases from the official repository are checked.')
             self.action.setText(tr('새 버전 확인', 'Check for update'))
         if self.staged and not getattr(sys, 'frozen', False):
             self.action.setEnabled(False)

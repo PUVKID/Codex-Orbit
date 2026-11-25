@@ -1,3 +1,15 @@
+# 3.12.0 정식 다운로드
+
+[43차 상세](../history/43차/README.md) · [사용 방법](43차_날씨와위치.md)
+
+| 파일 | 바이트 | SHA-256 |
+| --- | --- | --- |
+| [CodexOrbit.exe](https://github.com/PUVKID/Codex-Orbit/releases/download/v3.12.0/CodexOrbit.exe) | 105747032 | `74d7b12bddda15f1f38aff17836619d3c736f81ff48edc1ba1547fda7e2b7085` |
+| [CodexOrbit-Setup.exe](https://github.com/PUVKID/Codex-Orbit/releases/download/v3.12.0/CodexOrbit-Setup.exe) | 107830480 | `9218ce58c2156d1348083c21e128321737804b7beb06f931325488334d80104b` |
+
+<details>
+<summary>이전 배포 기록</summary>
+
 # 3.11.0 정식 다운로드
 
 [41차 상세](../history/41차/README.md) · [사용 방법](41차_선택한알림형식.md)
@@ -197,6 +209,8 @@ Windows 10/11 x64용 단일 실행 본과 현재 사용자 설치 본입니다. 
 
 
 공개 소스는 저장소와 GitHub의 Source code ZIP에서 받습니다. 비공개 전체 개발 ZIP·개인 위치·운영 원문은 공개 첨부에 넣지 않습니다.
+
+</details>
 
 </details>
 
