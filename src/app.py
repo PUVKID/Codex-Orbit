@@ -866,6 +866,8 @@ class Notice(QFrame):
         self.appearance.addAnimation(self.opacity_animation)
         self.appearance.finished.connect(self._motion_finished)
         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        self.setAutoFillBackground(False)
         self.setObjectName('notice')
         set_ui_style(self,'#notice {background:#f9fffc;border:1px solid #bad8ce;border-radius:16px;} QLabel {color:#193c36;background:transparent;border:none;font-weight:700;}')
         self.setFixedWidth(500)
