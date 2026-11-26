@@ -440,3 +440,7 @@ The following images show the actual Qt app with synthetic events and example va
 | Platform | Prefers Windows' default Segoe UI Emoji; Microsoft font files are not redistributed. |
 
 Ordinary Korean text, **actual inline emoji**, and **custom-drawn graphics** for models/buttons are displayed distinctly. Symbols were checked on Windows screens; font lists/results from headless Qt checks are distinguished separately.
+
+### Notification placement and motion
+
+Notifications default to the lower-right corner of the widget monitor. Choose any of four corners in Display settings → Notification position. They slide up on arrival and down on dismissal; Reduce motion skips movement. Earlier read diagnostics remain available in a collapsed detail panel.

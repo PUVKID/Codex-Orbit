@@ -4,8 +4,8 @@
 
 | 파일 | 바이트 | SHA-256 |
 | --- | --- | --- |
-| [CodexOrbit.exe](https://github.com/PUVKID/Codex-Orbit/releases/download/v3.13.0/CodexOrbit.exe) | 105840295 | `a54df0d5dfff859602e8db36f35d6dc1127511e11349bb7756fd2e36f094c724` |
-| [CodexOrbit-Setup.exe](https://github.com/PUVKID/Codex-Orbit/releases/download/v3.13.0/CodexOrbit-Setup.exe) | 107918442 | `3dd5880fea77c938228aa207cf822812b8f43ee404ff2fea8f3c4bb9f478346d` |
+| [CodexOrbit.exe](https://github.com/PUVKID/Codex-Orbit/releases/download/v3.13.0/CodexOrbit.exe) | 105845930 | `7d295acea9b0aa8fd73e4659866c7203dd3889c9252d02af81fb842d11a48a42` |
+| [CodexOrbit-Setup.exe](https://github.com/PUVKID/Codex-Orbit/releases/download/v3.13.0/CodexOrbit-Setup.exe) | 107927254 | `30e48d12970d9810b5ad789d81d9499c55bb9dea868d1912e105ae12666c7d64` |
 
 <details>
 <summary>이전 배포 기록</summary>

@@ -137,6 +137,10 @@ class Watcher:
         self.state.setdefault('seen', [])
         self.seen = set(self.state['seen'])
         self.reason_reads = {}
+        self.state.setdefault('reason_read_problems', [])
+        if (not isinstance(self.state['reason_read_problems'], list)
+                or any(not isinstance(value, str) for value in self.state['reason_read_problems'])):
+            raise ValueError('이유 조회 진단 상태가 올바르지 않습니다. 원본을 초기화하지 않습니다.')
         self.reason_budget = POLL_READ_BYTES
         self.diagnostic_failures = []
         self.activity = ActivityTracker(self.state)
@@ -439,7 +443,15 @@ class Watcher:
             # 잘린 앞부분은 정상적인 제한 조회이며 잘못된 중간 레코드는 진단에 남깁니다.
             for problem in problems:
                 if not problem.startswith('앞부분 생략:'):
-                    self.diagnostic(problem, path=filename, context='부모 공개 이유 제한 조회')
+                    identity = re.sub(r'^읽은 범위의 레코드 \d+: ', '', problem)
+                    key = hashlib.sha256((filename + '\n' + identity).encode('utf-8')).hexdigest()
+                    if key not in self.state['reason_read_problems']:
+                        failure = self.diagnostic(problem, path=filename, context='부모 공개 이유 제한 조회')
+                        # 기록 실패는 다음 주기에 재시도하며, 성공한 동일 손상만 중복을 막습니다.
+                        if failure is None:
+                            self.state['reason_read_problems'] = (self.state['reason_read_problems'] + [key])[-256:]
+                        else:
+                            self.reason_reads.pop(filename, None)
 
     def enrich_event(self, event):
         """이미 전송한 이력도 새 알림 없이 정확히 연결된 첫 배정 이유만 보강합니다."""

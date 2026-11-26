@@ -29,12 +29,16 @@ def read_jsonl_tail(path, max_bytes=MAX_TEXT_BYTES, max_records=500):
     problems = []
     if start:
         problems.append(f'앞부분 생략: 전체 {size}바이트, 최대 {max_bytes}바이트 읽음')
-        raw = raw.partition(b'\n')[2]
+        prefix, separator, remainder = raw.partition(b'\n')
+        start += len(prefix) + len(separator)
+        raw = remainder
     pieces = raw.split(b'\n')
     pieces.pop()  # 마지막 LF 뒤 조각 또는 미완성 레코드는 기다립니다.
     rows = []
+    offset = start
     for number, piece in enumerate(pieces):
         if not piece:
+            offset += 1
             continue
         try:
             row = json.loads(piece.decode('utf-8'))
@@ -42,7 +46,10 @@ def read_jsonl_tail(path, max_bytes=MAX_TEXT_BYTES, max_records=500):
                 raise ValueError('JSON 객체가 아닙니다.')
             rows.append(row)
         except (UnicodeError, ValueError) as error:
-            problems.append(f'읽은 범위의 레코드 {number + 1}: {error}')
+            # 조회 범위가 달라져도 같은 손상인지 식별하며 원문은 기록하지 않습니다.
+            problems.append(f'읽은 범위의 레코드 {number + 1}: {error} '
+                            f'[byte={offset}; sha256={digest(piece)}]')
+        offset += len(piece) + 1
     return rows[-max_records:], problems[:50]
 
 

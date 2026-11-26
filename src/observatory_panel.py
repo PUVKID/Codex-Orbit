@@ -120,14 +120,26 @@ class ObservatoryPanel(QFrame):
         super().__init__();self.controller=controller;self.setObjectName('observatoryHero')
         outer=QHBoxLayout(self);outer.setContentsMargins(20,20,20,20);outer.setSpacing(24)
         self.canvas=SceneCanvas(controller);outer.addWidget(self.canvas,2)
-        right=QWidget();right.setMinimumWidth(0);right.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Expanding);outer.addWidget(right,3)
-        body=QVBoxLayout(right);body.setContentsMargins(0,0,0,0);body.setSpacing(12)
-        self.content_scroll=QScrollArea();self.content_scroll.setWidgetResizable(True);self.content_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff);body.addWidget(self.content_scroll,1)
-        content=QWidget();content.setMinimumWidth(0);self.content_scroll.setWidget(content);section=QVBoxLayout(content);section.setContentsMargins(0,0,8,0);section.setSpacing(10)
+        right=QFrame();right.setObjectName('activitySurface');right.setMinimumWidth(0);right.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Expanding);outer.addWidget(right,3)
+        # 현재 작업은 한 면에서 읽고 하위 배치용 위젯은 배경을 칠하지 않습니다.
+        set_ui_style(right,'''QFrame#activitySurface {background:#ffffff;border:1px solid #d0e5db;border-radius:16px;}
+            QFrame#activitySurface QLabel {background:transparent;border:0;font-size:13px;}
+            QFrame#activitySurface QWidget#activityContent,
+            QFrame#activitySurface QWidget#activityViewport,
+            QFrame#activitySurface QWidget#activityActions,
+            QFrame#activitySurface QFrame#activityObservations,
+            QFrame#activitySurface QFrame#activityReplay,
+            QFrame#activitySurface QScrollArea,
+            QFrame#activitySurface QListWidget {background:transparent;border:0;border-radius:0;}
+            QFrame#activitySurface QListWidget {padding:0;}
+            QFrame#activitySurface QSlider {background:transparent;}''')
+        body=QVBoxLayout(right);body.setContentsMargins(18,18,18,16);body.setSpacing(14)
+        self.content_scroll=QScrollArea();self.content_scroll.setWidgetResizable(True);self.content_scroll.setFrameShape(QFrame.Shape.NoFrame);self.content_scroll.viewport().setObjectName('activityViewport');self.content_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff);body.addWidget(self.content_scroll,1)
+        content=QWidget();content.setObjectName('activityContent');content.setMinimumWidth(0);self.content_scroll.setWidget(content);section=QVBoxLayout(content);section.setContentsMargins(0,0,8,0);section.setSpacing(10)
         self.caption=QLabel(tr('현재 작업','Current activity'));self.caption.setObjectName('sectionCaption');section.addWidget(self.caption)
         self.heading=QLabel();self.heading.setObjectName('currentTask');self.heading.setWordWrap(True);self.heading.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Preferred);set_ui_style(self.heading,'font-size:22px;');section.addWidget(self.heading)
         self.state=QLabel();self.state.setWordWrap(True);self.state.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Preferred);section.addWidget(self.state)
-        card=QFrame();card.setObjectName('observationCard');info=QVBoxLayout(card);info.setContentsMargins(14,12,14,12)
+        card=QFrame();card.setObjectName('activityObservations');info=QVBoxLayout(card);info.setContentsMargins(0,8,0,8)
         self.observations=QLabel();self.observations.setWordWrap(True);self.observations.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Preferred);info.addWidget(self.observations);section.addWidget(card)
         self.away=QLabel();self.away.setWordWrap(True);self.away.setObjectName('sectionCaption');section.addWidget(self.away)
         self.agents=WrappedAgents();self.agents.setWordWrap(True);self.agents.setTextElideMode(Qt.TextElideMode.ElideRight);self.agents.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff);self.agents.setMinimumHeight(100);self.agents.setMaximumHeight(210);section.addWidget(self.agents,1)
@@ -135,8 +147,8 @@ class ObservatoryPanel(QFrame):
         row_buttons=[]
         self.pin=QPushButton();self.pin.clicked.connect(self.pin_agent);row_buttons.append(self.pin)
         self.bookmark=QPushButton();self.bookmark.clicked.connect(self.bookmark_event);row_buttons.append(self.bookmark)
-        self.copy=QPushButton();self.copy.clicked.connect(self.copy_id);row_buttons.append(self.copy);section.addWidget(ResponsiveRow(row_buttons))
-        replay=QFrame();replay.setObjectName('replayBar');controls=QVBoxLayout(replay);controls.setContentsMargins(12,10,12,10);controls.setSpacing(8);body.addWidget(replay)
+        self.copy=QPushButton();self.copy.clicked.connect(self.copy_id);row_buttons.append(self.copy);actions=ResponsiveRow(row_buttons);actions.setObjectName('activityActions');section.addWidget(actions)
+        replay=QFrame();replay.setObjectName('activityReplay');controls=QVBoxLayout(replay);controls.setContentsMargins(0,0,0,0);controls.setSpacing(8);body.addWidget(replay)
         self.timeline=QSlider(Qt.Orientation.Horizontal);self.timeline.setAccessibleName(tr('저장 기록 재생','Replay saved history'));self.timeline.valueChanged.connect(self.seek);controls.addWidget(self.timeline)
         replay_row=QHBoxLayout();controls.addLayout(replay_row)
         self.replay_label=QLabel();self.replay_label.setWordWrap(True);self.replay_label.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Preferred);replay_row.addWidget(self.replay_label,1)
@@ -283,6 +295,7 @@ class OrbitExperience:
                 key=check;button.setChecked(c.settings.values.get(key,False));button.toggled.connect(lambda value:self.option(key,value))
             action.setDefaultWidget(box);menu.addAction(action);self.menu_rows.append((button,label,ko,en,description_ko,description_en));return action,button
         for key,ko,en,dk,de in [('reduced_motion','움직임 줄이기','Reduce motion','입체 조형의 움직임을 최소화합니다.','Minimize animation of the sculpture.'),('edge_docking','화면 가장자리에 붙이기','Dock at screen edge','가장자리에서는 작게 접고 마우스를 올리면 펼칩니다.','Fold near the edge; hover to expand.'),('notification_sound','알림 소리','Notification sound','변경 알림이 올 때 짧은 소리를 냅니다.','Play a short sound for new notifications.')]:menu_row(self.menu,ko,en,dk,de,key)
+        self.add_notice_position_menu(self.menu)
         self.menu.addSeparator();quality=self.menu.addMenu(tr('성능·화질','Performance and quality'));self.quality_menu=quality;self.quality_group=QActionGroup(self.menu);self.quality_group.setExclusive(True)
         for value,ko,en,dk,de in [('eco','절전','Eco','움직임을 초당 최대20회로 제한합니다.','Limit animation to 20 frames per second.'),('balanced','균형','Balanced','움직임을 초당 최대30회로 제한합니다.','Limit animation to 30 frames per second.'),('high','고화질','High quality','움직임을 초당 최대60회로 제한합니다.','Limit animation to 60 frames per second.')]:
             action=quality.addAction(tr(ko,en));action.setCheckable(True);action.setData(value);action.setChecked(c.settings.values.get('render_quality','balanced')==value);self.quality_group.addAction(action);action.triggered.connect(lambda checked=False,v=value:self.option('render_quality',v));action.setToolTip(tr(dk,de))
@@ -320,6 +333,30 @@ class OrbitExperience:
         c.window.layout().itemAt(0).layout().insertWidget(2,self.controls_toggle)
         self.controls_scroll.hide()
         self.update_labels()
+    def add_notice_position_menu(self,menu):
+        """저장한 알림 위치를 네 모서리 중 하나로 선택합니다."""
+        self.notice_position_menu=menu.addMenu(tr('알림 위치','Notification position'))
+        self.notice_position_menu.setToolTipsVisible(True)
+        self.notice_position_group=QActionGroup(self.notice_position_menu)
+        self.notice_position_group.setExclusive(True)
+        self.notice_position_labels=[('bottom_right','오른쪽 아래','Bottom right'),
+            ('top_left','왼쪽 위','Top left'),('bottom_left','왼쪽 아래','Bottom left'),
+            ('top_right','오른쪽 위','Top right')]
+        for value,ko,en in self.notice_position_labels:
+            action=self.notice_position_menu.addAction(tr(ko,en));action.setCheckable(True)
+            action.setData(value);self.notice_position_group.addAction(action)
+            action.triggered.connect(lambda checked=False,v=value:self.option('notice_position',v))
+        self.refresh_notice_position_menu()
+
+    def refresh_notice_position_menu(self):
+        """언어와 저장값이 바뀌면 메뉴 제목·설명·선택을 함께 갱신합니다."""
+        self.notice_position_menu.setTitle(tr('알림 위치','Notification position'))
+        current=self.controller.settings.values.get('notice_position','bottom_right')
+        for action,(_,ko,en) in zip(self.notice_position_group.actions(),self.notice_position_labels):
+            action.setText(tr(ko,en));action.setChecked(action.data()==current)
+            action.setToolTip(tr('알림을 이 화면 모서리에 배치합니다. 위치를 선택하면 바로 적용됩니다.',
+                'Place notifications in this screen corner. Select a position to apply it immediately.'))
+
     def update_labels(self):
         c=self.controller
         self.play.setText(tr('▶ 재생','▶ Play') if c.settings.values.get('motion_paused') else tr('Ⅱ 일시정지','Ⅱ Pause'))
@@ -345,6 +382,7 @@ class OrbitExperience:
         for label,ko,en in self.ui_labels:label.setText(tr(ko,en))
         for button,label,ko,en,dk,de in self.menu_rows:button.setText(tr(ko,en));label.setText(tr(dk,de))
         for action,ko,en in self.menu_sections:action.setText(tr(ko,en))
+        self.refresh_notice_position_menu()
         self.quality_menu.setTitle(tr('성능·화질','Performance and quality'))
         for action,(ko,en) in zip(self.quality_group.actions(),[('절전','Eco'),('균형','Balanced'),('고화질','High quality')]):action.setText(tr(ko,en))
         self.theme_combo.blockSignals(True)
@@ -390,11 +428,15 @@ class OrbitExperience:
         if key=='ui_theme':
             from theme import normalize_theme_mode
             value=normalize_theme_mode(value)
-        c=self.controller;previous=c.settings.values.get(key)
+        c=self.controller;previous=c.settings.values.get(key);had_value=key in c.settings.values
         c.settings.values[key]=value
         try:c.settings.save()
         except Exception as error:
-            c.settings.values[key]=previous;QMessageBox.warning(c.window,tr('저장 실패','Save failed'),str(error));return
+            c.settings.values[key]=previous
+            if key=='notice_position':
+                if not had_value:c.settings.values.pop(key,None)
+                self.refresh_notice_position_menu()
+            QMessageBox.warning(c.window,tr('저장 실패','Save failed'),str(error));return
         if key=='broadcast_mode':
             for notice in c.notices.values():notice.broadcast_mode=bool(value);notice.update_event(notice.notice_event)
             mask_details(c.window);self.panel.refresh()
@@ -403,6 +445,8 @@ class OrbitExperience:
                 combo.blockSignals(True);combo.setCurrentIndex(max(0,combo.findData(value)));combo.blockSignals(False)
         for setting,button in [('broadcast_mode',self.privacy),('motion_paused',self.play)]:
             if key==setting:button.blockSignals(True);button.setChecked(bool(value));button.blockSignals(False)
+        if key=='notice_position':
+            self.refresh_notice_position_menu();c.layout_notices()
         if key=='render_quality':
             for action in self.quality_group.actions():action.setChecked(action.data()==value)
         if key=='ui_theme':

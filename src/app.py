@@ -17,7 +17,7 @@ from i18n import translate as t, get_language, set_language, remember_translatio
 from notice_format import (friendly_effort, previous_field, short_reason, public_text,
                            public_reason_original, notice_model_label, notice_previous_model,
                            notice_reason, notice_reason_original, notice_reason_caption)
-from PySide6.QtCore import QEvent, QObject, QLockFile, Qt, QSize, QThread, QTimer, Signal, Slot, QPropertyAnimation, QEasingCurve
+from PySide6.QtCore import QEvent, QObject, QLockFile, Qt, QSize, QPoint, QThread, QTimer, Signal, Slot, QPropertyAnimation, QParallelAnimationGroup, QEasingCurve
 from PySide6.QtGui import QIcon, QPainter, QPixmap, QColor, QImage, QPen, QPainterPath
 from PySide6.QtWidgets import (QApplication, QDialog,
                              QFrame, QGridLayout, QHBoxLayout, QLabel, QComboBox,
@@ -325,7 +325,7 @@ class Settings:
         self.directory.mkdir(parents=True, exist_ok=True)
         self.path = self.directory / 'settings.json'
         home = Path(os.environ.get('CODEX_HOME') or (Path.home() / '.codex'))
-        self.values = {'sessions': str(home / 'sessions'), 'theme': '자동', 'popup': True, 'notice_timeout_ms': 30000, 'language': 'ko', 'motion_speed': 1.0, 'weather_location': None, 'theme_country_mode': 'auto', 'theme_country': 'KR'}
+        self.values = {'sessions': str(home / 'sessions'), 'theme': '자동', 'popup': True, 'notice_timeout_ms': 30000, 'notice_position': 'bottom_right', 'language': 'ko', 'motion_speed': 1.0, 'weather_location': None, 'theme_country_mode': 'auto', 'theme_country': 'KR'}
         if self.path.exists():
             value = json.loads(read_text_strict(self.path))
             if not isinstance(value, dict):
@@ -333,6 +333,8 @@ class Settings:
             self.values.update(value)
         if self.values.get('language') not in ('ko', 'en'):
             self.values['language'] = 'ko'
+        if self.values.get('notice_position') not in ('top_left', 'bottom_left', 'top_right', 'bottom_right'):
+            self.values['notice_position'] = 'bottom_right'
         try:
             self.values['motion_speed'] = validated_motion_speed(self.values['motion_speed'])
         except ValueError:
@@ -824,6 +826,30 @@ def display_notice_comparison(owner, event):
             set_ui_style(label,f'font-size:{size}px;font-weight:700;color:#193c36;padding:5px;' + ('background:#d4f3e7;border-radius:6px;' if changed and index==1 else ''))
 
 
+def notice_positions(rect, sizes, corner='bottom_right'):
+    """위젯이 있는 모니터의 가용 화면 네 모서리에 알림을 쌓습니다."""
+    if not sizes:
+        return []
+    margin = min(12, max(0, min(rect.width(), rect.height()) // 10))
+    total = sum(height for width, height in sizes) + 10 * (len(sizes) - 1)
+    bottom = corner in ('bottom_left', 'bottom_right')
+    right = corner in ('top_right', 'bottom_right')
+    y = max(rect.top()+margin, rect.bottom()+1-margin-total) if bottom else rect.top()+margin
+    overlap = total > rect.height()-2*margin
+    span = max(0, rect.height()-2*margin-max(height for width,height in sizes))
+    positions = []
+    for index, (width, height) in enumerate(sizes):
+        x = rect.right()+1-margin-width if right else rect.left()+margin
+        if overlap:
+            y = rect.top()+margin+span*index//max(1,len(sizes)-1)
+            offset = min(index*18,max(0,rect.width()-width-2*margin))
+            x += -offset if right else offset
+        positions.append(QPoint(max(rect.left(), min(x, rect.right()+1-width)),
+                                max(rect.top(), min(y, rect.bottom()+1-height))))
+        if not overlap:y += height+10
+    return positions
+
+
 class Notice(QFrame):
     completed = Signal(str)
 
@@ -831,6 +857,16 @@ class Notice(QFrame):
         super().__init__(parent if parent is not None else _application_gui_root(),
                          Qt.WindowType.Tool | Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
         self.open_details = open_details
+        self.reduced_motion = False
+        self._dismissing = False
+        self._motion_target = None
+        self._motion_phase = ''
+        self.appearance = QParallelAnimationGroup(self)
+        self.position_animation = QPropertyAnimation(self, b'pos', self.appearance)
+        self.opacity_animation = QPropertyAnimation(self, b'windowOpacity', self.appearance)
+        self.appearance.addAnimation(self.position_animation)
+        self.appearance.addAnimation(self.opacity_animation)
+        self.appearance.finished.connect(self._motion_finished)
         self.setAttribute(Qt.WidgetAttribute.WA_ShowWithoutActivating)
         self.setObjectName('notice')
         set_ui_style(self,'#notice {background:#f9fffc;border:1px solid #bad8ce;border-radius:16px;} QLabel {color:#193c36;background:transparent;border:none;font-weight:700;}')
@@ -1033,16 +1069,73 @@ class Notice(QFrame):
         if value:pause_notice(self)
         elif not self.underMouse() and not self.reason_dialog.isVisible():resume_notice(self)
 
-    def dismiss(self):
-        if not self.isVisible():
+    def _motion_finished(self):
+        if self._dismissing:
+            self._finish_dismiss()
+        else:
+            self._motion_phase = ''
+            self.setWindowOpacity(1.)
+
+    def _animate_to(self, target, phase):
+        self.appearance.stop()
+        self._motion_target = QPoint(target)
+        self._motion_phase = phase
+        duration = 220 if phase == 'exit' else 280
+        curve = QEasingCurve.Type.InCubic if phase == 'exit' else QEasingCurve.Type.OutCubic
+        for animation in (self.position_animation, self.opacity_animation):
+            animation.setDuration(duration)
+            animation.setEasingCurve(curve)
+        self.position_animation.setStartValue(self.pos())
+        self.position_animation.setEndValue(target)
+        self.opacity_animation.setStartValue(self.windowOpacity())
+        self.opacity_animation.setEndValue(0. if phase == 'exit' else 1.)
+        self.appearance.start()
+
+    def place_animated(self, x, y, entering=False):
+        """겹쳐 쌓인 알림도 현재 위치에서 이어 움직이고 같은 도착점에서는 재시작하지 않습니다."""
+        if self._dismissing:
             return
-        self.timer.stop()
+        target = QPoint(x, y)
+        if self.reduced_motion:
+            self.appearance.stop()
+            self.move(target)
+            self.setWindowOpacity(1.)
+            self._motion_target = target
+            self._motion_phase = ''
+            if entering:self.show()
+            return
+        if entering:
+            self.appearance.stop()
+            self.move(target + QPoint(0, 42))
+            self.setWindowOpacity(0.)
+            self.show()
+        elif self._motion_target == target:
+            return
+        self._animate_to(target, 'enter' if entering or self._motion_phase == 'enter' else 'move')
+
+    def _finish_dismiss(self):
         self.hide()
+        self.setWindowOpacity(1.)
         self.reason_dialog.hide()
         self.completed.emit(str(getattr(self, 'event_id', '')))
 
+    def dismiss(self, immediate=False):
+        # clicked(bool) 신호의 False는 보통 닫기로 처리합니다.
+        if not self.isVisible():
+            return
+        if self._dismissing and not immediate:
+            return
+        self.timer.stop()
+        self.reason_dialog.hide()
+        self._dismissing = True
+        if immediate or self.reduced_motion:
+            self.appearance.stop()
+            self._finish_dismiss()
+        else:
+            self._animate_to(self.pos() + QPoint(0, 42), 'exit')
+
     def closeEvent(self, event):
-        self.dismiss()
+        self.dismiss(immediate=True)
         super().closeEvent(event)
 
     def _content_fit_signature(self):
@@ -1145,15 +1238,10 @@ class Notice(QFrame):
         self.available_rect = screen.availableGeometry()
         self.update_event(event, replay)
         rect = self.available_rect
-        self.move(max(rect.left(), min(orbit.x() - self.width(), rect.right() - self.width() + 1)),
-                  max(rect.top(), min(orbit.y(), rect.bottom() - self.height() + 1)))
-        self.show()
-        self.appearance = QPropertyAnimation(self, b'windowOpacity', self)
-        self.appearance.setDuration(180)
-        self.appearance.setStartValue(.92)
-        self.appearance.setEndValue(1.)
-        self.appearance.setEasingCurve(QEasingCurve.Type.OutCubic)
-        self.appearance.start()
+        self._dismissing = False
+        target = notice_positions(rect, [(self.width(), self.height())],
+                                  getattr(self, 'anchor_corner', 'bottom_right'))[0]
+        self.place_animated(target.x(), target.y(), entering=True)
         self.timer.stop()
         if timeout_ms != 0:
             self.timer.start(max(5000, min(120000, int(timeout_ms))))
@@ -1405,27 +1493,54 @@ class WeatherLocationDialog(QDialog):
         self.accept()
 
 
-class DiagnosticLabel(QLabel):
-    """오류가 있을 때 변경 기록 안에 원문을 보여 주는 읽기 전용 라벨입니다."""
+class DiagnosticLabel(QWidget):
+    """현재 상태를 짧게 안내하고 보존된 진단 원문은 필요할 때 펼칩니다."""
     def __init__(self):
         super().__init__()
-        self.setWordWrap(True)
-        self.setTextFormat(Qt.TextFormat.PlainText)
-        self.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
-        set_ui_style(self,'font-size:12px;color:#49615b;border-left:2px solid #aaaaaa;padding:10px;')
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 8, 0, 0)
+        layout.setSpacing(8)
+        self.summary = QLabel()
+        self.summary.setWordWrap(True)
+        self.summary.setTextFormat(Qt.TextFormat.PlainText)
+        self.summary.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        layout.addWidget(self.summary)
+        self.details_button = QPushButton()
+        self.details_button.setCheckable(True)
+        self.details_button.toggled.connect(self._toggle_details)
+        layout.addWidget(self.details_button, 0, Qt.AlignmentFlag.AlignLeft)
+        self.details = QPlainTextEdit()
+        self.details.setReadOnly(True)
+        self.details.setMaximumHeight(180)
+        self.details.hide()
+        layout.addWidget(self.details)
         self.original_text = ''
         self.hide()
+    def _toggle_details(self, expanded):
+        self.details.setVisible(expanded)
+        self.details_button.setText(t('진단 접기' if expanded else '진단 자세히 보기'))
     def setPlainText(self, text):
         self.original_text = str(text)
+        historical = False
+        earlier_read = False
         try:
             value = json.loads(text)
             failed = any(value.get(key) for key in ('error','diagnostic_error','notice_presentation_error',
                 'operation_log_error','diagnostic_write_failures','recent_errors','read_problems'))
             failed = failed or any(word in value.get('state','') for word in ('오류','실패','중단','지연'))
+            historical = bool(value.get('diagnostics'))
+            earlier_read = historical and all(isinstance(row, dict) and
+                row.get('context') == '부모 공개 이유 제한 조회' for row in value['diagnostics'])
         except (ValueError, TypeError, AttributeError):
             failed = bool(text)
-        self.setText(t('감시 진단\n') + self.original_text if failed else '')
-        self.setVisible(bool(failed))
+        message = ('확인이 필요한 문제가 있습니다. 자세한 진단을 확인해 주세요.' if failed else
+                   '이전 기록을 읽지 못한 내역이 있습니다. 현재 변경 감시는 계속됩니다.' if earlier_read else
+                   '이전 진단 기록이 있습니다. 자세히 보기를 눌러 확인할 수 있습니다.')
+        self.summary.setText(t(message))
+        if self.details.toPlainText() != self.original_text:
+            self.details.setPlainText(self.original_text)
+        self._toggle_details(self.details_button.isChecked())
+        self.setVisible(bool(failed or historical))
     def toPlainText(self):
         return self.original_text
 
@@ -2492,27 +2607,15 @@ class Controller(QObject):
             return
         screen = QApplication.screenAt(self.orbit.pos()) or QApplication.primaryScreen()
         rect = screen.availableGeometry()
-        cards = list(self.notices.values())
+        cards = [card for card in self.notices.values() if not card._dismissing]
+        corner = self.settings.values.get('notice_position', 'bottom_right')
         for card in cards:
+            card.reduced_motion = bool(self.settings.values.get('reduced_motion', False))
             card.fit_content(rect)
-        total = sum(card.height() for card in cards) + 10 * (len(cards) - 1)
-        top = max(rect.top(), min(self.orbit.y(), rect.bottom() + 1 - total))
-        y = top
-        # 모두 들어가지 않아도 새 카드를 기다리게 하지 않고 화면 안에서 어긋나게 겹칩니다.
-        overlap = total > rect.height()
-        for index, card in enumerate(cards):
-            x = max(rect.left(), min(self.orbit.x() - card.width(), rect.right() + 1 - card.width()))
-            if overlap:
-                # 기준 위치를 먼저 화면 안으로 제한한 뒤 반대 방향으로 어긋나게 배치합니다.
-                offset = min(index * 18, max(0, rect.width() - card.width()))
-                x = x - offset if x - offset >= rect.left() else x + offset
-                span = max(0, rect.height() - max(c.height() for c in cards))
-                y = rect.top() + (span * index // max(1, len(cards) - 1))
-            card.move(max(rect.left(), min(x, rect.right() + 1 - card.width())),
-                      max(rect.top(), min(y, rect.bottom() + 1 - card.height())))
+        positions = notice_positions(rect, [(card.width(), card.height()) for card in cards], corner)
+        for card, position in zip(cards, positions):
+            card.place_animated(position.x(), position.y())
             card.raise_()
-            if not overlap:
-                y += card.height() + 10
 
     def enqueue_notice(self, event, replay=False):
         if self.closing:
@@ -2525,7 +2628,7 @@ class Controller(QObject):
                 notice.update_event(event)
             self.update_notice_count()
             return
-        unpinned = [n for n in self.notices.values() if not getattr(n,'pinned',False)]
+        unpinned = [n for n in self.notices.values() if not getattr(n,'pinned',False) and not n._dismissing]
         if len(unpinned) >= self.max_visible_notices:
             oldest = unpinned[0]
             # 교체 도중의 중간 정렬은 새 카드가 들어간 뒤 최종 정렬 한 번으로 합칩니다.
@@ -2541,6 +2644,8 @@ class Controller(QObject):
     def display_notice(self, event, replay=False):
         self.notice = Notice(self.show, self.gui_owner)
         self.notices[event.get('id')] = self.notice
+        self.notice.reduced_motion = bool(self.settings.values.get('reduced_motion', False))
+        self.notice.anchor_corner = self.settings.values.get('notice_position', 'bottom_right')
         self.notice.broadcast_mode = bool(self.settings.values.get('broadcast_mode', False))
         self.notice.apply_text_scale(self.settings.values.get('text_scale',100)/100)
         self.notice.bookmark_callback = lambda key: self.features.set_bookmark(key, key not in self.features.bookmarks)

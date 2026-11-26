@@ -5,6 +5,11 @@ _language = 'ko'
 
 # 이 사전의 키는 앱 표시 문구이며 사용자 기록을 검색·치환하지 않습니다.
 _EN = {
+'이전 진단 기록이 있습니다. 자세히 보기를 눌러 확인할 수 있습니다.':'Earlier diagnostics are available. Open details to review them.',
+'진단 접기':'Hide diagnostics',
+'진단 자세히 보기':'View diagnostics',
+'확인이 필요한 문제가 있습니다. 자세한 진단을 확인해 주세요.':'An issue needs attention. Open diagnostics for details.',
+'이전 기록을 읽지 못한 내역이 있습니다. 현재 변경 감시는 계속됩니다.':'Some earlier records could not be read. Change monitoring is still running.',
 '기록 열기':'Open record','변경 이유':'Why this changed','작업 설명':'Task description','⭐ 보관':'⭐ Save',
 '고정':'Pin', '기록 보관':'Save record', '자세히 보기':'View details',
 '축제 목록 {items}개 항목 · 발표 일정 {events}개':'Festival catalog: {items} items · {events} announced schedules',
