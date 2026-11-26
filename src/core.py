@@ -101,8 +101,12 @@ def title_catalog(index_path, cache_path):
         try:
             with closing(sqlite3.connect(databases[0].resolve().as_uri() + '?mode=ro', uri=True, timeout=.2)) as connection:
                 columns = {row[1] for row in connection.execute('PRAGMA table_info(threads)')}
+                label_columns = {'name'} if 'name' in columns else {'title'}
                 label_column = 'name' if 'name' in columns else 'title'
-                if {'id', label_column, 'updated_at'} <= columns:
+                if {'name', 'title'} <= columns:
+                    label_columns = {'name', 'title'}
+                    label_column = "CASE WHEN trim(coalesce(name,'')) <> '' THEN name ELSE title END"
+                if {'id', 'updated_at'} | label_columns <= columns:
                     for sid, name, updated in connection.execute(
                             f"SELECT id,{label_column},updated_at FROM threads WHERE {label_column} IS NOT NULL AND trim({label_column}) <> ''"):
                         if isinstance(sid, str) and isinstance(name, str) and len(name) <= 2000:
