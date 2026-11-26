@@ -17,7 +17,7 @@ from i18n import translate as t, get_language, set_language, remember_translatio
 from notice_format import (friendly_effort, previous_field, short_reason, public_text,
                            public_reason_original, notice_model_label, notice_previous_model,
                            notice_reason, notice_reason_original, notice_reason_caption)
-from PySide6.QtCore import QEvent, QObject, QLockFile, Qt, QSize, QPoint, QThread, QTimer, Signal, Slot, QPropertyAnimation, QParallelAnimationGroup, QEasingCurve
+from PySide6.QtCore import QEvent, QObject, QLockFile, Qt, QSize, QPoint, QRectF, QThread, QTimer, Signal, Slot, QPropertyAnimation, QParallelAnimationGroup, QEasingCurve
 from PySide6.QtGui import QIcon, QPainter, QPixmap, QColor, QImage, QPen, QPainterPath
 from PySide6.QtWidgets import (QApplication, QDialog,
                              QFrame, QGridLayout, QHBoxLayout, QLabel, QComboBox,
@@ -161,8 +161,10 @@ def configuration_change_label(event):
 
 def task_explanation(event, limit=360):
     fallback = '공개된 작업 설명이 기록되지 않았습니다.'
-    if event.get('task_summary'):
+    if event.get('task_summary') not in (None, '', '확인 불가', '확인되지 않음'):
         return public_text(event['task_summary'], fallback, limit)
+    if event.get('task_source') == '비공개 저장':
+        return t('작업 설명이 비공개로 저장되어 읽을 수 없습니다.')
     if event.get('reason'):
         return public_text(short_reason(event, limit), fallback, limit)
     return t(fallback)
@@ -850,6 +852,16 @@ def notice_positions(rect, sizes, corner='bottom_right'):
 
 class Notice(QFrame):
     completed = Signal(str)
+
+    def paintEvent(self, event):
+        """투명 창 안에 카드만 그려 네 귀퉁이에 사각 배경이 남지 않게 합니다."""
+        from theme import colors
+        palette = colors()
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        painter.setPen(QPen(QColor(palette['border']), 1.0))
+        painter.setBrush(QColor(palette['surface']))
+        painter.drawRoundedRect(QRectF(self.rect()).adjusted(.5, .5, -.5, -.5), 18, 18)
 
     def __init__(self, open_details, parent=None):
         super().__init__(parent if parent is not None else _application_gui_root(),

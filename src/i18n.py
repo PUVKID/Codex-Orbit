@@ -5,6 +5,8 @@ _language = 'ko'
 
 # 이 사전의 키는 앱 표시 문구이며 사용자 기록을 검색·치환하지 않습니다.
 _EN = {
+'작업 설명이 비공개로 저장되어 읽을 수 없습니다.':'The task description is stored privately and cannot be read.',
+'작업 설명이 기록되지 않았습니다.':'No task description was recorded.',
 '이전 진단 기록이 있습니다. 자세히 보기를 눌러 확인할 수 있습니다.':'Earlier diagnostics are available. Open details to review them.',
 '진단 접기':'Hide diagnostics',
 '진단 자세히 보기':'View diagnostics',

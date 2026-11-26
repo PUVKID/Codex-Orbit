@@ -407,7 +407,7 @@ class Watcher:
 
     def _lookup_parent_reason(self, event):
         parent = event.get('parent')
-        if not parent or not event.get('agent_path') or event.get('before') is not None:
+        if not parent or not event.get('agent_path') or (event.get('before') is not None and event.get('kind') != 'activity'):
             return
         for filename, known in self.state['files'].items():
             if known.get('sid') != parent and known.get('expected_sid') != parent:
@@ -439,6 +439,7 @@ class Watcher:
                     info['owner_active'] = payload.get('thread_id') == parent
                 elif row.get('type') == 'response_item' and info['owner_active']:
                     self.public_reason(payload, info)
+                    self.activity.response(payload, info)
             self.reason_reads[filename] = signature
             # 잘린 앞부분은 정상적인 제한 조회이며 잘못된 중간 레코드는 진단에 남깁니다.
             for problem in problems:

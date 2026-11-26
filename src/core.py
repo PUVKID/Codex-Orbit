@@ -1,9 +1,11 @@
 """외부 통신 없는 로컬 자료 읽기와 명시적 지침 적용."""
-from datetime import datetime
+from datetime import datetime, timezone
 import hashlib
 import json
 import os
 from pathlib import Path
+import sqlite3
+from contextlib import closing
 import stat
 import uuid
 
@@ -68,9 +70,12 @@ def title_catalog(index_path, cache_path):
               for r in rows if isinstance(r.get('id'), str) and isinstance(r.get('thread_name'), str)
               and r['thread_name'].strip() and len(r['thread_name']) <= 2000}
     if Path(cache_path).exists():
-        cache = json.loads(read_text_strict(cache_path))
+        try:
+            cache = json.loads(read_text_strict(cache_path))
+        except (OSError, ValueError, UnicodeError):
+            cache = {'titles': {}}
         if not isinstance(cache, dict) or not isinstance(cache.get('titles'), dict):
-            raise ValueError('제목 캐시 구조가 올바르지 않습니다.')
+            cache = {'titles': {}}
         for sid, title in cache['titles'].items():
             if isinstance(sid, str) and isinstance(title, str) and title.strip() and len(title) <= 2000:
                 checked_at = cache.get('checked_at') or cache.get('observed_at') or '확인 시각 미기록'
@@ -87,6 +92,25 @@ def title_catalog(index_path, cache_path):
                     continue
                 result[sid] = {'title': title, 'source': str(cache.get('source', '출처 미기록')) + ' 확인 캐시',
                                'checked_at': checked_at}
+    # Codex의 표시 이름은 JSONL 색인이 손상되거나 갱신되지 않아도 DB에 남습니다.
+    # 읽기 전용으로 현재 DB를 열며 사용자 첫 메시지를 제목으로 합성하지 않습니다.
+    databases = sorted(Path(index_path).parent.glob('state_*.sqlite'),
+                       key=lambda p: int(p.stem.split('_')[-1]) if p.stem.split('_')[-1].isdigit() else -1,
+                       reverse=True)
+    if databases:
+        try:
+            with closing(sqlite3.connect(databases[0].resolve().as_uri() + '?mode=ro', uri=True, timeout=.2)) as connection:
+                columns = {row[1] for row in connection.execute('PRAGMA table_info(threads)')}
+                label_column = 'name' if 'name' in columns else 'title'
+                if {'id', label_column, 'updated_at'} <= columns:
+                    for sid, name, updated in connection.execute(
+                            f"SELECT id,{label_column},updated_at FROM threads WHERE {label_column} IS NOT NULL AND trim({label_column}) <> ''"):
+                        if isinstance(sid, str) and isinstance(name, str) and len(name) <= 2000:
+                            result[sid] = {'title': name, 'source': '로컬 Codex DB 표시 이름',
+                                           'checked_at': datetime.fromtimestamp(updated, timezone.utc).isoformat()
+                                           if isinstance(updated, (int, float)) else '확인 시각 미기록'}
+        except (sqlite3.Error, OSError, ValueError, OverflowError):
+            pass  # 기존 색인·캐시가 있으면 그대로 사용하고 다음 주기에 다시 조회합니다.
     return result
 
 

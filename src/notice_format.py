@@ -56,10 +56,12 @@ def notice_reason(event, limit=210, *, max_sentences=2):
         result = (t('이유가 기록되지 않았습니다.') if missing else t('설명이 길어 원문에서 전체 내용을 확인해 주세요.') if any(len(x.strip()) > limit for x in sentences) else t('공개된 선택 이유를 확인할 수 없습니다.'))
     if event.get('kind') == 'activity':
         task = public_text(event.get('task_summary'), '', 1000000)
-        if task and task not in result:
+        if task in ('', '확인 불가', '확인되지 않음'):
+            task = t('작업 설명이 비공개로 저장되어 읽을 수 없습니다.') if event.get('task_source') == '비공개 저장' else t('작업 설명이 기록되지 않았습니다.')
+        if task:
             short_task = next((x.strip() for x in re.split(r'(?<=[.!?。])\s+|\n+', task) if x.strip() and len(x.strip()) <= 100), '')
             if short_task:
-                result += '\n' + t('맡긴 일: ') + short_task
+                result += '\n\n' + t('맡긴 일: ') + short_task
     return result
 
 
@@ -69,7 +71,7 @@ def notice_reason_original(event):
     task = public_text(event.get('task_summary'), '', 1000000)
     if event.get('kind') == 'activity' and task:
         parts.append(t('맡긴 일: ') + task)
-    return '\n'.join(parts)
+    return '\n\n'.join(parts)
 
 
 def friendly_effort(value):

@@ -176,15 +176,26 @@ class ActivityTracker:
             return
         message = safe_public_text(arguments.get('message'))
         reason = safe_public_text(commentary)
-        summary = reason or message
+        summary = message
         calls[parent + '|' + call_id] = {'operation': name, 'target': target, 'task_name': task,
             'reason': reason, 'task_summary': re.sub(r'\s+', ' ', summary)[:600],
-            'task_source': ('정확한 호출 직전 공개 commentary' if reason else
-                            '읽을 수 있는 공개 호출 message' if message else '확인 불가'),
+            'task_source': ('읽을 수 있는 공개 호출 message' if message else
+                            '비공개 저장' if isinstance(arguments.get('message'), str) and
+                            arguments['message'].startswith('gAAAA') else '확인 불가'),
             'requested': {'model': _text(arguments.get('model')),
                           'effort': _text(arguments.get('reasoning_effort'), 64),
                           'role': _text(arguments.get('agent_type'), 64)}}
         _trim(calls, MAX_PUBLIC_CALLS)
+        # 이미 정확한 native 호출 연결로 만든 이력도 공개 설명만 보강합니다.
+        for stored in self.data['events'].values():
+            event = stored.get('event', {})
+            if (event.get('parent') == parent and event.get('call_id') == call_id
+                    and ((name == 'followup_task' and target in (event.get('target'), event.get('agent_path')))
+                         or (name == 'spawn_agent' and task == event.get('task_name')))):
+                call = calls[parent + '|' + call_id]
+                event.update(task_summary=call['task_summary'] or '확인 불가', task_source=call['task_source'])
+                if reason:
+                    event.update(reason=reason, reason_raw=reason, reason_source='정확한 호출 직전 공개 commentary')
 
     def defer(self, record, info):
         """원본 본문 없이 검증에 필요한 native 필드만 전역 32개까지 기다립니다."""
