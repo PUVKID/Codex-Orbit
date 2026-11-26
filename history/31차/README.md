@@ -1,3 +1,7 @@
+<!-- language-choice:start -->
+🔵 **한국어** · [English overview](../../en/README.md)
+<!-- language-choice:end -->
+
 <a name="-31차--화면-마감과-테마-선택"></a>
 # 31차·화면 마감과 테마 선택
 

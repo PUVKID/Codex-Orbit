@@ -1,3 +1,7 @@
+<!-- language-choice:start -->
+🔵 **한국어** · [English overview](../../en/README.md)
+<!-- language-choice:end -->
+
 # 36차·설치 선택 항목 정리
 
 제품 버전은 **3.5.0**이며 36차는 설치 파일 수정 이력입니다. [현재 다운로드](../../docs/DOWNLOADS.md) · [직전 전체 비교](직전차수.diff)

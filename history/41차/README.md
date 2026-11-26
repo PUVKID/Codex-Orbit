@@ -1,3 +1,7 @@
+<!-- language-choice:start -->
+🔵 **한국어** · [English overview](../../en/README.md)
+<!-- language-choice:end -->
+
 # 41차 · 선택한 당시 알림 디자인
 
 3.11.0은 사용자가 선택한 당시 알림 디자인을 복원합니다. 모델 그림과 추론 막대, 짧은 이유, 설명·상세 링크, 고정·기록 보관 두 버튼으로 구성합니다.

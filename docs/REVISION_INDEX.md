@@ -1,3 +1,7 @@
+<!-- language-choice:start -->
+🔵 **한국어** · [English overview](../en/README.md)
+<!-- language-choice:end -->
+
 <a name="️-차수별-독립-프로젝트-안내"></a>
 # 차수별 독립 프로젝트 안내
 
