@@ -791,11 +791,37 @@ class NoticeValue(QLabel):
     def set_symbol(self, kind):
         self.symbol_kind=kind;self.update()
 
+    def event(self, event):
+        if event.type() == QEvent.Type.DynamicPropertyChange and event.propertyName() == b'orbit_text_scale31':
+            # 내부 화면의 글자 확대에서도 그림과 글자 사이 여백을 함께 늘립니다.
+            scale = float(self.property('orbit_text_scale31') or 1)
+            self.setContentsMargins(round(26 * scale), 0, 0, 0)
+            self.setMinimumHeight(round(24 * scale) + (6 if scale > 1 else 0))
+        return super().event(event)
+
     def paintEvent(self, event):
         super().paintEvent(event)
         if self.symbol_kind:
             side=round(20*float(self.property('orbit_text_scale31') or 1))
             painter=QPainter(self);painter.drawPixmap(2,max(0,(self.height()-side)//2),notice_symbol(self.symbol_kind,side));painter.end()
+
+
+def display_notice_comparison(owner, event):
+    """알림과 내부 기록에서 같은 값·그림·변경 강조를 표시합니다."""
+    before, after_map = event.get('before'), event.get('after') or {}
+    owner.model_previous.setText(str(before.get('model')) if before and before.get('model') else notice_previous_model(before))
+    owner.model_current.setText(str(after_map.get('model')) if after_map.get('model') else notice_model_label(None))
+    owner.effort_previous.setText(friendly_effort(before.get('effort')).rsplit(' ',1)[0] if before and before.get('effort') in ('none','minimal','low','medium','high','xhigh','ultra') else previous_field(before,'effort'))
+    owner.effort_current.setText(friendly_effort(after_map.get('effort')).rsplit(' ',1)[0] if after_map.get('effort') in ('none','minimal','low','medium','high','xhigh','ultra') else friendly_effort(after_map.get('effort')))
+    for value,model_label,effort_label in ((before or {},owner.model_previous,owner.effort_previous),(after_map,owner.model_current,owner.effort_current)):
+        family=re.fullmatch(r'gpt-\d+(?:\.\d+)?-(sol|astra|terra|luna)',str(value.get('model') or ''))
+        model_label.set_symbol(family.group(1) if family else 'model')
+        effort_label.set_symbol('effort:'+str(value.get('effort') or 'unknown'))
+    for key, labels in (('model', (owner.model_previous, owner.model_current)), ('effort', (owner.effort_previous, owner.effort_current))):
+        changed = event.get('kind') != 'activity' and before is not None and before.get(key) and after_map.get(key) and before.get(key) != after_map.get(key)
+        for index,label in enumerate(labels):
+            size=16 if key=='model' else 14
+            set_ui_style(label,f'font-size:{size}px;font-weight:700;color:#193c36;padding:5px;' + ('background:#d4f3e7;border-radius:6px;' if changed and index==1 else ''))
 
 
 class Notice(QFrame):
@@ -1164,19 +1190,7 @@ class Notice(QFrame):
         self.notice_after_heading.setText(t('현재'))
         for label, caption in ((self.model_previous, '이전 모델'), (self.model_current, '현재 모델'), (self.effort_previous, '이전 추론 강도'), (self.effort_current, '현재 추론 강도')):
             label.setAccessibleName(t(caption))
-        self.model_previous.setText(str(before.get('model')) if before and before.get('model') else notice_previous_model(before))
-        self.model_current.setText(str(after_map.get('model')) if after_map.get('model') else notice_model_label(None))
-        self.effort_previous.setText(friendly_effort(before.get('effort')).rsplit(' ',1)[0] if before and before.get('effort') in ('none','minimal','low','medium','high','xhigh','ultra') else previous_field(before,'effort'))
-        self.effort_current.setText(friendly_effort(after_map.get('effort')).rsplit(' ',1)[0] if after_map.get('effort') in ('none','minimal','low','medium','high','xhigh','ultra') else friendly_effort(after_map.get('effort')))
-        for value,model_label,effort_label in ((before or {},self.model_previous,self.effort_previous),(after_map,self.model_current,self.effort_current)):
-            family=re.fullmatch(r'gpt-\d+(?:\.\d+)?-(sol|astra|terra|luna)',str(value.get('model') or ''))
-            model_label.set_symbol(family.group(1) if family else 'model')
-            effort_label.set_symbol('effort:'+str(value.get('effort') or 'unknown'))
-        for key, labels in (('model', (self.model_previous, self.model_current)), ('effort', (self.effort_previous, self.effort_current))):
-            changed = event.get('kind') != 'activity' and before is not None and before.get(key) and after_map.get(key) and before.get(key) != after_map.get(key)
-            for index,label in enumerate(labels):
-                size=16 if key=='model' else 14
-                set_ui_style(label,f'font-size:{size}px;font-weight:700;color:#193c36;padding:5px;' + ('background:#d4f3e7;border-radius:6px;' if changed and index==1 else ''))
+        display_notice_comparison(self, event)
         self.after_value.setText((t('현재 설정 · ') if event.get('kind') == 'activity' else t('→ 변경 후 · ')) + (self.setting_label(after).replace('\n',' · ') if after is not None else t('확인 불가')))
         self.text.setText(notice_reason_caption(event) + notice_reason(event, 140, max_sentences=1))
         self.reason_original.setPlainText(notice_reason_original(event))
@@ -1567,7 +1581,7 @@ class Details(QDialog):
         box.setSpacing(12)
         heading = QHBoxLayout()
         title = QLabel(t('계정 사용 한도'))
-        set_ui_style(title,'color:#355c50;font-size:25px;font-weight:700;')
+        set_ui_style(title,'color:#355c50;font-size:21px;font-weight:700;')
         title.setWordWrap(True);title.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Preferred)
         usage_title=with_symbol(title,'quota');usage_title.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Preferred);heading.addWidget(usage_title,1)
         self.usage_refresh = QPushButton(t('새로고침'))
@@ -1655,7 +1669,7 @@ class Details(QDialog):
             number.setToolTip(percentage_tooltip(remaining))
             number.setTextFormat(Qt.TextFormat.PlainText)
             number.setWordWrap(True)
-            set_ui_style(number,'color:#355c50;font-size:42px;font-weight:700;')
+            set_ui_style(number,'color:#355c50;font-size:30px;font-weight:700;')
             self.usage_rows_layout.addWidget(number)
             reset = QLabel(t('초기화: ') + t(reset_label(row['resets_at'])) + (t(' · 이전 조회 값') if stale else ''))
             reset.setTextFormat(Qt.TextFormat.PlainText)
@@ -1697,38 +1711,34 @@ class Details(QDialog):
         self.card.setObjectName('eventCard')
         self.card.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Minimum)
         card_layout = QVBoxLayout(self.card)
-        card_layout.setContentsMargins(20, 20, 20, 20)
-        card_layout.setSpacing(12)
+        card_layout.setContentsMargins(18, 16, 18, 16)
+        card_layout.setSpacing(8)
         self.chat_title = QLabel(t('변경을 기다리고 있습니다'))
-        set_ui_style(self.chat_title,'font-size:23px;font-weight:700;color:#183c36;padding:2px 0 6px 0;')
+        set_ui_style(self.chat_title,'font-size:20px;font-weight:700;color:#193c36;padding:0;')
         self.change_heading = QLabel(t('변경을 기다리고 있습니다'))
         set_ui_style(self.change_heading,'font-size:13px;color:#14785d;padding:5px 8px;')
-        self.model_transition = QLabel('')
-        set_ui_style(self.model_transition,'font-size:26px;font-weight:700;color:#23453f;')
-        self.model_previous = self.model_transition
-        self.model_current = QLabel('—')
-        set_ui_style(self.model_current,'font-size:26px;font-weight:700;color:#23453f;')
-        self.effort_transition = QLabel('')
-        set_ui_style(self.effort_transition,'font-size:26px;font-weight:700;color:#23453f;')
-        self.effort_previous = self.effort_transition
-        self.effort_current = QLabel('—')
-        set_ui_style(self.effort_current,'font-size:26px;font-weight:700;color:#23453f;')
+        self.model_previous = NoticeValue()
+        self.model_transition = self.model_previous
+        self.model_current = NoticeValue()
+        self.effort_previous = NoticeValue()
+        self.effort_transition = self.effort_previous
+        self.effort_current = NoticeValue()
         self.before_value = QLabel(t('변경 전  ·  —'))
         self.after_value = QLabel(t('변경 후  ·  —'))
         set_ui_style(self.after_value,'font-size:12px;color:#55736b;padding:0;')
         set_ui_style(self.before_value,'font-size:12px;color:#55736b;')
         self.activity_message = QLabel()
         self.activity_message.setWordWrap(True)
-        set_ui_style(self.activity_message,'font-size:22px;font-weight:700;color:#183c36;padding:6px 0;')
+        set_ui_style(self.activity_message,'font-size:13px;color:#193c36;padding:0;')
         self.activity_message.hide()
         self.task_value = QLabel(t('공개된 작업 설명을 기다립니다.'))
         self.selection_reason = QLabel(t('모델·추론 강도 선택 이유는 공개되지 않았습니다.'))
-        set_ui_style(self.task_value,'font-size:20px;font-weight:700;color:#23453f;padding:4px 0 10px 0;')
+        set_ui_style(self.task_value,'font-size:13px;color:#193c36;padding:0;')
         set_ui_style(self.selection_reason,'font-size:11px;color:#55736b;padding:4px 0;')
         self.reason_title = QLabel(t('왜 맡겼나요? · 공개 설명'))
         set_ui_style(self.reason_title,'color:#355c50;font-size:11px;padding-top:10px;')
         self.reason_value = QLabel(t('첫 실행은 과거 기록을 기준선으로 읽으며 과거 알림을 만들지 않습니다.'))
-        set_ui_style(self.reason_value,'font-size:15px;background:#edf8f2;border:1px solid #c4dfd0;border-radius:12px;padding:14px;color:#355c50;')
+        set_ui_style(self.reason_value,'font-size:14px;color:#193c36;padding:6px 0;')
         self.event_time = QLabel('')
         set_ui_style(self.event_time,'color:#355c50;font-size:11px;padding:0;')
         all_labels = (self.chat_title, self.event_time, self.change_heading, self.model_previous, self.model_current,
@@ -1740,31 +1750,52 @@ class Details(QDialog):
             label.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Minimum)
             label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
         card_layout.addWidget(with_symbol(self.event_time, 'time'))
-        for label in (self.chat_title, self.change_heading, self.activity_message, self.task_value):card_layout.addWidget(label)
-        table = QGridLayout();self.history_comparison_grid=table
-        self.history_comparison_headers=[];self.history_comparison_arrows=[]
-        table.setHorizontalSpacing(18)
-        table.setVerticalSpacing(12)
+        for label in (self.chat_title, self.change_heading):
+            card_layout.addWidget(label)
+        self.comparison = QFrame()
+        self.comparison.setObjectName('noticeComparison')
+        set_ui_style(self.comparison,'QFrame#noticeComparison {background:#edf8f2;border:1px solid #c4dfd0;border-radius:10px;}')
+        values = QGridLayout(self.comparison)
+        self.values_layout = values
+        values.setContentsMargins(10,10,10,10)
+        values.setHorizontalSpacing(8)
+        values.setVerticalSpacing(8)
+        self.notice_after_heading = QLabel(t('변경 후'))
+        for column, text in ((1, t('이전')), (2, ''), (3, t('현재'))):
+            label = self.notice_after_heading if column == 3 else QLabel(text)
+            if column==2:label.setPixmap(notice_symbol('arrow',16))
+            set_ui_style(label,'font-size:12px;color:#193c36;')
+            values.addWidget(label, 0, column)
+        self.comparison_labels=[]
+        for row, caption in ((1,'모델'),(2,'추론 강도')):
+            label=QLabel(t(caption));label.setWordWrap(True)
+            label.setMinimumWidth(60)
+            label.setMaximumWidth(66)
+            set_ui_style(label,'font-size:12px;color:#193c36;padding-right:4px;')
+            values.addWidget(label,row,0);self.comparison_labels.append(label)
+        for row, (previous, current) in enumerate(((self.model_previous, self.model_current),
+                                                    (self.effort_previous, self.effort_current)), 1):
+            for column, label in ((1, previous), (3, current)):
+                label.setWordWrap(True)
+                label.setTextFormat(Qt.TextFormat.PlainText)
+                set_ui_style(label,'font-size:16px;font-weight:700;color:#193c36;padding:3px;')
+                values.addWidget(label, row, column)
+        values.setColumnStretch(1, 1)
+        values.setColumnStretch(3, 1)
+        card_layout.addWidget(self.comparison)
+        self.model_transition = self.model_previous
+        self.effort_transition = self.effort_previous
+        self.history_comparison_grid = self.values_layout
+        self.history_comparison_headers = [self.values_layout.itemAtPosition(0, 1).widget(), self.notice_after_heading]
+        self.history_comparison_arrows = [self.values_layout.itemAtPosition(0, 2).widget()]
         self.after_headings = []
-        for row, (kind, previous, current) in enumerate((('모델',self.model_previous,self.model_current),
-                                                       ('추론 강도',self.effort_previous,self.effort_current))):
-            for col, text in ((0,t('이전')+' '+t(kind)),(2,t('새')+' '+t(kind))):
-                label=QLabel(text + (' 🧠' if row == 1 else ''));set_ui_style(label,'font-size:12px;color:#355c50;')
-                label.setWordWrap(True);label.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Minimum);self.history_comparison_headers.append(label)
-                if col == 2: self.after_headings.append((label, kind))
-                table.addWidget(with_symbol(label, 'model' if row == 0 else 'effort'),row*3,col)
-            arrow=QLabel('→');set_ui_style(arrow,'font-size:16px;color:#55736b;')
-            table.addWidget(previous,row*3+1,0)
-            self.history_comparison_arrows.append(arrow);table.addWidget(arrow,row*3+1,1)
-            table.addWidget(current,row*3+1,2)
-            line=QFrame();line.setFrameShape(QFrame.Shape.HLine);set_ui_style(line,'color:#3c5662;')
-            table.addWidget(line,row*3+2,0,1,3)
-        table.setColumnStretch(0,1);table.setColumnStretch(2,1)
-        card_layout.addLayout(table)
         for label in (self.before_value,self.after_value):card_layout.addWidget(label);label.hide()
-        card_layout.addWidget(with_symbol(self.reason_title, 'reason'))
+        self.reason_title.hide()
         card_layout.addWidget(self.reason_value)
-        card_layout.addWidget(self.selection_reason)
+        # 긴 작업 내용과 선택 설명은 원문 펼치기에서 함께 읽습니다.
+        self.activity_message.hide()
+        self.task_value.hide()
+        self.selection_reason.hide()
         self.diagnostics = DiagnosticLabel()
         cards.addWidget(self.diagnostics)
         cards.addWidget(self.card)
@@ -1809,33 +1840,29 @@ class Details(QDialog):
             if value.get('kind') == 'activity' or value.get('before') is None:
                 heading = event_kind(value)
             else:
-                heading = (t('모델·추론 강도가 바뀌었습니다') if model_changed and effort_changed
-                           else t('모델이 바뀌었습니다') if model_changed
-                           else t('추론 강도가 바뀌었습니다') if effort_changed else t('설정 관측'))
+                heading = (t('모델·추론 변경') if model_changed and effort_changed
+                           else t('모델 변경') if model_changed
+                           else t('추론 강도 변경') if effort_changed else t('설정 관측'))
+            if value.get('kind') == 'settings':
+                heading += ' · ' + t('선택 설정')
             if value.get('kind') == 'activity' and value.get('before') is not None and value['before'] == value.get('after'):
                 heading += ' · ' + t('설정 유지')
-            self.change_heading.setText(t(heading))
-            set_ui_style(self.change_heading,'font-size:13px;padding:5px 8px;border-radius:8px;color:'+event_accent(value)+';background:#e0f4e9;')
+            icon = '📋' if value.get('kind') == 'activity' and value.get('activity_type') == 'assigned' else '▶️' if value.get('kind') == 'activity' else '✅' if value.get('kind') == 'settings' else '🔄'
+            self.change_heading.setText(icon + ' ' + t(heading))
+            set_ui_style(self.change_heading,'font-size:13px;padding:2px 0;color:#193c36;')
             self.activity_message.setText(activity_message(value))
-            self.activity_message.setVisible(bool(activity_message(value)))
+            self.activity_message.hide()
             self.task_value.setText(task_explanation(value))
             self.selection_reason.setText(selection_explanation(value))
-            for heading, kind in self.after_headings:
-                heading.setText(t('현재') + ' ' + t(kind) + (' 🧠' if kind == '추론 강도' else ''))
-            self.model_previous.setText(notice_previous_model(value.get('before')))
-            self.model_current.setText(notice_model_label(after.get('model')))
-            self.effort_previous.setText(previous_field(value.get('before'), 'effort'))
-            self.effort_current.setText(friendly_effort(after.get('effort')))
-            before = value.get('before')
-            for key, labels in (('model', (self.model_previous, self.model_current)), ('effort', (self.effort_previous, self.effort_current))):
-                changed = value.get('kind') != 'activity' and before is not None and before.get(key) and after.get(key) and before.get(key) != after.get(key)
-                for label in labels:
-                    set_ui_style(label,'font-size:26px;font-weight:700;color:#23453f;' + ('background:#d4f3e7;border-radius:8px;padding:4px;' if changed else ''))
+            self.notice_after_heading.setText(t('현재'))
+            for label, caption in ((self.model_previous, '이전 모델'), (self.model_current, '현재 모델'), (self.effort_previous, '이전 추론 강도'), (self.effort_current, '현재 추론 강도')):
+                label.setAccessibleName(t(caption))
+            display_notice_comparison(self, value)
             self.before_value.setText(t('이전 기록 없음') if value.get('before') is None
                                       else t('이전') + '  ' + model_card_label(value['before']))
             self.after_value.setText((t('현재') + '  ' if value.get('kind') == 'activity' else '→  ') + model_card_label(value.get('after')))
             self.reason_title.setText(t('💬 이유'))
-            self.reason_value.setText(notice_reason(value, 600))
+            self.reason_value.setText(notice_reason_caption(value) + notice_reason(value, 140, max_sentences=1))
             self.reason_value.setToolTip(notice_reason_original(value))
             self.event_time.setText(kst_label(value.get('time')))
             self.history_layout_timer.start(0)

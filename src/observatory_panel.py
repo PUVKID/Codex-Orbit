@@ -6,7 +6,7 @@ import time
 from PySide6.QtCore import Qt,QTimer,QSize,QRect
 from PySide6.QtGui import QPainter,QColor,QActionGroup
 from PySide6.QtWidgets import (QWidget,QFrame,QVBoxLayout,QHBoxLayout,QLabel,QPushButton,
-    QListWidget,QListWidgetItem,QSlider,QComboBox,QFileDialog,QMessageBox,QApplication,QStackedWidget,QScrollArea,QSizePolicy,QWidgetAction,QCheckBox,QRadioButton)
+    QListWidget,QListWidgetItem,QSlider,QComboBox,QFileDialog,QMessageBox,QApplication,QStackedWidget,QScrollArea,QSizePolicy,QWidgetAction,QCheckBox,QRadioButton,QLayout)
 from i18n import translate as t,get_language
 from typography import app_font
 from ui_layout import OrbitComboBox as QComboBox,ResponsiveRow,PageStack as QStackedWidget
@@ -217,7 +217,17 @@ class OrbitExperience:
     def install_navigation(self):
         window=self.controller.window;layout=window.layout();tabs=window.tabs
         layout.removeWidget(tabs);wrapper=QWidget();row=QHBoxLayout(wrapper);row.setContentsMargins(0,0,0,0)
-        navigation=QFrame();navigation.setObjectName('navigationSurface');nav=QVBoxLayout(navigation);nav.setContentsMargins(8,12,8,12);nav.setSpacing(4);row.addWidget(navigation);self.stack=QStackedWidget();self.stack.setSizePolicy(QSizePolicy.Policy.Expanding,QSizePolicy.Policy.Ignored);self.stack.addWidget(self.panel);self.stack.addWidget(tabs);self.stack.setCurrentIndex(1);row.addWidget(self.stack,1);tabs.tabBar().hide()
+        navigation=QFrame();navigation.setObjectName('navigationSurface')
+        nav=QVBoxLayout(navigation);nav.setContentsMargins(8,12,8,12);nav.setSpacing(4)
+        # 작은 창에서도 항목을 압축하지 않고 원래 탐색 프레임을 스크롤합니다.
+        nav.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
+        self.navigation_scroll=QScrollArea();self.navigation_scroll.setObjectName('navigationScroll')
+        self.navigation_scroll.setWidgetResizable(True);self.navigation_scroll.setFrameShape(QFrame.Shape.NoFrame)
+        self.navigation_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.navigation_scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.navigation_scroll.setMinimumWidth(172);self.navigation_scroll.setMaximumWidth(204)
+        self.navigation_scroll.setWidget(navigation);row.addWidget(self.navigation_scroll)
+        self.stack=QStackedWidget();self.stack.setSizePolicy(QSizePolicy.Policy.Expanding,QSizePolicy.Policy.Ignored);self.stack.addWidget(self.panel);self.stack.addWidget(tabs);self.stack.setCurrentIndex(1);row.addWidget(self.stack,1);tabs.tabBar().hide()
         self.observatory_button=QPushButton(tr('작업 현황','Overview'));self.observatory_button.setCheckable(True);self.observatory_button.clicked.connect(lambda:(self.stack.setCurrentIndex(0),self.update_navigation()));nav.addWidget(self.observatory_button)
         self.nav_buttons=[]
         for index,ko,en in ((0,'변경 기록','Activity'),(1,'사용 한도','Usage')):
@@ -289,6 +299,26 @@ class OrbitExperience:
         self.location_button=QPushButton(tr('지역 변경','Change location'))
         self.location_button.clicked.connect(c.show_weather_location)
         location_row.addWidget(self.location_label,1);location_row.addWidget(self.location_button);rows.addLayout(location_row)
+        for widget in (self.view,self.play,self.privacy,self.more):row.removeWidget(widget)
+        rows.removeItem(row);row.deleteLater()
+        self.motion_actions=ResponsiveRow([self.view,self.play,self.privacy,self.more])
+        rows.insertWidget(1,self.motion_actions)
+        self.controls.setMinimumWidth(0)
+        self.controls.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Preferred)
+        # 조작부를 한곳에 모아 기록 읽기 공간을 확보하고 작은 창에서는 설정만 스크롤합니다.
+        c.window.layout().removeWidget(self.controls)
+        self.controls_scroll=QScrollArea();self.controls_scroll.setObjectName('displayPreferences')
+        self.controls_scroll.setWidgetResizable(True);self.controls_scroll.setFrameShape(QFrame.Shape.NoFrame)
+        self.controls_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.controls_scroll.setMaximumHeight(260);self.controls_scroll.setWidget(self.controls)
+        c.window.layout().insertWidget(1,self.controls_scroll)
+        self.controls_toggle=QPushButton(tr('화면·위젯 설정','Display and widget'))
+        self.controls_toggle.setCheckable(True)
+        self.controls_toggle.setAccessibleName(tr('화면·위젯 설정','Display and widget'))
+        self.controls_toggle.setToolTip(tr('테마·언어·글자 크기·움직임·지역을 설정합니다.','Set theme, language, text size, motion and location.'))
+        self.controls_toggle.toggled.connect(self.controls_scroll.setVisible)
+        c.window.layout().itemAt(0).layout().insertWidget(2,self.controls_toggle)
+        self.controls_scroll.hide()
         self.update_labels()
     def update_labels(self):
         c=self.controller
@@ -296,6 +326,9 @@ class OrbitExperience:
         self.privacy.setToolTip(tr('화면에서 채팅 제목과 작업 설명을 가립니다. 저장된 기록은 그대로 유지됩니다.','Hide chat titles and task descriptions on screen. Stored records stay unchanged.'))
         self.privacy.setText(tr('프라이버시 모드 켜짐','Privacy on') if c.settings.values.get('broadcast_mode') else tr('프라이버시 모드','Privacy mode'))
     def retranslate(self):
+        self.controls_toggle.setText(tr('화면·위젯 설정','Display and widget'))
+        self.controls_toggle.setAccessibleName(tr('화면·위젯 설정','Display and widget'))
+        self.controls_toggle.setToolTip(tr('테마·언어·글자 크기·움직임·지역을 설정합니다.','Set theme, language, text size, motion and location.'))
         pairs=[('작업 현황','Overview'),('변경 기록','Activity'),('사용 한도','Usage'),('★ 보관한 기록','★ Bookmarks'),('전체 기록','All activity'),('입체 관측소','3D observatory'),('날짜별 조형','Daily sculpture'),('화면 설정','Display settings'),('화면 설정','Display settings'),('모션 축소','Reduce motion'),('가장자리 도킹','Edge docking'),('알림음','Notification sound'),('자원 사용','Resource use'),('절전','Eco'),('균형','Balanced'),('고화질','High quality'),('진단 ZIP 저장','Save diagnostics ZIP'),('업데이트 확인','Check for updates')]
         translations={text:tr(ko,en) for ko,en in pairs for text in (ko,en)}
         for button in self.nav_buttons+[self.bookmarks,self.all_records,self.more,self.observatory_button]:button.setText(translations.get(button.text(),button.text()))
@@ -320,6 +353,7 @@ class OrbitExperience:
         self.appearance_button.setText(tr('색상 꾸미기','Customize colors'))
         self.appearance_button.setAccessibleName(tr('색상과 조명 설정','Colors and ambient light'))
         self.update_labels();self.panel.refresh()
+        QTimer.singleShot(0,self.fit_navigation)
 
     def show_appearance(self):
         from appearance35 import AppearanceDialog
@@ -396,6 +430,17 @@ class OrbitExperience:
         for notice in c.notices.values():notice.apply_text_scale(scale)
         if c.notices:c.layout_notices()
         self.panel.agents.fit_rows();c.window.history_layout_timer.start(0)
+        QTimer.singleShot(0,self.fit_navigation)
+
+    def fit_navigation(self):
+        """현재 언어와 글꼴의 실제 항목 폭을 확보해 숨은 가로 이동을 없앱니다."""
+        if not hasattr(self,'navigation_scroll'):return
+        navigation=self.navigation_scroll.widget()
+        navigation.layout().activate()
+        needed=(navigation.minimumSizeHint().width()
+                +self.navigation_scroll.verticalScrollBar().sizeHint().width()
+                +2*self.navigation_scroll.frameWidth())
+        self.navigation_scroll.setFixedWidth(max(172,needed))
     def ingest(self,event):
         c=self.controller
         if not isinstance(event.get('target'),str) or not event['target'].strip():return

@@ -9,7 +9,7 @@ import json
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFileDialog,
     QFormLayout, QHBoxLayout, QLabel, QLineEdit, QListWidget, QListWidgetItem,
-    QMessageBox, QPushButton, QScrollArea, QSpinBox, QTabWidget, QVBoxLayout, QWidget)
+    QMessageBox, QPushButton, QScrollArea, QSpinBox, QTabWidget, QVBoxLayout, QWidget, QFrame, QGridLayout, QSizePolicy, QLayout)
 from i18n import get_language
 from orbit_features import changed_fields
 from ui_layout import OrbitComboBox as QComboBox, ResponsiveRow
@@ -116,6 +116,14 @@ def summary_text(event, private=False):
     return '\n'.join(f'{tr(*label)}: {row[key] or missing}' for key, label in zip(EXPORT_FIELDS, labels))
 
 
+class WorkspaceComparison(QFrame):
+    """좁은 미리보기에서는 이전·현재를 위아래로 배치해 정확한 값을 보존합니다."""
+    def __init__(self,callback):
+        super().__init__();self.callback=callback
+    def resizeEvent(self,event):
+        super().resizeEvent(event);self.callback()
+
+
 class WorkspacePanel(QWidget):
     def __init__(self, controller, parent=None):
         super().__init__(parent)
@@ -125,11 +133,15 @@ class WorkspacePanel(QWidget):
         outer = QVBoxLayout(self)
         scroll = QScrollArea(self)
         scroll.setWidgetResizable(True)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         outer.addWidget(scroll)
         body = QWidget()
+        body.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Preferred)
         scroll.setWidget(body)
         layout = QVBoxLayout(body)
+        layout.setSizeConstraint(QLayout.SizeConstraint.SetNoConstraint)
         self.tabs = QTabWidget()
+        self.tabs.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Preferred)
         layout.addWidget(self.tabs)
         history = QWidget()
         settings = QWidget()
@@ -152,10 +164,34 @@ class WorkspacePanel(QWidget):
         history_layout.addWidget(ResponsiveRow([self.bookmarked, self.pinned, self.grouped]))
         self.count = QLabel()
         history_layout.addWidget(self.count)
-        self.records = QListWidget()
-        self.records.setMinimumHeight(240)
+        from observatory_panel import WrappedAgents
+        self.records = WrappedAgents()
+        self.records.setWordWrap(True)
+        self.records.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.records.setMinimumHeight(160)
         history_layout.addWidget(self.records)
         self.records.currentItemChanged.connect(self._select)
+        from app import NoticeValue, notice_symbol
+        from theme import set_ui_style
+        self.comparison=WorkspaceComparison(self._fit_comparison);self.comparison.setObjectName('noticeComparison')
+        set_ui_style(self.comparison,'QFrame#noticeComparison {background:#edf8f2;border:1px solid #c4dfd0;border-radius:10px;}')
+        grid=QGridLayout(self.comparison);self.comparison_grid=grid;grid.setContentsMargins(10,10,10,10);grid.setSpacing(8)
+        self.comparison_previous=QLabel();self.comparison_current=QLabel()
+        self.comparison_model=QLabel();self.comparison_effort=QLabel()
+        arrow=QLabel();self.comparison_arrow=arrow;arrow.setPixmap(notice_symbol('arrow',16))
+        grid.addWidget(self.comparison_previous,0,1);grid.addWidget(arrow,0,2);grid.addWidget(self.comparison_current,0,3)
+        self.model_previous=NoticeValue();self.model_current=NoticeValue()
+        self.effort_previous=NoticeValue();self.effort_current=NoticeValue()
+        for row,caption,previous,current in [(1,self.comparison_model,self.model_previous,self.model_current),(2,self.comparison_effort,self.effort_previous,self.effort_current)]:
+            caption.setWordWrap(True);caption.setMaximumWidth(68);grid.addWidget(caption,row,0)
+            for column,label in [(1,previous),(3,current)]:
+                label.setWordWrap(True);label.setSizePolicy(QSizePolicy.Policy.Ignored,QSizePolicy.Policy.Minimum)
+                label.setTextFormat(Qt.TextFormat.PlainText);grid.addWidget(label,row,column)
+        grid.setColumnStretch(1,1);grid.setColumnStretch(3,1)
+        self.comparison_model_current=QLabel();self.comparison_effort_current=QLabel()
+        for label in (self.comparison_model_current,self.comparison_effort_current):label.setWordWrap(True);label.setMaximumWidth(68)
+        self.comparison_columns=None
+        history_layout.addWidget(self.comparison)
         self.detail = QLabel()
         self.detail.setTextFormat(Qt.TextFormat.PlainText)
         self.detail.setWordWrap(True)
@@ -163,16 +199,17 @@ class WorkspacePanel(QWidget):
         history_layout.addWidget(self.detail)
         self.selection_buttons = []
         for ko, en, call in (
-            ('선택 요약 복사', 'Copy selected summary', self._copy),
+            ('선택 요약 복사', 'Copy summary', self._copy),
             ('알림 다시 보기', 'Replay notification', lambda: self._event_action('replay_event')),
-            ('원래 상세 열기', 'Open original details', lambda: self._event_action('show')),
-            ('선택 채팅 30분 무음', 'Mute selected chat for 30 minutes', self._mute)):
+            ('전체 설명·근거 보기', 'Full details', lambda: self._event_action('show')),
+            ('선택 채팅 30분 무음', 'Mute chat: 30 min', self._mute)):
             self.selection_buttons.append(self._button(history_layout, ko, en, call))
         history_layout.addWidget(ResponsiveRow(self.selection_buttons))
         self._button(history_layout, '현재 결과 CSV 저장', 'Save filtered CSV', lambda: self._export('csv'))
         self._button(history_layout, '현재 결과 JSON 저장', 'Save filtered JSON', lambda: self._export('json'))
         policy_layout = QVBoxLayout(settings)
         form = QFormLayout()
+        form.setRowWrapPolicy(QFormLayout.RowWrapPolicy.WrapLongRows)
         policy_layout.addLayout(form)
         self.option_controls = {}
         for key, low, high, ko, en in (
@@ -181,12 +218,13 @@ class WorkspacePanel(QWidget):
             spin = QSpinBox()
             spin.setRange(low, high)
             label = QLabel()
+            label.setWordWrap(True)
             self._texts.append((label, ko, en))
             form.addRow(label, spin)
             spin.valueChanged.connect(lambda value, name=key: self._set_option(name, value))
             self.option_controls[key] = spin
-        for key, ko, en in (('activity_popup', '작업 알림 표시', 'Show activity notifications'),
-                            ('compact_activity', '작업 알림 간결하게', 'Compact activity notifications'),
+        for key, ko, en in (('activity_popup', '작업 알림 표시', 'Activity alerts'),
+                            ('compact_activity', '작업 알림 간결하게', 'Compact activity alerts'),
                             ('sound', '알림음', 'Notification sound')):
             self.option_controls[key] = self._check(policy_layout, ko, en, lambda value, name=key: self._set_option(name, value))
         for minutes in (15, 30, 60):
@@ -197,7 +235,7 @@ class WorkspacePanel(QWidget):
                              ('effort', '추론 알림 미리보기', 'Preview effort notification'),
                              ('activity', '작업 알림 미리보기', 'Preview activity notification')):
             self._button(policy_layout, ko, en, lambda checked=False, value=kind: controller.preview_notice37(value))
-        self._button(policy_layout, '고정하지 않은 알림 모두 닫기', 'Dismiss all unpinned notifications', controller.dismiss_unpinned37)
+        self._button(policy_layout, '고정하지 않은 알림 모두 닫기', 'Close unpinned alerts', controller.dismiss_unpinned37)
         self.policy_summary = QLabel()
         self.policy_summary.setTextFormat(Qt.TextFormat.PlainText)
         self.policy_summary.setWordWrap(True)
@@ -267,6 +305,7 @@ class WorkspacePanel(QWidget):
                     chosen = item
         self.records.setCurrentItem(chosen or self.records.item(0))
         self.records.blockSignals(False)
+        self.records.fit_rows()
         self.count.setText(f'{len(self._rows)} {tr("건", "records")}' + ('' if self._rows else ' · ' + tr('검색 결과가 없습니다. 필터를 바꿔 주세요.', 'No results. Change the filters.')))
         self._select()
         self._sync_policy()
@@ -278,9 +317,42 @@ class WorkspacePanel(QWidget):
 
     def _select(self, *unused):
         event = self._selected()
-        self.detail.setText(summary_text(event, self._private()) if event else tr('기록을 선택하면 전체 요약이 표시됩니다.', 'Select a record to see its full summary.'))
+        from observatory_panel import present_event
+        from app import display_notice_comparison
+        from notice_format import notice_reason
+        shown=present_event(event,self._private()) if event else None
+        self.comparison_previous.setText(tr('이전','Previous'));self.comparison_current.setText(tr('현재','Current'))
+        for label in (self.comparison_model,self.comparison_model_current):label.setText(tr('모델','Model'))
+        for label in (self.comparison_effort,self.comparison_effort_current):
+            label.setText(tr('추론 강도','Effort'));label.setAccessibleName(tr('추론 강도','Reasoning effort'))
+        self.comparison.setVisible(shown is not None)
+        if shown:display_notice_comparison(self,shown)
+        self._fit_comparison()
+        self.detail.setText(title(shown)+'\n'+tr('이유: ','Reason: ')+notice_reason(shown,140,max_sentences=1) if shown else tr('기록을 선택하면 이전·현재 값과 이유가 표시됩니다.','Select a record to compare values and read its reason.'))
         for button in self.selection_buttons:
             button.setEnabled(event is not None)
+
+    def _fit_comparison(self):
+        if not hasattr(self,'comparison_columns'):return
+        values=(self.model_previous,self.model_current,self.effort_previous,self.effort_current)
+        value_width=max(label.fontMetrics().horizontalAdvance(label.text())+label.contentsMargins().left()+16 for label in values)
+        columns=2 if self.comparison.width()>=2*value_width+116 else 1
+        if columns==self.comparison_columns:return
+        self.comparison_columns=columns;grid=self.comparison_grid
+        while grid.count():grid.takeAt(0)
+        self.comparison_arrow.setVisible(columns==2)
+        for label in (self.comparison_model_current,self.comparison_effort_current):label.setVisible(columns==1)
+        if columns==2:
+            for widget,row,column in [(self.comparison_previous,0,1),(self.comparison_arrow,0,2),(self.comparison_current,0,3),
+                (self.comparison_model,1,0),(self.model_previous,1,1),(self.model_current,1,3),
+                (self.comparison_effort,2,0),(self.effort_previous,2,1),(self.effort_current,2,3)]:grid.addWidget(widget,row,column)
+        else:
+            for offset,heading,model_caption,effort_caption,model,effort in [
+                (0,self.comparison_previous,self.comparison_model,self.comparison_effort,self.model_previous,self.effort_previous),
+                (3,self.comparison_current,self.comparison_model_current,self.comparison_effort_current,self.model_current,self.effort_current)]:
+                grid.addWidget(heading,offset,1,1,3)
+                grid.addWidget(model_caption,offset+1,0);grid.addWidget(model,offset+1,1,1,3)
+                grid.addWidget(effort_caption,offset+2,0);grid.addWidget(effort,offset+2,1,1,3)
 
     def _copy(self):
         event = self._selected()
@@ -334,6 +406,7 @@ class WorkspacePanel(QWidget):
             self._error(error)
 
     def retranslate(self):
+        self._display_language=get_language()
         for widget, ko, en in self._texts:
             widget.setText(tr(ko, en))
         self.tabs.setTabText(0, tr('기록 탐색', 'History explorer'))
@@ -350,3 +423,8 @@ class WorkspacePanel(QWidget):
             combo.setCurrentIndex(max(0, combo.findData(selected)))
             combo.blockSignals(False)
         self.refresh()
+
+    def showEvent(self,event):
+        super().showEvent(event)
+        # 숨겨 둔 알림센터도 언어 선택 후 처음 열 때 같은 언어로 갱신합니다.
+        if getattr(self,'_display_language',None)!=get_language():self.retranslate()

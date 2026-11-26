@@ -1,6 +1,12 @@
 <a name="-codex-orbit-320"></a>
 
 
+## Revision 44
+
+Version 3.13.0 unifies in-app activity details with the compact widget notification. Existing daily pixel subjects and weather correction remain intact. [Details](history/44차/README.md)
+
+
+
 ## Revision 43
 
 Version 3.12.0 polls weather every 60 seconds and scopes a user-confirmed city correction to its matching connection. IP location checks remain separate at five minutes. Existing notifications are preserved. [Details](history/43차/README.md)
@@ -269,6 +275,7 @@ The existing yearly, monthly and daily theme code and assets remain unchanged. [
 | 40차 | 이모지 복원·읽기 쉬운 변경 이유 | 자료 폴더: [자료 폴더](history/40차) · 상세 설명: [상세 설명](history/40차/README.md) · 직전 비교·범위: [전체 비교·범위](history/40차/비교.md) |
 | 41차 | 선택한 당시 알림 디자인 | 자료 폴더: [자료 폴더](history/41차) · 상세 설명: [상세 설명](history/41차/README.md) · 직전 비교·범위: [전체 비교·범위](history/41차/비교.md) |
 | 43차 | 1분 날씨·연결별 도시 보정 | 자료 폴더: [자료 폴더](history/43차) · 상세 설명: [상세 설명](history/43차/README.md) · 직전 비교·범위: [전체 비교·범위](history/43차/비교.md) |
+| 44차 | 알림·내부 화면 통일과 날짜별 위젯 확인 | 자료 폴더: [자료 폴더](history/44차) · 상세 설명: [상세 설명](history/44차/README.md) · 직전 비교·범위: [전체 비교·범위](history/44차/비교.md) |
 | 최종 | Codex Orbit · 최종 | 폴더: [폴더](docs/최종/) · 설명: [설명](docs/최종/README.md) · 직전 차수와 실제 비교: [비교 대상 없는 근거](docs/최종/README.md) |
 
 Historical sources and supporting documents/assets are preserved with full comparisons, byte counts and SHA-256. [Archive manifests](docs/ARCHIVE_FILES.md) distinguish original copies, privacy edits and exclusions.

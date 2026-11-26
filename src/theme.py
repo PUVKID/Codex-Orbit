@@ -278,6 +278,21 @@ def themed_stylesheet():
     QToolTip {background:SURFACE;color:TEXT;border:1px solid BORDER;}
     """
     for token,key in [('RAISED','raised'),('BORDER','border'),('SURFACE','surface'),('SELECTED','selected'),('MUTED','muted'),('FOCUS','focus'),('TEXT','text'),('BG','bg')]:style=style.replace(token,c[key])
+    from astryx_theme import compile_qss
+    generated = compile_qss(effective_theme(), c['accent'], c['bg'], c['surface'],
+                            c['text'], c['muted'], c['border'])
+    # 내부 대화상자의 조작 높이가 승인된 작은 바탕화면 알림을 늘리지 않게 범위를 제한합니다.
+    import re
+    generated = re.sub(r'/\*.*?\*/', '', generated, flags=re.S)
+    for selectors, declarations in re.findall(r'([^{}]+)\{([^{}]*)\}', generated):
+        scoped = ','.join(selector.strip() if selector.strip().startswith('QDialog')
+                          else 'QDialog ' + selector.strip() for selector in selectors.split(','))
+        style += scoped + '{' + declarations + '}'
+    style += ('QFrame#navigationSurface,QFrame#controlsBar,QFrame#observationCard,'
+              'QFrame#eventCard,QFrame#usagePanel {border-radius:16px;}'
+              'QFrame#navigationSurface QPushButton {padding:0 12px;min-height:44px;border-radius:10px;}'
+              'QTabBar::tab {padding:12px 16px;}'
+              'QListWidget::item {padding:12px;border-radius:10px;}')
     return style
 
 
