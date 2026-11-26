@@ -444,3 +444,5 @@ Ordinary Korean text, **actual inline emoji**, and **custom-drawn graphics** for
 ### Notification placement and motion
 
 Notifications default to the lower-right corner of the widget monitor. Choose any of four corners in Display settings → Notification position. They slide up on arrival and down on dismissal; Reduce motion skips movement. Earlier read diagnostics remain available in a collapsed detail panel.
+
+Entry now takes one second and dismissal takes 0.85 seconds, with gentle acceleration at both ends. Multiple notifications share the same horizontal alignment in a vertical stack, including when overlapping on a full screen.

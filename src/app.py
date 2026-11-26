@@ -842,8 +842,6 @@ def notice_positions(rect, sizes, corner='bottom_right'):
         x = rect.right()+1-margin-width if right else rect.left()+margin
         if overlap:
             y = rect.top()+margin+span*index//max(1,len(sizes)-1)
-            offset = min(index*18,max(0,rect.width()-width-2*margin))
-            x += -offset if right else offset
         positions.append(QPoint(max(rect.left(), min(x, rect.right()+1-width)),
                                 max(rect.top(), min(y, rect.bottom()+1-height))))
         if not overlap:y += height+10
@@ -1080,8 +1078,8 @@ class Notice(QFrame):
         self.appearance.stop()
         self._motion_target = QPoint(target)
         self._motion_phase = phase
-        duration = 220 if phase == 'exit' else 280
-        curve = QEasingCurve.Type.InCubic if phase == 'exit' else QEasingCurve.Type.OutCubic
+        duration = 850 if phase == 'exit' else 1000 if phase == 'enter' else 400
+        curve = QEasingCurve.Type.InOutSine
         for animation in (self.position_animation, self.opacity_animation):
             animation.setDuration(duration)
             animation.setEasingCurve(curve)
@@ -1106,7 +1104,7 @@ class Notice(QFrame):
             return
         if entering:
             self.appearance.stop()
-            self.move(target + QPoint(0, 42))
+            self.move(target + QPoint(0, 96))
             self.setWindowOpacity(0.)
             self.show()
         elif self._motion_target == target:
@@ -1132,7 +1130,7 @@ class Notice(QFrame):
             self.appearance.stop()
             self._finish_dismiss()
         else:
-            self._animate_to(self.pos() + QPoint(0, 42), 'exit')
+            self._animate_to(self.pos() + QPoint(0, 96), 'exit')
 
     def closeEvent(self, event):
         self.dismiss(immediate=True)
