@@ -19,7 +19,7 @@
   <source media="(max-width: 600px)" srcset="assets/readme/flow-ko-light-mobile.svg" />
   <source media="(prefers-color-scheme: dark)" srcset="assets/readme/flow-ko-dark.svg" />
   <source media="(prefers-color-scheme: light)" srcset="assets/readme/flow-ko-light.svg" />
-  <img src="assets/readme/flow-ko-light.svg" alt="Codex Orbit: 날짜 · 관측 기록 → 3D 테마 · 알림 → 바탕화면 테마 · 기록" width="100%" />
+  <img src="assets/readme/flow-ko-light.svg" alt="날짜 · 관측 기록: 날짜·국가와 실제 관측 기록 → 3D 테마 · 알림: 날짜별 입체 모형과 변경 알림 → 바탕화면 테마 · 기록: 바탕화면 표시와 알림 센터 조회" width="100%" />
 </picture>
 <!-- readme-header32:end -->
 
