@@ -26,6 +26,19 @@
 <a name="-codex-orbit-320"></a>
 
 
+## Revision 44 · Consistent notifications and internal screens
+
+Version 3.13.0 uses the widget's previous/current comparison inside the app. Date-specific fruit, flowers, holidays, pixel motion, weather correction, and existing settings are preserved.
+
+| Area | Change |
+| --- | --- |
+| Model and effort | Two comparison rows; narrow windows stack previous/current groups |
+| Reason | A short explanation, with the original record available to expand |
+| Controls | Shared Rust-generated light/dark styles and one expandable settings area |
+| Calendar | Checked 27,028 dates through 2099 and 141 models across 282 GPU frames |
+
+[Revision 44 details (Korean source)](../history/44차/README.md) · [Usage (Korean source)](../docs/44차_내부화면과날짜별위젯.md) · [Downloads](../docs/DOWNLOADS.md)
+
 <a id="43차--1분-날씨와-위치-보정"></a>
 ## Revision 43 · One-minute weather and connection-scoped city correction
 
@@ -383,6 +396,7 @@ Actual generation rate and monitor display rate are separate; constant 240fps is
 | Revision 40 | Restored emoji and readable change reasons | Material folder: [Material folder (Korean source)](../history/40차) · Detailed description: [Detailed description (Korean source)](../history/40차/README.md) · Preceding comparison/scope: [Full comparison/scope (Korean source)](../history/40차/비교.md) |
 | Revision 41 | Selected notification design | Material folder: [Material folder (Korean source)](../history/41차) · Details: [Details (Korean source)](../history/41차/README.md) · Previous comparison and scope: [Full comparison and scope (Korean source)](../history/41차/비교.md) |
 | Revision 43 | One-minute weather · connection-scoped city correction | Material folder: [Material folder (Korean source)](../history/43차) · Details: [Details (Korean source)](../history/43차/README.md) · Previous comparison and scope: [Full comparison and scope (Korean source)](../history/43차/비교.md) |
+| Revision 44 | Consistent internal comparisons and date-specific widget checks | [Files](../history/44차) · [Details](../history/44차/README.md) · [Full comparison](../history/44차/비교.md) |
 
 Original source comparisons include comments, whitespace, line endings, and added/deleted states. Revision 20 preserves 38 designs without executable source; revision 21 preserves 110 designs. Original personal operational-verification text in the final folder is not published. Revision-specific links cover preservation, sanitization, exclusion reasons, and original/public SHAs for 2,281 historical items.
 
