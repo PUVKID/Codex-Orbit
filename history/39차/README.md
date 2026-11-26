@@ -1,3 +1,7 @@
+<!-- language-choice:start -->
+🔵 **한국어** · [English overview](../../en/README.md)
+<!-- language-choice:end -->
+
 # 39차 · 선명한 변경 알림
 
 **3.9.0**은 알림의 장식을 직접 그린 그림으로 표시합니다. 채팅 제목, 이전·현재 모델과 추론 강도, 짧은 이유 순서로 읽으며 **바뀐 현재 값만 강조**합니다.

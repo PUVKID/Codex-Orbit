@@ -1,3 +1,7 @@
+<!-- language-choice:start -->
+🔵 **한국어** · [English overview](../../en/README.md)
+<!-- language-choice:end -->
+
 # 40차 · 이모지와 알림 가독성
 
 **3.10.0**은 종류별 이모지와 모델·추론 강도의 이모지를 다시 표시합니다. 이전·현재 값을 나란히 비교하고, 변경 이유를 별도 영역에서 읽습니다.
